@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns 
+http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+ <graph  edgedefault="undirected">
+  <node id="0" weight="0.0" label="" x="333" y="235" color="#000000" />
+  <node id="1" weight="0.0" label="" x="578" y="234" color="#000000" />
+  <edge id="0" label="" weight="0.0" source="0" target="1" color="#000000" />
+ </graph></graphml>

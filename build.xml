@@ -1,0 +1,62 @@
+<project name="Galant" basedir="." default="main">
+
+	<property name="src.dir" value="src" />
+
+	<property name="build.dir" value="build" />
+	<property name="classes.dir" value="${build.dir}/classes" />
+	<property name="jar.dir" value="${build.dir}/jar" />
+	<property name="doc.dir" value="doc" />	
+
+	<property name="imgDirText" value="edu/ncsu/csc/Galant/gui/editor/images" />
+	<property name="imgDirGraph" value="edu/ncsu/csc/Galant/gui/window" />
+	
+	<property name="main-class" value="edu.ncsu.csc.Galant.Galant" />
+
+	<target name="clean">
+		<delete dir="${build.dir}" />
+	</target>
+
+	<target name="compile">
+		<mkdir dir="${classes.dir}" />
+		
+		<copy todir="${classes.dir}/${imgDirText}"> 
+			<fileset dir="${src.dir}/${imgDirText}" >
+				
+			</fileset> 
+		</copy>
+		<copy todir="${classes.dir}/${imgDirGraph}"> 
+			<fileset dir="${src.dir}/${imgDirGraph}" >
+				
+			</fileset> 
+		</copy>
+		
+		<javac srcdir="${src.dir}" destdir="${classes.dir}" includeantruntime="false" debug="true">
+			<exclude name="edu/ncsu/csc/Galant/test/**" />
+		</javac>	
+	</target>
+
+	<target name="jar" depends="compile">
+		<mkdir dir="${jar.dir}"/>
+		<jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}">
+			<fileset dir="${classes.dir}/${imgDirText}"/>
+		    <fileset dir="${classes.dir}/${imgDirGraph}"/>
+			<manifest>
+				<attribute name="Main-Class" value="${main-class}"/>
+			</manifest>
+		</jar>
+    </target>
+
+	<target name="run" depends="jar">
+		<java maxmemory="4g" jar="${jar.dir}/${ant.project.name}.jar" fork="true"/>
+    </target>
+	
+	<target name="clean-build" depends="clean,jar"/>
+
+   	<target name="main" depends="clean,run"/>
+
+	<target name="javadoc" description="generate documentation">
+		<delete dir="${doc.dir}" />
+		<mkdir dir="${doc.dir}" />
+		<javadoc sourcepath="${src.dir}" destdir="${doc.dir}" />
+	</target>
+</project>

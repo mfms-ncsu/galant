@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns 
+http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+ <graph edgedefault="directed" name="my_name">
+  <node id="0" weight="0" label="" x="345" y="211" color="#000000" />
+  <node id="1" weight="" label="" x="248" y="97" color="#000000" />
+  <node id="2" weight="0" label="" x="408" y="109" color="#000000" />
+  <node id="3" label="" x="254" y="313" color="#000000" />
+  <node id="4" weight="0" label="" x="360" y="303" color="#000000" />
+  <node id="5" weight="0" label="" x="482" y="298" color="#000000" />
+  <edge id="0" label="" weight="" source="1" target="0" color="#000000" />
+  <edge id="1" label=""  source="2" target="0" color="#000000" />
+  <edge id="2" weight="0" source="0" target="3" color="#000000" />
+  <edge id="3" label="" weight="0" source="0" target="4" color="#000000" />
+  <edge id="4" label="" weight="0" source="0" target="5" color="#000000" />
+ </graph></graphml>

@@ -1,0 +1,67 @@
+src/edu/ncsu/csc/Galant/graph/component/Edge.java:	public Edge(GraphState currentState, int _id, Node _source, Node _target, boolean _highlighted, int _weight, String _color, String _label) {
+src/edu/ncsu/csc/Galant/graph/component/Edge.java:		EdgeState es = new EdgeState(currentState, _highlighted, _weight, _source, _target, _id, _color, _label, false);
+src/edu/ncsu/csc/Galant/graph/component/Edge.java:	 * @return the weight of the edge
+src/edu/ncsu/csc/Galant/graph/component/Edge.java:	 * @param weight the weight of the edge
+src/edu/ncsu/csc/Galant/graph/component/Edge.java:	public void setWeight(int weight) {
+src/edu/ncsu/csc/Galant/graph/component/Edge.java:		es.setWeight(weight);
+src/edu/ncsu/csc/Galant/graph/component/Edge.java:		int weight = this.latestState().getWeight();
+src/edu/ncsu/csc/Galant/graph/component/Edge.java:				+ "\" weight=\"" + weight
+src/edu/ncsu/csc/Galant/graph/component/Edge.java:			int weight = es.getWeight();
+src/edu/ncsu/csc/Galant/graph/component/Edge.java:					"\" weight=\"" + weight +
+src/edu/ncsu/csc/Galant/graph/component/EdgeState.java:	private int weight;
+src/edu/ncsu/csc/Galant/graph/component/EdgeState.java:	public EdgeState(GraphState s, boolean _highlighted, int _weight, Node _source, Node _dest, int _id, String _color, String _label, boolean deleted) {
+src/edu/ncsu/csc/Galant/graph/component/EdgeState.java:		this(s.getState(), _highlighted, _weight, _source, _dest, _id, _color, _label, deleted);
+src/edu/ncsu/csc/Galant/graph/component/EdgeState.java:	public EdgeState(int s, boolean _highlighted, int _weight, Node _source, Node _dest, int _id, String _color, String _label, boolean deleted) {
+src/edu/ncsu/csc/Galant/graph/component/EdgeState.java:		this.weight = _weight;
+src/edu/ncsu/csc/Galant/graph/component/EdgeState.java:		this.weight = 0;
+src/edu/ncsu/csc/Galant/graph/component/EdgeState.java:		return weight;
+src/edu/ncsu/csc/Galant/graph/component/EdgeState.java:	public void setWeight(int weight) {
+src/edu/ncsu/csc/Galant/graph/component/EdgeState.java:		this.weight = weight;
+src/edu/ncsu/csc/Galant/graph/component/EdgeState.java:		EdgeState es = new EdgeState(state, highlighted, weight, source, destination, id, color, label, deleted);
+src/edu/ncsu/csc/Galant/graph/component/GraphElement.java:	public abstract void setWeight(int weight);
+src/edu/ncsu/csc/Galant/graph/component/Node.java:	public Node(GraphState currentState, int _id, int _weight, String _color, String _label, boolean _selected, boolean _visited) {
+src/edu/ncsu/csc/Galant/graph/component/Node.java:		this(currentState, _selected, _visited, new ArrayList<Edge>(), _id, _weight, _color, _label, genRandomPosition());
+src/edu/ncsu/csc/Galant/graph/component/Node.java:	public Node(GraphState currentState, boolean _selected, boolean _visited, List<Edge> _edges, int _id, int _weight, String _color, String _label, Point _position) { //TODO sanitize
+src/edu/ncsu/csc/Galant/graph/component/Node.java:		NodeState ns = new NodeState(currentState, _selected, _visited, _id, _weight, _color, _label);
+src/edu/ncsu/csc/Galant/graph/component/Node.java:	 * @return the weight of the edge
+src/edu/ncsu/csc/Galant/graph/component/Node.java:	 * @param weight the weight of the edge
+src/edu/ncsu/csc/Galant/graph/component/Node.java:	public void setWeight(int weight) {
+src/edu/ncsu/csc/Galant/graph/component/Node.java:		ns.setWeight(weight);
+src/edu/ncsu/csc/Galant/graph/component/Node.java:		int weight = this.getWeight();
+src/edu/ncsu/csc/Galant/graph/component/Node.java:				"\" weight=\"" + weight +
+src/edu/ncsu/csc/Galant/graph/component/Node.java:			int weight = ns.getWeight();
+src/edu/ncsu/csc/Galant/graph/component/Node.java:					"\" weight=\"" + weight +
+src/edu/ncsu/csc/Galant/graph/component/NodeState.java:	private int weight = 0;
+src/edu/ncsu/csc/Galant/graph/component/NodeState.java:	public NodeState(GraphState s, boolean _highlighted, boolean _visited, int _id, int _weight, String _color, String _label) {
+src/edu/ncsu/csc/Galant/graph/component/NodeState.java:		this(s.getState(), _highlighted, _visited, _id, _weight, _color, _label, false);
+src/edu/ncsu/csc/Galant/graph/component/NodeState.java:	public NodeState(int s, boolean _highlighted, boolean _visited, int _id, int _weight, String _color, String _label, boolean _deleted) {
+src/edu/ncsu/csc/Galant/graph/component/NodeState.java:		this.weight = _weight;
+src/edu/ncsu/csc/Galant/graph/component/NodeState.java:		return weight;
+src/edu/ncsu/csc/Galant/graph/component/NodeState.java:	public void setWeight(int weight) {
+src/edu/ncsu/csc/Galant/graph/component/NodeState.java:		this.weight = weight;
+src/edu/ncsu/csc/Galant/graph/component/NodeState.java:		NodeState ns = new NodeState(state, this.selected, this.visited, this.id, this.weight, this.color, this.label, this.deleted);
+src/edu/ncsu/csc/Galant/graph/parser/GraphMLParser.java:			int weight = ((attributes.getNamedItem("weight") != null) ? Integer.parseInt(attributes.getNamedItem("weight").getNodeValue()) : 0);
+src/edu/ncsu/csc/Galant/graph/parser/GraphMLParser.java:			Node n = new Node(gs, i, weight, color, label, highlighted, false);
+src/edu/ncsu/csc/Galant/graph/parser/GraphMLParser.java:			int weight = ((attributes.getNamedItem("weight") != null) ? Integer.parseInt(attributes.getNamedItem("weight").getNodeValue()) : 0);
+src/edu/ncsu/csc/Galant/graph/parser/GraphMLParser.java:			Edge e = new Edge(gs, Integer.valueOf(i), source, target, highlighted, weight, color, label);
+src/edu/ncsu/csc/Galant/gui/editor/GAlgorithmSyntaxHighlighting.java:		APIdictionary.put("getWeight", "Returns the Integer weight of the current Node or Edge. The default weight is 0.");
+src/edu/ncsu/csc/Galant/gui/editor/GAlgorithmSyntaxHighlighting.java:		APIdictionary.put("setWeight", "Sets the weight of the current Node or Edge.");
+src/edu/ncsu/csc/Galant/gui/prefs/PreferenceGroupPanel.java:				componentConstraints.weightx = 1;
+src/edu/ncsu/csc/Galant/gui/window/GraphWindow.java:		NODE_WEIGHTS("weightednode"),
+src/edu/ncsu/csc/Galant/gui/window/GraphWindow.java:		EDGE_WEIGHTS("weightededge");
+src/edu/ncsu/csc/Galant/gui/window/panels/ComponentEditPanel.java:	private JSpinner weight;
+src/edu/ncsu/csc/Galant/gui/window/panels/ComponentEditPanel.java:		weight = new JSpinner(new SpinnerNumberModel());
+src/edu/ncsu/csc/Galant/gui/window/panels/ComponentEditPanel.java:		Component editor = weight.getEditor();
+src/edu/ncsu/csc/Galant/gui/window/panels/ComponentEditPanel.java:		weight.addChangeListener(new ChangeListener() {
+src/edu/ncsu/csc/Galant/gui/window/panels/ComponentEditPanel.java:				Integer wgt = (Integer) weight.getValue();
+src/edu/ncsu/csc/Galant/gui/window/panels/ComponentEditPanel.java:		this.add(weight);
+src/edu/ncsu/csc/Galant/gui/window/panels/ComponentEditPanel.java:		weight.setValue(wgt);
+src/edu/ncsu/csc/Galant/gui/window/panels/GraphPanel.java:			// If drawing node weights is on, show it in a box.
+src/edu/ncsu/csc/Galant/gui/window/panels/GraphPanel.java:				String weight = ""+ns.getWeight();
+src/edu/ncsu/csc/Galant/gui/window/panels/GraphPanel.java:				drawTextBox(new Point(p.x+10, p.y-h), weight, false, g2d);
+src/edu/ncsu/csc/Galant/gui/window/panels/GraphPanel.java:				g2d.drawString(weight, p.x+13, p.y-3);
+src/edu/ncsu/csc/Galant/gui/window/panels/GraphPanel.java:	 * Draws an edge weight to the screen positioned along the edge itself
+src/edu/ncsu/csc/Galant/gui/window/panels/GraphPanel.java:	 * @param weight The value of the weight
+src/edu/ncsu/csc/Galant/gui/window/panels/GraphPanel.java:	 * @param label The label associated with the same edge. This is used to align the weight with the label.
+src/edu/ncsu/csc/Galant/gui/window/panels/GraphPanel.java:	private void drawEdgeWeight(int weight, String label, Point source, Point dest, Graphics2D g2d) {
+src/edu/ncsu/csc/Galant/gui/window/panels/GraphPanel.java:		String sWeight = "" + weight;

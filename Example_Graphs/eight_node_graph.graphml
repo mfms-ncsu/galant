@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns 
+http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+ <graph edgedefault="directed"
+        name="dfs_example">
+  <node id="0" weight="0.0" label="" x="296" y="43" color="#000000" />
+  <node id="1" weight="0.0" label="" x="420" y="221" color="#000000" />
+  <node id="2" weight="0.0" label="" x="115" y="387" color="#000000" />
+  <node id="3" weight="0.0" label="" x="273" y="379" color="#000000" />
+  <node id="4" weight="0.0" label="" x="437" y="452" color="#000000" />
+  <node id="5" weight="0.0" label="" x="287" y="542" color="#000000" />
+  <node id="6" weight="0.0" label="" x="120" y="510" color="#000000" />
+  <node id="7" weight="0.0" label="" x="244" y="218" color="#000000" />
+  <edge id="0" label="" weight="0.0" source="0" target="1" color="#000000" />
+  <edge id="1" label="" weight="0.0" source="1" target="7" color="#000000" />
+  <edge id="2" label="" weight="0.0" source="0" target="7" color="#000000" />
+  <edge id="3" label="" weight="0.0" source="7" target="2" color="#000000" />
+  <edge id="4" label="" weight="0.0" source="2" target="3" color="#000000" />
+  <edge id="5" label="" weight="0.0" source="3" target="4" color="#000000" />
+  <edge id="6" label="" weight="0.0" source="4" target="5" color="#000000" />
+  <edge id="7" label="" weight="0.0" source="6" target="5" color="#000000" />
+  <edge id="8" label="" weight="0.0" source="3" target="6" color="#000000" />
+  <edge id="9" label="" weight="0.0" source="3" target="7" color="#000000" />
+  <edge id="10" label="" weight="0.0" source="1" target="3" color="#000000" />
+  <edge id="11" label="" weight="0.0" source="5" target="3" color="#000000" />
+ </graph></graphml>

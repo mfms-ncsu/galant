@@ -1,0 +1,6 @@
+# .gitignore for galant
+*.class
+# emacs backups
+*.~*~
+# stuff in the build directory is the result of compilation
+build/

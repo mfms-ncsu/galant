@@ -12,6 +12,7 @@ import edu.ncsu.csc.Galant.graph.component.Edge;
 import edu.ncsu.csc.Galant.graph.component.Graph;
 import edu.ncsu.csc.Galant.graph.component.GraphState;
 import edu.ncsu.csc.Galant.graph.component.Node;
+import edu.ncsu.csc.Galant.GalantException;
 
 /** 
  * Represents a runnable algorithm. 
@@ -174,7 +175,7 @@ public abstract class Algorithm
 			}
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#getRootNode() */
-		protected Node getRootNode()
+		protected Node getRootNode() throws GalantException
 			{
 				return graph.getRootNode();
 			}
@@ -186,13 +187,13 @@ public abstract class Algorithm
 			}
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#getNodeById(int) */
-		protected Node getNodeById (int id) throws Exception
+		protected Node getNodeById (int id) throws GalantException
 			{
 				return graph.getNodeById(id);
 			}
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#getEdgeById(int) */
-		protected Edge getEdgeById(int id)
+		protected Edge getEdgeById(int id) throws GalantException
 			{
 				return graph.getEdgeById(id);
 			}
@@ -266,4 +267,4 @@ public abstract class Algorithm
 		public abstract void run();
 	}
 
-//  [Last modified: 2015 04 30 at 15:12:34 GMT]
+//  [Last modified: 2015 05 13 at 19:43:42 GMT]

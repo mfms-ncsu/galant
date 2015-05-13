@@ -334,7 +334,11 @@ public class Graph {
 	/**
 	 * @return the root node
 	 */
-	public Node getRootNode() {
+	public Node getRootNode() throws GalantException {
+        if ( rootNode == null ) {
+            throw new GalantException( "no root node has been set"
+                                       + "\n - in getRootNode" );
+        }
 		return rootNode;
 	}
 
@@ -352,6 +356,11 @@ public class Graph {
 	 * @return the specified Node if it exists, null otherwise
 	 */
 	public Node getNodeById( int id ) throws GalantException {
+        if ( this.nodes.size() == 0 ) {
+            throw new GalantException( "empty graph"
+                                       + "\n - in getNodeById" );
+        }
+
 		if ( id < 0 || id >= this.nodes.size() ) {
             throw new GalantException( "node out of range, id = "
                                        + id 
@@ -407,18 +416,27 @@ public class Graph {
 	 * @param id
 	 * @return the specified Edge if it exists, null otherwise
 	 */
-	public Edge getEdgeById(int id) {
-		if (id < 0)
-			return null;
-	
-		if (this.edges.size() > id) {
-			Edge e = this.edges.get(id);
-			if (!e.isDeleted()) {
-				return e;
-			}
+	public Edge getEdgeById(int id) throws GalantException {
+        if ( this.edges.size() == 0 ) {
+            throw new GalantException( "graph has no edges"
+                                       + "\n - in getEdgeById" );
+        }
+
+		if ( id < 0 || id >= this.nodes.size() ) {
+            throw new GalantException( "edge out of range, id = "
+                                       + id 
+                                       + "\n - in getEdgeById" );
+        }
+
+        Edge e = this.edges.get(id);
+
+        if ( e.isDeleted() ) {
+            throw new GalantException( "edge has been deleted, id = "
+                                       + id
+                                       + "\n - in getEdgeById" );
 		}
-		
-		return null;
+
+        return e;
 	}
 
 	/**
@@ -1202,4 +1220,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2015 05 05 at 15:29:21 GMT]
+//  [Last modified: 2015 05 13 at 19:53:28 GMT]

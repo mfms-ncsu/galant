@@ -66,10 +66,11 @@ public class CodeIntegrator
 					"@Override " +
 					"public void run() " +
 						String.format("{ try {%s}"
-                                      + " catch (GalantException e)"
-                                      + " {e.report(\"\"); e.display(); }"
                                       + " catch (Exception e)"
-                                      + " {e.printStackTrace(System.out);}%n }",
+                                      + " { if ( e instanceof GalantException )"
+                                      + " {GalantException ge = (GalantException) e;"
+                                      + " ge.report(\"\"); ge.display(); }"
+                                      + " else e.printStackTrace(System.out);}%n }",
                                       CODE_FIELD) +
 					// add newline after code in case of ending with line comment
 				"}";
@@ -149,4 +150,4 @@ public class CodeIntegrator
 			}
 	}
 
-//  [Last modified: 2015 05 08 at 21:52:24 GMT]
+//  [Last modified: 2015 05 13 at 18:51:14 GMT]

@@ -152,9 +152,10 @@ public abstract class Algorithm
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#getNodes() */
 		protected List<Node> getNodes()
-			{
-				return graph.getNodes();
-			}
+            throws GalantException
+        {
+            return graph.getNodes();
+        }
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#setNodes(java.util.List) */
 		protected void setNodes(List<Node> nodes)
@@ -164,9 +165,10 @@ public abstract class Algorithm
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#getEdges() */
 		protected List<Edge> getEdges()
-			{
-				return graph.getEdges();
-			}
+            throws GalantException
+        {
+            return graph.getEdges();
+        }
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#setEdges(java.util.List) */
 		protected void setEdges(List<Edge> edges)
@@ -267,4 +269,4 @@ public abstract class Algorithm
 		public abstract void run();
 	}
 
-//  [Last modified: 2015 05 13 at 19:43:42 GMT]
+//  [Last modified: 2015 05 14 at 15:59:06 GMT]

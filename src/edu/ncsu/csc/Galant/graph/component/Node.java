@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Random;
 import edu.ncsu.csc.Galant.logging.LogHelper;
 import edu.ncsu.csc.Galant.GraphDispatch;
+import edu.ncsu.csc.Galant.GalantException;
 
 /**
  * Represents node entities as elements of a graph.
@@ -86,7 +87,9 @@ public class Node extends GraphElement implements Comparable<Node> {
 		return !isDeleted();
 	}
 	
-	public boolean inScope(int state) {
+	public boolean inScope(int state) 
+        throws GalantException
+    {
 		return isCreated(state) && !isDeleted(state);
 	}
 	
@@ -99,10 +102,12 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 	
 	@Override
-	public double getWeight(int state) {
-		NodeState ns = getLatestValidState(state);
-		return ns==null ? null : ns.getWeight();
-	}
+	public double getWeight(int state)
+        throws GalantException
+        {
+            NodeState ns = getLatestValidState(state);
+            return ns==null ? null : ns.getWeight();
+        }
 
 	/**
 	 * @param weight the weight of the edge
@@ -125,10 +130,12 @@ public class Node extends GraphElement implements Comparable<Node> {
      * @return true if this node had a non-empty weight at the given state
      */
     @Override
-        public boolean hasWeight(int state) {
-		NodeState ns = getLatestValidState(state);
-        return ns == null ? false : ns.hasWeight();
-    }
+        public boolean hasWeight(int state)
+        throws GalantException
+        {
+            NodeState ns = getLatestValidState(state);
+            return ns == null ? false : ns.hasWeight();
+        }
 
 	/**
 	 * Postcondition: hasWeight() == false
@@ -147,7 +154,9 @@ public class Node extends GraphElement implements Comparable<Node> {
 		return latestState().isSelected();
 	}
 	
-	public boolean isSelected(int state) {
+	public boolean isSelected(int state)
+        throws GalantException
+    {
 		NodeState ns = getLatestValidState(state);
 		
 		return ns==null ? null : ns.isSelected();
@@ -157,14 +166,19 @@ public class Node extends GraphElement implements Comparable<Node> {
         return isSelected();
     }
 	
-    public boolean isHighlighted(int state) {
+    public boolean isHighlighted(int state)
+        throws GalantException
+    {
         return isSelected(state);
     }
 	
 	public boolean isVisited() {
 		return this.latestState().isVisited();
 	}
-	public Boolean isVisited(int state) {
+
+	public Boolean isVisited(int state)
+        throws GalantException
+    {
 		NodeState ns = getLatestValidState(state);
 		return ns==null ? null : ns.isVisited();
 	}
@@ -172,10 +186,14 @@ public class Node extends GraphElement implements Comparable<Node> {
 	public boolean isMarked() {
 		return this.latestState().isVisited();
 	}
-	public Boolean isMarked(int state) {
+
+	public Boolean isMarked(int state)
+        throws GalantException
+    {
 		NodeState ns = getLatestValidState(state);
 		return ns==null ? null : ns.isVisited();
 	}
+
 	public void setVisited(boolean b) {
 		NodeState ns = newState();
 		ns.setVisited(b);
@@ -437,10 +455,12 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 	
 	@Override
-	public String getColor(int state) {
-		NodeState ns = getLatestValidState(state);
-		return ns==null ? null : ns.getColor();
-	}
+	public String getColor(int state)
+        throws GalantException
+        {
+            NodeState ns = getLatestValidState(state);
+            return ns==null ? null : ns.getColor();
+        }
 
 	/**
 	 * @param color the color of the node to set, stored in six-digit hex representation
@@ -459,11 +479,14 @@ public class Node extends GraphElement implements Comparable<Node> {
 	public String getLabel() {
 		return latestState().getLabel();
 	}
+
 	@Override
-	public String getLabel(int state) {
-		NodeState ns = getLatestValidState(state);
-		return ns==null ? null : ns.getLabel();
-	}
+	public String getLabel(int state)
+        throws GalantException
+        {
+            NodeState ns = getLatestValidState(state);
+            return ns==null ? null : ns.getLabel();
+        }
 
 	/**
 	 * @param label the label to set
@@ -486,10 +509,12 @@ public class Node extends GraphElement implements Comparable<Node> {
      * @return true if this node had a non-empty label at the given state
      */
     @Override
-        public boolean hasLabel(int state) {
-		NodeState ns = getLatestValidState(state);
-        return ns == null ? false : ns.hasLabel();
-    }
+        public boolean hasLabel(int state)
+        throws GalantException
+        {
+            NodeState ns = getLatestValidState(state);
+            return ns == null ? false : ns.hasLabel();
+        }
 
 	/**
 	 * Postcondition: hasLabel() == false
@@ -501,7 +526,9 @@ public class Node extends GraphElement implements Comparable<Node> {
 		addNodeState(ns);
 	}
 	
-	public boolean isCreated(int state) {
+	public boolean isCreated(int state)
+        throws GalantException
+    {
 		NodeState ns = getLatestValidState(state);
 		return (ns != null);
 	}
@@ -510,7 +537,9 @@ public class Node extends GraphElement implements Comparable<Node> {
 		return latestState().isDeleted();
 	}
 	
-	public boolean isDeleted(int state) {
+	public boolean isDeleted(int state)
+        throws GalantException
+    {
 		NodeState ns = getLatestValidState(state);
 		return ns==null ? false : ns.isDeleted();
 	}
@@ -533,7 +562,9 @@ public class Node extends GraphElement implements Comparable<Node> {
 		return latestState().getPosition();
 	}
 
-	public Point getPosition(int state) {
+	public Point getPosition(int state)
+        throws GalantException
+    {
 		NodeState ns = getLatestValidState(state);
 		return ns==null ? null : ns.getPosition();
     }
@@ -542,7 +573,9 @@ public class Node extends GraphElement implements Comparable<Node> {
 		return latestState().getPosition().x;
 	}
 
-	public int getX(int state) {
+	public int getX(int state)
+        throws GalantException
+    {
 		NodeState ns = getLatestValidState(state);
 		return ns==null ? null : ns.getPosition().x;
     }
@@ -551,7 +584,9 @@ public class Node extends GraphElement implements Comparable<Node> {
 		return latestState().getPosition().y;
 	}
 
-	public int getY(int state) {
+	public int getY(int state)
+        throws GalantException
+    {
 		NodeState ns = getLatestValidState(state);
 		return ns==null ? null : ns.getPosition().y;
     }
@@ -632,14 +667,18 @@ public class Node extends GraphElement implements Comparable<Node> {
     public int getLayer() { 
         return latestState().getLayer();
     }
-    public int getLayer( int state ) { 
+    public int getLayer( int state )
+        throws GalantException
+    { 
 		NodeState ns = getLatestValidState(state);
 		return ns==null ? null : ns.getLayer();
     }
     public int getPositionInLayer() {
         return latestState().getPositionInLayer();
     }
-    public int getPositionInLayer( int state ) { 
+    public int getPositionInLayer( int state )
+        throws GalantException
+    { 
 		NodeState ns = getLatestValidState(state);
 		return ns==null ? null : ns.getPositionInLayer();
     }
@@ -713,15 +752,27 @@ public class Node extends GraphElement implements Comparable<Node> {
 		return nodeStates.get(nodeStates.size()-1);
 	}
 	
-	public NodeState getLatestValidState(int n) {
-		for (int i=nodeStates.size()-1; i >= 0; i--) {
+    /**
+     * This method is vital for retrieving the most recent information about
+     * a node, where most recent is defined relative to a given time stamp,
+     * as defined by forward and backward stepping through the animation.
+     * @param stateNumber the numerical indicator (timestamp) of a state,
+     * usually the current one in the animation
+     * @return the latest instance of NodeState that was created before the
+     * given time stamp
+     */
+	public NodeState getLatestValidState( int stateNumber )
+        throws GalantException
+    {
+		for ( int i = nodeStates.size() - 1; i >= 0; i-- ) {
 			NodeState ns = nodeStates.get(i);
-			if (ns.getState() <= n) {
+			if ( ns.getState() <= stateNumber ) {
 				return ns;
 			}
 		}
 		
-		return null;
+		throw new GalantException( "no valid node state\n"
+                                   + " - in NodeState getLatestValidState" );
 	}
 	
 	
@@ -773,11 +824,20 @@ public class Node extends GraphElement implements Comparable<Node> {
 		return s;
 	}
 	
-	public String toString(int state) {
-		if ( ! inScope(state) ) {
-			return "";
-		}
-        NodeState ns = getLatestValidState(state);
+	public String toString(int state)
+    {
+        NodeState ns = null;
+        try {
+            if ( ! inScope(state) ) {
+                return "<out of scope node> in state " + state;
+            }
+            
+            ns = getLatestValidState(state);
+        }
+        catch ( GalantException e ) {
+            this.toString();
+            return "<null node> in state " + state;
+        }
         String label = "";
         if (ns.getLabel() != null) {
             label = this.getLabel();
@@ -807,4 +867,4 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 }
 
-//  [Last modified: 2015 05 02 at 00:01:48 GMT]
+//  [Last modified: 2015 05 14 at 15:50:15 GMT]

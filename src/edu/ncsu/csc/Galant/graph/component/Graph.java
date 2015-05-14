@@ -245,7 +245,9 @@ public class Graph {
 	/**
 	 * @return all nodes in the graph
 	 */
-	public List<Node> getNodes(int state) {
+	public List<Node> getNodes(int state)
+        throws GalantException
+    {
 		List<Node> retNodes = new ArrayList<Node>();
 		
 		for (Node n : this.nodes) {
@@ -267,7 +269,9 @@ public class Graph {
 	/**
 	 * @return all <code>Edge</code>s in the <code>Graph</code> at the current <code>GraphState</code>
 	 */
-	public List<Edge> getEdges() {
+	public List<Edge> getEdges()
+        throws GalantException
+    {
 		List<Edge> retEdges = new ArrayList<Edge>();
 		
 		for (Edge e : this.edges) {
@@ -285,7 +289,9 @@ public class Graph {
 	 * @param state
 	 * @return
 	 */
-	public List<Edge> getEdges(int state) {
+	public List<Edge> getEdges(int state) 
+        throws GalantException
+    {
 		List<Edge> retEdges = new ArrayList<Edge>();
 		
 		for (Edge e : this.edges) {
@@ -1220,4 +1226,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2015 05 13 at 19:53:28 GMT]
+//  [Last modified: 2015 05 14 at 15:53:19 GMT]

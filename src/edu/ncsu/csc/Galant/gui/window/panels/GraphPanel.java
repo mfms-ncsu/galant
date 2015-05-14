@@ -23,6 +23,7 @@ import javax.swing.JPanel;
 
 import edu.ncsu.csc.Galant.GalantPreferences;
 import edu.ncsu.csc.Galant.GraphDispatch;
+import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.graph.component.Edge;
 import edu.ncsu.csc.Galant.graph.component.Graph;
 import edu.ncsu.csc.Galant.graph.component.GraphState;
@@ -175,54 +176,62 @@ public class GraphPanel extends JPanel{
 
 	@Override
 	public void paintComponent(Graphics g) {
+        try {
 
-		// Get the graph to draw
-		Graph graph = dispatch.getWorkingGraph();
+            // Get the graph to draw
+            Graph graph = dispatch.getWorkingGraph();
 		
-		// Get the preferred edge width
-		this.edgeSize = GalantPreferences.EDGE_WIDTH.get();
-		if (this.edgeSize < 1) this.edgeSize = 2;
+            // Get the preferred edge width
+            this.edgeSize = GalantPreferences.EDGE_WIDTH.get();
+            if (this.edgeSize < 1) this.edgeSize = 2;
 		
-		super.paintComponent(g);
-		Graphics2D g2d = (Graphics2D) g;
-		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+            super.paintComponent(g);
+            Graphics2D g2d = (Graphics2D) g;
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
-		// If you're drawing an edge, draw a line between the first node and
-		// the cursor
-		if ( ! dispatch.isAnimationMode() && this.selectedNode != null && this.edgeTracker != null) {
-			Point p1 = edgeTracker;
-			Point p2 = selectedNode.getFixedPosition();
-			g2d.drawLine(p1.x, p1.y, p2.x, p2.y);
-		}
+            // If you're drawing an edge, draw a line between the first node and
+            // the cursor
+            if ( ! dispatch.isAnimationMode() && this.selectedNode != null && this.edgeTracker != null) {
+                Point p1 = edgeTracker;
+                Point p2 = selectedNode.getFixedPosition();
+                g2d.drawLine(p1.x, p1.y, p2.x, p2.y);
+            }
 		
-		if (graph != null) {
-			List<Node> nodes = graph.getNodes(state);
-			List<Edge> edges = graph.getEdges(state);
+            if (graph != null) {
+                List<Node> nodes = graph.getNodes(state);
+                List<Edge> edges = graph.getEdges(state);
 			
-			// Draw edges first to put them behind nodes
-			for (Edge e : edges) {
-				drawEdge(graph, e, g2d);
-			}
+                // Draw edges first to put them behind nodes
+                for (Edge e : edges) {
+                    drawEdge(graph, e, g2d);
+                }
 			
-			for (Node n : nodes) {
-				drawNode(n, g2d);
-			}
+                for (Node n : nodes) {
+                    drawNode(n, g2d);
+                }
 			
-			// If there is a message, draw it
-			String message = graph.getMessage(state);
-			if (message != null) {
-				drawMessageBanner(message, g2d);
-			}
+                // If there is a message, draw it
+                String message = graph.getMessage(state);
+                if (message != null) {
+                    drawMessageBanner(message, g2d);
+                }
 		
-		}
-	}
+            }
+        }
+        catch (GalantException e) {
+            e.report( "error while redrawing" );
+            e.display();
+        }
+    }
 
     /**
      * @return the point at the center of node n, based on whether or not
      * you're in animation mode or whether the graph is layered.
      */
-    private Point getNodeCenter( Node n ) {
+    private Point getNodeCenter( Node n ) 
+        throws GalantException
+    {
         LogHelper.enterMethod( getClass(), "getNodeCenter, n = " + n );
 
         // ns is the latest state in the animation if in animation mode
@@ -272,7 +281,9 @@ public class GraphPanel extends JPanel{
 	 * @param n The node to be drawn (assumed to be non-null)
 	 * @param g2d The graphics object used to draw the elements
 	 */
-	private void drawNode(Node n, Graphics2D g2d) {
+	private void drawNode(Node n, Graphics2D g2d)
+        throws GalantException
+    {
 		NodeState ns = n.getLatestValidState(state);
         if ( ns == null ) return;
         Point nodeCenter = getNodeCenter( n );
@@ -418,7 +429,9 @@ public class GraphPanel extends JPanel{
 	 * @param e The edge to be drawn
 	 * @param g2d The graphics object used to draw the elements
 	 */
-	private void drawEdge(Graph g, Edge e, Graphics2D g2d) {
+	private void drawEdge(Graph g, Edge e, Graphics2D g2d) 
+        throws GalantException
+    {
 		
 		int thickness = edgeSize;
 		
@@ -800,17 +813,22 @@ public class GraphPanel extends JPanel{
             LogHelper.logDebug( "centerVal = " + centerVal );
 			Rectangle2D clickArea = new Rectangle2D.Double(p.getX() - centerVal, p.getY() - centerVal - 1, i, i);
 			
-			for (Edge e : g.getEdges()) {
-				Point p1 = e.getSourceNode().getFixedPosition();
-				Point p2 = e.getDestNode().getFixedPosition();
+            try {
+                for (Edge e : g.getEdges()) {
+                    Point p1 = e.getSourceNode().getFixedPosition();
+                    Point p2 = e.getDestNode().getFixedPosition();
 
-				Line2D l = new Line2D.Double(p1, p2);
+                    Line2D l = new Line2D.Double(p1, p2);
 				
-				if (l.intersects(clickArea)) {
-					top = e;
-				}
-				
-			}
+                    if (l.intersects(clickArea)) {
+                        top = e;
+                    }
+                    
+                }
+            }
+            catch ( GalantException e ) {
+                top = null;
+            }
 			
 			if (top != null) break;
 			
@@ -881,4 +899,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2015 04 20 at 14:27:16 GMT]
+//  [Last modified: 2015 05 14 at 16:19:56 GMT]

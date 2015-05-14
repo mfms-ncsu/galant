@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import edu.ncsu.csc.Galant.GalantException;
 
 /**
  * Edge graph object. Connects two <code>Node<code>s, and can be directored or undirected.
@@ -40,7 +41,9 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 		return !(isDeleted());
 	}
 	
-	public boolean inScope(int state) {
+	public boolean inScope(int state)
+        throws GalantException
+    {
 		return isCreated(state) && !isDeleted(state);
 	}
 	
@@ -54,7 +57,9 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 	/**
 	 * @return true if the edge is highlighted, false otherwise
 	 */
-	public boolean isSelected(int state) {
+	public boolean isSelected(int state)
+        throws GalantException
+    {
 		EdgeState es = getLatestValidState(state);
 		return es == null ? false : es.isHighlighted();
 		
@@ -64,7 +69,9 @@ public class Edge extends GraphElement implements Comparable<Edge> {
         return isSelected();
     }
 	
-    public boolean isHighlighted(int state) {
+    public boolean isHighlighted(int state)
+        throws GalantException
+    {
         return isSelected(state);
     }
 	
@@ -95,10 +102,12 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 	}
 	
 	@Override
-	public double getWeight(int state) {
-		EdgeState es = getLatestValidState(state);
-		return es==null ? null : es.getWeight();
-	}
+	public double getWeight(int state) 
+        throws GalantException
+        {
+            EdgeState es = getLatestValidState(state);
+            return es==null ? null : es.getWeight();
+        }
 
 	/**
 	 * @param weight the weight of the edge
@@ -121,10 +130,12 @@ public class Edge extends GraphElement implements Comparable<Edge> {
      * @return true if this edge had a non-empty weight at the given state
      */
     @Override
-        public boolean hasWeight(int state) {
-		EdgeState es = getLatestValidState(state);
-        return es == null ? false : es.hasWeight();
-    }
+        public boolean hasWeight(int state)
+        throws GalantException
+        {
+            EdgeState es = getLatestValidState(state);
+            return es == null ? false : es.hasWeight();
+        }
 
 	/**
 	 * Postcondition: hasWeight() == false
@@ -143,7 +154,9 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 		return latestState().getSource();
 	}
 	
-	public Node getSourceNode(int state) {
+	public Node getSourceNode(int state)
+        throws GalantException
+    {
 		EdgeState es = getLatestValidState(state);
 		return es==null ? null : es.getSource();
 	}
@@ -164,7 +177,9 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 		return latestState().getDestination();
 	}
 
-	public Node getDestNode(int state) {
+	public Node getDestNode(int state) 
+        throws GalantException
+    {
 		EdgeState es = getLatestValidState(state);
 		return es==null ? null : es.getDestination();
 	}
@@ -197,7 +212,9 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 		return latestState().getId();
 	}
 	
-	public int getId(int state) {
+	public int getId(int state)
+        throws GalantException
+    {
 		EdgeState es = getLatestValidState(state);
 		return es==null ? null : es.getId();
 	}
@@ -220,10 +237,12 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 	}
 	
 	@Override
-	public String getColor(int state) {
-		EdgeState es = getLatestValidState(state);
-		return es==null ? null : es.getColor();
-	}
+        public String getColor(int state)
+        throws GalantException
+        {
+            EdgeState es = getLatestValidState(state);
+            return es==null ? null : es.getColor();
+        }
 
 	/**
 	 * @param color the color of the edge to set, stored in six-digit hex representation
@@ -244,10 +263,12 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 	}
 	
 	@Override
-	public String getLabel(int state) {
-		EdgeState es = getLatestValidState(state);
-		return es==null ? null : es.getLabel();
-	}
+        public String getLabel(int state)
+        throws GalantException
+        {
+            EdgeState es = getLatestValidState(state);
+            return es==null ? null : es.getLabel();
+        }
 
 	/**
 	 * @param label the label to set
@@ -270,10 +291,12 @@ public class Edge extends GraphElement implements Comparable<Edge> {
      * @return true if this edge had a non-empty label at the given state
      */
     @Override
-        public boolean hasLabel(int state) {
-		EdgeState es = getLatestValidState(state);
-        return es == null ? false : es.hasLabel();
-    }
+        public boolean hasLabel(int state)
+        throws GalantException
+        {
+            EdgeState es = getLatestValidState(state);
+            return es == null ? false : es.hasLabel();
+        }
 
 	/**
 	 * Postcondition: hasLabel() == false
@@ -285,7 +308,9 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 		edgeStates.add(es);
 	}
 	
-	public boolean isCreated(int state) {
+	public boolean isCreated(int state)
+        throws GalantException
+    {
 		EdgeState ns = getLatestValidState(state);
 		return ! (ns == null);
 	}
@@ -294,7 +319,9 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 		return latestState().isDeleted();
 	}
 	
-	public boolean isDeleted(int state) {
+	public boolean isDeleted(int state)
+        throws GalantException
+    {
 		EdgeState es = getLatestValidState(state);
 		return es==null ? false : es.isDeleted();
 	}
@@ -356,15 +383,27 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 		return edgeStates.get(edgeStates.size()-1);
 	}
 	
-	private EdgeState getLatestValidState(int n) {
-		for (int i=edgeStates.size()-1; i >= 0; i--) {
+    /**
+     * This method is vital for retrieving the most recent information about
+     * an edge, where most recent is defined relative to a given time stamp,
+     * as defined by forward and backward stepping through the animation.
+     * @param stateNumber the numerical indicator (timestamp) of a state,
+     * usually the current one in the animation
+     * @return the latest instance of EdgeState that was created before the
+     * given time stamp
+     */
+	private EdgeState getLatestValidState( int stateNumber ) 
+        throws GalantException
+    {
+		for ( int i = edgeStates.size() - 1; i >= 0; i-- ) {
 			EdgeState es = edgeStates.get(i);
-			if (es.getState() <= n) {
+			if ( es.getState() <= stateNumber ) {
 				return es;
 			}
 		}
 		
-		return null;
+		throw new GalantException( "no valid edge state\n"
+                                   + " - in EdgeState getLatestValidState" );
 	}
 	
 	@Override
@@ -390,31 +429,39 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 		return s;
 	}
 	
-	public String toString(int state) {
-		if ( ! inScope(state) ) {
-			return "";
-		} else {
-			EdgeState es = getLatestValidState(state);
+	public String toString(int state) 
+    {
+        EdgeState es = null;
+        try {
+            if ( ! inScope(state) ) {
+                return "<out of scope edge> in state " + state;
+            }
+            else {
+                es = getLatestValidState(state);
+            }
+        }
+        catch ( GalantException e ) {
+            this.toString();
+            return "<null edge> in state " + state;
+        }
 			
-			int sourceId = (es.getSource() != null) ? es.getSource().getId() : -1;
-			int targetId = (es.getDestination() != null) ? es.getDestination().getId() : -1;
+        int sourceId = (es.getSource() != null) ? es.getSource().getId() : -1;
+        int targetId = (es.getDestination() != null) ? es.getDestination().getId() : -1;
 			
-			double weight = es.getWeight();
-			String label = "";
-			if (es.getLabel() != null) {
-				label = this.getLabel();
-			}
+        double weight = es.getWeight();
+        String label = "";
+        if (es.getLabel() != null) {
+            label = this.getLabel();
+        }
 			
-			String s = "<edge id=\"" + es.getId() +
-					"\" weight=\"" + weight +
-					"\" label=\"" + label + 
-					"\" source=\"" + sourceId + 
-					"\" target=\"" + targetId +  
-					"\" color=\"" + es.getColor() + "\" />";
-			return s;
-		}
-		
-	}
+        String s = "<edge id=\"" + es.getId() +
+            "\" weight=\"" + weight +
+            "\" label=\"" + label + 
+            "\" source=\"" + sourceId + 
+            "\" target=\"" + targetId +  
+            "\" color=\"" + es.getColor() + "\" />";
+        return s;
+    }
 
 	@Override
 	public int compareTo(Edge e) {
@@ -426,4 +473,4 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 	
 }
 
-//  [Last modified: 2014 06 19 at 19:11:24 GMT]
+//  [Last modified: 2015 05 14 at 15:56:53 GMT]

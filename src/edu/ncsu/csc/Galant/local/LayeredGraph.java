@@ -38,6 +38,7 @@ import edu.ncsu.csc.Galant.graph.component.Graph;
 import edu.ncsu.csc.Galant.graph.component.GraphState;
 import edu.ncsu.csc.Galant.graph.component.Node;
 import edu.ncsu.csc.Galant.GraphDispatch;
+import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.logging.LogHelper;
 
 /**
@@ -469,7 +470,9 @@ public class LayeredGraph {
     /**
      * Creates a new instance based on node positions in the graph.
      */
-    public LayeredGraph( Graph graph ) {
+    public LayeredGraph( Graph graph ) 
+        throws GalantException
+    {
         LogHelper.enterConstructor( getClass() );
         this.graph = graph;
         layers = new ArrayList<Layer>();
@@ -1221,7 +1224,9 @@ public class LayeredGraph {
      * one (logically) unmarked endpoint or null if all edges have both
      * endpoints marked.
      */
-    public Edge getMaxCrossingsEdge() {
+    public Edge getMaxCrossingsEdge()
+        throws GalantException
+    {
         Edge maxEdge = null;
         int maxCrossings = Integer.MIN_VALUE;
         for ( Edge e: graph.getEdges() ) {
@@ -1243,7 +1248,9 @@ public class LayeredGraph {
      * @param roundRobin if true, start the search one index beyond that of
      * the last edge returned <em>by this method</em>
      */
-    public Edge getMaxCrossingsEdge( boolean roundRobin ) {
+    public Edge getMaxCrossingsEdge( boolean roundRobin )
+        throws GalantException
+    {
         LogHelper.enterMethod( getClass(), "getMaxCrossingsEdge( " + roundRobin + " )" );
         if ( ! roundRobin ) return getMaxCrossingsEdge();
         int maxEdgeIndex = -1;
@@ -1538,7 +1545,9 @@ public class LayeredGraph {
      * the slow version of the maximum crossings edge heuristic, as reported
      * by Stallmann (JEA, 2012)
      */
-    public void setEdgeWeights() {
+    public void setEdgeWeights() 
+        throws GalantException
+    {
         for ( Edge e: graph.getEdges() ) {
             e.setWeight( crossingsOfEdge[ e.getId() ] );
         }
@@ -1589,4 +1598,4 @@ public class LayeredGraph {
 
 } // end, class LayeredGraph
 
-//  [Last modified: 2015 03 13 at 16:21:14 GMT]
+//  [Last modified: 2015 05 14 at 16:26:23 GMT]

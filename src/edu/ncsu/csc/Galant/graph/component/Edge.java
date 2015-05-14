@@ -390,7 +390,8 @@ public class Edge extends GraphElement implements Comparable<Edge> {
      * @param stateNumber the numerical indicator (timestamp) of a state,
      * usually the current one in the animation
      * @return the latest instance of EdgeState that was created before the
-     * given time stamp
+     * given time stamp, or null if the edge did not exist before the time
+     * stamp.
      */
 	private EdgeState getLatestValidState( int stateNumber ) 
         throws GalantException
@@ -402,8 +403,7 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 			}
 		}
 		
-		throw new GalantException( "no valid edge state\n"
-                                   + " - in EdgeState getLatestValidState" );
+        return null;
 	}
 	
 	@Override
@@ -473,4 +473,4 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 	
 }
 
-//  [Last modified: 2015 05 14 at 15:56:53 GMT]
+//  [Last modified: 2015 05 14 at 19:07:47 GMT]

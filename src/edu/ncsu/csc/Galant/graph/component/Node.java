@@ -759,7 +759,8 @@ public class Node extends GraphElement implements Comparable<Node> {
      * @param stateNumber the numerical indicator (timestamp) of a state,
      * usually the current one in the animation
      * @return the latest instance of NodeState that was created before the
-     * given time stamp
+     * given time stamp, or null if the node did not exist before the time
+     * stamp.
      */
 	public NodeState getLatestValidState( int stateNumber )
         throws GalantException
@@ -771,8 +772,7 @@ public class Node extends GraphElement implements Comparable<Node> {
 			}
 		}
 		
-		throw new GalantException( "no valid node state\n"
-                                   + " - in NodeState getLatestValidState" );
+        return null;
 	}
 	
 	
@@ -867,4 +867,4 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 }
 
-//  [Last modified: 2015 05 14 at 15:50:15 GMT]
+//  [Last modified: 2015 05 14 at 19:04:24 GMT]

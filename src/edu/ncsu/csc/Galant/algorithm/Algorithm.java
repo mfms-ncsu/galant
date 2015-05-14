@@ -13,6 +13,7 @@ import edu.ncsu.csc.Galant.graph.component.Graph;
 import edu.ncsu.csc.Galant.graph.component.GraphState;
 import edu.ncsu.csc.Galant.graph.component.Node;
 import edu.ncsu.csc.Galant.GalantException;
+import edu.ncsu.csc.Galant.GraphDispatch;
 
 /** 
  * Represents a runnable algorithm. 
@@ -245,6 +246,16 @@ public abstract class Algorithm
 				return graph.getGraphState();
 			}
 
+        /** @see edu.ncsu.csc.Galant.GraphDispatch#getWindowWidth() */
+        protected int windowWidth() {
+            return GraphDispatch.getInstance().getWindowWidth();
+        }
+
+        /** @see edu.ncsu.csc.Galant.GraphDispatch#getWindowHeight() */
+        protected int windowHeight() {
+            return GraphDispatch.getInstance().getWindowHeight();
+        }
+
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#smartReposition() */
 		protected void smartReposition()
 			{
@@ -269,4 +280,4 @@ public abstract class Algorithm
 		public abstract void run();
 	}
 
-//  [Last modified: 2015 05 14 at 15:59:06 GMT]
+//  [Last modified: 2015 05 14 at 19:20:52 GMT]

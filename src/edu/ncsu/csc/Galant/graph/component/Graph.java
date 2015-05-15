@@ -3,7 +3,7 @@ package edu.ncsu.csc.Galant.graph.component;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.TreeMap;
 import java.util.List;
 import java.util.Map;
 import edu.ncsu.csc.Galant.GalantException;
@@ -106,6 +106,9 @@ public class Graph {
 	private Map<Integer, String> messages;
 	
 	private List<Node> nodes;
+
+    private TreeMap<Integer,Node> nodeById = new TreeMap<Integer,Node>();
+
 	private List<Edge> edges;
 	private Node rootNode;
 	
@@ -118,7 +121,7 @@ public class Graph {
 	 * Default constructor.
 	 */
 	public Graph() {
-		messages = new HashMap<Integer, String>();
+		messages = new TreeMap<Integer, String>();
 		currentGraphState = new GraphState();
 		nodes = new ArrayList<Node>();
 		edges = new ArrayList<Edge>();
@@ -355,6 +358,13 @@ public class Graph {
 		this.rootNode = rootNode;
 	}
 	
+    /**
+     * @returns true if a node with the given id exists
+     */
+    public boolean nodeIdExists( Integer id ) {
+        return nodeById.containsKey( id );
+    }
+
 	/**
 	 * Returns the Node in the graph represented by the given unique ID.
 	 * 
@@ -367,13 +377,14 @@ public class Graph {
                                        + "\n - in getNodeById" );
         }
 
-		if ( id < 0 || id >= this.nodes.size() ) {
-            throw new GalantException( "node out of range, id = "
-                                       + id 
+		if ( ! nodeById.containsKey( id ) ) {
+            throw new GalantException( "no node with id = "
+                                       + id
+                                       + " exists"
                                        + "\n - in getNodeById" );
         }
 
-        Node n = this.nodes.get(id);
+        Node n = nodeById.get( id );
 
         if ( n.isDeleted() ) {
             throw new GalantException( "node has been deleted, id = "
@@ -493,8 +504,10 @@ public class Graph {
 	public Node addNode() {
         LogHelper.enterMethod( getClass(), "addNode()" );
 		currentGraphState.incrementState();
-		Node n = new Node(currentGraphState, nextNodeId());
+        Integer newId = nextNodeId();
+		Node n = new Node(currentGraphState, newId );
 		nodes.add(n);
+        nodeById.put( newId, n ); 
 		
 		if (this.rootNode == null) {
 			this.rootNode = n;
@@ -513,9 +526,11 @@ public class Graph {
 		int state = currentGraphState.getState();
 		currentGraphState.setState(1);
 		currentGraphState.setLocked(true);
-		
-		Node n = new Node(currentGraphState, nextNodeId());
+
+        Integer newId = nextNodeId();
+		Node n = new Node( currentGraphState, newId );
 		nodes.add(n);
+        nodeById.put( newId, n ); 
 
 		currentGraphState.setLocked(false);
 		currentGraphState.setState(state);
@@ -539,6 +554,8 @@ public class Graph {
         }
 
 		nodes.add(n);
+        nodeById.put( n.getId(), n );
+
         LogHelper.exitMethod( getClass(), "addNode( Node )" );
         LogHelper.restoreState();
 	}
@@ -547,11 +564,12 @@ public class Graph {
 	 * Adds the specified <code>Node</code> at the specified index and increments the <code>GraphState</code>
 	 * @param n the <code>Node</code> to add
 	 * @param index the index at which to add the <code>Node</code>
+     * (does not appear to be used)
 	 */
-	public void addNode(Node n, int index) {
-		currentGraphState.incrementState();
-		nodes.add(index, n);
-	}
+// 	public void addNode(Node n, int index) {
+// 		currentGraphState.incrementState();
+// 		nodes.add(index, n);
+// 	}
 	
 	/**
 	 * Adds a new <code>Edge</code> to the <code>Graph</code> with the specified source and target <code>Node</code> IDs and increments the <code>GraphState</code>
@@ -676,13 +694,11 @@ public class Graph {
 	}
 	
 	/**
-	 * Provides the integer ID of the next <code>Node</code>, if it is added. Conveniently, this corresponds with
-	 * the current size of the <code>Node</code> array.
-	 * 
-	 * @return the ID that would be assigned to the next <code>Node</code> when added to the <code>Graph</code>.
+	 * @return an integer ID for the next <code>Node</code> to be
+	 * added. This will always be the largest id so far + 1 
 	 */
 	private int nextNodeId() {
-		return nodes.size();
+		return nodeById.lastKey() + 1;
 	}
 	
 	/**
@@ -1226,4 +1242,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2015 05 14 at 15:53:19 GMT]
+//  [Last modified: 2015 05 15 at 17:51:53 GMT]

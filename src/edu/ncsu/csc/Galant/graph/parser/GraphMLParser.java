@@ -165,10 +165,13 @@ public class GraphMLParser {
         /** @todo instead of retrieving specific attributes by name, go
          * through all the attributes and use special handling for the ones
          * below if and when they occur, setting up default values initially */
+
+        // to ensure that there are no duplicate node id's
+
         LogHelper.beginIndent();
-		for(int i = 0; i < nodes.getLength(); i++) {
-            LogHelper.logDebug( " processing node " + i );
-			attributes = nodes.item(i).getAttributes();
+		for (int nodeIndex = 0; nodeIndex < nodes.getLength(); nodeIndex++) {
+            LogHelper.logDebug( " processing node " + nodeIndex );
+			attributes = nodes.item(nodeIndex).getAttributes();
             String idString = ((attributes.getNamedItem("id") != null)
                                ? attributes.getNamedItem("id").getNodeValue()
                                : "_");
@@ -182,12 +185,11 @@ public class GraphMLParser {
                                            + idString,
                                            e );
             }
-            if ( idHasBeenSeen[id] ) {
+            if ( g.nodeIdExists( id ) ) {
                 throw new GalantException( "Duplicate id: " + id 
                                            + "\n when processing nodes"
                                            + "\n in buildGraphFrom Input");
             }
-            idHasBeenSeen[id] = true;
 			String color = ((attributes.getNamedItem("color") != null) ? attributes.getNamedItem("color").getNodeValue() : "#000000");
 			String label = ((attributes.getNamedItem("label") != null) ? attributes.getNamedItem("label").getNodeValue() : Graph.NOT_A_LABEL);
             String weightString
@@ -287,7 +289,7 @@ public class GraphMLParser {
         LogHelper.endIndent();
 
 		for(int i = 0; i < edges.getLength(); i++) {
-            String sourceString = null; // for exception handling
+            String sourceString = null; // for exception handling (no longer needed?)
             String targetString = null;
             Node source = null;
             Node target = null;
@@ -296,58 +298,48 @@ public class GraphMLParser {
             double weight = Graph.NOT_A_WEIGHT;
             String label = Graph.NOT_A_LABEL;
                 
-            try {
-                attributes = edges.item(i).getAttributes();
-                sourceString
-                    = attributes.getNamedItem("source").getNodeValue();
-                source = g.getNodeById( Integer.parseInt( sourceString ) );
-                targetString
-                    = attributes.getNamedItem("target").getNodeValue();
-                target = g.getNodeById( Integer.parseInt( targetString ) );
+            attributes = edges.item(i).getAttributes();
+            sourceString
+                = attributes.getNamedItem("source").getNodeValue();
+            source = g.getNodeById( Integer.parseInt( sourceString ) );
+            targetString
+                = attributes.getNamedItem("target").getNodeValue();
+            target = g.getNodeById( Integer.parseInt( targetString ) );
                 
-                if ( attributes.getNamedItem("color") != null ) {
-                    color = attributes.getNamedItem("color").getNodeValue();
-                }
-                if ( attributes.getNamedItem("label") != null ) {
-                    label = attributes.getNamedItem("label").getNodeValue();
-                }
-                String highlightedString = null;
-                if ( attributes.getNamedItem("highlighted") != null ) {
-                    highlightedString
-                        = attributes.getNamedItem("highlighted").getNodeValue();
-
-                }
-                if ( highlightedString != null ) {
-                    highlighted = Boolean.parseBoolean( highlightedString );
-                }
-                String weightString = null; 
-                if ( attributes.getNamedItem("weight") != null ) {
-                    weightString
-                        = attributes.getNamedItem("weight").getNodeValue();
-                }
-                if ( weightString != null ) {
-                    weight = Double.parseDouble( weightString );
-                }
+            if ( attributes.getNamedItem("color") != null ) {
+                color = attributes.getNamedItem("color").getNodeValue();
             }
-            catch ( Exception exception ) {
-                throw new GalantException( exception.getMessage()
-                                           + "\n  on edge with"
-                                           + " source = " + sourceString
-                                           + ", target = " + targetString
-                                           + " \n - in buildGraphFromInput",
-                                           exception );
+            if ( attributes.getNamedItem("label") != null ) {
+                label = attributes.getNamedItem("label").getNodeValue();
+            }
+            String highlightedString = null;
+            if ( attributes.getNamedItem("highlighted") != null ) {
+                highlightedString
+                    = attributes.getNamedItem("highlighted").getNodeValue();
+
+            }
+            if ( highlightedString != null ) {
+                highlighted = Boolean.parseBoolean( highlightedString );
+            }
+            String weightString = null; 
+            if ( attributes.getNamedItem("weight") != null ) {
+                weightString
+                    = attributes.getNamedItem("weight").getNodeValue();
+            }
+            if ( weightString != null ) {
+                weight = Double.parseDouble( weightString );
             }
 
-			Edge e = new Edge(gs, Integer.valueOf(i), source, target, highlighted, weight, color, label);
-			g.addEdge(e);
-			source.addEdge(e);
-			target.addEdge(e);
+            Edge e = new Edge(gs, Integer.valueOf(i), source, target, highlighted, weight, color, label);
+            g.addEdge(e);
+            source.addEdge(e);
+            target.addEdge(e);
             LogHelper.logDebug( "adding edge " + e );
 		} // adding edge
-		g.getGraphState().setLocked(false);
+        g.getGraphState().setLocked(false);
         LogHelper.exitMethod( getClass(), "buildGraphFromInput:\n" + g );
-		return g;
-	} // buildGraphFromInput
+        return g;
+    } // buildGraphFromInput
 	
     /**
      * @todo the exception handling here needs to go at least one level up
@@ -370,11 +362,12 @@ public class GraphMLParser {
 //             exception.display();
 //         }
         catch ( Exception exception ) {
-            GalantException topLevelException
-                = new GalantException( exception.getMessage()
-                                       + "\n - in generateGraph(String xml)" );
-            topLevelException.report( "" );
-            topLevelException.display();
+            if ( exception instanceof GalantException ) {
+                GalantException ge = (GalantException) exception;
+                ge.report( "" );
+                ge.display();
+            }
+            else exception.printStackTrace( System.out );
         }
 
         LogHelper.exitMethod( getClass(), "generateGraph( String )" );
@@ -410,15 +403,15 @@ public class GraphMLParser {
         return newGraph;
 	}
 	
-	public void addNode(Node n) {
-		//TODO add node to front of Nodes, return complete graph string
-		graph.addNode(n, 0);
-	}
+// 	public void addNode(Node n) {
+// 		//TODO add node to front of Nodes, return complete graph string
+// 		graph.addNode(n, 0);
+// 	}
 	
-	public void addEdge(Edge e) {
-		//TODO add edge to front of Edges, return complete graph string
-		graph.addEdge(e, 0);
-	}
+// 	public void addEdge(Edge e) {
+// 		//TODO add edge to front of Edges, return complete graph string
+// 		graph.addEdge(e, 0);
+// 	}
 	
 	public NodeList getGraphNode() {
 		return this.document.getElementsByTagName("graph");
@@ -438,4 +431,4 @@ public class GraphMLParser {
 	
 }
 
-//  [Last modified: 2015 05 05 at 15:28:07 GMT]
+//  [Last modified: 2015 05 15 at 17:58:45 GMT]

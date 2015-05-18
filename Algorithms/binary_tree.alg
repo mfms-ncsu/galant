@@ -7,11 +7,8 @@
 import java.awt.Point;
 
 final int TREE_HEIGHT = 4;
-// int width = GraphDispatch.getInstance().getWindowWidth();
-// int height = GraphDispatch.getInstance().getWindowHeight();
-
-int width = 500;
-int height = 500;
+int width = windowWidth();
+int height = windowHeight();
 
 /**
  * creates a complete binary tree of height tree_height with root at position

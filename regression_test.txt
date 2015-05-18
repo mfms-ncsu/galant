@@ -6,6 +6,8 @@ Testing protocol for Galant.
 
 - open test (in Example_Graphs) and move some nodes around
 
+- rub bfs on eight_node_graph (in Example_Graphs)
+
 - run dfs_d on eight_node_graph (in Example_Graphs)
 
 - run dijkstra on weighted_example (in Example_Graphs), with graph both undirected and directed
@@ -13,6 +15,8 @@ Testing protocol for Galant.
 - run kruskal on weighted_example
 
 - run insertion_sort on sorting_test (in Example_Graphs)
+
+- binary_tree on an empty graph
 
 - load 0_simple (in Crossing_Graphs) and make sure it draws properly (responds to changes in window size)
 

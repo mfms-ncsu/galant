@@ -231,7 +231,13 @@ public class Graph {
 	}
 
 	/**
-	 * @return all nodes in the graph
+	 * @return all nodes in the graph; this version can only be used when
+	 * there is no algorithm running; some nodes may not yet exist; inScope()
+	 * without the 'state' argument only checks to see if a node has been
+	 * deleted.
+     *
+     * @todo Just like the Algorithm provides NodeQueue, etc., it should also
+     * provide NodeList as a data structure to avoid the template.
 	 */
 	public List<Node> getNodes() {
 		List<Node> retNodes = new ArrayList<Node>();
@@ -246,7 +252,7 @@ public class Graph {
 	}
 	
 	/**
-	 * @return all nodes in the graph
+	 * @return all nodes in the graph that exist in the given state.
 	 */
 	public List<Node> getNodes(int state)
         throws GalantException
@@ -698,7 +704,8 @@ public class Graph {
 	 * added. This will always be the largest id so far + 1 
 	 */
 	private int nextNodeId() {
-		return nodeById.lastKey() + 1;
+        if ( nodeById.isEmpty() ) return 0;
+        else return nodeById.lastKey() + 1;
 	}
 	
 	/**
@@ -1242,4 +1249,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2015 05 15 at 17:51:53 GMT]
+//  [Last modified: 2015 05 18 at 00:47:02 GMT]

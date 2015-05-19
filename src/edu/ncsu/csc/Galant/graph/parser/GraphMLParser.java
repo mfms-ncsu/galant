@@ -60,7 +60,10 @@ public class GraphMLParser {
 		this.graph = generateGraph(graphMLFile);
 	}
 	
-	public GraphMLParser(String xml) {
+	public GraphMLParser(String xml) throws GalantException {
+        if ( xml == null || xml.equals( "" ) ) {
+            throw new GalantException( "empty graph when invoking GraphMLParser" );
+        }
 		this.graph = generateGraph(xml);
 	}
 	
@@ -431,4 +434,4 @@ public class GraphMLParser {
 	
 }
 
-//  [Last modified: 2015 05 15 at 17:58:45 GMT]
+//  [Last modified: 2015 05 19 at 20:40:07 GMT]

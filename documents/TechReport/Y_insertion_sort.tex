@@ -1,0 +1,16 @@
+\input{Y_insertion_sort_animation}
+
+Fig.~\ref{fig:insertion_sort_animation}
+illustrates an animation of insertion sort
+that uses node movement and suggests that, with some creativity,
+other sorting algorithms might be animated as well
+-- this has already been done for bubble sort.
+At the beginning (not shown) the code:
+(i)~puts nodes, evenly spaced, on a horizontal line;
+(ii)~creates arrays \verb$nodes$, \verb$xCoord$ and \verb$A$, holding the
+nodes, their horizontal positions and their weights (i.e., the array to be sorted), respectively; and (iii)~adds a new node \verb$toInsert$ for the
+element to be inserted at each outer-loop iteration.
+The rest of the code is a classic insertion sort implementation: nodes behave
+as if they were array positions; those in the already sorted part of the array
+are marked; a node that is being compared with \verb$x$ is highlighted (selected).
+

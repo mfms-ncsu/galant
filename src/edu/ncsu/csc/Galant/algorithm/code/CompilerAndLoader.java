@@ -146,6 +146,7 @@ class DynamicJavaSourceCodeObject extends SimpleJavaFileObject
 				super(URI.create("string:///" + name.replaceAll("\\.", "/") + Kind.SOURCE.extension), Kind.SOURCE);
 				this.qualifiedName = name;
 				this.sourceCode = code;
+				// System.out.println(" 啊实打实的     " +this.qualifiedName);
 			}
 
 		@Override

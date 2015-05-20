@@ -38,6 +38,14 @@ import edu.ncsu.csc.Galant.GalantException;
  * </p>
  */
 public class CodeIntegrator
+	/**
+ 	  * @todo Testing GitHub branch merging.
+ 	  * @todo I notice that everytime algorithm is loaded and compile, newly-generated/recursive 
+ 	  *		  code is being printed on console. I think that a good way for me to study the shortcommings 
+ 	  *		  of the recursive mechnism is to examinate those code on console. Could you point out which 
+ 	  *		  part of code triggers printing while the program is running?
+ 	  * 
+ 	*/
 	{
 		public static final String METHOD_NAME = "runAlgorithm";
 

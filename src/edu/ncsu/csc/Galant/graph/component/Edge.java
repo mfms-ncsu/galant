@@ -42,7 +42,6 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 	}
 	
 	public boolean inScope(int state)
-        throws GalantException
     {
 		return isCreated(state) && !isDeleted(state);
 	}
@@ -58,7 +57,6 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 	 * @return true if the edge is highlighted, false otherwise
 	 */
 	public boolean isSelected(int state)
-        throws GalantException
     {
 		EdgeState es = getLatestValidState(state);
 		return es == null ? false : es.isHighlighted();
@@ -102,22 +100,21 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 	}
 	
 	@Override
-	public double getWeight(int state) 
-        throws GalantException
-        {
-            EdgeState es = getLatestValidState(state);
-            return es==null ? null : es.getWeight();
-        }
+	public double getWeight(int state) {
+        EdgeState es = getLatestValidState(state);
+        return es==null ? null : es.getWeight();
+    }
 
 	/**
 	 * @param weight the weight of the edge
 	 */
 	@Override
-	public void setWeight(double weight) {
-		EdgeState es = newState();
-		es.setWeight(weight);
-		edgeStates.add(es);
-	}
+        public void setWeight(double weight)
+        {
+            EdgeState es = newState();
+            es.setWeight(weight);
+            edgeStates.add(es);
+        }
 
     /**
      * @return true if the edge has a weight in the current state
@@ -131,7 +128,6 @@ public class Edge extends GraphElement implements Comparable<Edge> {
      */
     @Override
         public boolean hasWeight(int state)
-        throws GalantException
         {
             EdgeState es = getLatestValidState(state);
             return es == null ? false : es.hasWeight();
@@ -141,11 +137,12 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 	 * Postcondition: hasWeight() == false
 	 */
 	@Override
-        public void clearWeight() {
-		EdgeState es = newState();
-		es.clearWeight();
-		edgeStates.add(es);
-	}
+        public void clearWeight()
+        {
+            EdgeState es = newState();
+            es.clearWeight();
+            edgeStates.add(es);
+        }
 
 	/**
 	 * @return the source node. If the graph is undirected, source and destination nodes are treated similarly.
@@ -155,7 +152,6 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 	}
 	
 	public Node getSourceNode(int state)
-        throws GalantException
     {
 		EdgeState es = getLatestValidState(state);
 		return es==null ? null : es.getSource();
@@ -178,7 +174,6 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 	}
 
 	public Node getDestNode(int state) 
-        throws GalantException
     {
 		EdgeState es = getLatestValidState(state);
 		return es==null ? null : es.getDestination();
@@ -213,7 +208,6 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 	}
 	
 	public int getId(int state)
-        throws GalantException
     {
 		EdgeState es = getLatestValidState(state);
 		return es==null ? null : es.getId();
@@ -238,7 +232,6 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 	
 	@Override
         public String getColor(int state)
-        throws GalantException
         {
             EdgeState es = getLatestValidState(state);
             return es==null ? null : es.getColor();
@@ -264,7 +257,6 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 	
 	@Override
         public String getLabel(int state)
-        throws GalantException
         {
             EdgeState es = getLatestValidState(state);
             return es==null ? null : es.getLabel();
@@ -292,7 +284,6 @@ public class Edge extends GraphElement implements Comparable<Edge> {
      */
     @Override
         public boolean hasLabel(int state)
-        throws GalantException
         {
             EdgeState es = getLatestValidState(state);
             return es == null ? false : es.hasLabel();
@@ -302,14 +293,14 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 	 * Postcondition: hasLabel() == false
 	 */
 	@Override
-        public void clearLabel() {
-		EdgeState es = newState();
-		es.clearLabel();
-		edgeStates.add(es);
-	}
+        public void clearLabel()
+        {
+            EdgeState es = newState();
+            es.clearLabel();
+            edgeStates.add(es);
+        }
 	
 	public boolean isCreated(int state)
-        throws GalantException
     {
 		EdgeState ns = getLatestValidState(state);
 		return ! (ns == null);
@@ -320,7 +311,6 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 	}
 	
 	public boolean isDeleted(int state)
-        throws GalantException
     {
 		EdgeState es = getLatestValidState(state);
 		return es==null ? false : es.isDeleted();
@@ -394,7 +384,6 @@ public class Edge extends GraphElement implements Comparable<Edge> {
      * stamp.
      */
 	private EdgeState getLatestValidState( int stateNumber ) 
-        throws GalantException
     {
 		for ( int i = edgeStates.size() - 1; i >= 0; i-- ) {
 			EdgeState es = edgeStates.get(i);
@@ -431,19 +420,12 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 	
 	public String toString(int state) 
     {
-        EdgeState es = null;
-        try {
-            if ( ! inScope(state) ) {
-                return "<edge id=\"-1\" scope=\"out\" state=\"" + state + "\" />";
-            }
-            else {
-                es = getLatestValidState(state);
-            }
+        if ( ! inScope(state) ) {
+            return "";
         }
-        catch ( GalantException e ) {
-            return "<edge id=\"-1\" scope=\"empty\" state=\"" + state + "\" />";
-        }
-			
+        
+        EdgeState es = getLatestValidState(state);
+
         int sourceId = (es.getSource() != null) ? es.getSource().getId() : -1;
         int targetId = (es.getDestination() != null) ? es.getDestination().getId() : -1;
 			
@@ -472,4 +454,4 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 	
 }
 
-//  [Last modified: 2015 05 20 at 17:06:15 GMT]
+//  [Last modified: 2015 05 20 at 19:40:31 GMT]

@@ -88,7 +88,6 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 	
 	public boolean inScope(int state) 
-        throws GalantException
     {
 		return isCreated(state) && !isDeleted(state);
 	}
@@ -527,7 +526,6 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 	
 	public boolean isCreated(int state)
-        throws GalantException
     {
 		NodeState ns = getLatestValidState(state);
 		return (ns != null);
@@ -538,7 +536,6 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 	
 	public boolean isDeleted(int state)
-        throws GalantException
     {
 		NodeState ns = getLatestValidState(state);
 		return ns==null ? false : ns.isDeleted();
@@ -763,7 +760,6 @@ public class Node extends GraphElement implements Comparable<Node> {
      * stamp.
      */
 	public NodeState getLatestValidState( int stateNumber )
-        throws GalantException
     {
 		for ( int i = nodeStates.size() - 1; i >= 0; i-- ) {
 			NodeState ns = nodeStates.get(i);
@@ -826,19 +822,14 @@ public class Node extends GraphElement implements Comparable<Node> {
 	
 	public String toString(int state)
     {
-        NodeState ns = null;
-        try {
-            if ( ! inScope(state) ) {
-                return "<node id=\"-1\" scope=\"out\" state=\"" + state + "\" />";
-            }
+        if ( ! inScope(state) ) {
+            return "";
+        }
             
-            ns = getLatestValidState(state);
-        }
-        catch ( GalantException e ) {
-            return "<node id=\"-1\" scope=\"empty\" state=\"" + state + "\" />";
-        }
+        NodeState ns = getLatestValidState(state);
+
         String label = "";
-        if (ns.getLabel() != null) {
+        if ( ns.getLabel() != null ) {
             label = this.getLabel();
         }
 		
@@ -850,7 +841,7 @@ public class Node extends GraphElement implements Comparable<Node> {
             + " y=\"" + ns.getPosition().y + "\""
             + " color=\"" + ns.getColor() + "\"";
         
-        if ( this.getLayer() >= 0 && this.getPositionInLayer() >= 0 )
+        if ( GraphDispatch.getInstance().getWorkingGraph().isLayered() )
             s = s 
                 + " layer=\"" + ns.getLayer() + "\""
                 + " positionInLayer=\"" + ns.getPositionInLayer() + "\"";
@@ -866,4 +857,4 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 }
 
-//  [Last modified: 2015 05 20 at 17:05:16 GMT]
+//  [Last modified: 2015 05 20 at 19:35:13 GMT]

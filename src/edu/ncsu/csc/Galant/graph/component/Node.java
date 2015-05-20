@@ -829,14 +829,13 @@ public class Node extends GraphElement implements Comparable<Node> {
         NodeState ns = null;
         try {
             if ( ! inScope(state) ) {
-                return "<out of scope node> in state " + state;
+                return "<node id=\"-1\" scope=\"out\" state=\"" + state + "\" />";
             }
             
             ns = getLatestValidState(state);
         }
         catch ( GalantException e ) {
-            this.toString();
-            return "<null node> in state " + state;
+            return "<node id=\"-1\" scope=\"empty\" state=\"" + state + "\" />";
         }
         String label = "";
         if (ns.getLabel() != null) {
@@ -867,4 +866,4 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 }
 
-//  [Last modified: 2015 05 14 at 19:04:24 GMT]
+//  [Last modified: 2015 05 20 at 17:05:16 GMT]

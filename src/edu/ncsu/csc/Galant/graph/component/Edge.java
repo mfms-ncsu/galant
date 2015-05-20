@@ -434,15 +434,14 @@ public class Edge extends GraphElement implements Comparable<Edge> {
         EdgeState es = null;
         try {
             if ( ! inScope(state) ) {
-                return "<out of scope edge> in state " + state;
+                return "<edge id=\"-1\" scope=\"out\" state=\"" + state + "\" />";
             }
             else {
                 es = getLatestValidState(state);
             }
         }
         catch ( GalantException e ) {
-            this.toString();
-            return "<null edge> in state " + state;
+            return "<edge id=\"-1\" scope=\"empty\" state=\"" + state + "\" />";
         }
 			
         int sourceId = (es.getSource() != null) ? es.getSource().getId() : -1;
@@ -473,4 +472,4 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 	
 }
 
-//  [Last modified: 2015 05 14 at 19:07:47 GMT]
+//  [Last modified: 2015 05 20 at 17:06:15 GMT]

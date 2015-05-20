@@ -143,10 +143,11 @@ public class CodeIntegrator
 				String sourceCode = toJavaClass(className, userCode);
 				
                 // Display source code after macro processing
+                /*
                 LogHelper.setEnabled( true );
 				LogHelper.logDebug(sourceCode);
                 LogHelper.restoreState();
-
+				*/
 				// Compile
 				DiagnosticCollector<JavaFileObject> diagnostics =
 					CompilerAndLoader.compile(qualifiedName, sourceCode);

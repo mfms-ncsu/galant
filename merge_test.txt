@@ -1,1 +1,2 @@
-A different version of merge_test.txt
+The origin/master version of merge_test.txt
+

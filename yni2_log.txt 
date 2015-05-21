@@ -1,0 +1,3 @@
+May 20: 2 hours  
+	- Reading macro, CodeIntegrator.java, LogHelper.java, and CompilerAndLoader.java 
+	- Looking to make change on LogHelper so it can print out the line number along with source code on console. It can be helpful when debugging.

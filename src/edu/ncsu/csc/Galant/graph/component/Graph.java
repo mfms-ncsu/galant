@@ -69,8 +69,15 @@ class LayerInformation {
 public class Graph {
 
     public final static Double NOT_A_WEIGHT = Double.NaN;
-    public final static String NOT_A_LABEL = null;
-    public final static String DEFAULT_COLOR = "#000000"; // black
+    public final static String NOT_A_LABEL = "";
+
+    /**
+     * NOT_A_COLOR is used when no color is specified; when the GraphElement
+     * is drawn on the panel NOT_A_COLOR is rendered as the default color
+     * (black); in other situations (e.g., when converting to text), it may
+     * be omitted
+     */
+    public final static String NOT_A_COLOR = "";
 
     /** 
      * minimum distance from the edge of a window when fitting a graph to
@@ -1249,4 +1256,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2015 05 18 at 00:47:02 GMT]
+//  [Last modified: 2015 05 21 at 18:07:45 GMT]

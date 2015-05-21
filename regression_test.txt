@@ -6,21 +6,21 @@ Testing protocol for Galant.
 
 - open test (in Example_Graphs) and move some nodes around
 
-- rub bfs on eight_node_graph (in Example_Graphs)
+- run bfs on eight_node_graph (in Example_Graphs), need node weights only
 
-- run dfs_d on eight_node_graph (in Example_Graphs)
+- run dfs_d on eight_node_graph (in Example_Graphs), need node and edge labels, no weights
 
-- run dijkstra on weighted_example (in Example_Graphs), with graph both undirected and directed
+- run dijkstra on weighted_example (in Example_Graphs), with graph both undirected and directed; in undirected case, node 3 is distance 2 from the start via path 0-2-3; in the directed case it’s distance 3 via the edge 0->3
 
-- run kruskal on weighted_example
+- run kruskal on weighted_example, need edge labels only; there’s text commentary
 
-- run insertion_sort on sorting_test (in Example_Graphs)
+- run insertion_sort on sorting_test (in Example_Graphs), need node weights only
 
-- binary_tree on an empty graph
+- binary_tree on an empty graph, no weights or labels, try exporting an intermediate state
 
 - load 0_simple (in Crossing_Graphs) and make sure it draws properly (responds to changes in window size)
 
-- run both barycenter and mce on 1_test (in Crossing Graphs)
+- run both barycenter and mce (in Crossing-Algorithms) on 1_test (in Crossing Graphs), need node weights for barycenter
 
 - ditto for r_100_110_10_0_0p7 (in Crossing_Graphs)
 

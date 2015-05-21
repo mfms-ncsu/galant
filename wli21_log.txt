@@ -1,2 +1,3 @@
 19 May (~3 hours) reading gui_algorithm_description; reading the book on Git to figure out the basic command line usage
 20 May (~3 hours) reading GraphWindow.java, GraphPanel.java, GraphDispatch.java to figure out how the Graph Editor work
+21 May (~3 hours) basic implementation of moving node during animation mode.

@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 # ignore files created during LaTeX compilation
-=======
-# files created during LaTeX compilation
->>>>>>> gui
 *.aux
 *.bbl
 *.brf

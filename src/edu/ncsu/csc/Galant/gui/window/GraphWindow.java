@@ -217,14 +217,17 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                         if (sel != null) {
                             gp.setDragging(true);
                             gp.setEdgeTracker(null);
-                            //sel.setFixedPosition( arg0.getPoint() );
-                            NodeState currentState = null;
-                            try {
-                                currentState = sel.getLatestValidState(gp.getDisplayState());
-                            } catch ( GalantException e ) {
-                                //@todo need to figure out how to handle this exception 
+                            if ( ! dispatch.isAnimationMode() ) {
+                                sel.setFixedPosition( arg0.getPoint() );
+                            } else {
+                                NodeState currentState = null;
+                                try {
+                                    currentState = sel.getLatestValidState(gp.getDisplayState());
+                                } catch ( GalantException e ) {
+                                    //@todo need to figure out how to handle this exception 
+                                }
+                                currentState.setPosition( arg0.getPoint() );
                             }
-                            currentState.setPosition( arg0.getPoint() );
                         }
                     //}
                     frame.repaint();

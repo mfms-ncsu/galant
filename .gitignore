@@ -6,3 +6,5 @@
 build/
 # graphs created on the fly
 *.graphml
+# anything in the Sandbox -- used for trying things out
+Sandbox/*

@@ -6,3 +6,9 @@ May 21: 2 hours
 	- Reading Macro.java and Macros.java.
 	- Made minor changes on LogHelper.java and CodeIntegrator.java.
 	
+May 22: 5 hours
+	- Created new_eculidian.alg and new_bubble_sort.alg for testing. They are formatted into expected input pattern. (e.g: new_function(), algorithm{} … )
+	- Made changes in Marcos.java. Macros now transfer function() into static methods.  		- For the purpose of minimizing modification on original code, I added a  new macro syntax “new_function”. It should be equivalent to the old “function“. 
+	- Algorithm{} is still not responding properly.   
+	- Since recursive mechanism is not used any more, looking to remove some unnecessary structure  within new_function macro.
+	 

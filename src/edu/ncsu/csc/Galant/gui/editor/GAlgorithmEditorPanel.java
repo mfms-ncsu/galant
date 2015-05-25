@@ -9,15 +9,13 @@ import java.beans.PropertyChangeEvent;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.tools.Diagnostic;
-
-import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.GraphDispatch;
 import edu.ncsu.csc.Galant.algorithm.Algorithm;
-import edu.ncsu.csc.Galant.algorithm.line_up_nodes_alg;
 import edu.ncsu.csc.Galant.algorithm.code.CodeIntegrator;
 import edu.ncsu.csc.Galant.algorithm.code.CompilationException;
 import edu.ncsu.csc.Galant.algorithm.code.macro.MalformedMacroException;
 import edu.ncsu.csc.Galant.logging.LogHelper;
+import edu.ncsu.csc.Galant.GalantException;
 
 /**
  * Each instance of GAlgorithmEditorPanel corresponds to a particular
@@ -46,9 +44,7 @@ public class GAlgorithmEditorPanel extends GEditorPanel {
 		add(new ButtonsPanel(), BorderLayout.SOUTH);
 		syntaxHighlighter = new GAlgorithmSyntaxHighlighting(textPane);
 		documentUpdated();
-		//setCompiledAlgorithm(null);
-		System.out.println("Setting intial compiled algorith to our line_up_nodes_alg...");
-		setCompiledAlgorithm(new line_up_nodes_alg());
+		setCompiledAlgorithm(null);
 		
 		GraphDispatch.getInstance().addChangeListener(this);
 		
@@ -158,8 +154,6 @@ public class GAlgorithmEditorPanel extends GEditorPanel {
 		public void actionPerformed(ActionEvent arg0)
         {
             compile();
-			// MPM
-			//System.out.println("We don't need no stinking compilation");
         }
 	}
 	

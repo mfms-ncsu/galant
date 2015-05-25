@@ -19,8 +19,32 @@ import edu.ncsu.csc.Galant.GraphDispatch;
  * Represents a runnable algorithm. 
  * @author Jason Cockrell, Ty Devries, Alex McCabe, Michael Owoc
  */
-public abstract class Algorithm
-	{
+public abstract class Algorithm implements Runnable{
+	
+	
+	
+	protected int complete = 0; // This is used to keep track of whether the step of the algorithm is done or not
+	protected int exit = 0; // This is used to keep track of whether we're done with all of the algorithm steps or not
+	
+	public synchronized void setComplete(){
+		complete = 1;
+	}
+	public synchronized void setIncomplete(){
+		complete = 0;
+	}
+	public synchronized boolean isComplete() {
+		return(complete == 1);
+	}
+	
+	public synchronized boolean exit(){
+		return (exit >0);
+	}
+	
+	public synchronized void setExit(boolean set){
+		if(set) exit = 1;
+		else exit = 0;
+	}
+	
 		// Specialized Node/Edge types for Queues/Stacks/Priority Queues
 		protected class NodeQueue extends AbstractQueue<Node>
 			{
@@ -278,6 +302,26 @@ public abstract class Algorithm
 
 		/** Runs this algorithm on the given graph. */
 		public abstract void run();
+		/*
+		public void run(){
+			while (!exit()) {
+				synchronized(this){
+					try{
+						this.wait();
+					}
+					catch(InterruptedException e){
+						System.out.printf("Error occured while trying to wait");
+						e.printStackTrace(System.out);
+					}
+				}
+				setIncomplete();
+				nextStep();
+				setComplete();
+			}
+			
+			
+		}*/
+		//public abstract void nextStep();
 	}
 
 //  [Last modified: 2015 05 14 at 19:20:52 GMT]

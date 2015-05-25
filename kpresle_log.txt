@@ -1,3 +1,4 @@
+22 May (~4 hours) Regression testing; hacking up the GUI; trying to implement so that Galant will run algorithm in steps (no support for reversing)
 21 May (~2 hours) Trying to turn Algorith into a Runnable; discovering that Galant seems to be broken; trying to figure out when/where/why this happened; also fixed a bug in the Node.java that was causing a (non-fatal) exception
 20 May (~2 hours) reading Galant code; reading book on Git and trying to figure it out
 19 May (~7 hours) reading Java tutorials on threading and monitors; implementing the basic galantThreading project submitted to Dr. Stallmann that had a worker and controler

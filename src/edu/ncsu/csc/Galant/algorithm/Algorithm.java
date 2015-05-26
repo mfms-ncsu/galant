@@ -153,7 +153,6 @@ public abstract class Algorithm
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#getNodes() */
 		protected List<Node> getNodes()
-            throws GalantException
         {
             return graph.getNodes();
         }
@@ -190,7 +189,7 @@ public abstract class Algorithm
 			}
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#getNodeById(int) */
-		protected Node getNodeById (int id) throws GalantException
+		protected Node getNodeById (int id) 
 			{
 				return graph.getNodeById(id);
 			}

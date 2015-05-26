@@ -222,12 +222,8 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                             if ( ! dispatch.isAnimationMode() ) {
                                 sel.setFixedPosition( arg0.getPoint() );
                             } else {
-                                NodeState currentState = null;
-                                try {
-                                    currentState = sel.getLatestValidState(gp.getDisplayState());
-                                } catch ( GalantException e ) {
-                                    //@todo need to figure out how to handle this exception 
-                                }
+                                NodeState currentState = null;    
+                                currentState = sel.getLatestValidState(gp.getDisplayState());
                                 currentState.setPosition( arg0.getPoint() );
                             }
                         }

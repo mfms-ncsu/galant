@@ -8,11 +8,11 @@ Testing protocol for Galant.
 
 2. run bfs on eight_node_graph (in Example_Graphs), need node weights only
 
-3. run dfs_d on eight_node_graph (in Example_Graphs), need node and edge labels, no weights
+3. run dfs_d on eight_node_graph (in Example_Graphs), need node and edge labels, no weights, graph must be directed
 
-4. run dijkstra on weighted_example (in Example_Graphs), with graph both undirected and directed; in undirected case, node 3 is distance 2 from the start via path 0-2-3; in the directed case it’s distance 3 via the edge 0->3
+4. run dijkstra on weighted_example (in Example_Graphs), with graph both undirected and directed; in undirected case, node 3 is distance 2 from the start via path 0-2-3; in the directed case it’s distance 3 via the edge 0->3; need weights on both edges and nodes
 
-5. run kruskal on weighted_example, need edge labels only; there’s text commentary
+5. run kruskal on weighted_example, need edge weights only; there’s text commentary
 
 6. run insertion_sort on sorting_test (in Example_Graphs), need node weights only
 

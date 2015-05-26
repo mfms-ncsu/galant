@@ -322,7 +322,7 @@ public class Macros
 				 * (TODO: how to declare a function variable without the implementation-dependent type variables?)
 				 * 
 				 * Usage: function [<return_type>] <name>(<params>) {<code_block>}
-				 * 		  <return_type> ← <name>(<args>)
+				 * 		  <return_type> <- <name>(<args>)
 				 * 
 				 * Parameters:
 				 * 

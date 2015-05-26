@@ -165,7 +165,6 @@ public abstract class Algorithm
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#getEdges() */
 		protected List<Edge> getEdges()
-            throws GalantException
         {
             return graph.getEdges();
         }
@@ -177,7 +176,7 @@ public abstract class Algorithm
 			}
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#getRootNode() */
-		protected Node getRootNode() throws GalantException
+		protected Node getRootNode()
 			{
 				return graph.getRootNode();
 			}
@@ -189,13 +188,15 @@ public abstract class Algorithm
 			}
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#getNodeById(int) */
-		protected Node getNodeById (int id) throws GalantException
+		protected Node getNodeById (int id)
+//             throws GalantException
 			{
 				return graph.getNodeById(id);
 			}
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#getEdgeById(int) */
-		protected Edge getEdgeById(int id) throws GalantException
+		protected Edge getEdgeById(int id)
+//             throws GalantException
 			{
 				return graph.getEdgeById(id);
 			}
@@ -279,4 +280,4 @@ public abstract class Algorithm
 		public abstract void run();
 	}
 
-//  [Last modified: 2015 05 14 at 19:20:52 GMT]
+//  [Last modified: 2015 05 26 at 11:21:34 GMT]

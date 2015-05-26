@@ -1,0 +1,70 @@
+Perhaps the most promising direction that our work on Galant can take is
+that of developing research applications.
+The benefits are twofold.
+First, Galant has the potential for providing a rich environment for
+the exploration of new graph algorithms or developing hypotheses about the
+behavior of existing ones.
+Second, as Galant is augmented with the infrastructure for specific research
+domains (i.e., additional Java classes), some of the resulting functionality
+will no doubt be migrated into its core. Or the core will be enhanced to
+accommodate new capabilities.
+
+One drawback of the current implementation is
+that an animation runs to
+completion before the user can interact with it.
+This precludes certain types of interactions.
+For example, one might want the user to be able to select the next node to
+visit during a depth-first search or a node to insert or remove during an animation of
+a binary search tree.
+
+An algorithm implementation, despite the preprocessing we provide, still
+requires some undesirable Java-specific syntax and generates highly
+unfriendly error messages at both compile and runtime --- the compiler, after
+preprocessing deals with raw Java code. Automatic insertion of semicolons at
+the ends of lines would prevent some of the strangest error messages. There
+are also serious issues with the use of global variables, e.g., a time stamp
+that is used to assign discovery and finish times for nodes in a depth-first
+search. The necessary (arcane) syntax for global variables could easily be
+provided.
+However, the ideal of completely programmer-friendly pseudocode would require
+the writing of a new compiler.
+
+A key challenge confronting any developer of algorithm animation
+software is that of accessibility to blind users.
+Previous work addressed this via a combination \emph{earcons}\footnote{
+\emph{Earcons} are sounds that signal specific events, such as the arrival of email. The term was coined by Blattner et al.~\cite{1989-HCI-Blattner-earcons}.
+}, spoken navigation
+and haptic interfaces
+(see~\cite{2002-SoftViz-Baloian,2005-SCCC-Baloian,2002-Diagrams-Bennett}).
+The resulting algorithm animations were developed for demonstration and exploration rather than simplified
+creation of
+animations.
+In theory any graph navigation tool can be extended, with appropriate auditory
+signals for steps in an animation, to an algorithm animation tool.
+The most promising recent example, due to its simplicity, is GSK~\cite{2013-SIGCSE-Balik}.
+Earcons can be added to substitute for state changes of nodes or edges.
+
+A user study testing the hypothesis that student creation of animations
+promotes enhanced learning raises several nontrivial questions.
+Are we going to measure ability to navigate specific algorithms? Or a broader
+understanding of graphs and graph algorithms?
+Can we make a fair comparison that takes into account the
+extra effort expended by students to create and debug animations?
+Why incur the overhead of designing an experiment that is very likely to validate the obvious?
+Namely:
+in order to create a compelling animation,
+an animator must first decide what aspects of a graph are important
+at each step of an algorithm and then how best to highlight these.
+This two-stage process requires a longer and more intense involvement
+with an algorithm than mere exploration of an existing animation.
+
+There are various implementation issues with and useful enhancements
+to the current version of Galant.
+These will be addressed in future releases.
+As new animations for teaching and research
+are created, other issues and desired enhancements
+will undoubtedly arise.
+The current implementation should be transparent and flexible enough to effect the necessary modifications --- the most challenging aspect
+of creating enhancements has been and continues to be the design decisions involved.
+
+% [Last modified: 2013 06 26 at 19:02:26 GMT]

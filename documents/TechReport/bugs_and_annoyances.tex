@@ -1,0 +1,120 @@
+
+\subsubsection*{Input/output}
+
+\begin{itemize}
+
+\item
+Weights, if not specified in the input are automatically initialized to 0 instead of, for example, not being displayed at all.
+
+\item
+It is impossible to close a tab if it is the only graph or
+algorithm -- you must have at least one graph and at least one algorithm open
+at any given time.
+
+\item
+Tabs for graphs and algorithms are often hard to deal with: (a) if you reread
+a graph or algorithm, it appears twice; (b) you can only run an algorithm on a graph if the tabs for the two appear at the top of the window at the same time
+-- although the tabs bar can be ``scrolled'',
+this may be impossible if there are other intervening graphs and algorithms.
+
+\item
+If you close a tab or window you are asked if you want to save changes.
+This does not occur, however, if you quit Galant entirely.
+
+\item
+When you save the current state of an animation using \texttt{File->Export}
+on the graph panel some of the information might not be saved.
+In particular, weights and labels are saved, but highlighting is not (since it is not equivalent to an actual color change of a node or edge).
+
+\end{itemize}
+
+\subsubsection*{Graph editing\footnote{
+Galant's program editor  is primitive, but
+programs can easily be edited externally.}}
+
+\begin{itemize}
+
+\item
+When a node is deleted, the id numbers are resequenced so that they run from
+0 to $n-1$, where $n$ is the number of nodes.
+
+\item
+It is not possible to change the thickness of an edge or node boundary directly
+from the editor or an algorithm nor is it possible to change the fill color of a node.
+The only way to change these properties is via highlighting, selecting, and
+marking nodes/edges during the animation.
+
+\item
+A change in color of an edge does not appear to take place while the edge
+is selected for editing -- its color stays blue during that time.
+Only when focus is no longer on the edge does it change color.
+
+\item
+If the user changes the weight of a node or an edge by typing in the text box instead of using the spinner, the weight does not change unless the spinner is
+also used (for example, one can enter the desired weight, increment it using the spinner, and then decrement it again).
+Sometimes an exception is thrown if the text box is used instead of the spinner. 
+
+\end{itemize}
+
+\subsubsection*{Compilation and execution}
+
+\begin{itemize}
+
+\item
+The macro preprocessor is oblivious to comments. Thus, the placement or contents of a comment may cause it to throw an exception.
+Such exceptions have been known to occur when comments appear inside functions
+or contain constructions that are subject to macro expansion.
+For example, sometimes the word \texttt{for} in a comment causes problems.
+
+\item
+  Every once in a while an exception occurs when an error-free algorithm
+  is executed, but it is possible to step through the animation normally
+  after hitting the \textsf{Continue} button.
+
+\item 
+  The \texttt{function} construct appears not to work if the arguments or
+  return value are arrays (or lists?).
+  Macro expansion for this construct is complex.
+
+\item
+Compiler error messages can be cryptic (but at least they refer to the correct
+line numbers). Because of the macro preprocessing, it may be necessary to look at the console to get an idea of what is causing a particular error.
+
+\item
+There is no way for the user to change anything about the display while stepping through the animation, such as, for example, changing visibility of labels and weights,
+or positions of nodes to make important features more visible.
+
+\item
+There is no way for the animation program to specify that labels and/o weights
+should be displayed or hidden.
+
+\item
+The animation program completes execution before the actual animation begins.
+Thus runtime error messages appear on the console only and it is difficult to
+tell at which point in the algorithm execution they occurred (unless print statements are inserted).
+Infinite loops are even more problematic -- the animation is never initiated
+when these arise.\footnote{
+A team of undergraduate research assistants is planning to address this issue.
+A possible solution is to step through the algorithm going forward and display
+earlier animation states when the user
+steps backward (as opposed to backward execution).
+} 
+
+\item
+There is no way to execute the animation in a continuous fashion with a
+controllable speed. The current workaround is the use of arrow keys as keyboard
+shortcuts for stepping forward or backward -- these can be held down to
+generate multiple steps in rapid succession, but the user must click on the
+graph panel before starting the animation; for some reason, there is no
+reaction to the shortcuts if the first mouse click is on one of the arrows at the bottom of the graph window.
+
+\item
+The animation tool provides only a single instance of each of the common data structures: queue, stack, priority queue. If a programmer wants multiple instances
+or arbitrary lists of nodes or edges, they have to use the appropriate Java constructs.\footnote{
+  While this is not a major disadvantage for experienced Java programmers, it is
+  an issue for animators who want to deal with algorithms at a level as
+  close to pseudocode as possible.
+}
+
+\end{itemize}
+

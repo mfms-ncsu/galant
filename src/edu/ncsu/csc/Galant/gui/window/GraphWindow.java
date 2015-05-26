@@ -33,12 +33,14 @@ import edu.ncsu.csc.Galant.graph.component.Edge;
 import edu.ncsu.csc.Galant.graph.component.Graph;
 import edu.ncsu.csc.Galant.graph.component.GraphState;
 import edu.ncsu.csc.Galant.graph.component.Node;
+import edu.ncsu.csc.Galant.graph.component.NodeState;
 import edu.ncsu.csc.Galant.gui.prefs.PreferencesPanel;
 import edu.ncsu.csc.Galant.gui.util.WindowUtil;
 import edu.ncsu.csc.Galant.gui.window.panels.ComponentEditPanel;
 import edu.ncsu.csc.Galant.gui.window.panels.GraphPanel;
 import edu.ncsu.csc.Galant.logging.LogHelper;
 import edu.ncsu.csc.Galant.prefs.Preference;
+import edu.ncsu.csc.Galant.GalantException;
 
 /**
  * Window for displaying the <code>Graph</code>, containing all necessary
@@ -211,14 +213,25 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                     // If you start dragging, set dragging mode so you don't
                     // perform any other operations on the Node after
                     // releasing it
-                    if ( ! dispatch.isAnimationMode() ) {
+                    //@todo sometimes graph panel can't recognize some nodes
+                    //if ( ! dispatch.isAnimationMode() ) {
                         Node sel = gp.getSelectedNode();
                         if (sel != null) {
                             gp.setDragging(true);
                             gp.setEdgeTracker(null);
-                            sel.setFixedPosition( arg0.getPoint() );
+                            if ( ! dispatch.isAnimationMode() ) {
+                                sel.setFixedPosition( arg0.getPoint() );
+                            } else {
+                                NodeState currentState = null;
+                                try {
+                                    currentState = sel.getLatestValidState(gp.getDisplayState());
+                                } catch ( GalantException e ) {
+                                    //@todo need to figure out how to handle this exception 
+                                }
+                                currentState.setPosition( arg0.getPoint() );
+                            }
                         }
-                    }
+                    //}
                     frame.repaint();
                 }
 
@@ -241,18 +254,18 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 			
                 @Override
                     public void mousePressed(MouseEvent e) {
-                    if ( ! dispatch.isAnimationMode() ) {
+                    //if ( ! dispatch.isAnimationMode() ) {
                         Point location = e.getPoint();
                         LogHelper.logDebug( "CLICK, location = " + location );
 					
                         prevNode = gp.getSelectedNode();
                         Node n = gp.selectTopClickedNode(location);
-                    }
+                    //}
                 }
 
                 @Override
                     public void mouseReleased(MouseEvent arg0) {
-                    if ( ! dispatch.isAnimationMode() ) {
+                    //if ( ! dispatch.isAnimationMode() ) {
                         // not in animation mode
                         Point location = arg0.getPoint();
                         LogHelper.logDebug("RELEASE");
@@ -370,7 +383,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                             } // delete mode
                         } // not dragging
                         
-                    } // not in animation mode
+                    //} // not in animation mode
                     frame.repaint();
                 }
             }

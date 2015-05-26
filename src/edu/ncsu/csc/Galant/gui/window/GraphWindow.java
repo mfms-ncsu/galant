@@ -212,6 +212,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                     // If you start dragging, set dragging mode so you don't
                     // perform any other operations on the Node after
                     // releasing it
+                    //@todo sometimes graph panel can't recognize some nodes
                     //if ( ! dispatch.isAnimationMode() ) {
                         Node sel = gp.getSelectedNode();
                         if (sel != null) {

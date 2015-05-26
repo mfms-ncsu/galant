@@ -119,7 +119,9 @@ public class GAlgorithmEditorPanel extends GEditorPanel {
 	public void run() {
 		GraphDispatch.getInstance().setAnimationMode(true);
 		getCompiledAlgorithm().setGraph(GraphDispatch.getInstance().getWorkingGraph());
+//         LogHelper.setEnabled( true );
 		getCompiledAlgorithm().run();
+        LogHelper.restoreState();
 	}
 	
 	/**
@@ -182,4 +184,4 @@ public class GAlgorithmEditorPanel extends GEditorPanel {
 
 }
 
-//  [Last modified: 2015 05 08 at 14:58:01 GMT]
+//  [Last modified: 2015 05 26 at 15:28:57 GMT]

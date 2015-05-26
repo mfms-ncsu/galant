@@ -88,7 +88,6 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 	
 	public boolean inScope(int state) 
-        throws GalantException
     {
 		return isCreated(state) && !isDeleted(state);
 	}
@@ -103,7 +102,6 @@ public class Node extends GraphElement implements Comparable<Node> {
 	
 	@Override
 	public double getWeight(int state)
-        throws GalantException
         {
             NodeState ns = getLatestValidState(state);
             return ns==null ? null : ns.getWeight();
@@ -131,7 +129,6 @@ public class Node extends GraphElement implements Comparable<Node> {
      */
     @Override
         public boolean hasWeight(int state)
-        throws GalantException
         {
             NodeState ns = getLatestValidState(state);
             return ns == null ? false : ns.hasWeight();
@@ -155,7 +152,6 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 	
 	public boolean isSelected(int state)
-        throws GalantException
     {
 		NodeState ns = getLatestValidState(state);
 		
@@ -167,7 +163,6 @@ public class Node extends GraphElement implements Comparable<Node> {
     }
 	
     public boolean isHighlighted(int state)
-        throws GalantException
     {
         return isSelected(state);
     }
@@ -177,7 +172,6 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 
 	public Boolean isVisited(int state)
-        throws GalantException
     {
 		NodeState ns = getLatestValidState(state);
 		return ns==null ? null : ns.isVisited();
@@ -188,7 +182,6 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 
 	public Boolean isMarked(int state)
-        throws GalantException
     {
 		NodeState ns = getLatestValidState(state);
 		return ns==null ? null : ns.isVisited();
@@ -456,7 +449,6 @@ public class Node extends GraphElement implements Comparable<Node> {
 	
 	@Override
 	public String getColor(int state)
-        throws GalantException
         {
             NodeState ns = getLatestValidState(state);
             return ns==null ? null : ns.getColor();
@@ -482,7 +474,6 @@ public class Node extends GraphElement implements Comparable<Node> {
 
 	@Override
 	public String getLabel(int state)
-        throws GalantException
         {
             NodeState ns = getLatestValidState(state);
             return ns==null ? null : ns.getLabel();
@@ -510,7 +501,6 @@ public class Node extends GraphElement implements Comparable<Node> {
      */
     @Override
         public boolean hasLabel(int state)
-        throws GalantException
         {
             NodeState ns = getLatestValidState(state);
             return ns == null ? false : ns.hasLabel();
@@ -527,7 +517,6 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 	
 	public boolean isCreated(int state)
-        throws GalantException
     {
 		NodeState ns = getLatestValidState(state);
 		return (ns != null);
@@ -538,7 +527,6 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 	
 	public boolean isDeleted(int state)
-        throws GalantException
     {
 		NodeState ns = getLatestValidState(state);
 		return ns==null ? false : ns.isDeleted();
@@ -563,7 +551,6 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 
 	public Point getPosition(int state)
-        throws GalantException
     {
 		NodeState ns = getLatestValidState(state);
 		return ns==null ? null : ns.getPosition();
@@ -574,7 +561,6 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 
 	public int getX(int state)
-        throws GalantException
     {
 		NodeState ns = getLatestValidState(state);
 		return ns==null ? null : ns.getPosition().x;
@@ -585,7 +571,6 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 
 	public int getY(int state)
-        throws GalantException
     {
 		NodeState ns = getLatestValidState(state);
 		return ns==null ? null : ns.getPosition().y;
@@ -668,7 +653,6 @@ public class Node extends GraphElement implements Comparable<Node> {
         return latestState().getLayer();
     }
     public int getLayer( int state )
-        throws GalantException
     { 
 		NodeState ns = getLatestValidState(state);
 		return ns==null ? null : ns.getLayer();
@@ -677,7 +661,6 @@ public class Node extends GraphElement implements Comparable<Node> {
         return latestState().getPositionInLayer();
     }
     public int getPositionInLayer( int state )
-        throws GalantException
     { 
 		NodeState ns = getLatestValidState(state);
 		return ns==null ? null : ns.getPositionInLayer();
@@ -763,7 +746,6 @@ public class Node extends GraphElement implements Comparable<Node> {
      * stamp.
      */
 	public NodeState getLatestValidState( int stateNumber )
-        throws GalantException
     {
 		for ( int i = nodeStates.size() - 1; i >= 0; i-- ) {
 			NodeState ns = nodeStates.get(i);
@@ -795,8 +777,16 @@ public class Node extends GraphElement implements Comparable<Node> {
 		return new Point(x,y);
 	}
 	
+
     /**
-     * @todo Here we should output all the programmer-created attributes.
+     * This version is called when the graph window editor pushes changes to
+     * the text editor and at various other points.
+     *
+     * @todo perhaps need some way to distinguish between the text window
+     * function and others such as debugging
+     *
+     * @todo both toString() methods need to be fixed so that they write only
+     * the attributes that are actually present.
      */
 	@Override
 	public String toString() {
@@ -813,45 +803,40 @@ public class Node extends GraphElement implements Comparable<Node> {
             + " x=\"" + this.position.x + "\""
             + " y=\"" + this.position.y + "\""
             + " color=\"" + this.getColor() + "\"";
-
+        /**
+         * @todo Need to decide whether to include ...
+         *    + "\" highlighted=\"" + this.isSelected() + "\" />";
+         * It might make a lot of sense for exports
+         */
         if ( GraphDispatch.getInstance().getWorkingGraph().isLayered() ) {
             s = s 
                 + " layer=\"" + this.getLayer() + "\""
                 + " positionInLayer=\"" + this.getPositionInLayer() + "\"";
         }
         s += " />";
-				//+ "\" highlighted=\"" + this.isSelected() + "\" />";
 		return s;
 	}
 	
+    /**
+     * This version is called when the current state of the animation is
+     * exported.
+     */
 	public String toString(int state)
     {
-        NodeState ns = null;
-        try {
-            if ( ! inScope(state) ) {
-                return "<out of scope node> in state " + state;
-            }
-            
-            ns = getLatestValidState(state);
+        if ( ! inScope(state) ) {
+            return "";
         }
-        catch ( GalantException e ) {
-            this.toString();
-            return "<null node> in state " + state;
-        }
-        String label = "";
-        if (ns.getLabel() != null) {
-            label = this.getLabel();
-        }
-		
-        String s = "<node"
-            + " id=\"" + this.getId() + "\""
+
+        NodeState ns = getLatestValidState( state );
+
+        String s = "<node" + " id=\"" + this.getId() + "\""
             + " weight=\"" + ns.getWeight() + "\""
-            + " label=\"" + label + "\""
+            + " label=\"" + ns.getLabel() + "\""
             + " x=\"" + ns.getPosition().x + "\""
             + " y=\"" + ns.getPosition().y + "\""
             + " color=\"" + ns.getColor() + "\"";
         
-        if ( this.getLayer() >= 0 && this.getPositionInLayer() >= 0 )
+        if ( GraphDispatch.getInstance().getWorkingGraph().isLayered() )
             s = s 
                 + " layer=\"" + ns.getLayer() + "\""
                 + " positionInLayer=\"" + ns.getPositionInLayer() + "\"";
@@ -867,4 +852,4 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 }
 
-//  [Last modified: 2015 05 14 at 19:04:24 GMT]
+//  [Last modified: 2015 05 26 at 11:54:21 GMT]

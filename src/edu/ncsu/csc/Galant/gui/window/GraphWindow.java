@@ -76,6 +76,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	private static JPanel animationButtons;
 	private final JButton stepForward;
 	private final JButton stepBack;
+    private final JButton done;
 	
 	private ButtonGroup modeGroup = new ButtonGroup();
 	private JToggleButton select;
@@ -401,6 +402,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		
 		stepForward = new JButton(new ImageIcon(GraphWindow.class.getResource("images/stepforward_24.png")));
 		stepBack = new JButton(new ImageIcon(GraphWindow.class.getResource("images/stepback_24.png")));
+		done = new JButton(new ImageIcon(GraphWindow.class.getResource("images/close_24.png")));
 		
 		componentEditPanel = new ComponentEditPanel();
 		componentEditPanel.setVisible(false);
@@ -726,17 +728,15 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		});
 		
 		// Exit the animation and change back to Edit mode
-		JButton done = new JButton(new ImageIcon(GraphWindow.class.getResource("images/close_24.png")));
 		done.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				dispatch.setAnimationMode(false);
 			}
 		});
-		//animationButtons.add(new JButton(new ImageIcon(GraphWindow.class.getResource("images/stepbeginning_24.png"))));
+
 		animationButtons.add(stepBack);
 		animationButtons.add(stepForward);
-		//animationButtons.add(new JButton(new ImageIcon(GraphWindow.class.getResource("images/stepEnd_24.png"))));
 		animationButtons.add(done);
 		animationButtons.setMaximumSize(new Dimension(DEFAULT_WIDTH, ANIMATION_BUTTON_SIZE));
 		animationButtons.setMinimumSize(new Dimension(DEFAULT_WIDTH, ANIMATION_BUTTON_SIZE));
@@ -785,4 +785,4 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	}
 }
 
-//  [Last modified: 2015 04 30 at 00:24:27 GMT]
+//  [Last modified: 2015 05 19 at 20:29:47 GMT]

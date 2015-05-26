@@ -169,14 +169,14 @@ public class Macros
 			Macro.MACROS.add(new ParameterizedMacro(MacroUtil.replaceWhitespace("new_function (\\S+)?  (\\S+)"), true){
 					Map<String, String> wrapperMap = new HashMap<String, String>();
 						{
-							wrapperMap.put("int", "Integer");
-							wrapperMap.put("long", "Long");
-							wrapperMap.put("short", "Short");
-							wrapperMap.put("byte", "Byte");
-							wrapperMap.put("double", "Double");
-							wrapperMap.put("float", "Float");
-							wrapperMap.put("boolean", "Boolean");
-							wrapperMap.put("char", "Character");
+							wrapperMap.put("int", " int");
+							wrapperMap.put("long", " long");
+							wrapperMap.put("short", " short");
+							wrapperMap.put("byte", " byte");
+							wrapperMap.put("double", " double");
+							wrapperMap.put("float", " float");
+							wrapperMap.put("boolean", " boolean");
+							wrapperMap.put("char", " char");
 							// map "void" to " "(empty string)
 							wrapperMap.put("void", " ");
 						}

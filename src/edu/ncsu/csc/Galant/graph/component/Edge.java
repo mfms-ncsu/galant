@@ -68,7 +68,6 @@ public class Edge extends GraphElement implements Comparable<Edge> {
     }
 	
     public boolean isHighlighted(int state)
-        throws GalantException
     {
         return isSelected(state);
     }
@@ -454,4 +453,4 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 	
 }
 
-//  [Last modified: 2015 05 20 at 19:40:31 GMT]
+//  [Last modified: 2015 05 26 at 11:22:46 GMT]

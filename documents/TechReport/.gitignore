@@ -1,4 +1,4 @@
-# files created during LaTeX compilation
+# ignore files created during LaTeX compilation
 *.aux
 *.bbl
 *.brf

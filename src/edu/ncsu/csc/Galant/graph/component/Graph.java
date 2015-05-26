@@ -262,7 +262,6 @@ public class Graph {
 	 * @return all nodes in the graph that exist in the given state.
 	 */
 	public List<Node> getNodes(int state)
-        throws GalantException
     {
 		List<Node> retNodes = new ArrayList<Node>();
 		
@@ -286,7 +285,6 @@ public class Graph {
 	 * @return all <code>Edge</code>s in the <code>Graph</code> at the current <code>GraphState</code>
 	 */
 	public List<Edge> getEdges()
-        throws GalantException
     {
 		List<Edge> retEdges = new ArrayList<Edge>();
 		
@@ -306,7 +304,6 @@ public class Graph {
 	 * @return
 	 */
 	public List<Edge> getEdges(int state) 
-        throws GalantException
     {
 		List<Edge> retEdges = new ArrayList<Edge>();
 		
@@ -356,11 +353,13 @@ public class Graph {
 	/**
 	 * @return the root node
 	 */
-	public Node getRootNode() throws GalantException {
-        if ( rootNode == null ) {
-            throw new GalantException( "no root node has been set"
-                                       + "\n - in getRootNode" );
-        }
+	public Node getRootNode()
+//         throws GalantException
+    {
+//         if ( rootNode == null ) {
+//             throw new GalantException( "no root node has been set"
+//                                        + "\n - in getRootNode" );
+//         }
 		return rootNode;
 	}
 
@@ -384,26 +383,28 @@ public class Graph {
 	 * @param id
 	 * @return the specified Node if it exists, null otherwise
 	 */
-	public Node getNodeById( int id ) throws GalantException {
-        if ( this.nodes.size() == 0 ) {
-            throw new GalantException( "empty graph"
-                                       + "\n - in getNodeById" );
-        }
+	public Node getNodeById( int id )
+//         throws GalantException
+    {
+//         if ( this.nodes.size() == 0 ) {
+//             throw new GalantException( "empty graph"
+//                                        + "\n - in getNodeById" );
+//         }
 
-		if ( ! nodeById.containsKey( id ) ) {
-            throw new GalantException( "no node with id = "
-                                       + id
-                                       + " exists"
-                                       + "\n - in getNodeById" );
-        }
+// 		if ( ! nodeById.containsKey( id ) ) {
+//             throw new GalantException( "no node with id = "
+//                                        + id
+//                                        + " exists"
+//                                        + "\n - in getNodeById" );
+//         }
 
         Node n = nodeById.get( id );
 
-        if ( n.isDeleted() ) {
-            throw new GalantException( "node has been deleted, id = "
-                                       + id
-                                       + "\n - in getNodeById" );
-		}
+//         if ( n.isDeleted() ) {
+//             throw new GalantException( "node has been deleted, id = "
+//                                        + id
+//                                        + "\n - in getNodeById" );
+// 		}
 		
 		return n;
 	}
@@ -446,25 +447,27 @@ public class Graph {
 	 * @param id
 	 * @return the specified Edge if it exists, null otherwise
 	 */
-	public Edge getEdgeById(int id) throws GalantException {
-        if ( this.edges.size() == 0 ) {
-            throw new GalantException( "graph has no edges"
-                                       + "\n - in getEdgeById" );
-        }
+	public Edge getEdgeById(int id)
+//         throws GalantException
+    {
+//         if ( this.edges.size() == 0 ) {
+//             throw new GalantException( "graph has no edges"
+//                                        + "\n - in getEdgeById" );
+//         }
 
-		if ( id < 0 || id >= this.nodes.size() ) {
-            throw new GalantException( "edge out of range, id = "
-                                       + id 
-                                       + "\n - in getEdgeById" );
-        }
+// 		if ( id < 0 || id >= this.nodes.size() ) {
+//             throw new GalantException( "edge out of range, id = "
+//                                        + id 
+//                                        + "\n - in getEdgeById" );
+//         }
 
         Edge e = this.edges.get(id);
 
-        if ( e.isDeleted() ) {
-            throw new GalantException( "edge has been deleted, id = "
-                                       + id
-                                       + "\n - in getEdgeById" );
-		}
+//         if ( e.isDeleted() ) {
+//             throw new GalantException( "edge has been deleted, id = "
+//                                        + id
+//                                        + "\n - in getEdgeById" );
+// 		}
 
         return e;
 	}
@@ -1256,4 +1259,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2015 05 21 at 18:07:45 GMT]
+//  [Last modified: 2015 05 26 at 12:04:35 GMT]

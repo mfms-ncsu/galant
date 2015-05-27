@@ -13,7 +13,7 @@ import java.util.PriorityQueue;
 
 final double INFINITY = Double.POSITIVE_INFINITY;
 
-final Edge [] chosenEdge = new Edge[ getNodes().size() ];
+Edge [] chosenEdge; 
 
 new_function decreaseKey( Node v, double newKey ) {
     nodePQ.remove(v);
@@ -23,10 +23,13 @@ new_function decreaseKey( Node v, double newKey ) {
 
 /* This function is an example of function with return type */
 new_function double euclidian( Node v, Node w ) {
+     System.out.println("Nodes number inside function" + getNodes().size());
     return v.getPosition().distance( w.getPosition() );
 }
 
 algorithm {
+
+   chosenEdge = new Edge[ getNodes().size() ];
     beginStep();
     for_nodes(node) {
         node.setWeight( INFINITY );

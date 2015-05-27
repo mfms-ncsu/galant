@@ -1,0 +1,96 @@
+There is a large variety of algorithm animations available. Here we focus solely on those that offer significant mechanisms for creating new animations.
+These differ primarily in (i)~whether the user acts primarily as an observer; and
+(ii)~the challenges imposed on the animator.
+Almost all of these are systems rather than tools.
+For a comprehensive survey of graph algorithm animation and graph drawing used
+as educational tools see Bridgeman~\cite{2013-GDBook-Bridgeman}. 
+
+\textbf{Observer-oriented (passive) systems.}
+One general purpose animation program is ANIMAL~\cite{2002-JVLC-Roessling,ANIMAL};
+it provides the animator
+with a rich menu
+of elements common to many algorithms.
+Steps in the animation are linked to steps in the pseudocode.
+Though there are many options for creating interesting animations,
+it appears that these are passive.
+
+Galles~\cite{Galles} is an animation tool with very
+sophisticated creation options.
+Primarily designed to be passive, it could conceivably, with a parser
+for a graph input format and a mechanism that allows the user to view and
+manipulate the input graph, be made interactive.
+In that sense it would also be a tool.
+It suffers, however, from the fact that the
+animator must navigate a complex Java-based interface.
+
+Although secondary to its main purpose as a library of data structures and
+algorithms,
+LEDA~\cite{1999-LEDA-Mehlhorn} offers a graph window facility that can be
+used to create animations of graph algorithms.
+The documentation gives several examples and illustrates the rich functionality of
+the drawing and visualization capability of graph windows.
+Since LEDA is a general purpose, C++-based, programming language for
+algorithms and data structures, it is easily augmented with extensions that
+are integrated seamlessly with the core API; in this case, graph windows work
+in concert with core graph functions and macros.
+%%  (which are similar to, but
+%% more sophisticated than, those in GDR).
+Unfortunately LEDA is a commercial product with
+non-trivial licensing cost.
+
+\textbf{Explorer-oriented (interactive) systems.}
+Several online applets feature graph algorithm animation. Of these,
+Javenga~\cite{JAVENGA} stands out. It is highly interactive. The drawing and
+editing of
+graphs is simple and intuitive, and graphs can be viewed in all three major
+representations (drawing, adjacency matrix and adjacency list).
+The variety of graph algorithms available is impressive:
+breadth-first and depth-first search, topological sort, strongly connected
+components, four shortest path algorithms, two minimum spanning tree
+algorithms, and a network flow algorithm.
+Animations can be run one step at a time with the option of moving backwards
+or continuously with an adjustable number of milliseconds per step.
+Javenga's main drawback is that the explorer is unable to save graphs for
+future sessions.
+
+The j-Alg~\cite{j-Algo} is an impressive animation system.
+It is highly interactive, has a relatively easy to use interface, and has sophisticated animations for a large variety of algorithms,
+including graph searching, Dijkstra's algorithm,
+algebraic path problems (generalizations of all-pairs shortest paths and transitive closure), AVL trees, Knuth-Morris-Pratt string searching and BNF syntax diagrams.
+Its only drawback is that there is no readily available mechanism
+for outsiders to create new animations.
+New animations are developer-created and released periodically.
+
+\textbf{Libraries.}
+AlgoViz~\cite{AlgoViz}
+is a large catalog of algorithm animations, continually updated by
+contributors who either submit new animations or comment on existing ones.
+Like any large repository with many contributors, AlgoViz is difficult to
+monitor and
+maintain.
+The OpenDSA project~\cite{%
+2011-ProgramVisualization-Shaffer,2011-Koli-Shaffer,2012-SIGCSE-Fouh%
+}
+aims to create a textbook compilation of a variety of
+visualizations, mostly designed for observers.
+
+\textbf{Early work.}
+Earlier animation tools/systems include GDR~\cite{1992-CSDM-Stallmann}, John Stasko's
+Tango~\cite{1990-Computer-Stasko}, Xtango,
+and SAMBA,\footnote{
+These and Stasko's other animation tools are posted at
+http://www.cc.gatech.edu/gvu/ii/softvis/
+} and, of course,
+the work of
+Brown and Sedgewick~\cite{1988-Computer-Brown,1985-IEEE_Software-Brown}
+and that of Bentley and Kernighan~\cite{1987-Animation-Bentley}.
+SAMBA, and to a lesser extent GDR, is especially notable for emphasis on simplifying the creation of
+animations so that students can easily accomplish them.
+Both are also tools by our definition.
+All of these suffer, however, from using old technology,
+and, except for GDR,
+they require off-line creation
+of problem instances and have no graph-algorithm specific implementations
+or graph creation interfaces to offer.
+
+% [Last modified: 2013 06 26 at 18:34:44 GMT]

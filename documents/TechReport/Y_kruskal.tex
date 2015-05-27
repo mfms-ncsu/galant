@@ -1,0 +1,56 @@
+\input{Y_kruskals_algorithm}
+
+\input{Y_kruskal_pictures}
+
+Another simple algorithm implementation is that of Kruskal's algorithm
+for finding a minimum spanning tree (or forest) in a graph.
+Fig.~\ref{fig:kruskals_algorithm}
+shows the implemented animation of Kruskal's algorithm.
+Additional Galant features/workarounds illustrated here are:
+\begin{itemize}
+
+\item
+Use of the keyword \verb+function+ to declare a function: this avoids the
+syntactic complications of Java method declarations. In the case of
+\verb+FIND_SET+, for example, you would normally have to say\\
+\verb+static Node FIND_SET( Node x )+\\
+and would get error messages about non-static methods in a static context
+if you omitted the keyword \verb+static+.
+
+\item
+Implicit use of weights to sort the edges: weights are created by the
+explorer when editing a graph. The only (syntactic) drawback is the required
+use of the Java \verb+Collections.sort()+ construct, but this will be easy to fix in future releases.
+Another piece of awkward syntax is the template invocation
+\verb+List<Edge>+; again, this is easily fixable.
+
+\item
+The ability to write messages during execution, as accomplished by the
+\verb+writeMessage+ calls.
+The syntax that requires \verb+writeMessage+ to be a method of the \verb+Graph+
+class is awkward, but can be remedied by augmenting the macro translation
+mechanism.
+
+\item
+Declaration of a global array: the current implementation of Galant does
+not provide a less Java-specific variant.
+With moderate effort the Galant preprocessor could be augmented to provide
+a more transparent syntax, such as\\
+\verb+Node array parent[Node]+\\
+The underlying implementation could either be a map (associative array) or an
+array with integer indices but with nodes automatically converted to their
+id's so that a reference to an element would always be \verb+parent[x]+
+rather than \verb+parent[x.getId()]+.
+In this specific situation -- implementation of disjoint set union --
+the need for the array can be obviated by providing disjoint sets as
+a built-in data structure.
+
+\end{itemize}
+
+Two steps in the execution of the animation are shown
+in Fig.~\ref{fig:kruskal_pictures}.
+The two endpoints of an edge are marked when that edge is considered
+for inclusion in the spanning tree.
+If the endpoints are not in the same tree, the edge is added and highlighted
+and the cost of the current tree is displayed in the message.
+Otherwise the message reports that the endpoints are already in the same tree. 

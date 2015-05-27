@@ -213,21 +213,17 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                     // If you start dragging, set dragging mode so you don't
                     // perform any other operations on the Node after
                     // releasing it
-                    //@todo sometimes graph panel can't recognize some nodes
-                    //if ( ! dispatch.isAnimationMode() ) {
-                        Node sel = gp.getSelectedNode();
-                        if (sel != null) {
-                            gp.setDragging(true);
-                            gp.setEdgeTracker(null);
-                            if ( ! dispatch.isAnimationMode() ) {
-                                sel.setFixedPosition( arg0.getPoint() );
-                            } else {
-                                NodeState currentState = null;    
-                                currentState = sel.getLatestValidState(gp.getDisplayState());
-                                currentState.setPosition( arg0.getPoint() );
-                            }
+                    Node sel = gp.getSelectedNode();
+                    if (sel != null) {
+                        gp.setDragging(true);
+                        gp.setEdgeTracker(null);
+                        if ( ! dispatch.isAnimationMode() ) {
+                            sel.setFixedPosition( arg0.getPoint() );
+                        } else {
+                            NodeState currentState = sel.getLatestValidState(gp.getDisplayState());
+                            currentState.setPosition( arg0.getPoint() );
                         }
-                    //}
+                    }
                     frame.repaint();
                 }
 
@@ -250,19 +246,15 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 			
                 @Override
                     public void mousePressed(MouseEvent e) {
-                    //if ( ! dispatch.isAnimationMode() ) {
                         Point location = e.getPoint();
                         LogHelper.logDebug( "CLICK, location = " + location );
 					
                         prevNode = gp.getSelectedNode();
                         Node n = gp.selectTopClickedNode(location);
-                    //}
                 }
 
                 @Override
-                    public void mouseReleased(MouseEvent arg0) {
-                    //if ( ! dispatch.isAnimationMode() ) {
-                        // not in animation mode
+                    public void mouseReleased(MouseEvent arg0) {       
                         Point location = arg0.getPoint();
                         LogHelper.logDebug("RELEASE");
                         LogHelper.logDebug(mode.toString());
@@ -281,9 +273,10 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 					
                             dispatch.pushToTextEditor(); 
 							
-                        } // dragging
-                        else {
+                        } // only allow dragging in animation mode
+                        else if ( ! dispatch.isAnimationMode() ){
                             // release after click
+                            // not in animation mode
                             Node clickNode = gp.getSelectedNode();
                             Edge clickEdge = null;
                             if (clickNode == null) {
@@ -378,8 +371,6 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 							
                             } // delete mode
                         } // not dragging
-                        
-                    //} // not in animation mode
                     frame.repaint();
                 }
             }

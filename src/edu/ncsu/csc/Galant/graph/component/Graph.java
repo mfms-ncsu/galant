@@ -849,10 +849,17 @@ public class Graph {
 		Point2D.Double[] points_0 = new Point2D.Double[points.length];
 		progress = 0;
 		
+        /**
+         * @todo need a way to map a node to its index in these arrays,
+         * probably need a TreeMap as in nodeById(), but here it's position
+         * by node or position by node id
+         */
 		// initialize the starting points
-		for (int i=0; i < nodes.size(); i++) {
-			Point p = nodes.get(i).getPosition();
-			points[i] = new Point2D.Double(p.x, p.y);
+        int index = 0;
+		for ( Node node: nodes ) {
+			Point p = node.getPosition();
+			points[index] = new Point2D.Double(p.x, p.y);
+            index++;
 		}
 		
 		boolean cvg = false;
@@ -1259,4 +1266,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2015 05 26 at 12:04:35 GMT]
+//  [Last modified: 2015 05 27 at 19:38:33 GMT]

@@ -44,13 +44,24 @@ public class GraphPanel extends JPanel{
     /**
      * whether or not to display the id of a node (should be a preference)
      */
-    private final boolean DISPLAY_ID = true;
+//     private final boolean DISPLAY_ID = true;
+    private final boolean DISPLAY_ID = false;
 
     /**
      * Diameter of a node (eventually this should be a preference)
      */
-    private final int NODE_RADIUS = 11;
-    // private final int NODE_RADIUS = 4;
+//     private final int NODE_RADIUS = 11;
+    private final int NODE_RADIUS = 3;
+
+    /**
+     * diameter of a node for selection purposes
+     */
+    private final int NODE_SELECTION_RADIUS = 11;
+
+    /**
+     * width of an edge for selection purposes
+     */
+    private final int EDGE_SELECTION_WIDTH = 8;
 
     /**
      * Characteristics of the boundary of a selected node
@@ -765,7 +776,7 @@ public class GraphPanel extends JPanel{
 		
 		for (Node n : g.getNodes()) {
             LogHelper.logDebug( "next node = " + n.getId() + " position = " + n.getPosition() );
-			if ( p.distance(n.getPosition()) < NODE_RADIUS ) {
+			if ( p.distance(n.getPosition()) < NODE_SELECTION_RADIUS ) {
 				top = n;
 			}
 		}
@@ -812,7 +823,7 @@ public class GraphPanel extends JPanel{
 		
 		Edge top = null;
 		
-		for (int i=1; i <= 8; i++) {
+		for (int i=1; i <= EDGE_SELECTION_WIDTH; i++) {
 			double width = i;
 			double centerVal = width/2;
             LogHelper.logDebug( "centerVal = " + centerVal );
@@ -898,4 +909,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2015 05 26 at 12:07:13 GMT]
+//  [Last modified: 2015 05 27 at 19:17:33 GMT]

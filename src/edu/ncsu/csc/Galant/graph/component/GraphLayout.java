@@ -39,9 +39,8 @@ public class GraphLayout {
     /**
      * maximum number of repositioning iterations in force-directed layout =
      * 100,000
-     * Apparently it does not work to make this an instance variable ??!!
      */
-    //    final static int MAX_REPOSITION_ITERATIONS = 100000;
+     final static int MAX_REPOSITION_ITERATIONS = 100000;
 
     /** 
      * minimum distance from the edge of a window when fitting a graph to
@@ -189,11 +188,9 @@ public class GraphLayout {
 		double c = 1.0; // scalar. won't make much difference since we rescale at the end anyway
 		double k = 120.0; // natural spring (Edge) length
 		double tol = .1; // the tolerance in change before the algorithm concludes itself
-		int iterMax = 1; // caps the number of repositioning iterations 
 		
 		int iter = 0;
-        //		while (!cvg && iter < MAX_REPOSITION_ITERATIONS ) {
-        while (!cvg && iter < 100000 ) {
+        while (!cvg && iter < MAX_REPOSITION_ITERATIONS ) {
 			iter++;
 			
 			// copy your new points to your old points
@@ -537,4 +534,4 @@ public class GraphLayout {
 
 }	
 
-//  [Last modified: 2015 05 28 at 18:57:54 GMT]
+//  [Last modified: 2015 05 28 at 19:50:46 GMT]

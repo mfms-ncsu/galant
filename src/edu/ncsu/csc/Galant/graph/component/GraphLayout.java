@@ -9,7 +9,7 @@ package edu.ncsu.csc.Galant.graph.component;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.TreeMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import edu.ncsu.csc.Galant.GalantException;
@@ -22,6 +22,26 @@ public class GraphLayout {
     private List<Node> nodes;
     private List<Edge> edges;
     private int progress;       // need this to be an instance variable, for now
+
+		
+    /**
+     * Maps nodes to indexes in an array that keeps track of their
+     * (temporary) positions during a layout algorithm; necessary because
+     * node id's may not be contiguous.
+     */
+    private Map<Node,Integer> nodeToIndex;
+
+    /**
+     * Need to recover nodes at the end
+     */
+    private Node[] indexToNode;
+        
+    /**
+     * maximum number of repositioning iterations in force-directed layout =
+     * 100,000
+     * Apparently it does not work to make this an instance variable ??!!
+     */
+    //    final static int MAX_REPOSITION_ITERATIONS = 100000;
 
     /** 
      * minimum distance from the edge of a window when fitting a graph to
@@ -51,6 +71,8 @@ public class GraphLayout {
         this.graph = graph;
         this.nodes = graph.getNodes();
         this.edges = graph.getEdges();
+        nodeToIndex = new HashMap();
+        indexToNode = new Node[nodes.size()];
     }
 
     /**
@@ -134,19 +156,6 @@ public class GraphLayout {
      * @todo would be good to have a way to undo this
 	 */
 	public void forceDirected() {
-		
-        /**
-         * Maps nodes to indexes in an array that keeps track of their
-         * (temporary) positions during a layout algorithm; necessary because
-         * node id's may not be contiguous.
-         */
-        Map<Node,Integer> nodeToIndex = new TreeMap();
-
-        /**
-         * Need to recover nodes at the end
-         */
-        Node[] indexToNode = new Node[nodes.size()];
-        
         /**
          * These store the previous and current positions of the nodes
          */
@@ -163,6 +172,8 @@ public class GraphLayout {
 		for ( Node node: nodes ) {
             nodeToIndex.put( node, index );
             indexToNode[index] = node;
+//             System.out.printf( "initializing: index = %d, node = %s\n", index, node );
+//             System.out.printf( "checking:     index = %d, node = %s\n", nodeToIndex.get(node), indexToNode[index] );
 			Point p = node.getFixedPosition();
 			points[index] = new Point2D.Double(p.x, p.y);
             index++;
@@ -178,10 +189,11 @@ public class GraphLayout {
 		double c = 1.0; // scalar. won't make much difference since we rescale at the end anyway
 		double k = 120.0; // natural spring (Edge) length
 		double tol = .1; // the tolerance in change before the algorithm concludes itself
-		double iterMax = 100000; // caps the number of repositioning iterations 
+		int iterMax = 1; // caps the number of repositioning iterations 
 		
 		int iter = 0;
-		while (!cvg && iter < iterMax) {
+        //		while (!cvg && iter < MAX_REPOSITION_ITERATIONS ) {
+        while (!cvg && iter < 100000 ) {
 			iter++;
 			
 			// copy your new points to your old points
@@ -202,10 +214,20 @@ public class GraphLayout {
 				// calculate attractive force of edges
 				for (Edge e : edges) {
 					int j = -1;
-					if (e.getSourceNode().getId() == i) {
-						j = e.getDestNode().getId();
-					} else if (e.getDestNode().getId() == i) {
-						j = e.getSourceNode().getId();
+//                     System.out.printf( "source: index = %d, node = %s\n",
+//                                        nodeToIndex.get( e.getSourceNode() ).intValue(), e.getSourceNode() );
+//                     System.out.printf( "dest:   index = %d, node = %s\n",
+//                                        nodeToIndex.get( e.getDestNode() ).intValue(), e.getDestNode() );
+//                     if (e.getSourceNode().getId() == i) {
+//                         j = e.getDestNode().getId();
+//                     } else if (e.getDestNode().getId() == i) {
+//                         j = e.getSourceNode().getId();
+//                     }
+					if ( nodeToIndex.get( e.getSourceNode() ).intValue() == i ) {
+						j = nodeToIndex.get( e.getDestNode() );
+                    }
+                    else if ( nodeToIndex.get( e.getDestNode() ).intValue() == i ) {
+						j = nodeToIndex.get( e.getSourceNode() );
 					}
 					if (j != -1 && j != i) {
 						double attractive = forceAttractive(points[i], points[j], k);
@@ -483,9 +505,9 @@ public class GraphLayout {
 		List<Node> visited = new ArrayList<Node>();
 		List<Node> frontier = new ArrayList<Node>();
 		
-		Node destination = nodes.get(j);
+		Node destination = indexToNode[j];
 		
-		Node n = nodes.get(i);
+		Node n = indexToNode[i];
 		visited.add(n);
 		frontier.add(n);
 		
@@ -515,4 +537,4 @@ public class GraphLayout {
 
 }	
 
-//  [Last modified: 2015 05 28 at 15:41:17 GMT]
+//  [Last modified: 2015 05 28 at 18:57:54 GMT]

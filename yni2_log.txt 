@@ -12,3 +12,6 @@ May 22: 5 hours
 	- Algorithm{} is still not responding properly.   
 	- Since recursive mechanism is not used any more, looking to remove some unnecessary structure  within new_function macro.
 	 
+May 27: 2 hours
+	- Still trying to figure out why getNodes will get an NullPointerException when hit compile.
+	- Looking to create Macro that declares and initializes a list. The list contains current nodes on the graph.(Works as the same as e.g: “final Node [] parent = new Node[ getNodes ]”)

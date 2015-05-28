@@ -646,22 +646,12 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	}
 	
     static class AnimationKeyListener extends KeyAdapter {
-        static final long DELAY_TIME = 17;
-
-        /**
+        /** 
          * Intent is to delay for about 1/60 second = roughly 17 milliseconds
          * to allow the display to catch up to repeated keystrokes when an
-         * arrow key is held down. Ultimately this should be handled by an
-         * invocation of the Timer class.
+         * arrow key is held down. 
          */
-        void delay() {
-            long startTime = System.currentTimeMillis();
-            long currentTime = System.currentTimeMillis();
-            long endOfDelay = startTime + DELAY_TIME;
-            while ( currentTime < endOfDelay ) {
-                currentTime = System.currentTimeMillis();
-            }
-        }
+        static final long DELAY_TIME = 17;
 
         public void keyPressed(KeyEvent e) {
             if (e.getKeyCode() == KeyEvent.VK_LEFT) {
@@ -673,7 +663,11 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
             if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                 // delete row method (when "delete" is pressed)
             }
-            delay();
+            try {
+                Thread.sleep(DELAY_TIME);
+            } catch (InterruptedException f) {
+                //Handle exception
+            }
             frame.repaint();
         }
     }

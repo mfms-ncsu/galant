@@ -9,4 +9,4 @@ build/
 # anything in the Sandbox -- used for trying things out
 Sandbox/*
 # Graph-Gallery is used for WTEiR experiments
-Graph-Gallery/*
+Graph-Gallery

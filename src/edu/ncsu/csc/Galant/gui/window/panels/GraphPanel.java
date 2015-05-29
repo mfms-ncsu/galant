@@ -48,20 +48,31 @@ public class GraphPanel extends JPanel{
     private final boolean DISPLAY_ID = false;
 
     /**
-     * Diameter of a node (eventually this should be a preference)
+     * color of a node boundary or edge if none is specified
      */
-//     private final int NODE_RADIUS = 11;
-    private final int NODE_RADIUS = 3;
+    public final Color DEFAULT_COLOR = Color.black;
 
     /**
-     * diameter of a node for selection purposes
+     * Default width of an edge or node boundary
      */
-    private final int NODE_SELECTION_RADIUS = 11;
+    public static final int DEFAULT_WIDTH = 2;
+    
+    /**
+     * Maximum width of a node boundary or edge that can be specified by a
+     * spinner in the preferences panel
+     */
+    public static final int MAXIMUM_WIDTH = 6;
 
     /**
-     * width of an edge for selection purposes
+     * This is the default value if none is specified in the preferences
      */
-    private final int EDGE_SELECTION_WIDTH = 8;
+    public static final int DEFAULT_NODE_RADIUS = 12;
+
+    /**
+     * This is the maximum value that can be specified via a spinner in the
+     * preferences
+     */
+    public static final int MAXIMUM_NODE_RADIUS = 15;
 
     /**
      * Characteristics of the boundary of a selected node
@@ -71,9 +82,14 @@ public class GraphPanel extends JPanel{
     private final Color SELECTED_NODE_LINE_COLOR = Color.red;
 
     /**
-     * color of a node boundary or edge if none is specified
+     * diameter of a node for selection purposes
      */
-    public final Color DEFAULT_COLOR = Color.black;
+    private final int NODE_SELECTION_RADIUS = 12;
+
+    /**
+     * width of an edge for selection purposes
+     */
+    private final int EDGE_SELECTION_WIDTH = 8;
 
     /**
      * Node weights are stacked on top of labels; their left edge is
@@ -128,7 +144,13 @@ public class GraphPanel extends JPanel{
 	 * Holds the width to draw edges. Pulled on each repaint
 	 * from the Galant Preferences 
 	 */
-	private int edgeSize = 2;
+	private int edgeWidth = DEFAULT_WIDTH;
+
+	/**
+	 * Holds the radius for drawing nodes. Pulled on each repaint
+	 * from the Galant Preferences
+	 */
+	private int nodeRadius = DEFAULT_NODE_RADIUS;
 	
 	private Node previousNode;
 	private Node selectedNode;
@@ -198,8 +220,10 @@ public class GraphPanel extends JPanel{
             Graph graph = dispatch.getWorkingGraph();
 		
             // Get the preferred edge width
-            this.edgeSize = GalantPreferences.EDGE_WIDTH.get();
-            if (this.edgeSize < 1) this.edgeSize = 2;
+            this.edgeWidth = GalantPreferences.EDGE_WIDTH.get();
+
+            // Get node radius
+            this.nodeRadius = GalantPreferences.NODE_RADIUS.get();
 		
             super.paintComponent(g);
             Graphics2D g2d = (Graphics2D) g;
@@ -327,7 +351,7 @@ public class GraphPanel extends JPanel{
                 // ditto with weight below
                 Point labelPosition
                     = new Point( nodeCenter.x
-                                 + NODE_RADIUS
+                                 + nodeRadius
                                  + NODE_LABEL_DISTANCE + LABEL_PADDING,
                                  nodeCenter.y
                                  + LABEL_PADDING );
@@ -353,7 +377,7 @@ public class GraphPanel extends JPanel{
             Rectangle2D bounds = layout.getBounds();
             // padding is 'shared' with node label
             Point weightPosition = new Point( nodeCenter.x
-                                              + NODE_RADIUS
+                                              + nodeRadius
                                               + NODE_LABEL_DISTANCE
                                               + LABEL_PADDING,
                                               nodeCenter.y
@@ -374,10 +398,10 @@ public class GraphPanel extends JPanel{
            Circle is filled first so that outline can be drawn on top of
            the filled circle */
         Ellipse2D.Double nodeCircle
-            = new Ellipse2D.Double( nodeCenter.x - NODE_RADIUS,
-                                    nodeCenter.y - NODE_RADIUS,
-                                    2 * NODE_RADIUS,
-                                    2 * NODE_RADIUS );
+            = new Ellipse2D.Double( nodeCenter.x - nodeRadius,
+                                    nodeCenter.y - nodeRadius,
+                                    2 * nodeRadius,
+                                    2 * nodeRadius );
 
         /* draw node interior */
         if ( n.isMarked(state) ) {
@@ -449,7 +473,7 @@ public class GraphPanel extends JPanel{
         throws GalantException
     {
 		
-		int thickness = edgeSize;
+		int thickness = edgeWidth;
 		
 		if (e != null) {
 			Node dest = e.getDestNode(state);
@@ -524,7 +548,7 @@ public class GraphPanel extends JPanel{
         double dy = dest.getY() - source.getY();
         double angle = Math.atan2(dy, dx);
         
-        int len = (int) Math.sqrt(dx*dx + dy*dy) - NODE_RADIUS;
+        int len = (int) Math.sqrt(dx*dx + dy*dy) - nodeRadius;
         
         AffineTransform at = AffineTransform.getTranslateInstance(source.getX(), source.getY());
         at.concatenate(AffineTransform.getRotateInstance(angle));
@@ -544,7 +568,7 @@ public class GraphPanel extends JPanel{
 	 */
 	private void drawSelfLoopArrow(Point p1, Graphics2D g2d) {
 		int x = p1.x + 1;
-		int y = p1.y + NODE_RADIUS;
+		int y = p1.y + nodeRadius;
 		
 		g2d.fillPolygon(new int[] {x, x-6, x+6, x},
                       new int[] {y, y+6, y+6, y}, 4);
@@ -669,7 +693,7 @@ public class GraphPanel extends JPanel{
              flip = true;
         }
         
-        int len = (int) Math.sqrt(dx*dx + dy*dy) - NODE_RADIUS;
+        int len = (int) Math.sqrt(dx*dx + dy*dy) - nodeRadius;
         
         AffineTransform at = AffineTransform.getTranslateInstance(p1.getX(), p1.getY());
         at.concatenate(AffineTransform.getRotateInstance(angle));
@@ -909,4 +933,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2015 05 27 at 19:17:33 GMT]
+//  [Last modified: 2015 05 29 at 15:02:10 GMT]

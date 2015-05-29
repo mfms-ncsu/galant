@@ -1,3 +1,12 @@
+/**
+ * Sets up the hierarchy of preferences and declares each available
+ * preference using utilities provided in prefs
+ * @see edu.ncsu.csc.Galant.prefs
+ *
+ * @todo The mechanism here is heavily dependent on specific GUI features --
+ * it should be possible to select preferences via keyboard shortcuts.
+ */
+
 package edu.ncsu.csc.Galant;
 
 import java.awt.Color;
@@ -13,6 +22,7 @@ import edu.ncsu.csc.Galant.gui.prefs.components.PreferenceSpinner;
 import edu.ncsu.csc.Galant.prefs.Accessors;
 import edu.ncsu.csc.Galant.prefs.Preference;
 import edu.ncsu.csc.Galant.prefs.PreferenceGroup;
+import edu.ncsu.csc.Galant.gui.window.panels.GraphPanel;
 
 /** 
  * The actual preferences available in the program. 
@@ -52,6 +62,10 @@ public class GalantPreferences
 	public static final PreferenceGroup VISUAL_GRAPH_EDITOR;
 
 	public static final Preference<Integer> EDGE_WIDTH;
+
+	public static final Preference<Integer> NODE_RADIUS;
+
+// 	public static final Preference<Boolean> DISPLAY_NODE_ID;
 
 	// Open/Save
 
@@ -146,8 +160,23 @@ public class GalantPreferences
 		VISUAL_GRAPH_EDITOR = EDITORS.addNewChild("Visual Graph Editor");
 
 		EDGE_WIDTH =
-				VISUAL_GRAPH_EDITOR.addPreference(new Preference<Integer>("Edge Width", 2, Accessors.INT_ACCESSOR));
-		new PreferenceSpinner(EDGE_WIDTH, 1, 10, 1){
+				VISUAL_GRAPH_EDITOR.addPreference( new Preference<Integer>( "Edge Width", 
+                                                                           GraphPanel.DEFAULT_WIDTH,
+                                                                           Accessors.INT_ACCESSOR ) );
+		new PreferenceSpinner(EDGE_WIDTH, 1, GraphPanel.MAXIMUM_WIDTH, 1){
+			@Override
+			public void apply()
+			{
+				GraphDispatch.getInstance().pushToGraphEditor();
+				super.apply();
+			}
+		};
+
+		NODE_RADIUS =
+				VISUAL_GRAPH_EDITOR.addPreference( new Preference<Integer>( "Node radius",
+                                                                            GraphPanel.DEFAULT_NODE_RADIUS,
+                                                                            Accessors.INT_ACCESSOR ) );
+		new PreferenceSpinner(NODE_RADIUS, 1, GraphPanel.MAXIMUM_NODE_RADIUS, 1) {
 			@Override
 			public void apply()
 			{
@@ -179,3 +208,5 @@ public class GalantPreferences
 	public static void initPrefs()
 	{}
 }
+
+//  [Last modified: 2015 05 29 at 14:55:03 GMT]

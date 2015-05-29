@@ -6,3 +6,6 @@
 build/
 # graphs created on the fly
 *.graphml
+# a couple directories used for trying things out; the gallery is for research
+Sandbox/
+Graph-Gallery/

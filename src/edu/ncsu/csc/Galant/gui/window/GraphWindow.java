@@ -644,7 +644,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		button.setSelected(displayType.isShown());
 		return button;
 	}
-	
+    //@todo unable to use keyboard shortcuts after press buttons	
     static class AnimationKeyListener extends KeyAdapter {
         /** 
          * Intent is to delay for about 1/60 second = roughly 17 milliseconds

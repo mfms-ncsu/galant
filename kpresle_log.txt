@@ -1,3 +1,4 @@
+29 May (4 hours) Trying to figure out how graph state changes are kept; trying to figure out where to declare and invoke worker thread; modified the GraphState and Galant.java files (albeit incorrectly); struggling with Git and version changes
 27 May (2 hours) Reading Galant source code, trying to figure out how the graph state changes are manifested and propogates, so that I can exchange control between master and worker thread appropriately
 26 May (1 hour) Reading OReilly book on Git to try and understand it better
 25 May (~1.5 hours) Thinking about new model for implementing Galant threading (as on papers shown on Tuesday's meeting) and thinking of way to do faster regression testing

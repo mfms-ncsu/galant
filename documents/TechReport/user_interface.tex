@@ -1,0 +1,36 @@
+Two windows appear when Galant is started: a \emph{graph window} shows the
+current graph and a \emph{text window} shows editable text.
+Depending on the currently selected tab in the text window,
+the text can be either a GraphML description of the current graph or an
+algorithm implementation. 
+
+The user interface is designed for all three roles.
+The observer (or an instructor demonstrating an algorithm) does as follows: (a)~loads a graph using the file browser; (b)~loads an algorithm; (c)~pushes the ``Compile and Run'' button; and (d)~uses
+the controls underneath the graph window to step through the algorithm
+forward or backward as desired.
+
+A typical explorer might edit or create a graph using the graph window and then
+follow steps (b)--(d), repeating steps (a) and (d) to try out different
+graphs. Saving graphs for later use is also an option.
+In addition, the explorer can use the graph's tab
+in the text window to fine tune the placement of
+nodes or apply a force-directed graph drawing method
+(as described by Hu~\cite{2006-Mathematica-Hu}) to adjust node placement.
+
+A creator can load and edit an existing algorithm or create one from scratch
+using an appropriate tab in the text window.
+Compilation and execution is accomplished via the buttons at the bottom.
+In fact, the code of an animation is essentially a Java program with
+(a)~predefined types for nodes and edges; (b)~an
+API that interacts with the graph and with intended animation effects; (c)~a
+set of built-in data structures for convenience; and (d)~a set of macros that
+allows the program to traverse, for example, all incident edges of a node
+without invoking templated Java constructs.
+Line numbers of errors reported by the compiler are those of the code
+displayed in the text window.
+Runtime errors are reported in the same way.
+In both cases, due to the imports and macro translations, the error messages
+may not be immediately intelligible, but the line numbers \emph{are}
+correctly identified.
+
+% [Last modified: 2013 06 25 at 18:08:07 GMT]

@@ -1,0 +1,57 @@
+Buildfile: /home/kai/galant/build.xml
+
+compile:
+    [javac] Compiling 1 source file to /home/kai/galant/build/classes
+
+jar:
+
+run:
+     [java] java.lang.IllegalArgumentException: n must be positive
+     [java] 	at java.util.Random.nextInt(Random.java:300)
+     [java] 	at edu.ncsu.csc.Galant.graph.component.Node.genRandomPosition(Node.java:783)
+     [java] 	at edu.ncsu.csc.Galant.graph.component.Node.<init>(Node.java:44)
+     [java] 	at edu.ncsu.csc.Galant.graph.parser.GraphMLParser.buildGraphFromInput(GraphMLParser.java:284)
+     [java] 	at edu.ncsu.csc.Galant.graph.parser.GraphMLParser.generateGraph(GraphMLParser.java:370)
+     [java] 	at edu.ncsu.csc.Galant.graph.parser.GraphMLParser.<init>(GraphMLParser.java:67)
+     [java] 	at edu.ncsu.csc.Galant.gui.editor.GGraphEditorPanel.<init>(GGraphEditorPanel.java:38)
+     [java] 	at edu.ncsu.csc.Galant.gui.editor.GTabbedPane.addEditorTab(GTabbedPane.java:124)
+     [java] 	at edu.ncsu.csc.Galant.gui.editor.GTabbedPane.open(GTabbedPane.java:307)
+     [java] 	at edu.ncsu.csc.Galant.gui.editor.GTabbedPane.restoreLastState(GTabbedPane.java:168)
+     [java] 	at edu.ncsu.csc.Galant.gui.editor.GTabbedPane.<init>(GTabbedPane.java:97)
+     [java] 	at edu.ncsu.csc.Galant.gui.editor.GEditorFrame.<init>(GEditorFrame.java:73)
+     [java] 	at edu.ncsu.csc.Galant.Galant$1.run(Galant.java:24)
+     [java] 	at java.awt.event.InvocationEvent.dispatch(InvocationEvent.java:312)
+     [java] 	at java.awt.EventQueue.dispatchEventImpl(EventQueue.java:745)
+     [java] 	at java.awt.EventQueue.access$300(EventQueue.java:103)
+     [java] 	at java.awt.EventQueue$3.run(EventQueue.java:706)
+     [java] 	at java.awt.EventQueue$3.run(EventQueue.java:704)
+     [java] 	at java.security.AccessController.doPrivileged(Native Method)
+     [java] 	at java.security.ProtectionDomain$1.doIntersectionPrivilege(ProtectionDomain.java:76)
+     [java] 	at java.awt.EventQueue.dispatchEvent(EventQueue.java:715)
+     [java] 	at java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:242)
+     [java] 	at java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:161)
+     [java] 	at java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:150)
+     [java] 	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:146)
+     [java] 	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:138)
+     [java] 	at java.awt.EventDispatchThread.run(EventDispatchThread.java:91)
+     [java] ....package edu.ncsu.csc.Galant.algorithm.code.compiled;import java.util.*;import edu.ncsu.csc.Galant.algorithm.Algorithm;import edu.ncsu.csc.Galant.graph.component.Graph;import edu.ncsu.csc.Galant.graph.component.Node;import edu.ncsu.csc.Galant.graph.component.Edge;import edu.ncsu.csc.Galant.algorithm.code.macro.Function;import edu.ncsu.csc.Galant.algorithm.code.macro.Pair;import edu.ncsu.csc.Galant.GalantException;public class line_up_nodes_alg extends Algorithm{@Override public void run() { try {final int HORIZONTAL_GAP = 100;
+     [java] final int VERTICAL_GAP = 100;
+     [java] final int TOP_GAP = 2*VERTICAL_GAP;
+     [java] int arraySize = 0;
+     [java] for(Node n : getNodes()){
+     [java] 	arraySize++;
+     [java] }
+     [java] Node[] nodeArray = new Node[arraySize];
+     [java] int j = 0;
+     [java] int xPosition = HORIZONTAL_GAP;
+     [java] int yPosition = TOP_GAP;
+     [java] for(Node n : getNodes()){
+     [java] 	n.setPosition(xPosition,yPosition);
+     [java] 	xPosition += HORIZONTAL_GAP;
+     [java] 	nodeArray[j] = n;
+     [java] 	j++;
+     [java] }} catch (Exception e) { if ( e instanceof GalantException ) {GalantException ge = (GalantException) e; ge.report(""); ge.display(); } else e.printStackTrace(System.out);}
+     [java]  }}
+
+BUILD SUCCESSFUL
+Total time: 36 seconds

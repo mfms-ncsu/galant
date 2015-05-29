@@ -16,6 +16,7 @@ for_nodes( n ) {
 
 Node start = getNodeById( 0 );
 start.setWeight( 0 );
+start.setSelected( true );
 nodeQ.offer( start );
 endStep();
 
@@ -23,7 +24,7 @@ while ( ! nodeQ.isEmpty()) {
     Node n = nodeQ.poll();
     n.setVisited( true );
 
-    for_adjacent ( n, e, head ) {
+    for_outgoing( n, e, head ) {
         if ( ! head.isSelected() ) {
             beginStep();
             e.setSelected( true );
@@ -36,18 +37,4 @@ while ( ! nodeQ.isEmpty()) {
     }
 }
 
-/*
-beginStep();
-for_nodes ( n ) {
-    n.setSelected( false );
-    n.setVisited( false );
-    n.setWeight( INFINITY );
-}
-
-for_edges ( e ) {
-    e.setSelected( false );
-}
-endStep();
-*/
-
-//  [Last modified: 2013 07 15 at 14:22:11 GMT]
+//  [Last modified: 2015 05 21 at 19:46:45 GMT]

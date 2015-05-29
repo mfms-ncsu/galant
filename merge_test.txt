@@ -1,1 +1,2 @@
-this is only a test
+The origin/master version of merge_test.txt
+Repository moved under GalantTeam

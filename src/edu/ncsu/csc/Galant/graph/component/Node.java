@@ -852,4 +852,8 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 }
 
+<<<<<<< HEAD
 //  [Last modified: 2015 05 26 at 14:30:16 GMT]
+=======
+//  [Last modified: 2015 05 26 at 11:54:21 GMT]
+>>>>>>> parent of 1062608... Added debugging printout for Node state change

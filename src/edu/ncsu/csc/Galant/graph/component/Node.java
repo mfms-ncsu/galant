@@ -724,7 +724,6 @@ public class Node extends GraphElement implements Comparable<Node> {
 		NodeState latest = latestState();
 		NodeState ns = new NodeState ( latest, this.graphCurrentState );
 		
-        LogHelper.logDebug( "newState (node) = " + ns );
 		return ns;
 	}
 
@@ -853,4 +852,4 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 }
 
-//  [Last modified: 2015 05 26 at 15:25:57 GMT]
+//  [Last modified: 2015 05 26 at 14:30:16 GMT]

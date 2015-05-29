@@ -13,6 +13,8 @@ public class line_up_nodes_alg extends Algorithm {
 		System.out.println("Created new line_up_nodes_alg using hardcoded implementation.");
 	}
 	
+	
+	
 	@Override public void run() {
 		System.out.println("Starting hardcoded class's run(); method");
 		try {

@@ -233,10 +233,6 @@ public class GraphPanel extends JPanel{
     /**
      * @return the point at the center of node n, based on whether or not
      * you're in animation mode or whether the graph is layered.
-     *
-     * @todo Once LayeredGraph becomes a subclass of Graph, and LayeredNode a
-     * subclass of Node, we can override getPosition(), getX(), and getY() in
-     * LayeredNode() so that they do the right thing.
      */
     private Point getNodeCenter( Node n ) 
         throws GalantException
@@ -818,15 +814,21 @@ public class GraphPanel extends JPanel{
             LogHelper.logDebug( "centerVal = " + centerVal );
 			Rectangle2D clickArea = new Rectangle2D.Double(p.getX() - centerVal, p.getY() - centerVal - 1, i, i);
 			
-            for (Edge e : g.getEdges()) {
-                Point p1 = e.getSourceNode().getFixedPosition();
-                Point p2 = e.getDestNode().getFixedPosition();
+            try {
+                for (Edge e : g.getEdges()) {
+                    Point p1 = e.getSourceNode().getFixedPosition();
+                    Point p2 = e.getDestNode().getFixedPosition();
 
-                Line2D l = new Line2D.Double(p1, p2);
+                    Line2D l = new Line2D.Double(p1, p2);
 				
-                if (l.intersects(clickArea)) {
-                    top = e;
+                    if (l.intersects(clickArea)) {
+                        top = e;
+                    }
+                    
                 }
+            }
+            catch ( GalantException e ) {
+                top = null;
             }
 			
 			if (top != null) break;
@@ -898,4 +900,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2015 05 26 at 14:32:04 GMT]
+//  [Last modified: 2015 05 21 at 18:52:36 GMT]

@@ -11,7 +11,10 @@ package edu.ncsu.csc.Galant.graph.component;
 public class GraphState {
 
 	public static final int GRAPH_START_STATE = 1;
-	private int state;
+
+	
+	private int state = 0;
+	
 
     /**
      * non-zero if in the middle of a step, i.e., between beginStep() and

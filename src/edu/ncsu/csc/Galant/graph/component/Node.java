@@ -102,6 +102,7 @@ public class Node extends GraphElement implements Comparable<Node> {
 	
 	@Override
 	public double getWeight(int state)
+        throws GalantException
         {
             NodeState ns = getLatestValidState(state);
             return ns==null ? null : ns.getWeight();
@@ -152,6 +153,7 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 	
 	public boolean isSelected(int state)
+        throws GalantException
     {
 		NodeState ns = getLatestValidState(state);
 		
@@ -163,6 +165,7 @@ public class Node extends GraphElement implements Comparable<Node> {
     }
 	
     public boolean isHighlighted(int state)
+        throws GalantException
     {
         return isSelected(state);
     }
@@ -172,6 +175,7 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 
 	public Boolean isVisited(int state)
+        throws GalantException
     {
 		NodeState ns = getLatestValidState(state);
 		return ns==null ? null : ns.isVisited();
@@ -182,6 +186,7 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 
 	public Boolean isMarked(int state)
+        throws GalantException
     {
 		NodeState ns = getLatestValidState(state);
 		return ns==null ? null : ns.isVisited();
@@ -551,6 +556,7 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 
 	public Point getPosition(int state)
+        throws GalantException
     {
 		NodeState ns = getLatestValidState(state);
 		return ns==null ? null : ns.getPosition();
@@ -561,6 +567,7 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 
 	public int getX(int state)
+        throws GalantException
     {
 		NodeState ns = getLatestValidState(state);
 		return ns==null ? null : ns.getPosition().x;
@@ -571,6 +578,7 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 
 	public int getY(int state)
+        throws GalantException
     {
 		NodeState ns = getLatestValidState(state);
 		return ns==null ? null : ns.getPosition().y;
@@ -852,4 +860,4 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 }
 
-//  [Last modified: 2015 05 26 at 14:30:16 GMT]
+//  [Last modified: 2015 05 21 at 18:52:52 GMT]

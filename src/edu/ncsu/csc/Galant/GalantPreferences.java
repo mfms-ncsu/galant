@@ -1,3 +1,12 @@
+/**
+ * Sets up the hierarchy of preferences and declares each available
+ * preference using utilities provided in prefs
+ * @see edu.ncsu.csc.Galant.prefs
+ *
+ * @todo The mechanism here is heavily dependent on specific GUI features --
+ * it should be possible to select preferences via keyboard shortcuts.
+ */
+
 package edu.ncsu.csc.Galant;
 
 import java.awt.Color;
@@ -52,6 +61,10 @@ public class GalantPreferences
 	public static final PreferenceGroup VISUAL_GRAPH_EDITOR;
 
 	public static final Preference<Integer> EDGE_WIDTH;
+
+	public static final Preference<Integer> NODE_RADIUS;
+
+// 	public static final Preference<Boolean> DISPLAY_NODE_ID;
 
 	// Open/Save
 
@@ -156,6 +169,17 @@ public class GalantPreferences
 			}
 		};
 
+		NODE_RADIUS =
+				VISUAL_GRAPH_EDITOR.addPreference(new Preference<Integer>("Node radius", 12, Accessors.INT_ACCESSOR));
+		new PreferenceSpinner(NODE_RADIUS, 1, 15, 1){
+			@Override
+			public void apply()
+			{
+				GraphDispatch.getInstance().pushToGraphEditor();
+				super.apply();
+			}
+		};
+
 		// -------- Open/Save --------
 
 		OPEN_SAVE = PreferenceGroup.ROOT.addNewChild("Open/Save");
@@ -179,3 +203,5 @@ public class GalantPreferences
 	public static void initPrefs()
 	{}
 }
+
+//  [Last modified: 2015 05 29 at 13:53:25 GMT]

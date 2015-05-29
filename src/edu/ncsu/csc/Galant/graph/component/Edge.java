@@ -453,4 +453,4 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 	
 }
 
-//  [Last modified: 2015 05 26 at 14:28:59 GMT]
+//  [Last modified: 2015 05 26 at 11:22:46 GMT]

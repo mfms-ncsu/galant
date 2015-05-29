@@ -56,6 +56,8 @@ import edu.ncsu.csc.Galant.prefs.PreferenceVisitor;
 public class PreferencesPanel extends JPanel
 	{
 		private static final int DEFAULT_X = 300, DEFAULT_Y = 150, DEFAULT_WIDTH = 500, DEFAULT_HEIGHT = 350;
+        private static final int DEFAULT_GROUP_PANEL_WIDTH = 200;
+        private static final int DEFAULT_GROUP_PANEL_HEIGHT = 240;
 		private static final PreferencesPanel PREFS_PANEL = new PreferencesPanel();
 
 		/**
@@ -144,7 +146,7 @@ public class PreferencesPanel extends JPanel
 				});
 
 				JScrollPane treeScroller = new JScrollPane(groupTree);
-				treeScroller.setPreferredSize(new Dimension(DEFAULT_WIDTH * 1 / 4, DEFAULT_HEIGHT * 3 / 4));
+				treeScroller.setPreferredSize( new Dimension( DEFAULT_GROUP_PANEL_WIDTH, DEFAULT_GROUP_PANEL_HEIGHT ) );
 				return treeScroller;
 			}
 
@@ -246,3 +248,5 @@ public class PreferencesPanel extends JPanel
 				groupTree.setSelectionPath(currentGroup.pathToNode());
 			}
 	}
+
+//  [Last modified: 2015 05 29 at 15:47:10 GMT]

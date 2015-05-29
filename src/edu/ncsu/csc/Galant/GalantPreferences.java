@@ -37,7 +37,7 @@ public class GalantPreferences
 
 	// Editors
 
-	public static final PreferenceGroup EDITORS;
+	public static final PreferenceGroup TEXT_EDITORS;
 
 	public static final Preference<Integer> FONT_SIZE;
 
@@ -85,10 +85,10 @@ public class GalantPreferences
 	{
 		// -------- Editors --------
 
-		EDITORS = PreferenceGroup.ROOT.addNewChild("Editors");
+		TEXT_EDITORS = PreferenceGroup.ROOT.addNewChild("Text Window");
 
 		FONT_SIZE =
-				EDITORS.addPreference(new Preference<Integer>("Font Size", UIManager.getDefaults()
+				TEXT_EDITORS.addPreference(new Preference<Integer>("Font Size", UIManager.getDefaults()
 						.getFont("TextPane.font").getSize(), Accessors.INT_ACCESSOR));
 		new PreferenceSpinner(FONT_SIZE, 1, null, 1){
 			@Override
@@ -102,7 +102,7 @@ public class GalantPreferences
 
 		// TODO find the default tab size (I'm just using "4" for now; we could just stick
 		// with that, I guess)
-		TAB_SIZE = EDITORS.addPreference(new Preference<Integer>("Tab Size", 4, Accessors.INT_ACCESSOR));
+		TAB_SIZE = TEXT_EDITORS.addPreference(new Preference<Integer>("Tab Size", 4, Accessors.INT_ACCESSOR));
 		new PreferenceSpinner(TAB_SIZE, 1, null, 1){
 			@Override
 			public void apply()
@@ -114,7 +114,7 @@ public class GalantPreferences
 
 		// ---- Algorithm Editor ----
 
-		ALGORITHM_EDITOR = EDITORS.addNewChild("Algorithm Editor");
+		ALGORITHM_EDITOR = PreferenceGroup.ROOT.addNewChild("Algorithm Editor");
 
 		JAVA_KEYWORD_COLOR =
 				ALGORITHM_EDITOR.addPreference(new Preference<Color>("Java Keyword Color", new Color(0, 0, 255),
@@ -142,7 +142,7 @@ public class GalantPreferences
 
 		// ---- Text Graph Editor ----
 
-		TEXT_GRAPH_EDITOR = EDITORS.addNewChild("Textual Graph Editor");
+		TEXT_GRAPH_EDITOR = PreferenceGroup.ROOT.addNewChild("Textual Graph Editor");
 
 		GML_KEYWORD_COLOR =
 				TEXT_GRAPH_EDITOR.addPreference(new Preference<Color>("GraphML Keyword Color", new Color(0, 0, 255),
@@ -157,7 +157,7 @@ public class GalantPreferences
 
 		// ---- Visual Graph Editor ----
 
-		VISUAL_GRAPH_EDITOR = EDITORS.addNewChild("Visual Graph Editor");
+		VISUAL_GRAPH_EDITOR = PreferenceGroup.ROOT.addNewChild("Visual Graph Editor");
 
 		EDGE_WIDTH =
 				VISUAL_GRAPH_EDITOR.addPreference( new Preference<Integer>( "Edge Width", 
@@ -209,4 +209,4 @@ public class GalantPreferences
 	{}
 }
 
-//  [Last modified: 2015 05 29 at 15:16:03 GMT]
+//  [Last modified: 2015 05 29 at 15:37:52 GMT]

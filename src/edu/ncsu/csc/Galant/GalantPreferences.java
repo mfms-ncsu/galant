@@ -14,6 +14,7 @@ import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileSystemView;
+import javax.swing.JSpinner;
 
 import edu.ncsu.csc.Galant.gui.editor.GEditorFrame;
 import edu.ncsu.csc.Galant.gui.prefs.components.ColorPanel;
@@ -163,7 +164,7 @@ public class GalantPreferences
 				VISUAL_GRAPH_EDITOR.addPreference( new Preference<Integer>( "Edge Width", 
                                                                            GraphPanel.DEFAULT_WIDTH,
                                                                            Accessors.INT_ACCESSOR ) );
-		new PreferenceSpinner(EDGE_WIDTH, 1, GraphPanel.MAXIMUM_WIDTH, 1){
+		PreferenceSpinner edgeWidthSpinner = new PreferenceSpinner(EDGE_WIDTH, 1, GraphPanel.MAXIMUM_WIDTH, 1) {
 			@Override
 			public void apply()
 			{
@@ -209,4 +210,4 @@ public class GalantPreferences
 	{}
 }
 
-//  [Last modified: 2015 05 29 at 15:37:52 GMT]
+//  [Last modified: 2015 05 29 at 21:29:55 GMT]

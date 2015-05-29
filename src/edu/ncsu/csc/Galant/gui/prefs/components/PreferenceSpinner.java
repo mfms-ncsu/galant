@@ -25,6 +25,9 @@ public class PreferenceSpinner extends PreferenceComponent<Integer, JSpinner>
 		 * @param step the step size of the spinner.
 		 * @see SpinnerNumberModel#SpinnerNumberModel(Number, Comparable, Comparable, Number)
 		 */
+        // I can't seem to come up with a strategy that allows me to see the numbers
+        private final static int SPINNER_FIELD_WIDTH = 3;
+        
 		public PreferenceSpinner(Preference<Integer> preference, Integer min, Integer max,
 			Integer step)
 			{
@@ -37,12 +40,17 @@ public class PreferenceSpinner extends PreferenceComponent<Integer, JSpinner>
 							JComponent editor = getComponent().getEditor();
 							Dimension preferred = editor.getPreferredSize();
 							int prevWidth = preferred.width;
-							preferred.width =
-								SwingUtilities.computeStringWidth(editor.getFontMetrics(editor.getFont()), NumberFormat
-									.getInstance().format(getValue()));
-							editor.setPreferredSize(preferred);
-							if(prevWidth != preferred.width)
-								getComponent().getParent().validate();
+							preferred.width
+//                                 = SwingUtilities.computeStringWidth(editor.getFontMetrics(editor.getFont()), "000" );
+                                = SPINNER_FIELD_WIDTH;
+                                // The method below appears to give windows
+                                // that are too small
+//                             String numberFormat = NumberFormat.getInstance().format(getValue());
+// 								SwingUtilities.computeStringWidth(editor.getFontMetrics(editor.getFont()), numberFormat );
+							editor.setMinimumSize(preferred);
+                            getComponent().setEditor(editor);
+// 							if(prevWidth != preferred.width)
+// 								getComponent().getParent().validate();
 						}
 				});
 			}
@@ -61,3 +69,5 @@ public class PreferenceSpinner extends PreferenceComponent<Integer, JSpinner>
 				getComponent().setValue(value);
 			}
 	}
+
+//  [Last modified: 2015 05 29 at 21:45:16 GMT]

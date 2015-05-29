@@ -715,7 +715,7 @@ public class GraphPanel extends JPanel{
 	
 	public void incrementDisplayState() {
 		LogHelper.enterMethod(getClass(), "incrementDisplayState");
-		
+		System.out.printf("Incrementing the graph display state");
         LogHelper.logDebug( "" + state );
 		Graph graph = dispatch.getWorkingGraph();
 		if (this.state < graph.getState()) {

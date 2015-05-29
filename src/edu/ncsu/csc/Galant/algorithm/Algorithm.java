@@ -315,17 +315,7 @@ public abstract class Algorithm implements Runnable{
 
 		/** Runs this algorithm on the given graph. */
 		public abstract void run();
-		/*
-		public void run(){
-			while (!exit()) {
-				synchronizeWithController();
-				setIncomplete();
-				//Go run a step; wait for the algorithm to do a graph update; this is when we know that a step is complete
-				setComplete();
-			}
-			
-			
-		}*/
+		
 	}
 
 //  [Last modified: 2015 05 14 at 19:20:52 GMT]

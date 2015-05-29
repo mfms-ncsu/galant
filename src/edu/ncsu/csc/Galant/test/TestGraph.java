@@ -9,12 +9,11 @@ import org.junit.Test;
 import edu.ncsu.csc.Galant.graph.component.Edge;
 import edu.ncsu.csc.Galant.graph.component.Graph;
 import edu.ncsu.csc.Galant.graph.component.Node;
-import edu.ncsu.csc.Galant.*;
 
 public class TestGraph {
 
 	@Test
-	public void testGetNodes() throws GalantException{
+	public void testGetNodes() {
 		Graph g = generateTestGraph();
 		
 		assertEquals(3, g.getNodes(1).size());
@@ -23,7 +22,7 @@ public class TestGraph {
 	}
 	
 	@Test
-	public void testGetEdges() throws GalantException{
+	public void testGetEdges() {
 		Graph g = generateTestGraph();
 		
 		assertEquals(0, g.getEdges(1).size());
@@ -32,7 +31,7 @@ public class TestGraph {
 	}
 	
 	@Test
-	public void testDeleteEdge() throws GalantException{		
+	public void testDeleteEdge() {		
 		Graph g = new Graph();
 		Node n1 = g.addInitialNode();
 		Node n2 = g.addInitialNode();
@@ -46,7 +45,7 @@ public class TestGraph {
 	}
 	
 	@Test
-	public void testDeleteNode() throws GalantException{
+	public void testDeleteNode() {
 		Graph g = new Graph();
 		Node n1 = g.addInitialNode();
 		Node n2 = g.addInitialNode();

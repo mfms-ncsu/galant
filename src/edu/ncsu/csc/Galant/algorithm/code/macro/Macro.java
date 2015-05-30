@@ -58,6 +58,8 @@ public abstract class Macro
 				return pattern;
 			}
 
+		protected abstract boolean getIncludedInAlgorithm();
+
 		/**
 		 * <p>
 		 * Subclasses should implement this method and return a modified version of the current match. The returned string will
@@ -91,17 +93,39 @@ public abstract class Macro
 			{
 				Matcher matcher;
 				int start = 0;
-				while((matcher = getPattern().matcher(code).region(start, code.length())).find())
-					{
-						StringBuffer newCode = new StringBuffer();
-						String modified = modify(code, matcher);
-						if(modified != null)
-							matcher.appendReplacement(newCode, modified);
-						matcher.appendTail(newCode);
-						code = newCode.toString();
-						if(matcher.start() < code.length() - 1)
-							start = matcher.start() + 1;
+
+				if(getIncludedInAlgorithm()) {
+					
+					matcher = getPattern().matcher(code).region(start, code.length()); // find();
+					
+					matcher.find();
+
+					matcher = Pattern.compile("^(.*?)\\;").matcher(modified);
+					matcher.find();
+					String replaceWith = matcher.group(0);
+
+					// Re-read until we hit
+					StringBuffer newCode = new StringBuffer();
+					matcher = getPattern().matcher(code).region(start, code.length());
+					String modified = modify(code, matcher);
+							if(modified != null) {
+								matcher.appendTail(replaceWith);
 					}
+
+				} else {
+					while((matcher = getPattern().matcher(code).region(start, code.length())).find())
+						{	
+							StringBuffer newCode = new StringBuffer();
+							String modified = modify(code, matcher);
+							if(modified != null) {
+								matcher.appendReplacement(newCode, modified);
+							}
+							matcher.appendTail(newCode);
+							code = newCode.toString();
+							if(matcher.start() < code.length() - 1)
+								start = matcher.start() + 1;
+						}
+				}
 				return code;
-			}
+			}	
 	}

@@ -12,29 +12,26 @@ import java.util.Arrays;
 public class Macros
 	{
 		public static void macros()
-			{
-				Macro.MACROS.add(new Macro("\\bbool\\b"){
+			{	
+				
+				Macro.MACROS.add(new SimpleReplacementMacro("\\bbool\\b", "boolean"){
+					/*
 					@Override
 					protected String modify(String code, MatchResult match) throws MalformedMacroException
 						{
 							return "boolean";
 						}
-				});
+					*/	
+				}); 
 
-				
-				/*
-				 * algorithm: to indicate the start of an algorithm
-				 * 
-				 * Usage: algorithm{<code_block>}
-				 * 
-				 * code_block: a block of code that is executed for the algorithm
-				 */
-				Macro.MACROS.add(new Macro("algorithm"){
+
+				Macro.MACROS.add(new ParameterizedMacro("currentNodeList", 1, false, true){
 					@Override
-					protected String modify(String code, MatchResult match) throws MalformedMacroException
+					protected String modifyMatch(String code, MatchResult nameMatch, String[] args, String whitespace,
+						String block)
 						{
-							return "public void run()" ;
-						}
+							return Matcher.quoteReplacement("Node [] " + args[0] + " = new Node[ getNodes().size() ]");
+						}	
 				});
 
 				/*
@@ -57,7 +54,7 @@ public class Macros
 				 * code_block: a block of code that is executed for each adjacent node / incident
 				 * edge of <node>. The curly braces are required.
 				 */
-				Macro.MACROS.add(new ParameterizedMacro("for_outgoing", 3, true){
+				Macro.MACROS.add(new ParameterizedMacro("for_outgoing", 3, true, false){
 					@Override
 					protected String modifyMatch(String code, MatchResult nameMatch, String[] args, String whitespace,
 						String block)
@@ -89,7 +86,7 @@ public class Macros
 				 * code_block: a block of code that is executed for each adjacent node / incident
 				 * edge of <node>. The curly braces are required.
 				 */
-				Macro.MACROS.add(new ParameterizedMacro("for_incoming", 3, true){
+				Macro.MACROS.add(new ParameterizedMacro("for_incoming", 3, true, false){
 					@Override
 					protected String modifyMatch(String code, MatchResult nameMatch, String[] args, String whitespace,
 						String block)
@@ -120,7 +117,7 @@ public class Macros
 				 * code_block: a block of code that is executed for each adjacent node / incident
 				 * edge of <node>. The curly braces are required.
 				 */
-				Macro.MACROS.add(new ParameterizedMacro("for_adjacent", 3, true){
+				Macro.MACROS.add(new ParameterizedMacro("for_adjacent", 3, true, false){
 					@Override
 					protected String modifyMatch(String code, MatchResult nameMatch, String[] args, String whitespace,
 						String block)
@@ -143,7 +140,7 @@ public class Macros
 				 * 
 				 * code_block: a block of code that is executed for each node in the graph.
 				 */
-				Macro.MACROS.add(new ParameterizedMacro("for_nodes", 1){
+				Macro.MACROS.add(new ParameterizedMacro("for_nodes", 1, false){
 					@Override
 					protected String modifyMatch(String code, MatchResult nameMatch, String[] args, String whitespace,
 						String block)
@@ -164,7 +161,7 @@ public class Macros
 				 * 
 				 * code_block: a block of code that is executed for each edge in the graph.
 				 */
-				Macro.MACROS.add(new ParameterizedMacro("for_edges", 1){
+				Macro.MACROS.add(new ParameterizedMacro("for_edges", 1, false){
 					@Override
 					protected String modifyMatch(String code, MatchResult nameMatch, String[] args, String whitespace,
 						String block)
@@ -173,7 +170,7 @@ public class Macros
 						}
 				});
 
-				Macro.MACROS.add(new ParameterizedMacro(MacroUtil.replaceWhitespace("new_function (\\S+)?  (\\S+)"), true){
+				Macro.MACROS.add(new ParameterizedMacro(MacroUtil.replaceWhitespace("new_function (\\S+)?  (\\S+)"), true, false){
 					
 						private String getObjectType(String type)
 							{	
@@ -267,6 +264,14 @@ public class Macros
 							}
 					});				
 
+				/*
+				 * algorithm: to indicate the start of an algorithm
+				 * 
+				 * Usage: algorithm{<code_block>}
+				 * 
+				 * code_block: a block of code that is executed for the algorithm
+				 */
+				Macro.MACROS.add(new AlgorithmMacro());
 
 				/*
 				 * function: creates a function that can be called later.
@@ -291,7 +296,7 @@ public class Macros
 				 * 
 				 * code_block: a block of code that is executed when the function is called. The curly braces are required.
 				 */
-				Macro.MACROS.add(new ParameterizedMacro(MacroUtil.replaceWhitespace("function (\\S+)?  (\\S+)"), true){
+				Macro.MACROS.add(new ParameterizedMacro(MacroUtil.replaceWhitespace("function (\\S+)?  (\\S+)"), true, false){
 					Map<String, String> wrapperMap = new HashMap<String, String>();
 						{
 							wrapperMap.put("int", "Integer");
@@ -521,7 +526,7 @@ public class Macros
 
 					private void createCallMacro(final String name, int numParams, final Param mainParam)
 						{
-							Macro.GENERATED_MACROS.add(new ParameterizedMacro(name, numParams){
+							Macro.GENERATED_MACROS.add(new ParameterizedMacro(name, numParams, false){
 								@Override
 								protected String modifyMatch(String code, MatchResult nameMatch, String[] args,
 									String whitespace, String block)

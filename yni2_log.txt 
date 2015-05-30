@@ -15,3 +15,7 @@ May 22: 5 hours
 May 27: 2 hours
 	- Still trying to figure out why getNodes will get an NullPointerException when hit compile.
 	- Looking to create Macro that declares and initializes a list. The list contains current nodes on the graph.(Works as the same as e.g: “final Node [] parent = new Node[ getNodes ]”)
+
+May 29: 5 hours
+	- Creating a new Macro. Have to find out a way to handle regular expression. :( (Need to remove the old expression and add the new one into algorithm{} but  Matcher.Replacement is not useful anymore.) 
+	

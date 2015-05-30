@@ -79,7 +79,9 @@ public class GalantPreferences
 
 	public static final PreferenceGroup VISUAL_GRAPH_EDITOR;
 
-	public static final Preference<Integer> EDGE_WIDTH;
+	public static final Preference<Integer> NORMAL_WIDTH;
+
+	public static final Preference<Integer> HIGHLIGHT_WIDTH;
 
 	public static final Preference<Integer> NODE_RADIUS;
 
@@ -175,13 +177,28 @@ public class GalantPreferences
 
 		// ---- Visual Graph Editor ----
 
-		VISUAL_GRAPH_EDITOR = PreferenceGroup.ROOT.addNewChild("Visual Graph Editor");
+		VISUAL_GRAPH_EDITOR = PreferenceGroup.ROOT.addNewChild("Graph Display");
 
-		EDGE_WIDTH =
-				VISUAL_GRAPH_EDITOR.addPreference( new Preference<Integer>( "Edge Width", 
+		NORMAL_WIDTH =
+				VISUAL_GRAPH_EDITOR.addPreference( new Preference<Integer>( "Line Width", 
                                                                            GraphPanel.DEFAULT_WIDTH,
                                                                            Accessors.INT_ACCESSOR ) );
-		PreferenceSpinner edgeWidthSpinner = new PreferenceSpinner(EDGE_WIDTH, 1, GraphPanel.MAXIMUM_WIDTH, 1) {
+		PreferenceSpinner normalWidthSpinner
+            = new PreferenceSpinner(NORMAL_WIDTH, 1, GraphPanel.MAXIMUM_LINE_WIDTH, 1) {
+			@Override
+			public void apply()
+			{
+				GraphDispatch.getInstance().pushToGraphEditor();
+				super.apply();
+			}
+		};
+
+		HIGHLIGHT_WIDTH =
+				VISUAL_GRAPH_EDITOR.addPreference( new Preference<Integer>( "Highlight Line Width", 
+                                                                           GraphPanel.DEFAULT_HIGHLIGHT_WIDTH,
+                                                                           Accessors.INT_ACCESSOR ) );
+		PreferenceSpinner highlightWidthSpinner
+            = new PreferenceSpinner(HIGHLIGHT_WIDTH, 1, GraphPanel.MAXIMUM_LINE_WIDTH, 1) {
 			@Override
 			public void apply()
 			{
@@ -227,4 +244,4 @@ public class GalantPreferences
 	{}
 }
 
-//  [Last modified: 2015 05 30 at 12:39:48 GMT]
+//  [Last modified: 2015 05 30 at 18:10:01 GMT]

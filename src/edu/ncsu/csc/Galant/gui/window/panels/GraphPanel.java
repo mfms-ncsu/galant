@@ -42,12 +42,6 @@ import java.text.*;             // DecimalFormat
 public class GraphPanel extends JPanel{
 
     /**
-     * whether or not to display the id of a node (should be a preference)
-     */
-//     private final boolean DISPLAY_ID = true;
-    private final boolean DISPLAY_ID = false;
-
-    /**
      * color of a node boundary or edge if none is specified
      */
     public final Color DEFAULT_COLOR = Color.black;
@@ -61,7 +55,12 @@ public class GraphPanel extends JPanel{
      * Maximum width of a node boundary or edge that can be specified by a
      * spinner in the preferences panel
      */
-    public static final int MAXIMUM_WIDTH = 6;
+    public static final int MAXIMUM_LINE_WIDTH = 7;
+
+    /**
+     * default width for a highlighted or colored edge or node boundary
+     */
+    public static final int DEFAULT_HIGHLIGHT_WIDTH = 5;
 
     /**
      * This is the default value if none is specified in the preferences
@@ -75,10 +74,15 @@ public class GraphPanel extends JPanel{
     public static final int MAXIMUM_NODE_RADIUS = 15;
 
     /**
-     * Characteristics of the boundary of a selected node
-     * (line width setting does not work -- not clear why)
+     * Minimum node radius that allows display of node id
      */
-    private final float THICKER_WIDTH = 5;
+    private static final int MINIMUM_ID_RADIUS = 10;
+
+    /**
+     * Characteristics of the boundary of a selected node
+     * (line width setting does not work because this has to be a float)
+     */
+    private final float SELECTED_NODE_LINE_WIDTH = 5;
     private final Color SELECTED_NODE_LINE_COLOR = Color.red;
 
     /**
@@ -141,10 +145,16 @@ public class GraphPanel extends JPanel{
 	private int state = GraphState.GRAPH_START_STATE;
 	
 	/**
-	 * Holds the width to draw edges. Pulled on each repaint
-	 * from the Galant Preferences 
+	 * Holds the width to draw edges and node boundaries. Pulled on each
+	 * repaint from the Galant Preferences 
 	 */
-	private int edgeWidth = DEFAULT_WIDTH;
+	private int lineWidth = DEFAULT_WIDTH;
+
+    /**
+     * Holds the width to draw edges and node boundaries when these are
+     * highlighted or colored
+     */
+    private int highlightWidth = DEFAULT_HIGHLIGHT_WIDTH;
 
 	/**
 	 * Holds the radius for drawing nodes. Pulled on each repaint
@@ -152,6 +162,11 @@ public class GraphPanel extends JPanel{
 	 */
 	private int nodeRadius = DEFAULT_NODE_RADIUS;
 	
+    /**
+     * whether or not to display the id's of nodes
+     */
+    private boolean displayIds = false;
+
 	private Node previousNode;
 	private Node selectedNode;
 	private Edge selectedEdge;
@@ -219,12 +234,18 @@ public class GraphPanel extends JPanel{
             // Get the graph to draw
             Graph graph = dispatch.getWorkingGraph();
 		
-            // Get the preferred edge width
-            this.edgeWidth = GalantPreferences.EDGE_WIDTH.get();
+            // Get the normal width of an edge or node boundary
+            this.lineWidth = GalantPreferences.NORMAL_WIDTH.get();
+
+            // Get the width of a node boundary that's highlighted or colored
+            this.highlightWidth = GalantPreferences.HIGHLIGHT_WIDTH.get();
 
             // Get node radius
             this.nodeRadius = GalantPreferences.NODE_RADIUS.get();
-		
+	
+            // display id's only if radius is large enough
+            displayIds = ( nodeRadius >= MINIMUM_ID_RADIUS );
+
             super.paintComponent(g);
             Graphics2D g2d = (Graphics2D) g;
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -415,19 +436,19 @@ public class GraphPanel extends JPanel{
         /* draw node boundary */
         if ( ns.isSelected() ) {
             g2d.setColor( SELECTED_NODE_LINE_COLOR );
-            g2d.setStroke( new BasicStroke( THICKER_WIDTH ) );
+            g2d.setStroke( new BasicStroke( highlightWidth ) );
         }
         else if ( ns.getColor().equals( Graph.NOT_A_COLOR ) ) {
             // no declared color, use default color with default line width 
             g2d.setColor( DEFAULT_COLOR );
-            g2d.setStroke( new BasicStroke() );
+            g2d.setStroke( new BasicStroke( lineWidth ) );
         }
         else {
             // color declared, use it and make stroke thicker
             String nodeColor = ns.getColor();
             Color c = Color.decode( nodeColor );
             g2d.setColor(c);
-            g2d.setStroke( new BasicStroke( THICKER_WIDTH ) );
+            g2d.setStroke( new BasicStroke( highlightWidth ) );
         }
 
         // draw node boundary
@@ -435,7 +456,7 @@ public class GraphPanel extends JPanel{
 
         /* draw node id if desired */
         /** @todo get rid of magic numbers here */
-        if ( DISPLAY_ID ) {
+        if ( displayIds ) {
             g2d.setColor(Color.BLACK);
             String idStr = "" + n.getId();
             if (idStr.length() > 1) {
@@ -473,7 +494,7 @@ public class GraphPanel extends JPanel{
         throws GalantException
     {
 		
-		int thickness = edgeWidth;
+		int thickness = lineWidth; 
 		
 		if (e != null) {
 			Node dest = e.getDestNode(state);
@@ -487,7 +508,7 @@ public class GraphPanel extends JPanel{
 					g2d.setColor(Color.BLUE);
 				} else if (e.isSelected(state)) {
 					g2d.setColor(Color.RED);
-					thickness += 2; // thicken the line on selection 
+					thickness = highlightWidth;
 				} else {
 					try {
 						Color c = Color.decode(e.getColor());
@@ -933,4 +954,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2015 05 30 at 00:37:06 GMT]
+//  [Last modified: 2015 05 30 at 18:16:58 GMT]

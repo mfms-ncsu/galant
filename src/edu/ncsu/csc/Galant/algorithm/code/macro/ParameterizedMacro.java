@@ -33,10 +33,6 @@ public abstract class ParameterizedMacro extends Macro
 		private String name = null;
 		private int minParams, maxParams;
 		private boolean includeCodeBlock;
-		/* If this field is true, then this macro will be included in algorithm{} no matter where it was initially set to be. 
-		   This can be helpful when you want to create something will call getNodes().
-		*/    
-		private boolean includedInAlgorithm;
 
 		/**
 		 * Creates a new <code>ParameterizedMacro</code>. <code>minParams</code> and <code>maxParams</code> determine the
@@ -47,35 +43,28 @@ public abstract class ParameterizedMacro extends Macro
 		 * @param minParams the minimum number of parameters the macro should take.
 		 * @param maxParams the maximum number of parameters the macro should take.
 		 */
-		public ParameterizedMacro(String name, int minParams, int maxParams, boolean includeCodeBlock, boolean includedInAlgorithm)
+		public ParameterizedMacro(String name, int minParams, int maxParams, boolean includeCodeBlock)
 			{
 				super(MacroUtil.nestedRegex(MacroUtil.replaceWhitespace("(" + name + ") \\("), (includeCodeBlock ? "\\}" : "\\)")));
 				this.namePattern = Pattern.compile(name);
 				this.minParams = minParams;
 				this.maxParams = maxParams;
 				this.includeCodeBlock = includeCodeBlock;
-				this.includedInAlgorithm = includedInAlgorithm;
 			}
-		public ParameterizedMacro(String name, int numParams, boolean includeCodeBlock, boolean includedInAlgorithm)
+		public ParameterizedMacro(String name, int numParams, boolean includeCodeBlock)
 			{
-				this(name, numParams ,numParams, includeCodeBlock, includedInAlgorithm);
+				this(name, numParams, numParams, includeCodeBlock);
 			}
 		/** Defaults to not including code block */
-		public ParameterizedMacro(String name, int numParams, boolean includedInAlgorithm)
+		public ParameterizedMacro(String name, int numParams)
 			{
-				this(name, numParams, false, includedInAlgorithm);
+				this(name, numParams, false);
 			}
 		/** Can have any number of params */
-		public ParameterizedMacro(String name, boolean includeCodeBlock, boolean includedInAlgorithm)
+		public ParameterizedMacro(String name, boolean includeCodeBlock)
 			{
-				this(name, -1, includeCodeBlock, includedInAlgorithm);
+				this(name, -1, includeCodeBlock);
 			}
-
-		@Override
-		public boolean getIncludedInAlgorithm() {
-			return includedInAlgorithm;
-		}
-
 
 		@Override
 		public String toString()
@@ -89,7 +78,6 @@ public abstract class ParameterizedMacro extends Macro
 				if(MacroUtil.isPartOfIdentifier(IdentifierPartLocation.BEFORE, code, match))
 					return null;
 				name = match.group(NAME_GROUP);
-
 				Matcher nameMatcher = namePattern.matcher(name);
 				nameMatcher.matches();
 				MatchResult nameMatch = nameMatcher.toMatchResult();
@@ -137,8 +125,7 @@ public abstract class ParameterizedMacro extends Macro
 				for(int i = 0; i < numParams; i++)
 					args[i] = params.getMatch().substring(paramBounds.get(i) + 1, paramBounds.get(i + 1)).trim();
 
-
-				if(block == null) 
+				if(block == null)
 					return modifyMatch(code, nameMatch, args, null, null) + Matcher.quoteReplacement(params.getExtra());
 				return modifyMatch(code, nameMatch, args, whitespace, block.getMatch()) +
 					Matcher.quoteReplacement(block.getExtra());

@@ -38,9 +38,6 @@ import edu.ncsu.csc.Galant.GalantException;
  * </p>
  */
 public class CodeIntegrator
-	/**
- 	  * @todo Testing GitHub branch merging.
- 	*/
 	{
 		public static final String METHOD_NAME = "runAlgorithm";
 
@@ -54,23 +51,21 @@ public class CodeIntegrator
 		// compiled.
 		//@formatter:off
 		private static final String CLASS_STRUCTURE =
-			"package " + PACKAGE + ";\n" +
-			"import java.util.*;\n" +
-			"import edu.ncsu.csc.Galant.algorithm.Algorithm;\n" +
-			"import edu.ncsu.csc.Galant.graph.component.Graph;\n" +
-			"import edu.ncsu.csc.Galant.graph.component.Node;\n" +
-			"import edu.ncsu.csc.Galant.graph.component.Edge;\n" +
-			"import edu.ncsu.csc.Galant.algorithm.code.macro.Function;\n" +
-			"import edu.ncsu.csc.Galant.algorithm.code.macro.Pair;\n" +
-            "import edu.ncsu.csc.Galant.GalantException;\n" +
+			"package " + PACKAGE + ";" +
+			"import java.util.*;" +
+			"import edu.ncsu.csc.Galant.algorithm.Algorithm;" +
+			"import edu.ncsu.csc.Galant.graph.component.Graph;" +
+			"import edu.ncsu.csc.Galant.graph.component.Node;" +
+			"import edu.ncsu.csc.Galant.graph.component.Edge;" +
+			"import edu.ncsu.csc.Galant.algorithm.code.macro.Function;" +
+			"import edu.ncsu.csc.Galant.algorithm.code.macro.Pair;" +
+            "import edu.ncsu.csc.Galant.GalantException;" +
 			IMPORTS_FIELD +
-			
 			"public class " + NAME_FIELD + " extends Algorithm" +
-				"{\n" + CODE_FIELD + 
-					/*
+				"{" +
 					"@Override " +
 					"public void run() " +
-						String.format("{ \n try { \n %s}"
+						String.format("{ try {%s}"
                                       + " catch (Exception e)"
                                       + " { if ( e instanceof GalantException )"
                                       + " {GalantException ge = (GalantException) e;"
@@ -78,9 +73,7 @@ public class CodeIntegrator
                                       + " else e.printStackTrace(System.out);}%n }",
                                       CODE_FIELD) +
 					// add newline after code in case of ending with line comment
-					*/
 				"}";
-				
 		//@formatter:on
 
 		/**
@@ -145,7 +138,7 @@ public class CodeIntegrator
                 LogHelper.setEnabled( true );
 				LogHelper.logDebug(sourceCode);
                 LogHelper.restoreState();
-				
+
 				// Compile
 				DiagnosticCollector<JavaFileObject> diagnostics =
 					CompilerAndLoader.compile(qualifiedName, sourceCode);

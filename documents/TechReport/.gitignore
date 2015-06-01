@@ -1,6 +1,0 @@
-# ignore files created during LaTeX compilation
-*.aux
-*.bbl
-*.brf
-*.log
-*.out

@@ -5,14 +5,14 @@ import static org.junit.Assert.assertEquals;
 import java.io.File;
 
 import org.junit.Test;
-import edu.ncsu.csc.Galant.GalantException;
+
 import edu.ncsu.csc.Galant.graph.component.Graph;
 import edu.ncsu.csc.Galant.graph.parser.GraphMLParser;
 
 public class TestGraphMLParser {
 
 	@Test
-	public void testBuildFromFile() throws GalantException {
+	public void testBuildFromFile() {
 		File f = new File("test.gml");
 		GraphMLParser gmp = new GraphMLParser(f);
 		

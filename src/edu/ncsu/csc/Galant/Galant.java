@@ -1,8 +1,6 @@
 package edu.ncsu.csc.Galant;
 
 import javax.swing.SwingUtilities;
-
-import edu.ncsu.csc.Galant.algorithm.Algorithm;
 import edu.ncsu.csc.Galant.gui.editor.GEditorFrame;
 import edu.ncsu.csc.Galant.gui.util.ExceptionDialog;
 import edu.ncsu.csc.Galant.gui.util.WindowUtil;
@@ -15,23 +13,21 @@ import edu.ncsu.csc.Galant.gui.window.GraphWindow;
 public class Galant {
 
 	public static void main(String[] args) {
-		System.out.printf("In Galant main\n");
 		ExceptionDialog.setDialogExceptionHandlerAsDefault();
 		SwingUtilities.invokeLater(new Runnable(){
 			@Override
-			public void run(){
-				GraphDispatch gd = GraphDispatch.getInstance();
-				GalantPreferences.initPrefs();
-				new GraphWindow(gd);
-				new GEditorFrame();
-				GraphWindow.getGraphFrame().addWindowListener(GEditorFrame.getSingleton());
-				WindowUtil.linkWindows();
-				GraphDispatch.getInstance().pushToGraphEditor();
+			public void run()
+				{
+					GraphDispatch gd = GraphDispatch.getInstance();
+					GalantPreferences.initPrefs();
+					new GraphWindow(gd);
+					new GEditorFrame();
+					GraphWindow.getGraphFrame().addWindowListener(GEditorFrame.getSingleton());
+					WindowUtil.linkWindows();
+					GraphDispatch.getInstance().pushToGraphEditor();
 				}
-		}
-		);
+		});
 	}
-	
 	
 }
 

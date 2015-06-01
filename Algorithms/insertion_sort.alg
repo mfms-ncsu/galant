@@ -29,22 +29,8 @@ final Node [] nodes = new Node[ n ]; // actual nodes
 
 /**
  * Lines up the nodes in a single horizontal row
- * @todo this currently does not work because getNodeById() throws a
- * GalantException which can't be caught inside a function.
  */
-// function lineUpNodes() {
-//     int xPosition = HORIZONTAL_GAP;
-//     int yPosition = 2 * VERTICAL_GAP;
-//     for ( int i = 0; i < n; i++ ) { 
-//         nodes[i] = getNodeById( i );
-//         xCoord[i] = xPosition;
-//         A[i] = nodes[i].getWeight();
-//         nodes[i].setPosition( xPosition, yPosition );
-//         xPosition += HORIZONTAL_GAP;
-//     }
-// }
-
-beginStep();
+function lineUpNodes() {
     int xPosition = HORIZONTAL_GAP;
     int yPosition = 2 * VERTICAL_GAP;
     for ( int i = 0; i < n; i++ ) { 
@@ -54,7 +40,10 @@ beginStep();
         nodes[i].setPosition( xPosition, yPosition );
         xPosition += HORIZONTAL_GAP;
     }
-// lineUpNodes();
+}
+
+beginStep();
+lineUpNodes();
 endStep();
 
 beginStep();
@@ -87,4 +76,4 @@ for ( int i = 1; i < n; i++ ) {
 graph.deleteNode( toInsert );
 endStep();
 
-//  [Last modified: 2015 05 21 at 20:11:55 GMT]
+//  [Last modified: 2014 05 12 at 17:22:59 GMT]

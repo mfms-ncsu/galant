@@ -56,13 +56,8 @@ public class GraphPanel extends JPanel{
      * Characteristics of the boundary of a selected node
      * (line width setting does not work -- not clear why)
      */
-    private final float THICKER_WIDTH = 5;
+    private final float SELECTED_NODE_LINE_WIDTH = 5;
     private final Color SELECTED_NODE_LINE_COLOR = Color.red;
-
-    /**
-     * color of a node boundary or edge if none is specified
-     */
-    public final Color DEFAULT_COLOR = Color.black;
 
     /**
      * Node weights are stacked on top of labels; their left edge is
@@ -376,20 +371,24 @@ public class GraphPanel extends JPanel{
         /* draw node boundary */
         if ( ns.isSelected() ) {
             g2d.setColor( SELECTED_NODE_LINE_COLOR );
-            g2d.setStroke( new BasicStroke( THICKER_WIDTH ) );
-        }
-        else if ( ns.getColor().equals( Graph.NOT_A_COLOR ) ) {
-            // no declared color, use default color with default line width 
-            g2d.setColor( DEFAULT_COLOR );
-            g2d.setStroke( new BasicStroke() );
+            g2d.setStroke( new BasicStroke( SELECTED_NODE_LINE_WIDTH ) );
         }
         else {
-            // color declared, use it and make stroke thicker
+            // If it's not selected, use a default line width and ... 
+            // then try to get the user specified color and parse it
+            g2d.setStroke( new BasicStroke() );
             String nodeColor = ns.getColor();
-            Color c = Color.decode( nodeColor );
-            g2d.setColor(c);
-            g2d.setStroke( new BasicStroke( THICKER_WIDTH ) );
-        }
+            try {
+                Color c = Color.decode( nodeColor );
+                g2d.setColor(c);
+            } catch (Exception e ) {
+                // Default to black on error (e.g. ill-formated color inputs)
+                System.out.println( "Warning: color "
+                                    + nodeColor 
+                                    + " not parsed, default to BLACK" );
+                g2d.setColor(Color.BLACK);
+            }
+        } // end, node not selected
 
         // draw node boundary
         g2d.draw( nodeCircle );
@@ -715,14 +714,12 @@ public class GraphPanel extends JPanel{
 	
 	public void incrementDisplayState() {
 		LogHelper.enterMethod(getClass(), "incrementDisplayState");
+		
         LogHelper.logDebug( "" + state );
 		Graph graph = dispatch.getWorkingGraph();
-		int currentState = this.state;
-		int currentGraphState = graph.getState();
 		if (this.state < graph.getState()) {
 			this.state++;
 		}
-		System.out.println("Incrementing the graph display state: [" + currentState + "," + currentGraphState + "] --> " + state);
 		
 		LogHelper.exitMethod(getClass(), "incrementDisplayState");
 	}
@@ -730,11 +727,9 @@ public class GraphPanel extends JPanel{
 	public void decrementDisplayState() {
 		LogHelper.enterMethod(getClass(), "decrementDisplayState");
 		
-		int currentState = state;
 		if (this.state > 1) {
 			this.state--;
 		}
-		System.out.println("Decrementing the graph display state: [" + currentState + "] --> " + state);
 		
 		LogHelper.exitMethod(getClass(), "decrementDisplayState");
 	}
@@ -904,8 +899,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-<<<<<<< HEAD
-//  [Last modified: 2015 05 26 at 14:32:04 GMT]
-=======
-//  [Last modified: 2015 05 21 at 18:52:36 GMT]
->>>>>>> threads
+//  [Last modified: 2015 05 14 at 16:19:56 GMT]

@@ -55,8 +55,3 @@
  */
 
 //  [Last modified: 2015 03 02 at 21:06:02 GMT]
-
-/**
- * @TODO allow user to repaint the panel during animation
- *
- */

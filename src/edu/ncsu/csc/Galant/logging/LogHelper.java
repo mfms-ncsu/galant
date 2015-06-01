@@ -37,20 +37,8 @@ public class LogHelper {
     }
 	
 	public static void logDebug(String msg) {
-		int lineCounter = 0;
-		if (loggingEnabled) {
-			/*
-			if (loggingEnabled)
-				System.out.println(spaceString() + msg);
-			*/
-
-			// Split the msg/source code with new line,
-			// then increment line counter
-			for (String line: msg.split("\n")){
-				lineCounter ++;
-         		System.out.println("Line " + lineCounter + ": " + line);
-      		}
-		}	
+		if (loggingEnabled)
+			System.out.println(spaceString() + msg);
 	}
 	
 	public static void enterConstructor(Class<?> cls) {

@@ -4,5 +4,3 @@
 *.~*~
 # stuff in the build directory is the result of compilation
 build/
-# graphs created on the fly
-*.graphml

@@ -60,10 +60,7 @@ public class GraphMLParser {
 		this.graph = generateGraph(graphMLFile);
 	}
 	
-	public GraphMLParser(String xml) throws GalantException {
-        if ( xml == null || xml.equals( "" ) ) {
-            throw new GalantException( "empty graph when invoking GraphMLParser" );
-        }
+	public GraphMLParser(String xml) {
 		this.graph = generateGraph(xml);
 	}
 	
@@ -193,7 +190,7 @@ public class GraphMLParser {
                                            + "\n when processing nodes"
                                            + "\n in buildGraphFrom Input");
             }
-			String color = ((attributes.getNamedItem("color") != null) ? attributes.getNamedItem("color").getNodeValue() : Graph.NOT_A_COLOR );
+			String color = ((attributes.getNamedItem("color") != null) ? attributes.getNamedItem("color").getNodeValue() : "#000000");
 			String label = ((attributes.getNamedItem("label") != null) ? attributes.getNamedItem("label").getNodeValue() : Graph.NOT_A_LABEL);
             String weightString
                 = (attributes.getNamedItem("weight") != null )
@@ -296,23 +293,18 @@ public class GraphMLParser {
             String targetString = null;
             Node source = null;
             Node target = null;
-            String color = Graph.NOT_A_COLOR;
+            String color = Graph.DEFAULT_COLOR;
             Boolean highlighted = false;
             double weight = Graph.NOT_A_WEIGHT;
             String label = Graph.NOT_A_LABEL;
                 
             attributes = edges.item(i).getAttributes();
-            try {
-                sourceString
-                    = attributes.getNamedItem("source").getNodeValue();
-                source = g.getNodeById( Integer.parseInt( sourceString ) );
-                targetString
-                    = attributes.getNamedItem("target").getNodeValue();
-                target = g.getNodeById( Integer.parseInt( targetString ) );
-            }
-            catch ( Exception e ) {
-                throw new GalantException( e.getMessage() + " \n - bad source or target for edge " + i );
-            }
+            sourceString
+                = attributes.getNamedItem("source").getNodeValue();
+            source = g.getNodeById( Integer.parseInt( sourceString ) );
+            targetString
+                = attributes.getNamedItem("target").getNodeValue();
+            target = g.getNodeById( Integer.parseInt( targetString ) );
                 
             if ( attributes.getNamedItem("color") != null ) {
                 color = attributes.getNamedItem("color").getNodeValue();
@@ -324,7 +316,7 @@ public class GraphMLParser {
             if ( attributes.getNamedItem("highlighted") != null ) {
                 highlightedString
                     = attributes.getNamedItem("highlighted").getNodeValue();
-                    
+
             }
             if ( highlightedString != null ) {
                 highlighted = Boolean.parseBoolean( highlightedString );
@@ -334,13 +326,8 @@ public class GraphMLParser {
                 weightString
                     = attributes.getNamedItem("weight").getNodeValue();
             }
-            try {
-                if ( weightString != null ) {
-                    weight = Double.parseDouble( weightString );
-                }
-            }
-            catch ( Exception e ) {
-                throw new GalantException( e.getMessage() + " \n - bad weight for edge " + i );
+            if ( weightString != null ) {
+                weight = Double.parseDouble( weightString );
             }
 
             Edge e = new Edge(gs, Integer.valueOf(i), source, target, highlighted, weight, color, label);
@@ -444,4 +431,4 @@ public class GraphMLParser {
 	
 }
 
-//  [Last modified: 2015 05 21 at 19:26:47 GMT]
+//  [Last modified: 2015 05 15 at 17:58:45 GMT]

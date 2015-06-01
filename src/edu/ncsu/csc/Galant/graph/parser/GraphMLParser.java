@@ -302,17 +302,23 @@ public class GraphMLParser {
             String label = Graph.NOT_A_LABEL;
                 
             attributes = edges.item(i).getAttributes();
-            try {
+//             try {
                 sourceString
                     = attributes.getNamedItem("source").getNodeValue();
                 source = g.getNodeById( Integer.parseInt( sourceString ) );
+                if ( source == null ) {
+                    throw new GalantException( "Bad source id " + sourceString );
+                }
                 targetString
                     = attributes.getNamedItem("target").getNodeValue();
                 target = g.getNodeById( Integer.parseInt( targetString ) );
-            }
-            catch ( Exception e ) {
-                throw new GalantException( e.getMessage() + " \n - bad source or target for edge " + i );
-            }
+                if ( target == null ) {
+                    throw new GalantException( "Bad target id " + targetString );
+                }
+//             }
+//             catch ( Exception e ) {
+//                 throw new GalantException( e.getMessage() + " \n - bad source or target for edge " + i );
+//             }
                 
             if ( attributes.getNamedItem("color") != null ) {
                 color = attributes.getNamedItem("color").getNodeValue();
@@ -444,4 +450,4 @@ public class GraphMLParser {
 	
 }
 
-//  [Last modified: 2015 05 21 at 19:26:47 GMT]
+//  [Last modified: 2015 05 31 at 18:33:19 GMT]

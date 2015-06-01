@@ -58,6 +58,8 @@ public abstract class Macro
 				return pattern;
 			}
 
+		protected abstract boolean getIncludedInAlgorithm();
+
 		/**
 		 * <p>
 		 * Subclasses should implement this method and return a modified version of the current match. The returned string will
@@ -91,17 +93,55 @@ public abstract class Macro
 			{
 				Matcher matcher;
 				int start = 0;
-				while((matcher = getPattern().matcher(code).region(start, code.length())).find())
-					{
-						StringBuffer newCode = new StringBuffer();
-						String modified = modify(code, matcher);
-						if(modified != null)
-							matcher.appendReplacement(newCode, modified);
-						matcher.appendTail(newCode);
-						code = newCode.toString();
-						if(matcher.start() < code.length() - 1)
-							start = matcher.start() + 1;
-					}
+
+				if(getIncludedInAlgorithm()) {
+					
+					StringBuffer newCode = new StringBuffer();
+
+					matcher = getPattern().matcher(code).region(start, code.length()); // find();		
+					matcher.find();
+					String originalExpression = matcher.group(0);
+					
+					String modified = modify(code, matcher);
+					
+					matcher = Pattern.compile("^(.*?)\\;").matcher(modified);
+					matcher.find();
+					String newExpression = matcher.group(0);
+
+
+					matcher = getPattern().matcher(code).region(start, code.length()); 
+					if(matcher.find()){
+            			matcher.appendReplacement(newCode, "");
+
+            			// help on regular expression: http://www.tutorialspoint.com/java/java_regular_expressions.htm
+						matcher = Pattern.compile("^([\\s\\S]*)(algorithm(.*)\\{)").matcher(code);
+						if(matcher.find()) {
+							String beforeAlgorithm = matcher.group(0);
+							
+							newCode.append(beforeAlgorithm);
+							newCode.append(newExpression);
+
+							matcher = Pattern.compile("(" + newExpression + ")([\\s\\S]*)$").matcher(code);
+							// Still incompleted.
+							// Trying not to get invovled with String.replace() or remove(previous programmer did not use that)
+
+
+						}
+        			}
+				} else {
+					while((matcher = getPattern().matcher(code).region(start, code.length())).find())
+						{	
+							StringBuffer newCode = new StringBuffer();
+							String modified = modify(code, matcher);
+							if(modified != null) {
+								matcher.appendReplacement(newCode, modified);
+							}
+							matcher.appendTail(newCode);
+							code = newCode.toString();
+							if(matcher.start() < code.length() - 1)
+								start = matcher.start() + 1;
+						}
+				}
 				return code;
-			}
+			}	
 	}

@@ -1,0 +1,52 @@
+Here Galant offers the most significant advantages over GDR and, a fortiori,
+over other algorithm animation software. Among these are:
+
+\begin{itemize}
+
+\item
+  The API interface is simpler, due, in part, to the fact that the
+  underlying language is Java rather than C.
+\item
+  Each node and edge has both a weight and a label. Conversion of a weight to
+  a number is automatic while labels are kept as text. The programmer can
+  choose the appropriate attribute, which makes the implementation more
+  transparent and devoid of explicit conversions.
+
+\item
+  Most data structures are built in: stacks, queues, lists and priority
+  queues of both edges and vertices. Priority queues implicitly use the
+  weight attribute of the node/edge in question. The weight attribute is also
+  used for sorting.
+
+\item
+  An algorithm initially designed for directed graphs can usually be applied
+  to undirected graphs (and get the desired interpretation) with no change in
+  the implementation.
+  This is useful, for example, when implementing Dijkstra's
+  algorithm or depth-first search.
+
+\item
+  The interface that allows an explorer to edit graph instances can also be used
+  to edit, compile, and run algorithm implementations. While initial creation
+  and major edits are usually more convenient via a standard program editor
+  offline, an algorithm window in Galant can be used to view the algorithm and
+  make corrections in response to compile or runtime errors.
+
+\end{itemize}
+
+The philosophy behind the API design is that it should be usable by someone
+familiar with graph algorithms but only a rudimentary knowledge of Java (or
+any other programming language).
+The fact that Galant code resembles the pseudocode used
+in one of the most
+popular algorithm design and analysis texts, that of Cormen et al.~\cite{2009-Intro_to_Algorithms-Cormen},
+attests to the fact that we have succeeded.
+
+A key advantage of the API design, not present in, for example, BALSA, is that it sits directly on top of Java.
+This allows the creator to develop arbitrarily complex algorithms using other Java class API's and ones devised by the creator.
+More importantly, it allows Galant to offer significant new functionality
+provided by developers with only a modicum of Java training:
+\emph{sets} of nodes and edges (in addition to the stacks and queues already
+built in) or significant infrastructure for algorithms in a specific domain.
+
+% [Last modified: 2013 06 25 at 17:59:49 GMT]

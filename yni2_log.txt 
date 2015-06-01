@@ -18,4 +18,8 @@ May 27: 2 hours
 
 May 29: 5 hours
 	- Creating a new Macro. Have to find out a way to handle regular expression. :( (Need to remove the old expression and add the new one into algorithm{} but  Matcher.Replacement is not useful anymore.) 
+
+May 31: 3 hours
+	- Learning about regular expression and Matcher/Pattern in JAVA from online resources.
+	- Still work on creating the new macro.
 	

@@ -96,22 +96,38 @@ public abstract class Macro
 
 				if(getIncludedInAlgorithm()) {
 					
-					matcher = getPattern().matcher(code).region(start, code.length()); // find();
-					
-					matcher.find();
+					StringBuffer newCode = new StringBuffer();
 
+					matcher = getPattern().matcher(code).region(start, code.length()); // find();		
+					matcher.find();
+					String originalExpression = matcher.group(0);
+					
+					String modified = modify(code, matcher);
+					
 					matcher = Pattern.compile("^(.*?)\\;").matcher(modified);
 					matcher.find();
-					String replaceWith = matcher.group(0);
+					String newExpression = matcher.group(0);
 
-					// Re-read until we hit
-					StringBuffer newCode = new StringBuffer();
-					matcher = getPattern().matcher(code).region(start, code.length());
-					String modified = modify(code, matcher);
-							if(modified != null) {
-								matcher.appendTail(replaceWith);
-					}
 
+					matcher = getPattern().matcher(code).region(start, code.length()); 
+					if(matcher.find()){
+            			matcher.appendReplacement(newCode, "");
+
+            			// help on regular expression: http://www.tutorialspoint.com/java/java_regular_expressions.htm
+						matcher = Pattern.compile("^([\\s\\S]*)(algorithm(.*)\\{)").matcher(code);
+						if(matcher.find()) {
+							String beforeAlgorithm = matcher.group(0);
+							
+							newCode.append(beforeAlgorithm);
+							newCode.append(newExpression);
+
+							matcher = Pattern.compile("(" + newExpression + ")([\\s\\S]*)$").matcher(code);
+							// Still incompleted.
+							// Trying not to get invovled with String.replace() or remove(previous programmer did not use that)
+
+
+						}
+        			}
 				} else {
 					while((matcher = getPattern().matcher(code).region(start, code.length())).find())
 						{	

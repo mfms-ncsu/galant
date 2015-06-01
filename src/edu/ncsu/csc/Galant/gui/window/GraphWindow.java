@@ -33,12 +33,14 @@ import edu.ncsu.csc.Galant.graph.component.Edge;
 import edu.ncsu.csc.Galant.graph.component.Graph;
 import edu.ncsu.csc.Galant.graph.component.GraphState;
 import edu.ncsu.csc.Galant.graph.component.Node;
+import edu.ncsu.csc.Galant.graph.component.NodeState;
 import edu.ncsu.csc.Galant.gui.prefs.PreferencesPanel;
 import edu.ncsu.csc.Galant.gui.util.WindowUtil;
 import edu.ncsu.csc.Galant.gui.window.panels.ComponentEditPanel;
 import edu.ncsu.csc.Galant.gui.window.panels.GraphPanel;
 import edu.ncsu.csc.Galant.logging.LogHelper;
 import edu.ncsu.csc.Galant.prefs.Preference;
+import edu.ncsu.csc.Galant.GalantException;
 
 /**
  * Window for displaying the <code>Graph</code>, containing all necessary
@@ -211,12 +213,15 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                     // If you start dragging, set dragging mode so you don't
                     // perform any other operations on the Node after
                     // releasing it
-                    if ( ! dispatch.isAnimationMode() ) {
-                        Node sel = gp.getSelectedNode();
-                        if (sel != null) {
-                            gp.setDragging(true);
-                            gp.setEdgeTracker(null);
+                    Node sel = gp.getSelectedNode();
+                    if (sel != null) {
+                        gp.setDragging(true);
+                        gp.setEdgeTracker(null);
+                        if ( ! dispatch.isAnimationMode() ) {
                             sel.setFixedPosition( arg0.getPoint() );
+                        } else {
+                            NodeState currentState = sel.getLatestValidState(gp.getDisplayState());
+                            currentState.setPosition( arg0.getPoint() );
                         }
                     }
                     frame.repaint();
@@ -241,19 +246,15 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 			
                 @Override
                     public void mousePressed(MouseEvent e) {
-                    if ( ! dispatch.isAnimationMode() ) {
                         Point location = e.getPoint();
                         LogHelper.logDebug( "CLICK, location = " + location );
 					
                         prevNode = gp.getSelectedNode();
                         Node n = gp.selectTopClickedNode(location);
-                    }
                 }
 
                 @Override
-                    public void mouseReleased(MouseEvent arg0) {
-                    if ( ! dispatch.isAnimationMode() ) {
-                        // not in animation mode
+                    public void mouseReleased(MouseEvent arg0) {       
                         Point location = arg0.getPoint();
                         LogHelper.logDebug("RELEASE");
                         LogHelper.logDebug(mode.toString());
@@ -272,9 +273,10 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 					
                             dispatch.pushToTextEditor(); 
 							
-                        } // dragging
-                        else {
+                        } // only allow dragging in animation mode
+                        else if ( ! dispatch.isAnimationMode() ){
                             // release after click
+                            // not in animation mode
                             Node clickNode = gp.getSelectedNode();
                             Edge clickEdge = null;
                             if (clickNode == null) {
@@ -369,8 +371,6 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 							
                             } // delete mode
                         } // not dragging
-                        
-                    } // not in animation mode
                     frame.repaint();
                 }
             }
@@ -644,24 +644,14 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		button.setSelected(displayType.isShown());
 		return button;
 	}
-	
+    //@todo unable to use keyboard shortcuts after press buttons	
     static class AnimationKeyListener extends KeyAdapter {
-        static final long DELAY_TIME = 17;
-
-        /**
+        /** 
          * Intent is to delay for about 1/60 second = roughly 17 milliseconds
          * to allow the display to catch up to repeated keystrokes when an
-         * arrow key is held down. Ultimately this should be handled by an
-         * invocation of the Timer class.
+         * arrow key is held down. 
          */
-        void delay() {
-            long startTime = System.currentTimeMillis();
-            long currentTime = System.currentTimeMillis();
-            long endOfDelay = startTime + DELAY_TIME;
-            while ( currentTime < endOfDelay ) {
-                currentTime = System.currentTimeMillis();
-            }
-        }
+        static final long DELAY_TIME = 17;
 
         public void keyPressed(KeyEvent e) {
             if (e.getKeyCode() == KeyEvent.VK_LEFT) {
@@ -673,7 +663,11 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
             if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                 // delete row method (when "delete" is pressed)
             }
-            delay();
+            try {
+                Thread.sleep(DELAY_TIME);
+            } catch (InterruptedException f) {
+                //Handle exception
+            }
             frame.repaint();
         }
     }

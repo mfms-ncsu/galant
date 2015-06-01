@@ -7,6 +7,7 @@ import edu.ncsu.csc.Galant.graph.component.Edge;
 import edu.ncsu.csc.Galant.algorithm.code.macro.Function;
 import edu.ncsu.csc.Galant.algorithm.code.macro.Pair;
 import edu.ncsu.csc.Galant.GalantException;
+import edu.ncsu.csc.Galant.graph.component.GraphState;
 public class line_up_nodes_alg extends Algorithm {
 	public line_up_nodes_alg() {
 		super();
@@ -29,6 +30,8 @@ public class line_up_nodes_alg extends Algorithm {
 			int j = 0;
 			int xPosition = HORIZONTAL_GAP;
 			int yPosition = TOP_GAP;
+			GraphState.setInitializationComplete();
+			
 			for(Node n : getNodes()){
 				n.setPosition(xPosition,yPosition);
 				xPosition += HORIZONTAL_GAP;

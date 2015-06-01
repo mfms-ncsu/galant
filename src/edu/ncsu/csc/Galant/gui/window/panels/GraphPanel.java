@@ -715,12 +715,14 @@ public class GraphPanel extends JPanel{
 	
 	public void incrementDisplayState() {
 		LogHelper.enterMethod(getClass(), "incrementDisplayState");
-		System.out.printf("Incrementing the graph display state");
         LogHelper.logDebug( "" + state );
 		Graph graph = dispatch.getWorkingGraph();
+		int currentState = this.state;
+		int currentGraphState = graph.getState();
 		if (this.state < graph.getState()) {
 			this.state++;
 		}
+		System.out.println("Incrementing the graph display state: [" + currentState + "," + currentGraphState + "] --> " + state);
 		
 		LogHelper.exitMethod(getClass(), "incrementDisplayState");
 	}
@@ -728,9 +730,11 @@ public class GraphPanel extends JPanel{
 	public void decrementDisplayState() {
 		LogHelper.enterMethod(getClass(), "decrementDisplayState");
 		
+		int currentState = state;
 		if (this.state > 1) {
 			this.state--;
 		}
+		System.out.println("Decrementing the graph display state: [" + currentState + "] --> " + state);
 		
 		LogHelper.exitMethod(getClass(), "decrementDisplayState");
 	}

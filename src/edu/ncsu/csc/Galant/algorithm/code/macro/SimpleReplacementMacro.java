@@ -33,4 +33,9 @@ public class SimpleReplacementMacro extends Macro
 			{
 				return replacement;
 			}
+
+		@Override
+		public boolean getIncludedInAlgorithm() {
+			return false;
+		}	
 	}

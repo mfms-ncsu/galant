@@ -40,7 +40,12 @@ public class GraphLayout {
      * maximum number of repositioning iterations in force-directed layout =
      * 100,000
      */
-     final static int MAX_REPOSITION_ITERATIONS = 100000;
+    final private static int MAX_REPOSITION_ITERATIONS = 100000;
+
+    /**
+     * how often to print progress
+     */
+    final private static int PRINT_FREQUENCY = 100;
 
     /** 
      * minimum distance from the edge of a window when fitting a graph to
@@ -193,6 +198,8 @@ public class GraphLayout {
         while (!cvg && iter < MAX_REPOSITION_ITERATIONS ) {
 			iter++;
 			
+            if ( iter % PRINT_FREQUENCY == 0 )
+                System.out.println( "force directed layout, iteration " + iter );
 			// copy your new points to your old points
 			for (int i=0; i < points.length; i++) {
 				previousPoints[i] = (Point2D.Double) points[i].clone();
@@ -497,6 +504,10 @@ public class GraphLayout {
 	 * @param i the index of the start node
 	 * @param j the index of the end node
 	 * @return true if a path exists
+     *
+     * @todo This is, to say the least, stupid. An O(n) BFS is performed for
+     * every *pair* of nodes during each iteration. It would be simple to do
+     * a single BF at the beginning to identify the connected components.
 	 */
 	private boolean pathExists(int i, int j) {
 		List<Node> visited = new ArrayList<Node>();
@@ -534,4 +545,4 @@ public class GraphLayout {
 
 }	
 
-//  [Last modified: 2015 05 28 at 19:50:46 GMT]
+//  [Last modified: 2015 05 31 at 23:58:30 GMT]

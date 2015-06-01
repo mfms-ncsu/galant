@@ -694,6 +694,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 				frame.repaint();
 			}
 		});
+    stepBack.addKeyListener(new AnimationKeyListener());
 		
 		// Move the display state in GraphPanel forward one
 		stepForward.addActionListener(new ActionListener() {
@@ -707,6 +708,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 				frame.repaint();
 			}
 		});
+    stepForward.addKeyListener(new AnimationKeyListener());
 		
 		// Exit the animation and change back to Edit mode
 		done.addActionListener(new ActionListener() {
@@ -715,6 +717,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 				dispatch.setAnimationMode(false);
 			}
 		});
+    done.addKeyListener(new AnimationKeyListener());
 
 		animationButtons.add(stepBack);
 		animationButtons.add(stepForward);

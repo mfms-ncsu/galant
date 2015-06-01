@@ -7,12 +7,21 @@ import edu.ncsu.csc.Galant.graph.component.Edge;
 import edu.ncsu.csc.Galant.algorithm.code.macro.Function;
 import edu.ncsu.csc.Galant.algorithm.code.macro.Pair;
 import edu.ncsu.csc.Galant.GalantException;
+<<<<<<< HEAD
+=======
+import edu.ncsu.csc.Galant.graph.component.GraphState;
+>>>>>>> threads
 public class line_up_nodes_alg extends Algorithm {
 	public line_up_nodes_alg() {
 		super();
 		System.out.println("Created new line_up_nodes_alg using hardcoded implementation.");
 	}
 	
+<<<<<<< HEAD
+=======
+	
+	
+>>>>>>> threads
 	@Override public void run() {
 		System.out.println("Starting hardcoded class's run(); method");
 		try {
@@ -27,6 +36,11 @@ public class line_up_nodes_alg extends Algorithm {
 			int j = 0;
 			int xPosition = HORIZONTAL_GAP;
 			int yPosition = TOP_GAP;
+<<<<<<< HEAD
+=======
+			GraphState.setInitializationComplete();
+			
+>>>>>>> threads
 			for(Node n : getNodes()){
 				n.setPosition(xPosition,yPosition);
 				xPosition += HORIZONTAL_GAP;

@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+31 May (2 hours) Managed to break Galant; now it claims to have run the algorithm but won't actually display it.  I think I'm not passing my Thread object around correctly
+29 May (6 hours) Trying to figure out how graph state changes are kept; trying to figure out where to declare and invoke worker thread; modified the GraphState and Galant.java files (albeit incorrectly); struggling with Git and version changes; modified so that it *should* run algorithm until it's finished initializing, then have it wait; next I'll need to wake up the algorithm when the GraphState is incremented, run a step, and then sleep it again
+>>>>>>> threads
 27 May (2 hours) Reading Galant source code, trying to figure out how the graph state changes are manifested and propogates, so that I can exchange control between master and worker thread appropriately
 26 May (1 hour) Reading OReilly book on Git to try and understand it better
 25 May (~1.5 hours) Thinking about new model for implementing Galant threading (as on papers shown on Tuesday's meeting) and thinking of way to do faster regression testing

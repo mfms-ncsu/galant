@@ -19,8 +19,45 @@ import edu.ncsu.csc.Galant.GraphDispatch;
  * Represents a runnable algorithm. 
  * @author Jason Cockrell, Ty Devries, Alex McCabe, Michael Owoc
  */
-public abstract class Algorithm
-	{
+public abstract class Algorithm implements Runnable{
+	
+	
+	
+	protected int complete = 0; // This is used to keep track of whether the step of the algorithm is done or not
+	protected int exit = 0; // This is used to keep track of whether we're done with all of the algorithm steps or not
+	
+	public synchronized void setComplete(){
+		complete = 1;
+	}
+	public synchronized void setIncomplete(){
+		complete = 0;
+	}
+	public synchronized boolean isComplete() {
+		return(complete == 1);
+	}
+	
+	public synchronized boolean exit(){
+		return (exit >0);
+	}
+	
+	public synchronized void setExit(boolean set){
+		if(set) exit = 1;
+		else exit = 0;
+	}
+	
+	public synchronized void synchronizeWithController(){
+		synchronized(this){
+			try{
+				this.wait();
+			}
+			catch(InterruptedException e){
+				System.out.printf("Error occured while trying to wait");
+				e.printStackTrace(System.out);
+			}
+		}
+		
+	}
+	
 		// Specialized Node/Edge types for Queues/Stacks/Priority Queues
 		protected class NodeQueue extends AbstractQueue<Node>
 			{
@@ -153,6 +190,7 @@ public abstract class Algorithm
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#getNodes() */
 		protected List<Node> getNodes()
+            throws GalantException
         {
             return graph.getNodes();
         }
@@ -165,6 +203,7 @@ public abstract class Algorithm
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#getEdges() */
 		protected List<Edge> getEdges()
+            throws GalantException
         {
             return graph.getEdges();
         }
@@ -176,7 +215,7 @@ public abstract class Algorithm
 			}
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#getRootNode() */
-		protected Node getRootNode()
+		protected Node getRootNode() throws GalantException
 			{
 				return graph.getRootNode();
 			}
@@ -188,15 +227,13 @@ public abstract class Algorithm
 			}
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#getNodeById(int) */
-		protected Node getNodeById (int id)
-//             throws GalantException
+		protected Node getNodeById (int id) throws GalantException
 			{
 				return graph.getNodeById(id);
 			}
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#getEdgeById(int) */
-		protected Edge getEdgeById(int id)
-//             throws GalantException
+		protected Edge getEdgeById(int id) throws GalantException
 			{
 				return graph.getEdgeById(id);
 			}
@@ -278,6 +315,7 @@ public abstract class Algorithm
 
 		/** Runs this algorithm on the given graph. */
 		public abstract void run();
+		
 	}
 
-//  [Last modified: 2015 05 26 at 11:21:34 GMT]
+//  [Last modified: 2015 05 14 at 19:20:52 GMT]

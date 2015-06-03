@@ -94,40 +94,46 @@ public abstract class Macro
 				Matcher matcher;
 				int start = 0;
 
-				if(getIncludedInAlgorithm()) {
-					
-					StringBuffer newCode = new StringBuffer();
 
-					matcher = getPattern().matcher(code).region(start, code.length()); // find();		
-					matcher.find();
-					String originalExpression = matcher.group(0);
-					
-					String modified = modify(code, matcher);
-					
-					matcher = Pattern.compile("^(.*?)\\;").matcher(modified);
-					matcher.find();
-					String newExpression = matcher.group(0);
+			if(getIncludedInAlgorithm()) {
+						// find the original expresion searching from the start
+						matcher = getPattern().matcher(code); 	
+						matcher.find();
+						String originalExpression = matcher.group(0);
+						matcher = Pattern.compile("^(.*?)\\;").matcher(originalExpression);
+						matcher.find();
+						originalExpression = matcher.group(0);
+						
+						// find its replacement the result returned by modify()
+						matcher = getPattern().matcher(code);
+						matcher.find();
+						String modified = modify(code, matcher);
+						matcher = Pattern.compile("^(.*?)\\;").matcher(modified);
+						matcher.find();
+						String newExpression = matcher.group(0);
 
+						// find the declaration part of original expression
+						matcher = Pattern.compile("^(.*?)(\\=)").matcher(newExpression);
+						matcher.find();
+						String declaration = matcher.group(0);
+						declaration = declaration.replace("=", ";") ;
+						
+						// find the variable part of original expression
+						matcher = Pattern.compile("(\\])(.*)(\\;)").matcher(declaration);
+						matcher.find();
+						String variableName = matcher.group(0);
+						variableName = variableName.replace("]", "").replace(";", "");
+						
+						// find the initialization part of original expression
+						matcher = Pattern.compile("(\\=)(.*)$").matcher(newExpression);
+						matcher.find();	
+						String intialization = variableName + matcher.group(0);
 
-					matcher = getPattern().matcher(code).region(start, code.length()); 
-					if(matcher.find()){
-            			matcher.appendReplacement(newCode, "");
-
-            			// help on regular expression: http://www.tutorialspoint.com/java/java_regular_expressions.htm
-						matcher = Pattern.compile("^([\\s\\S]*)(algorithm(.*)\\{)").matcher(code);
-						if(matcher.find()) {
-							String beforeAlgorithm = matcher.group(0);
-							
-							newCode.append(beforeAlgorithm);
-							newCode.append(newExpression);
-
-							matcher = Pattern.compile("(" + newExpression + ")([\\s\\S]*)$").matcher(code);
-							// Still incompleted.
-							// Trying not to get invovled with String.replace() or remove(previous programmer did not use that)
-
-
-						}
-        			}
+						// build the new code 
+						String newCode = code.replaceAll("(algorithm(.*)\\{)", "algorithm{" + intialization);
+						newCode = newCode.replace(originalExpression, declaration);
+						return newCode;
+        			
 				} else {
 					while((matcher = getPattern().matcher(code).region(start, code.length())).find())
 						{	

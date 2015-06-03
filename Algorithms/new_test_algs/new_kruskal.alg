@@ -7,8 +7,8 @@
 /** Required: edge weights defined and visible */
 
 // parent in the disjoint set forest
-final Node [] parent = new Node[ graph.numberOfNodes() ];
-
+// final Node [] parent = new Node[ graph.numberOfNodes() ];
+currentNodeList(parent);
 // standard disjoint set untilities; not doing union by rank or path
 // compression; efficiency is not an issue
 

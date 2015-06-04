@@ -388,9 +388,12 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		frame.addComponentListener(this);
 		
 		stepForward = new JButton(new ImageIcon(GraphWindow.class.getResource("images/stepforward_24.png")));
-		stepBack = new JButton(new ImageIcon(GraphWindow.class.getResource("images/stepback_24.png")));
-		done = new JButton(new ImageIcon(GraphWindow.class.getResource("images/close_24.png")));
-		
+		stepForward.setToolTipText("Step Forward");
+    stepBack = new JButton(new ImageIcon(GraphWindow.class.getResource("images/stepback_24.png")));
+		stepBack.setToolTipText("Step Backward");
+    done = new JButton(new ImageIcon(GraphWindow.class.getResource("images/close_24.png")));
+		done.setToolTipText("Exit Animation");
+    
 		componentEditPanel = new ComponentEditPanel();
 		componentEditPanel.setVisible(false);
 		
@@ -541,29 +544,39 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		toolBar.setAlignmentY(0);
 		
 		select = createButton(GraphMode.SELECT);
+    select.setToolTipText("Select");
 		addNode = createButton(GraphMode.CREATE_NODE);
-		addEdge = createButton(GraphMode.CREATE_EDGE);
-		deleteBtn = createButton(GraphMode.DELETE);
-		changeMode(GraphMode.SELECT);
-		
+		addNode.setToolTipText("Create Node");
+    addEdge = createButton(GraphMode.CREATE_EDGE);
+		addEdge.setToolTipText("Create Edge");
+    deleteBtn = createButton(GraphMode.DELETE);
+		deleteBtn.setToolTipText("Delete");
+    changeMode(GraphMode.SELECT);		
+    
 		toolBar.addSeparator();
 		
 		undirectedBtn = createButton(Directedness.UNDIRECTED);
-		directedBtn = createButton(Directedness.DIRECTED);
-		changeDirectedness(Directedness.UNDIRECTED);
+		undirectedBtn.setToolTipText("Undirected");
+    directedBtn = createButton(Directedness.DIRECTED);
+		directedBtn.setToolTipText("Directed");
+    changeDirectedness(Directedness.UNDIRECTED);
 		
 		toolBar.addSeparator();
 		
 		nodeLabels = createButton(GraphDisplays.NODE_LABELS);
-		edgeLabels = createButton(GraphDisplays.EDGE_LABELS);
-		nodeWeights = createButton(GraphDisplays.NODE_WEIGHTS);
-		edgeWeights = createButton(GraphDisplays.EDGE_WEIGHTS);
-		
+		nodeLabels.setToolTipText("Display Node Labels");
+    edgeLabels = createButton(GraphDisplays.EDGE_LABELS);
+		edgeLabels.setToolTipText("Display Edge Labels");
+    nodeWeights = createButton(GraphDisplays.NODE_WEIGHTS);
+		nodeWeights.setToolTipText("Display Node Weights");
+    edgeWeights = createButton(GraphDisplays.EDGE_WEIGHTS);
+		edgeWeights.setToolTipText("Display Edge Weights");
 		toolBar.addSeparator();
 		
 		java.net.URL imageURL = GraphWindow.class.getResource("images/autoposition_24.png");
 		repositionBtn = new JToggleButton(new ImageIcon(imageURL));
-		repositionBtn.addActionListener(new ActionListener(){
+		repositionBtn.setToolTipText("Intelligent Rearrange");
+    repositionBtn.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				// TODO Auto-generated method stub

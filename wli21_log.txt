@@ -9,3 +9,4 @@
 1 June (~3 hours) change key action dependency of button focus 
 2 June (~3 hours) read Java API about JToggleButton mouseover event
 3 June (~3 hours) find out setToolTipText() for the same job
+4 June (~3 hours) enable some toggles during animation mode, research the best way to do shortcuts

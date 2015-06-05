@@ -489,10 +489,18 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 				animationButtons.setVisible(true);
                 animationButtons.setFocusable(true);
                 animationButtons.requestFocusInWindow();
-				toolBar.setVisible(false);
+				select.setVisible(false);
+        addNode.setVisible(false);
+        addEdge.setVisible(false);
+        deleteBtn.setVisible(false);
+        repositionBtn.setVisible(false);
 			} else {
 				animationButtons.setVisible(false);
-				toolBar.setVisible(true);
+				select.setVisible(true);
+        addNode.setVisible(true);
+        addEdge.setVisible(true);
+        deleteBtn.setVisible(true);
+        repositionBtn.setVisible(true);
 			}
 			
 		// Update the graph directedness flag to the new working graph's flag

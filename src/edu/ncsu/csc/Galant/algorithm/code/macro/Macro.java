@@ -58,7 +58,7 @@ public abstract class Macro
 				return pattern;
 			}
 
-		protected abstract boolean getIncludedInAlgorithm();
+		protected abstract String includeInAlgorithm();
 
 		/**
 		 * <p>
@@ -81,6 +81,7 @@ public abstract class Macro
 		 */
 		protected abstract String modify(String code, MatchResult match) throws MalformedMacroException;
 
+
 		/**
 		 * Applies this macro to the given code. For each match found, replaces the match with the result of
 		 * {@link #modify(String, MatchResult)} (if it's not <code>null</code>), then searches for the next match starting at
@@ -94,47 +95,37 @@ public abstract class Macro
 				Matcher matcher;
 				int start = 0;
 
-
-			if(getIncludedInAlgorithm()) {
-						// find the original expresion searching from the start
-						matcher = getPattern().matcher(code); 	
-						matcher.find();
-						String originalExpression = matcher.group(0);
-						matcher = Pattern.compile("^(.*?)\\;").matcher(originalExpression);
-						matcher.find();
+				// If this macro is an instance of FetchingMacro,
+				// it means we have to split initilization part and decaration part.
+				if (this instanceof FetchingMacro )	{	
+					String originalExpression = "";
+					matcher = getPattern().matcher(code); 
+					if(matcher.find()) {
 						originalExpression = matcher.group(0);
-						
-						// find its replacement the result returned by modify()
-						matcher = getPattern().matcher(code);
-						matcher.find();
-						String modified = modify(code, matcher);
-						matcher = Pattern.compile("^(.*?)\\;").matcher(modified);
-						matcher.find();
-						String newExpression = matcher.group(0);
 
-						// find the declaration part of original expression
-						matcher = Pattern.compile("^(.*?)(\\=)").matcher(newExpression);
+						// Find the new expression
+						String newCode = code;
+						String newExpression = modify(code, matcher) + ";";
+						// System.out.println("OUTOFALGORITHM -->" + newExpression + "<--");
+							
+						// Find the variable name	
+						matcher = Pattern.compile("(\\s)(.*)$").matcher(modify(code, matcher));
 						matcher.find();
-						String declaration = matcher.group(0);
-						declaration = declaration.replace("=", ";") ;
-						
-						// find the variable part of original expression
-						matcher = Pattern.compile("(\\])(.*)(\\;)").matcher(declaration);
-						matcher.find();
-						String variableName = matcher.group(0);
-						variableName = variableName.replace("]", "").replace(";", "");
-						
-						// find the initialization part of original expression
-						matcher = Pattern.compile("(\\=)(.*)$").matcher(newExpression);
-						matcher.find();	
-						String intialization = variableName + matcher.group(0);
+						String variableName = matcher.group(0); 
+						// System.out.println("INSIDEOFALGORITHM -->" + variableName + includeInAlgorithm() + "<--");
 
-						// build the new code 
-						String newCode = code.replaceAll("(algorithm(.*)\\{)", "algorithm{" + intialization);
-						newCode = newCode.replace(originalExpression, declaration);
+						newCode = code.replaceAll("(algorithm(.*)\\{)", "algorithm{" + variableName + includeInAlgorithm()); 
+						newCode = newCode.replace(originalExpression, newExpression); 
 						return newCode;
-        			
+					}	
+
+					return code;
+
+					/** IMPORTANT: sth need to be fixed. The integrator will translate macroes even if those macroes are
+					* 			   in comment line.  
+					*/
 				} else {
+
 					while((matcher = getPattern().matcher(code).region(start, code.length())).find())
 						{	
 							StringBuffer newCode = new StringBuffer();
@@ -147,7 +138,8 @@ public abstract class Macro
 							if(matcher.start() < code.length() - 1)
 								start = matcher.start() + 1;
 						}
-				}
-				return code;
-			}	
+
+					return code;
+				}	
+			}
 	}

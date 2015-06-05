@@ -15,23 +15,23 @@ public class Macros
 			{	
 				
 				Macro.MACROS.add(new SimpleReplacementMacro("\\bbool\\b", "boolean"){
-					/*
-					@Override
-					protected String modify(String code, MatchResult match) throws MalformedMacroException
-						{
-							return "boolean";
-						}
-					*/	
+			
 				}); 
 
 
-				Macro.MACROS.add(new ParameterizedMacro("currentNodeList", 1, false, true){
+				Macro.MACROS.add(new FetchingMacro("numOfNodes(.*)(\\;)", "int"){
 					@Override
-					protected String modifyMatch(String code, MatchResult nameMatch, String[] args, String whitespace,
-						String block)
-						{
-							return Matcher.quoteReplacement("Node [] " + args[0] + " = new Node[ getNodes().size() ]");
-						}	
+					protected String includeInAlgorithm() {
+						return "= getNodes().size();";
+					}
+				});
+
+
+				Macro.MACROS.add(new FetchingMacro("edgesList(.*)(\\;)", "Edge[]"){
+					@Override
+					protected String includeInAlgorithm() {
+						return " = new Edge[ getEdges().size() ];";
+					}
 				});
 
 				/*
@@ -54,7 +54,7 @@ public class Macros
 				 * code_block: a block of code that is executed for each adjacent node / incident
 				 * edge of <node>. The curly braces are required.
 				 */
-				Macro.MACROS.add(new ParameterizedMacro("for_outgoing", 3, true, false){
+				Macro.MACROS.add(new ParameterizedMacro("for_outgoing", 3, true){
 					@Override
 					protected String modifyMatch(String code, MatchResult nameMatch, String[] args, String whitespace,
 						String block)
@@ -86,7 +86,7 @@ public class Macros
 				 * code_block: a block of code that is executed for each adjacent node / incident
 				 * edge of <node>. The curly braces are required.
 				 */
-				Macro.MACROS.add(new ParameterizedMacro("for_incoming", 3, true, false){
+				Macro.MACROS.add(new ParameterizedMacro("for_incoming", 3, true){
 					@Override
 					protected String modifyMatch(String code, MatchResult nameMatch, String[] args, String whitespace,
 						String block)
@@ -117,7 +117,7 @@ public class Macros
 				 * code_block: a block of code that is executed for each adjacent node / incident
 				 * edge of <node>. The curly braces are required.
 				 */
-				Macro.MACROS.add(new ParameterizedMacro("for_adjacent", 3, true, false){
+				Macro.MACROS.add(new ParameterizedMacro("for_adjacent", 3, true){
 					@Override
 					protected String modifyMatch(String code, MatchResult nameMatch, String[] args, String whitespace,
 						String block)
@@ -170,7 +170,7 @@ public class Macros
 						}
 				});
 
-				Macro.MACROS.add(new ParameterizedMacro(MacroUtil.replaceWhitespace("new_function (\\S+)?  (\\S+)"), true, false){
+				Macro.MACROS.add(new ParameterizedMacro(MacroUtil.replaceWhitespace("new_function (\\S+)?  (\\S+)"), true){
 					
 						private String getObjectType(String type)
 							{	
@@ -296,7 +296,7 @@ public class Macros
 				 * 
 				 * code_block: a block of code that is executed when the function is called. The curly braces are required.
 				 */
-				Macro.MACROS.add(new ParameterizedMacro(MacroUtil.replaceWhitespace("function (\\S+)?  (\\S+)"), true, false){
+				Macro.MACROS.add(new ParameterizedMacro(MacroUtil.replaceWhitespace("function (\\S+)?  (\\S+)"), true){
 					Map<String, String> wrapperMap = new HashMap<String, String>();
 						{
 							wrapperMap.put("int", "Integer");

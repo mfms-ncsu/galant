@@ -34,3 +34,9 @@ June 4: 4 hours
 	- Need to make more Java documentation.
 	- Wish to enable macro syntax highlight in the future.
 	- Wish to add more exception handle in newly created files.
+
+June 6: 2 hours 
+	- Documented FetchingMaro.java.
+	- Keep getting Java regex look-behind group exception when dealing with comment lines. Had to find an alternative way to handle the problem. 
+	- Wish to add feature “Load compiled algorithm”.
+	

@@ -26,6 +26,20 @@ public class Macros
 					}
 				});
 
+				Macro.MACROS.add(new FetchingMacro("numOfEdges(.*)(\\;)", "int"){
+					@Override
+					protected String includeInAlgorithm() {
+						return "= getEdges().size();";
+					}
+				});
+
+				Macro.MACROS.add(new FetchingMacro("nodesList(.*)(\\;)", "Node[]"){
+					@Override
+					protected String includeInAlgorithm() {
+						return " = new Node[ getNodes().size() ];";
+					}
+				});
+
 
 				Macro.MACROS.add(new FetchingMacro("edgesList(.*)(\\;)", "Edge[]"){
 					@Override

@@ -41,6 +41,8 @@ public class GalantPreferences
 
 	public static final Preference<Color> API_CALL_COLOR;
 
+	public static final Preference<Color> MACRO_KEYWORD_COLOR;
+
 	// -Text graph editor
 
 	public static final PreferenceGroup TEXT_GRAPH_EDITOR;
@@ -118,6 +120,19 @@ public class GalantPreferences
 				ALGORITHM_EDITOR.addPreference(new Preference<Color>("API Call Color", new Color(0, 255, 0),
 						Accessors.COLOR_ACCESSOR));
 		new ColorPanel(API_CALL_COLOR){
+			@Override
+			public void apply()
+			{
+				super.apply();
+				// TODO: apply it to the current session
+			}
+		};
+
+		// Macro keywords are set to be orange
+		MACRO_KEYWORD_COLOR =
+				ALGORITHM_EDITOR.addPreference(new Preference<Color>("Macro Keyword Color", new Color(255, 200, 0),
+						Accessors.COLOR_ACCESSOR));
+		new ColorPanel(MACRO_KEYWORD_COLOR){
 			@Override
 			public void apply()
 			{

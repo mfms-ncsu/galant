@@ -27,6 +27,7 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
 	
 	public static Color javaKeywordColor = GalantPreferences.JAVA_KEYWORD_COLOR.get();
 	public static Color apiKeywordColor = GalantPreferences.API_CALL_COLOR.get();
+	public static Color macroKeywordColor = GalantPreferences.MACRO_KEYWORD_COLOR.get();
 	
 	private JTextPane textpane;
 	
@@ -130,7 +131,7 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
 	        
 	        applyStyleToKeywords(doc, content, allJavaKeywords, javaKeywordStyleName);
 	        applyStyleToKeywords(doc, content, allAPIkeywords, "apiKeyword");
-	        applyStyleToKeywords(doc, content, allMacrokeywords, )
+	        applyStyleToKeywords(doc, content, allMacrokeywords, "macroKeyword");
 	        
 	        textpane.setDocument(doc);
 		} catch (Exception e) {
@@ -149,6 +150,9 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
 		
 		Style q = doc.addStyle("apiKeyword", regular);
 		StyleConstants.setForeground(q, apiKeywordColor);
+
+		Style m = doc.addStyle("macroKeyword", regular);
+		StyleConstants.setForeground(m, macroKeywordColor);
 	}
 	
 	private static void applyStyleToKeywords(StyledDocument doc, String content, String[] keywords, String styleName)

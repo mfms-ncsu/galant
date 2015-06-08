@@ -12,6 +12,7 @@ import javax.swing.text.StyleContext;
 import javax.swing.text.StyledDocument;
 import edu.ncsu.csc.Galant.GalantPreferences;
 import edu.ncsu.csc.Galant.gui.util.ExceptionDialog;
+import edu.ncsu.csc.Galant.algorithm.code.macro.Macro;
 
 /**
  * Adds syntax highlighting in the algorithm editor. Tooltips are displayed for highlighted API references in the editor.
@@ -82,6 +83,11 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
 
 		StyledDocument doc = textpane.getStyledDocument();
 		updateDocStyles(doc);
+
+		// Initialize allMacrokeywords
+		for(int i = 0; i < Macro.MACROS.size(); i++) {
+			allMacrokeywords[i] = Macro.MACROS.get(i).getName();
+		}
 	}
 	
 	/**
@@ -109,6 +115,12 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
 			"EdgeStack", "NodePriorityQueue", "EdgePriorityQueue", "nodeQ", "edgeQ", "nodeStack", "edgeStack", "nodePQ",
 			"edgePQ", "getId", "equals", "Graph", "Node", "Edge", "for_adjacent", "for_nodes", "for_edges", "function", "graph"};
 
+	/**
+	 * An immutable list of all Macroes predefined for the user's benefit.
+	 * It get initilizaed when this GAlgorithmSyntaxHighlighting was created. See constructor. 
+	 */
+		public static String[] allMacrokeywords = new String[Macro.MACROS.size()];
+
 	@Override
 	public void run() {
 		try {
@@ -118,6 +130,7 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
 	        
 	        applyStyleToKeywords(doc, content, allJavaKeywords, javaKeywordStyleName);
 	        applyStyleToKeywords(doc, content, allAPIkeywords, "apiKeyword");
+	        applyStyleToKeywords(doc, content, allMacrokeywords, )
 	        
 	        textpane.setDocument(doc);
 		} catch (Exception e) {

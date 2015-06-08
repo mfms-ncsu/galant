@@ -40,7 +40,14 @@ public class AlgorithmMacro extends Macro {
 	}
 	
 	@Override
-	public String includeInAlgorithm() {
+	public String includeInAlgorithm() 
+	{
 			return null;
-		}	
+	}
+
+	@Override
+	public String getName() {
+		return "algorithm";
+	}	
+
 } 

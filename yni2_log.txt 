@@ -37,6 +37,10 @@ June 4: 4 hours
 
 June 6: 2 hours 
 	- Documented FetchingMaro.java.
-	- Keep getting Java regex look-behind group exception when dealing with comment lines. Had to find an alternative way to handle the problem. 
+	- Keep getting Java regex look-behind group exception when dealing with comment lines. 
 	- Wish to add feature “Load compiled algorithm”.
-	
+
+June 7: 2 hours
+	- trying to add highlight macro syntax in GalantEditor. 
+	- trying to figure out how to resolve the comment line problem.
+	- Will be working on “Load compiled algorithm” in the next iteration .

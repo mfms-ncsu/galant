@@ -49,6 +49,7 @@ public abstract class ParameterizedMacro extends Macro
 		public ParameterizedMacro(String name, int minParams, int maxParams, boolean includeCodeBlock)
 			{
 				super(MacroUtil.nestedRegex(MacroUtil.replaceWhitespace("(" + name + ") \\("), (includeCodeBlock ? "\\}" : "\\)")));
+				this.name = name;
 				this.namePattern = Pattern.compile(name);
 				this.minParams = minParams;
 				this.maxParams = maxParams;
@@ -72,6 +73,11 @@ public abstract class ParameterizedMacro extends Macro
 		@Override
 		protected String includeInAlgorithm() {
 			return null;
+		}
+
+		@Override
+		public String getName() {
+			return name;
 		}
 
 		@Override

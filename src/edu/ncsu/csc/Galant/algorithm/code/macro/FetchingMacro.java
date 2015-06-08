@@ -22,25 +22,32 @@ import edu.ncsu.csc.Galant.algorithm.code.macro.MacroUtil.NestedRegexResult;
 public abstract class FetchingMacro extends Macro
 	{	
 		String initializationPrefix = "";
+		String name = "";
 
 		/**
-		 * Creates a new <code>FetchingMacro</code>. <code>regex</code> speclify the regular expression
-		 * pattern; <code>intilizationPrefix</code> defines the expected variable type. e.g: for macro
+		 * Creates a new <code>FetchingMacro</code>. <code>name</code> speclify the name. 
+		 * <code>intilizationPrefix</code> defines the expected variable type. e.g: for macro
 		 * that gets the number of nodes on the graph, we use "int" as our <code>intilizationPrefix</code>.
 		 */
-		public FetchingMacro(String regex, String initializationPrefix)
+		public FetchingMacro(String name, String initializationPrefix)
 		{	
 				// src: http://stackoverflow.com/questions/24874404/java-regex-look-behind-group-does-not-have-obvious-maximum-length-error
 				// Does not work. Getting Java look-behind group exception
-				super("(?<!\\/\\/[\\s]{0, 10})"+ regex);
-				System.out.println("The pattern is ->" + getPattern() + "<-");
+				super("(?<!\\/\\/[\\s])"+ name + "(.*)(\\;)");
+				// System.out.println("The pattern is ->" + getPattern() + "<-");
 				this.initializationPrefix = initializationPrefix;
+				this.name = name;
 		}
 
 		@Override
 		public String toString()
 		{
 				return super.toString();
+		}
+
+		@Override
+		public String getName() {
+			return name;
 		}
 
 		/**

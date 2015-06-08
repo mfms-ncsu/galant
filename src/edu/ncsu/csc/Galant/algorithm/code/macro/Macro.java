@@ -58,6 +58,9 @@ public abstract class Macro
 				return pattern;
 			}
 
+		/** return the name of the macro. Mainly used for macro syntax highlighting. */
+		public abstract String getName();	
+
 		protected abstract String includeInAlgorithm();
 
 		/**

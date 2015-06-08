@@ -15,25 +15,28 @@ public class Macros
 			{	
 				
 				Macro.MACROS.add(new SimpleReplacementMacro("\\bbool\\b", "boolean"){
-			
+					@Override
+					public String getName() {
+						return "bool";
+					}
 				}); 
 
 
-				Macro.MACROS.add(new FetchingMacro("numOfNodes(.*)(\\;)", "int"){
+				Macro.MACROS.add(new FetchingMacro("numOfNodes", "int"){
 					@Override
 					protected String includeInAlgorithm() {
 						return "= getNodes().size();";
 					}
 				});
 
-				Macro.MACROS.add(new FetchingMacro("numOfEdges(.*)(\\;)", "int"){
+				Macro.MACROS.add(new FetchingMacro("numOfEdges", "int"){
 					@Override
 					protected String includeInAlgorithm() {
 						return "= getEdges().size();";
 					}
 				});
 
-				Macro.MACROS.add(new FetchingMacro("nodesList(.*)(\\;)", "Node[]"){
+				Macro.MACROS.add(new FetchingMacro("nodesList", "Node[]"){
 					@Override
 					protected String includeInAlgorithm() {
 						return " = new Node[ getNodes().size() ];";
@@ -41,7 +44,7 @@ public class Macros
 				});
 
 
-				Macro.MACROS.add(new FetchingMacro("edgesList(.*)(\\;)", "Edge[]"){
+				Macro.MACROS.add(new FetchingMacro("edgesList", "Edge[]"){
 					@Override
 					protected String includeInAlgorithm() {
 						return " = new Edge[ getEdges().size() ];";
@@ -185,7 +188,12 @@ public class Macros
 				});
 
 				Macro.MACROS.add(new ParameterizedMacro(MacroUtil.replaceWhitespace("new_function (\\S+)?  (\\S+)"), true){
-					
+							
+						@Override
+						public String getName() {
+								return "new_function";
+							}
+
 						private String getObjectType(String type)
 							{	
 								return " " + type;
@@ -309,7 +317,9 @@ public class Macros
 				 * args: values of the types determined by <params>, passed in when the function is called.
 				 * 
 				 * code_block: a block of code that is executed when the function is called. The curly braces are required.
-				 */
+				 */ 
+
+				/*
 				Macro.MACROS.add(new ParameterizedMacro(MacroUtil.replaceWhitespace("function (\\S+)?  (\\S+)"), true){
 					Map<String, String> wrapperMap = new HashMap<String, String>();
 						{
@@ -368,7 +378,7 @@ public class Macros
 						{
 							protected PairParam parent;
 							protected PairParam child;
-							/** Creates a new <code>PairParam</code>. */
+							// Creates a new <code>PairParam</code>. 
 							public PairParam(PairParam parent, int index, String[] paramStrings)
 								{
 									super(index, paramStrings);
@@ -423,7 +433,7 @@ public class Macros
 						}
 					class LastParam extends PairParam
 						{
-							/** Creates a new <code>LastParam</code>. */
+							// Creates a new <code>LastParam</code>. 
 							public LastParam(PairParam parent, String[] paramStrings)
 								{
 									super(parent, paramStrings.length - 1, paramStrings);
@@ -457,7 +467,7 @@ public class Macros
 						}
 					class SingleParam extends Param
 						{
-							/** Creates a new <code>SingleParam</code>. */
+							// Creates a new <code>SingleParam</code>. 
 							public SingleParam(String[] paramStrings)
 								{
 									super(0, paramStrings);
@@ -478,7 +488,7 @@ public class Macros
 						}
 					class NoParam extends Param
 						{
-							/** Creates a new <code>NoParam</code>. */
+							// Creates a new <code>NoParam</code>. 
 							public NoParam()
 								{
 									super(-1, null);
@@ -550,7 +560,9 @@ public class Macros
 									}
 							});
 						}
-				});
+				
+				}); */
+				
 			}
 	}
 

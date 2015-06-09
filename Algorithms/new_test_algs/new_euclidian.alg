@@ -13,7 +13,7 @@ import java.util.PriorityQueue;
 
 final double INFINITY = Double.POSITIVE_INFINITY;
 
-Edge [] chosenEdge; 
+edgesList chosenEdge;
 
 new_function decreaseKey( Node v, double newKey ) {
     nodePQ.remove(v);
@@ -28,8 +28,6 @@ new_function double euclidian( Node v, Node w ) {
 }
 
 algorithm {
-
-   chosenEdge = new Edge[ getNodes().size() ];
     beginStep();
     for_nodes(node) {
         node.setWeight( INFINITY );

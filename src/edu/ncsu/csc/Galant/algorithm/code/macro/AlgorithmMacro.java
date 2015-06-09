@@ -7,6 +7,11 @@ import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
+/**
+ * <p>
+ * Represents an algorithm macro that replaces algorithm{} in original code.
+ */
 public class AlgorithmMacro extends Macro {
 
 	private static volatile AlgorithmMacro instance;
@@ -15,7 +20,6 @@ public class AlgorithmMacro extends Macro {
 		super(Pattern.compile("algorithm"));
 	}
 
-	/* src: http://en.wikipedia.org/wiki/Singleton_pattern */
 	public static AlgorithmMacro getInstance() {
 		if ( instance == null ) {
 			synchronized (AlgorithmMacro.class) {
@@ -34,10 +38,16 @@ public class AlgorithmMacro extends Macro {
 		return "public void run() ";
 
 	}
+	
+	@Override
+	public String includeInAlgorithm() 
+	{
+			return null;
+	}
 
 	@Override
-	public boolean getIncludedInAlgorithm() {
-		return false;
-	}
-	
+	public String getName() {
+		return "algorithm";
+	}	
+
 } 

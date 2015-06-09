@@ -15,23 +15,40 @@ public class Macros
 			{	
 				
 				Macro.MACROS.add(new SimpleReplacementMacro("\\bbool\\b", "boolean"){
-					/*
 					@Override
-					protected String modify(String code, MatchResult match) throws MalformedMacroException
-						{
-							return "boolean";
-						}
-					*/	
+					public String getName() {
+						return "bool";
+					}
 				}); 
 
 
-				Macro.MACROS.add(new ParameterizedMacro("currentNodeList", 1, false, true){
+				Macro.MACROS.add(new FetchingMacro("numOfNodes", "int"){
 					@Override
-					protected String modifyMatch(String code, MatchResult nameMatch, String[] args, String whitespace,
-						String block)
-						{
-							return Matcher.quoteReplacement("Node [] " + args[0] + " = new Node[ getNodes().size() ]");
-						}	
+					protected String includeInAlgorithm() {
+						return "= getNodes().size();";
+					}
+				});
+
+				Macro.MACROS.add(new FetchingMacro("numOfEdges", "int"){
+					@Override
+					protected String includeInAlgorithm() {
+						return "= getEdges().size();";
+					}
+				});
+
+				Macro.MACROS.add(new FetchingMacro("nodesList", "Node[]"){
+					@Override
+					protected String includeInAlgorithm() {
+						return " = new Node[ getNodes().size() ];";
+					}
+				});
+
+
+				Macro.MACROS.add(new FetchingMacro("edgesList", "Edge[]"){
+					@Override
+					protected String includeInAlgorithm() {
+						return " = new Edge[ getEdges().size() ];";
+					}
 				});
 
 				/*
@@ -54,7 +71,7 @@ public class Macros
 				 * code_block: a block of code that is executed for each adjacent node / incident
 				 * edge of <node>. The curly braces are required.
 				 */
-				Macro.MACROS.add(new ParameterizedMacro("for_outgoing", 3, true, false){
+				Macro.MACROS.add(new ParameterizedMacro("for_outgoing", 3, true){
 					@Override
 					protected String modifyMatch(String code, MatchResult nameMatch, String[] args, String whitespace,
 						String block)
@@ -86,7 +103,7 @@ public class Macros
 				 * code_block: a block of code that is executed for each adjacent node / incident
 				 * edge of <node>. The curly braces are required.
 				 */
-				Macro.MACROS.add(new ParameterizedMacro("for_incoming", 3, true, false){
+				Macro.MACROS.add(new ParameterizedMacro("for_incoming", 3, true){
 					@Override
 					protected String modifyMatch(String code, MatchResult nameMatch, String[] args, String whitespace,
 						String block)
@@ -117,7 +134,7 @@ public class Macros
 				 * code_block: a block of code that is executed for each adjacent node / incident
 				 * edge of <node>. The curly braces are required.
 				 */
-				Macro.MACROS.add(new ParameterizedMacro("for_adjacent", 3, true, false){
+				Macro.MACROS.add(new ParameterizedMacro("for_adjacent", 3, true){
 					@Override
 					protected String modifyMatch(String code, MatchResult nameMatch, String[] args, String whitespace,
 						String block)
@@ -170,8 +187,13 @@ public class Macros
 						}
 				});
 
-				Macro.MACROS.add(new ParameterizedMacro(MacroUtil.replaceWhitespace("new_function (\\S+)?  (\\S+)"), true, false){
-					
+				Macro.MACROS.add(new ParameterizedMacro(MacroUtil.replaceWhitespace("new_function (\\S+)?  (\\S+)"), true){
+							
+						@Override
+						public String getName() {
+								return "new_function";
+							}
+
 						private String getObjectType(String type)
 							{	
 								return " " + type;
@@ -295,8 +317,10 @@ public class Macros
 				 * args: values of the types determined by <params>, passed in when the function is called.
 				 * 
 				 * code_block: a block of code that is executed when the function is called. The curly braces are required.
-				 */
-				Macro.MACROS.add(new ParameterizedMacro(MacroUtil.replaceWhitespace("function (\\S+)?  (\\S+)"), true, false){
+				 */ 
+
+				/*
+				Macro.MACROS.add(new ParameterizedMacro(MacroUtil.replaceWhitespace("function (\\S+)?  (\\S+)"), true){
 					Map<String, String> wrapperMap = new HashMap<String, String>();
 						{
 							wrapperMap.put("int", "Integer");
@@ -354,7 +378,7 @@ public class Macros
 						{
 							protected PairParam parent;
 							protected PairParam child;
-							/** Creates a new <code>PairParam</code>. */
+							// Creates a new <code>PairParam</code>. 
 							public PairParam(PairParam parent, int index, String[] paramStrings)
 								{
 									super(index, paramStrings);
@@ -409,7 +433,7 @@ public class Macros
 						}
 					class LastParam extends PairParam
 						{
-							/** Creates a new <code>LastParam</code>. */
+							// Creates a new <code>LastParam</code>. 
 							public LastParam(PairParam parent, String[] paramStrings)
 								{
 									super(parent, paramStrings.length - 1, paramStrings);
@@ -443,7 +467,7 @@ public class Macros
 						}
 					class SingleParam extends Param
 						{
-							/** Creates a new <code>SingleParam</code>. */
+							// Creates a new <code>SingleParam</code>. 
 							public SingleParam(String[] paramStrings)
 								{
 									super(0, paramStrings);
@@ -464,7 +488,7 @@ public class Macros
 						}
 					class NoParam extends Param
 						{
-							/** Creates a new <code>NoParam</code>. */
+							// Creates a new <code>NoParam</code>. 
 							public NoParam()
 								{
 									super(-1, null);
@@ -536,7 +560,9 @@ public class Macros
 									}
 							});
 						}
-				});
+				
+				}); */
+				
 			}
 	}
 

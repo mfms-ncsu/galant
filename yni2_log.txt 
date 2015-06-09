@@ -22,4 +22,25 @@ May 29: 5 hours
 May 31: 3 hours
 	- Learning about regular expression and Matcher/Pattern in JAVA from online resources.
 	- Still work on creating the new macro.
-	
+
+June 2: 3 hours
+	- new_krusal.alg is working now.
+	- Should be testing the new macro on other algorithms in the future. 
+	- Making more changes on this macro.
+
+June 4: 4 hours
+	- Created FetchingMaro.java. It runs now but has minor issues. 
+	- Need to disable macro translation in comment lines.
+	- Need to make more Java documentation.
+	- Wish to enable macro syntax highlight in the future.
+	- Wish to add more exception handle in newly created files.
+
+June 6: 2 hours 
+	- Documented FetchingMaro.java.
+	- Keep getting Java regex look-behind group exception when dealing with comment lines. 
+	- Wish to add feature “Load compiled algorithm”.
+
+June 7: 2 hours
+	- trying to add highlight macro syntax in GalantEditor. 
+	- trying to figure out how to resolve the comment line problem.
+	- Will be working on “Load compiled algorithm” in the next iteration .

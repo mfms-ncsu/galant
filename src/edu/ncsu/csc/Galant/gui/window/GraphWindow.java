@@ -385,11 +385,11 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		frame.addComponentListener(this);
 		
 		stepForward = new JButton(new ImageIcon(GraphWindow.class.getResource("images/stepforward_24.png")));
-		stepForward.setToolTipText("Step Forward");
+		stepForward.setToolTipText("Step Forward\n[->]");
     stepBack = new JButton(new ImageIcon(GraphWindow.class.getResource("images/stepback_24.png")));
-		stepBack.setToolTipText("Step Backward");
+		stepBack.setToolTipText("Step Backward\n[<-]");
     done = new JButton(new ImageIcon(GraphWindow.class.getResource("images/close_24.png")));
-		done.setToolTipText("Exit Animation");
+		done.setToolTipText("Exit Animation\n[Esc]");
     
 		componentEditPanel = new ComponentEditPanel();
 		componentEditPanel.setVisible(false);
@@ -726,7 +726,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 				}
 		});
 
-  // add keyboard shortcuts (left and right arrows, enter)        
+  // add keyboard shortcuts    
   KeyboardFocusManager keyManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
   keyManager.addKeyEventDispatcher(new KeyEventDispatcher() {
     /** 
@@ -737,6 +737,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
     static final long DELAY_TIME = 17;
     @Override
     public boolean dispatchKeyEvent(KeyEvent e) {
+      //"left" step backward when in animation mode
       if(e.getID()==KeyEvent.KEY_PRESSED && e.getKeyCode()==KeyEvent.VK_LEFT){
         synchronized (this) { //Handle delay
           if (dispatch.isAnimationMode()) {
@@ -753,6 +754,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
         }
         return true;
       }
+      //"right" step forward when in animation mode
       if(e.getID()==KeyEvent.KEY_PRESSED && e.getKeyCode()==KeyEvent.VK_RIGHT){
         synchronized (this) { //Handle delay
           if (dispatch.isAnimationMode()) {
@@ -766,6 +768,13 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
             }
             frame.repaint();
           }
+        }
+        return true;
+      }
+      // "Esc" leave animation mode when in animation mode
+      if(e.getID()==KeyEvent.KEY_PRESSED && e.getKeyCode()==KeyEvent.VK_ESCAPE){
+        if (dispatch.isAnimationMode()) {
+          dispatch.setAnimationMode(false);
         }
         return true;
       }

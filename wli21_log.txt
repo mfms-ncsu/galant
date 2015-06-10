@@ -10,3 +10,5 @@
 2 June (~3 hours) read Java API about JToggleButton mouseover event
 3 June (~3 hours) find out setToolTipText() for the same job
 4 June (~3 hours) enable some toggles during animation mode, research the best way to do shortcuts
+
+9 June (~6 hours) disable directed/undirected buttons, application wide keyboard shortcuts use KeyEventDispatcher, Synchronized block handle delay

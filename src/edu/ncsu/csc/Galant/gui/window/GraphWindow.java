@@ -14,6 +14,8 @@ import java.awt.event.WindowEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyListener;
+import java.awt.KeyboardFocusManager;
+import java.awt.KeyEventDispatcher;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.BoxLayout;
@@ -200,11 +202,6 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		
 		// Create the panel that renders the active Graph
 		gp = new GraphPanel(dispatch);
-
-        // add keyboard shortcuts (left and right arrows, enter)
-        gp.addKeyListener(new AnimationKeyListener());
-        gp.setFocusable(true);
-        gp.requestFocusInWindow();
 
 		// Add a listener to handle visual editing of the Graph
 		gp.addMouseMotionListener( new MouseMotionListener() {
@@ -489,6 +486,8 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 				animationButtons.setVisible(true);
                 animationButtons.setFocusable(true);
                 animationButtons.requestFocusInWindow();
+        directedBtn.setVisible(false);
+        undirectedBtn.setVisible(false);
 				select.setVisible(false);
         addNode.setVisible(false);
         addEdge.setVisible(false);
@@ -496,6 +495,8 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
         repositionBtn.setVisible(false);
 			} else {
 				animationButtons.setVisible(false);
+        directedBtn.setVisible(true);
+        undirectedBtn.setVisible(true);
 				select.setVisible(true);
         addNode.setVisible(true);
         addEdge.setVisible(true);
@@ -665,33 +666,6 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		button.setSelected(displayType.isShown());
 		return button;
 	}
-    //@todo unable to use keyboard shortcuts after press buttons	
-    static class AnimationKeyListener extends KeyAdapter {
-        /** 
-         * Intent is to delay for about 1/60 second = roughly 17 milliseconds
-         * to allow the display to catch up to repeated keystrokes when an
-         * arrow key is held down. 
-         */
-        static final long DELAY_TIME = 17;
-
-        public void keyPressed(KeyEvent e) {
-            if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-				gp.decrementDisplayState();
-            }
-            if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-				gp.incrementDisplayState();
-            }
-            if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                // delete row method (when "delete" is pressed)
-            }
-            try {
-                Thread.sleep(DELAY_TIME);
-            } catch (InterruptedException f) {
-                //Handle exception
-            }
-            frame.repaint();
-        }
-    }
 
 	/**
 	 * Initialize the animation panel controls
@@ -715,8 +689,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 				frame.repaint();
 			}
 		});
-    stepBack.addKeyListener(new AnimationKeyListener());
-		
+    		
 		// Move the display state in GraphPanel forward one
 		stepForward.addActionListener(new ActionListener() {
 			@Override
@@ -729,7 +702,6 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 				frame.repaint();
 			}
 		});
-    stepForward.addKeyListener(new AnimationKeyListener());
 		
 		// Exit the animation and change back to Edit mode
 		done.addActionListener(new ActionListener() {
@@ -738,8 +710,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 				dispatch.setAnimationMode(false);
 			}
 		});
-    done.addKeyListener(new AnimationKeyListener());
-
+    
 		animationButtons.add(stepBack);
 		animationButtons.add(stepForward);
 		animationButtons.add(done);
@@ -755,10 +726,52 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 				}
 		});
 
-        // add keyboard shortcuts (left and right arrows, enter)
-        animationButtons.addKeyListener(new AnimationKeyListener());
-        animationButtons.setFocusable(true);
-        animationButtons.requestFocusInWindow();
+  // add keyboard shortcuts (left and right arrows, enter)        
+  KeyboardFocusManager keyManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+  keyManager.addKeyEventDispatcher(new KeyEventDispatcher() {
+    /** 
+     * Intent is to delay for about 1/60 second = roughly 17 milliseconds
+     * to allow the display to catch up to repeated keystrokes when an
+     * arrow key is held down. 
+     */
+    static final long DELAY_TIME = 17;
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent e) {
+      if(e.getID()==KeyEvent.KEY_PRESSED && e.getKeyCode()==KeyEvent.VK_LEFT){
+        synchronized (this) { //Handle delay
+          if (dispatch.isAnimationMode()) {
+            gp.decrementDisplayState();
+            stepForward.setEnabled(gp.hasNextState());
+				    stepBack.setEnabled(gp.hasPreviousState());
+            try {
+              Thread.sleep(DELAY_TIME);
+            } catch (InterruptedException f) {
+              //Handle exception
+            }
+            frame.repaint();
+          }
+        }
+        return true;
+      }
+      if(e.getID()==KeyEvent.KEY_PRESSED && e.getKeyCode()==KeyEvent.VK_RIGHT){
+        synchronized (this) { //Handle delay
+          if (dispatch.isAnimationMode()) {
+            gp.incrementDisplayState();
+            stepForward.setEnabled(gp.hasNextState());
+				    stepBack.setEnabled(gp.hasPreviousState());
+            try {
+              Thread.sleep(DELAY_TIME);
+            } catch (InterruptedException f) {
+              //Handle exception
+            }
+            frame.repaint();
+          }
+        }
+        return true;
+      }
+      return false;
+    }
+  });
 
 		LogHelper.exitMethod(getClass(), "initAnimationPanel");
 		return animationButtons;

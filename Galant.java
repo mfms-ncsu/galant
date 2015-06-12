@@ -30,7 +30,6 @@ public class Galant {
 				}
 		}
 		);
-		System.out.printf("Galant has finished running\n");
 	}
 	
 	

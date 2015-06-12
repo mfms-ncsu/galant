@@ -6,22 +6,21 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
@@ -29,7 +28,6 @@ import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
-
 import edu.ncsu.csc.Galant.GraphDispatch;
 import edu.ncsu.csc.Galant.graph.component.Edge;
 import edu.ncsu.csc.Galant.graph.component.Graph;
@@ -56,16 +54,6 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
     public static final int TOOLBAR_HEIGHT = 24;
     public static final int ANIMATION_BUTTON_SIZE = 40;
 	
-    static public void setInitializationComplete(){
-    	
-    }
-    static public void stepComplete(){
-    	
-    }
-    static public void stepStarted(){
-    	
-    }
-    
 	/** Refers to the singleton GraphDispatch to push global information */
 	private final GraphDispatch dispatch;
 	
@@ -104,19 +92,6 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	private JToggleButton edgeWeights;
 	
 	private JToggleButton repositionBtn;
-	
-	private JLabel statusLabel;
-	
-	public void updateStatusLabel(int s){
-		String t = "Graph state is " + s;
-		statusLabel.setText(t);
-	}
-	public void updateStatusLabel(char [] a){
-		statusLabel.setText(new String(a));
-	}
-	public String getStatusLabel(){
-		return statusLabel.getText();
-	}
 	
 	private GraphMode mode = null;
 	
@@ -418,13 +393,11 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		
 		componentEditPanel = new ComponentEditPanel();
 		componentEditPanel.setVisible(false);
-
-		statusLabel = new JLabel("No status");
+		
 		
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
 		this.add(initToolbar());
-		this.add(statusLabel);
 		this.add(gp);
 		this.add(initAnimationPanel());
 		this.add(componentEditPanel);

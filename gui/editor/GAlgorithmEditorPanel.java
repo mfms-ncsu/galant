@@ -18,7 +18,7 @@ import edu.ncsu.csc.Galant.algorithm.code.CodeIntegrator;
 import edu.ncsu.csc.Galant.algorithm.code.CompilationException;
 import edu.ncsu.csc.Galant.algorithm.code.macro.MalformedMacroException;
 import edu.ncsu.csc.Galant.logging.LogHelper;
-import edu.ncsu.csc.Galant.graph.component.GraphState;
+
 /**
  * Each instance of GAlgorithmEditorPanel corresponds to a particular
  * edit session of a particular algorithm file, or unsaved algorithm.
@@ -122,44 +122,8 @@ public class GAlgorithmEditorPanel extends GEditorPanel {
 	 */
 	public void run() {
 		GraphDispatch.getInstance().setAnimationMode(true);
-		Algorithm ca = getCompiledAlgorithm();
-		ca.setGraph(GraphDispatch.getInstance().getWorkingGraph());
-		Thread t = new Thread(ca);
-		t.start();
-		while(GraphState.initilizationIncomplete()){
-			synchronized(this){
-				try{
-					t.sleep(10);
-				}
-				catch(Exception e){
-					System.out.println("Error occured while trying to sleep");
-					e.printStackTrace(System.out);
-				}
-			}
-		}
-		System.out.printf("Initialization finished; should \"run\" algorithm now");
-		synchronized(this){
-			try{
-				t.wait();
-			}
-			catch(InterruptedException e){
-				System.out.printf("Error occurred while trying to wait");
-				e.printStackTrace(System.out);
-			}
-		}
-		try{
-			Thread.sleep(2000);
-		}
-		catch (InterruptedException e){
-			System.out.printf("Error occured while trying to wait");
-			e.printStackTrace(System.out);
-		}
-		t.notify();
-		
-		
-		System.out.printf("Algorithm has returned from sleeping & should continue at this point\n");
-		
-		
+		getCompiledAlgorithm().setGraph(GraphDispatch.getInstance().getWorkingGraph());
+		getCompiledAlgorithm().run();
 	}
 	
 	/**

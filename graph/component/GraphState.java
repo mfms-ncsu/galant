@@ -1,7 +1,5 @@
 package edu.ncsu.csc.Galant.graph.component;
 
-import edu.ncsu.csc.Galant.algorithm.line_up_nodes_alg;
-import edu.ncsu.csc.Galant.gui.window.GraphWindow;
 /**
  * 
  * Stores the current state of the graph for iterating through the animation. Each state
@@ -11,16 +9,11 @@ import edu.ncsu.csc.Galant.gui.window.GraphWindow;
  *
  */
 public class GraphState {
-	
-	protected GraphWindow gw;
 
 	public static final int GRAPH_START_STATE = 1;
 
 	
 	private int state = 0;
-	static public int iComplete = 0;
-	//line_up_nodes_alg l = new line_up_nodes_alg();
-	
 	
 
     /**
@@ -34,16 +27,6 @@ public class GraphState {
 	public GraphState() {
 		state = 1;
 	}
-	static public void setInitializationComplete(){
-		iComplete++;
-	}
-	static public void setInitializationIncomplete(){
-		iComplete = 0;
-	}
-	static public boolean initilizationIncomplete(){
-		return iComplete == 0;
-	}
-	
 	
 	/**
 	 * @return true if the graph is directed, false otherwise
@@ -68,10 +51,7 @@ public class GraphState {
 	}
 	
 	public void incrementState() {
-		if(locked==0) {
-			this.state++;
-			gw.updateStatusLabel(this.state);
-		}
+		if(locked==0) this.state++;
 	}
 	
 	public void setLocked(boolean lock) {

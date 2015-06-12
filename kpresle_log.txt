@@ -1,3 +1,4 @@
+11 June (3.5 hours) Trying to understand the GUI; learning about Swing; added a panel to the GUI that will print out the graph state each time & display if in the midst of running the set-up
 6-7 June (7.5 hours) Algorithm is (I think) now being run in bits and pieces.  I'm still unable to step through it correctly, but I've added printouts to the log and I think things are going well
 04 June (3.5 hours) Better understanding of how the algorithm is being run; now have it pausing after doing the "set up" stage; still don't have it passing control correctly
 31 May (2 hours) Managed to break Galant; now it claims to have run the algorithm but won't actually display it.  I think I'm not passing my Thread object around correctly

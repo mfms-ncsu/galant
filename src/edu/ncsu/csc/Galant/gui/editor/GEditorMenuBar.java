@@ -35,6 +35,7 @@ public class GEditorMenuBar extends JMenuBar {
 			add(new GOpenItem());
 			add(new GSaveItem());
 			add(new GSaveAsItem());
+			add(new GLoadCompiledAlgorithm());
 			add(PreferencesPanel.SHOW_PREFS_DIALOG);
 			add(WindowUtil.QUIT_ACTION);
 		}
@@ -54,5 +55,10 @@ public class GEditorMenuBar extends JMenuBar {
 		public GSaveItem() { super("Save"); addActionListener(this); setMnemonic(KeyEvent.VK_S); setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())); }
 		@Override
 		public void actionPerformed(ActionEvent e) { parentFrame.save(); }
+	}
+	class GLoadCompiledAlgorithm extends JMenuItem implements ActionListener {
+		public GLoadCompiledAlgorithm() {super("Load Compiled Algorithm"); addActionListener(this); setMnemonic(KeyEvent.VK_D); setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));  }
+		@Override
+		public void actionPerformed(ActionEvent e) { parentFrame.loadCompiledAlgorithm(); /* parentFrame.open(); */ }
 	}
 }

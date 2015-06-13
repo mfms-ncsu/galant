@@ -101,10 +101,36 @@ public class GEditorFrame extends JFrame implements WindowListener {
 
            	  } catch(Exception e) { ExceptionDialog.displayExceptionInDialog(e); }
            	  	finally { if(scanner != null) scanner.close(); }
-            } else JOptionPane.showMessageDialog(this, FILENAME_EXTENSION_MESSAGE);
+            } else JOptionPane.showMessageDialog(this, FILENAME_EXTENSION_MESSAGE); 
         }
 	}
 	
+	public void loadCompiledAlgorithm() {		
+		// Filter for .class file
+		FileNameExtensionFilter filter = new FileNameExtensionFilter(".class File","class");
+		jfc.setFileFilter(filter);
+
+		// Set the initial Diectory as where .class file temporary stored.
+		jfc.setCurrentDirectory(GalantPreferences.OUTPUT_DIRECTORY.get());
+		int returnVal = jfc.showOpenDialog(this);
+
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            if(jfc.getSelectedFile().isFile()) {
+            	File file = jfc.getSelectedFile();
+            	GTabbedPane.AlgorithmOrGraph type = AlgorithmOrGraph.typeForFileName(file.getName());
+	             
+	             // Since files are filtered, no need to check the extension exception.
+            	try{
+	            	 
+	            	 Scanner scanner = new Scanner(file);
+	            	 scanner.useDelimiter("\\A");
+
+	            	 tabbedPane.addEditorTab(file.getName(), file.getPath(), scanner.hasNext() ? scanner.next() : "", type); 
+	            } catch(Exception e) { ExceptionDialog.displayExceptionInDialog(e); }
+            }
+        } 
+	}
+
 	public void saveAs() {
 		GEditorPanel gaep = tabbedPane.getSelectedPanel();
 		

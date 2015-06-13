@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
  * A <code>Macro</code> that just replaces each match with a replacement string. The replacement
  * string is as described in {@link Matcher#appendReplacement(StringBuffer, String)}.
  */
-public class SimpleReplacementMacro extends Macro
+public abstract class SimpleReplacementMacro extends Macro
 	{
 		private String replacement;
 
@@ -38,5 +38,4 @@ public class SimpleReplacementMacro extends Macro
 		public String includeInAlgorithm() {
 			return null;
 		}	
-
 	}

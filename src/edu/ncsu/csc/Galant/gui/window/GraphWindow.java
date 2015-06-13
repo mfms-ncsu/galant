@@ -735,6 +735,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
      * arrow key is held down. 
      */
     static final long DELAY_TIME = 17;
+    boolean ctrlPressed = false;
     @Override
     public boolean dispatchKeyEvent(KeyEvent e) {
       //"left" step backward when in animation mode
@@ -772,9 +773,30 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
         return true;
       }
       // "Esc" leave animation mode when in animation mode
-      if(e.getID()==KeyEvent.KEY_PRESSED && e.getKeyCode()==KeyEvent.VK_ESCAPE){
-        if (dispatch.isAnimationMode()) {
-          dispatch.setAnimationMode(false);
+      if(dispatch.isAnimationMode() && e.getID()==KeyEvent.KEY_PRESSED
+                                    && e.getKeyCode()==KeyEvent.VK_ESCAPE){
+        dispatch.setAnimationMode(false);
+        return true;
+      }
+      // "Ctrl" pressed
+      if(!dispatch.isAnimationMode() && e.getID()==KeyEvent.KEY_PRESSED
+                                     && e.getKeyCode()==KeyEvent.VK_CONTROL){
+          ctrlPressed = true;
+          System.out.println("Ctrl pressed");
+        return true;
+      }
+      // "Ctrl" released
+      if(e.getID()==KeyEvent.KEY_RELEASED && e.getKeyCode()==KeyEvent.VK_CONTROL){
+        System.out.println("Ctrl released");
+        ctrlPressed = false;
+        return true;
+      }
+      // "N" pressed
+      if(!dispatch.isAnimationMode() && e.getID()==KeyEvent.KEY_PRESSED
+                                     && e.getKeyCode()==KeyEvent.VK_N){
+        // "ctrl" already pressed, "ctrl + N"
+        if(ctrlPressed){
+          System.out.println("Ctrl + N");
         }
         return true;
       }

@@ -13,4 +13,5 @@
 
 9 June (~6 hours) disable directed/undirected buttons, application wide keyboard shortcuts use KeyEventDispatcher, Synchronized block handle delay
 10 June (~2 hours) "Esc" exit animation mode
-12 June (~3 hours) basic idea of multi keys shortcuts
+12 June (~3 hours) basic idea of multi keys shortcuts, "Ctrl + N"
+13 June (~2 hours) research the best position to place new node

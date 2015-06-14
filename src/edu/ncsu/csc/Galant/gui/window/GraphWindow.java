@@ -736,6 +736,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
      */
     static final long DELAY_TIME = 17;
     boolean ctrlPressed = false;
+    boolean nPressed = false;
     @Override
     public boolean dispatchKeyEvent(KeyEvent e) {
       //"left" step backward when in animation mode
@@ -782,23 +783,29 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
       if(!dispatch.isAnimationMode() && e.getID()==KeyEvent.KEY_PRESSED
                                      && e.getKeyCode()==KeyEvent.VK_CONTROL){
           ctrlPressed = true;
-          System.out.println("Ctrl pressed");
         return true;
       }
       // "Ctrl" released
       if(e.getID()==KeyEvent.KEY_RELEASED && e.getKeyCode()==KeyEvent.VK_CONTROL){
-        System.out.println("Ctrl released");
         ctrlPressed = false;
+        return true;
+      }
+      // "N" released
+      if(e.getID()==KeyEvent.KEY_RELEASED && e.getKeyCode()==KeyEvent.VK_N){
+        nPressed = false;
         return true;
       }
       // "N" pressed
       if(!dispatch.isAnimationMode() && e.getID()==KeyEvent.KEY_PRESSED
                                      && e.getKeyCode()==KeyEvent.VK_N){
-        // "ctrl" already pressed, "ctrl + N"
-        if(ctrlPressed){
-          System.out.println("Ctrl + N");
-        }
+        synchronized(this){
+          // "ctrl" already pressed and the first time handle n pressed, create new node
+          if(ctrlPressed && !nPressed){
+            System.out.println("Ctrl + N");
+            nPressed = true;
+          }
         return true;
+        }
       }
       return false;
     }

@@ -117,15 +117,11 @@ public class GEditorFrame extends JFrame implements WindowListener {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             if(jfc.getSelectedFile().isFile()) {
             	File file = jfc.getSelectedFile();
-            	GTabbedPane.AlgorithmOrGraph type = AlgorithmOrGraph.typeForFileName(file.getName());
-	             
-	             // Since files are filtered, no need to check the extension exception.
-            	try{
-	            	 
-	            	 Scanner scanner = new Scanner(file);
-	            	 scanner.useDelimiter("\\A");
 
-	            	 tabbedPane.addEditorTab(file.getName(), file.getPath(), scanner.hasNext() ? scanner.next() : "", type); 
+            	// Since files are filtered, no need to check the extension exception.
+            	try{
+            		 // The param content is not needed for compiled algorithm tab. We'll leave it null here. 
+	            	 tabbedPane.addEditorTab(file.getName(), file.getPath(), null, AlgorithmOrGraph.CompiledAlgorithm); 
 	            } catch(Exception e) { ExceptionDialog.displayExceptionInDialog(e); }
             }
         } 

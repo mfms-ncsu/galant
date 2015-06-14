@@ -33,7 +33,7 @@ public class GCompiledAlgorithmEditorPanel extends GEditorPanel {
 	 * Create a new edit session of an algorithm.
 	 * @param gTabbedPane The parent tabbed pane, of which there is only ever one.
 	 * @param filename The name of the file to be edited, which may be an unsaved file with a dummy name.
-	 * @param content The text which constitutes the contet of the file to be edited. It is either the result of reading in the file, or the empty string.
+	 * @param content set to be null when CompiledAlgorithmEditorPanel gets called from GEditorFrame.
 	 */
 	public GCompiledAlgorithmEditorPanel(GTabbedPane gTabbedPane, String filename, String content) {
 		super(gTabbedPane, filename, content);
@@ -42,10 +42,9 @@ public class GCompiledAlgorithmEditorPanel extends GEditorPanel {
 		syntaxHighlighter = new GAlgorithmSyntaxHighlighting(textPane);
 		documentUpdated();
 		setCompiledAlgorithm(null);
-
-		// Need to manipulate qualified name so class file can be loaded
-		// see CodeIntegrator.java 
-		String qualifiedName = GalantPreferences.OUTPUT_DIRECTORY.get() + "/" + filename;
+		
+		String className = filename.substring(0, filename.indexOf('.'));
+		String qualifiedName = PACKAGE + "." + className;
 
 		setCompiledAlgorithm(CompilerAndLoader.loadAlgorithm(qualifiedName));
 		GraphDispatch.getInstance().addChangeListener(this);
@@ -96,17 +95,11 @@ public class GCompiledAlgorithmEditorPanel extends GEditorPanel {
 		public void actionPerformed(ActionEvent arg0) {run();}
 	}
 
+	// There is no transition between animation mode and edit mode under CompiledAlgorithm.
+	// So this method remains empty.
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
-		if (evt.getPropertyName().equals(GraphDispatch.ANIMATION_MODE)) {
-			if ( (Boolean) evt.getNewValue() ) { //animation mode
-				this.textPane.setEnabled(false);
-			} else { //edit mode
-				this.textPane.setEnabled(true);
-			}
-		}
 	}
-
 }
 
 //  [Last modified: 2015 05 08 at 14:58:01 GMT]

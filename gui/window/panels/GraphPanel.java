@@ -2,28 +2,27 @@ package edu.ncsu.csc.Galant.gui.window.panels;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.FontMetrics;
 import java.awt.Font;
-import java.awt.font.FontRenderContext;
-import java.awt.font.TextLayout;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
-import java.awt.Rectangle;
+import java.awt.font.TextLayout;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
-import java.awt.geom.Rectangle2D;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.text.DecimalFormat;             // DecimalFormat
 import java.util.List;
 
 import javax.swing.JPanel;
 
+import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.GalantPreferences;
 import edu.ncsu.csc.Galant.GraphDispatch;
-import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.graph.component.Edge;
 import edu.ncsu.csc.Galant.graph.component.Graph;
 import edu.ncsu.csc.Galant.graph.component.GraphState;
@@ -31,8 +30,6 @@ import edu.ncsu.csc.Galant.graph.component.Node;
 import edu.ncsu.csc.Galant.graph.component.NodeState;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow.GraphDisplays;
 import edu.ncsu.csc.Galant.logging.LogHelper;
-
-import java.text.*;             // DecimalFormat
 
 /**
  * Component used to manage <code>Graph</code> actions and visual graph manipulations.
@@ -714,13 +711,25 @@ public class GraphPanel extends JPanel{
 	}
 	
 	public void incrementDisplayState() {
+		System.out.printf("In the GraphPanel class - incrementing the display state\n");
+		try{
+			throw new NullPointerException();
+		}
+		catch (Exception e){
+			e.printStackTrace(System.out);
+		}
+		finally{
+			System.out.printf("Stack trace for incrementing the state in the array of states created--no bearing on the GraphState incrementState");
+		}
 		LogHelper.enterMethod(getClass(), "incrementDisplayState");
-		System.out.printf("Incrementing the graph display state");
         LogHelper.logDebug( "" + state );
 		Graph graph = dispatch.getWorkingGraph();
+		int currentState = this.state;
+		int currentGraphState = graph.getState();
 		if (this.state < graph.getState()) {
 			this.state++;
 		}
+		System.out.println("Incrementing the graph display state: [" + currentState + "," + currentGraphState + "] --> " + state);
 		
 		LogHelper.exitMethod(getClass(), "incrementDisplayState");
 	}
@@ -728,9 +737,11 @@ public class GraphPanel extends JPanel{
 	public void decrementDisplayState() {
 		LogHelper.enterMethod(getClass(), "decrementDisplayState");
 		
+		int currentState = state;
 		if (this.state > 1) {
 			this.state--;
 		}
+		System.out.println("Decrementing the graph display state: [" + currentState + "] --> " + state);
 		
 		LogHelper.exitMethod(getClass(), "decrementDisplayState");
 	}

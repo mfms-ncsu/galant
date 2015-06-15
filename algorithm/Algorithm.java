@@ -1,6 +1,16 @@
 package edu.ncsu.csc.Galant.algorithm;
 
-import java.util.*;
+import java.util.AbstractQueue;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.Stack;
+
+import edu.ncsu.csc.Galant.GalantException;
+import edu.ncsu.csc.Galant.GraphDispatch;
 // import java.util.ArrayDeque;
 // import java.util.ArrayList;
 // import java.util.Iterator;
@@ -12,8 +22,7 @@ import edu.ncsu.csc.Galant.graph.component.Edge;
 import edu.ncsu.csc.Galant.graph.component.Graph;
 import edu.ncsu.csc.Galant.graph.component.GraphState;
 import edu.ncsu.csc.Galant.graph.component.Node;
-import edu.ncsu.csc.Galant.GalantException;
-import edu.ncsu.csc.Galant.GraphDispatch;
+import edu.ncsu.csc.Galant.gui.window.GraphWindow;
 
 /** 
  * Represents a runnable algorithm. 
@@ -21,7 +30,7 @@ import edu.ncsu.csc.Galant.GraphDispatch;
  */
 public abstract class Algorithm implements Runnable{
 	
-	
+	protected GraphWindow gw;
 	
 	protected int complete = 0; // This is used to keep track of whether the step of the algorithm is done or not
 	protected int exit = 0; // This is used to keep track of whether we're done with all of the algorithm steps or not

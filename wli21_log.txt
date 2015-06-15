@@ -15,3 +15,5 @@
 10 June (~2 hours) "Esc" exit animation mode
 12 June (~3 hours) basic idea of multi keys shortcuts, "Ctrl + N"
 13 June (~2 hours) research the best position to place new node
+
+15 June (~2 hours) "ctrl + n" create new node at random position for now

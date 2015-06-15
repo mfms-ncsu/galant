@@ -1,5 +1,6 @@
 package edu.ncsu.csc.Galant.gui.window;
 
+import java.util.Random;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -98,6 +99,8 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	private JToggleButton repositionBtn;
 	
 	private GraphMode mode = null;
+  
+  private Random rand = new Random();
 	
 	/**
 	 * The Edit modes GraphWindow can assume. Used in the listener for the
@@ -801,9 +804,29 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
         synchronized(this){
           // "ctrl" already pressed and the first time handle n pressed, create new node
           if(ctrlPressed && !nPressed){
-            System.out.println("Ctrl + N");
+            LogHelper.logDebug("CREATE NODE");
+							
+            // add a new default node to the working
+            Graph g = dispatch.getWorkingGraph();
+            Node n = g.addInitialNode();
+            LogHelper.logDebug( " addInitial: node = " + n );
+            // choice a position to place new node
+            int x = rand.nextInt(590) + 10;
+            int y = rand.nextInt(590) + 10;
+            Point p = new Point(x, y);
+            n.setFixedPosition(p);
+            LogHelper.logDebug( " setFixedPosition: node = " + n );
+							
+            // select the new node
+            Node nNew = gp.selectTopClickedNode(p);
+            LogHelper.logDebug( " select: node = " + n );
+
+            componentEditPanel.setWorkingComponent(nNew);
+            LogHelper.logDebug( " setWorking: node = " + n );
+                                
+            dispatch.pushToTextEditor();
             nPressed = true;
-          }
+          } //Create new node
         return true;
         }
       }

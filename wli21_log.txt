@@ -17,3 +17,5 @@
 13 June (~2 hours) research the best position to place new node
 
 15 June (~2 hours) "ctrl + n" create new node at random position for now
+17 June (~2 hours) new positions persist throughout execution when move node
+18 June (~6 hours) "ctrl + e" create new edge done

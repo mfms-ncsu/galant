@@ -640,6 +640,16 @@ public class Node extends GraphElement implements Comparable<Node> {
 		this.position = p;
         getInitialState().setPosition( p );
 	}
+  
+  /**
+   * set the position of every states
+   */
+  public void setAnimationPosition( Point position ) {
+    for (int i=nodeStates.size()-1; i >= 0; i--) {
+			NodeState ns = nodeStates.get(i);
+			ns.setPosition( position );
+		}
+  }
 	
     /**
      * The following have been added for layered graphs. The value -1 is used

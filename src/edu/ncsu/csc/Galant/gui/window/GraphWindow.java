@@ -1,7 +1,9 @@
 package edu.ncsu.csc.Galant.gui.window;
 
 import java.util.Random;
+import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,10 +22,12 @@ import java.awt.KeyEventDispatcher;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.BoxLayout;
+import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
@@ -44,6 +48,7 @@ import edu.ncsu.csc.Galant.gui.window.panels.GraphPanel;
 import edu.ncsu.csc.Galant.logging.LogHelper;
 import edu.ncsu.csc.Galant.prefs.Preference;
 import edu.ncsu.csc.Galant.GalantException;
+import edu.ncsu.csc.Galant.gui.util.EdgeEditDialog;
 
 /**
  * Window for displaying the <code>Graph</code>, containing all necessary
@@ -100,7 +105,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	
 	private GraphMode mode = null;
   
-  private Random rand = new Random();
+  private EdgeEditDialog edgeEditDialog;
 	
 	/**
 	 * The Edit modes GraphWindow can assume. Used in the listener for the
@@ -220,8 +225,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                         if ( ! dispatch.isAnimationMode() ) {
                             sel.setFixedPosition( arg0.getPoint() );
                         } else {
-                            NodeState currentState = sel.getLatestValidState(gp.getDisplayState());
-                            currentState.setPosition( arg0.getPoint() );
+                            sel.setAnimationPosition( arg0.getPoint() );
                         }
                     }
                     frame.repaint();
@@ -740,6 +744,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
     static final long DELAY_TIME = 17;
     boolean ctrlPressed = false;
     boolean nPressed = false;
+    boolean ePressed = false;
     @Override
     public boolean dispatchKeyEvent(KeyEvent e) {
       //"left" step backward when in animation mode
@@ -798,6 +803,29 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
         nPressed = false;
         return true;
       }
+      // "E" released
+      if(e.getID()==KeyEvent.KEY_RELEASED && e.getKeyCode()==KeyEvent.VK_E){
+        ePressed = false;
+        return true;
+      }
+      // "E" pressed
+      if(!dispatch.isAnimationMode() && e.getID()==KeyEvent.KEY_PRESSED
+                                     && e.getKeyCode()==KeyEvent.VK_E){
+        synchronized(this){
+          // "ctrl" already pressed and the first time handle e pressed, create new edge
+          if(ctrlPressed && !ePressed){
+            LogHelper.logDebug("CREATE EDGE");
+						//prompt user for the id of two nodes	
+            edgeEditDialog = new EdgeEditDialog(frame, dispatch);
+            edgeEditDialog.pack();
+            edgeEditDialog.setLocationRelativeTo(frame);
+            edgeEditDialog.setVisible(true);
+            dispatch.pushToTextEditor();
+            nPressed = true;
+          } //Create new edge
+        return true;
+        }
+      }
       // "N" pressed
       if(!dispatch.isAnimationMode() && e.getID()==KeyEvent.KEY_PRESSED
                                      && e.getKeyCode()==KeyEvent.VK_N){
@@ -811,9 +839,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
             Node n = g.addInitialNode();
             LogHelper.logDebug( " addInitial: node = " + n );
             // choice a position to place new node
-            int x = rand.nextInt(590) + 10;
-            int y = rand.nextInt(590) + 10;
-            Point p = new Point(x, y);
+            Point p = Node.genRandomPosition();
             n.setFixedPosition(p);
             LogHelper.logDebug( " setFixedPosition: node = " + n );
 							
@@ -823,7 +849,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 
             componentEditPanel.setWorkingComponent(nNew);
             LogHelper.logDebug( " setWorking: node = " + n );
-                                
+            
             dispatch.pushToTextEditor();
             nPressed = true;
           } //Create new node

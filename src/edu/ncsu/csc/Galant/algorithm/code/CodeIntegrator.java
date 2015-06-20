@@ -2,6 +2,7 @@ package edu.ncsu.csc.Galant.algorithm.code;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.Scanner;
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaFileObject;
 import edu.ncsu.csc.Galant.GalantPreferences;
@@ -100,6 +101,41 @@ public class CodeIntegrator
 				String imports = userCode.substring(0, splitAt);
 				userCode = userCode.substring(splitAt);
 
+				// Initilize a new String
+				String userCodeWithoutCommentLines = userCode;
+
+				Scanner scanner = new Scanner(userCode);
+				while(scanner.hasNextLine()) {
+					String line = scanner.nextLine();
+					
+					// Check if the string contains comment line /** newline */
+					if( Pattern.compile("(\\s*)\\/\\*\\*(\\s*)").matcher(line).find()) {
+						// sb.append(line + "\n");
+						userCodeWithoutCommentLines = userCodeWithoutCommentLines.replace(line , "");
+						line = scanner.nextLine();
+
+						while (Pattern.compile("(\\s*)\\*(.*)").matcher(line).find() ) {
+							// sb.append(line + "\n");
+							userCodeWithoutCommentLines = userCodeWithoutCommentLines.replace(line , "");
+							line = scanner.nextLine();
+
+						}
+						// sb.append(line + "\n");
+						userCodeWithoutCommentLines = userCodeWithoutCommentLines.replace(line , "");
+					} else if( Pattern.compile("(\\s*)\\/\\*(\\s|\\.*)").matcher(line).find()) {
+						// Check if the string contains comment line /* */
+						userCodeWithoutCommentLines = userCodeWithoutCommentLines.replace(line , "");
+						// sb.append(line + "\n");
+
+					} else if( Pattern.compile("(\\s*)\\/\\/(\\s|\\.*)").matcher(line).find()) {
+						// Check if the string contains comment line // 
+						userCodeWithoutCommentLines = userCodeWithoutCommentLines.replace(line , "");
+						// sb.append(line + "\n");
+					} 
+				}
+
+				System.out.println("->" + userCodeWithoutCommentLines + "<-");
+
 				// apply macros
 				for(Macro macro : Macro.MACROS)
 					userCode = macro.applyTo(userCode);
@@ -151,7 +187,7 @@ public class CodeIntegrator
 					CompilerAndLoader.compile(qualifiedName, sourceCode);
 				if(diagnostics != null)
 					throw new CompilationException(diagnostics);
-
+					
 				// Load
 				return CompilerAndLoader.loadAlgorithm(qualifiedName);
 			}

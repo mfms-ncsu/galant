@@ -84,7 +84,6 @@ public abstract class Macro
 		 */
 		protected abstract String modify(String code, MatchResult match) throws MalformedMacroException;
 
-
 		/**
 		 * Applies this macro to the given code. For each match found, replaces the match with the result of
 		 * {@link #modify(String, MatchResult)} (if it's not <code>null</code>), then searches for the next match starting at
@@ -109,13 +108,11 @@ public abstract class Macro
 						// Find the new expression
 						String newCode = code;
 						String newExpression = modify(code, matcher) + ";";
-						// System.out.println("OUTOFALGORITHM -->" + newExpression + "<--");
 							
 						// Find the variable name	
 						matcher = Pattern.compile("(\\s)(.*)$").matcher(modify(code, matcher));
 						matcher.find();
 						String variableName = matcher.group(0); 
-						// System.out.println("INSIDEOFALGORITHM -->" + variableName + includeInAlgorithm() + "<--");
 
 						newCode = code.replaceAll("(algorithm(.*)\\{)", "algorithm{" + variableName + includeInAlgorithm()); 
 						newCode = newCode.replace(originalExpression, newExpression); 
@@ -123,10 +120,6 @@ public abstract class Macro
 					}	
 
 					return code;
-
-					/** IMPORTANT: sth need to be fixed. The integrator will translate macroes even if those macroes are
-					* 			   in comment line.  
-					*/
 				} else {
 
 					while((matcher = getPattern().matcher(code).region(start, code.length())).find())

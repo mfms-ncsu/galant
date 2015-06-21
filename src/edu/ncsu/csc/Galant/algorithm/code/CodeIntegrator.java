@@ -102,39 +102,33 @@ public class CodeIntegrator
 				userCode = userCode.substring(splitAt);
 
 				// Initilize a new String
-				String userCodeWithoutCommentLines = userCode;
+				StringBuilder sb = new StringBuilder();
 
 				Scanner scanner = new Scanner(userCode);
 				while(scanner.hasNextLine()) {
 					String line = scanner.nextLine();
 					
-					// Check if the string contains comment line /** newline */
-					if( Pattern.compile("(\\s*)\\/\\*\\*(\\s*)").matcher(line).find()) {
-						// sb.append(line + "\n");
-						userCodeWithoutCommentLines = userCodeWithoutCommentLines.replace(line , "");
+					// Skip all the comment line then build the new source code  
+					
+					// Check if the string contains comment /** */ line newline 
+					if( Pattern.compile("(\\s)*\\/\\*\\*").matcher(line).find()) {
 						line = scanner.nextLine();
 
 						while (Pattern.compile("(\\s*)\\*(.*)").matcher(line).find() ) {
-							// sb.append(line + "\n");
-							userCodeWithoutCommentLines = userCodeWithoutCommentLines.replace(line , "");
 							line = scanner.nextLine();
-
 						}
-						// sb.append(line + "\n");
-						userCodeWithoutCommentLines = userCodeWithoutCommentLines.replace(line , "");
-					} else if( Pattern.compile("(\\s*)\\/\\*(\\s|\\.*)").matcher(line).find()) {
+					} else if( Pattern.compile("(\\s*)\\/\\*(\\s|.*)").matcher(line).find()) {
 						// Check if the string contains comment line /* */
-						userCodeWithoutCommentLines = userCodeWithoutCommentLines.replace(line , "");
-						// sb.append(line + "\n");
 
-					} else if( Pattern.compile("(\\s*)\\/\\/(\\s|\\.*)").matcher(line).find()) {
+					} else if( Pattern.compile("(\\s*)\\/\\/(\\s|.*)").matcher(line).find()) {
 						// Check if the string contains comment line // 
-						userCodeWithoutCommentLines = userCodeWithoutCommentLines.replace(line , "");
-						// sb.append(line + "\n");
-					} 
+					} else if( line!= null && line.length()>0 ){
+						sb.append(line + "\n");
+					}
 				}
-
-				System.out.println("->" + userCodeWithoutCommentLines + "<-");
+				
+				// Reassign userCode with comment line removed
+				userCode = sb.toString();
 
 				// apply macros
 				for(Macro macro : Macro.MACROS)

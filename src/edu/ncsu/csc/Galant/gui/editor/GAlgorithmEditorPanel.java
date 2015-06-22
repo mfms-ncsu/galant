@@ -138,27 +138,6 @@ public class GAlgorithmEditorPanel extends GEditorPanel {
 			}
 		}
 		System.out.printf("Initialization finished; should \"run\" algorithm now");
-		/*
-		synchronized(this){
-			try{
-				t.wait();
-			}
-			catch(InterruptedException e){
-				System.out.printf("Error occurred while trying to wait");
-				e.printStackTrace(System.out);
-			}
-		}
-		try{
-			Thread.sleep(2000);
-		}
-		catch (InterruptedException e){
-			System.out.printf("Error occured while trying to wait");
-			e.printStackTrace(System.out);
-		}
-		t.notify();
-		*/
-		
-		System.out.printf("Algorithm has returned from sleeping & should continue at this point\n");
 		
 		
 	}

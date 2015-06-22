@@ -117,8 +117,7 @@ public class NodeState {
      * @todo LayeredGraph should extend Graph, but this may get complicated
      * because you'd need NodeInLayeredGraph
      */
-	public NodeState( GraphState s,                      boolean _highlighted,                      boolean _visited,                      int _id,                      double _weight,                      String _color,
-                      String _label,                      int _layer,                      int _positionInLayer                      ) {
+	public NodeState( GraphState s, boolean _highlighted, boolean _visited, int _id, double _weight, String _color, String _label, int _layer, int _positionInLayer) {
 		this.state = s.getState();
 		
 		this.selected = _highlighted;

@@ -12,16 +12,14 @@ public class line_up_nodes_alg extends Algorithm {
 	public line_up_nodes_alg() {
 		super();
 		System.out.println("Created new line_up_nodes_alg using hardcoded implementation.");
-		try {
-			throw new Exception();
-		} catch (Exception e) {
-			e.printStackTrace(System.out);
-		}
+		
 	}
 	
 	
 	
 	@Override public void run() {
+		
+		GraphState gs = this.getGraph().getGraphState();
 		System.out.println("Starting hardcoded class's run(); method");
 		try {
 			final int HORIZONTAL_GAP = 100;
@@ -36,10 +34,9 @@ public class line_up_nodes_alg extends Algorithm {
 			int xPosition = HORIZONTAL_GAP;
 			int yPosition = TOP_GAP;
 			System.out.println("About to mark initialization as complete");
-			GraphState.setInitializationComplete();
-			synchronized(this){
-				this.wait();
-			}
+			
+			gs.setInitializationComplete();
+			
 			/* THis "initialization complete" can be replaced with a beginStep() and endStep() for the user after they've done everything that they consider initialization.
 			 * A macro that does a beginstep followed by code followed by end step would probably be better
 			 * GDR has a macro called wait() with a message argument; another idea of what to do here.

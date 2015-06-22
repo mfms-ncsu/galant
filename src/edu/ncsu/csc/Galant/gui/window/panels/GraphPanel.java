@@ -28,6 +28,7 @@ import edu.ncsu.csc.Galant.graph.component.Graph;
 import edu.ncsu.csc.Galant.graph.component.GraphState;
 import edu.ncsu.csc.Galant.graph.component.Node;
 import edu.ncsu.csc.Galant.graph.component.NodeState;
+import edu.ncsu.csc.Galant.gui.window.GraphWindow;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow.GraphDisplays;
 import edu.ncsu.csc.Galant.logging.LogHelper;
 
@@ -39,6 +40,18 @@ import edu.ncsu.csc.Galant.logging.LogHelper;
 public class GraphPanel extends JPanel{
 	
 	Thread t;
+	boolean algorithmComplete;
+	public void setAlgorithmComplete(){
+		this.algorithmComplete = !false;
+	}
+	public boolean getAlgorithmComplete(){
+		return algorithmComplete ? true : false;
+	}
+	private GraphWindow gw;
+	public boolean setGraphWindow(GraphWindow a){
+		this.gw = a;
+		return false;
+	}
 
     /**
      * whether or not to display the id of a node (should be a preference)
@@ -166,10 +179,11 @@ public class GraphPanel extends JPanel{
 	 * 
 	 * @param _dispatch A reference to the GraphDispatch
 	 */
-	public GraphPanel(GraphDispatch _dispatch) {
+	public GraphPanel(GraphDispatch _dispatch, GraphWindow a) {
 		LogHelper.enterConstructor(getClass());
 		
 		this.dispatch = _dispatch;
+		this.gw = a;
 		
 		this.setSize(600, 600);
 		//this.setMinimumSize(new Dimension(600, 600));
@@ -233,9 +247,7 @@ public class GraphPanel extends JPanel{
      * @return the point at the center of node n, based on whether or not
      * you're in animation mode or whether the graph is layered.
      */
-    private Point getNodeCenter( Node n ) 
-        throws GalantException
-    {
+    private Point getNodeCenter( Node n ) throws GalantException{
         LogHelper.enterMethod( getClass(), "getNodeCenter, n = " + n );
 
         // ns is the latest state in the animation if in animation mode
@@ -712,6 +724,19 @@ public class GraphPanel extends JPanel{
 		g2d.setColor(prevColor);
 	}
 	
+	public boolean startAlgorithm(){
+		
+		if(!algorithmComplete){
+			synchronized(dispatch.getWorkingGraph().getGraphState()){
+				dispatch.getWorkingGraph().getGraphState().notify();
+			}
+			System.out.printf("Algorithm is started");
+		return true; // algorithm was started
+		}
+		
+		return false; // algorithm not started
+	}
+	
 	public void incrementDisplayState() {
 		System.out.printf("In the GraphPanel class - incrementing the display state\n");
 		try{
@@ -723,7 +748,6 @@ public class GraphPanel extends JPanel{
 		finally{
 			System.out.printf("Stack trace for incrementing the state in the array of states created--no bearing on the GraphState incrementState\n");
 		}
-		dispatch.getWorkingGraph().getGraphState().notify();
 		LogHelper.enterMethod(getClass(), "incrementDisplayState");
         LogHelper.logDebug( "" + state );
 		Graph graph = dispatch.getWorkingGraph();
@@ -732,6 +756,8 @@ public class GraphPanel extends JPanel{
 		if (this.state < graph.getState()) {
 			this.state++;
 		}
+		this.gw.updateStatusLabel(this.getDisplayState());
+//		System.out.printf(this.gw != null ? "yes" : "no");
 		System.out.println("Incrementing the graph display state: [" + currentState + "," + currentGraphState + "] --> " + state);
 		
 		LogHelper.exitMethod(getClass(), "incrementDisplayState");

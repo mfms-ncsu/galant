@@ -6,9 +6,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import edu.ncsu.csc.Galant.logging.LogHelper;
-import edu.ncsu.csc.Galant.GraphDispatch;
+
 import edu.ncsu.csc.Galant.GalantException;
+import edu.ncsu.csc.Galant.GraphDispatch;
+import edu.ncsu.csc.Galant.gui.window.GraphWindow;
+import edu.ncsu.csc.Galant.logging.LogHelper;
 
 /**
  * Represents node entities as elements of a graph.
@@ -83,7 +85,7 @@ public class Node extends GraphElement implements Comparable<Node> {
         LogHelper.exitConstructor( getClass(), "ns = " + ns );
 	}
 
-	public boolean inScope() {
+	public boolean inScope(){
 		return !isDeleted();
 	}
 	
@@ -776,9 +778,36 @@ public class Node extends GraphElement implements Comparable<Node> {
 		}
 		
 		nodeStates.add(n);
+		
+		try {
+			throw new Exception();
+		} catch (Exception e) {
+			e.printStackTrace(System.out);
+		}
+		// Graph window gives a segfault--make sure that the pointer to it is OK		
+		//n.graphState.getGraph().graphWindow.updateStatusLabel(/*n.graphState.getGraph().getState()*/0);
+		
+		n.graphState.synchronizedWait();
+		/*
 		synchronized(n.graphState){
 			try{
-				n.graphState.wait();
+				// In the Node.java file; about to suspend worker
+				try{
+					throw new IllegalArgumentException();
+				}
+				catch(IllegalArgumentException e){
+					e.printStackTrace(System.out);
+					
+				}
+				
+				if(!n.graphState.initilizationIncomplete()){
+					System.out.printf("In the addNodeState function; about to suspend execution\n");
+					GraphWindow.getGraphPanel().incrementDisplayState();
+					
+					n.graphState.wait();
+					
+				}
+				// In the Node.java file; worker just suspended
 			}
 			catch (InterruptedException e){
 				e.printStackTrace(System.out);
@@ -788,6 +817,9 @@ public class Node extends GraphElement implements Comparable<Node> {
 			}
 			
 		}
+		if(!n.graphState.initilizationIncomplete()) System.out.printf("In the addNodeState function; execution resumed\n");
+		*/
+
 	}
 	
 	public static Point genRandomPosition() {

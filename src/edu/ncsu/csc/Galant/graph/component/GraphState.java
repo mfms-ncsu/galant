@@ -1,5 +1,7 @@
 package edu.ncsu.csc.Galant.graph.component;
 
+import edu.ncsu.csc.Galant.gui.window.GraphWindow;
+
 /**
  * 
  * Stores the current state of the graph for iterating through the animation. Each state
@@ -18,13 +20,22 @@ package edu.ncsu.csc.Galant.graph.component;
  */
 public class GraphState {
 	
+	private Graph g;
+	
+	public Graph getGraph(){
+		return g;
+	}
+	public Boolean setGraph(Graph g){
+		this.g = g;
+		return true;
+	}
 
 	public static final int GRAPH_START_STATE = 1;
 
 	
 	private int state = 0;
 	static public int iComplete = 0;
-	//line_up_nodes_alg l = new line_up_nodes_alg();
+
 	Thread t;
 	
 	
@@ -45,15 +56,15 @@ public class GraphState {
 		iComplete++;
 		Thread myThread = Thread.currentThread();
 		// modify the status message to say tha tinitialization is complete
-		System.out.printf("Initialization complete; suspending thread [%s]", myThread.getName());
-		/*synchronized(this){
+		//System.out.printf("Initialization complete; suspending thread [%s]", myThread.getName());
+		synchronized(this){
 			try{
 				this.wait();
 			}
 			catch(InterruptedException e){
 				e.printStackTrace(System.out);
 			}
-		}*/
+		}
 	}
 	static public void setInitializationIncomplete(){
 		iComplete = 0;
@@ -86,13 +97,8 @@ public class GraphState {
 	}
 	
 	public void incrementState() {
-		System.out.printf("Incrementing the graph state");/*
-		try{
-			t.wait();
-		}
-		catch(InterruptedException e){
-			e.printStackTrace(System.out);
-		}*/
+		System.out.printf("Incrementing the graph state\n");
+		
 		try{
 			throw new ArrayIndexOutOfBoundsException();
 		}
@@ -103,6 +109,34 @@ public class GraphState {
 			this.state++;
 			
 		}
+	}
+	
+	public boolean synchronizedWait(){
+		
+		synchronized(this){
+			try{
+				try{
+					throw new IllegalArgumentException();
+				}
+				catch (IllegalArgumentException e){
+					e.printStackTrace(System.out);
+				}
+				
+
+				if(!this.initilizationIncomplete()){
+					System.out.printf("In the synchronizedWait function; about to suspend execution\n");
+					GraphWindow.getGraphPanel().incrementDisplayState();
+					
+					this.wait();
+					
+				}
+			}
+			catch (InterruptedException e){
+				e.printStackTrace(System.out);
+			}
+		}
+		
+		return true ? true : false;
 	}
 	
 	

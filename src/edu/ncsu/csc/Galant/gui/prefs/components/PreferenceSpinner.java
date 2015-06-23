@@ -8,6 +8,9 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.JTextField;
+import javax.swing.JFormattedTextField;
+
 import edu.ncsu.csc.Galant.gui.prefs.PreferenceComponent;
 import edu.ncsu.csc.Galant.prefs.Preference;
 
@@ -25,26 +28,40 @@ public class PreferenceSpinner extends PreferenceComponent<Integer, JSpinner>
 		 * @param step the step size of the spinner.
 		 * @see SpinnerNumberModel#SpinnerNumberModel(Number, Comparable, Comparable, Number)
 		 */
+        private final static int SPINNER_FIELD_WIDTH = 3;
+        
 		public PreferenceSpinner(Preference<Integer> preference, Integer min, Integer max,
 			Integer step)
 			{
 				super(preference, new JSpinner(new SpinnerNumberModel(preference.getDefaultValue(),
 					min, max, step)));
-				getComponent().addChangeListener(new ChangeListener(){
-					@Override
-					public void stateChanged(ChangeEvent e)
-						{
-							JComponent editor = getComponent().getEditor();
-							Dimension preferred = editor.getPreferredSize();
-							int prevWidth = preferred.width;
-							preferred.width =
-								SwingUtilities.computeStringWidth(editor.getFontMetrics(editor.getFont()), NumberFormat
-									.getInstance().format(getValue()));
-							editor.setPreferredSize(preferred);
-							if(prevWidth != preferred.width)
-								getComponent().getParent().validate();
-						}
-				});
+                JComponent editor = getComponent().getEditor();
+                JFormattedTextField textField
+                    = ((JSpinner.DefaultEditor) editor).getTextField();
+                textField.setColumns( SPINNER_FIELD_WIDTH );
+                textField.setHorizontalAlignment( JTextField.CENTER );
+                // apparently there's no need to override the change listener
+// 				getComponent().addChangeListener(
+//                                                  new ChangeListener(){
+// 					@Override
+// 					public void stateChanged(ChangeEvent e)
+// 						{
+// 							JComponent editor = getComponent().getEditor();
+// 							Dimension preferred = editor.getPreferredSize();
+// 							int prevWidth = preferred.width;
+// 							preferred.width
+//                                 = SwingUtilities.computeStringWidth(editor.getFontMetrics(editor.getFont()), "000" );
+//                                 = SPINNER_FIELD_WIDTH;
+//                                 The method below appears to give windows
+//                                 that are too small
+//                             String numberFormat = NumberFormat.getInstance().format(getValue());
+// 								SwingUtilities.computeStringWidth(editor.getFontMetrics(editor.getFont()), numberFormat );
+// 							editor.setMinimumSize(preferred);
+//                             getComponent().setEditor(editor);
+// 							if(prevWidth != preferred.width)
+// 								getComponent().getParent().validate();
+// 						}
+// 				});
 			}
 		@Override
 		protected Integer getValue()
@@ -61,3 +78,5 @@ public class PreferenceSpinner extends PreferenceComponent<Integer, JSpinner>
 				getComponent().setValue(value);
 			}
 	}
+
+//  [Last modified: 2015 05 30 at 00:34:24 GMT]

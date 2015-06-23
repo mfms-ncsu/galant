@@ -42,27 +42,58 @@ import java.text.*;             // DecimalFormat
 public class GraphPanel extends JPanel{
 
     /**
-     * whether or not to display the id of a node (should be a preference)
-     */
-    private final boolean DISPLAY_ID = true;
-
-    /**
-     * Diameter of a node (eventually this should be a preference)
-     */
-    private final int NODE_RADIUS = 11;
-    // private final int NODE_RADIUS = 4;
-
-    /**
-     * Characteristics of the boundary of a selected node
-     * (line width setting does not work -- not clear why)
-     */
-    private final float THICKER_WIDTH = 5;
-    private final Color SELECTED_NODE_LINE_COLOR = Color.red;
-
-    /**
      * color of a node boundary or edge if none is specified
      */
     public final Color DEFAULT_COLOR = Color.black;
+
+    /**
+     * Default width of an edge or node boundary
+     */
+    public static final int DEFAULT_WIDTH = 2;
+    
+    /**
+     * Maximum width of a node boundary or edge that can be specified by a
+     * spinner in the preferences panel
+     */
+    public static final int MAXIMUM_LINE_WIDTH = 7;
+
+    /**
+     * default width for a highlighted or colored edge or node boundary
+     */
+    public static final int DEFAULT_HIGHLIGHT_WIDTH = 5;
+
+    /**
+     * This is the default value if none is specified in the preferences
+     */
+    public static final int DEFAULT_NODE_RADIUS = 12;
+
+    /**
+     * This is the maximum value that can be specified via a spinner in the
+     * preferences
+     */
+    public static final int MAXIMUM_NODE_RADIUS = 15;
+
+    /**
+     * Minimum node radius that allows display of node id
+     */
+    private static final int MINIMUM_ID_RADIUS = 10;
+
+    /**
+     * Characteristics of the boundary of a selected node
+     * (line width setting does not work because this has to be a float)
+     */
+    private final float SELECTED_NODE_LINE_WIDTH = 5;
+    private final Color SELECTED_NODE_LINE_COLOR = Color.red;
+
+    /**
+     * diameter of a node for selection purposes
+     */
+    private final int NODE_SELECTION_RADIUS = 12;
+
+    /**
+     * width of an edge for selection purposes
+     */
+    private final int EDGE_SELECTION_WIDTH = 8;
 
     /**
      * Node weights are stacked on top of labels; their left edge is
@@ -114,11 +145,28 @@ public class GraphPanel extends JPanel{
 	private int state = GraphState.GRAPH_START_STATE;
 	
 	/**
-	 * Holds the width to draw edges. Pulled on each repaint
-	 * from the Galant Preferences 
+	 * Holds the width to draw edges and node boundaries. Pulled on each
+	 * repaint from the Galant Preferences 
 	 */
-	private int edgeSize = 2;
+	private int lineWidth = DEFAULT_WIDTH;
+
+    /**
+     * Holds the width to draw edges and node boundaries when these are
+     * highlighted or colored
+     */
+    private int highlightWidth = DEFAULT_HIGHLIGHT_WIDTH;
+
+	/**
+	 * Holds the radius for drawing nodes. Pulled on each repaint
+	 * from the Galant Preferences
+	 */
+	private int nodeRadius = DEFAULT_NODE_RADIUS;
 	
+    /**
+     * whether or not to display the id's of nodes
+     */
+    private boolean displayIds = false;
+
 	private Node previousNode;
 	private Node selectedNode;
 	private Edge selectedEdge;
@@ -186,10 +234,18 @@ public class GraphPanel extends JPanel{
             // Get the graph to draw
             Graph graph = dispatch.getWorkingGraph();
 		
-            // Get the preferred edge width
-            this.edgeSize = GalantPreferences.EDGE_WIDTH.get();
-            if (this.edgeSize < 1) this.edgeSize = 2;
-		
+            // Get the normal width of an edge or node boundary
+            this.lineWidth = GalantPreferences.NORMAL_WIDTH.get();
+
+            // Get the width of a node boundary that's highlighted or colored
+            this.highlightWidth = GalantPreferences.HIGHLIGHT_WIDTH.get();
+
+            // Get node radius
+            this.nodeRadius = GalantPreferences.NODE_RADIUS.get();
+	
+            // display id's only if radius is large enough
+            displayIds = ( nodeRadius >= MINIMUM_ID_RADIUS );
+
             super.paintComponent(g);
             Graphics2D g2d = (Graphics2D) g;
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -316,7 +372,7 @@ public class GraphPanel extends JPanel{
                 // ditto with weight below
                 Point labelPosition
                     = new Point( nodeCenter.x
-                                 + NODE_RADIUS
+                                 + nodeRadius
                                  + NODE_LABEL_DISTANCE + LABEL_PADDING,
                                  nodeCenter.y
                                  + LABEL_PADDING );
@@ -342,7 +398,7 @@ public class GraphPanel extends JPanel{
             Rectangle2D bounds = layout.getBounds();
             // padding is 'shared' with node label
             Point weightPosition = new Point( nodeCenter.x
-                                              + NODE_RADIUS
+                                              + nodeRadius
                                               + NODE_LABEL_DISTANCE
                                               + LABEL_PADDING,
                                               nodeCenter.y
@@ -363,10 +419,10 @@ public class GraphPanel extends JPanel{
            Circle is filled first so that outline can be drawn on top of
            the filled circle */
         Ellipse2D.Double nodeCircle
-            = new Ellipse2D.Double( nodeCenter.x - NODE_RADIUS,
-                                    nodeCenter.y - NODE_RADIUS,
-                                    2 * NODE_RADIUS,
-                                    2 * NODE_RADIUS );
+            = new Ellipse2D.Double( nodeCenter.x - nodeRadius,
+                                    nodeCenter.y - nodeRadius,
+                                    2 * nodeRadius,
+                                    2 * nodeRadius );
 
         /* draw node interior */
         if ( n.isMarked(state) ) {
@@ -380,19 +436,19 @@ public class GraphPanel extends JPanel{
         /* draw node boundary */
         if ( ns.isSelected() ) {
             g2d.setColor( SELECTED_NODE_LINE_COLOR );
-            g2d.setStroke( new BasicStroke( THICKER_WIDTH ) );
+            g2d.setStroke( new BasicStroke( highlightWidth ) );
         }
         else if ( ns.getColor().equals( Graph.NOT_A_COLOR ) ) {
             // no declared color, use default color with default line width 
             g2d.setColor( DEFAULT_COLOR );
-            g2d.setStroke( new BasicStroke() );
+            g2d.setStroke( new BasicStroke( lineWidth ) );
         }
         else {
             // color declared, use it and make stroke thicker
             String nodeColor = ns.getColor();
             Color c = Color.decode( nodeColor );
             g2d.setColor(c);
-            g2d.setStroke( new BasicStroke( THICKER_WIDTH ) );
+            g2d.setStroke( new BasicStroke( highlightWidth ) );
         }
 
         // draw node boundary
@@ -400,7 +456,7 @@ public class GraphPanel extends JPanel{
 
         /* draw node id if desired */
         /** @todo get rid of magic numbers here */
-        if ( DISPLAY_ID ) {
+        if ( displayIds ) {
             g2d.setColor(Color.BLACK);
             String idStr = "" + n.getId();
             if (idStr.length() > 1) {
@@ -438,7 +494,7 @@ public class GraphPanel extends JPanel{
         throws GalantException
     {
 		
-		int thickness = edgeSize;
+		int thickness = lineWidth; 
 		
 		if (e != null) {
 			Node dest = e.getDestNode(state);
@@ -452,7 +508,7 @@ public class GraphPanel extends JPanel{
 					g2d.setColor(Color.BLUE);
 				} else if (e.isSelected(state)) {
 					g2d.setColor(Color.RED);
-					thickness += 2; // thicken the line on selection 
+					thickness = highlightWidth;
 				} else {
 					try {
 						Color c = Color.decode(e.getColor());
@@ -513,7 +569,7 @@ public class GraphPanel extends JPanel{
         double dy = dest.getY() - source.getY();
         double angle = Math.atan2(dy, dx);
         
-        int len = (int) Math.sqrt(dx*dx + dy*dy) - NODE_RADIUS;
+        int len = (int) Math.sqrt(dx*dx + dy*dy) - nodeRadius;
         
         AffineTransform at = AffineTransform.getTranslateInstance(source.getX(), source.getY());
         at.concatenate(AffineTransform.getRotateInstance(angle));
@@ -533,7 +589,7 @@ public class GraphPanel extends JPanel{
 	 */
 	private void drawSelfLoopArrow(Point p1, Graphics2D g2d) {
 		int x = p1.x + 1;
-		int y = p1.y + NODE_RADIUS;
+		int y = p1.y + nodeRadius;
 		
 		g2d.fillPolygon(new int[] {x, x-6, x+6, x},
                       new int[] {y, y+6, y+6, y}, 4);
@@ -658,7 +714,7 @@ public class GraphPanel extends JPanel{
              flip = true;
         }
         
-        int len = (int) Math.sqrt(dx*dx + dy*dy) - NODE_RADIUS;
+        int len = (int) Math.sqrt(dx*dx + dy*dy) - nodeRadius;
         
         AffineTransform at = AffineTransform.getTranslateInstance(p1.getX(), p1.getY());
         at.concatenate(AffineTransform.getRotateInstance(angle));
@@ -765,7 +821,7 @@ public class GraphPanel extends JPanel{
 		
 		for (Node n : g.getNodes()) {
             LogHelper.logDebug( "next node = " + n.getId() + " position = " + n.getPosition() );
-			if ( p.distance(n.getPosition()) < NODE_RADIUS ) {
+			if ( p.distance(n.getPosition()) < NODE_SELECTION_RADIUS ) {
 				top = n;
 			}
 		}
@@ -812,7 +868,7 @@ public class GraphPanel extends JPanel{
 		
 		Edge top = null;
 		
-		for (int i=1; i <= 8; i++) {
+		for (int i=1; i <= EDGE_SELECTION_WIDTH; i++) {
 			double width = i;
 			double centerVal = width/2;
             LogHelper.logDebug( "centerVal = " + centerVal );
@@ -898,4 +954,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2015 05 26 at 12:07:13 GMT]
+//  [Last modified: 2015 06 01 at 15:14:57 GMT]

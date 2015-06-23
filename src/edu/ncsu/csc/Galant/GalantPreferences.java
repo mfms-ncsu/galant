@@ -1,3 +1,29 @@
+/**
+ * Sets up the hierarchy of preferences and declares each available
+ * preference using utilities provided in prefs
+ * @see edu.ncsu.csc.Galant.prefs
+ *
+ * @todo The mechanism here is heavily dependent on specific GUI features --
+ * it should be possible to select preferences via keyboard shortcuts.
+ *
+ * @todo Organize the options under "Graph Display", now called "Visual Graph
+ * Editor", as follows:
+ *
+ * Nodes                            (a header, bold font)
+ *  Default border thickness        (spinner)
+ *  Highlight border thickness      (spinner)
+ *  Highlight color
+ *  Radius                          (spinner)
+ *  Show id's                       (toggle)
+ * Edges
+ *  Default width
+ *  Highlight width
+ *  Highlight color
+ *
+ * Eventually think about how to indicate that a node or edge is
+ * selected. Highest priority is the toggle for showing id's.
+ */
+
 package edu.ncsu.csc.Galant;
 
 import java.awt.Color;
@@ -5,6 +31,7 @@ import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileSystemView;
+import javax.swing.JSpinner;
 
 import edu.ncsu.csc.Galant.gui.editor.GEditorFrame;
 import edu.ncsu.csc.Galant.gui.prefs.components.ColorPanel;
@@ -13,6 +40,7 @@ import edu.ncsu.csc.Galant.gui.prefs.components.PreferenceSpinner;
 import edu.ncsu.csc.Galant.prefs.Accessors;
 import edu.ncsu.csc.Galant.prefs.Preference;
 import edu.ncsu.csc.Galant.prefs.PreferenceGroup;
+import edu.ncsu.csc.Galant.gui.window.panels.GraphPanel;
 
 /** 
  * The actual preferences available in the program. 
@@ -27,7 +55,7 @@ public class GalantPreferences
 
 	// Editors
 
-	public static final PreferenceGroup EDITORS;
+	public static final PreferenceGroup TEXT_EDITORS;
 
 	public static final Preference<Integer> FONT_SIZE;
 
@@ -53,7 +81,13 @@ public class GalantPreferences
 
 	public static final PreferenceGroup VISUAL_GRAPH_EDITOR;
 
-	public static final Preference<Integer> EDGE_WIDTH;
+	public static final Preference<Integer> NORMAL_WIDTH;
+
+	public static final Preference<Integer> HIGHLIGHT_WIDTH;
+
+	public static final Preference<Integer> NODE_RADIUS;
+
+// 	public static final Preference<Boolean> DISPLAY_NODE_ID;
 
 	// Open/Save
 
@@ -73,10 +107,10 @@ public class GalantPreferences
 	{
 		// -------- Editors --------
 
-		EDITORS = PreferenceGroup.ROOT.addNewChild("Editors");
+		TEXT_EDITORS = PreferenceGroup.ROOT.addNewChild("Text Window");
 
 		FONT_SIZE =
-				EDITORS.addPreference(new Preference<Integer>("Font Size", UIManager.getDefaults()
+				TEXT_EDITORS.addPreference(new Preference<Integer>("Font Size", UIManager.getDefaults()
 						.getFont("TextPane.font").getSize(), Accessors.INT_ACCESSOR));
 		new PreferenceSpinner(FONT_SIZE, 1, null, 1){
 			@Override
@@ -90,7 +124,7 @@ public class GalantPreferences
 
 		// TODO find the default tab size (I'm just using "4" for now; we could just stick
 		// with that, I guess)
-		TAB_SIZE = EDITORS.addPreference(new Preference<Integer>("Tab Size", 4, Accessors.INT_ACCESSOR));
+		TAB_SIZE = TEXT_EDITORS.addPreference(new Preference<Integer>("Tab Size", 4, Accessors.INT_ACCESSOR));
 		new PreferenceSpinner(TAB_SIZE, 1, null, 1){
 			@Override
 			public void apply()
@@ -102,7 +136,7 @@ public class GalantPreferences
 
 		// ---- Algorithm Editor ----
 
-		ALGORITHM_EDITOR = EDITORS.addNewChild("Algorithm Editor");
+		ALGORITHM_EDITOR = PreferenceGroup.ROOT.addNewChild("Algorithm Editor");
 
 		JAVA_KEYWORD_COLOR =
 				ALGORITHM_EDITOR.addPreference(new Preference<Color>("Java Keyword Color", new Color(0, 0, 255),
@@ -143,7 +177,7 @@ public class GalantPreferences
 
 		// ---- Text Graph Editor ----
 
-		TEXT_GRAPH_EDITOR = EDITORS.addNewChild("Textual Graph Editor");
+		TEXT_GRAPH_EDITOR = PreferenceGroup.ROOT.addNewChild("Textual Graph Editor");
 
 		GML_KEYWORD_COLOR =
 				TEXT_GRAPH_EDITOR.addPreference(new Preference<Color>("GraphML Keyword Color", new Color(0, 0, 255),
@@ -158,11 +192,41 @@ public class GalantPreferences
 
 		// ---- Visual Graph Editor ----
 
-		VISUAL_GRAPH_EDITOR = EDITORS.addNewChild("Visual Graph Editor");
+		VISUAL_GRAPH_EDITOR = PreferenceGroup.ROOT.addNewChild("Graph Display");
 
-		EDGE_WIDTH =
-				VISUAL_GRAPH_EDITOR.addPreference(new Preference<Integer>("Edge Width", 2, Accessors.INT_ACCESSOR));
-		new PreferenceSpinner(EDGE_WIDTH, 1, 10, 1){
+		NORMAL_WIDTH =
+				VISUAL_GRAPH_EDITOR.addPreference( new Preference<Integer>( "Line Width", 
+                                                                           GraphPanel.DEFAULT_WIDTH,
+                                                                           Accessors.INT_ACCESSOR ) );
+		PreferenceSpinner normalWidthSpinner
+            = new PreferenceSpinner(NORMAL_WIDTH, 1, GraphPanel.MAXIMUM_LINE_WIDTH, 1) {
+			@Override
+			public void apply()
+			{
+				GraphDispatch.getInstance().pushToGraphEditor();
+				super.apply();
+			}
+		};
+
+		HIGHLIGHT_WIDTH =
+				VISUAL_GRAPH_EDITOR.addPreference( new Preference<Integer>( "Highlight Line Width", 
+                                                                           GraphPanel.DEFAULT_HIGHLIGHT_WIDTH,
+                                                                           Accessors.INT_ACCESSOR ) );
+		PreferenceSpinner highlightWidthSpinner
+            = new PreferenceSpinner(HIGHLIGHT_WIDTH, 1, GraphPanel.MAXIMUM_LINE_WIDTH, 1) {
+			@Override
+			public void apply()
+			{
+				GraphDispatch.getInstance().pushToGraphEditor();
+				super.apply();
+			}
+		};
+
+		NODE_RADIUS =
+				VISUAL_GRAPH_EDITOR.addPreference( new Preference<Integer>( "Node radius",
+                                                                            GraphPanel.DEFAULT_NODE_RADIUS,
+                                                                            Accessors.INT_ACCESSOR ) );
+		new PreferenceSpinner(NODE_RADIUS, 1, GraphPanel.MAXIMUM_NODE_RADIUS, 1) {
 			@Override
 			public void apply()
 			{
@@ -194,3 +258,5 @@ public class GalantPreferences
 	public static void initPrefs()
 	{}
 }
+
+//  [Last modified: 2015 05 30 at 18:10:01 GMT]

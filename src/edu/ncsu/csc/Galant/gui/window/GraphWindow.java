@@ -78,7 +78,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	private static GraphPanel gp;
 	
 	/** A panel used to edit Graph element's properties **/ 
-	private static ComponentEditPanel componentEditPanel;
+	public static ComponentEditPanel componentEditPanel;
 	
 	/** A panel used to navigate through an animation **/
 	private static JPanel animationButtons;
@@ -821,7 +821,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
             edgeEditDialog.setLocationRelativeTo(frame);
             edgeEditDialog.setVisible(true);
             dispatch.pushToTextEditor();
-            nPressed = true;
+            ePressed = true;
           } //Create new edge
         return true;
         }
@@ -845,6 +845,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 							
             // select the new node
             Node nNew = gp.selectTopClickedNode(p);
+            componentEditPanel.setWorkingComponent(nNew);
             LogHelper.logDebug( " select: node = " + n );
 
             componentEditPanel.setWorkingComponent(nNew);

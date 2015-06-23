@@ -12,6 +12,7 @@ import edu.ncsu.csc.Galant.graph.component.Edge;
 import edu.ncsu.csc.Galant.graph.component.Graph;
 import edu.ncsu.csc.Galant.graph.component.Node;
 import edu.ncsu.csc.Galant.gui.window.panels.GraphPanel;
+import edu.ncsu.csc.Galant.gui.window.panels.ComponentEditPanel;
 
 /**
  * this dialog displayed when user create new edge with "ctrl + e" 
@@ -24,7 +25,6 @@ public class EdgeEditDialog extends JDialog
     private JTextField point1TextField;
     private JTextField point2TextField;
 
-    private String magicWord;
     private JOptionPane optionPane;
 
     private String btnString1 = "Enter";
@@ -123,11 +123,18 @@ public class EdgeEditDialog extends JDialog
             if (btnString1.equals(value)) {
                     point1Text = point1TextField.getText();
                     point2Text = point2TextField.getText();
-                    int point1 = Integer.parseInt(point1Text);
-                    int point2 = Integer.parseInt(point2Text);
+                    boolean isInt = true;
+                    int point1 = 0;
+                    int point2 = 0;
+                    try {
+                        point1 = Integer.parseInt(point1Text);
+                        point2 = Integer.parseInt(point2Text);
+                    } catch (NumberFormatException ex) {
+                        isInt = false;
+                    }
                     Graph g = dispatch.getWorkingGraph();
                     int numNodes = g.getNodes().size();
-                if (point1 < numNodes && point2 < numNodes && point1 >= 0 && point2 >= 0) {
+                if (isInt && point1 < numNodes && point2 < numNodes && point1 >= 0 && point2 >= 0) {
                     //create a new edge from point1 to point2
                     Node n1 = g.getNodeById(point1);
                     Node n2 = g.getNodeById(point2);
@@ -137,6 +144,7 @@ public class EdgeEditDialog extends JDialog
                     GraphPanel gp = GraphWindow.getGraphPanel();
                     gp.setSelectedNode(null);
                     gp.setSelectedEdge(edge);
+                    GraphWindow.componentEditPanel.setWorkingComponent(edge);
                     gp.setEdgeTracker(null);
                     
                     dispatch.pushToTextEditor(); 

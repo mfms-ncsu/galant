@@ -744,7 +744,7 @@ public class GraphPanel extends JPanel{
 	
 	public void incrementDisplayState() {
 		System.out.printf("In the GraphPanel class - incrementing the display state\n");
-		
+		/*
 		try{
 			throw new NullPointerException();
 		}
@@ -753,20 +753,21 @@ public class GraphPanel extends JPanel{
 		}
 		finally{
 			System.out.printf("Stack trace for incrementing the state in the array of states created--no bearing on the GraphState incrementState\n");
-		}
+		} 
 		LogHelper.enterMethod(getClass(), "incrementDisplayState");
         LogHelper.logDebug( "" + state );
 		Graph graph = dispatch.getWorkingGraph();
 		int currentState = this.state;
-		int currentGraphState = graph.getState();
+		int currentGraphState = graph.getState(); 
 		if (this.state < graph.getState()) {
 			this.state++;
 		}
 		this.gw.updateStatusLabel(this.getDisplayState());
-		/* System.out.printf(this.gw != null ? "yes" : "no"); */
+		/* System.out.printf(this.gw != null ? "yes" : "no"); 
 		System.out.println("Incrementing the graph display state: [" + currentState + "," + currentGraphState + "] --> " + state);
 		
-		LogHelper.exitMethod(getClass(), "incrementDisplayState");
+		LogHelper.exitMethod(getClass(), "incrementDisplayState");*/
+		++this.state;
 	}
 	
 	public void decrementDisplayState() {

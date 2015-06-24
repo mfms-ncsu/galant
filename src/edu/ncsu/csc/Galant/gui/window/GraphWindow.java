@@ -757,6 +757,9 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		stepBack.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				System.out.printf("In the \"previous\" button function\n");
+				System.out.printf("Graph state is: %d\n",getGraphDispatch().getWorkingGraph().getGraphState().getState());
+				System.out.printf("Display state is: %d\n",getGraphPanel().getDisplayState());
 				gp.decrementDisplayState();
 				
 				stepForward.setEnabled(gp.hasNextState());
@@ -774,25 +777,44 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 				// When it completes (and blocks), then the button can be enabled. That'll make the enable/disable
 				// work better for algorithms that take a long time to run.
 				
-				stepForward.setEnabled(!true); // Disable the button after clicking on it -- not ready to go on again
-				gp.startAlgorithm(); // Start the algorithm up again
-				
-				
-				
-				//gp.incrementDisplayState(); // wait I think that this is bad.  it will try to increment the display state as soon as it started the algorithm.  iff the algorithm finishes way fast, OK, this might work.  bt else?  maybe not.
-				
-				/* Once it's complete, then re-enable the button iff there is a next state
-				 * Will this need to figure out (obviously) when the algorithm has finished running its step or not
+				/*
+				System.out.printf("In the \"next\" button function\n");
+				System.out.printf("Graph state is: %d\n",getGraphDispatch().getWorkingGraph().getGraphState().getState());
+				System.out.printf("Display state is: %d\n",getGraphPanel().getDisplayState());
+				// This is to keep track of "where are we?"
 				 */
 				
+				if(getGraphPanel().getDisplayState() < getGraphDispatch().getWorkingGraph().getGraphState().getState()){
+					//increment the graphState
+					stepForward.setEnabled(false);
+					stepBack.setEnabled(true);
+					gp.incrementDisplayState();
+					stepForward.setEnabled(true);
+					frame.repaint();
+				}
+				else if(true){ // go run a step of the algorithm if we're moving forward but not lagging behind
+					stepForward.setEnabled(!true); // Disable the button after clicking on it -- not ready to go on again
+					gp.startAlgorithm(); // Start the algorithm up again
+					
+					
+					
+					//gp.incrementDisplayState(); // wait I think that this is bad.  it will try to increment the display state as soon as it started the algorithm.  iff the algorithm finishes way fast, OK, this might work.  bt else?  maybe not.
+					
+					/* Once it's complete, then re-enable the button iff there is a next state
+					 * Will this need to figure out (obviously) when the algorithm has finished running its step or not
+					 */
+					
 
-				//System.out.println("Forward button has been pressed: next/prev available: " + gp.hasNextState() + " / " + gp.hasPreviousState());
+					//System.out.println("Forward button has been pressed: next/prev available: " + gp.hasNextState() + " / " + gp.hasPreviousState());
+					
+					/*if (stepForward.getEnabled)*/ //stepForward.setEnabled(!getGraphPanel().getAlgorithmComplete()); // checks to see if the algorithm is done running & as long as it has not, next button is clickable
+					stepBack.setEnabled(gp.hasPreviousState()); // if we've clicked on a next button then there will always be a previous button available
+					
+					
+					frame.repaint();
+					
+				}
 				
-				/*if (stepForward.getEnabled)*/ //stepForward.setEnabled(!getGraphPanel().getAlgorithmComplete()); // checks to see if the algorithm is done running & as long as it has not, next button is clickable
-				stepBack.setEnabled(gp.hasPreviousState()); // if we've clicked on a next button then there will always be a previous button available
-				
-				
-				frame.repaint();
 			}
 		});
 		

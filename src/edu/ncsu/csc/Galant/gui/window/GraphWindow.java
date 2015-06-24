@@ -560,12 +560,16 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		toolBar.setAlignmentY(0);
 		
 		select = createButton(GraphMode.SELECT);
+    select.setFocusable(false);
     select.setToolTipText("Select");
 		addNode = createButton(GraphMode.CREATE_NODE);
+    addNode.setFocusable(false);
 		addNode.setToolTipText("Create Node");
     addEdge = createButton(GraphMode.CREATE_EDGE);
+    addEdge.setFocusable(false);
 		addEdge.setToolTipText("Create Edge");
     deleteBtn = createButton(GraphMode.DELETE);
+    deleteBtn.setFocusable(false);
 		deleteBtn.setToolTipText("Delete");
     changeMode(GraphMode.SELECT);		
     
@@ -573,24 +577,31 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		
 		undirectedBtn = createButton(Directedness.UNDIRECTED);
 		undirectedBtn.setToolTipText("Undirected");
+    undirectedBtn.setFocusable(false);
     directedBtn = createButton(Directedness.DIRECTED);
 		directedBtn.setToolTipText("Directed");
+    directedBtn.setFocusable(false);
     changeDirectedness(Directedness.UNDIRECTED);
 		
 		toolBar.addSeparator();
 		
 		nodeLabels = createButton(GraphDisplays.NODE_LABELS);
+    nodeLabels.setFocusable(false);
 		nodeLabels.setToolTipText("Display Node Labels");
     edgeLabels = createButton(GraphDisplays.EDGE_LABELS);
+    edgeLabels.setFocusable(false);
 		edgeLabels.setToolTipText("Display Edge Labels");
     nodeWeights = createButton(GraphDisplays.NODE_WEIGHTS);
+    nodeWeights.setFocusable(false);
 		nodeWeights.setToolTipText("Display Node Weights");
     edgeWeights = createButton(GraphDisplays.EDGE_WEIGHTS);
+    edgeWeights.setFocusable(false);
 		edgeWeights.setToolTipText("Display Edge Weights");
 		toolBar.addSeparator();
 		
 		java.net.URL imageURL = GraphWindow.class.getResource("images/autoposition_24.png");
 		repositionBtn = new JToggleButton(new ImageIcon(imageURL));
+    repositionBtn.setFocusable(false);
 		repositionBtn.setToolTipText("Intelligent Rearrange");
     repositionBtn.addActionListener(new ActionListener(){
 			@Override
@@ -743,8 +754,6 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
      */
     static final long DELAY_TIME = 17;
     boolean ctrlPressed = false;
-    boolean nPressed = false;
-    boolean ePressed = false;
     @Override
     public boolean dispatchKeyEvent(KeyEvent e) {
       //"left" step backward when in animation mode
@@ -798,22 +807,12 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
         ctrlPressed = false;
         return true;
       }
-      // "N" released
-      if(e.getID()==KeyEvent.KEY_RELEASED && e.getKeyCode()==KeyEvent.VK_N){
-        nPressed = false;
-        return true;
-      }
-      // "E" released
-      if(e.getID()==KeyEvent.KEY_RELEASED && e.getKeyCode()==KeyEvent.VK_E){
-        ePressed = false;
-        return true;
-      }
       // "E" pressed
       if(!dispatch.isAnimationMode() && e.getID()==KeyEvent.KEY_PRESSED
                                      && e.getKeyCode()==KeyEvent.VK_E){
         synchronized(this){
-          // "ctrl" already pressed and the first time handle e pressed, create new edge
-          if(ctrlPressed && !ePressed){
+          // "ctrl" already pressed, create new edge
+          if(ctrlPressed){
             LogHelper.logDebug("CREATE EDGE");
 						//prompt user for the id of two nodes	
             edgeEditDialog = new EdgeEditDialog(frame, dispatch);
@@ -821,17 +820,16 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
             edgeEditDialog.setLocationRelativeTo(frame);
             edgeEditDialog.setVisible(true);
             dispatch.pushToTextEditor();
-            ePressed = true;
           } //Create new edge
-        return true;
         }
+        return true;
       }
       // "N" pressed
       if(!dispatch.isAnimationMode() && e.getID()==KeyEvent.KEY_PRESSED
                                      && e.getKeyCode()==KeyEvent.VK_N){
         synchronized(this){
-          // "ctrl" already pressed and the first time handle n pressed, create new node
-          if(ctrlPressed && !nPressed){
+          // "ctrl" already pressed, create new node
+          if(ctrlPressed){
             LogHelper.logDebug("CREATE NODE");
 							
             // add a new default node to the working
@@ -852,11 +850,74 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
             LogHelper.logDebug( " setWorking: node = " + n );
             
             dispatch.pushToTextEditor();
-            nPressed = true;
           } //Create new node
-        return true;
         }
+        return true;
       }
+      //"ctrl + i" intelligent rearrange
+      if(!dispatch.isAnimationMode() && e.getID()==KeyEvent.KEY_PRESSED
+        && e.getKeyCode()==KeyEvent.VK_I && ctrlPressed ){
+        synchronized(this){
+          if (!repositionBtn.isSelected()) {
+            repositionBtn.setSelected(true);
+            dispatch.getWorkingGraph().smartReposition();
+					  dispatch.pushToTextEditor();
+          } else {
+            repositionBtn.setSelected(false);
+            //todo - undo smartReposition
+          }
+        }
+        return true;
+      }
+      // "ctrl+d" switch between directed and undirected
+      if(!dispatch.isAnimationMode() && e.getID()==KeyEvent.KEY_PRESSED
+        && e.getKeyCode()==KeyEvent.VK_D && ctrlPressed){
+        synchronized(this){
+          if (!dispatch.getWorkingGraph().isDirected()) {
+				    changeDirectedness(Directedness.DIRECTED);
+			    } else {
+				    changeDirectedness(Directedness.UNDIRECTED);
+			    }
+        }
+        return true;
+      }
+      // "ctrl+l" display labels
+      if(e.getID()==KeyEvent.KEY_PRESSED && e.getKeyCode()==KeyEvent.VK_L && ctrlPressed){
+        synchronized(this){
+          if (nodeLabels.isSelected() && edgeLabels.isSelected()) {
+            GraphDisplays.NODE_LABELS.setShown(false);
+            GraphDisplays.EDGE_LABELS.setShown(false);
+            nodeLabels.setSelected(false);
+            edgeLabels.setSelected(false);
+          } else {
+            GraphDisplays.NODE_LABELS.setShown(true);
+            GraphDisplays.EDGE_LABELS.setShown(true);
+            nodeLabels.setSelected(true);
+            edgeLabels.setSelected(true);
+          }
+          frame.repaint(); 
+        }
+        return true;
+      }
+      // "ctrl+w" display weights
+      if(e.getID()==KeyEvent.KEY_PRESSED && e.getKeyCode()==KeyEvent.VK_W && ctrlPressed){
+        synchronized(this){
+          if (nodeWeights.isSelected() && edgeWeights.isSelected()) {
+            GraphDisplays.NODE_WEIGHTS.setShown(false);
+            GraphDisplays.EDGE_WEIGHTS.setShown(false);
+            nodeWeights.setSelected(false);
+            edgeWeights.setSelected(false);
+          } else {
+            GraphDisplays.NODE_WEIGHTS.setShown(true);
+            GraphDisplays.EDGE_WEIGHTS.setShown(true);
+            nodeWeights.setSelected(true);
+            edgeWeights.setSelected(true);
+          }
+          frame.repaint(); 
+        }
+        return true;
+      }
+      // "" delete edge or node
       return false;
     }
   });

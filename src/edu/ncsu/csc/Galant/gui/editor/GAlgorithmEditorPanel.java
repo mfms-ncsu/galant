@@ -125,10 +125,15 @@ public class GAlgorithmEditorPanel extends GEditorPanel {
 		Algorithm ca = getCompiledAlgorithm();
 		ca.setGraph(GraphDispatch.getInstance().getWorkingGraph());
 		Thread t = new Thread(ca);
+		t.setName("Execution thread");
 		t.start(); 
-		while(GraphState.initilizationIncomplete()){
+		while(GraphState.initializationIncomplete()){
 			synchronized(this){
 				try{
+					// MPM: You're on the GUI thread...you don't want to block here. Why do you need to sleep at all?
+					// I would recommend you update the status label to say "initializing" or something, and then
+					// when the algorithm finishes initializing, update the status label again, and at that point enable the 
+					// forward button.
 					t.sleep(10);
 				}
 				catch(Exception e){
@@ -174,8 +179,6 @@ public class GAlgorithmEditorPanel extends GEditorPanel {
 		public void actionPerformed(ActionEvent arg0)
         {
             compile();
-			// MPM
-			//System.out.println("We don't need no stinking compilation");
         }
 	}
 	

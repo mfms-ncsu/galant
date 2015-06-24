@@ -9,7 +9,6 @@ import java.util.Random;
 
 import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.GraphDispatch;
-import edu.ncsu.csc.Galant.gui.window.GraphWindow;
 import edu.ncsu.csc.Galant.logging.LogHelper;
 
 /**
@@ -787,38 +786,8 @@ public class Node extends GraphElement implements Comparable<Node> {
 		// Graph window gives a segfault--make sure that the pointer to it is OK		
 		//n.graphState.getGraph().graphWindow.updateStatusLabel(/*n.graphState.getGraph().getState()*/0);
 		
-		n.graphState.synchronizedWait();
-		/*
-		synchronized(n.graphState){
-			try{
-				// In the Node.java file; about to suspend worker
-				try{
-					throw new IllegalArgumentException();
-				}
-				catch(IllegalArgumentException e){
-					e.printStackTrace(System.out);
-					
-				}
-				
-				if(!n.graphState.initilizationIncomplete()){
-					System.out.printf("In the addNodeState function; about to suspend execution\n");
-					GraphWindow.getGraphPanel().incrementDisplayState();
-					
-					n.graphState.wait();
-					
-				}
-				// In the Node.java file; worker just suspended
-			}
-			catch (InterruptedException e){
-				e.printStackTrace(System.out);
-			}
-			finally{
-				
-			}
-			
-		}
-		if(!n.graphState.initilizationIncomplete()) System.out.printf("In the addNodeState function; execution resumed\n");
-		*/
+		n.graphState.pauseExecution();
+		
 
 	}
 	

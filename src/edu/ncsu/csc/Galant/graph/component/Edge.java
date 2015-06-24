@@ -21,7 +21,7 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 	
 	public void addEdgeState(EdgeState e){
 		edgeStates.add(e);
-		graphCurrentState.synchronizedWait();
+		graphCurrentState.pauseExecution();
 	}
 	
 	public Edge(GraphState currentState, int id, Node _source, Node _dest) {

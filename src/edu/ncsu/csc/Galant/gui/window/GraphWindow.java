@@ -61,6 +61,10 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	/** Refers to the singleton GraphDispatch to push global information */
 	private final GraphDispatch dispatch;
 	
+	public GraphDispatch getGraphDispatch(){
+		return dispatch;
+	}
+	
 	/** The main frame for the Visual Graph Editor **/
 	private static JFrame frame;
 	
@@ -69,6 +73,8 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	private static JToolBar toolBar;
 	
 	/** The Graph panel used to draw the active graph **/
+	// MPM: Very short names for fields (like 'gp') are abominable for maintenance purposes. It would be far better to name
+	// this graphPanel.
 	private static GraphPanel gp;
 	
 	/** A panel used to edit Graph element's properties **/ 
@@ -77,6 +83,9 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	/** A panel used to navigate through an animation **/
 	private static JPanel animationButtons;
 	private final JButton stepForward;
+	public JButton getStepForward(){
+		return stepForward;
+	}
 	private final JButton stepBack;
     private final JButton done;
 	
@@ -96,20 +105,39 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	private JToggleButton edgeWeights;
 	
 	private JToggleButton repositionBtn;
-	
+
+	// MPM: I would recommend that all the instance variables be grouped together, and the status label-modifying methods
+	// go at the bottom of this class.
+	// MPM: The status label has been a handy GUI debug tool, but I think it's really useful for ordinary users too.
+	// Think about what would be good to display in this field, and then discuss it with the rest of your team.
 	private JLabel statusLabel;
 	
+	
+	/* Update the status message to display the graph state
+	 * @param s the integer state to display as part of a message
+	 */
 	public void updateStatusLabel(int s){
 		String t = "Graph state is " + s;
 		statusLabel.setText(t);
 	}
-	public void updateStatusLabel(String s) {
-		statusLabel.setText(s);
-	}
+	/*
+	 * Want to display a custom message?  We've got you covered.  Lets the status message be anything desired
+	 * @param a Character array to display as the status message
+	 */
 	public void updateStatusLabel(char [] a){
 		statusLabel.setText(new String(a));
 	}
-	public String getStatusLabel(){
+	
+	/*
+	 * Same as above, but it takes a string object instead of a character array
+	 * @param s String to display as status message
+	 */
+	public void updateStatusLabel(String s) {
+		statusLabel.setText(s);
+	}
+	
+
+	public String getStatusLabelAsAString(){
 		return statusLabel.getText();
 	}
 	
@@ -691,9 +719,14 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 				
             }
             if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+            	// MPM: Check if the algorithm has completed initializing; if not, ignore this keypress (and possibly beep
+            	// at the user)
+            	// MPM: Before you start the algorithm, you should first grey out the 'advance' button so people can't
+            	// press it.
+            	// MPM: You might want to update the status label to say "algorithm running" or something like that.
+            	// MPM: You should also check if the algorithm is currently running and if it is, beep or something.
+            	
             	gp.startAlgorithm();
-				//gp.incrementDisplayState();
-				//updateStatusLabel(gp.getDisplayState());
             }
             if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                 // delete row method (when "delete" is pressed)
@@ -704,7 +737,8 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
             if (e.getKeyCode() == KeyEvent.VK_DOWN) {
             	updateStatusLabel("Please use left/right arrows, not 'down'");
             }
-            delay();
+            
+            delay(); /* I don't know what this does but it seems ugly */
             frame.repaint();
         }
     }
@@ -736,11 +770,27 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		stepForward.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				gp.startAlgorithm();
+				// MPM: I would first disable the step-forward button, and then wake up the algorithm and let it run.
+				// When it completes (and blocks), then the button can be enabled. That'll make the enable/disable
+				// work better for algorithms that take a long time to run.
 				
-				System.out.println("Forward button has been pressed: next/prev available: " + gp.hasNextState() + " / " + gp.hasPreviousState());
-				stepForward.setEnabled(/*gp.hasNextState()*/ !getGraphPanel().getAlgorithmComplete()); // checks to see if the algorithm is done running & as long as it has not, next button is clickable
-				stepBack.setEnabled(gp.hasPreviousState());
+				stepForward.setEnabled(!true); // Disable the button after clicking on it -- not ready to go on again
+				gp.startAlgorithm(); // Start the algorithm up again
+				
+				
+				
+				//gp.incrementDisplayState(); // wait I think that this is bad.  it will try to increment the display state as soon as it started the algorithm.  iff the algorithm finishes way fast, OK, this might work.  bt else?  maybe not.
+				
+				/* Once it's complete, then re-enable the button iff there is a next state
+				 * Will this need to figure out (obviously) when the algorithm has finished running its step or not
+				 */
+				
+
+				//System.out.println("Forward button has been pressed: next/prev available: " + gp.hasNextState() + " / " + gp.hasPreviousState());
+				
+				/*if (stepForward.getEnabled)*/ //stepForward.setEnabled(!getGraphPanel().getAlgorithmComplete()); // checks to see if the algorithm is done running & as long as it has not, next button is clickable
+				stepBack.setEnabled(gp.hasPreviousState()); // if we've clicked on a next button then there will always be a previous button available
+				
 				
 				frame.repaint();
 			}
@@ -802,6 +852,11 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		// TODO Auto-generated method stub
 		
 	}
+	public void repaintFrame() {
+		frame.repaint();
+	}
+	
+
 }
 
 //  [Last modified: 2015 05 19 at 20:29:47 GMT]

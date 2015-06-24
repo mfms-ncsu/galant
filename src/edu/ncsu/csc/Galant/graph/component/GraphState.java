@@ -1,44 +1,32 @@
 package edu.ncsu.csc.Galant.graph.component;
 
-import edu.ncsu.csc.Galant.gui.window.GraphWindow;
+import edu.ncsu.csc.Galant.GraphDispatch;
+
 
 /**
  * 
  * Stores the current state of the graph for iterating through the animation. Each state
  * corresponds with the next step in the animation.
  * 
- * @author Michael Owoc
- *
- */
-/**
- * 
- * Stores the current state of the graph for iterating through the animation. Each state
- * corresponds with the next step in the animation.
- * 
+ *  
  * @author Michael Owoc
  *
  */
 public class GraphState {
 	
-	private Graph g;
+	public String toString(){
+		return String.format("Graph state: %d; initialization is: %s; graph is: %s; graph is: %s\n",state, initializationComplete>0 ? "complete" : "incomplete", directed ? "directed" : "undirected", locked!=0 ? "locked" : "unlocked");
+	}
 	
-	public Graph getGraph(){
-		return g;
-	}
-	public Boolean setGraph(Graph g){
-		this.g = g;
-		return true;
-	}
+	
+	private Graph graph;
 
 	public static final int GRAPH_START_STATE = 1;
 
-	
 	private int state = 0;
-	static public int iComplete = 0;
-
-	Thread t;
 	
-	
+	// MPM: Why is this static? It seems like it should be an instance variable that goes along with the graph state.
+	static public int initializationComplete = 0;
 
     /**
      * non-zero if in the middle of a step, i.e., between beginStep() and
@@ -53,10 +41,12 @@ public class GraphState {
 	}
 	
 	public void setInitializationComplete(){
-		iComplete++;
-		Thread myThread = Thread.currentThread();
-		// modify the status message to say tha tinitialization is complete
-		//System.out.printf("Initialization complete; suspending thread [%s]", myThread.getName());
+		initializationComplete++;
+		Thread a = Thread.currentThread();
+		// modify the status message to say that initialization is complete
+		//System.out.printf("Initialization complete; suspending thread [%s]", a.getName());
+		//graphWindow doesn't exist
+		//this.graph.graphWindow.updateStatusLabel("Initialization complete".toCharArray());
 		synchronized(this){
 			try{
 				this.wait();
@@ -66,11 +56,18 @@ public class GraphState {
 			}
 		}
 	}
+	
+	
 	static public void setInitializationIncomplete(){
-		iComplete = 0;
+		initializationComplete = 0;
 	}
-	static public boolean initilizationIncomplete(){
-		return iComplete == 0;
+	
+	static public boolean initializationComplete(){
+		return initializationComplete != 0;
+	}
+	
+	static public boolean initializationIncomplete(){
+		return initializationComplete == 0;
 	}
 	
 	
@@ -98,7 +95,6 @@ public class GraphState {
 	
 	public void incrementState() {
 		System.out.printf("Incrementing the graph state\n");
-		
 		try{
 			throw new ArrayIndexOutOfBoundsException();
 		}
@@ -111,7 +107,7 @@ public class GraphState {
 		}
 	}
 	
-	public boolean synchronizedWait(){
+	public boolean pauseExecution(){
 		
 		synchronized(this){
 			try{
@@ -122,12 +118,18 @@ public class GraphState {
 					e.printStackTrace(System.out);
 				}
 				
-
-				if(!this.initilizationIncomplete()){
-					System.out.printf("In the synchronizedWait function; about to suspend execution\n");
-					GraphWindow.getGraphPanel().incrementDisplayState();
+				if(!this.initializationIncomplete()){ /* Wait only if initialization is actually complete; otherwise program hangs while setting up graph when launching (when the addNodeState and addEdgeState function calls are also made) */
+					GraphDispatch.getInstance().getGraphWindow().getStepForward().setEnabled(true);
+					/* System.out.printf("In the synchronizedWait function; about to suspend execution\n");
 					
-					this.wait();
+					GraphDispatch.getInstance().getGraphWindow().updateStatusLabel("Algorithm runner thread has completed a step; state is now " + state + ".");
+					System.out.println("Graph state: " + toString());
+					^^Debug info */
+					
+					// Make sure to remember to update the graph here */
+					this.getGraph().graphWindow.getGraphPanel().incrementDisplayState();
+					GraphDispatch.getInstance().getGraphWindow().repaintFrame(); // I don't know that repainting the frame is required but it does this regularly at other points too
+					this.wait(); // Suspend algorithm execution until notified to complete another step
 					
 				}
 			}
@@ -135,8 +137,7 @@ public class GraphState {
 				e.printStackTrace(System.out);
 			}
 		}
-		
-		return true ? true : false;
+		return this != null ? true : false;
 	}
 	
 	
@@ -159,6 +160,16 @@ public class GraphState {
 		this.locked = 0;
 		
 	}
+	
+	public Graph getGraph(){
+		return graph;
+	}
+	public boolean setGraph(Graph g){
+		if(this.graph == g) return false;
+		this.graph = g;
+		return true;
+	}
+	
 	
 }
 

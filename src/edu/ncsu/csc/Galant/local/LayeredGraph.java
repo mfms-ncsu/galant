@@ -31,14 +31,15 @@
  */
 
 package edu.ncsu.csc.Galant.local;
-import java.util.*;
-import java.awt.Point;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.graph.component.Edge;
 import edu.ncsu.csc.Galant.graph.component.Graph;
-import edu.ncsu.csc.Galant.graph.component.GraphState;
 import edu.ncsu.csc.Galant.graph.component.Node;
-import edu.ncsu.csc.Galant.GraphDispatch;
-import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.logging.LogHelper;
 
 /**

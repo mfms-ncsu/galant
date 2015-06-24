@@ -1,8 +1,6 @@
 package edu.ncsu.csc.Galant.gui.editor;
 
 import java.awt.Color;
-import java.util.Dictionary;
-import java.util.Enumeration;
 import java.util.Hashtable;
 
 import javax.swing.JTextPane;
@@ -10,6 +8,7 @@ import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 import javax.swing.text.StyledDocument;
+
 import edu.ncsu.csc.Galant.GalantPreferences;
 import edu.ncsu.csc.Galant.gui.util.ExceptionDialog;
 

@@ -724,14 +724,19 @@ public class GraphPanel extends JPanel{
 		g2d.setColor(prevColor);
 	}
 	
+	// MPM: It's a little odd to me that the graph panel maintains information about whether the algorithm has completed. I think it
+	// might be better to keep a reference to the Algorithm instance and just directly ask it if it is complete.
+	// MPM: And this is not starting the algorithm, it is allowing the algorithm to advance.
 	public boolean startAlgorithm(){
 		
+		System.out.println("GraphPanel is notifying the worker thread so it will wake up and work.");
 		if(!algorithmComplete){
 			synchronized(dispatch.getWorkingGraph().getGraphState()){
 				dispatch.getWorkingGraph().getGraphState().notify();
 			}
 			System.out.printf("Algorithm is started");
-		return true; // algorithm was started
+			
+		    return true; // algorithm was started
 		}
 		
 		return false; // algorithm not started
@@ -739,6 +744,7 @@ public class GraphPanel extends JPanel{
 	
 	public void incrementDisplayState() {
 		System.out.printf("In the GraphPanel class - incrementing the display state\n");
+		
 		try{
 			throw new NullPointerException();
 		}
@@ -757,7 +763,7 @@ public class GraphPanel extends JPanel{
 			this.state++;
 		}
 		this.gw.updateStatusLabel(this.getDisplayState());
-//		System.out.printf(this.gw != null ? "yes" : "no");
+		/* System.out.printf(this.gw != null ? "yes" : "no"); */
 		System.out.println("Incrementing the graph display state: [" + currentState + "," + currentGraphState + "] --> " + state);
 		
 		LogHelper.exitMethod(getClass(), "incrementDisplayState");

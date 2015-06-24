@@ -1,7 +1,6 @@
 package edu.ncsu.csc.Galant.algorithm.code;
 
 import javax.tools.DiagnosticCollector;
-import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 
 /** 

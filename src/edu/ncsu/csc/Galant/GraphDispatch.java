@@ -22,7 +22,7 @@ public class GraphDispatch {
 	private static GraphDispatch instance;
 	private Graph workingGraph;
 	private UUID graphSource;
-	
+
 	private int windowWidth;
 	private int windowHeight;
 

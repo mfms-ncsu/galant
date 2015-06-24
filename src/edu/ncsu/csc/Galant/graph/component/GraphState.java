@@ -126,8 +126,12 @@ public class GraphState {
 					System.out.println("Graph state: " + toString());
 					^^Debug info */
 					
+					
 					// Make sure to remember to update the graph here */
 					this.getGraph().graphWindow.getGraphPanel().incrementDisplayState();
+					/*
+					int a = GraphDispatch.getInstance().getGraphWindow().getGraphPanel().getDisplayState();
+					GraphDispatch.getInstance().getGraphWindow().updateStatusLabel(a);*/
 					GraphDispatch.getInstance().getGraphWindow().repaintFrame(); // I don't know that repainting the frame is required but it does this regularly at other points too
 					this.wait(); // Suspend algorithm execution until notified to complete another step
 					

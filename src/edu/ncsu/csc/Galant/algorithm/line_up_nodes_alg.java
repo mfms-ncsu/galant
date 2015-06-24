@@ -31,6 +31,7 @@ public class line_up_nodes_alg extends Algorithm {
 			
 			gs.setInitializationComplete();
 			
+			
 			/* This "initialization complete" can be replaced with a beginStep() and endStep() for the user after they've done everything that they consider initialization.
 			 * A macro that does a beginstep followed by code followed by end step would probably be better
 			 * GDR has a macro called wait() with a message argument; another idea of what to do here.

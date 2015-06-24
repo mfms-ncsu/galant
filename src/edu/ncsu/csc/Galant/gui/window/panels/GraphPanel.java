@@ -729,7 +729,6 @@ public class GraphPanel extends JPanel{
 	// MPM: And this is not starting the algorithm, it is allowing the algorithm to advance.
 	public boolean resumeAlgorithmExecution(){
 		
-		
 		if(!algorithmComplete){
 			System.out.println("GraphPanel is notifying the worker thread so it will wake up and work.");
 			synchronized(dispatch.getWorkingGraph().getGraphState()){
@@ -769,6 +768,8 @@ public class GraphPanel extends JPanel{
 		
 		LogHelper.exitMethod(getClass(), "incrementDisplayState");*/
 		++this.state;
+		int a = GraphDispatch.getInstance().getGraphWindow().getGraphPanel().getDisplayState();
+		GraphDispatch.getInstance().getGraphWindow().updateStatusLabel(a);
 	}
 	
 	public void decrementDisplayState() {
@@ -781,6 +782,11 @@ public class GraphPanel extends JPanel{
 		System.out.println("Decrementing the graph display state: [" + currentState + "] --> " + state);
 		
 		LogHelper.exitMethod(getClass(), "decrementDisplayState");
+		
+		int a = GraphDispatch.getInstance().getGraphWindow().getGraphPanel().getDisplayState();
+		GraphDispatch.getInstance().getGraphWindow().updateStatusLabel(a);
+		
+		
 	}
 	
 	public int getDisplayState() {

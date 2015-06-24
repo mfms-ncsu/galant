@@ -726,7 +726,20 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
             	// MPM: You might want to update the status label to say "algorithm running" or something like that.
             	// MPM: You should also check if the algorithm is currently running and if it is, beep or something.
             	
-            	gp.startAlgorithm();
+            	
+            	//check to see if the graph state is lagging behind the array of states that has already been calculated
+            	//if it's lagging behind, just push forward one entry in the array and update the graph state
+            	if(getGraphPanel().getDisplayState() < getGraphDispatch().getWorkingGraph().getGraphState().getState()){
+					//increment the graphState
+					gp.incrementDisplayState();
+				}
+            	//if we're at or (banish the thought) past the end of the array, wake up the algorithm.
+            	//this will also handle the incrementation of the graph state as part of this.
+            	else if(true){
+            		updateStatusLabel("Algorithm execution in progress");
+            		gp.resumeAlgorithmExecution();
+            	}
+            	
             }
             if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                 // delete row method (when "delete" is pressed)
@@ -794,7 +807,8 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 				}
 				else if(true){ // go run a step of the algorithm if we're moving forward but not lagging behind
 					stepForward.setEnabled(!true); // Disable the button after clicking on it -- not ready to go on again
-					gp.startAlgorithm(); // Start the algorithm up again
+					updateStatusLabel("Algorithm execution in progress".toCharArray());
+					gp.resumeAlgorithmExecution(); // Start the algorithm up again
 					
 					
 					

@@ -6,6 +6,7 @@ import javax.swing.JTextField;
 import java.beans.*; //property change stuff
 import java.awt.*;
 import java.awt.event.*;
+import java.util.*;
 import edu.ncsu.csc.Galant.GraphDispatch;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow;
 import edu.ncsu.csc.Galant.graph.component.Edge;
@@ -16,6 +17,7 @@ import edu.ncsu.csc.Galant.gui.window.panels.ComponentEditPanel;
 
 /**
  * this dialog displayed when user create new edge with "ctrl + e" 
+ * or delete edge with "delete + e"
  */
 public class EdgeEditDialog extends JDialog
                    implements ActionListener,
@@ -34,15 +36,23 @@ public class EdgeEditDialog extends JDialog
 	  private final GraphDispatch dispatch;
     
     private Frame frame;
+    
+    /** 0 create mode, 1 delete mode */
+    private int mode;
 
     /** Creates the reusable dialog. */
-    public EdgeEditDialog(Frame frame, GraphDispatch _dispatch) {
+    public EdgeEditDialog(Frame frame, GraphDispatch _dispatch, int mode) {
         super(frame, true);
         this.dispatch = _dispatch;
+        this.mode = mode;
 		    // Register this object as a change listener. Allows GraphDispatch notifications to be pushed to this object
 		    _dispatch.addChangeListener(this);
-        setTitle("Create New Edge");
-
+        
+        if (mode == 0) {
+            setTitle("Create New Edge");
+        } else if (mode == 1) {
+            setTitle("Delete Edge");
+        }
         point1TextField = new JTextField(10);
         point2TextField = new JTextField(10);
 
@@ -135,18 +145,34 @@ public class EdgeEditDialog extends JDialog
                     Graph g = dispatch.getWorkingGraph();
                     int numNodes = g.getNodes().size();
                 if (isInt && point1 < numNodes && point2 < numNodes && point1 >= 0 && point2 >= 0) {
-                    //create a new edge from point1 to point2
                     Node n1 = g.getNodeById(point1);
                     Node n2 = g.getNodeById(point2);
-                    Edge edge = g.addInitialEdge(n1, n2);
-                    // select the new edge and clear the edge
-                    // trackers
-                    GraphPanel gp = GraphWindow.getGraphPanel();
-                    gp.setSelectedNode(null);
-                    gp.setSelectedEdge(edge);
-                    GraphWindow.componentEditPanel.setWorkingComponent(edge);
-                    gp.setEdgeTracker(null);
-                    
+                    if (mode == 0) {
+                        //create a new edge from point1 to point2
+                        Edge edge = g.addInitialEdge(n1, n2);
+                        // select the new edge and clear the edge
+                        // trackers
+                        GraphPanel gp = GraphWindow.getGraphPanel();
+                        gp.setSelectedNode(null);
+                        gp.setSelectedEdge(edge);
+                        GraphWindow.componentEditPanel.setWorkingComponent(edge);
+                        gp.setEdgeTracker(null);
+                    }
+                    if (mode == 1) {
+                        //delete the edge between those node
+                        ArrayList<Edge> edges = new ArrayList<Edge>();
+                        for (Edge e1 : n1.getEdges()) {
+                            for (Edge e2 : n2.getEdges()) {
+                                if (e1.getId() == e2.getId()) {
+			                              edges.add(e2);
+                                }
+                            }
+		                    }
+                        for (Edge ed : edges) {
+                            g.removeEdge(ed);
+                        }
+                    }
+                    GraphWindow.componentEditPanel.setWorkingComponent(null);
                     dispatch.pushToTextEditor(); 
                     //we're done; clear and dismiss the dialog
                     clearAndHide();

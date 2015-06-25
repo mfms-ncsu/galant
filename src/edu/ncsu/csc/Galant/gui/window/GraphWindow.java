@@ -829,12 +829,22 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
           if(ctrlPressed){
             LogHelper.logDebug("CREATE EDGE");
 						//prompt user for the id of two nodes	
-            edgeEditDialog = new EdgeEditDialog(frame, dispatch);
+            edgeEditDialog = new EdgeEditDialog(frame, dispatch, 0);
             edgeEditDialog.pack();
             edgeEditDialog.setLocationRelativeTo(frame);
             edgeEditDialog.setVisible(true);
             dispatch.pushToTextEditor();
           } //Create new edge
+          //delete edge
+          if(deletePressed){
+            LogHelper.logDebug("DELETE EDGE");
+						//prompt user for the id of two nodes	
+            edgeEditDialog = new EdgeEditDialog(frame, dispatch, 1);
+            edgeEditDialog.pack();
+            edgeEditDialog.setLocationRelativeTo(frame);
+            edgeEditDialog.setVisible(true);
+            dispatch.pushToTextEditor();
+          }//delete edge
         }
         return true;
       }
@@ -939,14 +949,6 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
             edgeWeights.setSelected(true);
           }
           frame.repaint(); 
-        }
-        return true;
-      }
-      // "delete+e" delete edge
-      if(!dispatch.isAnimationMode() && e.getID()==KeyEvent.KEY_PRESSED
-          && e.getKeyCode()==KeyEvent.VK_E && deletePressed){
-        synchronized(this){
-          //todo
         }
         return true;
       }

@@ -49,6 +49,7 @@ import edu.ncsu.csc.Galant.logging.LogHelper;
 import edu.ncsu.csc.Galant.prefs.Preference;
 import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.gui.util.EdgeEditDialog;
+import edu.ncsu.csc.Galant.gui.util.DeleteNodeDialog;
 
 /**
  * Window for displaying the <code>Graph</code>, containing all necessary
@@ -106,6 +107,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	private GraphMode mode = null;
   
   private EdgeEditDialog edgeEditDialog;
+  private DeleteNodeDialog deleteNodeDialog;
 	
 	/**
 	 * The Edit modes GraphWindow can assume. Used in the listener for the
@@ -754,6 +756,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
      */
     static final long DELAY_TIME = 17;
     boolean ctrlPressed = false;
+    boolean deletePressed = false;
     @Override
     public boolean dispatchKeyEvent(KeyEvent e) {
       //"left" step backward when in animation mode
@@ -807,6 +810,17 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
         ctrlPressed = false;
         return true;
       }
+      // "Delete" pressed
+      if(!dispatch.isAnimationMode() && e.getID()==KeyEvent.KEY_PRESSED
+                                     && e.getKeyCode()==KeyEvent.VK_DELETE){
+        deletePressed = true;
+        return true;
+      }
+      // "Delete" released
+      if(e.getID()==KeyEvent.KEY_RELEASED && e.getKeyCode()==KeyEvent.VK_DELETE){
+        deletePressed = false;
+        return true;
+      }
       // "E" pressed
       if(!dispatch.isAnimationMode() && e.getID()==KeyEvent.KEY_PRESSED
                                      && e.getKeyCode()==KeyEvent.VK_E){
@@ -851,6 +865,17 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
             
             dispatch.pushToTextEditor();
           } //Create new node
+          //delete already pressed, delete node
+          if (deletePressed) {
+            LogHelper.logDebug("DELETE NODE");	
+            //hide edit panel
+            componentEditPanel.setWorkingComponent(null);
+            deleteNodeDialog = new DeleteNodeDialog(frame, dispatch);
+            deleteNodeDialog.pack();
+            deleteNodeDialog.setLocationRelativeTo(frame);
+            deleteNodeDialog.setVisible(true);
+            dispatch.pushToTextEditor();
+          }//delete node
         }
         return true;
       }
@@ -917,7 +942,14 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
         }
         return true;
       }
-      // "" delete edge or node
+      // "delete+e" delete edge
+      if(!dispatch.isAnimationMode() && e.getID()==KeyEvent.KEY_PRESSED
+          && e.getKeyCode()==KeyEvent.VK_E && deletePressed){
+        synchronized(this){
+          //todo
+        }
+        return true;
+      }
       return false;
     }
   });

@@ -21,4 +21,4 @@
 18 June (~6 hours) "ctrl + e" create new edge done
 
 22 June (~3 hours) convenient way to change the weights of newly created nodes and edges, try to make Galant mouse free.
-24 June (~6 hours) fix edit edges and nodes bugs, "ctrl+l" display labels, "ctrl+w" display weights, "ctrl+i" intelligent reposition, "ctrl+d" direct/undirect
+24 June (~6 hours) fix edit edges and nodes bugs, "ctrl+l" display labels, "ctrl+w" display weights, "ctrl+i" intelligent reposition, "ctrl+d" direct/undirect, "delete+n"delete node

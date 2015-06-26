@@ -805,7 +805,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 					stepForward.setEnabled(false);
 					stepBack.setEnabled(true);
 					gp.incrementDisplayState();
-					stepForward.setEnabled(true);
+					stepForward.setEnabled(!getGraphPanel().getAlgorithmComplete());
 					frame.repaint();
 				}
 				else if(true){ // go run a step of the algorithm if we're moving forward but not lagging behind

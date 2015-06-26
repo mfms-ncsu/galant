@@ -69,12 +69,12 @@ public class CodeIntegrator
 				"{" +
 					"@Override " +
 					"public void run() " +
-						String.format("{ GraphState gs = this.getGraph().getGraphState(); try {%s if(gs.isLocked()) endStep();}"
+						String.format("{ GraphState gs = this.getGraph().getGraphState(); try {%s if(gs.isLocked()) endStep(); this.gw.getGraphPanel().setAlgorithmComplete();}"
                                       + " catch (Exception e)"
                                       + " { if ( e instanceof GalantException )"
                                       + " {GalantException ge = (GalantException) e;"
                                       + " ge.report(\"\"); ge.display(); }"
-                                      + " else e.printStackTrace(System.out);} this.gw.getGraphPanel().setAlgorithmComplete();%n }",
+                                      + " else e.printStackTrace(System.out);} %n }",
                                       CODE_FIELD) +
 					// add newline after code in case of ending with line comment
 				"}";

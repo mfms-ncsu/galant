@@ -730,11 +730,15 @@ public class GraphPanel extends JPanel{
 	public boolean resumeAlgorithmExecution(){
 		
 		if(!algorithmComplete){
-			System.out.println("GraphPanel is notifying the worker thread so it will wake up and work.");
+			//System.out.println("GraphPanel is notifying the worker thread so it will wake up and work.");
 			synchronized(dispatch.getWorkingGraph().getGraphState()){
 				dispatch.getWorkingGraph().getGraphState().notify();
 			}
-			System.out.printf("Algorithm is started");
+			if(algorithmComplete){
+				this.gw.updateStatusLabel("Execution is finished");
+				this.gw.getStepForward().setEnabled(false);
+			}
+			//System.out.printf("Algorithm is started");
 			
 		    return true; // algorithm was started
 		}

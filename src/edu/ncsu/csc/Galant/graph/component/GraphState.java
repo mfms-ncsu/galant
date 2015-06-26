@@ -15,7 +15,7 @@ import edu.ncsu.csc.Galant.GraphDispatch;
 public class GraphState {
 	
 	public String toString(){
-		return String.format("Graph state: %d; initialization is: %s; graph is: %s; graph is: %s\n",state, initializationComplete>0 ? "complete" : "incomplete", directed ? "directed" : "undirected", locked!=0 ? "locked" : "unlocked");
+		return String.format("Graph state: %d; initialization is: %s; graph is: %s; graph is: %s\n",state, initializationComplete>0 ? "complete" : "incomplete", directed ? "directed" : "undirected", locked ? "locked" : "unlocked");
 	}
 	
 	
@@ -32,7 +32,7 @@ public class GraphState {
      * non-zero if in the middle of a step, i.e., between beginStep() and
      * endStep()
      */
-	private int locked = 0;
+	private boolean locked;
 
 	private boolean directed;
 	
@@ -90,7 +90,7 @@ public class GraphState {
 	}
 
 	public void setState(int state) {
-		if(locked==0) this.state = state;
+		if(locked==false) this.state = state;
 	}
 	
 	public void incrementState() {
@@ -101,7 +101,7 @@ public class GraphState {
 		catch (Exception e){
 			e.printStackTrace(System.out);
 		}
-		if(locked==0) {
+		if(locked==false) {
 			this.state++;
 			
 		}
@@ -112,8 +112,8 @@ public class GraphState {
 		synchronized(this){
 			try{
 				
-				if(!this.initializationIncomplete()  && (locked==0)){ /* Wait only if initialization is actually complete; otherwise program hangs while setting up graph when launching (when the addNodeState and addEdgeState function calls are also made) */
-					GraphDispatch.getInstance().getGraphWindow().getStepForward().setEnabled(true);
+				if(!this.initializationIncomplete()  && (!locked)){ /* Wait only if initialization is actually complete; otherwise program hangs while setting up graph when launching (when the addNodeState and addEdgeState function calls are also made) */
+					GraphDispatch.getInstance().getGraphWindow().getStepForward().setEnabled(!GraphDispatch.getInstance().getGraphWindow().getGraphPanel().getAlgorithmComplete());
 					/* System.out.printf("In the synchronizedWait function; about to suspend execution\n");
 					
 					GraphDispatch.getInstance().getGraphWindow().updateStatusLabel("Algorithm runner thread has completed a step; state is now " + state + ".");
@@ -140,25 +140,18 @@ public class GraphState {
 	
 	
 	public void setLocked(boolean lock) {
-		if (lock) {
-			this.locked++;
-		} else {
-			if (this.locked > 0) {
-				this.locked--;
-			}
-		}
+		this.locked = lock;
 		
 	}
 	
 	public boolean isLocked() {
-		return this.locked>0;
+		return locked;
 	}
 	
 	public void resetLocks() {
-		this.locked = 0;
+		this.locked = false;
 		
-	}
-	
+	}	
 	public Graph getGraph(){
 		return graph;
 	}

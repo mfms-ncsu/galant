@@ -2,12 +2,15 @@ package edu.ncsu.csc.Galant.algorithm.code;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaFileObject;
+
 import edu.ncsu.csc.Galant.GalantPreferences;
 import edu.ncsu.csc.Galant.algorithm.Algorithm;
 import edu.ncsu.csc.Galant.algorithm.code.macro.Macro;
 import edu.ncsu.csc.Galant.algorithm.code.macro.MalformedMacroException;
+import edu.ncsu.csc.Galant.graph.component.GraphState;
 import edu.ncsu.csc.Galant.logging.LogHelper;
 import edu.ncsu.csc.Galant.GalantException;
 
@@ -53,6 +56,7 @@ public class CodeIntegrator
 		private static final String CLASS_STRUCTURE =
 			"package " + PACKAGE + ";" +
 			"import java.util.*;" +
+			"import edu.ncsu.csc.Galant.graph.component.GraphState;" + 
 			"import edu.ncsu.csc.Galant.algorithm.Algorithm;" +
 			"import edu.ncsu.csc.Galant.graph.component.Graph;" +
 			"import edu.ncsu.csc.Galant.graph.component.Node;" +
@@ -65,12 +69,12 @@ public class CodeIntegrator
 				"{" +
 					"@Override " +
 					"public void run() " +
-						String.format("{ try {%s}"
+						String.format("{ GraphState gs = this.getGraph().getGraphState(); try {%s}"
                                       + " catch (Exception e)"
                                       + " { if ( e instanceof GalantException )"
                                       + " {GalantException ge = (GalantException) e;"
                                       + " ge.report(\"\"); ge.display(); }"
-                                      + " else e.printStackTrace(System.out);}%n }",
+                                      + " else e.printStackTrace(System.out);} this.gw.getGraphPanel().setAlgorithmComplete();%n }",
                                       CODE_FIELD) +
 					// add newline after code in case of ending with line comment
 				"}";

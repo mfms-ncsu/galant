@@ -156,6 +156,18 @@ public class Macros
 							return Matcher.quoteReplacement("for(Edge " + args[0] + " : getEdges())");
 						}
 				});
+				
+				/*
+				 * initializationComplete(); : marks the end of the initialization portion of the algorithm
+				 * Usage:
+				 * <initialization code>
+				 * initializationComplete(); 
+				 * <code block>
+				 * 
+				 * Parameters: none
+				 */
+				Macro.MACROS.add(new SimpleReplacementMacro("initializationComplete\\(\\);","gs.setInitializationComplete();"));
+				
 
 				/*
 				 * function: creates a function that can be called later.

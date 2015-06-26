@@ -1,25 +1,45 @@
 Buildfile: /home/kai/galant/build.xml
 
+clean:
+   [delete] Deleting directory /home/kai/galant/build
+
 compile:
-    [javac] Compiling 1 source file to /home/kai/galant/build/classes
+    [mkdir] Created dir: /home/kai/galant/build/classes
+     [copy] Copying 5 files to /home/kai/galant/build/classes/edu/ncsu/csc/Galant/gui/editor/images
+     [copy] Copying 24 files to /home/kai/galant/build/classes/edu/ncsu/csc/Galant/gui/window
+    [javac] Compiling 56 source files to /home/kai/galant/build/classes
+    [javac] Note: /home/kai/galant/src/edu/ncsu/csc/Galant/gui/util/ExceptionDialog.java uses unchecked or unsafe operations.
+    [javac] Note: Recompile with -Xlint:unchecked for details.
+    [javac] Creating empty /home/kai/galant/build/classes/edu/ncsu/csc/Galant/algorithm/code/compiled/package-info.class
 
 jar:
+    [mkdir] Created dir: /home/kai/galant/build/jar
+      [jar] Building jar: /home/kai/galant/build/jar/Galant.jar
 
 run:
+     [java] New Graph created
+     [java] Setting intial compiled algorith to our line_up_nodes_alg...
+     [java] Created new line_up_nodes_alg using hardcoded implementation.
+     [java] Setting intial compiled algorith to our line_up_nodes_alg...
+     [java] Created new line_up_nodes_alg using hardcoded implementation.
+     [java] Setting intial compiled algorith to our line_up_nodes_alg...
+     [java] Created new line_up_nodes_alg using hardcoded implementation.
+     [java] New Graph created
+     [java] Built an empty graph in GraphMLParser.buildGraphFromInput
      [java] java.lang.IllegalArgumentException: n must be positive
      [java] 	at java.util.Random.nextInt(Random.java:300)
-     [java] 	at edu.ncsu.csc.Galant.graph.component.Node.genRandomPosition(Node.java:783)
-     [java] 	at edu.ncsu.csc.Galant.graph.component.Node.<init>(Node.java:44)
-     [java] 	at edu.ncsu.csc.Galant.graph.parser.GraphMLParser.buildGraphFromInput(GraphMLParser.java:284)
-     [java] 	at edu.ncsu.csc.Galant.graph.parser.GraphMLParser.generateGraph(GraphMLParser.java:370)
-     [java] 	at edu.ncsu.csc.Galant.graph.parser.GraphMLParser.<init>(GraphMLParser.java:67)
+     [java] 	at edu.ncsu.csc.Galant.graph.component.Node.genRandomPosition(Node.java:796)
+     [java] 	at edu.ncsu.csc.Galant.graph.component.Node.<init>(Node.java:45)
+     [java] 	at edu.ncsu.csc.Galant.graph.parser.GraphMLParser.buildGraphFromInput(GraphMLParser.java:283)
+     [java] 	at edu.ncsu.csc.Galant.graph.parser.GraphMLParser.generateGraph(GraphMLParser.java:369)
+     [java] 	at edu.ncsu.csc.Galant.graph.parser.GraphMLParser.<init>(GraphMLParser.java:65)
      [java] 	at edu.ncsu.csc.Galant.gui.editor.GGraphEditorPanel.<init>(GGraphEditorPanel.java:38)
-     [java] 	at edu.ncsu.csc.Galant.gui.editor.GTabbedPane.addEditorTab(GTabbedPane.java:124)
-     [java] 	at edu.ncsu.csc.Galant.gui.editor.GTabbedPane.open(GTabbedPane.java:307)
-     [java] 	at edu.ncsu.csc.Galant.gui.editor.GTabbedPane.restoreLastState(GTabbedPane.java:168)
-     [java] 	at edu.ncsu.csc.Galant.gui.editor.GTabbedPane.<init>(GTabbedPane.java:97)
+     [java] 	at edu.ncsu.csc.Galant.gui.editor.GTabbedPane.addEditorTab(GTabbedPane.java:123)
+     [java] 	at edu.ncsu.csc.Galant.gui.editor.GTabbedPane.open(GTabbedPane.java:306)
+     [java] 	at edu.ncsu.csc.Galant.gui.editor.GTabbedPane.restoreLastState(GTabbedPane.java:167)
+     [java] 	at edu.ncsu.csc.Galant.gui.editor.GTabbedPane.<init>(GTabbedPane.java:96)
      [java] 	at edu.ncsu.csc.Galant.gui.editor.GEditorFrame.<init>(GEditorFrame.java:73)
-     [java] 	at edu.ncsu.csc.Galant.Galant$1.run(Galant.java:24)
+     [java] 	at edu.ncsu.csc.Galant.Galant$1.run(Galant.java:27)
      [java] 	at java.awt.event.InvocationEvent.dispatch(InvocationEvent.java:312)
      [java] 	at java.awt.EventQueue.dispatchEventImpl(EventQueue.java:745)
      [java] 	at java.awt.EventQueue.access$300(EventQueue.java:103)
@@ -34,24 +54,205 @@ run:
      [java] 	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:146)
      [java] 	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:138)
      [java] 	at java.awt.EventDispatchThread.run(EventDispatchThread.java:91)
-     [java] ....package edu.ncsu.csc.Galant.algorithm.code.compiled;import java.util.*;import edu.ncsu.csc.Galant.algorithm.Algorithm;import edu.ncsu.csc.Galant.graph.component.Graph;import edu.ncsu.csc.Galant.graph.component.Node;import edu.ncsu.csc.Galant.graph.component.Edge;import edu.ncsu.csc.Galant.algorithm.code.macro.Function;import edu.ncsu.csc.Galant.algorithm.code.macro.Pair;import edu.ncsu.csc.Galant.GalantException;public class line_up_nodes_alg extends Algorithm{@Override public void run() { try {final int HORIZONTAL_GAP = 100;
-     [java] final int VERTICAL_GAP = 100;
-     [java] final int TOP_GAP = 2*VERTICAL_GAP;
-     [java] int arraySize = 0;
-     [java] for(Node n : getNodes()){
-     [java] 	arraySize++;
+     [java] New Graph created
+     [java] New Graph created
+     [java] Built an empty graph in GraphMLParser.buildGraphFromInput
+     [java] java.lang.IllegalArgumentException: n must be positive
+     [java] 	at java.util.Random.nextInt(Random.java:300)
+     [java] 	at edu.ncsu.csc.Galant.graph.component.Node.genRandomPosition(Node.java:796)
+     [java] 	at edu.ncsu.csc.Galant.graph.component.Node.<init>(Node.java:45)
+     [java] 	at edu.ncsu.csc.Galant.graph.parser.GraphMLParser.buildGraphFromInput(GraphMLParser.java:283)
+     [java] 	at edu.ncsu.csc.Galant.graph.parser.GraphMLParser.generateGraph(GraphMLParser.java:369)
+     [java] 	at edu.ncsu.csc.Galant.graph.parser.GraphMLParser.<init>(GraphMLParser.java:65)
+     [java] 	at edu.ncsu.csc.Galant.gui.editor.GGraphEditorPanel.<init>(GGraphEditorPanel.java:38)
+     [java] 	at edu.ncsu.csc.Galant.gui.editor.GTabbedPane.addEditorTab(GTabbedPane.java:123)
+     [java] 	at edu.ncsu.csc.Galant.gui.editor.GTabbedPane.open(GTabbedPane.java:306)
+     [java] 	at edu.ncsu.csc.Galant.gui.editor.GTabbedPane.restoreLastState(GTabbedPane.java:167)
+     [java] 	at edu.ncsu.csc.Galant.gui.editor.GTabbedPane.<init>(GTabbedPane.java:96)
+     [java] 	at edu.ncsu.csc.Galant.gui.editor.GEditorFrame.<init>(GEditorFrame.java:73)
+     [java] 	at edu.ncsu.csc.Galant.Galant$1.run(Galant.java:27)
+     [java] 	at java.awt.event.InvocationEvent.dispatch(InvocationEvent.java:312)
+     [java] 	at java.awt.EventQueue.dispatchEventImpl(EventQueue.java:745)
+     [java] 	at java.awt.EventQueue.access$300(EventQueue.java:103)
+     [java] 	at java.awt.EventQueue$3.run(EventQueue.java:706)
+     [java] 	at java.awt.EventQueue$3.run(EventQueue.java:704)
+     [java] 	at java.security.AccessController.doPrivileged(Native Method)
+     [java] 	at java.security.ProtectionDomain$1.doIntersectionPrivilege(ProtectionDomain.java:76)
+     [java] 	at java.awt.EventQueue.dispatchEvent(EventQueue.java:715)
+     [java] 	at java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:242)
+     [java] 	at java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:161)
+     [java] 	at java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:150)
+     [java] 	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:146)
+     [java] 	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:138)
+     [java] 	at java.awt.EventDispatchThread.run(EventDispatchThread.java:91)
+     [java] New Graph created
+     [java] ........package edu.ncsu.csc.Galant.algorithm.code.compiled;import java.util.*;import edu.ncsu.csc.Galant.graph.component.GraphState;import edu.ncsu.csc.Galant.algorithm.Algorithm;import edu.ncsu.csc.Galant.graph.component.Graph;import edu.ncsu.csc.Galant.graph.component.Node;import edu.ncsu.csc.Galant.graph.component.Edge;import edu.ncsu.csc.Galant.algorithm.code.macro.Function;import edu.ncsu.csc.Galant.algorithm.code.macro.Pair;import edu.ncsu.csc.Galant.GalantException;public class boruvka_alg extends Algorithm{@Override public void run() { GraphState gs = this.getGraph().getGraphState(); try {/**
+     [java]  * A wrapper wrapper class. Compiler didn't like having
+     [java]  * multiple classes which refer to each other, so we'll
+     [java]  * do this and just resort to actual Java.
+     [java]  */
+     [java] class Boruvka {
+     [java]     /**
+     [java]      * Class representing a cloud or set of nodes
+     [java]      * while running Boruvka's algorithm.
+     [java]      *
+     [java]      * Supports merging clouds, which removes all
+     [java]      * nodes from the other set, and adding nodes.
+     [java]      * Can also mark/unmark all nodes in set.
+     [java]      */
+     [java]     class NodeSet {
+     [java]         /** list of all nodes in the set */
+     [java]         public ArrayList<Node> list = new ArrayList<Node>();
+     [java] 
+     [java]         /** The lowest connecting edge on the set */
+     [java]         public Edge lowest;
+     [java] 
+     [java]         /** Remove all nodes from a set s and add them to the list */
+     [java]         public void merge(NodeSet s) {
+     [java]             // While the other set still has nodes in it
+     [java]             while (s.list.size() > 0) {
+     [java]                 // Remove the Node
+     [java]                 add(s.list.remove(0));
+     [java]             }
+     [java]         }
+     [java] 
+     [java]         /** Add a node to the set */
+     [java]         public void add(Node n) {
+     [java]             list.add(n);
+     [java]         }
+     [java] 
+     [java]         /** Mark all nodes */
+     [java]         public void mark() {
+     [java]             for (int i = 0; i < list.size(); i++)
+     [java]                 list.get(i).mark();
+     [java]         }
+     [java] 
+     [java]         /** Unmark all nodes */
+     [java]         public void unmark() {
+     [java]             for (int i = 0; i < list.size(); i++)
+     [java]                 list.get(i).unMark();
+     [java]         }
+     [java]     }
+     [java] 
+     [java]     /**
+     [java]      * Find the set associated with a node
+     [java]      */
+     [java]     public NodeSet findSet(Node n) {
+     [java]         for (int i = 0; i < sets.size(); i++) {
+     [java]             if (sets.get(i).list.contains(n))
+     [java]                 return sets.get(i);
+     [java]         }
+     [java]         return null;
+     [java]     }
+     [java] 
+     [java]     /** Track the disjoint sets of nodes */
+     [java]     ArrayList<NodeSet> sets;
+     [java] 
+     [java]     /**
+     [java]      * Implementation of Boruvka's algorithm for finding a minimal spanning tree.
+     [java]      */
+     [java]     public void start() {
+     [java]         sets = new ArrayList<NodeSet>();
+     [java] 
+     [java]         // Set graph to undirected
+     [java]         setDirected(false);
+     [java] 
+     [java]         // Initialize sets of nodes
+     [java]         for (Node n: graph.getNodes()) {
+     [java]             NodeSet s = new NodeSet();
+     [java]             s.add(n);
+     [java]             sets.add(s);
+     [java]         }
+     [java] 
+     [java]         // Continue to coalesce NodeSets until only one remains
+     [java]         while (sets.size() > 1) {
+     [java]             // Step through each set, find the lowest connecting edge
+     [java]             for (int i = 0; i < sets.size(); i++) {
+     [java]                 beginStep();
+     [java]                 Edge lowest = null;
+     [java]                 double weight = Double.POSITIVE_INFINITY;
+     [java] 
+     [java]                 // Step through the set
+     [java]                 NodeSet currentSet = sets.get(i);
+     [java]                 currentSet.mark();
+     [java]                 for (int j = 0; j < currentSet.list.size(); j++) {
+     [java]                     Node x = currentSet.list.get(j); // Grab the current node
+     [java]                     x.setSelected(true);
+     [java]                     beginStep();
+     [java] 
+     [java]                     // For all adjacent nodes
+     [java]                     for(Edge e : x.getIncidentEdges()) { Node o = x.travel(e);
+     [java]                         o.mark();
+     [java]                         beginStep();
+     [java] 
+     [java]                         // If not in the same set and lower edge weight, set as min
+     [java]                         if (findSet(o) != currentSet) {
+     [java]                             o.unMark();
+     [java] 
+     [java]                             if (e.getWeight() < weight) {
+     [java]                                 lowest = e;
+     [java]                                 weight = lowest.getWeight();
+     [java]                             }
+     [java]                         }
+     [java]                     }
+     [java]                     x.setSelected(false);
+     [java]                 }
+     [java] 
+     [java]                 // Set the sets lowest edge
+     [java]                 currentSet.lowest = lowest;
+     [java]                 currentSet.unmark();
+     [java]             }
+     [java] 
+     [java]             // Step through each set again to merge them
+     [java]             for (int i = 0; i < sets.size(); i++) {
+     [java]                 NodeSet current = sets.get(i);
+     [java]                 current.mark();
+     [java]                 beginStep();
+     [java] 
+     [java]                 while (current.lowest != null) {
+     [java]                     // Find the connecting set
+     [java]                     NodeSet opp;
+     [java]                     if (findSet(current.lowest.getSourceNode()) == current) {
+     [java]                         opp = findSet(current.lowest.getDestNode());
+     [java]                     }
+     [java]                     else {
+     [java]                         opp = findSet(current.lowest.getSourceNode());
+     [java]                     }
+     [java] 
+     [java] 
+     [java]                     // Merge them
+     [java]                     sets.get(i).merge(opp);
+     [java]                     current.lowest.setSelected(true);
+     [java]                     current.mark();
+     [java] 
+     [java]                     if (opp.lowest != null && findSet(opp.lowest.getSourceNode()) == current &&
+     [java]                         findSet(opp.lowest.getDestNode()) == current) {
+     [java]                         current.lowest = null;
+     [java]                     }
+     [java]                     else {
+     [java]                         current.lowest = opp.lowest;
+     [java]                         beginStep();
+     [java]                     }
+     [java] 
+     [java]                     // Remove the opposite set
+     [java]                     sets.remove(opp);
+     [java]                     i--;
+     [java]                 }
+     [java] 
+     [java]                 current.unmark();
+     [java]             }
+     [java]         }
+     [java]         // Mark all nodes
+     [java]         sets.get(0).mark();
+     [java]     }
      [java] }
-     [java] Node[] nodeArray = new Node[arraySize];
-     [java] int j = 0;
-     [java] int xPosition = HORIZONTAL_GAP;
-     [java] int yPosition = TOP_GAP;
-     [java] for(Node n : getNodes()){
-     [java] 	n.setPosition(xPosition,yPosition);
-     [java] 	xPosition += HORIZONTAL_GAP;
-     [java] 	nodeArray[j] = n;
-     [java] 	j++;
-     [java] }} catch (Exception e) { if ( e instanceof GalantException ) {GalantException ge = (GalantException) e; ge.report(""); ge.display(); } else e.printStackTrace(System.out);}
+     [java] this.gw.getGraphPanel().setAlgorithmComplete();
+     [java] // Run the algorithm
+     [java] new Boruvka().start();
+     [java] } catch (Exception e) { if ( e instanceof GalantException ) {GalantException ge = (GalantException) e; ge.report(""); ge.display(); } else e.printStackTrace(System.out);} this.gw.getGraphPanel().setAlgorithmComplete();
      [java]  }}
 
+main:
+
 BUILD SUCCESSFUL
-Total time: 36 seconds
+Total time: 22 seconds

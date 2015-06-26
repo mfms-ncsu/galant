@@ -111,14 +111,8 @@ public class GraphState {
 		
 		synchronized(this){
 			try{
-				try{
-					throw new IllegalArgumentException();
-				}
-				catch (IllegalArgumentException e){
-					e.printStackTrace(System.out);
-				}
 				
-				if(!this.initializationIncomplete()){ /* Wait only if initialization is actually complete; otherwise program hangs while setting up graph when launching (when the addNodeState and addEdgeState function calls are also made) */
+				if(!this.initializationIncomplete()  && (locked==0)){ /* Wait only if initialization is actually complete; otherwise program hangs while setting up graph when launching (when the addNodeState and addEdgeState function calls are also made) */
 					GraphDispatch.getInstance().getGraphWindow().getStepForward().setEnabled(true);
 					/* System.out.printf("In the synchronizedWait function; about to suspend execution\n");
 					

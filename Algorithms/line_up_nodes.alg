@@ -8,6 +8,7 @@ for_nodes(n){
 
 Node[] nodeArray= new Node[arraySize]; // create an array of them
 int j=0;
+initializationComplete();
 
 int xPosition=HORIZONTAL_GAP;
 int yPosition=TOP_GAP;

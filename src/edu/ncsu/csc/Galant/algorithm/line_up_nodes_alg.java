@@ -53,10 +53,8 @@ public class line_up_nodes_alg extends Algorithm {
 				ge.report("");
 				ge.display();
 			}
-			else {
-				System.out.printf("unexpected exception caught in run method\n");
-				e.printStackTrace(System.out);
-			}
+			else e.printStackTrace(System.out);
+			
 		} 
 		System.out.println("Done with hardcoded class's run(); method");
 		this.gw.getGraphPanel().setAlgorithmComplete();

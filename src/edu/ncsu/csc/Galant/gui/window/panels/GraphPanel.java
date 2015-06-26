@@ -743,8 +743,8 @@ public class GraphPanel extends JPanel{
 	}
 	
 	public void incrementDisplayState() {
-		System.out.printf("In the GraphPanel class - incrementing the display state\n");
-		/*
+		/* System.out.printf("In the GraphPanel class - incrementing the display state\n");
+		
 		try{
 			throw new NullPointerException();
 		}
@@ -753,23 +753,27 @@ public class GraphPanel extends JPanel{
 		}
 		finally{
 			System.out.printf("Stack trace for incrementing the state in the array of states created--no bearing on the GraphState incrementState\n");
-		} 
+		} */
 		LogHelper.enterMethod(getClass(), "incrementDisplayState");
         LogHelper.logDebug( "" + state );
 		Graph graph = dispatch.getWorkingGraph();
-		int currentState = this.state;
-		int currentGraphState = graph.getState(); 
-		if (this.state < graph.getState()) {
-			this.state++;
-		}
+		/*
+		if (this.state >= graph.getState()) {
+			throw new IllegalStateException();
+		}*/
 		this.gw.updateStatusLabel(this.getDisplayState());
 		/* System.out.printf(this.gw != null ? "yes" : "no"); 
 		System.out.println("Incrementing the graph display state: [" + currentState + "," + currentGraphState + "] --> " + state);
-		
-		LogHelper.exitMethod(getClass(), "incrementDisplayState");*/
+		*/
 		++this.state;
+		LogHelper.exitMethod(getClass(), "incrementDisplayState");
+		/* This is responsible for updating the status label to display the new state number that we have now stepped forward to
+		 * Changing this will naturally overwrite any previous status message (including the "algorithm executing" message, the "no algorithm running" message, or so on)
+		 * A failure to call the updateStatusLabel in one of its three forms will result in inconsistent behavior between the message and the graph display state
+		 */
 		int a = GraphDispatch.getInstance().getGraphWindow().getGraphPanel().getDisplayState();
 		GraphDispatch.getInstance().getGraphWindow().updateStatusLabel(a);
+		
 	}
 	
 	public void decrementDisplayState() {
@@ -779,13 +783,15 @@ public class GraphPanel extends JPanel{
 		if (this.state > 1) {
 			this.state--;
 		}
-		System.out.println("Decrementing the graph display state: [" + currentState + "] --> " + state);
+		//System.out.println("Decrementing the graph display state: [" + currentState + "] --> " + state);
 		
 		LogHelper.exitMethod(getClass(), "decrementDisplayState");
 		
+		/* This is responsible for updating the status label at the top of the Galant screen so that it displays the correct graph state
+		 * This happens whenever the user hits the right arrow key or the right arrow button
+		 */
 		int a = GraphDispatch.getInstance().getGraphWindow().getGraphPanel().getDisplayState();
 		GraphDispatch.getInstance().getGraphWindow().updateStatusLabel(a);
-		
 		
 	}
 	

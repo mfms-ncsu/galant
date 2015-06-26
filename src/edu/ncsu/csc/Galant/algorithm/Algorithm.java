@@ -251,7 +251,7 @@ public abstract class Algorithm implements Runnable{
 
 		/** @see edu.ncsu.csc.Galant.graph.component.GraphState */
 		protected void beginStep(){
-				graph.getGraphState().resetLocks();
+				if(graph.getGraphState().isLocked()) endStep();
 				graph.getGraphState().incrementState();
 				graph.getGraphState().setLocked(true);
 			}

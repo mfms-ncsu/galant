@@ -46,6 +46,7 @@ public class line_up_nodes_alg extends Algorithm {
 				nodeArray[j] = n;
 				j++;
 			}
+			if(gs.isLocked()) endStep();
 		}
 		catch (Exception e) {
 			if (e instanceof GalantException) {

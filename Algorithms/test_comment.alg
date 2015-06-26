@@ -44,4 +44,18 @@ double /* keep everything before and after single line c-style comment */ variab
   */
 
 algorithm{ // keep every before double-slash and ignore the rest of comment
+
+/* More tests 
+    Sub-line without asterisk heading
+    test
+    test
+*/
+
+/** More tests on double asterisk
+      Sub-line without asterisk heading
+      test
+      test 
+*/
 }
+
+   

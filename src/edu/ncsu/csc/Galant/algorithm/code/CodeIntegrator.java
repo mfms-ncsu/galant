@@ -109,7 +109,7 @@ public class CodeIntegrator
 				while(scanner.hasNextLine()) {
 					String line = scanner.nextLine();				
 					Matcher cStyleMatcher = Pattern.compile("(.*)\\/\\*\\*(.*)").matcher(line);
-					Matcher singleAsteriskMatcher = Pattern.compile("(.*)\\/\\*.*\\*\\/(.*)").matcher(line);
+					Matcher singleAsteriskMatcher = Pattern.compile("(.*)\\/\\*(.*)").matcher(line);
 					Matcher doubleSlashMatcher = Pattern.compile("(.*)\\/\\/(\\s|.*)").matcher(line);
 
 
@@ -137,12 +137,24 @@ public class CodeIntegrator
 								sb.append(behindCStyleMatcher.group(2) + "\n");
 							}
 					} else if( singleAsteriskMatcher.find()) {
-						// read everything before /*
 						sb.append(singleAsteriskMatcher.group(1));
-						
-						// read everything after */
-						sb.append(singleAsteriskMatcher.group(2) + "\n");
-							
+						Matcher behindSingleAsterisk = Pattern.compile("(\\*\\/)(.*)").matcher(singleAsteriskMatcher.group(2));
+
+						if( behindSingleAsterisk.find()) {
+								// single-line single-asterisk if falls in here
+								sb.append(behindSingleAsterisk.group(2) + "\n");
+						} else {
+							while(scanner.hasNextLine()) {
+								line = scanner.nextLine();
+								behindSingleAsterisk = Pattern.compile("(\\*\\/)(.*)").matcher(line);
+
+								if(behindSingleAsterisk.find()) {
+									break;
+								}
+							}
+
+							sb.append( behindSingleAsterisk.group(2) + "\n");
+						}	
 					} else if( doubleSlashMatcher.find()) {
 						// read everything after //
 						sb.append(doubleSlashMatcher.group(1) + "\n");

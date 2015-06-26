@@ -162,8 +162,8 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
 	        	while((index = content.indexOf(keyword, index)) != -1) {
 	        		char prev = (index > 0) ? content.charAt(index-1) : ' ';
 	        		char next = (index+keyword.length() < content.length()) ? content.charAt(index+keyword.length()) : ' ';
-	        		if(!Character.isJavaIdentifierPart(prev) && !Character.isJavaIdentifierPart(next))
-	        			doc.setCharacterAttributes(index, keyword.length(), doc.getStyle(styleName), true); 
+	        		if(!Character.isJavaIdentifierPart(prev) && !Character.isJavaIdentifierPart(next)) {
+	        			doc.setCharacterAttributes(index, keyword.length(), doc.getStyle(styleName), true);	        		}	
 	        		index += keyword.length();
 	        	}
 	        }

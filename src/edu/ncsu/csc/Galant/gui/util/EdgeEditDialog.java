@@ -9,6 +9,7 @@ import java.awt.event.*;
 import java.util.*;
 import edu.ncsu.csc.Galant.GraphDispatch;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow;
+import edu.ncsu.csc.Galant.gui.window.GraphWindow.GraphMode;
 import edu.ncsu.csc.Galant.graph.component.Edge;
 import edu.ncsu.csc.Galant.graph.component.Graph;
 import edu.ncsu.csc.Galant.graph.component.Node;
@@ -37,20 +38,19 @@ public class EdgeEditDialog extends JDialog
     
     private Frame frame;
     
-    /** 0 create mode, 1 delete mode */
-    private int mode;
+    private GraphMode mode;
 
     /** Creates the reusable dialog. */
-    public EdgeEditDialog(Frame frame, GraphDispatch _dispatch, int mode) {
+    public EdgeEditDialog(Frame frame, GraphDispatch _dispatch, GraphMode mode) {
         super(frame, true);
         this.dispatch = _dispatch;
         this.mode = mode;
 		    // Register this object as a change listener. Allows GraphDispatch notifications to be pushed to this object
 		    _dispatch.addChangeListener(this);
         
-        if (mode == 0) {
+        if (mode == GraphMode.CREATE_EDGE) {
             setTitle("Create New Edge");
-        } else if (mode == 1) {
+        } else if (mode == GraphMode.DELETE) {
             setTitle("Delete Edge");
         }
         point1TextField = new JTextField(10);
@@ -147,7 +147,7 @@ public class EdgeEditDialog extends JDialog
                 if (isInt && point1 < numNodes && point2 < numNodes && point1 >= 0 && point2 >= 0) {
                     Node n1 = g.getNodeById(point1);
                     Node n2 = g.getNodeById(point2);
-                    if (mode == 0) {
+                    if (mode == GraphMode.CREATE_EDGE) {
                         //create a new edge from point1 to point2
                         Edge edge = g.addInitialEdge(n1, n2);
                         // select the new edge and clear the edge
@@ -158,16 +158,24 @@ public class EdgeEditDialog extends JDialog
                         GraphWindow.componentEditPanel.setWorkingComponent(edge);
                         gp.setEdgeTracker(null);
                     }
-                    if (mode == 1) {
+                    if (mode == GraphMode.DELETE) {
                         //delete the edge between those node
                         ArrayList<Edge> edges = new ArrayList<Edge>();
-                        for (Edge e1 : n1.getEdges()) {
-                            for (Edge e2 : n2.getEdges()) {
-                                if (e1.getId() == e2.getId()) {
-			                              edges.add(e2);
+                        if (n1.equals(n2)) {
+                            for (Edge e1 : n1.getEdges()) {
+                                if (e1.getSourceNode().equals(e1.getDestNode())) {
+                                    edges.add(e1);
                                 }
-                            }
-		                    }
+		                        }
+                        } else {
+                            for (Edge e1 : n1.getEdges()) {
+                                for (Edge e2 : n2.getEdges()) {
+                                    if (e1.getId() == e2.getId()) {
+			                                  edges.add(e2);
+                                    }  
+                                }
+		                        }
+                        }
                         for (Edge ed : edges) {
                             g.removeEdge(ed);
                         }

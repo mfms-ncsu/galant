@@ -107,7 +107,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	private GraphMode mode = null;
   
   private EdgeEditDialog edgeEditDialog;
-  private DeleteNodeDialog deleteNodeDialog;
+  private DeleteNodeDialog deleteNodeDialog;  
 	
 	/**
 	 * The Edit modes GraphWindow can assume. Used in the listener for the
@@ -224,10 +224,8 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                     if (sel != null) {
                         gp.setDragging(true);
                         gp.setEdgeTracker(null);
-                        if ( ! dispatch.isAnimationMode() ) {
+                        if ( !dispatch.isAnimationMode() || !dispatch.isAlgorithmMovesNodes()) {
                             sel.setFixedPosition( arg0.getPoint() );
-                        } else {
-                            sel.setAnimationPosition( arg0.getPoint() );
                         }
                     }
                     frame.repaint();
@@ -279,7 +277,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 					
                             dispatch.pushToTextEditor(); 
 							
-                        } // only allow dragging in animation mode
+                        } // only allow "dragging" in animation mode
                         else if ( ! dispatch.isAnimationMode() ){
                             // release after click
                             // not in animation mode
@@ -829,7 +827,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
           if(ctrlPressed){
             LogHelper.logDebug("CREATE EDGE");
 						//prompt user for the id of two nodes	
-            edgeEditDialog = new EdgeEditDialog(frame, dispatch, 0);
+            edgeEditDialog = new EdgeEditDialog(frame, dispatch, GraphMode.CREATE_EDGE);
             edgeEditDialog.pack();
             edgeEditDialog.setLocationRelativeTo(frame);
             edgeEditDialog.setVisible(true);
@@ -839,7 +837,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
           if(deletePressed){
             LogHelper.logDebug("DELETE EDGE");
 						//prompt user for the id of two nodes	
-            edgeEditDialog = new EdgeEditDialog(frame, dispatch, 1);
+            edgeEditDialog = new EdgeEditDialog(frame, dispatch, GraphMode.DELETE);
             edgeEditDialog.pack();
             edgeEditDialog.setLocationRelativeTo(frame);
             edgeEditDialog.setVisible(true);

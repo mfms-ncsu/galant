@@ -630,7 +630,10 @@ public class Node extends GraphElement implements Comparable<Node> {
         LogHelper.enterMethod( getClass(), "setFixedPosition: " + position 
                                + "\n node = " + this );
 		this.position = position;
-        getInitialState().setPosition( position );
+        for (int i=nodeStates.size()-1; i >= 0; i--) {
+			      NodeState ns = nodeStates.get(i);
+			      ns.setPosition( position );
+		    }
         LogHelper.exitMethod( getClass(), "setFixedPosition"
                               + "\n node = " + this );
 	}
@@ -638,18 +641,11 @@ public class Node extends GraphElement implements Comparable<Node> {
 	public void setFixedPosition(int x, int y) {
 		Point p = new Point(x, y);
 		this.position = p;
-        getInitialState().setPosition( p );
+        for (int i=nodeStates.size()-1; i >= 0; i--) {
+			      NodeState ns = nodeStates.get(i);
+			  ns.setPosition( p );
+		    }
 	}
-  
-  /**
-   * set the position of every states
-   */
-  public void setAnimationPosition( Point position ) {
-    for (int i=nodeStates.size()-1; i >= 0; i--) {
-			NodeState ns = nodeStates.get(i);
-			ns.setPosition( position );
-		}
-  }
 	
     /**
      * The following have been added for layered graphs. The value -1 is used

@@ -69,7 +69,9 @@ public class CodeIntegrator
 				"{" +
 					"@Override " +
 					"public void run() " +
-						String.format("{ GraphState gs = this.getGraph().getGraphState(); try {%s if(gs.isLocked()) endStep(); this.gw.getGraphPanel().setAlgorithmComplete();}"
+						String.format("{ GraphState gs = this.getGraph().getGraphState();"
+									  + "synchronized(gs){try{gs.wait();}catch (InterruptedException e){e.printStackTrace(System.out);}}"
+									  + " try {%s if(gs.isLocked()) endStep(); this.gw.getGraphPanel().setAlgorithmComplete();}"
                                       + " catch (Exception e)"
                                       + " { if ( e instanceof GalantException )"
                                       + " {GalantException ge = (GalantException) e;"

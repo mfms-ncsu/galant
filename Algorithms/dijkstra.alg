@@ -23,7 +23,7 @@ for_nodes(node) {
     node.setWeight( INFINITY );
     nodePQ.add( node);
 }
-initializationComplete();
+//initializationComplete();
 // can start at vertex 0 for now, as in dfs, but would be more general to
 // allow user to select starting vertex (do for dfs also)
 Node v = getNodeById(0);

@@ -14,6 +14,14 @@ public class line_up_nodes_alg extends Algorithm {
 	@Override public void run() {
 		
 		GraphState gs = this.getGraph().getGraphState();
+		synchronized(gs){
+			try{
+				gs.wait();
+			}
+			catch (InterruptedException e){
+				e.printStackTrace(System.out);
+			}
+		}
 		System.out.println("Starting hardcoded class's run(); method");
 		try {
 			final int HORIZONTAL_GAP = 100;
@@ -29,7 +37,7 @@ public class line_up_nodes_alg extends Algorithm {
 			int yPosition = TOP_GAP;
 			System.out.println("About to mark initialization as complete");
 			
-			gs.setInitializationComplete();
+			///gs.setInitializationComplete();
 			
 			
 			/* This "initialization complete" can be replaced with a beginStep() and endStep() for the user after they've done everything that they consider initialization.

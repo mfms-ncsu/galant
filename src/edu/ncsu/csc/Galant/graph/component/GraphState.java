@@ -40,6 +40,7 @@ public class GraphState {
 		state = 1;
 	}
 	
+	/*
 	public void setInitializationComplete(){
 		initializationComplete++;
 		Thread a = Thread.currentThread();
@@ -55,7 +56,7 @@ public class GraphState {
 				e.printStackTrace(System.out);
 			}
 		}
-	}
+	}*/
 	
 	
 	static public void setInitializationIncomplete(){
@@ -112,7 +113,7 @@ public class GraphState {
 		synchronized(this){
 			try{
 				
-				if(!this.initializationIncomplete()  && (!locked)){ /* Wait only if initialization is actually complete; otherwise program hangs while setting up graph when launching (when the addNodeState and addEdgeState function calls are also made) */
+				if(/*!this.initializationIncomplete()  && */(!locked)){ /* Wait only if initialization is actually complete; otherwise program hangs while setting up graph when launching (when the addNodeState and addEdgeState function calls are also made) */
 					GraphDispatch.getInstance().getGraphWindow().getStepForward().setEnabled(!GraphDispatch.getInstance().getGraphWindow().getGraphPanel().getAlgorithmComplete());
 					/* System.out.printf("In the synchronizedWait function; about to suspend execution\n");
 					

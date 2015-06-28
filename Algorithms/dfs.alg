@@ -17,10 +17,13 @@ class GlobalVariables {
     public int time;
 }
 
-final GlobalVariables globals = new GlobalVariables();
+GlobalVariables globals = new GlobalVariables();
 
-final int [] discovery = new int[ graph.getNodes().size() ];
-final int [] finish = new int[ graph.getNodes().size() ];
+int [] discovery; 
+// Append initialization in algorithm{} or in Fectching Macro way: nodesList discovery;
+int [] finish; 
+// Append initialization in algorithm{} or in Fectching Macro way: nodesList finish;
+Graph graph;
 
 function visit( Node v, Node parent ) {
     globals.time++;
@@ -59,20 +62,26 @@ function visit( Node v, Node parent ) {
     v.setLabel( "" + discovery[ v.getId() ] + "/" + finish[ v.getId() ] );
 }
 
-beginStep();
-for_nodes( u ) {
-    u.setLabel("");
-}
+algorithm {
+ graph = getGraph();
+ discovery	= new int[ graph.getNodes().size() ];
+ finish = new int[ graph.getNodes().size() ];
 
-for_edges( e ) {
-    e.setLabel("");
-}
-endStep();
+ beginStep();
+ for_nodes( u ) {
+     u.setLabel("");
+ }
 
-for_nodes( u ) {
-    if ( ! u.isMarked() ) {
-        visit( u, null );
-    }
+ for_edges( e ) {
+     e.setLabel("");
+ }
+ endStep();
+
+ for_nodes( u ) {
+     if ( ! u.isMarked() ) {
+         visit( u, null );
+     }
+ }
 }
 
 //  [Last modified: 2013 07 15 at 14:07:48 GMT]

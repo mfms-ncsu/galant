@@ -65,22 +65,8 @@ public class CodeIntegrator
 			"import edu.ncsu.csc.Galant.algorithm.code.macro.Pair;\n" +
             "import edu.ncsu.csc.Galant.GalantException;\n" +
 			IMPORTS_FIELD +
-			
 			"public class " + NAME_FIELD + " extends Algorithm" +
-				"{\n" + CODE_FIELD + 
-					/*
-					"@Override " +
-					"public void run() " +
-						String.format("{ \n try { \n %s}"
-                                      + " catch (Exception e)"
-                                      + " { if ( e instanceof GalantException )"
-                                      + " {GalantException ge = (GalantException) e;"
-                                      + " ge.report(\"\"); ge.display(); }"
-                                      + " else e.printStackTrace(System.out);}%n }",
-                                      CODE_FIELD) +
-					// add newline after code in case of ending with line comment
-					*/
-				"}";
+				"{\n" +CODE_FIELD + "}";
 				
 		//@formatter:on
 

@@ -1,6 +1,9 @@
 package edu.ncsu.csc.Galant.gui.window;
 
+import java.util.Random;
+import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,13 +17,17 @@ import java.awt.event.WindowEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyListener;
+import java.awt.KeyboardFocusManager;
+import java.awt.KeyEventDispatcher;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.BoxLayout;
+import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
@@ -41,6 +48,8 @@ import edu.ncsu.csc.Galant.gui.window.panels.GraphPanel;
 import edu.ncsu.csc.Galant.logging.LogHelper;
 import edu.ncsu.csc.Galant.prefs.Preference;
 import edu.ncsu.csc.Galant.GalantException;
+import edu.ncsu.csc.Galant.gui.util.EdgeEditDialog;
+import edu.ncsu.csc.Galant.gui.util.DeleteNodeDialog;
 
 /**
  * Window for displaying the <code>Graph</code>, containing all necessary
@@ -70,7 +79,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	private static GraphPanel gp;
 	
 	/** A panel used to edit Graph element's properties **/ 
-	private static ComponentEditPanel componentEditPanel;
+	public static ComponentEditPanel componentEditPanel;
 	
 	/** A panel used to navigate through an animation **/
 	private static JPanel animationButtons;
@@ -96,6 +105,9 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	private JToggleButton repositionBtn;
 	
 	private GraphMode mode = null;
+  
+  private EdgeEditDialog edgeEditDialog;
+  private DeleteNodeDialog deleteNodeDialog;  
 	
 	/**
 	 * The Edit modes GraphWindow can assume. Used in the listener for the
@@ -201,11 +213,6 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		// Create the panel that renders the active Graph
 		gp = new GraphPanel(dispatch);
 
-        // add keyboard shortcuts (left and right arrows, enter)
-        gp.addKeyListener(new AnimationKeyListener());
-        gp.setFocusable(true);
-        gp.requestFocusInWindow();
-
 		// Add a listener to handle visual editing of the Graph
 		gp.addMouseMotionListener( new MouseMotionListener() {
                 @Override
@@ -217,11 +224,8 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                     if (sel != null) {
                         gp.setDragging(true);
                         gp.setEdgeTracker(null);
-                        if ( ! dispatch.isAnimationMode() ) {
+                        if ( !dispatch.isAnimationMode() || !dispatch.isAlgorithmMovesNodes()) {
                             sel.setFixedPosition( arg0.getPoint() );
-                        } else {
-                            NodeState currentState = sel.getLatestValidState(gp.getDisplayState());
-                            currentState.setPosition( arg0.getPoint() );
                         }
                     }
                     frame.repaint();
@@ -273,7 +277,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 					
                             dispatch.pushToTextEditor(); 
 							
-                        } // only allow dragging in animation mode
+                        } // only allow "dragging" in animation mode
                         else if ( ! dispatch.isAnimationMode() ){
                             // release after click
                             // not in animation mode
@@ -388,9 +392,12 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		frame.addComponentListener(this);
 		
 		stepForward = new JButton(new ImageIcon(GraphWindow.class.getResource("images/stepforward_24.png")));
-		stepBack = new JButton(new ImageIcon(GraphWindow.class.getResource("images/stepback_24.png")));
-		done = new JButton(new ImageIcon(GraphWindow.class.getResource("images/close_24.png")));
-		
+		stepForward.setToolTipText("Step Forward\n[->]");
+    stepBack = new JButton(new ImageIcon(GraphWindow.class.getResource("images/stepback_24.png")));
+		stepBack.setToolTipText("Step Backward\n[<-]");
+    done = new JButton(new ImageIcon(GraphWindow.class.getResource("images/close_24.png")));
+		done.setToolTipText("Exit Animation\n[Esc]");
+    
 		componentEditPanel = new ComponentEditPanel();
 		componentEditPanel.setVisible(false);
 		
@@ -486,10 +493,22 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 				animationButtons.setVisible(true);
                 animationButtons.setFocusable(true);
                 animationButtons.requestFocusInWindow();
-				toolBar.setVisible(false);
+        directedBtn.setVisible(false);
+        undirectedBtn.setVisible(false);
+				select.setVisible(false);
+        addNode.setVisible(false);
+        addEdge.setVisible(false);
+        deleteBtn.setVisible(false);
+        repositionBtn.setVisible(false);
 			} else {
 				animationButtons.setVisible(false);
-				toolBar.setVisible(true);
+        directedBtn.setVisible(true);
+        undirectedBtn.setVisible(true);
+				select.setVisible(true);
+        addNode.setVisible(true);
+        addEdge.setVisible(true);
+        deleteBtn.setVisible(true);
+        repositionBtn.setVisible(true);
 			}
 			
 		// Update the graph directedness flag to the new working graph's flag
@@ -541,29 +560,50 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		toolBar.setAlignmentY(0);
 		
 		select = createButton(GraphMode.SELECT);
+    select.setFocusable(false);
+    select.setToolTipText("Select");
 		addNode = createButton(GraphMode.CREATE_NODE);
-		addEdge = createButton(GraphMode.CREATE_EDGE);
-		deleteBtn = createButton(GraphMode.DELETE);
-		changeMode(GraphMode.SELECT);
-		
+    addNode.setFocusable(false);
+		addNode.setToolTipText("Create Node");
+    addEdge = createButton(GraphMode.CREATE_EDGE);
+    addEdge.setFocusable(false);
+		addEdge.setToolTipText("Create Edge");
+    deleteBtn = createButton(GraphMode.DELETE);
+    deleteBtn.setFocusable(false);
+		deleteBtn.setToolTipText("Delete");
+    changeMode(GraphMode.SELECT);		
+    
 		toolBar.addSeparator();
 		
 		undirectedBtn = createButton(Directedness.UNDIRECTED);
-		directedBtn = createButton(Directedness.DIRECTED);
-		changeDirectedness(Directedness.UNDIRECTED);
+		undirectedBtn.setToolTipText("Undirected");
+    undirectedBtn.setFocusable(false);
+    directedBtn = createButton(Directedness.DIRECTED);
+		directedBtn.setToolTipText("Directed");
+    directedBtn.setFocusable(false);
+    changeDirectedness(Directedness.UNDIRECTED);
 		
 		toolBar.addSeparator();
 		
 		nodeLabels = createButton(GraphDisplays.NODE_LABELS);
-		edgeLabels = createButton(GraphDisplays.EDGE_LABELS);
-		nodeWeights = createButton(GraphDisplays.NODE_WEIGHTS);
-		edgeWeights = createButton(GraphDisplays.EDGE_WEIGHTS);
-		
+    nodeLabels.setFocusable(false);
+		nodeLabels.setToolTipText("Display Node Labels");
+    edgeLabels = createButton(GraphDisplays.EDGE_LABELS);
+    edgeLabels.setFocusable(false);
+		edgeLabels.setToolTipText("Display Edge Labels");
+    nodeWeights = createButton(GraphDisplays.NODE_WEIGHTS);
+    nodeWeights.setFocusable(false);
+		nodeWeights.setToolTipText("Display Node Weights");
+    edgeWeights = createButton(GraphDisplays.EDGE_WEIGHTS);
+    edgeWeights.setFocusable(false);
+		edgeWeights.setToolTipText("Display Edge Weights");
 		toolBar.addSeparator();
 		
 		java.net.URL imageURL = GraphWindow.class.getResource("images/autoposition_24.png");
 		repositionBtn = new JToggleButton(new ImageIcon(imageURL));
-		repositionBtn.addActionListener(new ActionListener(){
+    repositionBtn.setFocusable(false);
+		repositionBtn.setToolTipText("Intelligent Rearrange");
+    repositionBtn.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				// TODO Auto-generated method stub
@@ -644,33 +684,6 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		button.setSelected(displayType.isShown());
 		return button;
 	}
-    //@todo unable to use keyboard shortcuts after press buttons	
-    static class AnimationKeyListener extends KeyAdapter {
-        /** 
-         * Intent is to delay for about 1/60 second = roughly 17 milliseconds
-         * to allow the display to catch up to repeated keystrokes when an
-         * arrow key is held down. 
-         */
-        static final long DELAY_TIME = 17;
-
-        public void keyPressed(KeyEvent e) {
-            if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-				gp.decrementDisplayState();
-            }
-            if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-				gp.incrementDisplayState();
-            }
-            if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                // delete row method (when "delete" is pressed)
-            }
-            try {
-                Thread.sleep(DELAY_TIME);
-            } catch (InterruptedException f) {
-                //Handle exception
-            }
-            frame.repaint();
-        }
-    }
 
 	/**
 	 * Initialize the animation panel controls
@@ -694,7 +707,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 				frame.repaint();
 			}
 		});
-		
+    		
 		// Move the display state in GraphPanel forward one
 		stepForward.addActionListener(new ActionListener() {
 			@Override
@@ -715,7 +728,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 				dispatch.setAnimationMode(false);
 			}
 		});
-
+    
 		animationButtons.add(stepBack);
 		animationButtons.add(stepForward);
 		animationButtons.add(done);
@@ -731,10 +744,215 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 				}
 		});
 
-        // add keyboard shortcuts (left and right arrows, enter)
-        animationButtons.addKeyListener(new AnimationKeyListener());
-        animationButtons.setFocusable(true);
-        animationButtons.requestFocusInWindow();
+  // add keyboard shortcuts    
+  KeyboardFocusManager keyManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+  keyManager.addKeyEventDispatcher(new KeyEventDispatcher() {
+    /** 
+     * Intent is to delay for about 1/60 second = roughly 17 milliseconds
+     * to allow the display to catch up to repeated keystrokes when an
+     * arrow key is held down. 
+     */
+    static final long DELAY_TIME = 17;
+    boolean ctrlPressed = false;
+    boolean deletePressed = false;
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent e) {
+      //"left" step backward when in animation mode
+      if(e.getID()==KeyEvent.KEY_PRESSED && e.getKeyCode()==KeyEvent.VK_LEFT){
+        synchronized (this) { //Handle delay
+          if (dispatch.isAnimationMode()) {
+            gp.decrementDisplayState();
+            stepForward.setEnabled(gp.hasNextState());
+				    stepBack.setEnabled(gp.hasPreviousState());
+            try {
+              Thread.sleep(DELAY_TIME);
+            } catch (InterruptedException f) {
+              //Handle exception
+            }
+            frame.repaint();
+          }
+        }
+        return true;
+      }
+      //"right" step forward when in animation mode
+      if(e.getID()==KeyEvent.KEY_PRESSED && e.getKeyCode()==KeyEvent.VK_RIGHT){
+        synchronized (this) { //Handle delay
+          if (dispatch.isAnimationMode()) {
+            gp.incrementDisplayState();
+            stepForward.setEnabled(gp.hasNextState());
+				    stepBack.setEnabled(gp.hasPreviousState());
+            try {
+              Thread.sleep(DELAY_TIME);
+            } catch (InterruptedException f) {
+              //Handle exception
+            }
+            frame.repaint();
+          }
+        }
+        return true;
+      }
+      // "Esc" leave animation mode when in animation mode
+      if(dispatch.isAnimationMode() && e.getID()==KeyEvent.KEY_PRESSED
+                                    && e.getKeyCode()==KeyEvent.VK_ESCAPE){
+        dispatch.setAnimationMode(false);
+        return true;
+      }
+      // "Ctrl" pressed
+      if(!dispatch.isAnimationMode() && e.getID()==KeyEvent.KEY_PRESSED
+                                     && e.getKeyCode()==KeyEvent.VK_CONTROL){
+          ctrlPressed = true;
+        return true;
+      }
+      // "Ctrl" released
+      if(e.getID()==KeyEvent.KEY_RELEASED && e.getKeyCode()==KeyEvent.VK_CONTROL){
+        ctrlPressed = false;
+        return true;
+      }
+      // "Delete" pressed
+      if(!dispatch.isAnimationMode() && e.getID()==KeyEvent.KEY_PRESSED
+                                     && e.getKeyCode()==KeyEvent.VK_DELETE){
+        deletePressed = true;
+        return true;
+      }
+      // "Delete" released
+      if(e.getID()==KeyEvent.KEY_RELEASED && e.getKeyCode()==KeyEvent.VK_DELETE){
+        deletePressed = false;
+        return true;
+      }
+      // "E" pressed
+      if(!dispatch.isAnimationMode() && e.getID()==KeyEvent.KEY_PRESSED
+                                     && e.getKeyCode()==KeyEvent.VK_E){
+        synchronized(this){
+          // "ctrl" already pressed, create new edge
+          if(ctrlPressed){
+            LogHelper.logDebug("CREATE EDGE");
+						//prompt user for the id of two nodes	
+            edgeEditDialog = new EdgeEditDialog(frame, dispatch, GraphMode.CREATE_EDGE);
+            edgeEditDialog.pack();
+            edgeEditDialog.setLocationRelativeTo(frame);
+            edgeEditDialog.setVisible(true);
+            dispatch.pushToTextEditor();
+          } //Create new edge
+          //delete edge
+          if(deletePressed){
+            LogHelper.logDebug("DELETE EDGE");
+						//prompt user for the id of two nodes	
+            edgeEditDialog = new EdgeEditDialog(frame, dispatch, GraphMode.DELETE);
+            edgeEditDialog.pack();
+            edgeEditDialog.setLocationRelativeTo(frame);
+            edgeEditDialog.setVisible(true);
+            dispatch.pushToTextEditor();
+          }//delete edge
+        }
+        return true;
+      }
+      // "N" pressed
+      if(!dispatch.isAnimationMode() && e.getID()==KeyEvent.KEY_PRESSED
+                                     && e.getKeyCode()==KeyEvent.VK_N){
+        synchronized(this){
+          // "ctrl" already pressed, create new node
+          if(ctrlPressed){
+            LogHelper.logDebug("CREATE NODE");
+							
+            // add a new default node to the working
+            Graph g = dispatch.getWorkingGraph();
+            Node n = g.addInitialNode();
+            LogHelper.logDebug( " addInitial: node = " + n );
+            // choice a position to place new node
+            Point p = Node.genRandomPosition();
+            n.setFixedPosition(p);
+            LogHelper.logDebug( " setFixedPosition: node = " + n );
+							
+            // select the new node
+            Node nNew = gp.selectTopClickedNode(p);
+            componentEditPanel.setWorkingComponent(nNew);
+            LogHelper.logDebug( " select: node = " + n );
+
+            componentEditPanel.setWorkingComponent(nNew);
+            LogHelper.logDebug( " setWorking: node = " + n );
+            
+            dispatch.pushToTextEditor();
+          } //Create new node
+          //delete already pressed, delete node
+          if (deletePressed) {
+            LogHelper.logDebug("DELETE NODE");	
+            //hide edit panel
+            componentEditPanel.setWorkingComponent(null);
+            deleteNodeDialog = new DeleteNodeDialog(frame, dispatch);
+            deleteNodeDialog.pack();
+            deleteNodeDialog.setLocationRelativeTo(frame);
+            deleteNodeDialog.setVisible(true);
+            dispatch.pushToTextEditor();
+          }//delete node
+        }
+        return true;
+      }
+      //"ctrl + i" intelligent rearrange
+      if(!dispatch.isAnimationMode() && e.getID()==KeyEvent.KEY_PRESSED
+        && e.getKeyCode()==KeyEvent.VK_I && ctrlPressed ){
+        synchronized(this){
+          if (!repositionBtn.isSelected()) {
+            repositionBtn.setSelected(true);
+            dispatch.getWorkingGraph().smartReposition();
+					  dispatch.pushToTextEditor();
+          } else {
+            repositionBtn.setSelected(false);
+            //todo - undo smartReposition
+          }
+        }
+        return true;
+      }
+      // "ctrl+d" switch between directed and undirected
+      if(!dispatch.isAnimationMode() && e.getID()==KeyEvent.KEY_PRESSED
+        && e.getKeyCode()==KeyEvent.VK_D && ctrlPressed){
+        synchronized(this){
+          if (!dispatch.getWorkingGraph().isDirected()) {
+				    changeDirectedness(Directedness.DIRECTED);
+			    } else {
+				    changeDirectedness(Directedness.UNDIRECTED);
+			    }
+        }
+        return true;
+      }
+      // "ctrl+l" display labels
+      if(e.getID()==KeyEvent.KEY_PRESSED && e.getKeyCode()==KeyEvent.VK_L && ctrlPressed){
+        synchronized(this){
+          if (nodeLabels.isSelected() && edgeLabels.isSelected()) {
+            GraphDisplays.NODE_LABELS.setShown(false);
+            GraphDisplays.EDGE_LABELS.setShown(false);
+            nodeLabels.setSelected(false);
+            edgeLabels.setSelected(false);
+          } else {
+            GraphDisplays.NODE_LABELS.setShown(true);
+            GraphDisplays.EDGE_LABELS.setShown(true);
+            nodeLabels.setSelected(true);
+            edgeLabels.setSelected(true);
+          }
+          frame.repaint(); 
+        }
+        return true;
+      }
+      // "ctrl+w" display weights
+      if(e.getID()==KeyEvent.KEY_PRESSED && e.getKeyCode()==KeyEvent.VK_W && ctrlPressed){
+        synchronized(this){
+          if (nodeWeights.isSelected() && edgeWeights.isSelected()) {
+            GraphDisplays.NODE_WEIGHTS.setShown(false);
+            GraphDisplays.EDGE_WEIGHTS.setShown(false);
+            nodeWeights.setSelected(false);
+            edgeWeights.setSelected(false);
+          } else {
+            GraphDisplays.NODE_WEIGHTS.setShown(true);
+            GraphDisplays.EDGE_WEIGHTS.setShown(true);
+            nodeWeights.setSelected(true);
+            edgeWeights.setSelected(true);
+          }
+          frame.repaint(); 
+        }
+        return true;
+      }
+      return false;
+    }
+  });
 
 		LogHelper.exitMethod(getClass(), "initAnimationPanel");
 		return animationButtons;

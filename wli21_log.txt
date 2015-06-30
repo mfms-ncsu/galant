@@ -1,0 +1,33 @@
+19 May (~3 hours) reading gui_algorithm_description; reading the book on Git to figure out the basic command line usage
+20 May (~3 hours) reading GraphWindow.java, GraphPanel.java, GraphDispatch.java to figure out how the Graph Editor work
+21 May (~3 hours) basic implementation of moving node during animation mode.
+22 May (~2 hours) fixed some bugs
+
+27 May (~5 hours) dragging in animation mode, design of graph editor
+28 May (~5 hours) figured out how to use the focus subsystem for keyboard shortcuts
+
+1 June (~3 hours) change key action dependency of button focus 
+2 June (~3 hours) read Java API about JToggleButton mouseover event
+3 June (~3 hours) find out setToolTipText() for the same job
+4 June (~3 hours) enable some toggles during animation mode, research the best way to do shortcuts
+
+9 June (~6 hours) disable directed/undirected buttons, application wide keyboard shortcuts use KeyEventDispatcher, Synchronized block handle delay
+10 June (~2 hours) "Esc" exit animation mode
+12 June (~3 hours) basic idea of multi keys shortcuts, "Ctrl + N"
+13 June (~2 hours) research the best position to place new node
+
+15 June (~2 hours) "ctrl + n" create new node at random position for now
+17 June (~2 hours) new positions persist throughout execution when move node
+18 June (~6 hours) "ctrl + e" create new edge done
+
+22 June (~3 hours) convenient way to change the weights of newly created nodes and edges, try to make Galant mouse free.
+24 June (~6 hours) fix edit edges and nodes bugs, "ctrl+l" display labels, "ctrl+w" display weights, "ctrl+i" intelligent reposition, "ctrl+d" direct/undirect, "delete+n"delete node
+25 June (~2 hours) "delete + e" delete edge
+
+26 June (~2 hours)
+Display positions of each nodes during animation were dependent on its states, which were set once the run button was pressed.
+In order to call only setFixedPosition() to change the positions of node in the middle of algorithm, either the drawNode() method must based on the position associated with node,
+or the setFixedPosition() will implicated call setPosition on every states. The first solution will cause the problem that algorithm may not be able to move nodes since current implementation
+of animation use positions that associate with each state.
+For now, I choice the second solution, and add "algorithmMovesNodes" field into GraphDispatch.java to prevent user from moving nodes when algorithm may change the position.
+ 

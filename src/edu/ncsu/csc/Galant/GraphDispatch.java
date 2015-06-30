@@ -26,6 +26,8 @@ public class GraphDispatch {
 	private int windowHeight;
 
 	private boolean animationMode = false;
+  
+  private boolean algorithmMovesNodes = false;
 
     /** if true, this goes through the animation in slow motion but does not
      * allow backtracking */
@@ -88,6 +90,10 @@ public class GraphDispatch {
 
 	public boolean isAnimationMode() {
 		return this.animationMode;
+	}
+  
+  public boolean isAlgorithmMovesNodes() {
+		return this.algorithmMovesNodes;
 	}
 	
 	public void setAnimationMode(boolean mode) {

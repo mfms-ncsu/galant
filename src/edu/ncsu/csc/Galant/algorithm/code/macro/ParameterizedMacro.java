@@ -34,6 +34,10 @@ public abstract class ParameterizedMacro extends Macro
 		private int minParams, maxParams;
 		private boolean includeCodeBlock;
 
+		/* If this field is true, then this macro will be included in algorithm{} no matter where it was initially set to be. 
+		   This can be helpful when you want to create something will call getNodes().
+		*/    
+
 		/**
 		 * Creates a new <code>ParameterizedMacro</code>. <code>minParams</code> and <code>maxParams</code> determine the
 		 * number of parameters allowed; if the actual number of parameters is less than <code>minParams</code> or greater than
@@ -46,6 +50,7 @@ public abstract class ParameterizedMacro extends Macro
 		public ParameterizedMacro(String name, int minParams, int maxParams, boolean includeCodeBlock)
 			{
 				super(MacroUtil.nestedRegex(MacroUtil.replaceWhitespace("(" + name + ") \\("), (includeCodeBlock ? "\\}" : "\\)")));
+				this.name = name;
 				this.namePattern = Pattern.compile(name);
 				this.minParams = minParams;
 				this.maxParams = maxParams;
@@ -65,6 +70,17 @@ public abstract class ParameterizedMacro extends Macro
 			{
 				this(name, -1, includeCodeBlock);
 			}
+
+		@Override
+
+		protected String includeInAlgorithm() {
+			return null;
+		}
+
+		@Override
+		public String getName() {
+			return name;
+		}
 
 		@Override
 		public String toString()
@@ -145,3 +161,5 @@ public abstract class ParameterizedMacro extends Macro
 		protected abstract String modifyMatch(String code, MatchResult nameMatch, String[] args, String whitespace,
 			String block);
 	}
+
+//  [Last modified: 2015 06 30 at 15:23:12 GMT]

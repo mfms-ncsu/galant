@@ -13,6 +13,7 @@
 final int HORIZONTAL_GAP = 100;
 final int VERTICAL_GAP = 100;
 final int TOP_GAP = 2 * VERTICAL_GAP;
+Graph graph;
 
 /**
  * Lines up the nodes in a single horizontal row
@@ -62,33 +63,35 @@ function exchange( Node n1, Node n2 ) {
     n2.setY( p2Y );
     endStep();
 }
+algorithm {
+ graph = getGraph(); 
+ beginStep();
+ lineUpNodes();
+ endStep();
 
-beginStep();
-lineUpNodes();
-endStep();
+ int N = getNodes().size();
 
-int N = getNodes().size();
+ boolean sorted = false;
 
-boolean sorted = false;
-
-while ( ! sorted ) {
-    sorted = true;
-    for ( int i = 0; i < N - 1; i++ ) {
-        Node n_i = getNodeById( i );
-        Node n_i_plus_1 = getNodeById( i + 1 );  
-        beginStep();
-        n_i.setSelected( true );
-        n_i_plus_1.setSelected( true );
-       endStep();
-        if ( n_i_plus_1.getWeight() < n_i.getWeight() ) {
-            exchange( n_i, n_i_plus_1 );
-            sorted = false;
-        }
-        beginStep(); 
-        n_i.setSelected( false );
-        n_i_plus_1.setSelected( false );
-        endStep(); 
-  }
+ while ( ! sorted ) {
+     sorted = true;
+     for ( int i = 0; i < N - 1; i++ ) {
+         Node n_i = getNodeById( i );
+         Node n_i_plus_1 = getNodeById( i + 1 );  
+         beginStep();
+         n_i.setSelected( true );
+         n_i_plus_1.setSelected( true );
+        endStep();
+         if ( n_i_plus_1.getWeight() < n_i.getWeight() ) {
+             exchange( n_i, n_i_plus_1 );
+             sorted = false;
+         }
+         beginStep(); 
+         n_i.setSelected( false );
+         n_i_plus_1.setSelected( false );
+         endStep(); 
+   }
+ }
 } 
 
 //  [Last modified: 2013 08 05 at 15:20:01 GMT]

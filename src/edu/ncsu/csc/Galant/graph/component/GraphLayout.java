@@ -21,7 +21,9 @@ public class GraphLayout {
     private Graph graph;
     private List<Node> nodes;
     private List<Edge> edges;
-    private int progress;       // need this to be an instance variable, for now
+    private int progress;       // need this to be an instance variable, for
+                                // now because it gets modified as a side
+                                // effect of a method
 
 		
     /**
@@ -43,9 +45,9 @@ public class GraphLayout {
     final private static int MAX_REPOSITION_ITERATIONS = 100000;
 
     /**
-     * how often to print progress
+     * how often to print progress (never)
      */
-    final private static int PRINT_FREQUENCY = 100;
+    final private static int PRINT_FREQUENCY = 100000;
 
     /** 
      * minimum distance from the edge of a window when fitting a graph to
@@ -243,7 +245,9 @@ public class GraphLayout {
 				
 				// calculate repulsive force from other nodes
 				for (int j=0; j < points.length; j++) {
-					if (j != i && pathExists(i,j)) {
+					if (j != i
+//                         && pathExists(i,j)
+                        ) {
 						double repulsive = forceRepulsive(points[i], points[j], c, k);
 						double[] unitVector = unitVector(points[i], points[j]);
 						f[0] += unitVector[0] * repulsive;
@@ -545,4 +549,4 @@ public class GraphLayout {
 
 }	
 
-//  [Last modified: 2015 05 31 at 23:58:30 GMT]
+//  [Last modified: 2015 06 02 at 13:57:24 GMT]

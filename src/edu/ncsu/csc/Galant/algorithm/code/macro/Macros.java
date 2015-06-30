@@ -12,13 +12,42 @@ import java.util.regex.Pattern;
 public class Macros
 	{
 		public static void macros()
-			{
-				Macro.MACROS.add(new Macro("\\bbool\\b"){
+			{	
+				
+				Macro.MACROS.add(new SimpleReplacementMacro("\\bbool\\b", "boolean"){
 					@Override
-					protected String modify(String code, MatchResult match) throws MalformedMacroException
-						{
-							return "boolean";
-						}
+					public String getName() {
+						return "bool";
+					}
+				}); 
+
+
+				Macro.MACROS.add(new FetchingMacro("numOfNodes", "int"){
+					@Override
+					protected String includeInAlgorithm() {
+						return "= graph.getNodes().size();";
+					}
+				});
+
+				Macro.MACROS.add(new FetchingMacro("numOfEdges", "int"){
+					@Override
+					protected String includeInAlgorithm() {
+						return "= graph.getEdges().size();";
+					}
+				});
+
+				Macro.MACROS.add(new FetchingMacro("nodesList", "Node[]"){
+					@Override
+					protected String includeInAlgorithm() {
+						return " = new Node[ graph.getNodes().size() ];";
+					}
+				});
+
+				Macro.MACROS.add(new FetchingMacro("edgesList", "Edge[]"){
+					@Override
+					protected String includeInAlgorithm() {
+						return " = new Edge[ graph.getEdges().size() ];";
+					}
 				});
 				
 				/*
@@ -157,271 +186,114 @@ public class Macros
 						}
 				});
 
-				/*
-				 * function: creates a function that can be called later.
-				 * 				Functions are objects (of type Function), and so they can be assigned to variables
-				 * 				and passed to other functions.
-				 * (TODO: how to declare a function variable without the implementation-dependent type variables?)
-				 * 
-				 * Usage: function [<return_type>] <name>(<params>) {<code_block>}
-				 * 		  <return_type> <- <name>(<args>)
-				 * 
-				 * Parameters:
-				 * 
-				 * return_type: a type. If the function returns a value, this should indicate the type of value returned.
-				 * 				If no value is returned, this is not necessary.
-				 * 
-				 * name: a variable name. Used to identify and call the function.
-				 * 
-				 * params: a comma-separated list of variable names, including types (e.g., "int i, String str").
-				 * 			Can be referenced from within the code block. May be empty, if there are no parameters.
-				 * 
-				 * args: values of the types determined by <params>, passed in when the function is called.
-				 * 
-				 * code_block: a block of code that is executed when the function is called. The curly braces are required.
-				 */
 				Macro.MACROS.add(new ParameterizedMacro(MacroUtil.replaceWhitespace("function (\\S+)?  (\\S+)"), true){
-					Map<String, String> wrapperMap = new HashMap<String, String>();
-						{
-							wrapperMap.put("int", "Integer");
-							wrapperMap.put("long", "Long");
-							wrapperMap.put("short", "Short");
-							wrapperMap.put("byte", "Byte");
-							wrapperMap.put("double", "Double");
-							wrapperMap.put("float", "Float");
-							wrapperMap.put("boolean", "Boolean");
-							wrapperMap.put("char", "Character");
-							wrapperMap.put("void", "Void");
-						}
-					private String getObjectType(String type)
-						{
-							int bracketIndex = type.indexOf('[');
-							boolean isArrayType = bracketIndex != -1;
-							String nonArrayType = isArrayType ? type.substring(0, bracketIndex).trim() : type;
-							String wrapper = wrapperMap.get(nonArrayType);
-							return wrapper == null ? type : isArrayType ? wrapper + type.substring(nonArrayType.length())
-								: wrapper;
-						}
+							
+						@Override
+						public String getName() {
+								return "new_function";
+							}
 
-					abstract class Param
-						{
-							public String name, declaredType, type;
-							protected int index;
-							public Param(int index, String[] paramStrings)
-								{
-									if(paramStrings != null)
-										{
-											String paramString = paramStrings[index];
-											Matcher matcher = Pattern.compile("\\s+").matcher(paramString);
-											StringBuilder bracketBuilder = new StringBuilder();
-											int start = 0;
-											while(matcher.find())
-												{
-													bracketBuilder.append(paramString.substring(start, matcher.end()));
-													start = matcher.end();
+						private String getObjectType(String type)
+							{	
+								return " " + type;
+							}
+
+						abstract class Param
+							{
+								public String name, declaredType, type;
+								public String paramToString = "";
+								public Param(int index, String[] paramStrings)
+									{	
+										if(paramStrings != null)
+											{	
+
+												StringBuilder stringBuilder = new StringBuilder();
+												for(int i = 0; i < paramStrings.length; i++) {
+													stringBuilder.append(paramStrings[i]);
+													if( i < paramStrings.length - 1 ){
+														stringBuilder.append(",");
+													}
 												}
-											name = paramString.substring(start);
-											// trim just trailing whitespace
-											declaredType = ("a" + bracketBuilder).trim().substring(1);
-										}
-									this.index = index;
-								}
-							public String declareArgs(String args)
-								{
-									return declaredType + " " + name + " = " + args + getToArg() + ";";
-								}
-							public abstract String getToArg();
-							public abstract String makeArg(String[] args);
-						}
+												
+												paramToString = stringBuilder.toString();
 
-					class PairParam extends Param
-						{
-							protected PairParam parent;
-							protected PairParam child;
-							/** Creates a new <code>PairParam</code>. */
-							public PairParam(PairParam parent, int index, String[] paramStrings)
-								{
-									super(index, paramStrings);
-									this.parent = parent;
-									child = initChild(paramStrings);
-									type = initType();
-								}
-							protected PairParam initChild(String[] paramStrings)
-								{
-									return index == paramStrings.length - 2 ? new LastParam(this, paramStrings)
-										: new PairParam(this, index + 1, paramStrings);
-								}
-							protected String initType()
-								{
-									return "Pair<" + getObjectType(declaredType) + ", " + child.type + ">";
-								}
-
-							@Override
-							public String makeArg(String[] args)
-								{
-									return "new " + type + "(" + args[index] + ", " + child.makeArg(args) + ")";
-								}
-
-							public String getToPair()
-								{
-									return parent.getToPair() + ".getElement2()";
-								}
-
-							@Override
-							public String getToArg()
-								{
-									return getToPair() + ".getElement1()";
-								}
-
-							@Override
-							public String declareArgs(String args)
-								{
-									return super.declareArgs(args) + (child == null ? "" : child.declareArgs(args));
-								}
-						}
-					class FirstParam extends PairParam
-						{
-							public FirstParam(String[] paramStrings)
-								{
-									super(null, 0, paramStrings);
-								}
-							@Override
-							public String getToPair()
-								{
-									return "";
-								}
-						}
-					class LastParam extends PairParam
-						{
-							/** Creates a new <code>LastParam</code>. */
-							public LastParam(PairParam parent, String[] paramStrings)
-								{
-									super(parent, paramStrings.length - 1, paramStrings);
-									child = null;
-								}
-							@Override
-							protected PairParam initChild(String[] paramStrings)
-								{
-									return null;
-								}
-							@Override
-							protected String initType()
-								{
-									return getObjectType(declaredType);
-								}
-							@Override
-							public String getToPair()
-								{
-									return parent.getToPair();
-								}
-							@Override
-							public String getToArg()
-								{
-									return getToPair() + ".getElement2()";
-								}
-							@Override
-							public String makeArg(String[] args)
-								{
-									return args[index];
-								}
-						}
-					class SingleParam extends Param
-						{
-							/** Creates a new <code>SingleParam</code>. */
-							public SingleParam(String[] paramStrings)
-								{
-									super(0, paramStrings);
-									type = getObjectType(declaredType);
-								}
-
-							@Override
-							public String makeArg(String[] args)
-								{
-									return args[index];
-								}
-
-							@Override
-							public String getToArg()
-								{
-									return "";
-								}
-						}
-					class NoParam extends Param
-						{
-							/** Creates a new <code>NoParam</code>. */
-							public NoParam()
-								{
-									super(-1, null);
-									type = "Void";
-								}
-
-							@Override
-							public String makeArg(String[] args)
-								{
-									return "null";
-								}
-
-							@Override
-							public String getToArg()
-								{
-									return null;
-								}
-							@Override
-							public String declareArgs(String args)
-								{
-									return "";
-								}
-						}
-
-					@Override
-					protected String modifyMatch(String code, MatchResult nameMatch, String[] args, String whitespace,
-						String block)
-						{
-							// name
-							String name = nameMatch.group(2);
-
-							// get P from params
-							Param mainParam =
-								args.length == 0 ? new NoParam() : args.length == 1 ? new SingleParam(args) : new FirstParam(
-									args);
-
-							// get R from return type
-							String declaredReturnType = nameMatch.group(1);
-							String returnType = declaredReturnType == null ? "Void" : getObjectType(declaredReturnType);
-
-							createCallMacro(name, args.length, mainParam);
-
-							String funcType = "Function<" + mainParam.type + ", " + returnType + ">";
-							// if the function references itself in its body, it can't be initialized all at once
-							// so declare the actual var first, so it can be referenced, then create a temp var that references
-							// the actual var, then assign the temp var as the actual var
-							// But since the actual var has to be final so it can be referenced in an anon class,
-							// make it actually be a Pair with one of the elements being the "actual var"
-							// So you initialize the Pair and don't change it, and assigning the temp var as the actual var
-							// is just a matter of changing an element of the Pair.
-							// (I would have used a single-element array, but Function is a parameterized type, and arrays
-							// don't play well with those.)
-							return Matcher.quoteReplacement("final Pair<" + funcType + ", Void> " + name + " = new Pair<" +
-								funcType + ", Void>(null, null); " + funcType + " $" + name + " = new " + funcType +
-								"(){public " + returnType + " invoke(" + mainParam.type + " $args)" + whitespace + "{" +
-								mainParam.declareArgs("$args") + block + (declaredReturnType == null ? "return null;" : "") +
-								"}}; " + name + ".setElement1($" + name + ");");
-						}
-
-					private void createCallMacro(final String name, int numParams, final Param mainParam)
-						{
-							Macro.GENERATED_MACROS.add(new ParameterizedMacro(name, numParams){
-								@Override
-								protected String modifyMatch(String code, MatchResult nameMatch, String[] args,
-									String whitespace, String block)
-									{
-										return Matcher.quoteReplacement(name + ".getElement1().invoke(" +
-											mainParam.makeArg(args) + ")");
+												String paramString = paramStrings[index];
+												Matcher matcher = Pattern.compile("\\s+").matcher(paramString);
+												StringBuilder bracketBuilder = new StringBuilder();
+												int start = 0;
+												while(matcher.find())
+													{
+														bracketBuilder.append(paramString.substring(start, matcher.end()));
+														start = matcher.end();
+													}
+												name = paramString.substring(start);
+												// trim just trailing whitespace
+												declaredType = ("a" + bracketBuilder).trim().substring(1);
+											}	
 									}
-							});
-						}
-				});
+
+								public String toString() 
+								{	
+										return paramToString;
+								}	
+							}
+
+						class PairParam extends Param
+							{
+								/** Creates a new <code>PairParam</code>. */
+								public PairParam(int index, String[] paramStrings)
+									{
+										super(index, paramStrings);
+									}
+
+							}
+						class SingleParam extends Param
+							{
+								/** Creates a new <code>SingleParam</code>. */
+								public SingleParam(String[] paramStrings)
+									{
+										super(0, paramStrings);
+									}
+							}
+						class NoParam extends Param
+							{
+								/** Creates a new <code>NoParam</code>. */
+								public NoParam()
+									{	
+										super(-1, null);
+									}
+							}
+
+						@Override
+						protected String modifyMatch(String code, MatchResult nameMatch, String[] args, String whitespace,
+							String block)
+							{
+								// name
+								String name = nameMatch.group(2);
+
+								// get P from params
+								Param mainParam =
+									args.length == 0 ? new NoParam() : args.length == 1 ? new SingleParam(args) : new PairParam(
+										0, args);
+
+								// get R from return type
+								String declaredReturnType = nameMatch.group(1);
+								String returnType = declaredReturnType == null ? " void" : getObjectType(declaredReturnType);
+
+								return Matcher.quoteReplacement("public" + returnType + " " + name + " ( " + mainParam.toString() + ")" + "{" 
+									+  block + "}" ); 
+							}
+					});				
+
+				/*
+				 * algorithm: to indicate the start of an algorithm
+				 * 
+				 * Usage: algorithm{<code_block>}
+				 * 
+				 * code_block: a block of code that is executed for the algorithm
+				 */
+				Macro.MACROS.add(new AlgorithmMacro());	
 			}
 	}
 
-//  [Last modified: 2013 06 27 at 23:11:29 GMT]
+//  [Last modified: 2015 06 30 at 15:33:17 GMT]

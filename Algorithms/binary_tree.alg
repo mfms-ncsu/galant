@@ -9,6 +9,7 @@ import java.awt.Point;
 final int TREE_HEIGHT = 4;
 int width = windowWidth();
 int height = windowHeight();
+Graph graph;
 
 /**
  * creates a complete binary tree of height tree_height with root at position
@@ -46,7 +47,10 @@ function Node createTree( int tree_height,
     return root;
 }
 
-int padding = height / (TREE_HEIGHT + 1);
-Node root = createTree( TREE_HEIGHT, width / 2, padding, width / 2, padding );
+algorithm {
+	graph = getGraph();
+	int padding = height / (TREE_HEIGHT + 1);
+	Node root = createTree( TREE_HEIGHT, width / 2, padding, width / 2, padding );
+}	
 
 //  [Last modified: 2014 04 04 at 21:19:10 GMT]

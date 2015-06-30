@@ -20,10 +20,11 @@ class GlobalVariables {
     public int time;
 }
 
-final GlobalVariables globals = new GlobalVariables();
+Graph graph;
 
-final int [] discovery = new int[ graph.numberOfNodes() ];
-final int [] finish = new int[ graph.numberOfNodes() ];
+final GlobalVariables globals = new GlobalVariables();
+int [] discovery;
+int [] finish;
 
 function visit( Node v ) {
     globals.time++;
@@ -58,21 +59,27 @@ function visit( Node v ) {
     endStep();
 }
 
-setDirected( true );
+algorithm {
+ graph = getGraph();
+ discovery = new int[ graph.numberOfNodes() ];
+ finish = new int[ graph.numberOfNodes() ];
 
-beginStep();
-for_nodes( u ) {
-    u.setLabel("");
-}
-for_edges( e ) {
-    e.setLabel("");
-}
-endStep();
+ setDirected( true );
 
-for_nodes( u ) {
-    if ( ! u.isSelected() ) {
-        visit( u );
-    }
+ beginStep();
+ for_nodes( u ) {
+     u.setLabel("");
+ }
+ for_edges( e ) {
+     e.setLabel("");
+ }
+ endStep();
+
+ for_nodes( u ) {
+     if ( ! u.isSelected() ) {
+         visit( u );
+     }
+ }
 }
 
 //  [Last modified: 2014 05 12 at 16:48:42 GMT]

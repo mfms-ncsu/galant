@@ -58,6 +58,11 @@ public abstract class Macro
 				return pattern;
 			}
 
+		/** return the name of the macro. Mainly used for macro syntax highlighting. */
+		public abstract String getName();	
+
+		protected abstract String includeInAlgorithm();
+
 		/**
 		 * <p>
 		 * Subclasses should implement this method and return a modified version of the current match. The returned string will
@@ -91,17 +96,51 @@ public abstract class Macro
 			{
 				Matcher matcher;
 				int start = 0;
-				while((matcher = getPattern().matcher(code).region(start, code.length())).find())
-					{
-						StringBuffer newCode = new StringBuffer();
-						String modified = modify(code, matcher);
-						if(modified != null)
-							matcher.appendReplacement(newCode, modified);
-						matcher.appendTail(newCode);
-						code = newCode.toString();
-						if(matcher.start() < code.length() - 1)
-							start = matcher.start() + 1;
-					}
-				return code;
+
+				// If this macro is an instance of FetchingMacro,
+				// it means we have to split initilization part and decaration part.
+				if (this instanceof FetchingMacro )	{	
+                    // use regular expression replacement to replace every
+                    // occurrence of the macro with its replacement
+					String originalExpression = "";
+					matcher = getPattern().matcher(code); 
+					if(matcher.find()) {
+						originalExpression = matcher.group(0);
+
+						// Find the new expression
+						String newCode = code;
+						String newExpression = modify(code, matcher) + ";";
+							
+						// Find the variable name	
+						matcher = Pattern.compile("(\\s)(.*)$").matcher(modify(code, matcher));
+						matcher.find();
+						String variableName = matcher.group(0); 
+
+						newCode = code.replaceAll("(algorithm(.*)\\{)", "algorithm{" + variableName + includeInAlgorithm()); 
+						newCode = newCode.replace(originalExpression, newExpression); 
+						return newCode;
+					}	
+
+					return code;
+				} else {
+                    // can't do regular expression replacement here because
+                    // it's not a simple text replacement
+					while((matcher = getPattern().matcher(code).region(start, code.length())).find())
+						{	
+							StringBuffer newCode = new StringBuffer();
+							String modified = modify(code, matcher);
+							if(modified != null) {
+								matcher.appendReplacement(newCode, modified);
+							}
+							matcher.appendTail(newCode);
+							code = newCode.toString();
+							if(matcher.start() < code.length() - 1)
+								start = matcher.start() + 1;
+						}
+
+					return code;
+				}	
 			}
 	}
+
+//  [Last modified: 2015 06 30 at 15:47:54 GMT]

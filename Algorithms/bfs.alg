@@ -8,33 +8,37 @@
 /** Required: node weights visible */
 
 final double INFINITY = Double.POSITIVE_INFINITY;
+Graph graph;
 
-beginStep();
-for_nodes( n ) {
-    n.setWeight( INFINITY );
-}
+algorithm {
+ graph = getGraph();
+ beginStep();
+ for_nodes( n ) {
+     n.setWeight( INFINITY );
+ }
 
-Node start = getNodeById( 0 );
-start.setWeight( 0 );
-start.setSelected( true );
-nodeQ.offer( start );
-endStep();
+ Node start = getNodeById( 0 );
+ start.setWeight( 0 );
+ start.setSelected( true );
+ nodeQ.offer( start );
+ endStep();
 
-while ( ! nodeQ.isEmpty()) {
-    Node n = nodeQ.poll();
-    n.setVisited( true );
+ while ( ! nodeQ.isEmpty()) {
+     Node n = nodeQ.poll();
+     n.setVisited( true );
 
-    for_outgoing( n, e, head ) {
-        if ( ! head.isSelected() ) {
-            beginStep();
-            e.setSelected( true );
-            head.setSelected( true );
-            double distance = n.getWeight() + 1;
-            head.setWeight( distance );
-            nodeQ.offer( head );
-            endStep();
-        }
-    }
+     for_outgoing( n, e, head ) {
+         if ( ! head.isSelected() ) {
+             beginStep();
+             e.setSelected( true );
+             head.setSelected( true );
+             double distance = n.getWeight() + 1;
+             head.setWeight( distance );
+             nodeQ.offer( head );
+             endStep();
+         }
+     }
+ }
 }
 
 //  [Last modified: 2015 05 21 at 19:46:45 GMT]

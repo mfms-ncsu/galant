@@ -65,22 +65,8 @@ public class CodeIntegrator
 			"import edu.ncsu.csc.Galant.algorithm.code.macro.Pair;\n" +
             "import edu.ncsu.csc.Galant.GalantException;\n" +
 			IMPORTS_FIELD +
-			
 			"public class " + NAME_FIELD + " extends Algorithm" +
-				"{\n" + CODE_FIELD + 
-					/*
-					"@Override " +
-					"public void run() " +
-						String.format("{ \n try { \n %s}"
-                                      + " catch (Exception e)"
-                                      + " { if ( e instanceof GalantException )"
-                                      + " {GalantException ge = (GalantException) e;"
-                                      + " ge.report(\"\"); ge.display(); }"
-                                      + " else e.printStackTrace(System.out);}%n }",
-                                      CODE_FIELD) +
-					// add newline after code in case of ending with line comment
-					*/
-				"}";
+				"{\n" +CODE_FIELD + "}";
 				
 		//@formatter:on
 
@@ -101,27 +87,63 @@ public class CodeIntegrator
 				String imports = userCode.substring(0, splitAt);
 				userCode = userCode.substring(splitAt);
 
+				// Skip all the comment line then build the new source code  
 				// Initilize a new String
 				StringBuilder sb = new StringBuilder();
 
 				Scanner scanner = new Scanner(userCode);
 				while(scanner.hasNextLine()) {
-					String line = scanner.nextLine();
-					
-					// Skip all the comment line then build the new source code  
-					
-					// Check if the string contains comment /** */ line newline 
-					if( Pattern.compile("(\\s)*\\/\\*\\*").matcher(line).find()) {
-						line = scanner.nextLine();
+					String line = scanner.nextLine();				
+					Matcher cStyleMatcher = Pattern.compile("(.*)\\/\\*\\*(.*)").matcher(line);
+					Matcher singleAsteriskMatcher = Pattern.compile("(.*)\\/\\*(.*)").matcher(line);
+					Matcher doubleSlashMatcher = Pattern.compile("(.*)\\/\\/(\\s|.*)").matcher(line);
 
-						while (Pattern.compile("(\\s*)\\*(.*)").matcher(line).find() ) {
-							line = scanner.nextLine();
-						}
-					} else if( Pattern.compile("(\\s*)\\/\\*(\\s|.*)").matcher(line).find()) {
-						// Check if the string contains comment line /* */
 
-					} else if( Pattern.compile("(\\s*)\\/\\/(\\s|.*)").matcher(line).find()) {
-						// Check if the string contains comment line // 
+					if( cStyleMatcher.find() ) {
+							sb.append(cStyleMatcher.group(1));
+
+							Matcher behindCStyleMatcher = Pattern.compile("(\\*\\/)(.*)").matcher(cStyleMatcher.group(2));
+
+							if( behindCStyleMatcher.find()) {
+								// single line c style if falls in here
+
+								sb.append(behindCStyleMatcher.group(2) + "\n");
+							} else {
+								// multiple line c style comment if falls in here 
+								// infinte loop keep reading until hit "*/""
+								while(scanner.hasNextLine()) {
+									line = scanner.nextLine();	
+									behindCStyleMatcher = Pattern.compile("(\\*\\/)(.*)").matcher(line);
+
+									if(behindCStyleMatcher.find()) {
+										break;
+									}
+								}
+								
+								sb.append(behindCStyleMatcher.group(2) + "\n");
+							}
+					} else if( singleAsteriskMatcher.find()) {
+						sb.append(singleAsteriskMatcher.group(1));
+						Matcher behindSingleAsterisk = Pattern.compile("(\\*\\/)(.*)").matcher(singleAsteriskMatcher.group(2));
+
+						if( behindSingleAsterisk.find()) {
+								// single-line single-asterisk if falls in here
+								sb.append(behindSingleAsterisk.group(2) + "\n");
+						} else {
+							while(scanner.hasNextLine()) {
+								line = scanner.nextLine();
+								behindSingleAsterisk = Pattern.compile("(\\*\\/)(.*)").matcher(line);
+
+								if(behindSingleAsterisk.find()) {
+									break;
+								}
+							}
+
+							sb.append( behindSingleAsterisk.group(2) + "\n");
+						}	
+					} else if( doubleSlashMatcher.find()) {
+						// read everything after //
+						sb.append(doubleSlashMatcher.group(1) + "\n");
 					} else if( line!= null && line.length()>0 ){
 						sb.append(line + "\n");
 					}

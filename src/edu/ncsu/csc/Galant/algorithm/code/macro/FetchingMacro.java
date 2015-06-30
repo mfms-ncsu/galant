@@ -31,10 +31,8 @@ public abstract class FetchingMacro extends Macro
 		 */
 		public FetchingMacro(String name, String initializationPrefix)
 		{	
-				// src: http://stackoverflow.com/questions/24874404/java-regex-look-behind-group-does-not-have-obvious-maximum-length-error
-				// Does not work. Getting Java look-behind group exception
-				super("(?<!\\/\\/[\\s])"+ name + "(.*)(\\;)");
-				// System.out.println("The pattern is ->" + getPattern() + "<-");
+				
+				super(name + "(.*)(\\;)");
 				this.initializationPrefix = initializationPrefix;
 				this.name = name;
 		}
@@ -77,7 +75,6 @@ public abstract class FetchingMacro extends Macro
 		@Override
 		protected final String modify(String code, MatchResult match) throws MalformedMacroException
 		{	
-	
 			return initializationPrefix + getVariableName(code);	
 		}
 	}

@@ -798,8 +798,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
         return true;
       }
       // "Ctrl" pressed
-      if(!dispatch.isAnimationMode() && e.getID()==KeyEvent.KEY_PRESSED
-                                     && e.getKeyCode()==KeyEvent.VK_CONTROL){
+      if(e.getID()==KeyEvent.KEY_PRESSED && e.getKeyCode()==KeyEvent.VK_CONTROL){
           ctrlPressed = true;
         return true;
       }

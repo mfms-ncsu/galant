@@ -23,11 +23,9 @@
 22 June (~3 hours) convenient way to change the weights of newly created nodes and edges, try to make Galant mouse free.
 24 June (~6 hours) fix edit edges and nodes bugs, "ctrl+l" display labels, "ctrl+w" display weights, "ctrl+i" intelligent reposition, "ctrl+d" direct/undirect, "delete+n"delete node
 25 June (~2 hours) "delete + e" delete edge
-
 26 June (~2 hours)
 Display positions of each nodes during animation were dependent on its states, which were set once the run button was pressed.
 In order to call only setFixedPosition() to change the positions of node in the middle of algorithm, either the drawNode() method must based on the position associated with node,
 or the setFixedPosition() will implicated call setPosition on every states. The first solution will cause the problem that algorithm may not be able to move nodes since current implementation
 of animation use positions that associate with each state.
 For now, I choice the second solution, and add "algorithmMovesNodes" field into GraphDispatch.java to prevent user from moving nodes when algorithm may change the position.
- 

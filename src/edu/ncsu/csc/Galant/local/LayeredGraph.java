@@ -38,7 +38,6 @@ import edu.ncsu.csc.Galant.graph.component.Graph;
 import edu.ncsu.csc.Galant.graph.component.GraphState;
 import edu.ncsu.csc.Galant.graph.component.Node;
 import edu.ncsu.csc.Galant.GraphDispatch;
-import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.logging.LogHelper;
 
 /**
@@ -471,7 +470,6 @@ public class LayeredGraph {
      * Creates a new instance based on node positions in the graph.
      */
     public LayeredGraph( Graph graph ) 
-        throws GalantException
     {
         LogHelper.enterConstructor( getClass() );
         this.graph = graph;
@@ -1225,7 +1223,6 @@ public class LayeredGraph {
      * endpoints marked.
      */
     public Edge getMaxCrossingsEdge()
-        throws GalantException
     {
         Edge maxEdge = null;
         int maxCrossings = Integer.MIN_VALUE;
@@ -1249,7 +1246,6 @@ public class LayeredGraph {
      * the last edge returned <em>by this method</em>
      */
     public Edge getMaxCrossingsEdge( boolean roundRobin )
-        throws GalantException
     {
         LogHelper.enterMethod( getClass(), "getMaxCrossingsEdge( " + roundRobin + " )" );
         if ( ! roundRobin ) return getMaxCrossingsEdge();
@@ -1546,7 +1542,6 @@ public class LayeredGraph {
      * by Stallmann (JEA, 2012)
      */
     public void setEdgeWeights() 
-        throws GalantException
     {
         for ( Edge e: graph.getEdges() ) {
             e.setWeight( crossingsOfEdge[ e.getId() ] );
@@ -1598,4 +1593,4 @@ public class LayeredGraph {
 
 } // end, class LayeredGraph
 
-//  [Last modified: 2015 05 14 at 16:26:23 GMT]
+//  [Last modified: 2015 06 30 at 19:34:14 GMT]

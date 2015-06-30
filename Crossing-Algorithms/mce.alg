@@ -14,28 +14,21 @@
 
 import edu.ncsu.csc.Galant.local.LayeredGraph;
 
-final int MAX_ITERATIONS = 200;
-class Globals {
-    int minCrossings = Integer.MAX_VALUE;
-    int iteration = 0;
-    int pass = 0;
-    int minIteration = 0;
-    int minPass = 0;
-}
-final Globals globals = new Globals();
+int MAX_ITERATIONS = 200;
+int minCrossings = Integer.MAX_VALUE;
+int iteration = 0;
+int pass = 0;
+int minIteration = 0;
+int minPass = 0;
 
-beginStep();
-final LayeredGraph layeredGraph
-    = new LayeredGraph( getGraph() );
-
-setDirected( true );
+LayeredGraph layeredGraph;
 
 function checkCrossings() {
     int crossings = layeredGraph.numberOfCrossings();
-    if ( crossings < globals.minCrossings ) {
-        globals.minCrossings = crossings;
-        globals.minIteration = globals.iteration;
-        globals.minPass = globals.pass;
+    if ( crossings < minCrossings ) {
+        minCrossings = crossings;
+        minIteration = iteration;
+        minPass = pass;
         layeredGraph.savePositions();
     }
 }
@@ -48,8 +41,8 @@ function displayCrossings() {
     int crossings = layeredGraph.numberOfCrossings();
     layeredGraph.displayPositions();
     layeredGraph.displayMarks();
-    graph.writeMessage( "pass = " + globals.pass
-                            + ", iteration = " + globals.iteration
+    graph.writeMessage( "pass = " + pass
+                            + ", iteration = " + iteration
                             + ", crossings = " + crossings 
                             );
 }
@@ -94,52 +87,61 @@ function edgeSift( Node x, Edge maxCrossingsEdge ) {
     layeredGraph.insert( layer, pos, min_position );
 }
 
-while ( globals.iteration < MAX_ITERATIONS ) {
-    globals.pass++;
-    if ( globals.pass % 100 == 0 ) System.out.println( "pass = " + globals.pass );
-    layeredGraph.clearMarks();
-    Edge maxCrossingsEdge = layeredGraph.getMaxCrossingsEdge( true );
-    while ( maxCrossingsEdge != null ) {
-        endStep(); beginStep();
-        maxCrossingsEdge.highlight();
-        globals.iteration++;
-        Node v = maxCrossingsEdge.getSourceNode();
-        Node w = maxCrossingsEdge.getDestNode();
-        beginStep();
-        if ( ! layeredGraph.isMarked( v ) ) {
-            v.highlight();
+algorithm {
+
+    beginStep();
+    layeredGraph = new LayeredGraph( getGraph() );
+
+    setDirected( true );
+
+
+    while ( iteration < MAX_ITERATIONS ) {
+        pass++;
+        if ( pass % 100 == 0 ) System.out.println( "pass = " + pass );
+        layeredGraph.clearMarks();
+        Edge maxCrossingsEdge = layeredGraph.getMaxCrossingsEdge( true );
+        while ( maxCrossingsEdge != null ) {
             endStep(); beginStep();
-            edgeSift( v, maxCrossingsEdge );
-            layeredGraph.mark( v );
-        }
-        checkCrossings();
-        displayCrossings();
-        endStep(); beginStep();
-        v.unHighlight();
-        if ( ! layeredGraph.isMarked( w ) ) {
-            w.highlight();
+            maxCrossingsEdge.highlight();
+            iteration++;
+            Node v = maxCrossingsEdge.getSourceNode();
+            Node w = maxCrossingsEdge.getDestNode();
+            beginStep();
+            if ( ! layeredGraph.isMarked( v ) ) {
+                v.highlight();
+                endStep(); beginStep();
+                edgeSift( v, maxCrossingsEdge );
+                layeredGraph.mark( v );
+            }
+            checkCrossings();
+            displayCrossings();
             endStep(); beginStep();
-            edgeSift( w, maxCrossingsEdge );
-            layeredGraph.mark( w );
+            v.unHighlight();
+            if ( ! layeredGraph.isMarked( w ) ) {
+                w.highlight();
+                endStep(); beginStep();
+                edgeSift( w, maxCrossingsEdge );
+                layeredGraph.mark( w );
+            }
+            checkCrossings();
+            displayCrossings();
+            w.unHighlight();
+            endStep(); beginStep();
+
+            maxCrossingsEdge.unHighlight();
+            maxCrossingsEdge = layeredGraph.getMaxCrossingsEdge();
         }
-        checkCrossings();
-        displayCrossings();
-        w.unHighlight();
-        endStep(); beginStep();
+    } 
+    endStep();
 
-        maxCrossingsEdge.unHighlight();
-        maxCrossingsEdge = layeredGraph.getMaxCrossingsEdge();
-    }
-} 
-endStep();
+    layeredGraph.displaySavedPositions();
+    graph.writeMessage( "min pass = " + minPass
+                        + ", min iteration = " + minIteration
+                        + ", min crossings = " + minCrossings 
+                        );
 
-layeredGraph.displaySavedPositions();
-graph.writeMessage( "min pass = " + globals.minPass
-                    + ", min iteration = " + globals.minIteration
-                    + ", min crossings = " + globals.minCrossings 
-                    );
+    System.out.println( "Minimum crossings = " + minCrossings
+                        + " at iteration " + minIteration );
 
-System.out.println( "Minimum crossings = " + globals.minCrossings
-                    + " at iteration " + globals.minIteration );
-
-//  [Last modified: 2014 07 14 at 21:18:11 GMT]
+}
+//  [Last modified: 2015 06 30 at 19:38:29 GMT]

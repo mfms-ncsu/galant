@@ -15,25 +15,22 @@
 
 import edu.ncsu.csc.Galant.local.LayeredGraph;
 
-class GlobalVariables {
-    public int iteration = 1;
-    public int pass = 1;
-    public int minCrossings = Integer.MAX_VALUE;
-    public int minIteration = -1;
-}
+int iteration = 1;
+int pass = 1;
+int minCrossings = Integer.MAX_VALUE;
+int minIteration = -1;
 
-final GlobalVariables globals = new GlobalVariables();
-final LayeredGraph layeredGraph = new LayeredGraph( getGraph() );
+LayeredGraph layeredGraph;
 
-final int MAX_ITERATIONS = 100;
+int MAX_ITERATIONS = 100;
 
 /**
  * writes message about crossings
  */
 function displayMessage() {
     int crossings = layeredGraph.numberOfCrossings();
-    graph.writeMessage( "pass = " + globals.pass
-                       + ", iteration = " + globals.iteration
+    graph.writeMessage( "pass = " + pass
+                       + ", iteration = " + iteration
                        + ", crossings = " + crossings 
                         );
 }
@@ -43,9 +40,9 @@ function displayMessage() {
  */
 function checkCrossings() {
     int crossings = layeredGraph.numberOfCrossings();
-    if ( crossings < globals.minCrossings ) {
-        globals.minCrossings = crossings;
-        globals.minIteration = globals.iteration;
+    if ( crossings < minCrossings ) {
+        minCrossings = crossings;
+        minIteration = iteration;
         layeredGraph.savePositions();
     }
 }
@@ -138,7 +135,7 @@ function boolean siftIncreasing( List<Node> nodes ) {
     for ( int i = 0; i < nodes.size(); i++ ) {
         sift( nodes.get( i ) );
         checkCrossings();
-        globals.iteration++;
+        iteration++;
     }
     int crossings = layeredGraph.numberOfCrossings();
     if ( crossings < initial_crossings ) return true;
@@ -153,47 +150,52 @@ function boolean siftDecreasing( List<Node> nodes ) {
     for ( int i = nodes.size() - 1; i >= 0; i-- ) {
         sift( nodes.get( i ) );
         checkCrossings();
-        globals.iteration++;
+        iteration++;
     }
     int crossings = layeredGraph.numberOfCrossings();
     if ( crossings < initial_crossings ) return true;
     return false;
 }
 
-setDirected( true );
+algorithm {
+    setDirected( true );
 
-beginStep();
-displayMessage();
-endStep();
+    layeredGraph = new LayeredGraph( getGraph() );
 
-List<Node> nodes = graph.getNodes();
-layeredGraph.sortByIncreasingDegree( nodes );
-while ( globals.iteration <= MAX_ITERATIONS ) {
-    if ( globals.pass % 1000 == 0 )
-        System.out.println( "pass = " + globals.pass );
     beginStep();
     displayMessage();
-    layeredGraph.clearMarks();
-    layeredGraph.displayMarks();
     endStep();
-    boolean improved = siftDecreasing( nodes );
-    if ( ! improved ) {
+
+    List<Node> nodes = graph.getNodes();
+    layeredGraph.sortByIncreasingDegree( nodes );
+    while ( iteration <= MAX_ITERATIONS ) {
+        if ( pass % 1000 == 0 )
+            System.out.println( "pass = " + pass );
         beginStep();
         displayMessage();
         layeredGraph.clearMarks();
         layeredGraph.displayMarks();
         endStep();
-        improved = siftIncreasing( nodes );
+        boolean improved = siftDecreasing( nodes );
+        if ( ! improved ) {
+            beginStep();
+            displayMessage();
+            layeredGraph.clearMarks();
+            layeredGraph.displayMarks();
+            endStep();
+            improved = siftIncreasing( nodes );
+        }
+        pass++;
     }
-    globals.pass++;
+
+    layeredGraph.displaySavedPositions();
+    graph.writeMessage( "min iteration = " + minIteration
+                        + ", min crossings = " + minCrossings 
+                        );
+
+    System.out.println( "Minimum crossings = " + minCrossings
+                        + " at iteration " + minIteration );
+
 }
 
-layeredGraph.displaySavedPositions();
-graph.writeMessage( "min iteration = " + globals.minIteration
-                    + ", min crossings = " + globals.minCrossings 
-                    );
-
-System.out.println( "Minimum crossings = " + globals.minCrossings
-                    + " at iteration " + globals.minIteration );
-
-//  [Last modified: 2014 07 14 at 20:04:50 GMT]
+//  [Last modified: 2015 06 30 at 19:45:05 GMT]

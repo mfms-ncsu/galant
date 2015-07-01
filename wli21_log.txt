@@ -29,3 +29,6 @@ In order to call only setFixedPosition() to change the positions of node in the 
 or the setFixedPosition() will implicated call setPosition on every states. The first solution will cause the problem that algorithm may not be able to move nodes since current implementation
 of animation use positions that associate with each state.
 For now, I choice the second solution, and add "algorithmMovesNodes" field into GraphDispatch.java to prevent user from moving nodes when algorithm may change the position.
+
+29 June (~2 hours) testing, document what have done
+30 June (~2 hours) investigate bug about node Id

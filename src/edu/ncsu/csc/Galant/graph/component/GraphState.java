@@ -20,12 +20,21 @@ public class GraphState {
 	
 	
 	private Graph graph;
+	
+	private boolean stepComplete = false;
+	
+	public void setStepComplete(boolean stepComplete){
+		this.stepComplete = stepComplete;
+	}
+	
+	public boolean getStepComplete(){
+		return stepComplete;
+	}
 
 	public static final int GRAPH_START_STATE = 1;
 
 	private int state = 0;
 	
-	// MPM: Why is this static? It seems like it should be an instance variable that goes along with the graph state.
 	static public int initializationComplete = 0;
 
     /**
@@ -56,7 +65,7 @@ public class GraphState {
 				e.printStackTrace(System.out);
 			}
 		}
-	}*/
+	}
 	
 	
 	static public void setInitializationIncomplete(){
@@ -69,7 +78,7 @@ public class GraphState {
 	
 	static public boolean initializationIncomplete(){
 		return initializationComplete == 0;
-	}
+	} */
 	
 	
 	/**
@@ -108,34 +117,21 @@ public class GraphState {
 		}
 	}
 	
-	public boolean pauseExecution(){
-		
+	public boolean pauseExecution(){	
+		this.setStepComplete(true);
 		synchronized(this){
 			try{
-				
-				if(/*!this.initializationIncomplete()  && */(!locked)){ /* Wait only if initialization is actually complete; otherwise program hangs while setting up graph when launching (when the addNodeState and addEdgeState function calls are also made) */
-					GraphDispatch.getInstance().getGraphWindow().getStepForward().setEnabled(!GraphDispatch.getInstance().getGraphWindow().getGraphPanel().getAlgorithmComplete());
-					/* System.out.printf("In the synchronizedWait function; about to suspend execution\n");
-					
-					GraphDispatch.getInstance().getGraphWindow().updateStatusLabel("Algorithm runner thread has completed a step; state is now " + state + ".");
-					System.out.println("Graph state: " + toString());
-					^^Debug info */
-					
-					
-					// Make sure to remember to update the graph here */
-					this.getGraph().graphWindow.getGraphPanel().incrementDisplayState();
-					/*
-					int a = GraphDispatch.getInstance().getGraphWindow().getGraphPanel().getDisplayState();
-					GraphDispatch.getInstance().getGraphWindow().updateStatusLabel(a);*/
-					GraphDispatch.getInstance().getGraphWindow().repaintFrame(); // I don't know that repainting the frame is required but it does this regularly at other points too
+				if(/*!this.initializationIncomplete()  && */(!locked)){ /* Wait only if initialization is actually complete; otherwise program hangs while setting up graph when launching (when the addNodeState and addEdgeState function calls are also made) */	
 					this.wait(); // Suspend algorithm execution until notified to complete another step
-					
 				}
 			}
 			catch (InterruptedException e){
 				e.printStackTrace(System.out);
 			}
 		}
+		
+		
+		
 		return this != null ? true : false;
 	}
 	

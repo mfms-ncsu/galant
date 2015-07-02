@@ -719,26 +719,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 				
             }
             if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-            	// MPM: Check if the algorithm has completed initializing; if not, ignore this keypress (and possibly beep
-            	// at the user)
-            	// MPM: Before you start the algorithm, you should first grey out the 'advance' button so people can't
-            	// press it.
-            	// MPM: You might want to update the status label to say "algorithm running" or something like that.
-            	// MPM: You should also check if the algorithm is currently running and if it is, beep or something.
-            	
-            	
-            	//check to see if the graph state is lagging behind the array of states that has already been calculated
-            	//if it's lagging behind, just push forward one entry in the array and update the graph state
-            	if(getGraphPanel().getDisplayState() < getGraphDispatch().getWorkingGraph().getGraphState().getState()){
-					//increment the graphState
-					gp.incrementDisplayState();
-				}
-            	//if we're at or (banish the thought) past the end of the array, wake up the algorithm.
-            	//this will also handle the incrementation of the graph state as part of this.
-            	else if(true){
-            		updateStatusLabel("Algorithm execution in progress");
-            		gp.resumeAlgorithmExecution();
-            	}
+            	gp.incrementDisplayState();
             	
             }
             if (e.getKeyCode() == KeyEvent.VK_ENTER) {
@@ -798,28 +779,15 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 				System.out.printf("Graph state is: %d\n",getGraphDispatch().getWorkingGraph().getGraphState().getState());
 				System.out.printf("Display state is: %d\n",getGraphPanel().getDisplayState());
 				// This is to keep track of "where are we?"
-				 */
-				
-				if(getGraphPanel().getDisplayState() < getGraphDispatch().getWorkingGraph().getGraphState().getState()){
-					//increment the graphState
-					stepForward.setEnabled(false);
-					stepBack.setEnabled(true);
-					gp.incrementDisplayState();
-					stepForward.setEnabled(!getGraphPanel().getAlgorithmComplete());
-					frame.repaint();
-				}
-				else if(true){ // go run a step of the algorithm if we're moving forward but not lagging behind
-					stepForward.setEnabled(!true); // Disable the button after clicking on it -- not ready to go on again
-					updateStatusLabel("Algorithm execution in progress".toCharArray());
-					gp.resumeAlgorithmExecution(); // Start the algorithm up again					
-					
-					/*if (stepForward.getEnabled)*/ //stepForward.setEnabled(!getGraphPanel().getAlgorithmComplete()); // checks to see if the algorithm is done running & as long as it has not, next button is clickable
-					stepBack.setEnabled(gp.hasPreviousState()); // if we've clicked on a next button then there will always be a previous button available
-					
-					
-					frame.repaint();
-					
-				}
+				 */	
+				stepForward.setEnabled(false);
+				stepBack.setEnabled(false);
+				updateStatusLabel("Algorithm execution in progress");
+				gp.incrementDisplayState();
+				updateStatusLabel(getGraphDispatch().getWorkingGraph().getGraphState().getState());
+				stepForward.setEnabled(gp.hasNextState());
+				stepBack.setEnabled(gp.hasPreviousState());
+				frame.repaint();
 				
 			}
 		});

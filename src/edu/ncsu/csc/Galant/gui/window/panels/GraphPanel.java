@@ -729,6 +729,7 @@ public class GraphPanel extends JPanel{
 	// MPM: And this is not starting the algorithm, it is allowing the algorithm to advance.
 	public boolean resumeAlgorithmExecution(){
 		
+		this.gw.getGraphDispatch().getWorkingGraph().getGraphState().setStepComplete(false);
 		if(!algorithmComplete){
 			//System.out.println("GraphPanel is notifying the worker thread so it will wake up and work.");
 			synchronized(dispatch.getWorkingGraph().getGraphState()){
@@ -747,7 +748,8 @@ public class GraphPanel extends JPanel{
 	}
 	
 	public void incrementDisplayState() {
-		/* System.out.printf("In the GraphPanel class - incrementing the display state\n");
+		//if (this.getAlgorithmComplete()) return;
+		System.out.printf("In the GraphPanel class - incrementing the display state\n"); /*
 		
 		try{
 			throw new NullPointerException();
@@ -758,14 +760,40 @@ public class GraphPanel extends JPanel{
 		finally{
 			System.out.printf("Stack trace for incrementing the state in the array of states created--no bearing on the GraphState incrementState\n");
 		} */
+		
+		if(this.getDisplayState() < this.gw.getGraphDispatch().getWorkingGraph().getGraphState().getState()){
+			//increment the graphState
+			//update the display state but don't run anything
+		}
+		else if(true){ // go run a step of the algorithm if we're moving forward but not lagging behind
+			
+			this.resumeAlgorithmExecution(); // Start the algorithm up again
+			long time = System.currentTimeMillis();
+			System.out.printf("\n");
+			while(!this.gw.getGraphDispatch().getWorkingGraph().getGraphState().getStepComplete() && !this.getAlgorithmComplete()){
+				try{
+					Thread.sleep(15);
+					System.out.printf(".");
+				}
+				catch (InterruptedException e){
+					e.printStackTrace(System.out);
+				}/*
+				if (System.currentTimeMillis() - time > 6000){
+					// update status to say this is taking a damn long time
+				}*/
+			}
+			System.out.printf("\n");
+			
+			/*if (stepForward.getEnabled)*/ //stepForward.setEnabled(!getGraphPanel().getAlgorithmComplete()); // checks to see if the algorithm is done running & as long as it has not, next button is clickable
+			
+		}
+		
+		
+		
+		
+		
 		LogHelper.enterMethod(getClass(), "incrementDisplayState");
         LogHelper.logDebug( "" + state );
-		Graph graph = dispatch.getWorkingGraph();
-		/*
-		if (this.state >= graph.getState()) {
-			throw new IllegalStateException();
-		}*/
-		this.gw.updateStatusLabel(this.getDisplayState());
 		/* System.out.printf(this.gw != null ? "yes" : "no"); 
 		System.out.println("Incrementing the graph display state: [" + currentState + "," + currentGraphState + "] --> " + state);
 		*/

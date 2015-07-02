@@ -777,15 +777,7 @@ public class Node extends GraphElement implements Comparable<Node> {
 		}
 		
 		nodeStates.add(n);
-		
-		try {
-			throw new Exception();
-		} catch (Exception e) {
-			e.printStackTrace(System.out);
-		}
-		// Graph window gives a segfault--make sure that the pointer to it is OK		
-		//n.graphState.getGraph().graphWindow.updateStatusLabel(/*n.graphState.getGraph().getState()*/0);
-		
+				
 		n.graphState.pauseExecution();
 		
 

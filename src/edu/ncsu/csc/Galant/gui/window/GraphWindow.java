@@ -715,12 +715,11 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 
         public void keyPressed(KeyEvent e) {
             if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-				gp.decrementDisplayState();
-				
+				gp.decrementDisplayState();	
             }
             if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-            	gp.incrementDisplayState();
-            	
+            	updateStatusLabel("Algorithm execution in progress".toCharArray());
+            	gp.incrementDisplayState();	
             }
             if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                 // delete row method (when "delete" is pressed)
@@ -746,7 +745,6 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		LogHelper.enterMethod(getClass(), "initAnimationPanel");
 		animationButtons = new JPanel();
 		
-		// Move the display state in GraphPanel back one 
 		stepBack.setEnabled(false);
 		stepBack.addActionListener(new ActionListener() {
 			@Override
@@ -770,10 +768,6 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		stepForward.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				// MPM: I would first disable the step-forward button, and then wake up the algorithm and let it run.
-				// When it completes (and blocks), then the button can be enabled. That'll make the enable/disable
-				// work better for algorithms that take a long time to run.
-				
 				/*
 				System.out.printf("In the \"next\" button function\n");
 				System.out.printf("Graph state is: %d\n",getGraphDispatch().getWorkingGraph().getGraphState().getState());
@@ -785,7 +779,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 				updateStatusLabel("Algorithm execution in progress");
 				gp.incrementDisplayState();
 				updateStatusLabel(getGraphDispatch().getWorkingGraph().getGraphState().getState());
-				stepForward.setEnabled(gp.hasNextState());
+				stepForward.setEnabled(!gp.getAlgorithmComplete());
 				stepBack.setEnabled(gp.hasPreviousState());
 				frame.repaint();
 				

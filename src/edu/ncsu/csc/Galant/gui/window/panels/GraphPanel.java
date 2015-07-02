@@ -747,54 +747,50 @@ public class GraphPanel extends JPanel{
 		return false; // algorithm not started
 	}
 	
+	/*
+	 * This is THE function to call whenever the graph state needs to be updated.  Currently it is called whenever the user clicks on the
+	 * "next" button or the right arrow key, but also aught to be the one called for future extensions that change the interface used
+	 * It will determine if the display state merely needs to be updated, or if first a new graphState must be calculated
+	 * If the latter, it will wake up the waiting algorithm, wait for it to run one step, and then increment the graphState
+	 * Then whatever called it can re-paint the frame
+	 * 
+	 * *WARNING* *ACHTUNG* *DANGER* *CAUTION* Calling this function will hang the GUI until a graph state successfully completes.  
+	 * This is as a result of putting the main thread to sleep for a few milliseconds and then checking, repeatedly, to see if the algorithm is done
+	 * A better solution wouldn't require this
+	 */
 	public void incrementDisplayState() {
-		//if (this.getAlgorithmComplete()) return;
-		System.out.printf("In the GraphPanel class - incrementing the display state\n"); /*
-		
-		try{
-			throw new NullPointerException();
-		}
-		catch (Exception e){
-			e.printStackTrace(System.out);
-		}
-		finally{
-			System.out.printf("Stack trace for incrementing the state in the array of states created--no bearing on the GraphState incrementState\n");
-		} */
+		System.out.printf("In the GraphPanel class - incrementing the display state\n"); 
 		
 		if(this.getDisplayState() < this.gw.getGraphDispatch().getWorkingGraph().getGraphState().getState()){
-			//increment the graphState
+			//increment the graphState array position
 			//update the display state but don't run anything
 		}
 		else if(true){ // go run a step of the algorithm if we're moving forward but not lagging behind
 			
 			this.resumeAlgorithmExecution(); // Start the algorithm up again
-			long time = System.currentTimeMillis();
+			long time = System.currentTimeMillis(); // Assuming that the previous call will return fast enough that we can consider this the start time
 			System.out.printf("\n");
-			while(!this.gw.getGraphDispatch().getWorkingGraph().getGraphState().getStepComplete() && !this.getAlgorithmComplete()){
+			while(!this.gw.getGraphDispatch().getWorkingGraph().getGraphState().getStepComplete() && !this.getAlgorithmComplete()){ // while algorithm isn't finished and a step isn't "ready", keep checking
 				try{
-					Thread.sleep(15);
+					Thread.sleep(15); // well after waiting for a bit, that is
 					System.out.printf(".");
 				}
 				catch (InterruptedException e){
 					e.printStackTrace(System.out);
-				}/*
-				if (System.currentTimeMillis() - time > 6000){
-					// update status to say this is taking a damn long time
-				}*/
+				}
+				if (System.currentTimeMillis() - time > 5000){
+					// Find some way to display to the user that this is taking a very long time
+					// the status bar would be the best bet, but actually updating it from here might violate MVC
+				}
 			}
 			System.out.printf("\n");
 			
 			/*if (stepForward.getEnabled)*/ //stepForward.setEnabled(!getGraphPanel().getAlgorithmComplete()); // checks to see if the algorithm is done running & as long as it has not, next button is clickable
 			
-		}
-		
-		
-		
-		
-		
+		}		
 		LogHelper.enterMethod(getClass(), "incrementDisplayState");
         LogHelper.logDebug( "" + state );
-		/* System.out.printf(this.gw != null ? "yes" : "no"); 
+        /*
 		System.out.println("Incrementing the graph display state: [" + currentState + "," + currentGraphState + "] --> " + state);
 		*/
 		++this.state;
@@ -803,8 +799,7 @@ public class GraphPanel extends JPanel{
 		 * Changing this will naturally overwrite any previous status message (including the "algorithm executing" message, the "no algorithm running" message, or so on)
 		 * A failure to call the updateStatusLabel in one of its three forms will result in inconsistent behavior between the message and the graph display state
 		 */
-		int a = GraphDispatch.getInstance().getGraphWindow().getGraphPanel().getDisplayState();
-		GraphDispatch.getInstance().getGraphWindow().updateStatusLabel(a);
+		GraphDispatch.getInstance().getGraphWindow().updateStatusLabel(this.getDisplayState());
 		
 	}
 	

@@ -137,7 +137,6 @@ public class Graph {
 		currentGraphState.setGraph(this);
 		nodes = new ArrayList<Node>();
 		edges = new ArrayList<Edge>();
-		System.out.println("New Graph created");
 	}
 	
 	/**

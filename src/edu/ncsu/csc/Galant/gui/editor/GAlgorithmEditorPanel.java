@@ -123,15 +123,7 @@ public class GAlgorithmEditorPanel extends GEditorPanel {
 		ca.setGraph(GraphDispatch.getInstance().getWorkingGraph());
 		Thread t = new Thread(ca);
 		t.setName("Execution thread");
-		t.start(); /*
-		synchronized(GraphDispatch.getInstance().getWorkingGraph().getGraphState()){
-			try{
-				GraphDispatch.getInstance().getWorkingGraph().getGraphState().wait();
-			}
-			catch (InterruptedException e){
-				e.printStackTrace(System.out);
-			}
-		}*/
+		t.start();
 		System.out.printf("Initialization finished; should \"run\" algorithm now");
 		
 		

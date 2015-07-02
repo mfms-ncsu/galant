@@ -48,7 +48,7 @@ public class line_up_nodes_alg extends Algorithm {
 			for(Node n : getNodes()){
 				n.setPosition(xPosition,yPosition);
 				//if(i==1) System.out.printf("%d\n", 1/0); //Divide-by-zero done here to demonstrate that algorithm explodes while moving forward, not at beginning */
-				if (i==1) Thread.sleep(2000); // wait for six seconds to demonstrate that the buttons are grayed out appropriately.
+				if (i==1) Thread.sleep(5500); // wait for six seconds to demonstrate that the buttons are grayed out appropriately.
 				xPosition += HORIZONTAL_GAP;
 				i++;
 				nodeArray[j] = n;

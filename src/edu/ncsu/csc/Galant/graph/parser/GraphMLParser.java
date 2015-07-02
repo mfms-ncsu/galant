@@ -118,7 +118,6 @@ public class GraphMLParser {
 		
 		//TODO populate Graph g
 		Graph g = new Graph();
-		System.out.println("Built an empty graph in GraphMLParser.buildGraphFromInput");
 		NodeList nodes;
 		NodeList edges;
 		NodeList graph;

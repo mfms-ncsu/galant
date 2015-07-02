@@ -104,16 +104,8 @@ public class GraphState {
 	}
 	
 	public void incrementState() {
-		System.out.printf("Incrementing the graph state\n");
-		try{
-			throw new ArrayIndexOutOfBoundsException();
-		}
-		catch (Exception e){
-			e.printStackTrace(System.out);
-		}
 		if(locked==false) {
 			this.state++;
-			
 		}
 	}
 	
@@ -129,9 +121,6 @@ public class GraphState {
 				e.printStackTrace(System.out);
 			}
 		}
-		
-		
-		
 		return this != null ? true : false;
 	}
 	

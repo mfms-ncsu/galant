@@ -35,7 +35,7 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
 	private static final long serialVersionUID = 170081847L;
 	
 	public static final String emptyAlgorithmFilename = "unsaved_alg." + AlgorithmOrGraph.Algorithm.getDefaultFileExtension();
-	/* Arrange an emptyAlgorithmContent when a new Graph tab. */
+	/* Arrange an emptyAlgorithmContent when creating a new Graph tab. */
 	public static final String emptyAlgorithmContent = "<graphml><graph></graph></graphml>";
 	public static final String emptyGraphFilename = "unsaved_graph." + AlgorithmOrGraph.Graph.getDefaultFileExtension();
 	public static final String newAlgorithm = "Create new algorithm";

@@ -473,6 +473,9 @@ public class LayeredGraph {
     {
         LogHelper.enterConstructor( getClass() );
         this.graph = graph;
+        System.out.printf( "-> LayeredGraph, nodes = %d, edges = %d\n",
+                           this.graph.numberOfNodes(),
+                           this.graph.numberOfEdges() );
         layers = new ArrayList<Layer>();
         positionOfNode = new int[ graph.getNodes().size() ];
         savedPositionOfNode = new int[ graph.getNodes().size() ];
@@ -1218,6 +1221,21 @@ public class LayeredGraph {
     }
 
     /**
+     * @return the maximum, over all edges e of the graph, of the number of
+     * edges crossing e
+     */
+    public int getMaxEdgeCrossings()
+    {
+        int maxCrossings = Integer.MIN_VALUE;
+        for ( Edge e: graph.getEdges() ) {
+            if ( crossingsOfEdge[ e.getId() ] > maxCrossings ) {
+                maxCrossings = crossingsOfEdge[ e.getId() ];
+            }
+        }
+        return maxCrossings;
+    }
+
+    /**
      * @return the edge with the most crossings among those that still have
      * one (logically) unmarked endpoint or null if all edges have both
      * endpoints marked.
@@ -1593,4 +1611,4 @@ public class LayeredGraph {
 
 } // end, class LayeredGraph
 
-//  [Last modified: 2015 06 30 at 19:34:14 GMT]
+//  [Last modified: 2015 07 02 at 17:03:38 GMT]

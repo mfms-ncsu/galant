@@ -16,11 +16,13 @@ import edu.ncsu.csc.Galant.local.LayeredGraph;
 
 int MAX_ITERATIONS = 200;
 int minCrossings = Integer.MAX_VALUE;
+int minEdgeCrossings = Integer.MAX_VALUE;
 int iteration = 0;
 int pass = 0;
 int minIteration = 0;
 int minPass = 0;
 
+Edge maxCrossingsEdge;
 LayeredGraph layeredGraph;
 
 function checkCrossings() {
@@ -31,20 +33,20 @@ function checkCrossings() {
         minPass = pass;
         layeredGraph.savePositions();
     }
+    if ( layeredGraph.getMaxEdgeCrossings() < minEdgeCrossings ) {
+        minEdgeCrossings = layeredGraph.getMaxEdgeCrossings();
+    }
 }
 
-/**
- * @param v the node to be highlighted
- * @param e the edge to be highlighted
- */
 function displayCrossings() {
     int crossings = layeredGraph.numberOfCrossings();
     layeredGraph.displayPositions();
     layeredGraph.displayMarks();
     graph.writeMessage( "pass = " + pass
-                            + ", iteration = " + iteration
-                            + ", crossings = " + crossings 
-                            );
+                        + ", iteration = " + iteration
+                        + ", crossings = " + crossings
+                        + ", edge_crossings = " + minEdgeCrossings
+                        );
 }
 
 function edgeSift( Node x, Edge maxCrossingsEdge ) {
@@ -89,26 +91,34 @@ function edgeSift( Node x, Edge maxCrossingsEdge ) {
 
 algorithm {
 
+    System.out.println( "nodes = " + getGraph().numberOfNodes()
+                        + ", edges = " + getGraph().numberOfEdges() );
     beginStep();
     layeredGraph = new LayeredGraph( getGraph() );
+    System.out.println( "nodes = " + getGraph().numberOfNodes()
+                        + ", edges = " + getGraph().numberOfEdges() );
 
     setDirected( true );
-
 
     while ( iteration < MAX_ITERATIONS ) {
         pass++;
         if ( pass % 100 == 0 ) System.out.println( "pass = " + pass );
         layeredGraph.clearMarks();
-        Edge maxCrossingsEdge = layeredGraph.getMaxCrossingsEdge( true );
+        maxCrossingsEdge = layeredGraph.getMaxCrossingsEdge( true );
         while ( maxCrossingsEdge != null ) {
+            checkCrossings();
+            displayCrossings();
             endStep(); beginStep();
             maxCrossingsEdge.highlight();
             iteration++;
             Node v = maxCrossingsEdge.getSourceNode();
             Node w = maxCrossingsEdge.getDestNode();
-            beginStep();
+            checkCrossings();
+            displayCrossings();
+            endStep(); beginStep();
             if ( ! layeredGraph.isMarked( v ) ) {
                 v.highlight();
+                displayCrossings();
                 endStep(); beginStep();
                 edgeSift( v, maxCrossingsEdge );
                 layeredGraph.mark( v );
@@ -119,6 +129,7 @@ algorithm {
             v.unHighlight();
             if ( ! layeredGraph.isMarked( w ) ) {
                 w.highlight();
+                displayCrossings();
                 endStep(); beginStep();
                 edgeSift( w, maxCrossingsEdge );
                 layeredGraph.mark( w );
@@ -131,7 +142,8 @@ algorithm {
             maxCrossingsEdge.unHighlight();
             maxCrossingsEdge = layeredGraph.getMaxCrossingsEdge();
         }
-    } 
+    }
+    displayCrossings();
     endStep();
 
     layeredGraph.displaySavedPositions();
@@ -143,5 +155,6 @@ algorithm {
     System.out.println( "Minimum crossings = " + minCrossings
                         + " at iteration " + minIteration );
 
+    System.out.println( "Minimum edge crossings = " + minEdgeCrossings );
 }
-//  [Last modified: 2015 06 30 at 19:38:29 GMT]
+//  [Last modified: 2015 07 02 at 16:55:33 GMT]

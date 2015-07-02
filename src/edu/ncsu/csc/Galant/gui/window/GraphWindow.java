@@ -117,7 +117,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	 * @param s the integer state to display as part of a message
 	 */
 	public void updateStatusLabel(int s){
-		String t = "Graph state is " + s;
+		String t = "Display state is " + s;
 		statusLabel.setText(t);
 	}
 	/*
@@ -718,7 +718,8 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 				gp.decrementDisplayState();	
             }
             if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-            	updateStatusLabel("Algorithm execution in progress".toCharArray());
+            	updateStatusLabel("Algorithm execution in progress");
+            	frame.repaint();
             	gp.incrementDisplayState();	
             }
             if (e.getKeyCode() == KeyEvent.VK_ENTER) {
@@ -777,8 +778,8 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 				stepForward.setEnabled(false);
 				stepBack.setEnabled(false);
 				updateStatusLabel("Algorithm execution in progress");
+				frame.repaint();
 				gp.incrementDisplayState();
-				updateStatusLabel(getGraphDispatch().getWorkingGraph().getGraphState().getState());
 				stepForward.setEnabled(!gp.getAlgorithmComplete());
 				stepBack.setEnabled(gp.hasPreviousState());
 				frame.repaint();

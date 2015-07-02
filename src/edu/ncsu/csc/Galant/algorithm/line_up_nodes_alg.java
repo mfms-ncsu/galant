@@ -5,7 +5,7 @@ import edu.ncsu.csc.Galant.graph.component.Node;
 public class line_up_nodes_alg extends Algorithm {
 	public line_up_nodes_alg() {
 		super();
-		System.out.println("Created new line_up_nodes_alg using hardcoded implementation.");
+		
 		
 	}
 	// this is the old line_up_nodes
@@ -22,7 +22,7 @@ public class line_up_nodes_alg extends Algorithm {
 				e.printStackTrace(System.out);
 			}
 		}
-		System.out.println("Starting hardcoded class's run(); method");
+		
 		try {
 			final int HORIZONTAL_GAP = 100;
 			final int VERTICAL_GAP = 100;
@@ -35,7 +35,6 @@ public class line_up_nodes_alg extends Algorithm {
 			int j = 0;
 			int xPosition = HORIZONTAL_GAP;
 			int yPosition = TOP_GAP;
-			System.out.println("About to mark initialization as complete");
 			
 			///gs.setInitializationComplete();
 			
@@ -65,7 +64,6 @@ public class line_up_nodes_alg extends Algorithm {
 			else e.printStackTrace(System.out);
 			
 		} 
-		System.out.println("Done with hardcoded class's run(); method");
 		this.gw.getGraphPanel().setAlgorithmComplete();
 
 	}

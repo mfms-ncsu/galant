@@ -47,7 +47,7 @@ public class GAlgorithmEditorPanel extends GEditorPanel {
 		syntaxHighlighter = new GAlgorithmSyntaxHighlighting(textPane);
 		documentUpdated();
 		//setCompiledAlgorithm(null);
-		System.out.println("Setting intial compiled algorith to our line_up_nodes_alg...");
+		//System.out.println("Setting initial compiled algorithm to our line_up_nodes_alg...");
 		setCompiledAlgorithm(new line_up_nodes_alg());
 		
 		GraphDispatch.getInstance().addChangeListener(this);
@@ -124,7 +124,6 @@ public class GAlgorithmEditorPanel extends GEditorPanel {
 		Thread t = new Thread(ca);
 		t.setName("Execution thread");
 		t.start();
-		System.out.printf("Initialization finished; should \"run\" algorithm now");
 		
 		
 	}

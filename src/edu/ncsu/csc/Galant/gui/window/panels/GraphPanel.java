@@ -758,8 +758,7 @@ public class GraphPanel extends JPanel{
 	 * This is as a result of putting the main thread to sleep for a few milliseconds and then checking, repeatedly, to see if the algorithm is done
 	 * A better solution wouldn't require this
 	 */
-	public void incrementDisplayState() {
-		System.out.printf("In the GraphPanel class - incrementing the display state\n"); 
+	public void incrementDisplayState() { 
 		
 		if(this.getDisplayState() < this.gw.getGraphDispatch().getWorkingGraph().getGraphState().getState()){
 			//increment the graphState array position
@@ -769,11 +768,9 @@ public class GraphPanel extends JPanel{
 			
 			this.resumeAlgorithmExecution(); // Start the algorithm up again
 			long time = System.currentTimeMillis(); // Assuming that the previous call will return fast enough that we can consider this the start time
-			System.out.printf("\n");
 			while(!this.gw.getGraphDispatch().getWorkingGraph().getGraphState().getStepComplete() && !this.getAlgorithmComplete()){ // while algorithm isn't finished and a step isn't "ready", keep checking
 				try{
 					Thread.sleep(15); // well after waiting for a bit, that is
-					System.out.printf(".");
 				}
 				catch (InterruptedException e){
 					e.printStackTrace(System.out);
@@ -783,7 +780,6 @@ public class GraphPanel extends JPanel{
 					// the status bar would be the best bet, but actually updating it from here might violate MVC
 				}
 			}
-			System.out.printf("\n");
 			
 			/*if (stepForward.getEnabled)*/ //stepForward.setEnabled(!getGraphPanel().getAlgorithmComplete()); // checks to see if the algorithm is done running & as long as it has not, next button is clickable
 			
@@ -802,6 +798,7 @@ public class GraphPanel extends JPanel{
 		GraphDispatch.getInstance().getGraphWindow().updateStatusLabel(this.getDisplayState());
 		
 	}
+
 	
 	public void decrementDisplayState() {
 		LogHelper.enterMethod(getClass(), "decrementDisplayState");
@@ -817,8 +814,7 @@ public class GraphPanel extends JPanel{
 		/* This is responsible for updating the status label at the top of the Galant screen so that it displays the correct graph state
 		 * This happens whenever the user hits the right arrow key or the right arrow button
 		 */
-		int a = GraphDispatch.getInstance().getGraphWindow().getGraphPanel().getDisplayState();
-		GraphDispatch.getInstance().getGraphWindow().updateStatusLabel(a);
+		GraphDispatch.getInstance().getGraphWindow().updateStatusLabel(this.getDisplayState());
 		
 	}
 	

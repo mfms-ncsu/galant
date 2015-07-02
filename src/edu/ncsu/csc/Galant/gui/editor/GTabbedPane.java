@@ -35,6 +35,8 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
 	private static final long serialVersionUID = 170081847L;
 	
 	public static final String emptyAlgorithmFilename = "unsaved_alg." + AlgorithmOrGraph.Algorithm.getDefaultFileExtension();
+	/* Arrange an emptyAlgorithmContent when a new Graph tab. */
+	public static final String emptyAlgorithmContent = "<graphml><graph></graph></graphml>";
 	public static final String emptyGraphFilename = "unsaved_graph." + AlgorithmOrGraph.Graph.getDefaultFileExtension();
 	public static final String newAlgorithm = "Create new algorithm";
 	public static final String newGraph = "Create new graph";
@@ -112,7 +114,9 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
 	}
 	
 	public void addEmptyAlgorithm(){addEditorTab(emptyAlgorithmFilename, null, "", AlgorithmOrGraph.Algorithm).setDirty(true);}
-	public void addEmptyGraph(){addEditorTab(emptyGraphFilename, null, "", AlgorithmOrGraph.Graph).setDirty(true);}
+	/* To avoid  NullPointerException. Append a header to an emptyEmptyGraph. GraphMLParser will try to parse text inside graphml when a new tab is created or 
+	   an algorithm is fired. */
+	public void addEmptyGraph(){addEditorTab(emptyGraphFilename, null, emptyAlgorithmContent, AlgorithmOrGraph.Graph).setDirty(true);}
 	
 	public GEditorPanel addEditorTab(String filename, String filepath, String content, AlgorithmOrGraph type) {
 		return addEditorTab(filename, filepath, content, type, true);

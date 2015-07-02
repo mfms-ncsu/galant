@@ -35,7 +35,7 @@ public class AlgorithmMacro extends Macro {
 	@Override
 	protected final String modify(String code, MatchResult match) throws MalformedMacroException
 	{	
-		return "public void run() ";
+		return "public void run() "; 
 
 	}
 	

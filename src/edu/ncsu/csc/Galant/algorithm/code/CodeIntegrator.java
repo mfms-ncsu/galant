@@ -75,7 +75,7 @@ public class CodeIntegrator
 				"}";
             */
 
-				"{\n" +CODE_FIELD + "}";
+				"{" + CODE_FIELD + "}";
 				
 		//@formatter:on
 
@@ -116,7 +116,7 @@ public class CodeIntegrator
 							if( behindCStyleMatcher.find()) {
 								// single line c style if falls in here
 
-								sb.append(behindCStyleMatcher.group(2) + "\n");
+								sb.append(behindCStyleMatcher.group(2));
 							} else {
 								// multiple line c style comment if falls in here 
 								// infinte loop keep reading until hit "*/""
@@ -129,7 +129,7 @@ public class CodeIntegrator
 									}
 								}
 								
-								sb.append(behindCStyleMatcher.group(2) + "\n");
+								sb.append(behindCStyleMatcher.group(2));
 							}
 					} else if( singleAsteriskMatcher.find()) {
 						sb.append(singleAsteriskMatcher.group(1));
@@ -137,7 +137,7 @@ public class CodeIntegrator
 
 						if( behindSingleAsterisk.find()) {
 								// single-line single-asterisk if falls in here
-								sb.append(behindSingleAsterisk.group(2) + "\n");
+								sb.append(behindSingleAsterisk.group(2));
 						} else {
 							while(scanner.hasNextLine()) {
 								line = scanner.nextLine();
@@ -148,11 +148,11 @@ public class CodeIntegrator
 								}
 							}
 
-							sb.append( behindSingleAsterisk.group(2) + "\n");
+							sb.append( behindSingleAsterisk.group(2));
 						}	
 					} else if( doubleSlashMatcher.find()) {
 						// read everything after //
-						sb.append(doubleSlashMatcher.group(1) + "\n");
+						sb.append(doubleSlashMatcher.group(1));
 					} else if( line!= null && line.length()>0 ){
 						sb.append(line + "\n");
 					}
@@ -162,8 +162,9 @@ public class CodeIntegrator
 				userCode = sb.toString();
 
 				// apply macros
-				for(Macro macro : Macro.MACROS)
-					userCode = macro.applyTo(userCode);
+				for(Macro macro : Macro.MACROS) {
+					System.out.println(macro.toString());
+					userCode = macro.applyTo(userCode); }
 				// apply generated macros, removing each one so if the code is recompiled,
 				// you don't end up with incorrect/duplicate macros
 				while(!Macro.GENERATED_MACROS.isEmpty())

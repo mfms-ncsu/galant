@@ -773,7 +773,7 @@ public class GraphPanel extends JPanel{
 					Thread.sleep(15); // well after waiting for a bit, that is
 				}
 				catch (InterruptedException e){
-					e.printStackTrace(System.out);
+					
 				}
 				if (System.currentTimeMillis() - time > 5000){
 					// Find some way to display to the user that this is taking a very long time
@@ -781,7 +781,6 @@ public class GraphPanel extends JPanel{
 				}
 			}
 			
-			/*if (stepForward.getEnabled)*/ //stepForward.setEnabled(!getGraphPanel().getAlgorithmComplete()); // checks to see if the algorithm is done running & as long as it has not, next button is clickable
 			
 		}		
 		LogHelper.enterMethod(getClass(), "incrementDisplayState");

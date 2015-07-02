@@ -119,6 +119,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	public void updateStatusLabel(int s){
 		String t = "Display state is " + s;
 		statusLabel.setText(t);
+		//System.out.printf("\nUpdating status label to a number %d; caller is %s\n",s, Thread.currentThread().getName());
 	}
 	/*
 	 * Want to display a custom message?  We've got you covered.  Lets the status message be anything desired
@@ -126,6 +127,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	 */
 	public void updateStatusLabel(char [] a){
 		statusLabel.setText(new String(a));
+		//System.out.printf("\nUpdating status label to chara array: %s; caller is %s\n", new String(a), Thread.currentThread().getName());
 	}
 	
 	/*
@@ -133,6 +135,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	 * @param s String to display as status message
 	 */
 	public void updateStatusLabel(String s) {
+		//System.out.printf("\n in the update status label function: %s; caller is %s \n",s, Thread.currentThread().getName());
 		statusLabel.setText(s);
 	}
 	
@@ -719,8 +722,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
             }
             if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
             	updateStatusLabel("Algorithm execution in progress");
-            	frame.repaint();
-            	gp.incrementDisplayState();	
+            	gp.incrementDisplayState();
             }
             if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                 // delete row method (when "delete" is pressed)
@@ -775,6 +777,12 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 				System.out.printf("Display state is: %d\n",getGraphPanel().getDisplayState());
 				// This is to keep track of "where are we?"
 				 */	
+				
+				// Chain of events: disable buttons until we figure out what's going on,
+				// update status to say execution in progress (if it actually isn't, this
+				// will be replaced soon enough, but this is the only "tidy" place to update
+				// from); run a step (which will itself update the status to the new graph
+				// state number); re-enable buttons as appropriate
 				stepForward.setEnabled(false);
 				stepBack.setEnabled(false);
 				updateStatusLabel("Algorithm execution in progress");

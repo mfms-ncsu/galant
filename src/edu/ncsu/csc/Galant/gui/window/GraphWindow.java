@@ -20,6 +20,7 @@ import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -738,6 +739,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
             frame.repaint();
         }
     }
+    
 
 	/**
 	 * Initialize the animation panel controls
@@ -788,9 +790,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 				updateStatusLabel("Algorithm execution in progress");
 				frame.repaint();
 				gp.incrementDisplayState();
-				stepForward.setEnabled(!gp.getAlgorithmComplete());
-				stepBack.setEnabled(gp.hasPreviousState());
-				frame.repaint();
+				
 				
 			}
 		});
@@ -853,6 +853,12 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	}
 	public void repaintFrame() {
 		frame.repaint();
+	}
+	public JButton getStepBack(){
+		return stepBack;
+	}
+	public JFrame getFrame(){
+		return frame;
 	}
 	
 

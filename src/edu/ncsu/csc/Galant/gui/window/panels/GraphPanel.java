@@ -28,6 +28,7 @@ import edu.ncsu.csc.Galant.graph.component.Graph;
 import edu.ncsu.csc.Galant.graph.component.GraphState;
 import edu.ncsu.csc.Galant.graph.component.Node;
 import edu.ncsu.csc.Galant.graph.component.NodeState;
+import edu.ncsu.csc.Galant.gui.util.guiStepExecutor;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow.GraphDisplays;
 import edu.ncsu.csc.Galant.logging.LogHelper;
@@ -747,57 +748,29 @@ public class GraphPanel extends JPanel{
 		return false; // algorithm not started
 	}
 	
+	public GraphWindow getGraphWindow(){
+		return gw;
+	}
+	
 	/*
 	 * This is THE function to call whenever the graph state needs to be updated.  Currently it is called whenever the user clicks on the
 	 * "next" button or the right arrow key, but also aught to be the one called for future extensions that change the interface used
 	 * It will determine if the display state merely needs to be updated, or if first a new graphState must be calculated
 	 * If the latter, it will wake up the waiting algorithm, wait for it to run one step, and then increment the graphState
-	 * Then whatever called it can re-paint the frame
-	 * 
-	 * *WARNING* *ACHTUNG* *DANGER* *CAUTION* Calling this function will hang the GUI until a graph state successfully completes.  
-	 * This is as a result of putting the main thread to sleep for a few milliseconds and then checking, repeatedly, to see if the algorithm is done
-	 * A better solution wouldn't require this
+	 * Then whatever called it can re-paint the frame 
 	 */
-	public void incrementDisplayState() { 
+	public void incrementDisplayState() {
+		guiStepExecutor t = new guiStepExecutor(this);
+		t.execute();
 		
-		if(this.getDisplayState() < this.gw.getGraphDispatch().getWorkingGraph().getGraphState().getState()){
-			//increment the graphState array position
-			//update the display state but don't run anything
-		}
-		else if(true){ // go run a step of the algorithm if we're moving forward but not lagging behind
-			
-			this.resumeAlgorithmExecution(); // Start the algorithm up again
-			long time = System.currentTimeMillis(); // Assuming that the previous call will return fast enough that we can consider this the start time
-			while(!this.gw.getGraphDispatch().getWorkingGraph().getGraphState().getStepComplete() && !this.getAlgorithmComplete()){ // while algorithm isn't finished and a step isn't "ready", keep checking
-				try{
-					Thread.sleep(15); // well after waiting for a bit, that is
-				}
-				catch (InterruptedException e){
-					
-				}
-				if (System.currentTimeMillis() - time > 5000){
-					// Find some way to display to the user that this is taking a very long time
-					// the status bar would be the best bet, but actually updating it from here might violate MVC
-				}
-			}
-			
-			
-		}		
-		LogHelper.enterMethod(getClass(), "incrementDisplayState");
-        LogHelper.logDebug( "" + state );
-        /*
-		System.out.println("Incrementing the graph display state: [" + currentState + "," + currentGraphState + "] --> " + state);
-		*/
-		++this.state;
-		LogHelper.exitMethod(getClass(), "incrementDisplayState");
-		/* This is responsible for updating the status label to display the new state number that we have now stepped forward to
-		 * Changing this will naturally overwrite any previous status message (including the "algorithm executing" message, the "no algorithm running" message, or so on)
-		 * A failure to call the updateStatusLabel in one of its three forms will result in inconsistent behavior between the message and the graph display state
-		 */
-		GraphDispatch.getInstance().getGraphWindow().updateStatusLabel(this.getDisplayState());
 		
 	}
-
+	public int getState(){
+		return this.state;
+	}
+	public void setState(int state){
+		this.state = state;
+	}
 	
 	public void decrementDisplayState() {
 		LogHelper.enterMethod(getClass(), "decrementDisplayState");

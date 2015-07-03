@@ -1,22 +1,46 @@
+2 July (~5 hours) More button work; realized that the current model wasn't working out OK; read a Sun tutorial on concurrency & Swing; implemented the guiStepExecutor that seems to have not only fixed this but has also amde it so that the status label displaysa  warning when execution takes a very long time; also doesn't hang the gui while a step is executing
+
 1 July (1.5 hours) Working on the buttons; trying to get the Status Label to work properly; cleaning up the code & documenting
+
 30 June (2 hours) Redoing how the graph state & display state changes are handled.  Now uses polling rather than having the GUI updated from outside of the display
+
 27 June (1.5 hours) Removed requirement for (and support of) initializationComplete macro.  Now, any existing algorithms that worked before should work now.  Edited the CodeIntegrator (compiler) so that it inserts the extra newly-required code into the compiled algorithm (with no initializationComplete function to pause execution we have to insert a synchronized-and-wait block directly into the compiled algorithm).  Still (should) be able to run arbitrary algorithms from the user
+
 26 June (2 hours) Realized an issue where the "next step" button remained clickable for one step too far and clicking it updated the status bar to say that execution was still in progress, even when it finished.  Fixed this.  Button is still clickable one step too far, but at lkeast wehn they click it, it now updates the status bar to say that execution is finished.  Made a few more other minor changes too
+
 25 June (4 hours) Edited the compiler so that it adds a few more things to the compiled code, added a new macro, fixed the beginstep & endstep calls (now they're no longer simply ignored, as they were before).  made some more changes that were influenced by this.  new macro is added to the list of syntax-highlighted elements and it is given an entry in the dictionary.
+
 24 June (5 hours) More small changes; the status window now displays everything that I think it ought to (no algorithm running at start, step number whens tepping back and forth; "execution in progress" or something like taht when actually executing.  User is now able to step back and forth freely and bits and a step of the algorithm is run when necessary.
+
 23 June (3 hours) A number of small changes; also made it so that the next-step button is grayed out while algorithm is executing.  Also am going to change it so that the status window displays something helpful
+
 22 June (9 hours)  Logic that controls the pausing moved from the Node class to a member function on the GraphState object.  Thus it adaquently handles pausing regardless of whether a node is being changed or an edge is being changed.  Worked on the buttons (back/forward/cancel).  The forward button is now enabled when it should be (as long as the algorithm has not finished running completely) and disabled when it should be (when the algorithm has completed).  All bets are off on the back button (and, in general, actions that would result in trying to go backwards ;)
+
 19-21 June (6 hours) After investigation and (failed) attempts, concluded that without a preprocessor macro to help out, I'm not going to be able to get other algorithms working.  Issue is that a gs.setInitializationComplete() call is being made in my hardcoded algorithm (& is necessary to function properly)--but I can't just copy-and-paste said statement into the uncompiled code or it will have a fit.  I'd like a new macro defined.  Time spent working on the buttons (so that they will let user step around correctly).  Working on changing implementation of where algorithm gets paused.  Fixed an off-by-one error that was causing the graph state to always lag behind the executed state by 1.
+
 15 June (8 hours) Algorithm IS being run in pieces; pausing is being done in the NodeState, so not acceptable in case the EdgeState changes.  Will need to move the pausing to somewhere where all changes will properly trigger a wait.  Can add a logic error to demonstrate that algorithm being run in pieces
+
 11 June (3.5 hours) Trying to understand the GUI; learning about Swing; added a panel to the GUI that will print out the graph state each time & display if in the midst of running the set-up
+
 6-7 June (7.5 hours) Algorithm is (I think) now being run in bits and pieces.  I'm still unable to step through it correctly, but I've added printouts to the log and I think things are going well
+
 04 June (3.5 hours) Better understanding of how the algorithm is being run; now have it pausing after doing the "set up" stage; still don't have it passing control correctly
+
 31 May (2 hours) Managed to break Galant; now it claims to have run the algorithm but won't actually display it.  I think I'm not passing my Thread object around correctly
+
 29 May (6 hours) Trying to figure out how graph state changes are kept; trying to figure out where to declare and invoke worker thread; modified the GraphState and Galant.java files (albeit incorrectly); struggling with Git and version changes; modified so that it *should* run algorithm until it's finished initializing, then have it wait; next I'll need to wake up the algorithm when the GraphState is incremented, run a step, and then sleep it again
+
 27 May (2 hours) Reading Galant source code, trying to figure out how the graph state changes are manifested and propogates, so that I can exchange control between master and worker thread appropriately
+
 26 May (1 hour) Reading OReilly book on Git to try and understand it better
+
 25 May (~1.5 hours) Thinking about new model for implementing Galant threading (as on papers shown on Tuesday's meeting) and thinking of way to do faster regression testing
+
 22 May (~4 hours) Regression testing; hacking up the GUI; trying to implement so that Galant will run algorithm in steps (no support for reversing)
+
 21 May (~2 hours) Trying to turn Algorith into a Runnable; discovering that Galant seems to be broken; trying to figure out when/where/why this happened; also fixed a bug in the Node.java that was causing a (non-fatal) exception
+
 20 May (~2 hours) reading Galant code; reading book on Git and trying to figure it out
+
 19 May (~7 hours) reading Java tutorials on threading and monitors; implementing the basic galantThreading project submitted to Dr. Stallmann that had a worker and controler
+

@@ -291,7 +291,7 @@ public class Macros
 				 * 
 				 * code_block: a block of code that is executed for the algorithm
 				 */
-				 Macro.MACROS.add(new AlgorithmMacro());	
+				 // Macro.MACROS.add(new AlgorithmMacro());	
 			}
 	}
 

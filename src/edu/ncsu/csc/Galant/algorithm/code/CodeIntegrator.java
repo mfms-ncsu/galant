@@ -11,6 +11,11 @@ import edu.ncsu.csc.Galant.algorithm.code.macro.Macro;
 import edu.ncsu.csc.Galant.algorithm.code.macro.MalformedMacroException;
 import edu.ncsu.csc.Galant.logging.LogHelper;
 import edu.ncsu.csc.Galant.GalantException;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 /**
  * @todo Exception handling needs work, but the bigger issue is creation of a
@@ -46,7 +51,8 @@ public class CodeIntegrator
 
 		// fields to represent variables in the class structure
 		private static final String IMPORTS_FIELD = "{Imports}", NAME_FIELD = "{Algorithm Name}",
-						CODE_FIELD = "{User Code}";
+						CODE_FIELD = "{User Code}", ALGORITHM_HEAD = "{Algorithm Head}", 
+						ALGORITHM_TAIL = "{Algorithm Tail}", ALGORITHM_BODY = "{Algorithm Body}";
 
 		// The basic class structure into which the user's code can be inserted so it can be
 		// compiled.
@@ -62,21 +68,14 @@ public class CodeIntegrator
 			"import edu.ncsu.csc.Galant.algorithm.code.macro.Pair;" +
             "import edu.ncsu.csc.Galant.GalantException;" +
 			IMPORTS_FIELD +
-			"public class " + NAME_FIELD + " extends Algorithm" +
+			"public class " + NAME_FIELD + " extends Algorithm" + "{" + CODE_FIELD + "}";
 
-            /* @todo The following code needs to be put in the run method
-				during macro replacement
-						"{ try { <body of algorithm> }"
-                                      + " catch (Exception e)"
-                                      + " { if ( e instanceof GalantException )"
-                                      + " {GalantException ge = (GalantException) e;"
+		public static final String ALGORITHM_STRUCTURE = "public void run(){ try {" +
+						    ALGORITHM_HEAD + ALGORITHM_BODY + ALGORITHM_TAIL + "}" + "catch (Exception e)"
+                                      + " { \n if ( e instanceof GalantException )"
+                                      + " { GalantException ge = (GalantException) e;"
                                       + " ge.report(\"\"); ge.display(); }"
-                                      + " else e.printStackTrace(System.out);}%n }",
-				"}";
-            */
-
-				"{" + CODE_FIELD + "}";
-				
+                                      + " \n else {e.printStackTrace(System.out);}}}" ;
 		//@formatter:on
 
 		/**
@@ -161,9 +160,13 @@ public class CodeIntegrator
 				// Reassign userCode with comment line removed
 				userCode = sb.toString();
 
+				// Rebuild the algorithm and add head or tail as needed
+				sb = new StringBuilder( userCode.substring(0, userCode.indexOf("algorithm")));
+				sb.append(modifyAlgorithm("", "", userCode));
+				userCode = sb.toString();
+
 				// apply macros
 				for(Macro macro : Macro.MACROS) {
-					System.out.println(macro.toString());
 					userCode = macro.applyTo(userCode); }
 				// apply generated macros, removing each one so if the code is recompiled,
 				// you don't end up with incorrect/duplicate macros
@@ -217,6 +220,75 @@ public class CodeIntegrator
 				// Load
 				return CompilerAndLoader.loadAlgorithm(qualifiedName);
 			}
+
+		/**
+		 * Modify Algorithm as needed 
+		 * @param head code block to be appended before the substantial algorithm part
+		 * @param tail code block to be appended after the substantial algorithm part
+		 * @param userCode user code containing algorithm{}
+		 */
+		public static String modifyAlgorithm(String head, String tail, String userCode) throws MalformedMacroException {
+			String modifiedBody ;
+
+			try{
+				modifiedBody = getCodeBlock(userCode.substring(userCode.indexOf("algorithm"), userCode.length()));
+			} catch (IOException e) {
+				throw new MalformedMacroException() ;
+			}
+
+			try {
+				return ALGORITHM_STRUCTURE.replace(ALGORITHM_HEAD, head).replace(ALGORITHM_TAIL, tail).replace(ALGORITHM_BODY, modifiedBody);				
+			} catch (NullPointerException e) {
+				return ALGORITHM_STRUCTURE.replace(ALGORITHM_HEAD, "").replace(ALGORITHM_TAIL, "").replace(ALGORITHM_BODY, modifiedBody);
+			}
+		}
+
+		/**
+		 * Read and return code in between { and } in the given code
+		 * @param code code to be proceessed 
+		 */
+		private static String getCodeBlock(String code) throws IOException {
+			/* Convert code string to a BufferReader */
+			// http://www.coderanch.com/t/519147/java/java/ignore-remove-comments-java-file
+			InputStream codeInput = new ByteArrayInputStream(code.getBytes());
+			BufferedReader reader = new BufferedReader(new InputStreamReader(codeInput));
+			
+			StringBuilder sb = new StringBuilder();
+			
+			/* Increment counter when meet a {, decrement it when meet a } 
+			 * Stop when counter hit 0;
+			 */
+			int counter = 0;
+			
+			/* If false, means that the first { has not been read yet. This circumstance will not stop the 
+			 * reader even though counter is 0;
+			 */
+			boolean firstEncounter = false;
+			boolean startScan = false;
+			
+			int char1 = reader.read();
+			if (char1 != -1) {
+				do {
+					if(char1 == '{') {
+						counter ++;
+						firstEncounter = true;
+					} else if(char1 == '}'){
+						counter --;
+					}
+
+					if(firstEncounter == true) {
+						sb.append((char)char1);
+						if(counter == 0) {
+							break;
+						}
+					}
+
+					char1 = reader.read();
+					
+					} while (char1 != -1);
+				// use substring to ignore the first pair of { and }. They are mean for marking the start and end of algorithm {}	
+			}	return sb.toString().substring(1, sb.length() - 1);
+		}		
 	}
 
 //  [Last modified: 2015 06 30 at 15:57:34 GMT]

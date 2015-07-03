@@ -9,24 +9,16 @@
 
 /** Required: node and edge labels visible */
 
-/**
- * An unfortunate consequence of the way algorithms are encapsulated in Java
- * is the inability of functions to modify global variables. The exceptions
- * are arrays and instances of classes -- in those cases the functions can
- * change *contents* at will, as long as the references to the arrays/objects
- * remain unchanged.
- */
-int time;
+int time = 0;
 
 Graph graph;
 
-final GlobalVariables globals = new GlobalVariables();
 int [] discovery;
 int [] finish;
 
 function visit( Node v ) {
-    globals.time++;
-    discovery[ v.getId() ] = globals.time;
+    time++;
+    discovery[ v.getId() ] = time;
     beginStep();
     v.setLabel( "" + discovery[ v.getId() ] );
     v.setSelected( true );
@@ -49,8 +41,8 @@ function visit( Node v ) {
         }
         endStep();
     }
-    globals.time++;
-    finish[ v.getId() ] = globals.time;
+    time++;
+    finish[ v.getId() ] = time;
     beginStep();
     v.mark();
     v.setLabel( "" + discovery[ v.getId() ] + "/" + finish[ v.getId() ] );
@@ -80,4 +72,4 @@ algorithm {
  }
 }
 
-//  [Last modified: 2015 07 03 at 19:02:01 GMT]
+//  [Last modified: 2015 07 03 at 19:09:06 GMT]

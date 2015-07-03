@@ -370,6 +370,17 @@ class Layer {
         }
     }
 
+    public String toString() {
+        String s = "";
+        s += "[";
+        for ( Node node : nodes ) {
+            s += " " + node.getId() + " " +
+                "(" + node.getLayer() + "," + node.getPositionInLayer() + "),";
+        }
+        s += " ]";
+        return s;
+    }
+
 } // end, class Layer
 
 /**
@@ -562,27 +573,17 @@ public class LayeredGraph {
         return positionOfNode[ v.getId() ];
     }
 
-    // /**
-    //  * Uses window width and height to display all of the nodes in their
-    //  * correct positions; should only be done once at the beginning of
-    //  * execution; layer 0 is at the bottom
-    //  */
-    // public void displayInitialPositions() {
-    //     int numLayers = layers.size();
-    //     for ( int i = 0; i <  numLayers; i++ ) { 
-    //         // put nodes in the correct horizontal position
-    //         layers.get( i ).displayPositions();
-    //     }
-    //     // put nodes in the correct vertical position if not done already
-    //     if ( ! verticalPositionsFixed ) {
-    //         for ( int i = 0; i <  numLayers; i++ ) { 
-    //             for ( Node v: getLayer( i ) ) {
-    //                 v.setY( (numLayers - i) * layerGap );
-    //             }
-    //         }
-    //         verticalPositionsFixed = true;
-    //     }
-    // }
+    public String toString() {
+        String s = "";
+        for ( int layerNumber = 0; layerNumber < layers.size(); layerNumber++ ) {
+            s += "Layer " + layerNumber + " " + layers.get( layerNumber ) + "\n";
+        }
+        return s;
+    }
+
+    /********************************************************************/
+    // Algorithm-related code begins here
+    /********************************************************************/
 
     /**
      * Displays the node v (as if it were) at position i on its layer. The
@@ -1611,4 +1612,4 @@ public class LayeredGraph {
 
 } // end, class LayeredGraph
 
-//  [Last modified: 2015 07 02 at 17:03:38 GMT]
+//  [Last modified: 2015 07 03 at 18:28:05 GMT]

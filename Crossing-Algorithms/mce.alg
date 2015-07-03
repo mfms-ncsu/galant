@@ -14,7 +14,7 @@
 
 import edu.ncsu.csc.Galant.local.LayeredGraph;
 
-int MAX_ITERATIONS = 200;
+int MAX_ITERATIONS = 5;
 int minCrossings = Integer.MAX_VALUE;
 int minEdgeCrossings = Integer.MAX_VALUE;
 int iteration = 0;
@@ -98,14 +98,18 @@ algorithm {
     System.out.println( "nodes = " + getGraph().numberOfNodes()
                         + ", edges = " + getGraph().numberOfEdges() );
 
+    System.out.println( "\n" + layeredGraph );
     setDirected( true );
 
+    System.out.printf( "iteration = %d, MAX_ITERATIONS = %d\n",
+                       iteration, MAX_ITERATIONS );
     while ( iteration < MAX_ITERATIONS ) {
         pass++;
         if ( pass % 100 == 0 ) System.out.println( "pass = " + pass );
         layeredGraph.clearMarks();
         maxCrossingsEdge = layeredGraph.getMaxCrossingsEdge( true );
-        while ( maxCrossingsEdge != null ) {
+        while ( maxCrossingsEdge != null && iteration < MAX_ITERATIONS ) {
+            System.out.println(  "iteration " + iteration + "\n" + layeredGraph );
             checkCrossings();
             displayCrossings();
             endStep(); beginStep();
@@ -157,4 +161,4 @@ algorithm {
 
     System.out.println( "Minimum edge crossings = " + minEdgeCrossings );
 }
-//  [Last modified: 2015 07 02 at 16:55:33 GMT]
+//  [Last modified: 2015 07 03 at 18:58:06 GMT]

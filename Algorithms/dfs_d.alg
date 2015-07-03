@@ -16,9 +16,7 @@
  * change *contents* at will, as long as the references to the arrays/objects
  * remain unchanged.
  */
-class GlobalVariables {
-    public int time;
-}
+int time;
 
 Graph graph;
 
@@ -82,4 +80,4 @@ algorithm {
  }
 }
 
-//  [Last modified: 2014 05 12 at 16:48:42 GMT]
+//  [Last modified: 2015 07 03 at 19:02:01 GMT]

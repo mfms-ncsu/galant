@@ -32,3 +32,5 @@ For now, I choice the second solution, and add "algorithmMovesNodes" field into 
 
 29 June (~2 hours) testing, document what have done
 30 June (~2 hours) investigate bug about node Id
+1 July (~4 hours) developer documentation, fixed some bugs
+2 July (~2 hours) regression_tests_gui

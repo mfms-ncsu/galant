@@ -224,7 +224,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                     if (sel != null) {
                         gp.setDragging(true);
                         gp.setEdgeTracker(null);
-                        if ( !dispatch.isAnimationMode() || !dispatch.isAlgorithmMovesNodes()) {
+                        if ( !dispatch.isAnimationMode() || !dispatch.algorithmMovesNodes()) {
                             sel.setFixedPosition( arg0.getPoint() );
                         }
                     }

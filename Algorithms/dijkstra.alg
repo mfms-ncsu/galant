@@ -10,7 +10,8 @@ import java.util.PriorityQueue;
 
 final double INFINITY = Double.POSITIVE_INFINITY;
 
-final Edge [] chosenEdge = new Edge[ getNodes().size() ];
+Edge [] chosenEdge;
+Graph graph;
 
 function decreaseKey( Node v, double newKey ) {
     nodePQ.remove(v);
@@ -18,6 +19,9 @@ function decreaseKey( Node v, double newKey ) {
     nodePQ.add(v);
 }
 
+algorithm {
+graph = getGraph();
+chosenEdge = new Edge[ graph.getNodes().size() ]; 
 beginStep();
 for_nodes(node) {
     node.setWeight( INFINITY );
@@ -53,5 +57,5 @@ while ( ! nodePQ.isEmpty() ) {
           // already in tree
     } // end, adjacency list traversal
 } // stop when priority queue is empty
-
+}
 //  [Last modified: 2013 08 03 at 12:39:35 GMT]

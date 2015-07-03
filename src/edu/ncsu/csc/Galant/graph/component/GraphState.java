@@ -2,7 +2,6 @@ package edu.ncsu.csc.Galant.graph.component;
 
 import edu.ncsu.csc.Galant.GraphDispatch;
 
-
 /**
  * 
  * Stores the current state of the graph for iterating through the animation. Each state
@@ -35,7 +34,7 @@ public class GraphState {
 
 	private int state = 0;
 	
-	static public int initializationComplete = 0;
+	static private int initializationComplete = 0;
 
     /**
      * non-zero if in the middle of a step, i.e., between beginStep() and
@@ -48,38 +47,6 @@ public class GraphState {
 	public GraphState() {
 		state = 1;
 	}
-	
-	/*
-	public void setInitializationComplete(){
-		initializationComplete++;
-		Thread a = Thread.currentThread();
-		// modify the status message to say that initialization is complete
-		//System.out.printf("Initialization complete; suspending thread [%s]", a.getName());
-		//graphWindow doesn't exist
-		//this.graph.graphWindow.updateStatusLabel("Initialization complete".toCharArray());
-		synchronized(this){
-			try{
-				this.wait();
-			}
-			catch(InterruptedException e){
-				e.printStackTrace(System.out);
-			}
-		}
-	}
-	
-	
-	static public void setInitializationIncomplete(){
-		initializationComplete = 0;
-	}
-	
-	static public boolean initializationComplete(){
-		return initializationComplete != 0;
-	}
-	
-	static public boolean initializationIncomplete(){
-		return initializationComplete == 0;
-	} */
-	
 	
 	/**
 	 * @return true if the graph is directed, false otherwise
@@ -113,8 +80,10 @@ public class GraphState {
 		this.setStepComplete(true);
 		synchronized(this){
 			try{
-				if(/*!this.initializationIncomplete()  && */(!locked)){ /* Wait only if initialization is actually complete; otherwise program hangs while setting up graph when launching (when the addNodeState and addEdgeState function calls are also made) */	
-					this.wait(); // Suspend algorithm execution until notified to complete another step
+				if ( !locked ) {
+                    // Suspend algorithm execution until notified to complete
+                    // another step
+					this.wait();
 				}
 			}
 			catch (InterruptedException e){
@@ -150,4 +119,4 @@ public class GraphState {
 	
 }
 
-//  [Last modified: 2014 03 14 at 14:26:02 GMT]
+//  [Last modified: 2015 07 03 at 14:26:53 GMT]

@@ -46,7 +46,7 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
 	public static enum AlgorithmOrGraph {
 		// Note: there shouldn't be any overlap between extensions for algorithms and extensions for graphs,
 		// because that would make the results of typeForFileName(String) not be well-defined.
-		Algorithm("alg", "txt"), Graph("graphml");
+		CompiledAlgorithm("class"), Algorithm("alg", "txt"), Graph("graphml");
 		
 		private static final List<String> ALL_FILE_EXTS = new ArrayList<String>();
 		static
@@ -116,6 +116,7 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
 	public GEditorPanel addEditorTab(String filename, String filepath, String content, AlgorithmOrGraph type) {
 		return addEditorTab(filename, filepath, content, type, true);
 	}
+
 	public GEditorPanel addEditorTab(String filename, String filepath, String content, AlgorithmOrGraph type, boolean serialize) {
 		String fullyQualifiedName = (filepath != null) ? filepath + "/" + filename : null;
 		GEditorPanel panel;
@@ -123,6 +124,8 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
 			panel = new GGraphEditorPanel(this, filename, content);
 		else if(type == AlgorithmOrGraph.Algorithm)
 			panel = new GAlgorithmEditorPanel(this, filename, content);
+		else if(type == AlgorithmOrGraph.CompiledAlgorithm)
+			panel = new GCompiledAlgorithmEditorPanel(this, filename, content);
 		else return null;
 		
 		if(filepath != null) panel.setFilePath(filepath);
@@ -236,6 +239,7 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
 				GEditorPanel gaep = (GEditorPanel) panel;
 				if(gaep instanceof GGraphEditorPanel) typeSelected = AlgorithmOrGraph.Graph;
 				if(gaep instanceof GAlgorithmEditorPanel) typeSelected = AlgorithmOrGraph.Algorithm;
+				if(gaep instanceof GCompiledAlgorithmEditorPanel) typeSelected = AlgorithmOrGraph.CompiledAlgorithm;
 				for(GEditorPanel gep : editorPanels) {
 					if(gep instanceof GAlgorithmEditorPanel) {
 						if(!foundAlg) foundAlg = true;
@@ -244,6 +248,13 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
 					if(gep instanceof GGraphEditorPanel) {
 						if(!foundGraph) foundGraph = true;
 						else if(typeSelected == AlgorithmOrGraph.Graph) foundSelected = true;
+					}
+					/* IMPORTATNT: The following foundGraph/foundSelected processes are necessary
+					 * or listener will give no response when user click on the "close" button.
+					 */
+					if(gep instanceof GCompiledAlgorithmEditorPanel) {
+						if(!foundGraph) foundGraph = true;
+						else if(typeSelected == AlgorithmOrGraph.CompiledAlgorithm) foundSelected = true;
 					}
 				}
 				if(!foundGraph || !foundAlg || !foundSelected) return;

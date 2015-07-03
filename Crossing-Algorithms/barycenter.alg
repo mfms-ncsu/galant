@@ -12,23 +12,14 @@
 
 import edu.ncsu.csc.Galant.local.LayeredGraph;
 
-final int MAX_ITERATIONS = 200;
+int MAX_ITERATIONS = 200;
 
-class Globals {
-    int minCrossings = Integer.MAX_VALUE;
-    int iteration = 0;
-    int pass = 0;
-    int minIteration = 0;
-    int minPass = 0;
-}
-final Globals globals = new Globals();
-final LayeredGraph layeredGraph
-    = new LayeredGraph( getGraph() );
-
-beginStep();
-layeredGraph.setWeightsToPositions();
-graph.writeMessage( "Crossings = " + layeredGraph.numberOfCrossings() );
-endStep();
+int minCrossings = Integer.MAX_VALUE;
+int iteration = 0;
+int pass = 0;
+int minIteration = 0;
+int minPass = 0;
+LayeredGraph layeredGraph;
 
 /**
  * writes a message about current number of crossings, along with context information
@@ -36,9 +27,9 @@ endStep();
 function displayMessage( int layer, String sweepDirection ) {
     int crossings = layeredGraph.numberOfCrossings();
     graph.writeMessage( "layer = " + layer
-                        + ", pass = " + globals.pass
+                        + ", pass = " + pass
                         + ", direction = " + sweepDirection
-                        + ", iteration = " + globals.iteration
+                        + ", iteration = " + iteration
                         + ", crossings = " + crossings 
                         );
 }
@@ -96,10 +87,10 @@ function reset( int layer ) {
  */
 function checkCrossings() {
     int crossings = layeredGraph.numberOfCrossings();
-    if ( crossings < globals.minCrossings ) {
-        globals.minCrossings = crossings;
-        globals.minIteration = globals.iteration;
-        globals.minPass = globals.pass;
+    if ( crossings < minCrossings ) {
+        minCrossings = crossings;
+        minIteration = iteration;
+        minPass = pass;
         layeredGraph.savePositions();
     }
 }
@@ -109,7 +100,7 @@ function upSweep( int numLayers ) {
         layeredGraph.assignWeights( layer, LayeredGraph.Scope.DOWN );
         displayAfterWeightAssignment( layer, LayeredGraph.Scope.DOWN );
         layeredGraph.sortByWeight( layer );
-        globals.iteration++;
+        iteration++;
         checkCrossings();
         displayAfterSort( layer, "up" );
         reset( layer );
@@ -121,41 +112,51 @@ function downSweep( int numLayers ) {
         layeredGraph.assignWeights( layer, LayeredGraph.Scope.UP );
         displayAfterWeightAssignment( layer, LayeredGraph.Scope.UP );
         layeredGraph.sortByWeight( layer );
-        globals.iteration++;
+        iteration++;
         checkCrossings();
         displayAfterSort( layer, "down" );
         reset( layer );
     }
 }
 
-setDirected( true );
-
 /**
  * Now the barycenter algorithm.
  */
 
-int numLayers = layeredGraph.numberOfLayers();
+algorithm {
+    setDirected( true );
 
-beginStep();
+    layeredGraph
+        = new LayeredGraph( getGraph() );
 
-checkCrossings();
-while ( globals.iteration < MAX_ITERATIONS ) {
-    /** what follows is a single pass */
-    globals.pass++;
-    if ( globals.pass % 1000 == 0 )
-        System.out.println( "pass = " + globals.pass );
-    upSweep( numLayers );
-    downSweep( numLayers );
+    beginStep();
+    layeredGraph.setWeightsToPositions();
+    graph.writeMessage( "Crossings = " + layeredGraph.numberOfCrossings() );
+    endStep();
+
+    int numLayers = layeredGraph.numberOfLayers();
+    
+    beginStep();
+
+    checkCrossings();
+    while ( iteration < MAX_ITERATIONS ) {
+        /** what follows is a single pass */
+        pass++;
+        if ( pass % 1000 == 0 )
+            System.out.println( "pass = " + pass );
+        upSweep( numLayers );
+        downSweep( numLayers );
+    }
+
+    layeredGraph.displaySavedPositions();
+    graph.writeMessage( "min pass = " + minPass
+                        + ", min iteration = " + minIteration
+                        + ", min crossings = " + minCrossings 
+                        );
+    System.out.println( "min pass = " + minPass
+                        + ", min iteration = " + minIteration
+                        + ", min crossings = " + minCrossings 
+                        );
 }
 
-layeredGraph.displaySavedPositions();
-graph.writeMessage( "min pass = " + globals.minPass
-                    + ", min iteration = " + globals.minIteration
-                    + ", min crossings = " + globals.minCrossings 
-                    );
-System.out.println( "min pass = " + globals.minPass
-                    + ", min iteration = " + globals.minIteration
-                    + ", min crossings = " + globals.minCrossings 
-);
-
-//  [Last modified: 2014 07 14 at 20:05:37 GMT]
+//  [Last modified: 2015 06 30 at 19:24:41 GMT]

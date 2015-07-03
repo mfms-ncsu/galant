@@ -17,6 +17,7 @@ import javax.tools.ToolProvider;
 import edu.ncsu.csc.Galant.GalantPreferences;
 import edu.ncsu.csc.Galant.algorithm.Algorithm;
 import edu.ncsu.csc.Galant.gui.util.ExceptionDialog;
+import edu.ncsu.csc.Galant.GalantException;
 
 /**
  * Dynamic code compilation class
@@ -79,7 +80,9 @@ public class CompilerAndLoader
 				boolean status = compilerTask.call();
 				
 				// Want to delete class files on exit.
-				removeClassFiles(outputDir);
+
+				// The class file was deleted after each compilation.
+				// removeClassFiles(outputDir);
 
 				if(!status)
 					{// If compilation error occurs
@@ -110,7 +113,11 @@ public class CompilerAndLoader
 						return cl.loadClass(qualifiedName).asSubclass(Algorithm.class).newInstance();
 					}
 				catch(Exception e)
-					{
+					{	
+						if (e instanceof NullPointerException)  {
+							ExceptionDialog.displayExceptionInDialog(new GalantException("LoadAlgorithm Failed: Check if graph call" +  
+								"is inside of algorithm{} or to use a fecthing macro"));
+						}	
 						ExceptionDialog.displayExceptionInDialog(e);
 						return null;
 					}

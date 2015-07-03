@@ -2,11 +2,11 @@ $Id: regression_test.txt 92 2014-07-14 21:22:35Z mfms $
 
 Testing protocol for Galant.
 
-0. create a new graph with two nodes and one edge; give both nodes and the edge a color, weight, and label
+0. create a new graph with two nodes and one edge; give both nodes and the edge a color, weight, and label; add another node and edge using ^n and ^e, respectively.
 
 1. open test (in Example_Graphs) and move some nodes around
 
-2. run bfs on eight_node_graph (in Example_Graphs), need node weights only
+2. run bfs on eight_node_graph (in Example_Graphs); in the middle of running the algorithm, change visibilities of weights and labels and move a few nodes around; these changes should persist during backward and forward motion as well as after the algorithm is done.
 
 3. run dfs_d on eight_node_graph (in Example_Graphs), need node and edge labels, no weights, graph must be directed
 

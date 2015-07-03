@@ -11,6 +11,7 @@ import javax.swing.text.StyledDocument;
 
 import edu.ncsu.csc.Galant.GalantPreferences;
 import edu.ncsu.csc.Galant.gui.util.ExceptionDialog;
+import edu.ncsu.csc.Galant.algorithm.code.macro.Macro;
 
 /**
  * Adds syntax highlighting in the algorithm editor. Tooltips are displayed for highlighted API references in the editor.
@@ -25,6 +26,7 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
 	
 	public static Color javaKeywordColor = GalantPreferences.JAVA_KEYWORD_COLOR.get();
 	public static Color apiKeywordColor = GalantPreferences.API_CALL_COLOR.get();
+	public static Color macroKeywordColor = GalantPreferences.MACRO_KEYWORD_COLOR.get();
 	
 	private JTextPane textpane;
 	
@@ -82,6 +84,11 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
 
 		StyledDocument doc = textpane.getStyledDocument();
 		updateDocStyles(doc);
+
+		// Initialize allMacrokeywords
+		for(int i = 0; i < Macro.MACROS.size(); i++) {
+			allMacrokeywords[i] = Macro.MACROS.get(i).getName();
+		}
 	}
 	
 	/**
@@ -109,6 +116,12 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
 			"EdgeStack", "NodePriorityQueue", "EdgePriorityQueue", "nodeQ", "edgeQ", "nodeStack", "edgeStack", "nodePQ",
 			"edgePQ", "getId", "equals", "Graph", "Node", "Edge", "for_adjacent", "for_nodes", "for_edges", "function", "graph", "initializationComplete"};
 
+	/**
+	 * An immutable list of all Macroes predefined for the user's benefit.
+	 * It get initilizaed when this GAlgorithmSyntaxHighlighting was created. See constructor. 
+	 */
+		public static String[] allMacrokeywords = new String[Macro.MACROS.size()];
+
 	@Override
 	public void run() {
 		try {
@@ -118,6 +131,7 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
 	        
 	        applyStyleToKeywords(doc, content, allJavaKeywords, javaKeywordStyleName);
 	        applyStyleToKeywords(doc, content, allAPIkeywords, "apiKeyword");
+	        applyStyleToKeywords(doc, content, allMacrokeywords, "macroKeyword");
 	        
 	        textpane.setDocument(doc);
 		} catch (Exception e) {
@@ -136,6 +150,9 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
 		
 		Style q = doc.addStyle("apiKeyword", regular);
 		StyleConstants.setForeground(q, apiKeywordColor);
+
+		Style m = doc.addStyle("macroKeyword", regular);
+		StyleConstants.setForeground(m, macroKeywordColor);
 	}
 	
 	private static void applyStyleToKeywords(StyledDocument doc, String content, String[] keywords, String styleName)
@@ -145,8 +162,8 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
 	        	while((index = content.indexOf(keyword, index)) != -1) {
 	        		char prev = (index > 0) ? content.charAt(index-1) : ' ';
 	        		char next = (index+keyword.length() < content.length()) ? content.charAt(index+keyword.length()) : ' ';
-	        		if(!Character.isJavaIdentifierPart(prev) && !Character.isJavaIdentifierPart(next))
-	        			doc.setCharacterAttributes(index, keyword.length(), doc.getStyle(styleName), true); 
+	        		if(!Character.isJavaIdentifierPart(prev) && !Character.isJavaIdentifierPart(next)) {
+	        			doc.setCharacterAttributes(index, keyword.length(), doc.getStyle(styleName), true);	        		}	
 	        		index += keyword.length();
 	        	}
 	        }

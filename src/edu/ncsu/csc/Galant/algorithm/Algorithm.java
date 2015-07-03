@@ -32,8 +32,6 @@ public abstract class Algorithm implements Runnable{
 	
 	protected GraphWindow gw;
 	
-	
-	
 		// Specialized Node/Edge types for Queues/Stacks/Priority Queues
 		protected class NodeQueue extends AbstractQueue<Node>
 			{
@@ -157,7 +155,8 @@ public abstract class Algorithm implements Runnable{
 			}
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#getNodes() */
-		protected List<Node> getNodes() throws GalantException{
+		protected List<Node> getNodes()
+        {
             return graph.getNodes();
         }
 
@@ -167,7 +166,8 @@ public abstract class Algorithm implements Runnable{
 			}
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#getEdges() */
-		protected List<Edge> getEdges() throws GalantException{
+		protected List<Edge> getEdges()
+        {
             return graph.getEdges();
         }
 
@@ -177,7 +177,8 @@ public abstract class Algorithm implements Runnable{
 			}
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#getRootNode() */
-		protected Node getRootNode() throws GalantException{
+		protected Node getRootNode()
+			{
 				return graph.getRootNode();
 			}
 
@@ -187,12 +188,14 @@ public abstract class Algorithm implements Runnable{
 			}
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#getNodeById(int) */
-		protected Node getNodeById (int id) throws GalantException{
+		protected Node getNodeById (int id)
+			{
 				return graph.getNodeById(id);
 			}
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#getEdgeById(int) */
-		protected Edge getEdgeById(int id) throws GalantException{
+		protected Edge getEdgeById(int id)
+			{
 				return graph.getEdgeById(id);
 			}
 
@@ -264,7 +267,6 @@ public abstract class Algorithm implements Runnable{
 
 		/** Runs this algorithm on the given graph. */
 		public abstract void run();
-		
 	}
 
-//  [Last modified: 2015 05 14 at 19:20:52 GMT]
+//  [Last modified: 2015 07 03 at 14:39:01 GMT]

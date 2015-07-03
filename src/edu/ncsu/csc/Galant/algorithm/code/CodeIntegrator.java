@@ -2,7 +2,7 @@ package edu.ncsu.csc.Galant.algorithm.code;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+import java.util.Scanner;
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaFileObject;
 
@@ -67,11 +67,10 @@ public class CodeIntegrator
 			IMPORTS_FIELD +
 			"public class " + NAME_FIELD + " extends Algorithm" +
 				"{" +
-					"@Override " +
-					"public void run() " +
 						String.format("{ GraphState gs = this.getGraph().getGraphState();"
 									  + "synchronized(gs){try{gs.wait();}catch (InterruptedException e){e.printStackTrace(System.out);}}"
 									  + " try {%s if(gs.isLocked()) endStep(); this.gw.getGraphPanel().setAlgorithmComplete();}"
+
                                       + " catch (Exception e)"
                                       + " { if ( e instanceof GalantException )"
                                       + " {GalantException ge = (GalantException) e;"
@@ -80,6 +79,7 @@ public class CodeIntegrator
                                       CODE_FIELD) +
 					// add newline after code in case of ending with line comment
 				"}";
+
 		//@formatter:on
 
 		/**
@@ -98,6 +98,71 @@ public class CodeIntegrator
 				// splitAt should be 1st char in 1st line not starting with "import"
 				String imports = userCode.substring(0, splitAt);
 				userCode = userCode.substring(splitAt);
+
+				// Skip all the comment line then build the new source code  
+				// Initilize a new String
+				StringBuilder sb = new StringBuilder();
+
+				Scanner scanner = new Scanner(userCode);
+				while(scanner.hasNextLine()) {
+					String line = scanner.nextLine();				
+					Matcher cStyleMatcher = Pattern.compile("(.*)\\/\\*\\*(.*)").matcher(line);
+					Matcher singleAsteriskMatcher = Pattern.compile("(.*)\\/\\*(.*)").matcher(line);
+					Matcher doubleSlashMatcher = Pattern.compile("(.*)\\/\\/(\\s|.*)").matcher(line);
+
+
+					if( cStyleMatcher.find() ) {
+							sb.append(cStyleMatcher.group(1));
+
+							Matcher behindCStyleMatcher = Pattern.compile("(\\*\\/)(.*)").matcher(cStyleMatcher.group(2));
+
+							if( behindCStyleMatcher.find()) {
+								// single line c style if falls in here
+
+								sb.append(behindCStyleMatcher.group(2) + "\n");
+							} else {
+								// multiple line c style comment if falls in here 
+								// infinte loop keep reading until hit "*/""
+								while(scanner.hasNextLine()) {
+									line = scanner.nextLine();	
+									behindCStyleMatcher = Pattern.compile("(\\*\\/)(.*)").matcher(line);
+
+									if(behindCStyleMatcher.find()) {
+										break;
+									}
+								}
+								
+								sb.append(behindCStyleMatcher.group(2) + "\n");
+							}
+					} else if( singleAsteriskMatcher.find()) {
+						sb.append(singleAsteriskMatcher.group(1));
+						Matcher behindSingleAsterisk = Pattern.compile("(\\*\\/)(.*)").matcher(singleAsteriskMatcher.group(2));
+
+						if( behindSingleAsterisk.find()) {
+								// single-line single-asterisk if falls in here
+								sb.append(behindSingleAsterisk.group(2) + "\n");
+						} else {
+							while(scanner.hasNextLine()) {
+								line = scanner.nextLine();
+								behindSingleAsterisk = Pattern.compile("(\\*\\/)(.*)").matcher(line);
+
+								if(behindSingleAsterisk.find()) {
+									break;
+								}
+							}
+
+							sb.append( behindSingleAsterisk.group(2) + "\n");
+						}	
+					} else if( doubleSlashMatcher.find()) {
+						// read everything after //
+						sb.append(doubleSlashMatcher.group(1) + "\n");
+					} else if( line!= null && line.length()>0 ){
+						sb.append(line + "\n");
+					}
+				}
+				
+				// Reassign userCode with comment line removed
+				userCode = sb.toString();
 
 				// apply macros
 				for(Macro macro : Macro.MACROS)
@@ -150,10 +215,10 @@ public class CodeIntegrator
 					CompilerAndLoader.compile(qualifiedName, sourceCode);
 				if(diagnostics != null)
 					throw new CompilationException(diagnostics);
-
+					
 				// Load
 				return CompilerAndLoader.loadAlgorithm(qualifiedName);
 			}
 	}
 
-//  [Last modified: 2015 05 13 at 18:51:14 GMT]
+//  [Last modified: 2015 07 03 at 15:56:17 GMT]

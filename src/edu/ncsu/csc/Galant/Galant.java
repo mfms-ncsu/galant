@@ -14,7 +14,6 @@ import edu.ncsu.csc.Galant.gui.window.GraphWindow;
 public class Galant {
 
 	public static void main(String[] args) {
-		
 		ExceptionDialog.setDialogExceptionHandlerAsDefault();
 		SwingUtilities.invokeLater(new Runnable(){
 			@Override
@@ -28,12 +27,10 @@ public class Galant {
 				GraphWindow.getGraphFrame().addWindowListener(gef);
 				WindowUtil.linkWindows();
 				GraphDispatch.getInstance().pushToGraphEditor();
-				}
-		}
-		);
+            }
+		});
 	}
-	
 	
 }
 
-//  [Last modified: 2015 04 30 at 15:18:43 GMT]
+//  [Last modified: 2015 07 03 at 14:42:20 GMT]

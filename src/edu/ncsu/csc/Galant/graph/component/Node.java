@@ -103,7 +103,6 @@ public class Node extends GraphElement implements Comparable<Node> {
 	
 	@Override
 	public double getWeight(int state)
-        throws GalantException
         {
             NodeState ns = getLatestValidState(state);
             return ns==null ? null : ns.getWeight();
@@ -154,7 +153,6 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 	
 	public boolean isSelected(int state)
-        throws GalantException
     {
 		NodeState ns = getLatestValidState(state);
 		
@@ -166,7 +164,6 @@ public class Node extends GraphElement implements Comparable<Node> {
     }
 	
     public boolean isHighlighted(int state)
-        throws GalantException
     {
         return isSelected(state);
     }
@@ -176,7 +173,6 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 
 	public Boolean isVisited(int state)
-        throws GalantException
     {
 		NodeState ns = getLatestValidState(state);
 		return ns==null ? null : ns.isVisited();
@@ -187,7 +183,6 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 
 	public Boolean isMarked(int state)
-        throws GalantException
     {
 		NodeState ns = getLatestValidState(state);
 		return ns==null ? null : ns.isVisited();
@@ -557,7 +552,6 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 
 	public Point getPosition(int state)
-        throws GalantException
     {
 		NodeState ns = getLatestValidState(state);
 		return ns==null ? null : ns.getPosition();
@@ -568,7 +562,6 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 
 	public int getX(int state)
-        throws GalantException
     {
 		NodeState ns = getLatestValidState(state);
 		return ns==null ? null : ns.getPosition().x;
@@ -579,7 +572,6 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 
 	public int getY(int state)
-        throws GalantException
     {
 		NodeState ns = getLatestValidState(state);
 		return ns==null ? null : ns.getPosition().y;
@@ -639,7 +631,10 @@ public class Node extends GraphElement implements Comparable<Node> {
         LogHelper.enterMethod( getClass(), "setFixedPosition: " + position 
                                + "\n node = " + this );
 		this.position = position;
-        getInitialState().setPosition( position );
+        for (int i=nodeStates.size()-1; i >= 0; i--) {
+			      NodeState ns = nodeStates.get(i);
+			      ns.setPosition( position );
+		    }
         LogHelper.exitMethod( getClass(), "setFixedPosition"
                               + "\n node = " + this );
 	}
@@ -647,7 +642,10 @@ public class Node extends GraphElement implements Comparable<Node> {
 	public void setFixedPosition(int x, int y) {
 		Point p = new Point(x, y);
 		this.position = p;
-        getInitialState().setPosition( p );
+        for (int i=nodeStates.size()-1; i >= 0; i--) {
+			      NodeState ns = nodeStates.get(i);
+			  ns.setPosition( p );
+		    }
 	}
 	
     /**
@@ -733,6 +731,7 @@ public class Node extends GraphElement implements Comparable<Node> {
 		NodeState latest = latestState();
 		NodeState ns = new NodeState ( latest, this.graphCurrentState );
 		
+        LogHelper.logDebug( "newState (node) = " + ns );
 		return ns;
 	}
 
@@ -865,4 +864,4 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 }
 
-//  [Last modified: 2015 05 21 at 18:52:52 GMT]
+//  [Last modified: 2015 05 26 at 15:25:57 GMT]

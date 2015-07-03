@@ -16,19 +16,19 @@
  * change *contents* at will, as long as the references to the arrays/objects
  * remain unchanged.
  */
-class GlobalVariables {
-    public int time;
-}
 
+int time;
 Graph graph;
-
-final GlobalVariables globals = new GlobalVariables();
 int [] discovery;
+// Append initialization in algorithm{} or in Fectching Macro way: nodesList
+// discovery;
 int [] finish;
+// Append initialization in algorithm{} or in Fectching Macro way: nodesList
+// finish;
 
 function visit( Node v ) {
-    globals.time++;
-    discovery[ v.getId() ] = globals.time;
+    time++;
+    discovery[ v.getId() ] = time;
     beginStep();
     v.setLabel( "" + discovery[ v.getId() ] );
     v.setSelected( true );
@@ -51,35 +51,34 @@ function visit( Node v ) {
         }
         endStep();
     }
-    globals.time++;
-    finish[ v.getId() ] = globals.time;
+    time++;
+    finish[ v.getId() ] = time;
     beginStep();
     v.mark();
     v.setLabel( "" + discovery[ v.getId() ] + "/" + finish[ v.getId() ] );
     endStep();
 }
 
-algorithm {
- graph = getGraph();
- discovery = new int[ graph.numberOfNodes() ];
- finish = new int[ graph.numberOfNodes() ];
+algorithm { 
+    graph = getGraph();
+    discovery = new int[ graph.numberOfNodes() ];
+    finish = new int[ graph.numberOfNodes() ];
+    setDirected( true );
 
- setDirected( true );
+    beginStep();
+    for_nodes( u ) {
+        u.setLabel("");
+    }
+    for_edges( e ) {
+        e.setLabel("");
+    }
+    endStep();
 
- beginStep();
- for_nodes( u ) {
-     u.setLabel("");
- }
- for_edges( e ) {
-     e.setLabel("");
- }
- endStep();
-
- for_nodes( u ) {
-     if ( ! u.isSelected() ) {
-         visit( u );
-     }
- }
+    for_nodes( u ) {
+        if ( ! u.isSelected() ) {
+            visit( u );
+        }
+    }
 }
 
-//  [Last modified: 2014 05 12 at 16:48:42 GMT]
+//  [Last modified: 2015 07 03 at 15:08:59 GMT]

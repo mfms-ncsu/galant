@@ -126,10 +126,9 @@ public class DeleteNodeDialog extends JDialog
                         isInt = false;
                     }
                     Graph g = dispatch.getWorkingGraph();
-                    int numNodes = g.getNodes().size();
-                if (isInt && nodeId < numNodes && nodeId >= 0) {
-                    //delete specified node
                     Node n = g.getNodeById(nodeId);
+                if (isInt && n != null && !n.isDeleted()) {
+                    //delete specified node
                     g.removeNode(n);                    
                     dispatch.pushToTextEditor(); 
                     //we're done; clear and dismiss the dialog
@@ -139,7 +138,7 @@ public class DeleteNodeDialog extends JDialog
                     nodeTextField.selectAll();
                     JOptionPane.showMessageDialog(
                                     DeleteNodeDialog.this,
-                                    "Sorry, End Point Must Between 0 and " + (numNodes - 1),
+                                    "Sorry, Node " + nodeText + " Doesn't Exist.",
                                     "Try again",
                                     JOptionPane.ERROR_MESSAGE);
                     nodeText = null;

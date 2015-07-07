@@ -179,8 +179,8 @@ public class EdgeEditDialog extends JDialog
                         for (Edge ed : edges) {
                             g.removeEdge(ed);
                         }
+                        GraphWindow.componentEditPanel.setWorkingComponent(null);
                     }
-                    GraphWindow.componentEditPanel.setWorkingComponent(null);
                     dispatch.pushToTextEditor(); 
                     //we're done; clear and dismiss the dialog
                     clearAndHide();

@@ -278,7 +278,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                     if (sel != null) {
                         gp.setDragging(true);
                         gp.setEdgeTracker(null);
-                        if ( !dispatch.isAnimationMode() || !dispatch.isAlgorithmMovesNodes()) {
+                        if ( !dispatch.isAnimationMode() || !dispatch.algorithmMovesNodes()) {
                             sel.setFixedPosition( arg0.getPoint() );
                         }
                     }
@@ -912,8 +912,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
         return true;
       }
       // "Ctrl" pressed
-      if(!dispatch.isAnimationMode() && e.getID()==KeyEvent.KEY_PRESSED
-                                     && e.getKeyCode()==KeyEvent.VK_CONTROL){
+      if(e.getID()==KeyEvent.KEY_PRESSED && e.getKeyCode()==KeyEvent.VK_CONTROL){
           ctrlPressed = true;
         return true;
       }

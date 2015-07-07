@@ -95,10 +95,6 @@ public class GraphDispatch {
 	public boolean isAnimationMode() {
 		return this.animationMode;
 	}
-  
-  public boolean isAlgorithmMovesNodes() {
-		return this.algorithmMovesNodes;
-	}
 	
 	public void setAnimationMode(boolean mode) {
 		boolean old = this.animationMode;
@@ -106,6 +102,14 @@ public class GraphDispatch {
 		notifyListeners(ANIMATION_MODE, new Boolean(old), new Boolean(this.animationMode) );
 	}
 
+  public boolean algorithmMovesNodes() {
+		return this.algorithmMovesNodes;
+	}
+  
+  public void setAlgorithmMovesNodes(boolean algmovnod) {
+    this.algorithmMovesNodes = algmovnod;
+  }
+  
 	public void pushToGraphEditor() {
 		notifyListeners(GRAPH_UPDATE, null, null);
 	}

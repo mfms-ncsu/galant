@@ -758,9 +758,8 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
     @Override
     public boolean dispatchKeyEvent(KeyEvent e) {
       //"left" step backward when in animation mode
-      if(e.getID()==KeyEvent.KEY_PRESSED && e.getKeyCode()==KeyEvent.VK_LEFT){
+      if(dispatch.isAnimationMode() && e.getID()==KeyEvent.KEY_PRESSED && e.getKeyCode()==KeyEvent.VK_LEFT){
         synchronized (this) { //Handle delay
-          if (dispatch.isAnimationMode()) {
             gp.decrementDisplayState();
             stepForward.setEnabled(gp.hasNextState());
 				    stepBack.setEnabled(gp.hasPreviousState());
@@ -770,14 +769,12 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
               //Handle exception
             }
             frame.repaint();
-          }
         }
         return true;
       }
       //"right" step forward when in animation mode
-      if(e.getID()==KeyEvent.KEY_PRESSED && e.getKeyCode()==KeyEvent.VK_RIGHT){
+      if(dispatch.isAnimationMode() && e.getID()==KeyEvent.KEY_PRESSED && e.getKeyCode()==KeyEvent.VK_RIGHT){
         synchronized (this) { //Handle delay
-          if (dispatch.isAnimationMode()) {
             gp.incrementDisplayState();
             stepForward.setEnabled(gp.hasNextState());
 				    stepBack.setEnabled(gp.hasPreviousState());
@@ -787,7 +784,6 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
               //Handle exception
             }
             frame.repaint();
-          }
         }
         return true;
       }

@@ -9,11 +9,13 @@ package edu.ncsu.csc.Galant.graph.component;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.TreeMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
+
 import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.GraphDispatch;
+import edu.ncsu.csc.Galant.gui.window.GraphWindow;
 import edu.ncsu.csc.Galant.logging.LogHelper;
 
 /**
@@ -73,6 +75,8 @@ class LayerInformation {
  * $Id: Graph.java 113 2015-05-05 15:31:47Z mfms $
  */
 public class Graph {
+	
+	public GraphWindow graphWindow;
 
     public final static Double NOT_A_WEIGHT = Double.NaN;
     public final static String NOT_A_LABEL = "";
@@ -107,6 +111,7 @@ public class Graph {
 	public Graph() {
 		messages = new TreeMap<Integer, String>();
 		currentGraphState = new GraphState();
+		currentGraphState.setGraph(this);
 		nodes = new ArrayList<Node>();
 		edges = new ArrayList<Edge>();
 	}

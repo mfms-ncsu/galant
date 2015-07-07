@@ -9,23 +9,25 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyListener;
 import java.awt.KeyboardFocusManager;
 import java.awt.KeyEventDispatcher;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+
 import javax.swing.BoxLayout;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -35,6 +37,7 @@ import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
+
 import edu.ncsu.csc.Galant.GraphDispatch;
 import edu.ncsu.csc.Galant.graph.component.Edge;
 import edu.ncsu.csc.Galant.graph.component.Graph;
@@ -65,8 +68,14 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
     public static final int TOOLBAR_HEIGHT = 24;
     public static final int ANIMATION_BUTTON_SIZE = 40;
 	
+  
+    
 	/** Refers to the singleton GraphDispatch to push global information */
 	private final GraphDispatch dispatch;
+	
+	public GraphDispatch getGraphDispatch(){
+		return dispatch;
+	}
 	
 	/** The main frame for the Visual Graph Editor **/
 	private static JFrame frame;
@@ -76,6 +85,8 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	private static JToolBar toolBar;
 	
 	/** The Graph panel used to draw the active graph **/
+	// MPM: Very short names for fields (like 'gp') are abominable for maintenance purposes. It would be far better to name
+	// this graphPanel.
 	private static GraphPanel gp;
 	
 	/** A panel used to edit Graph element's properties **/ 
@@ -84,6 +95,9 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	/** A panel used to navigate through an animation **/
 	private static JPanel animationButtons;
 	private final JButton stepForward;
+	public JButton getStepForward(){
+		return stepForward;
+	}
 	private final JButton stepBack;
     private final JButton done;
 	
@@ -103,6 +117,45 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	private JToggleButton edgeWeights;
 	
 	private JToggleButton repositionBtn;
+
+	// MPM: I would recommend that all the instance variables be grouped together, and the status label-modifying methods
+	// go at the bottom of this class.
+	// MPM: The status label has been a handy GUI debug tool, but I think it's really useful for ordinary users too.
+	// Think about what would be good to display in this field, and then discuss it with the rest of your team.
+	private JLabel statusLabel;
+	
+	
+	/* Update the status message to display the graph state
+	 * @param s the integer state to display as part of a message
+	 */
+	public void updateStatusLabel(int s){
+		String t = "Display state is " + s;
+		statusLabel.setText(t);
+		//System.out.printf("\nUpdating status label to a number %d; caller is %s\n",s, Thread.currentThread().getName());
+	}
+	/*
+	 * Want to display a custom message?  We've got you covered.  Lets the status message be anything desired
+	 * @param a Character array to display as the status message
+	 */
+	public void updateStatusLabel(char [] a){
+		statusLabel.setText(new String(a));
+		//System.out.printf("\nUpdating status label to chara array: %s; caller is %s\n", new String(a), Thread.currentThread().getName());
+	}
+	
+	/*
+	 * Same as above, but it takes a string object instead of a character array
+	 * @param s String to display as status message
+	 */
+	public void updateStatusLabel(String s) {
+		//System.out.printf("\n in the update status label function: %s; caller is %s \n",s, Thread.currentThread().getName());
+		statusLabel.setText(s);
+	}
+	
+
+	public String getStatusLabelAsAString(){
+		return statusLabel.getText();
+	}
+	
 	
 	private GraphMode mode = null;
   
@@ -208,10 +261,11 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		
 		this.dispatch = _dispatch;
 		// Register this object as a change listener. Allows GraphDispatch notifications to be pushed to this object
+		_dispatch.getWorkingGraph().graphWindow = this;
 		_dispatch.addChangeListener(this);
 		
 		// Create the panel that renders the active Graph
-		gp = new GraphPanel(dispatch);
+		gp = new GraphPanel(dispatch, this);
 
 		// Add a listener to handle visual editing of the Graph
 		gp.addMouseMotionListener( new MouseMotionListener() {
@@ -391,6 +445,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		
 		frame.addComponentListener(this);
 		
+		// Create the buttons to navigate the graph state: forward, back, and stop
 		stepForward = new JButton(new ImageIcon(GraphWindow.class.getResource("images/stepforward_24.png")));
 		stepForward.setToolTipText("Step Forward\n[->]");
     stepBack = new JButton(new ImageIcon(GraphWindow.class.getResource("images/stepback_24.png")));
@@ -400,11 +455,13 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
     
 		componentEditPanel = new ComponentEditPanel();
 		componentEditPanel.setVisible(false);
-		
+
+		statusLabel = new JLabel("No status");
 		
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
 		this.add(initToolbar());
+		this.add(statusLabel);
 		this.add(gp);
 		this.add(initAnimationPanel());
 		this.add(componentEditPanel);
@@ -428,8 +485,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		this.mode = mode;
 		gp.setEdgeTracker(null);
 				
-		switch(mode)
-			{
+		switch(mode) {
 				case SELECT:{
 					select.setSelected(true);
 					break;
@@ -460,8 +516,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	private void changeDirectedness(Directedness mode) {
 		LogHelper.enterMethod(getClass(), "changeDirectedness " + mode);
 		
-		switch(mode)
-			{
+		switch(mode){
 				case DIRECTED:{
 					directedBtn.setSelected(true);
 					dispatch.getWorkingGraph().setDirected(true);
@@ -493,6 +548,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 				animationButtons.setVisible(true);
                 animationButtons.setFocusable(true);
                 animationButtons.requestFocusInWindow();
+
         directedBtn.setVisible(false);
         undirectedBtn.setVisible(false);
 				select.setVisible(false);
@@ -512,10 +568,12 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 			}
 			
 		// Update the graph directedness flag to the new working graph's flag
-		} else if (evt.getPropertyName().equals(GraphDispatch.GRAPH_UPDATE)) {
+		} 
+		else if (evt.getPropertyName().equals(GraphDispatch.GRAPH_UPDATE)) {
 			if (dispatch.getWorkingGraph().isDirected()) {
 				changeDirectedness(Directedness.DIRECTED);
-			} else {
+			}
+			else {
 				changeDirectedness(Directedness.UNDIRECTED);
 			}
 		}
@@ -625,13 +683,11 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	 * @param mode The Edit mode to create a button for
 	 * @return the appropriate JToggleButton
 	 */
-	private JToggleButton createButton(final GraphMode mode)
-		{
+	private JToggleButton createButton(final GraphMode mode){
 			JToggleButton button = new JToggleButton();
 			button.addActionListener(new ActionListener(){
 				@Override
-				public void actionPerformed(ActionEvent e)
-					{
+				public void actionPerformed(ActionEvent e){
 						changeMode(mode);
 					}
 			});
@@ -651,8 +707,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		JToggleButton button = new JToggleButton();
 		button.addActionListener(new ActionListener(){
 			@Override
-			public void actionPerformed(ActionEvent e)
-				{
+			public void actionPerformed(ActionEvent e){
 					changeDirectedness(mode);
 					dispatch.pushToTextEditor(); 
 				}
@@ -672,8 +727,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		final JToggleButton button = new JToggleButton();
 		button.addActionListener(new ActionListener(){
 			@Override
-			public void actionPerformed(ActionEvent e)
-				{
+			public void actionPerformed(ActionEvent e){
 					displayType.setShown(button.isSelected());
 					frame.repaint(); 
 				}
@@ -684,6 +738,48 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		button.setSelected(displayType.isShown());
 		return button;
 	}
+	
+    class AnimationKeyListener extends KeyAdapter {
+        static final long DELAY_TIME = 17;
+
+        /**
+         * Intent is to delay for about 1/60 second = roughly 17 milliseconds
+         * to allow the display to catch up to repeated keystrokes when an
+         * arrow key is held down. Ultimately this should be handled by an
+         * invocation of the Timer class.
+         */
+        void delay() {
+            long startTime = System.currentTimeMillis();
+            long currentTime = System.currentTimeMillis();
+            long endOfDelay = startTime + DELAY_TIME;
+            while ( currentTime < endOfDelay ) {
+                currentTime = System.currentTimeMillis();
+            }
+        }
+
+        public void keyPressed(KeyEvent e) {
+            if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+				gp.decrementDisplayState();	
+            }
+            if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+            	updateStatusLabel("Algorithm execution in progress");
+            	gp.incrementDisplayState();
+            }
+            if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                // delete row method (when "delete" is pressed)
+            }
+            if (e.getKeyCode() == KeyEvent.VK_UP) {
+            	updateStatusLabel("Please use left/right arrows, not 'up'");
+            }
+            if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+            	updateStatusLabel("Please use left/right arrows, not 'down'");
+            }
+            
+            delay(); /* I don't know what this does but it seems ugly */
+            frame.repaint();
+        }
+    }
+    
 
 	/**
 	 * Initialize the animation panel controls
@@ -694,11 +790,16 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		LogHelper.enterMethod(getClass(), "initAnimationPanel");
 		animationButtons = new JPanel();
 		
-		// Move the display state in GraphPanel back one 
 		stepBack.setEnabled(false);
 		stepBack.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				/*
+				System.out.printf("In the \"previous\" button function\n");
+				System.out.printf("Graph state is: %d\n",getGraphDispatch().getWorkingGraph().getGraphState().getState());
+				System.out.printf("Display state is: %d\n",getGraphPanel().getDisplayState());
+				// This was to help keep track of where we are; useful when trying to implement the being able to go back & forth; currently not useful, so leaving it commented out
+				*/
 				gp.decrementDisplayState();
 				
 				stepForward.setEnabled(gp.hasNextState());
@@ -712,12 +813,25 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		stepForward.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				/*
+				System.out.printf("In the \"next\" button function\n");
+				System.out.printf("Graph state is: %d\n",getGraphDispatch().getWorkingGraph().getGraphState().getState());
+				System.out.printf("Display state is: %d\n",getGraphPanel().getDisplayState());
+				// This is to keep track of "where are we?"
+				 */	
+				
+				// Chain of events: disable buttons until we figure out what's going on,
+				// update status to say execution in progress (if it actually isn't, this
+				// will be replaced soon enough, but this is the only "tidy" place to update
+				// from); run a step (which will itself update the status to the new graph
+				// state number); re-enable buttons as appropriate
+				stepForward.setEnabled(false);
+				stepBack.setEnabled(false);
+				updateStatusLabel("Algorithm execution in progress");
+				frame.repaint();
 				gp.incrementDisplayState();
 				
-				stepForward.setEnabled(gp.hasNextState());
-				stepBack.setEnabled(gp.hasPreviousState());
 				
-				frame.repaint();
 			}
 		});
 		
@@ -982,6 +1096,17 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		// TODO Auto-generated method stub
 		
 	}
+	public void repaintFrame() {
+		frame.repaint();
+	}
+	public JButton getStepBack(){
+		return stepBack;
+	}
+	public JFrame getFrame(){
+		return frame;
+	}
+	
+
 }
 
-//  [Last modified: 2015 05 19 at 20:29:47 GMT]
+//  [Last modified: 2015 07 03 at 14:16:12 GMT]

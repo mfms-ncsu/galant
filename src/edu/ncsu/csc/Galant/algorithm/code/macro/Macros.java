@@ -164,7 +164,6 @@ public class Macros
 							return Matcher.quoteReplacement("for(Node " + args[0] + " : getNodes())");
 						}
 				});
-
 				/*
 				 * for_edges: iterates over all edges in the graph.
 				 * 
@@ -185,12 +184,24 @@ public class Macros
 							return Matcher.quoteReplacement("for(Edge " + args[0] + " : getEdges())");
 						}
 				});
+				
+				/*
+				 * initializationComplete(); : marks the end of the initialization portion of the algorithm
+				 * Usage:
+				 * <initialization code>
+				 * initializationComplete(); 
+				 * <code block>
+				 * 
+				 * Parameters: none
+				 */
+                //				Macro.MACROS.add(new SimpleReplacementMacro("initializationComplete\\(\\);","gs.setInitializationComplete();"));
+				
 
 				Macro.MACROS.add(new ParameterizedMacro(MacroUtil.replaceWhitespace("function (\\S+)?  (\\S+)"), true){
 							
 						@Override
 						public String getName() {
-								return "new_function";
+								return "function";
 							}
 
 						private String getObjectType(String type)
@@ -292,8 +303,8 @@ public class Macros
 				 * 
 				 * code_block: a block of code that is executed for the algorithm
 				 */
-				Macro.MACROS.add(new AlgorithmMacro());	
+				 // Macro.MACROS.add(new AlgorithmMacro());	
 			}
 	}
 
-//  [Last modified: 2015 06 30 at 15:33:17 GMT]
+//  [Last modified: 2015 07 03 at 14:46:18 GMT]

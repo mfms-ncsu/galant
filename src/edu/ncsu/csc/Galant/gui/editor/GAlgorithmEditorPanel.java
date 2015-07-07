@@ -76,28 +76,25 @@ public class GAlgorithmEditorPanel extends GEditorPanel {
 	public boolean compile() 
     {
 		LogHelper.enterMethod(getClass(), "compile");
-		try
-			{
-				setCompiledAlgorithm(CodeIntegrator.integrateCode(fileName, textPane.getText()));
-				LogHelper.exitMethod(getClass(), "compile");
-				return true;
-			}
-		catch(CompilationException e)
-			{
-				setCompiledAlgorithm(null);
-				// TODO: display compiler errors
-				LogHelper.exitMethod(getClass(), "compile [CompilationException]");
-                LogHelper.setEnabled( true );
-				for(Diagnostic<?> diagnostic : e.getDiagnostics().getDiagnostics()) {
-                    long line =  diagnostic.getLineNumber();
-                    String message = diagnostic.getMessage(getLocale());
-					LogHelper.logDebug("Error on line " + line + ": " + message);
-                }
-                LogHelper.restoreState();
-				return false;
-			}
-		catch(MalformedMacroException e)
-			{
+		try{
+			setCompiledAlgorithm(CodeIntegrator.integrateCode(fileName, textPane.getText()));
+			LogHelper.exitMethod(getClass(), "compile");
+			return true;
+		}
+		catch(CompilationException e){
+			setCompiledAlgorithm(null);
+			// TODO: display compiler errors
+			LogHelper.exitMethod(getClass(), "compile [CompilationException]");
+            LogHelper.setEnabled( true );
+			for(Diagnostic<?> diagnostic : e.getDiagnostics().getDiagnostics()) {
+				long line =  diagnostic.getLineNumber();
+                String message = diagnostic.getMessage(getLocale());
+				LogHelper.logDebug("Error on line " + line + ": " + message);
+            }
+            LogHelper.restoreState();
+			return false;
+		}
+		catch(MalformedMacroException e){
 				setCompiledAlgorithm(null);
 				// TODO: display macro errors
                 LogHelper.setEnabled( true );
@@ -105,7 +102,7 @@ public class GAlgorithmEditorPanel extends GEditorPanel {
 				LogHelper.logDebug(e.getMessage());
                 LogHelper.restoreState();
 				return false;
-			}
+		}
         catch ( GalantException e ) {
             e.report( "Galant compiler error" );
             return false;
@@ -118,8 +115,12 @@ public class GAlgorithmEditorPanel extends GEditorPanel {
 	 */
 	public void run() {
 		GraphDispatch.getInstance().setAnimationMode(true);
-		getCompiledAlgorithm().setGraph(GraphDispatch.getInstance().getWorkingGraph());
-		getCompiledAlgorithm().run();
+
+		Algorithm ca = getCompiledAlgorithm();
+		ca.setGraph(GraphDispatch.getInstance().getWorkingGraph());
+		Thread t = new Thread(ca);
+		t.setName("Execution thread");
+		t.start();
 	}
 	
 	/**
@@ -182,4 +183,4 @@ public class GAlgorithmEditorPanel extends GEditorPanel {
 
 }
 
-//  [Last modified: 2015 05 08 at 14:58:01 GMT]
+//  [Last modified: 2015 07 03 at 14:20:24 GMT]

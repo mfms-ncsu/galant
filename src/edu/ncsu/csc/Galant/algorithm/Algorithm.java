@@ -1,6 +1,16 @@
 package edu.ncsu.csc.Galant.algorithm;
 
-import java.util.*;
+import java.util.AbstractQueue;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.Stack;
+
+import edu.ncsu.csc.Galant.GalantException;
+import edu.ncsu.csc.Galant.GraphDispatch;
 // import java.util.ArrayDeque;
 // import java.util.ArrayList;
 // import java.util.Iterator;
@@ -12,15 +22,16 @@ import edu.ncsu.csc.Galant.graph.component.Edge;
 import edu.ncsu.csc.Galant.graph.component.Graph;
 import edu.ncsu.csc.Galant.graph.component.GraphState;
 import edu.ncsu.csc.Galant.graph.component.Node;
-import edu.ncsu.csc.Galant.GalantException;
-import edu.ncsu.csc.Galant.GraphDispatch;
+import edu.ncsu.csc.Galant.gui.window.GraphWindow;
 
 /** 
  * Represents a runnable algorithm. 
  * @author Jason Cockrell, Ty Devries, Alex McCabe, Michael Owoc
  */
-public abstract class Algorithm
-	{
+public abstract class Algorithm implements Runnable{
+	
+	protected GraphWindow gw;
+	
 		// Specialized Node/Edge types for Queues/Stacks/Priority Queues
 		protected class NodeQueue extends AbstractQueue<Node>
 			{
@@ -51,8 +62,7 @@ public abstract class Algorithm
 						return Q.size();
 					}
 			}
-		protected class EdgeQueue extends AbstractQueue<Edge>
-			{
+		protected class EdgeQueue extends AbstractQueue<Edge>{
 				private Queue<Edge> Q = new ArrayDeque<Edge>();
 				@Override
 				public boolean offer(Edge e)
@@ -103,14 +113,12 @@ public abstract class Algorithm
 		protected NodePriorityQueue nodePQ = new NodePriorityQueue();
 		protected EdgePriorityQueue edgePQ = new EdgePriorityQueue();
 
-		public Algorithm()
-			{
+		public Algorithm(){
 				algorithms.add(this);
 			}
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph */
-		public Graph getGraph()
-			{
+		public Graph getGraph(){
 				return graph;
 			}
 
@@ -118,8 +126,7 @@ public abstract class Algorithm
 		 * Sets the current <code>Graph</code> to the specified </code>Graph</code>
 		 * @param graph the new <code>Graph</code> on which this <code>Algorithm</code> will run
 		 */
-		public void setGraph(Graph graph)
-			{
+		public void setGraph(Graph graph){
 				this.graph = graph;
 			}
 
@@ -128,26 +135,22 @@ public abstract class Algorithm
 		// TODO: some of these might not be supposed to be accessible by the user?
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#addNode(Node) */
-		protected void addNode(Node n)
-			{
+		protected void addNode(Node n){
 				graph.addNode(n);
 			}
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#addNode() */
-		protected Node addNode()
-			{
+		protected Node addNode(){
 				return graph.addNode();
 			}
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#isDirected() */
-		protected boolean isDirected()
-			{
+		protected boolean isDirected(){
 				return graph.isDirected();
 			}
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#setDirected(boolean) */
-		protected void setDirected(boolean directed)
-			{
+		protected void setDirected(boolean directed){
 				graph.setDirected(directed);
 			}
 
@@ -158,8 +161,7 @@ public abstract class Algorithm
         }
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#setNodes(java.util.List) */
-		protected void setNodes(List<Node> nodes)
-			{
+		protected void setNodes(List<Node> nodes){
 				graph.setNodes(nodes);
 			}
 
@@ -170,8 +172,7 @@ public abstract class Algorithm
         }
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#setEdges(java.util.List) */
-		protected void setEdges(List<Edge> edges)
-			{
+		protected void setEdges(List<Edge> edges){
 				graph.setEdges(edges);
 			}
 
@@ -182,40 +183,34 @@ public abstract class Algorithm
 			}
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#setRootNode(edu.ncsu.csc.Galant.graph.component.Node) */
-		protected void setRootNode(Node rootNode)
-			{
+		protected void setRootNode(Node rootNode){
 				graph.setRootNode(rootNode);
 			}
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#getNodeById(int) */
 		protected Node getNodeById (int id)
-//             throws GalantException
 			{
 				return graph.getNodeById(id);
 			}
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#getEdgeById(int) */
 		protected Edge getEdgeById(int id)
-//             throws GalantException
 			{
 				return graph.getEdgeById(id);
 			}
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#select(int) */
-		protected void select(int id)
-			{
+		protected void select(int id){
 				graph.select(id);
 			}
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#select(edu.ncsu.csc.Galant.graph.component.Node) */
-		protected void select(Node n)
-			{
+		protected void select(Node n){
 				graph.select(n);
 			}
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#addEdge(int, int) */
-		protected void addEdge(int sourceId, int targetId)
-			{
+		protected void addEdge(int sourceId, int targetId){
 				graph.addEdge(sourceId, targetId);
 			}
 
@@ -223,61 +218,55 @@ public abstract class Algorithm
 		 * @see edu.ncsu.csc.Galant.graph.component.Graph#addEdge(edu.ncsu.csc.Galant.graph.component.Node,
 		 *      edu.ncsu.csc.Galant.graph.component.Node)
 		 */
-		protected void addEdge(Node source, Node target)
-			{
+		protected void addEdge(Node source, Node target){
 				graph.addEdge(source, target);
 			}
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#addEdge(edu.ncsu.csc.Galant.graph.component.Edge) */
-		protected void addEdge(Edge e)
-			{
+		protected void addEdge(Edge e){
 				graph.addEdge(e);
 			}
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#getState() */
-		protected int getState()
-			{
+		protected int getState(){
 				return graph.getState();
 			}
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#getGraphState() */
-		protected GraphState getGraphState()
-			{
+		protected GraphState getGraphState(){
 				return graph.getGraphState();
 			}
 
         /** @see edu.ncsu.csc.Galant.GraphDispatch#getWindowWidth() */
-        protected int windowWidth() {
+        protected int windowWidth(){
             return GraphDispatch.getInstance().getWindowWidth();
         }
 
         /** @see edu.ncsu.csc.Galant.GraphDispatch#getWindowHeight() */
-        protected int windowHeight() {
+        protected int windowHeight(){
             return GraphDispatch.getInstance().getWindowHeight();
         }
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#smartReposition() */
-		protected void smartReposition()
-			{
+		protected void smartReposition(){
 				graph.smartReposition();
 			}
 
 		/** @see edu.ncsu.csc.Galant.graph.component.GraphState */
-		protected void beginStep()
-			{
-				graph.getGraphState().resetLocks();
+		protected void beginStep(){
+				if(graph.getGraphState().isLocked()) endStep();
 				graph.getGraphState().incrementState();
 				graph.getGraphState().setLocked(true);
 			}
 
 		/** @see edu.ncsu.csc.Galant.graph.component.GraphState */
-		protected void endStep()
-			{
+		protected void endStep(){
 				graph.getGraphState().setLocked(false);
+				graph.getGraphState().pauseExecution();
 			}
 
 		/** Runs this algorithm on the given graph. */
 		public abstract void run();
 	}
 
-//  [Last modified: 2015 05 26 at 11:21:34 GMT]
+//  [Last modified: 2015 07 03 at 14:39:01 GMT]

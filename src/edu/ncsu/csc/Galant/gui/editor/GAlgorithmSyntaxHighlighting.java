@@ -1,8 +1,6 @@
 package edu.ncsu.csc.Galant.gui.editor;
 
 import java.awt.Color;
-import java.util.Dictionary;
-import java.util.Enumeration;
 import java.util.Hashtable;
 
 import javax.swing.JTextPane;
@@ -10,6 +8,7 @@ import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 import javax.swing.text.StyledDocument;
+
 import edu.ncsu.csc.Galant.GalantPreferences;
 import edu.ncsu.csc.Galant.gui.util.ExceptionDialog;
 import edu.ncsu.csc.Galant.algorithm.code.macro.Macro;
@@ -81,6 +80,7 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
         APIdictionary.put("for_nodes", "Iterates over the adjacent Nodes and Edges of a given Node.");
         APIdictionary.put("for_edges", "Iterates over all Edges in the graph.");
         APIdictionary.put("function", "Creates a function that can be called later.");
+        APIdictionary.put("initializationComplete", "Marks the end of the initialization code that occurs before steps are run");
 
 		StyledDocument doc = textpane.getStyledDocument();
 		updateDocStyles(doc);
@@ -114,7 +114,7 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
 			"getOtherEndpoint", "Graph", "Node", "Edge", "for_adjacent", "for_nodes", "for_edges", "function", "graph",
 			"setRootNode", "getRootNode", "getTargetNode", "setTargetNode", "getPaths", "NodeQueue", "EdgeQueue", "NodeStack",
 			"EdgeStack", "NodePriorityQueue", "EdgePriorityQueue", "nodeQ", "edgeQ", "nodeStack", "edgeStack", "nodePQ",
-			"edgePQ", "getId", "equals", "Graph", "Node", "Edge", "for_adjacent", "for_nodes", "for_edges", "function", "graph"};
+			"edgePQ", "getId", "equals", "Graph", "Node", "Edge", "for_adjacent", "for_nodes", "for_edges", "function", "graph", "initializationComplete"};
 
 	/**
 	 * An immutable list of all Macroes predefined for the user's benefit.

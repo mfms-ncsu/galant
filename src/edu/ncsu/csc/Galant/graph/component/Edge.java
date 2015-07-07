@@ -19,13 +19,18 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 	private GraphState graphCurrentState;
 	private List<EdgeState> edgeStates;
 	
+	public void addEdgeState(EdgeState e){
+		edgeStates.add(e);
+		graphCurrentState.pauseExecution();
+	}
+	
 	public Edge(GraphState currentState, int id, Node _source, Node _dest) {
 		this.graphCurrentState = currentState;
 		edgeStates = new ArrayList<EdgeState>();
 		attributes = new HashMap<String, Object>();
 		
 		EdgeState es = new EdgeState(currentState, id, _source, _dest);
-		edgeStates.add(es);
+		addEdgeState(es);
 	}
 	
 	public Edge(GraphState currentState, int _id, Node _source, Node _target, boolean _highlighted, double _weight, String _color, String _label) {
@@ -34,7 +39,7 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 		attributes = new HashMap<String, Object>();
 		
 		EdgeState es = new EdgeState(currentState, _highlighted, _weight, _source, _target, _id, _color, _label, false);
-		edgeStates.add(es);
+		addEdgeState(es);;
 	}
 
 	public boolean inScope() {
@@ -79,7 +84,7 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 		EdgeState es = newState();
 		es.setHighlighted(selected);
 		
-		edgeStates.add(es);
+		addEdgeState(es);;
 	}
 	
     public void highlight() {
@@ -112,7 +117,7 @@ public class Edge extends GraphElement implements Comparable<Edge> {
         {
             EdgeState es = newState();
             es.setWeight(weight);
-            edgeStates.add(es);
+            addEdgeState(es);;
         }
 
     /**
@@ -140,7 +145,7 @@ public class Edge extends GraphElement implements Comparable<Edge> {
         {
             EdgeState es = newState();
             es.clearWeight();
-            edgeStates.add(es);
+            addEdgeState(es);;
         }
 
 	/**
@@ -162,7 +167,7 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 	public void setSourceNode(Node sourceNode) {
 		EdgeState es = newState();
 		es.setSource(sourceNode);
-		edgeStates.add(es);
+		addEdgeState(es);;
 	}
 
 	/**
@@ -184,7 +189,7 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 	public void setDestNode(Node destNode) {
 		EdgeState es = newState();
 		es.setDestination(destNode);
-		edgeStates.add(es);
+		addEdgeState(es);;
 	}
 
 	public Node getOtherEndpoint(Node in) {
@@ -218,7 +223,7 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 	public void setId(int id) {
 		EdgeState es = newState();
 		es.setId(id);
-		edgeStates.add(es);
+		addEdgeState(es);;
 	}
 
 	/**
@@ -243,7 +248,7 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 	public void setColor(String color) {
 		EdgeState es = newState();
 		es.setColor(color);
-		edgeStates.add(es);
+		addEdgeState(es);;
 	}
 
 	/**
@@ -268,7 +273,7 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 	public void setLabel(String label) {
 		EdgeState es = newState();
 		es.setLabel(label);
-		edgeStates.add(es);
+		addEdgeState(es);;
 	}
 
     /**
@@ -296,7 +301,7 @@ public class Edge extends GraphElement implements Comparable<Edge> {
         {
             EdgeState es = newState();
             es.clearLabel();
-            edgeStates.add(es);
+            addEdgeState(es);;
         }
 	
 	public boolean isCreated(int state)
@@ -318,7 +323,7 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 	public void setDeleted(boolean deleted) {
 		EdgeState es = newState();
 		es.setDeleted(deleted);
-		edgeStates.add(es);
+		addEdgeState(es);;
 	}
 	
 	public void setStringAttribute(String key, String value) {

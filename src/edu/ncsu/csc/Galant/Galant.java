@@ -1,6 +1,7 @@
 package edu.ncsu.csc.Galant;
 
 import javax.swing.SwingUtilities;
+
 import edu.ncsu.csc.Galant.gui.editor.GEditorFrame;
 import edu.ncsu.csc.Galant.gui.util.ExceptionDialog;
 import edu.ncsu.csc.Galant.gui.util.WindowUtil;
@@ -16,19 +17,20 @@ public class Galant {
 		ExceptionDialog.setDialogExceptionHandlerAsDefault();
 		SwingUtilities.invokeLater(new Runnable(){
 			@Override
-			public void run()
-				{
-					GraphDispatch gd = GraphDispatch.getInstance();
-					GalantPreferences.initPrefs();
-					new GraphWindow(gd);
-					new GEditorFrame();
-					GraphWindow.getGraphFrame().addWindowListener(GEditorFrame.getSingleton());
-					WindowUtil.linkWindows();
-					GraphDispatch.getInstance().pushToGraphEditor();
-				}
+			public void run(){
+				GraphDispatch gd = GraphDispatch.getInstance();
+				GalantPreferences.initPrefs();
+				GraphWindow g = new GraphWindow(gd);
+				gd.setGraphWindow(g);
+				g.updateStatusLabel("No algorithm running".toCharArray());
+				GEditorFrame gef = new GEditorFrame();
+				GraphWindow.getGraphFrame().addWindowListener(gef);
+				WindowUtil.linkWindows();
+				GraphDispatch.getInstance().pushToGraphEditor();
+            }
 		});
 	}
 	
 }
 
-//  [Last modified: 2015 04 30 at 15:18:43 GMT]
+//  [Last modified: 2015 07 03 at 14:42:20 GMT]

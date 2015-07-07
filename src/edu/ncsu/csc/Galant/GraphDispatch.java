@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 import edu.ncsu.csc.Galant.graph.component.Graph;
+import edu.ncsu.csc.Galant.gui.window.GraphWindow;
 import edu.ncsu.csc.Galant.logging.LogHelper;
 
 /**
@@ -21,13 +22,15 @@ public class GraphDispatch {
 	private static GraphDispatch instance;
 	private Graph workingGraph;
 	private UUID graphSource;
-	
+
 	private int windowWidth;
 	private int windowHeight;
 
 	private boolean animationMode = false;
-  
-  private boolean algorithmMovesNodes = false;
+
+	private GraphWindow graphWindow;
+
+    private boolean algorithmMovesNodes = false;
 
     /** if true, this goes through the animation in slow motion but does not
      * allow backtracking */
@@ -69,6 +72,7 @@ public class GraphDispatch {
 	public Graph getWorkingGraph() {
 		if (workingGraph == null) {
 			workingGraph = new Graph();
+			workingGraph.graphWindow = graphWindow;
 		}
 		
 		return workingGraph;
@@ -156,6 +160,14 @@ public class GraphDispatch {
 		LogHelper.exitMethod(getClass(), "setWindowSize()");
 	}
 
+	public GraphWindow getGraphWindow(){
+		return graphWindow;
+	}
+
+	public void setGraphWindow(GraphWindow graphWindow){
+		this.graphWindow = graphWindow;
+	}
+
 }
 
-//  [Last modified: 2014 07 15 at 15:40:45 GMT]
+//  [Last modified: 2015 07 03 at 14:40:22 GMT]

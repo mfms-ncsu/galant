@@ -2,37 +2,36 @@ package edu.ncsu.csc.Galant.gui.window.panels;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.FontMetrics;
 import java.awt.Font;
-import java.awt.font.FontRenderContext;
-import java.awt.font.TextLayout;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
-import java.awt.Rectangle;
+import java.awt.font.TextLayout;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
-import java.awt.geom.Rectangle2D;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.text.DecimalFormat;             // DecimalFormat
 import java.util.List;
 
 import javax.swing.JPanel;
 
+import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.GalantPreferences;
 import edu.ncsu.csc.Galant.GraphDispatch;
-import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.graph.component.Edge;
 import edu.ncsu.csc.Galant.graph.component.Graph;
 import edu.ncsu.csc.Galant.graph.component.GraphState;
 import edu.ncsu.csc.Galant.graph.component.Node;
 import edu.ncsu.csc.Galant.graph.component.NodeState;
+import edu.ncsu.csc.Galant.gui.util.guiStepExecutor;
+import edu.ncsu.csc.Galant.gui.window.GraphWindow;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow.GraphDisplays;
 import edu.ncsu.csc.Galant.logging.LogHelper;
-
-import java.text.*;             // DecimalFormat
 
 /**
  * Component used to manage <code>Graph</code> actions and visual graph manipulations.
@@ -40,6 +39,20 @@ import java.text.*;             // DecimalFormat
  *
  */
 public class GraphPanel extends JPanel{
+	
+	Thread t;
+	boolean algorithmComplete;
+	public void setAlgorithmComplete(){
+		this.algorithmComplete = !false;
+	}
+	public boolean getAlgorithmComplete(){
+		return algorithmComplete ? true : false;
+	}
+	private GraphWindow gw;
+	public boolean setGraphWindow(GraphWindow a){
+		this.gw = a;
+		return false;
+	}
 
     /**
      * color of a node boundary or edge if none is specified
@@ -215,10 +228,11 @@ public class GraphPanel extends JPanel{
 	 * 
 	 * @param _dispatch A reference to the GraphDispatch
 	 */
-	public GraphPanel(GraphDispatch _dispatch) {
+	public GraphPanel(GraphDispatch _dispatch, GraphWindow a) {
 		LogHelper.enterConstructor(getClass());
 		
 		this.dispatch = _dispatch;
+		this.gw = a;
 		
 		this.setSize(600, 600);
 		//this.setMinimumSize(new Dimension(600, 600));
@@ -294,9 +308,7 @@ public class GraphPanel extends JPanel{
      * subclass of Node, we can override getPosition(), getX(), and getY() in
      * LayeredNode() so that they do the right thing.
      */
-    private Point getNodeCenter( Node n ) 
-        throws GalantException
-    {
+    private Point getNodeCenter( Node n ) throws GalantException{
         LogHelper.enterMethod( getClass(), "getNodeCenter, n = " + n );
 
         // ns is the latest state in the animation if in animation mode
@@ -773,26 +785,69 @@ public class GraphPanel extends JPanel{
 		g2d.setColor(prevColor);
 	}
 	
-	public void incrementDisplayState() {
-		LogHelper.enterMethod(getClass(), "incrementDisplayState");
+	// MPM: It's a little odd to me that the graph panel maintains information about whether the algorithm has completed. I think it
+	// might be better to keep a reference to the Algorithm instance and just directly ask it if it is complete.
+	// MPM: And this is not starting the algorithm, it is allowing the algorithm to advance.
+	public boolean resumeAlgorithmExecution(){
 		
-        LogHelper.logDebug( "" + state );
-		Graph graph = dispatch.getWorkingGraph();
-		if (this.state < graph.getState()) {
-			this.state++;
+		this.gw.getGraphDispatch().getWorkingGraph().getGraphState().setStepComplete(false);
+		if(!algorithmComplete){
+			//System.out.println("GraphPanel is notifying the worker thread so it will wake up and work.");
+			synchronized(dispatch.getWorkingGraph().getGraphState()){
+				dispatch.getWorkingGraph().getGraphState().notify();
+			}
+			if(algorithmComplete){
+				this.gw.updateStatusLabel("Execution is finished");
+				this.gw.getStepForward().setEnabled(false);
+			}
+			//System.out.printf("Algorithm is started");
+			
+		    return true; // algorithm was started
 		}
 		
-		LogHelper.exitMethod(getClass(), "incrementDisplayState");
+		return false; // algorithm not started
+	}
+	
+	public GraphWindow getGraphWindow(){
+		return gw;
+	}
+	
+	/*
+	 * This is THE function to call whenever the graph state needs to be updated.  Currently it is called whenever the user clicks on the
+	 * "next" button or the right arrow key, but also aught to be the one called for future extensions that change the interface used
+	 * It will determine if the display state merely needs to be updated, or if first a new graphState must be calculated
+	 * If the latter, it will wake up the waiting algorithm, wait for it to run one step, and then increment the graphState
+	 * Then whatever called it can re-paint the frame 
+	 */
+	public void incrementDisplayState() {
+		guiStepExecutor t = new guiStepExecutor(this);
+		t.execute();
+		
+		
+	}
+	public int getState(){
+		return this.state;
+	}
+	public void setState(int state){
+		this.state = state;
 	}
 	
 	public void decrementDisplayState() {
 		LogHelper.enterMethod(getClass(), "decrementDisplayState");
 		
+        int currentState = this.state;
 		if (this.state > 1) {
 			this.state--;
 		}
+		System.out.println("Decrementing the graph display state: [" + currentState + "] --> " + state);
 		
 		LogHelper.exitMethod(getClass(), "decrementDisplayState");
+		
+		/* This is responsible for updating the status label at the top of the Galant screen so that it displays the correct graph state
+		 * This happens whenever the user hits the right arrow key or the right arrow button
+		 */
+		GraphDispatch.getInstance().getGraphWindow().updateStatusLabel(this.getDisplayState());
+		
 	}
 	
 	public int getDisplayState() {
@@ -954,4 +1009,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2015 06 01 at 17:34:39 GMT]
+//  [Last modified: 2015 07 03 at 14:08:23 GMT]

@@ -6,9 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import edu.ncsu.csc.Galant.logging.LogHelper;
-import edu.ncsu.csc.Galant.GraphDispatch;
+
 import edu.ncsu.csc.Galant.GalantException;
+import edu.ncsu.csc.Galant.GraphDispatch;
+import edu.ncsu.csc.Galant.logging.LogHelper;
 
 /**
  * Represents node entities as elements of a graph.
@@ -83,7 +84,7 @@ public class Node extends GraphElement implements Comparable<Node> {
         LogHelper.exitConstructor( getClass(), "ns = " + ns );
 	}
 
-	public boolean inScope() {
+	public boolean inScope(){
 		return !isDeleted();
 	}
 	
@@ -765,16 +766,20 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 	
 	
-	private void addNodeState(NodeState _ns) {
+	private void addNodeState(NodeState n) {
 		for (int i=nodeStates.size()-1; i >= 0; i--) {
 			NodeState ns = nodeStates.get(i);
-			if (ns.getState() == _ns.getState()) {
-				nodeStates.set(i, _ns);
+			if (ns.getState() == n.getState()) {
+				nodeStates.set(i, n);
 				return;
 			}
 		}
 		
-		nodeStates.add(_ns);
+		nodeStates.add(n);
+				
+		n.graphState.pauseExecution();
+		
+
 	}
 	
 	public static Point genRandomPosition() {

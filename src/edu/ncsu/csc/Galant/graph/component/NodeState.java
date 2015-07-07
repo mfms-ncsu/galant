@@ -22,6 +22,8 @@ public class NodeState {
 	private String color;			
 	private String label;
     private Point position;
+    
+    public GraphState graphState;
 
     /** for layered graphs; should probably use inheritance */
     private int layer;
@@ -46,6 +48,7 @@ public class NodeState {
         this.layer = ns.layer;
         this.positionInLayer = ns.positionInLayer;
         this.deleted = ns.deleted;
+        graphState = s;
     }
 
 	public NodeState(GraphState s, int id) {
@@ -57,6 +60,7 @@ public class NodeState {
 		this.color = "#000000";
 		this.id = id;
 		this.label = null;
+		graphState = s;
 	}
 	
     /**
@@ -67,11 +71,23 @@ public class NodeState {
      * part of an algorithm)
      */
 	public NodeState(GraphState s, boolean _highlighted, boolean _visited, int _id, double _weight, String _color, String _label, Point _position) {
-		this(s.getState(), _highlighted, _visited, _id, _weight, _color, _label,_position, false);
+		this.state = s.getState();
+		
+		this.selected = _highlighted;
+		this.visited = _visited;
+		this.id = _id;
+		this.weight = _weight;
+		this.color = _color;
+		this.label = _label;
+        this.position = _position;
+		
+		this.deleted = false;
+		graphState = s;
 	}
-
-	public NodeState( int s,
-                      boolean _highlighted,
+/*
+	This constructor has been deprecated by a need to have a GraphState attached to the NodeState object.  Use at your own risk.
+	
+	public NodeState( int s, boolean _highlighted,
                       boolean _visited,
                       int _id,
                       double _weight,
@@ -91,7 +107,7 @@ public class NodeState {
         this.position = _position;
 		
 		this.deleted = _deleted;
-	}
+	}*/
 	
     /**
      * Constructor for layered graphs; nodes are never added or deleted in
@@ -101,16 +117,7 @@ public class NodeState {
      * @todo LayeredGraph should extend Graph, but this may get complicated
      * because you'd need NodeInLayeredGraph
      */
-	public NodeState( GraphState s,
-                      boolean _highlighted,
-                      boolean _visited,
-                      int _id,
-                      double _weight,
-                      String _color,
-                      String _label,
-                      int _layer,
-                      int _positionInLayer
-                      ) {
+	public NodeState( GraphState s, boolean _highlighted, boolean _visited, int _id, double _weight, String _color, String _label, int _layer, int _positionInLayer) {
 		this.state = s.getState();
 		
 		this.selected = _highlighted;
@@ -123,6 +130,7 @@ public class NodeState {
         this.positionInLayer = _positionInLayer; 
 		
 		this.deleted = false;
+		graphState = s;
 	}
 
 	public boolean isSelected() {

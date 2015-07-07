@@ -5,6 +5,8 @@
  * $Id: test_hello.alg 106 2015-04-15 13:01:30Z mfms $
  */
 
-System.out.println( "Hello world." );
+algorithm {
+    System.out.println( "Hello world." );
+}
 
-//  [Last modified: 2015 04 15 at 12:09:27 GMT]
+//  [Last modified: 2015 07 07 at 16:55:59 GMT]

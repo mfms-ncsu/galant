@@ -13,6 +13,11 @@ import edu.ncsu.csc.Galant.algorithm.code.macro.MalformedMacroException;
 import edu.ncsu.csc.Galant.graph.component.GraphState;
 import edu.ncsu.csc.Galant.logging.LogHelper;
 import edu.ncsu.csc.Galant.GalantException;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 /**
  * @todo Exception handling needs work, but the bigger issue is creation of a
@@ -46,9 +51,22 @@ public class CodeIntegrator
 
 		public static final String PACKAGE = "edu.ncsu.csc.Galant.algorithm.code.compiled";
 
-		// fields to represent variables in the class structure
-		private static final String IMPORTS_FIELD = "{Imports}", NAME_FIELD = "{Algorithm Name}",
-						CODE_FIELD = "{User Code}";
+        /**
+         * @todo These fields are initialized to meaningless values that will
+         * be replaced by others later. Should be a better way.
+         */
+		private static final String IMPORTS_FIELD = "{Imports}";
+        private static final String NAME_FIELD = "{Algorithm Name}";
+        private static final String CODE_FIELD = "{User Code}";
+        private static final String ALGORITHM_HEAD = "{Algorithm Head}";
+        private static final String ALGORITHM_TAIL = "{Algorithm Tail}";
+        private static final String ALGORITHM_BODY = "{Algorithm Body}";
+
+        /**
+         * Here is the real code that appears before and after the algorithm.
+         */
+        private static final String REAL_ALGORITHM_HEAD = "GraphState gs = this.getGraph().getGraphState();        synchronized(gs){ try{gs.wait(); } catch (InterruptedException e){e.printStackTrace(System.out); } }";
+        private static final String REAL_ALGORITHM_TAIL = "if(gs.isLocked()) endStep(); this.gw.getGraphPanel().setAlgorithmComplete();";
 
 		// The basic class structure into which the user's code can be inserted so it can be
 		// compiled.
@@ -65,21 +83,14 @@ public class CodeIntegrator
 			"import edu.ncsu.csc.Galant.algorithm.code.macro.Pair;" +
             "import edu.ncsu.csc.Galant.GalantException;" +
 			IMPORTS_FIELD +
-			"public class " + NAME_FIELD + " extends Algorithm" +
-				"{" +
-						String.format("{ GraphState gs = this.getGraph().getGraphState();"
-									  + "synchronized(gs){try{gs.wait();}catch (InterruptedException e){e.printStackTrace(System.out);}}"
-									  + " try {%s if(gs.isLocked()) endStep(); this.gw.getGraphPanel().setAlgorithmComplete();}"
+			"public class " + NAME_FIELD + " extends Algorithm" + "{" + CODE_FIELD + "}";
 
-                                      + " catch (Exception e)"
-                                      + " { if ( e instanceof GalantException )"
-                                      + " {GalantException ge = (GalantException) e;"
+		public static final String ALGORITHM_STRUCTURE = "public void run(){ try {" +
+						    ALGORITHM_HEAD + ALGORITHM_BODY + ALGORITHM_TAIL + "}" + "catch (Exception e)"
+                                      + " { \n if ( e instanceof GalantException )"
+                                      + " { GalantException ge = (GalantException) e;"
                                       + " ge.report(\"\"); ge.display(); }"
-                                      + " else e.printStackTrace(System.out);} %n }",
-                                      CODE_FIELD) +
-					// add newline after code in case of ending with line comment
-				"}";
-
+                                      + " \n else {e.printStackTrace(System.out);}}}" ;
 		//@formatter:on
 
 		/**
@@ -119,7 +130,7 @@ public class CodeIntegrator
 							if( behindCStyleMatcher.find()) {
 								// single line c style if falls in here
 
-								sb.append(behindCStyleMatcher.group(2) + "\n");
+								sb.append(behindCStyleMatcher.group(2));
 							} else {
 								// multiple line c style comment if falls in here 
 								// infinte loop keep reading until hit "*/""
@@ -132,7 +143,7 @@ public class CodeIntegrator
 									}
 								}
 								
-								sb.append(behindCStyleMatcher.group(2) + "\n");
+								sb.append(behindCStyleMatcher.group(2));
 							}
 					} else if( singleAsteriskMatcher.find()) {
 						sb.append(singleAsteriskMatcher.group(1));
@@ -140,7 +151,7 @@ public class CodeIntegrator
 
 						if( behindSingleAsterisk.find()) {
 								// single-line single-asterisk if falls in here
-								sb.append(behindSingleAsterisk.group(2) + "\n");
+								sb.append(behindSingleAsterisk.group(2));
 						} else {
 							while(scanner.hasNextLine()) {
 								line = scanner.nextLine();
@@ -151,11 +162,11 @@ public class CodeIntegrator
 								}
 							}
 
-							sb.append( behindSingleAsterisk.group(2) + "\n");
+							sb.append( behindSingleAsterisk.group(2));
 						}	
 					} else if( doubleSlashMatcher.find()) {
 						// read everything after //
-						sb.append(doubleSlashMatcher.group(1) + "\n");
+						sb.append(doubleSlashMatcher.group(1));
 					} else if( line!= null && line.length()>0 ){
 						sb.append(line + "\n");
 					}
@@ -164,9 +175,16 @@ public class CodeIntegrator
 				// Reassign userCode with comment line removed
 				userCode = sb.toString();
 
+				// Rebuild the algorithm and add head or tail as needed
+				sb = new StringBuilder( userCode.substring(0, userCode.indexOf("algorithm")));
+				sb.append(modifyAlgorithm( REAL_ALGORITHM_HEAD,
+                                           REAL_ALGORITHM_TAIL,
+                                           userCode ) );
+				userCode = sb.toString();
+
 				// apply macros
-				for(Macro macro : Macro.MACROS)
-					userCode = macro.applyTo(userCode);
+				for(Macro macro : Macro.MACROS) {
+					userCode = macro.applyTo(userCode); }
 				// apply generated macros, removing each one so if the code is recompiled,
 				// you don't end up with incorrect/duplicate macros
 				while(!Macro.GENERATED_MACROS.isEmpty())
@@ -219,6 +237,75 @@ public class CodeIntegrator
 				// Load
 				return CompilerAndLoader.loadAlgorithm(qualifiedName);
 			}
+
+		/**
+		 * Modify Algorithm as needed 
+		 * @param head code block to be appended before the substantial algorithm part
+		 * @param tail code block to be appended after the substantial algorithm part
+		 * @param userCode user code containing algorithm{}
+		 */
+		public static String modifyAlgorithm(String head, String tail, String userCode) throws MalformedMacroException {
+			String modifiedBody ;
+
+			try{
+				modifiedBody = getCodeBlock(userCode.substring(userCode.indexOf("algorithm"), userCode.length()));
+			} catch (IOException e) {
+				throw new MalformedMacroException() ;
+			}
+
+			try {
+				return ALGORITHM_STRUCTURE.replace(ALGORITHM_HEAD, head).replace(ALGORITHM_TAIL, tail).replace(ALGORITHM_BODY, modifiedBody);				
+			} catch (NullPointerException e) {
+				return ALGORITHM_STRUCTURE.replace(ALGORITHM_HEAD, "").replace(ALGORITHM_TAIL, "").replace(ALGORITHM_BODY, modifiedBody);
+			}
+		}
+
+		/**
+		 * Read and return code in between { and } in the given code
+		 * @param code code to be proceessed 
+		 */
+		private static String getCodeBlock(String code) throws IOException {
+			/* Convert code string to a BufferReader */
+			// http://www.coderanch.com/t/519147/java/java/ignore-remove-comments-java-file
+			InputStream codeInput = new ByteArrayInputStream(code.getBytes());
+			BufferedReader reader = new BufferedReader(new InputStreamReader(codeInput));
+			
+			StringBuilder sb = new StringBuilder();
+			
+			/* Increment counter when meet a {, decrement it when meet a } 
+			 * Stop when counter hit 0;
+			 */
+			int counter = 0;
+			
+			/* If false, means that the first { has not been read yet. This circumstance will not stop the 
+			 * reader even though counter is 0;
+			 */
+			boolean firstEncounter = false;
+			boolean startScan = false;
+			
+			int char1 = reader.read();
+			if (char1 != -1) {
+				do {
+					if(char1 == '{') {
+						counter ++;
+						firstEncounter = true;
+					} else if(char1 == '}'){
+						counter --;
+					}
+
+					if(firstEncounter == true) {
+						sb.append((char)char1);
+						if(counter == 0) {
+							break;
+						}
+					}
+
+					char1 = reader.read();
+					
+					} while (char1 != -1);
+				// use substring to ignore the first pair of { and }. They are mean for marking the start and end of algorithm {}	
+			}	return sb.toString().substring(1, sb.length() - 1);
+		}		
 	}
 
-//  [Last modified: 2015 07 03 at 15:56:17 GMT]
+//  [Last modified: 2015 07 07 at 14:34:55 GMT]

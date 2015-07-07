@@ -164,7 +164,6 @@ public class Macros
 							return Matcher.quoteReplacement("for(Node " + args[0] + " : getNodes())");
 						}
 				});
-
 				/*
 				 * for_edges: iterates over all edges in the graph.
 				 * 
@@ -202,7 +201,7 @@ public class Macros
 							
 						@Override
 						public String getName() {
-								return "new_function";
+								return "function";
 							}
 
 						private String getObjectType(String type)
@@ -304,7 +303,7 @@ public class Macros
 				 * 
 				 * code_block: a block of code that is executed for the algorithm
 				 */
-				Macro.MACROS.add(new AlgorithmMacro());	
+				 // Macro.MACROS.add(new AlgorithmMacro());	
 			}
 	}
 

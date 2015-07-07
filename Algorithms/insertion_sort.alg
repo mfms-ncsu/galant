@@ -13,6 +13,8 @@
  * $Id: insertion_sort.alg 74 2014-05-14 01:45:29Z mfms $
  */
 
+import edu.ncsu.csc.Galant.GraphDispatch;
+
 /**
  * Distances used when lining up nodes
  */
@@ -45,6 +47,7 @@ Graph graph;
 // }
 
 algorithm {
+GraphDispatch.getInstance().setAlgorithmMovesNodes(true);
 graph = getGraph();
 
  n = graph.getNodes().size(); 

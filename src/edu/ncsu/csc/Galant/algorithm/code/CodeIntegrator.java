@@ -49,10 +49,29 @@ public class CodeIntegrator
 
 		public static final String PACKAGE = "edu.ncsu.csc.Galant.algorithm.code.compiled";
 
-		// fields to represent variables in the class structure
-		private static final String IMPORTS_FIELD = "{Imports}", NAME_FIELD = "{Algorithm Name}",
-						CODE_FIELD = "{User Code}", ALGORITHM_HEAD = "{Algorithm Head}", 
-						ALGORITHM_TAIL = "{Algorithm Tail}", ALGORITHM_BODY = "{Algorithm Body}";
+        /**
+         * @todo These fields are initialized to meaningless values that will
+         * be replaced by others later. Should be a better way.
+         */
+		private static final String IMPORTS_FIELD = "{Imports}";
+        private static final String NAME_FIELD = "{Algorithm Name}";
+        private static final String CODE_FIELD = "{User Code}";
+        private static final String ALGORITHM_HEAD = "{Algorithm Head}";
+        private static final String ALGORITHM_TAIL = "{Algorithm Tail}";
+        private static final String ALGORITHM_BODY = "{Algorithm Body}";
+
+        /**
+         * Here is the real code that appears before and after the algorithm.
+         */
+        private static final String REAL_ALGORITHM_HEAD = "GraphState gs = this.getGraph().getGraphState();
+        synchronized(gs){
+           try{gs.wait();
+           }
+           catch (InterruptedException e){e.printStackTrace(System.out);
+           }
+        }";
+        private static final String REAL_ALGORITHM_TAIL = "if(gs.isLocked()) endStep();
+   this.gw.getGraphPanel().setAlgorithmComplete();";
 
 		// The basic class structure into which the user's code can be inserted so it can be
 		// compiled.
@@ -162,7 +181,9 @@ public class CodeIntegrator
 
 				// Rebuild the algorithm and add head or tail as needed
 				sb = new StringBuilder( userCode.substring(0, userCode.indexOf("algorithm")));
-				sb.append(modifyAlgorithm("", "", userCode));
+				sb.append(modifyAlgorithm( REAL_ALGORITHM_HEAD,
+                                           REAL_ALGORITHM_TAIL,
+                                           userCode ) );
 				userCode = sb.toString();
 
 				// apply macros
@@ -291,4 +312,4 @@ public class CodeIntegrator
 		}		
 	}
 
-//  [Last modified: 2015 06 30 at 15:57:34 GMT]
+//  [Last modified: 2015 07 07 at 14:23:35 GMT]

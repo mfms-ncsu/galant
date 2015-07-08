@@ -91,14 +91,8 @@ function edgeSift( Node x, Edge maxCrossingsEdge ) {
 
 algorithm {
 
-    System.out.println( "nodes = " + getGraph().numberOfNodes()
-                        + ", edges = " + getGraph().numberOfEdges() );
     beginStep();
     layeredGraph = new LayeredGraph( getGraph() );
-    System.out.println( "nodes = " + getGraph().numberOfNodes()
-                        + ", edges = " + getGraph().numberOfEdges() );
-
-    System.out.println( "\n" + layeredGraph );
     setDirected( true );
 
     System.out.printf( "iteration = %d, MAX_ITERATIONS = %d\n",

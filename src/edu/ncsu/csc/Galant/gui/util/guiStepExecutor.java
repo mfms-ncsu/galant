@@ -20,7 +20,7 @@ public class guiStepExecutor extends SwingWorker<Void,Long>{
 	// This is the function that gets executed when the user clicks on the nextStep button or hits the right arrow key.  It's what's actually executed by the incrementDisplayState function
 	/* It is responsible for making sure that the GUI is updated properly (& doesn't hang) during execution */
 	protected Void doInBackground(){
-		if(gp.getDisplayState() < gp.getGraphWindow().getGraphDispatch().getWorkingGraph().getGraphState().getState()){
+		if(gp.getDisplayState() < GraphDispatch.getInstance().getWorkingGraph().getGraphState().getState()){
 			//increment the graphState array position
 			//update the display state but don't run anything
 		}
@@ -32,7 +32,7 @@ public class guiStepExecutor extends SwingWorker<Void,Long>{
 			long sleepPeriod = 15L;
 			int count = 0;
 					
-			while(!gp.getGraphWindow().getGraphDispatch().getWorkingGraph().getGraphState().getStepComplete() && !gp.getAlgorithmComplete()){ // while algorithm isn't finished and a step isn't "ready", keep checking
+			while(!GraphDispatch.getInstance().getWorkingGraph().getGraphState().getStepComplete() && !gp.getAlgorithmComplete()){ // while algorithm isn't finished and a step isn't "ready", keep checking
 				try{
 					Thread.sleep(sleepPeriod); // well after waiting for a bit, that is
 				}
@@ -61,7 +61,7 @@ public class guiStepExecutor extends SwingWorker<Void,Long>{
 		gp.getGraphWindow().updateStatusLabel(gp.getDisplayState());
 		gp.getGraphWindow().getStepForward().setEnabled(!gp.getAlgorithmComplete());
 		gp.getGraphWindow().getStepBack().setEnabled(gp.hasPreviousState());
-		gp.getGraphWindow().getFrame().repaint();
+		gp.getGraphWindow().getGraphFrame().repaint();
 	}
 	
 	/*

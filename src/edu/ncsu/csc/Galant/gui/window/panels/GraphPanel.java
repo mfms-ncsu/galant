@@ -790,7 +790,7 @@ public class GraphPanel extends JPanel{
 	// MPM: And this is not starting the algorithm, it is allowing the algorithm to advance.
 	public boolean resumeAlgorithmExecution(){
 		
-		this.gw.getGraphDispatch().getWorkingGraph().getGraphState().setStepComplete(false);
+		GraphDispatch.getInstance().getWorkingGraph().getGraphState().setStepComplete(false);
 		if(!algorithmComplete){
 			//System.out.println("GraphPanel is notifying the worker thread so it will wake up and work.");
 			synchronized(dispatch.getWorkingGraph().getGraphState()){

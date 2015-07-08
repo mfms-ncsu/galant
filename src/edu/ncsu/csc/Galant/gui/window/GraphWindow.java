@@ -761,18 +761,13 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				
-				// Chain of events: disable buttons until we figure out what's going on,
-				// update status to say execution in progress (if it actually isn't, this
-				// will be replaced soon enough, but this is the only "tidy" place to update
-				// from); run a step (which will itself update the status to the new graph
-				// state number); re-enable buttons as appropriate
-				stepForward.setEnabled(false);
-				stepBack.setEnabled(false);
 				updateStatusLabel("Algorithm execution in progress");
-				frame.repaint();
 				gp.incrementDisplayState();
 				
+				stepForward.setEnabled(gp.hasNextState());
+				stepBack.setEnabled(gp.hasPreviousState());
 				
+				frame.repaint();
 			}
 		});
 		

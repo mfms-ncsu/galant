@@ -46,7 +46,7 @@ public class GraphPanel extends JPanel{
 		this.algorithmComplete = !false;
 	}
 	public boolean getAlgorithmComplete(){
-		return algorithmComplete ? true : false;
+		return algorithmComplete;
 	}
 	private GraphWindow gw;
 	public boolean setGraphWindow(GraphWindow a){
@@ -790,7 +790,7 @@ public class GraphPanel extends JPanel{
 	// MPM: And this is not starting the algorithm, it is allowing the algorithm to advance.
 	public boolean resumeAlgorithmExecution(){
 		
-		GraphDispatch.getInstance().getWorkingGraph().getGraphState().setStepComplete(false);
+		dispatch.getWorkingGraph().getGraphState().setStepComplete(false);
 		if(!algorithmComplete){
 			//System.out.println("GraphPanel is notifying the worker thread so it will wake up and work.");
 			synchronized(dispatch.getWorkingGraph().getGraphState()){
@@ -798,7 +798,6 @@ public class GraphPanel extends JPanel{
 			}
 			if(algorithmComplete){
 				this.gw.updateStatusLabel("Execution is finished");
-				this.gw.getStepForward().setEnabled(false);
 			}
 			//System.out.printf("Algorithm is started");
 			
@@ -806,10 +805,6 @@ public class GraphPanel extends JPanel{
 		}
 		
 		return false; // algorithm not started
-	}
-	
-	public GraphWindow getGraphWindow(){
-		return gw;
 	}
 	
 	/*
@@ -846,7 +841,7 @@ public class GraphPanel extends JPanel{
 		/* This is responsible for updating the status label at the top of the Galant screen so that it displays the correct graph state
 		 * This happens whenever the user hits the right arrow key or the right arrow button
 		 */
-		GraphDispatch.getInstance().getGraphWindow().updateStatusLabel(this.getDisplayState());
+		dispatch.getGraphWindow().updateStatusLabel(this.getDisplayState());
 		
 	}
 	

@@ -871,7 +871,7 @@ public class GraphPanel extends JPanel{
 		
 		for (Node n : g.getNodes()) {
             LogHelper.logDebug( "next node = " + n.getId() + " position = " + n.getPosition() );
-			if ( p.distance(n.getLatestValidState(getDisplayState()).getPosition()) < NODE_SELECTION_RADIUS ) {
+			if ( p.distance(n.getPosition()) < NODE_SELECTION_RADIUS ) {
 				top = n;
 			}
 		}

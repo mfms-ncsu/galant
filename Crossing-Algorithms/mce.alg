@@ -14,7 +14,7 @@
 
 import edu.ncsu.csc.Galant.local.LayeredGraph;
 
-int MAX_ITERATIONS = 5;
+int MAX_ITERATIONS = 100;
 int minCrossings = Integer.MAX_VALUE;
 int minEdgeCrossings = Integer.MAX_VALUE;
 int iteration = 0;
@@ -95,15 +95,12 @@ algorithm {
     layeredGraph = new LayeredGraph( getGraph() );
     setDirected( true );
 
-    System.out.printf( "iteration = %d, MAX_ITERATIONS = %d\n",
-                       iteration, MAX_ITERATIONS );
     while ( iteration < MAX_ITERATIONS ) {
         pass++;
         if ( pass % 100 == 0 ) System.out.println( "pass = " + pass );
         layeredGraph.clearMarks();
         maxCrossingsEdge = layeredGraph.getMaxCrossingsEdge( true );
         while ( maxCrossingsEdge != null && iteration < MAX_ITERATIONS ) {
-            System.out.println(  "iteration " + iteration + "\n" + layeredGraph );
             checkCrossings();
             displayCrossings();
             endStep(); beginStep();

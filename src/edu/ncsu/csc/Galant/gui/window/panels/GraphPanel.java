@@ -40,17 +40,6 @@ import edu.ncsu.csc.Galant.logging.LogHelper;
  */
 public class GraphPanel extends JPanel{
 	
-    int count = 0;
-	boolean algorithmComplete = false;
-	public void setAlgorithmComplete( boolean algorithmComplete ){
-        System.out.println("**** setAlgorithmComplete = " + algorithmComplete);
-		this.algorithmComplete = algorithmComplete;
-	}
-	public boolean getAlgorithmComplete(){
-        count++;
-        System.out.println("getAlgorithmComplete = " + algorithmComplete + ", " + count);
- 		return algorithmComplete;
-	}
 	private GraphWindow gw;
 	public boolean setGraphWindow(GraphWindow a){
 		this.gw = a;
@@ -235,7 +224,6 @@ public class GraphPanel extends JPanel{
 		LogHelper.enterConstructor(getClass());
 		
 		this.dispatch = _dispatch;
-        this.algorithmComplete = false;
 		this.gw = a;
 		
 		this.setSize(600, 600);
@@ -795,12 +783,12 @@ public class GraphPanel extends JPanel{
 	public boolean resumeAlgorithmExecution(){
 		
 		dispatch.getWorkingGraph().getGraphState().setStepComplete(false);
-		if(!algorithmComplete){
+		if ( ! dispatch.getAlgorithmComplete() ) {
 			//System.out.println("GraphPanel is notifying the worker thread so it will wake up and work.");
 			synchronized(dispatch.getWorkingGraph().getGraphState()){
 				dispatch.getWorkingGraph().getGraphState().notify();
 			}
-			if(algorithmComplete){
+			if ( dispatch.getAlgorithmComplete() ) {
 				this.gw.updateStatusLabel("Execution is finished");
 			}
 			//System.out.printf("Algorithm is started");
@@ -971,7 +959,7 @@ public class GraphPanel extends JPanel{
 	public boolean hasNextState() {
 		int graphState = dispatch.getWorkingGraph().getState();
         if ( graphState > this.state ) return true;
-		if ( ! getAlgorithmComplete() ) return true;
+		if ( ! dispatch.getAlgorithmComplete() ) return true;
         return false;
 	}
 	
@@ -1012,4 +1000,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2015 07 10 at 18:08:23 GMT]
+//  [Last modified: 2015 07 10 at 23:34:45 GMT]

@@ -9,7 +9,7 @@
 
 /** Required: node and edge labels visible */
 
-int time = 0;
+int time;
 
 Graph graph;
 
@@ -50,6 +50,7 @@ function visit( Node v ) {
 }
 
 algorithm {
+time = 0;
  graph = getGraph();
  discovery = new int[ graph.numberOfNodes() ];
  finish = new int[ graph.numberOfNodes() ];

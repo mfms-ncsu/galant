@@ -41,12 +41,12 @@ import edu.ncsu.csc.Galant.logging.LogHelper;
 public class GraphPanel extends JPanel{
 	
 	Thread t;
-	boolean algorithmComplete;
-	public void setAlgorithmComplete(){
-		this.algorithmComplete = !false;
+	boolean algorithmComplete = false;
+	public void setAlgorithmComplete( boolean algComplete ){
+		this.algorithmComplete = algComplete;
 	}
 	public boolean getAlgorithmComplete(){
-		return algorithmComplete;
+ 		return algorithmComplete;
 	}
 	private GraphWindow gw;
 	public boolean setGraphWindow(GraphWindow a){
@@ -232,6 +232,7 @@ public class GraphPanel extends JPanel{
 		LogHelper.enterConstructor(getClass());
 		
 		this.dispatch = _dispatch;
+        this.algorithmComplete = false;
 		this.gw = a;
 		
 		this.setSize(600, 600);
@@ -964,7 +965,9 @@ public class GraphPanel extends JPanel{
 	
 	public boolean hasNextState() {
 		int graphState = dispatch.getWorkingGraph().getState();
-		return (graphState > this.state);
+        if ( graphState > this.state ) return true;
+		if ( ! getAlgorithmComplete() ) return true;
+        return false;
 	}
 	
 	public boolean hasPreviousState() {
@@ -1004,4 +1007,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2015 07 03 at 14:08:23 GMT]
+//  [Last modified: 2015 07 10 at 15:47:34 GMT]

@@ -12,20 +12,22 @@ final double INFINITY = Double.POSITIVE_INFINITY;
 
 Edge [] chosenEdge;
 Graph graph;
+NodePriorityQueue pq;
 
 function decreaseKey( Node v, double newKey ) {
-    nodePQ.remove(v);
+    pq.remove(v);
     v.setWeight(newKey);
-    nodePQ.add(v);
+    pq.add(v);
 }
 
 algorithm {
 graph = getGraph();
+pq = new NodePriorityQueue();
 chosenEdge = new Edge[ graph.getNodes().size() ]; 
 beginStep();
 for_nodes(node) {
     node.setWeight( INFINITY );
-    nodePQ.add( node);
+    pq.add( node);
 }
 //initializationComplete();
 // can start at vertex 0 for now, as in dfs, but would be more general to
@@ -35,8 +37,8 @@ v.setSelected( true );
 v.setWeight( 0 );
 endStep();
 
-while ( ! nodePQ.isEmpty() ) {
-    v = nodePQ.poll();
+while ( ! pq.isEmpty() ) {
+    v = pq.poll();
     v.setVisited( true );
     v.setSelected( false );
     for_outgoing ( v, e, w ) {
@@ -58,4 +60,4 @@ while ( ! nodePQ.isEmpty() ) {
     } // end, adjacency list traversal
 } // stop when priority queue is empty
 }
-//  [Last modified: 2013 08 03 at 12:39:35 GMT]
+//  [Last modified: 2015 07 10 at 18:38:30 GMT]

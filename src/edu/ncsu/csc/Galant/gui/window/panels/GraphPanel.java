@@ -40,12 +40,15 @@ import edu.ncsu.csc.Galant.logging.LogHelper;
  */
 public class GraphPanel extends JPanel{
 	
-	Thread t;
+    int count = 0;
 	boolean algorithmComplete = false;
-	public void setAlgorithmComplete( boolean algComplete ){
-		this.algorithmComplete = algComplete;
+	public void setAlgorithmComplete( boolean algorithmComplete ){
+        System.out.println("**** setAlgorithmComplete = " + algorithmComplete);
+		this.algorithmComplete = algorithmComplete;
 	}
 	public boolean getAlgorithmComplete(){
+        count++;
+        System.out.println("getAlgorithmComplete = " + algorithmComplete + ", " + count);
  		return algorithmComplete;
 	}
 	private GraphWindow gw;
@@ -816,6 +819,8 @@ public class GraphPanel extends JPanel{
 	 * Then whatever called it can re-paint the frame 
 	 */
 	public void incrementDisplayState() {
+		System.out.printf("(+) Incrementing the graph display state: displayState = %d, graphState = %d\n",
+                          state, dispatch.getWorkingGraph().getState() );
 		guiStepExecutor t = new guiStepExecutor(this);
 		t.execute();
 		
@@ -831,11 +836,11 @@ public class GraphPanel extends JPanel{
 	public void decrementDisplayState() {
 		LogHelper.enterMethod(getClass(), "decrementDisplayState");
 		
-        int currentState = this.state;
 		if (this.state > 1) {
 			this.state--;
 		}
-		System.out.println("Decrementing the graph display state: [" + currentState + "] --> " + state);
+		System.out.printf("(-) Decrementing the graph display state: displayState = %d, graphState = %d\n",
+                          state, dispatch.getWorkingGraph().getState() );
 		
 		LogHelper.exitMethod(getClass(), "decrementDisplayState");
 		
@@ -1007,4 +1012,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2015 07 10 at 15:47:34 GMT]
+//  [Last modified: 2015 07 10 at 18:08:23 GMT]

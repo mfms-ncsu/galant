@@ -68,12 +68,14 @@ public class guiStepExecutor extends SwingWorker<Void,Long>{
 	 This function handles warning the user if execution has taken a long time.
 	 It will update the status label to alert the user of the time elapsed if the single step execution time goes over the 5-second mark
 	 */
-	public void process(List<Long> a){
-		int numUpdates = a.size();
-		Long lastElapsedTime = a.get(numUpdates - 1);
-		String message = String.format("Warning: execution has taken %2.2f seconds", lastElapsedTime.longValue()/1000.0);
-		dispatch.getGraphWindow().updateStatusLabel(message);
-	}
+// 	public void process(List<Long> a){
+// 		int numUpdates = a.size();
+// 		Long lastElapsedTime = a.get(numUpdates - 1);
+// 		String message = String.format("Warning: execution has taken %2.2f seconds", lastElapsedTime.longValue()/1000.0);
+// 		dispatch.getGraphWindow().updateStatusLabel(message);
+// 	}
 	
 	
 }
+
+//  [Last modified: 2015 07 10 at 17:38:27 GMT]

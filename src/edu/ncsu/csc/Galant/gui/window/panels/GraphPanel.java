@@ -40,14 +40,6 @@ import edu.ncsu.csc.Galant.logging.LogHelper;
  */
 public class GraphPanel extends JPanel{
 	
-	Thread t;
-	boolean algorithmComplete;
-	public void setAlgorithmComplete(){
-		this.algorithmComplete = !false;
-	}
-	public boolean getAlgorithmComplete(){
-		return algorithmComplete ? true : false;
-	}
 	private GraphWindow gw;
 	public boolean setGraphWindow(GraphWindow a){
 		this.gw = a;
@@ -788,28 +780,21 @@ public class GraphPanel extends JPanel{
 	// MPM: It's a little odd to me that the graph panel maintains information about whether the algorithm has completed. I think it
 	// might be better to keep a reference to the Algorithm instance and just directly ask it if it is complete.
 	// MPM: And this is not starting the algorithm, it is allowing the algorithm to advance.
-	public boolean resumeAlgorithmExecution(){
+	public void resumeAlgorithmExecution(){
 		
-		this.gw.getGraphDispatch().getWorkingGraph().getGraphState().setStepComplete(false);
-		if(!algorithmComplete){
+		dispatch.getWorkingGraph().getGraphState().setStepComplete(false);
+		if ( ! dispatch.getAlgorithmComplete() ) {
 			//System.out.println("GraphPanel is notifying the worker thread so it will wake up and work.");
 			synchronized(dispatch.getWorkingGraph().getGraphState()){
 				dispatch.getWorkingGraph().getGraphState().notify();
 			}
-			if(algorithmComplete){
-				this.gw.updateStatusLabel("Execution is finished");
-				this.gw.getStepForward().setEnabled(false);
+			if ( dispatch.getAlgorithmComplete() ) {
 			}
 			//System.out.printf("Algorithm is started");
-			
-		    return true; // algorithm was started
 		}
-		
-		return false; // algorithm not started
-	}
-	
-	public GraphWindow getGraphWindow(){
-		return gw;
+        else {
+            this.gw.updateStatusLabel("Execution is finished");
+		}
 	}
 	
 	/*
@@ -820,6 +805,8 @@ public class GraphPanel extends JPanel{
 	 * Then whatever called it can re-paint the frame 
 	 */
 	public void incrementDisplayState() {
+		System.out.printf("(+) Incrementing the graph display state: displayState = %d, graphState = %d\n",
+                          state, dispatch.getWorkingGraph().getState() );
 		guiStepExecutor t = new guiStepExecutor(this);
 		t.execute();
 		
@@ -835,18 +822,18 @@ public class GraphPanel extends JPanel{
 	public void decrementDisplayState() {
 		LogHelper.enterMethod(getClass(), "decrementDisplayState");
 		
-        int currentState = this.state;
 		if (this.state > 1) {
 			this.state--;
 		}
-		System.out.println("Decrementing the graph display state: [" + currentState + "] --> " + state);
+		System.out.printf("(-) Decrementing the graph display state: displayState = %d, graphState = %d\n",
+                          state, dispatch.getWorkingGraph().getState() );
 		
 		LogHelper.exitMethod(getClass(), "decrementDisplayState");
 		
 		/* This is responsible for updating the status label at the top of the Galant screen so that it displays the correct graph state
 		 * This happens whenever the user hits the right arrow key or the right arrow button
 		 */
-		GraphDispatch.getInstance().getGraphWindow().updateStatusLabel(this.getDisplayState());
+		dispatch.getGraphWindow().updateStatusLabel(this.getDisplayState());
 		
 	}
 	
@@ -876,7 +863,7 @@ public class GraphPanel extends JPanel{
 		
 		for (Node n : g.getNodes()) {
             LogHelper.logDebug( "next node = " + n.getId() + " position = " + n.getPosition() );
-			if ( p.distance(n.getLatestValidState(getDisplayState()).getPosition()) < NODE_SELECTION_RADIUS ) {
+			if ( p.distance(n.getPosition()) < NODE_SELECTION_RADIUS ) {
 				top = n;
 			}
 		}
@@ -969,7 +956,9 @@ public class GraphPanel extends JPanel{
 	
 	public boolean hasNextState() {
 		int graphState = dispatch.getWorkingGraph().getState();
-		return (graphState > this.state);
+        if ( graphState > this.state ) return true;
+		if ( ! dispatch.getAlgorithmComplete() ) return true;
+        return false;
 	}
 	
 	public boolean hasPreviousState() {
@@ -1009,4 +998,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2015 07 03 at 14:08:23 GMT]
+//  [Last modified: 2015 07 11 at 00:46:07 GMT]

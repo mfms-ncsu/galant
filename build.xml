@@ -31,7 +31,8 @@
 		</copy>
 		
 		<javac srcdir="${src.dir}" destdir="${classes.dir}" includeantruntime="false" debug="true">
-			<exclude name="edu/ncsu/csc/Galant/test/**" />
+          <compilerarg value="-Xlint:unchecked"/>
+		  <exclude name="edu/ncsu/csc/Galant/test/**" />
 		</javac>	
 	</target>
 

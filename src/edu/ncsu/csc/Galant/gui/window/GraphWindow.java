@@ -67,15 +67,9 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	public static final int DEFAULT_WIDTH = 600, DEFAULT_HEIGHT = 750;
     public static final int TOOLBAR_HEIGHT = 24;
     public static final int ANIMATION_BUTTON_SIZE = 40;
-	
-  
-    
+	   
 	/** Refers to the singleton GraphDispatch to push global information */
 	private final GraphDispatch dispatch;
-	
-	public GraphDispatch getGraphDispatch(){
-		return dispatch;
-	}
 	
 	/** The main frame for the Visual Graph Editor **/
 	private static JFrame frame;
@@ -85,8 +79,6 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	private static JToolBar toolBar;
 	
 	/** The Graph panel used to draw the active graph **/
-	// MPM: Very short names for fields (like 'gp') are abominable for maintenance purposes. It would be far better to name
-	// this graphPanel.
 	private static GraphPanel gp;
 	
 	/** A panel used to edit Graph element's properties **/ 
@@ -99,6 +91,9 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		return stepForward;
 	}
 	private final JButton stepBack;
+  public JButton getStepBack(){
+		return stepBack;
+	}
     private final JButton done;
 	
 	private ButtonGroup modeGroup = new ButtonGroup();
@@ -738,48 +733,6 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		button.setSelected(displayType.isShown());
 		return button;
 	}
-	
-    class AnimationKeyListener extends KeyAdapter {
-        static final long DELAY_TIME = 17;
-
-        /**
-         * Intent is to delay for about 1/60 second = roughly 17 milliseconds
-         * to allow the display to catch up to repeated keystrokes when an
-         * arrow key is held down. Ultimately this should be handled by an
-         * invocation of the Timer class.
-         */
-        void delay() {
-            long startTime = System.currentTimeMillis();
-            long currentTime = System.currentTimeMillis();
-            long endOfDelay = startTime + DELAY_TIME;
-            while ( currentTime < endOfDelay ) {
-                currentTime = System.currentTimeMillis();
-            }
-        }
-
-        public void keyPressed(KeyEvent e) {
-            if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-				gp.decrementDisplayState();	
-            }
-            if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-            	updateStatusLabel("Algorithm execution in progress");
-            	gp.incrementDisplayState();
-            }
-            if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                // delete row method (when "delete" is pressed)
-            }
-            if (e.getKeyCode() == KeyEvent.VK_UP) {
-            	updateStatusLabel("Please use left/right arrows, not 'up'");
-            }
-            if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-            	updateStatusLabel("Please use left/right arrows, not 'down'");
-            }
-            
-            delay(); /* I don't know what this does but it seems ugly */
-            frame.repaint();
-        }
-    }
-    
 
 	/**
 	 * Initialize the animation panel controls
@@ -794,12 +747,6 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		stepBack.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				/*
-				System.out.printf("In the \"previous\" button function\n");
-				System.out.printf("Graph state is: %d\n",getGraphDispatch().getWorkingGraph().getGraphState().getState());
-				System.out.printf("Display state is: %d\n",getGraphPanel().getDisplayState());
-				// This was to help keep track of where we are; useful when trying to implement the being able to go back & forth; currently not useful, so leaving it commented out
-				*/
 				gp.decrementDisplayState();
 				
 				stepForward.setEnabled(gp.hasNextState());
@@ -813,25 +760,14 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		stepForward.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				/*
-				System.out.printf("In the \"next\" button function\n");
-				System.out.printf("Graph state is: %d\n",getGraphDispatch().getWorkingGraph().getGraphState().getState());
-				System.out.printf("Display state is: %d\n",getGraphPanel().getDisplayState());
-				// This is to keep track of "where are we?"
-				 */	
 				
-				// Chain of events: disable buttons until we figure out what's going on,
-				// update status to say execution in progress (if it actually isn't, this
-				// will be replaced soon enough, but this is the only "tidy" place to update
-				// from); run a step (which will itself update the status to the new graph
-				// state number); re-enable buttons as appropriate
-				stepForward.setEnabled(false);
-				stepBack.setEnabled(false);
 				updateStatusLabel("Algorithm execution in progress");
-				frame.repaint();
 				gp.incrementDisplayState();
 				
+				stepForward.setEnabled(gp.hasNextState());
+				stepBack.setEnabled(gp.hasPreviousState());
 				
+				frame.repaint();
 			}
 		});
 		
@@ -1091,17 +1027,6 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		// TODO Auto-generated method stub
 		
 	}
-	public void repaintFrame() {
-		frame.repaint();
-	}
-	public JButton getStepBack(){
-		return stepBack;
-	}
-	public JFrame getFrame(){
-		return frame;
-	}
-	
-
 }
 
 //  [Last modified: 2015 07 03 at 14:16:12 GMT]

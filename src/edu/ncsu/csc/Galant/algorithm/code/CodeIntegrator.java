@@ -5,12 +5,10 @@ import java.util.regex.Pattern;
 import java.util.Scanner;
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaFileObject;
-
 import edu.ncsu.csc.Galant.GalantPreferences;
 import edu.ncsu.csc.Galant.algorithm.Algorithm;
 import edu.ncsu.csc.Galant.algorithm.code.macro.Macro;
 import edu.ncsu.csc.Galant.algorithm.code.macro.MalformedMacroException;
-import edu.ncsu.csc.Galant.graph.component.GraphState;
 import edu.ncsu.csc.Galant.logging.LogHelper;
 import edu.ncsu.csc.Galant.GalantException;
 import java.io.BufferedReader;
@@ -74,8 +72,8 @@ public class CodeIntegrator
 		private static final String CLASS_STRUCTURE =
 			"package " + PACKAGE + ";" +
 			"import java.util.*;" +
-			"import edu.ncsu.csc.Galant.graph.component.GraphState;" + 
 			"import edu.ncsu.csc.Galant.algorithm.Algorithm;" +
+			"import edu.ncsu.csc.Galant.graph.component.GraphState;" +
 			"import edu.ncsu.csc.Galant.graph.component.Graph;" +
 			"import edu.ncsu.csc.Galant.graph.component.Node;" +
 			"import edu.ncsu.csc.Galant.graph.component.Edge;" +
@@ -111,73 +109,17 @@ public class CodeIntegrator
 				String imports = userCode.substring(0, splitAt);
 				userCode = userCode.substring(splitAt);
 
-				// Skip all the comment line then build the new source code  
-				// Initilize a new String
-				StringBuilder sb = new StringBuilder();
-
-				Scanner scanner = new Scanner(userCode);
-				while(scanner.hasNextLine()) {
-					String line = scanner.nextLine();				
-					Matcher cStyleMatcher = Pattern.compile("(.*)\\/\\*\\*(.*)").matcher(line);
-					Matcher singleAsteriskMatcher = Pattern.compile("(.*)\\/\\*(.*)").matcher(line);
-					Matcher doubleSlashMatcher = Pattern.compile("(.*)\\/\\/(\\s|.*)").matcher(line);
-
-
-					if( cStyleMatcher.find() ) {
-							sb.append(cStyleMatcher.group(1));
-
-							Matcher behindCStyleMatcher = Pattern.compile("(\\*\\/)(.*)").matcher(cStyleMatcher.group(2));
-
-							if( behindCStyleMatcher.find()) {
-								// single line c style if falls in here
-
-								sb.append(behindCStyleMatcher.group(2));
-							} else {
-								// multiple line c style comment if falls in here 
-								// infinte loop keep reading until hit "*/""
-								while(scanner.hasNextLine()) {
-									line = scanner.nextLine();	
-									behindCStyleMatcher = Pattern.compile("(\\*\\/)(.*)").matcher(line);
-
-									if(behindCStyleMatcher.find()) {
-										break;
-									}
-								}
-								
-								sb.append(behindCStyleMatcher.group(2));
-							}
-					} else if( singleAsteriskMatcher.find()) {
-						sb.append(singleAsteriskMatcher.group(1));
-						Matcher behindSingleAsterisk = Pattern.compile("(\\*\\/)(.*)").matcher(singleAsteriskMatcher.group(2));
-
-						if( behindSingleAsterisk.find()) {
-								// single-line single-asterisk if falls in here
-								sb.append(behindSingleAsterisk.group(2));
-						} else {
-							while(scanner.hasNextLine()) {
-								line = scanner.nextLine();
-								behindSingleAsterisk = Pattern.compile("(\\*\\/)(.*)").matcher(line);
-
-								if(behindSingleAsterisk.find()) {
-									break;
-								}
-							}
-
-							sb.append( behindSingleAsterisk.group(2));
-						}	
-					} else if( doubleSlashMatcher.find()) {
-						// read everything after //
-						sb.append(doubleSlashMatcher.group(1));
-					} else if( line!= null && line.length()>0 ){
-						sb.append(line + "\n");
-					}
+				/* Try remove all the comment line*/
+				try {
+					System.out.println("->" + removeAllComment(userCode) + "<-");
+					userCode = removeAllComment(userCode);
+				} catch (IOException e) {
+					throw new MalformedMacroException();
 				}
-				
-				// Reassign userCode with comment line removed
-				userCode = sb.toString();
 
 				// Rebuild the algorithm and add head or tail as needed
-				sb = new StringBuilder( userCode.substring(0, userCode.indexOf("algorithm")));
+
+				StringBuilder sb = new StringBuilder( userCode.substring(0, userCode.indexOf("algorithm")));
 				sb.append(modifyAlgorithm( REAL_ALGORITHM_HEAD,
                                            REAL_ALGORITHM_TAIL,
                                            userCode ) );
@@ -306,7 +248,70 @@ public class CodeIntegrator
 					} while (char1 != -1);
 				// use substring to ignore the first pair of { and }. They are mean for marking the start and end of algorithm {}	
 			}	return sb.toString().substring(1, sb.length() - 1);
-		}		
+		}
+
+		/** 
+		 * Remove all the comment lines in a easy way. 
+		 * Has been tested by test_comment.alg
+		 * @param code code to be proceessed 
+		 */
+		private static String removeAllComment(String code) throws IOException {
+			// http://www.coderanch.com/t/519147/java/java/ignore-remove-comments-java-file
+			InputStream codeInput = new ByteArrayInputStream(code.getBytes());
+			BufferedReader reader = new BufferedReader(new InputStreamReader(codeInput));
+			
+			StringBuilder sb = new StringBuilder();
+
+			boolean inBlockComment = false;
+   			boolean inSlashSlashComment = false;
+
+   			int char1 = reader.read();
+   			if (char1 != -1) {
+   				int char2;
+   				while (char1 != -1) {
+		           	if ((char2 = reader.read()) == -1) {
+		                sb.append((char)char1);
+		                break;
+		            } 
+		            if (char1 == '/' && char2 == '*') {
+                		inBlockComment = true;
+                		char1 = reader.read();
+                		continue;
+            		} else if (char1 == '*' && char2 == '/') {
+                		inBlockComment = false;
+                		char1 = reader.read();
+                		continue;
+            		} else if (char1 == '/' && char2 == '/' && !inBlockComment) {
+                		inSlashSlashComment = true;
+                		char1 = reader.read();
+                		continue;
+            		}
+            		if (inBlockComment) {
+                		char1 = char2;
+                		continue;
+            		}
+            		if (inSlashSlashComment) {
+                		if (char2 == '\n') {
+                    		inSlashSlashComment = false;
+                    		sb.append((char)char2);
+                    		char1 = reader.read();
+                    		continue;
+	                	} else if (char1 == '\n') {
+	                    	inSlashSlashComment = false;
+	                    	sb.append((char)char2);
+	                    	char1 = char2;
+	                    	continue;
+	                	} else {
+	                    	char1 = reader.read();
+	                    	continue;
+	                	}
+            		}
+            		sb.append((char)char1);
+            		char1 = char2;
+				}
+			}
+			return sb.toString();
+		}				
 	}
 
-//  [Last modified: 2015 07 11 at 00:04:45 GMT]
+//  [Last modified: 2015 07 11 at 14:44:58 GMT]

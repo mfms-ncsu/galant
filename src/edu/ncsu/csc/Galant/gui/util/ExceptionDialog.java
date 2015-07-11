@@ -150,7 +150,8 @@ public class ExceptionDialog
 						label.setToolTipText(label.getText());
 						display.add(label);
 					}
-				JList stack = new JList(e.getStackTrace());
+				JList<StackTraceElement> stack
+                    = new JList<StackTraceElement>(e.getStackTrace());
 				stack.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 				display.add(new JScrollPane(stack));
 				if(e.getCause() != null)
@@ -186,4 +187,4 @@ public class ExceptionDialog
 			}
 	}
 
-//  [Last modified: 2015 05 01 at 13:06:10 GMT]
+//  [Last modified: 2015 07 10 at 23:16:12 GMT]

@@ -77,7 +77,7 @@ public class GraphLayout {
         this.graph = graph;
         this.nodes = graph.getNodes();
         this.edges = graph.getEdges();
-        nodeToIndex = new HashMap();
+        nodeToIndex = new HashMap<Node,Integer>();
         indexToNode = new Node[nodes.size()];
     }
 
@@ -549,4 +549,4 @@ public class GraphLayout {
 
 }	
 
-//  [Last modified: 2015 06 02 at 13:57:24 GMT]
+//  [Last modified: 2015 07 10 at 23:07:17 GMT]

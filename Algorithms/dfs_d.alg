@@ -9,9 +9,7 @@
 
 /** Required: node and edge labels visible */
 
-int time = 0;
-
-Graph graph;
+int time;
 
 int [] discovery;
 int [] finish;
@@ -50,26 +48,26 @@ function visit( Node v ) {
 }
 
 algorithm {
- graph = getGraph();
- discovery = new int[ graph.numberOfNodes() ];
- finish = new int[ graph.numberOfNodes() ];
+    time = 0;
+    discovery = new int[ graph.numberOfNodes() ];
+    finish = new int[ graph.numberOfNodes() ];
 
- setDirected( true );
+    setDirected( true );
 
- beginStep();
- for_nodes( u ) {
-     u.setLabel("");
- }
- for_edges( e ) {
-     e.setLabel("");
- }
- endStep();
+    beginStep();
+    for_nodes( u ) {
+        u.setLabel("");
+    }
+    for_edges( e ) {
+        e.setLabel("");
+    }
+    endStep();
 
- for_nodes( u ) {
-     if ( ! u.isSelected() ) {
-         visit( u );
-     }
- }
+    for_nodes( u ) {
+        if ( ! u.isSelected() ) {
+            visit( u );
+        }
+    }
 }
 
-//  [Last modified: 2015 07 03 at 19:09:06 GMT]
+//  [Last modified: 2015 07 11 at 15:34:18 GMT]

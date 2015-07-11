@@ -8,8 +8,12 @@
 /** Required: node weights visible */
 
 final double INFINITY = Double.POSITIVE_INFINITY;
+Graph graph;
+NodeQueue queue;
 
 algorithm {
+ graph = getGraph();
+ queue = new NodeQueue();
  beginStep();
  for_nodes( n ) {
      n.setWeight( INFINITY );
@@ -18,25 +22,29 @@ algorithm {
  Node start = getNodeById( 0 );
  start.setWeight( 0 );
  start.setSelected( true );
- nodeQ.offer( start );
+ queue.offer( start );
  endStep();
 
- while ( ! nodeQ.isEmpty()) {
-     Node n = nodeQ.poll();
+ while ( ! queue.isEmpty()) {
+     System.out.println("polling ...");
+     Node n = queue.poll();
+     System.out.println("node = " + n);
      n.setVisited( true );
 
      for_outgoing( n, e, head ) {
+         System.out.println( "head = " + head + ", n = " + n );
          if ( ! head.isSelected() ) {
+             System.out.println("not selected");
              beginStep();
              e.setSelected( true );
              head.setSelected( true );
              double distance = n.getWeight() + 1;
              head.setWeight( distance );
-             nodeQ.offer( head );
+             queue.offer( head );
              endStep();
          }
      }
  }
 }
 
-//  [Last modified: 2015 07 11 at 15:32:27 GMT]
+//  [Last modified: 2015 07 10 at 19:35:59 GMT]

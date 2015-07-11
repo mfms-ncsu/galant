@@ -30,10 +30,10 @@ import edu.ncsu.csc.Galant.gui.window.GraphWindow;
  */
 public abstract class Algorithm implements Runnable{
 	
-	protected GraphWindow gw;
+	public GraphWindow gw;
 	
 		// Specialized Node/Edge types for Queues/Stacks/Priority Queues
-		protected class NodeQueue extends AbstractQueue<Node>
+		public class NodeQueue extends AbstractQueue<Node>
 			{
 				private Queue<Node> Q = new ArrayDeque<Node>();
 				@Override
@@ -62,7 +62,7 @@ public abstract class Algorithm implements Runnable{
 						return Q.size();
 					}
 			}
-		protected class EdgeQueue extends AbstractQueue<Edge>{
+		public class EdgeQueue extends AbstractQueue<Edge>{
 				private Queue<Edge> Q = new ArrayDeque<Edge>();
 				@Override
 				public boolean offer(Edge e)
@@ -90,32 +90,45 @@ public abstract class Algorithm implements Runnable{
 						return Q.size();
 					}
 			}
-		protected class NodeStack extends Stack<Node>
+		public class NodeStack extends Stack<Node>
 			{}
-		protected class EdgeStack extends Stack<Edge>
+		public class EdgeStack extends Stack<Edge>
 			{}
-		protected class NodePriorityQueue extends PriorityQueue<Node>
+		public class NodePriorityQueue extends PriorityQueue<Node>
 			{}
-		protected class EdgePriorityQueue extends PriorityQueue<Edge>
+		public class EdgePriorityQueue extends PriorityQueue<Edge>
 			{}
 
 		/** A list of all the runnable algorithms. */
 		public static final List<Algorithm> algorithms = new ArrayList<Algorithm>();
 
 		/** The graph on which the algorithm is being run. */
-		protected Graph graph;
+		public Graph graph;
 
 		// Pre-existing queue/stack/priority queue objects
-		protected NodeQueue nodeQ = new NodeQueue();
-		protected EdgeQueue edgeQ = new EdgeQueue();
-		protected NodeStack nodeStack = new NodeStack();
-		protected EdgeStack edgeStack = new EdgeStack();
-		protected NodePriorityQueue nodePQ = new NodePriorityQueue();
-		protected EdgePriorityQueue edgePQ = new EdgePriorityQueue();
+		public NodeQueue nodeQ = new NodeQueue();
+		public EdgeQueue edgeQ = new EdgeQueue();
+		public NodeStack nodeStack = new NodeStack();
+		public EdgeStack edgeStack = new EdgeStack();
+		public NodePriorityQueue nodePQ = new NodePriorityQueue();
+		public EdgePriorityQueue edgePQ = new EdgePriorityQueue();
 
 		public Algorithm(){
 				algorithms.add(this);
 			}
+
+    /**
+     * Initializes data structures as a convenience
+     * @todo could be used more generally
+     */
+    public void initialize() {
+		nodeQ = new NodeQueue();
+		edgeQ = new EdgeQueue();
+		nodeStack = new NodeStack();
+		edgeStack = new EdgeStack();
+		nodePQ = new NodePriorityQueue();
+		edgePQ = new EdgePriorityQueue();
+    }
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph */
 		public Graph getGraph(){
@@ -135,82 +148,82 @@ public abstract class Algorithm implements Runnable{
 		// TODO: some of these might not be supposed to be accessible by the user?
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#addNode(Node) */
-		protected void addNode(Node n){
+		public void addNode(Node n){
 				graph.addNode(n);
 			}
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#addNode() */
-		protected Node addNode(){
+		public Node addNode(){
 				return graph.addNode();
 			}
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#isDirected() */
-		protected boolean isDirected(){
+		public boolean isDirected(){
 				return graph.isDirected();
 			}
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#setDirected(boolean) */
-		protected void setDirected(boolean directed){
+		public void setDirected(boolean directed){
 				graph.setDirected(directed);
 			}
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#getNodes() */
-		protected List<Node> getNodes()
+		public List<Node> getNodes()
         {
             return graph.getNodes();
         }
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#setNodes(java.util.List) */
-		protected void setNodes(List<Node> nodes){
+		public void setNodes(List<Node> nodes){
 				graph.setNodes(nodes);
 			}
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#getEdges() */
-		protected List<Edge> getEdges()
+		public List<Edge> getEdges()
         {
             return graph.getEdges();
         }
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#setEdges(java.util.List) */
-		protected void setEdges(List<Edge> edges){
+		public void setEdges(List<Edge> edges){
 				graph.setEdges(edges);
 			}
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#getRootNode() */
-		protected Node getRootNode()
+		public Node getRootNode()
 			{
 				return graph.getRootNode();
 			}
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#setRootNode(edu.ncsu.csc.Galant.graph.component.Node) */
-		protected void setRootNode(Node rootNode){
+		public void setRootNode(Node rootNode){
 				graph.setRootNode(rootNode);
 			}
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#getNodeById(int) */
-		protected Node getNodeById (int id)
+		public Node getNodeById (int id)
 			{
 				return graph.getNodeById(id);
 			}
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#getEdgeById(int) */
-		protected Edge getEdgeById(int id)
+		public Edge getEdgeById(int id)
 			{
 				return graph.getEdgeById(id);
 			}
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#select(int) */
-		protected void select(int id){
+		public void select(int id){
 				graph.select(id);
 			}
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#select(edu.ncsu.csc.Galant.graph.component.Node) */
-		protected void select(Node n){
+		public void select(Node n){
 				graph.select(n);
 			}
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#addEdge(int, int) */
-		protected void addEdge(int sourceId, int targetId){
+		public void addEdge(int sourceId, int targetId){
 				graph.addEdge(sourceId, targetId);
 			}
 
@@ -218,49 +231,49 @@ public abstract class Algorithm implements Runnable{
 		 * @see edu.ncsu.csc.Galant.graph.component.Graph#addEdge(edu.ncsu.csc.Galant.graph.component.Node,
 		 *      edu.ncsu.csc.Galant.graph.component.Node)
 		 */
-		protected void addEdge(Node source, Node target){
+		public void addEdge(Node source, Node target){
 				graph.addEdge(source, target);
 			}
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#addEdge(edu.ncsu.csc.Galant.graph.component.Edge) */
-		protected void addEdge(Edge e){
+		public void addEdge(Edge e){
 				graph.addEdge(e);
 			}
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#getState() */
-		protected int getState(){
+		public int getState(){
 				return graph.getState();
 			}
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#getGraphState() */
-		protected GraphState getGraphState(){
+		public GraphState getGraphState(){
 				return graph.getGraphState();
 			}
 
         /** @see edu.ncsu.csc.Galant.GraphDispatch#getWindowWidth() */
-        protected int windowWidth(){
+        public int windowWidth(){
             return GraphDispatch.getInstance().getWindowWidth();
         }
 
         /** @see edu.ncsu.csc.Galant.GraphDispatch#getWindowHeight() */
-        protected int windowHeight(){
+        public int windowHeight(){
             return GraphDispatch.getInstance().getWindowHeight();
         }
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#smartReposition() */
-		protected void smartReposition(){
+		public void smartReposition(){
 				graph.smartReposition();
 			}
 
 		/** @see edu.ncsu.csc.Galant.graph.component.GraphState */
-		protected void beginStep(){
+		public void beginStep(){
 				if(graph.getGraphState().isLocked()) endStep();
 				graph.getGraphState().incrementState();
 				graph.getGraphState().setLocked(true);
 			}
 
 		/** @see edu.ncsu.csc.Galant.graph.component.GraphState */
-		protected void endStep(){
+		public void endStep(){
 				graph.getGraphState().setLocked(false);
 				graph.getGraphState().pauseExecution();
 			}
@@ -269,4 +282,4 @@ public abstract class Algorithm implements Runnable{
 		public abstract void run();
 	}
 
-//  [Last modified: 2015 07 03 at 14:39:01 GMT]
+//  [Last modified: 2015 07 11 at 15:27:02 GMT]

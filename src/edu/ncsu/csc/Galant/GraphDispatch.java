@@ -32,6 +32,18 @@ public class GraphDispatch {
 
     private boolean algorithmMovesNodes = false;
 
+    private int count = 0;
+	private boolean algorithmComplete = false;
+	public void setAlgorithmComplete( boolean algorithmComplete ){
+        System.out.println("**** setAlgorithmComplete = " + algorithmComplete);
+		this.algorithmComplete = algorithmComplete;
+	}
+	public boolean getAlgorithmComplete(){
+        count++;
+        System.out.println("getAlgorithmComplete = " + algorithmComplete + ", " + count);
+ 		return algorithmComplete;
+	}
+
     /** if true, this goes through the animation in slow motion but does not
      * allow backtracking */
     private boolean movieMode = false;
@@ -174,4 +186,4 @@ public class GraphDispatch {
 
 }
 
-//  [Last modified: 2015 07 03 at 14:40:22 GMT]
+//  [Last modified: 2015 07 10 at 23:24:41 GMT]

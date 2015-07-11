@@ -8,10 +8,8 @@
 /** Required: node weights visible */
 
 final double INFINITY = Double.POSITIVE_INFINITY;
-Graph graph;
 
 algorithm {
- graph = getGraph();
  beginStep();
  for_nodes( n ) {
      n.setWeight( INFINITY );
@@ -41,4 +39,4 @@ algorithm {
  }
 }
 
-//  [Last modified: 2015 05 21 at 19:46:45 GMT]
+//  [Last modified: 2015 07 11 at 15:32:27 GMT]

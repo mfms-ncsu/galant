@@ -65,7 +65,7 @@ public class CodeIntegrator
         /**
          * Here is the real code that appears before and after the algorithm.
          */
-        private static final String REAL_ALGORITHM_HEAD = "GraphState gs = this.getGraph().getGraphState(); GraphDispatch.getInstance().setAlgorithmComplete(false); synchronized(gs){ try{gs.wait(); } catch (InterruptedException e){e.printStackTrace(System.out); } }";
+        private static final String REAL_ALGORITHM_HEAD = "initialize();GraphState gs = this.getGraph().getGraphState(); GraphDispatch.getInstance().setAlgorithmComplete(false); synchronized(gs){ try{gs.wait(); } catch (InterruptedException e){e.printStackTrace(System.out); } }";
         private static final String REAL_ALGORITHM_TAIL = "if(gs.isLocked()) endStep(); GraphDispatch.getInstance().setAlgorithmComplete(true);";
 
 		// The basic class structure into which the user's code can be inserted so it can be
@@ -309,4 +309,4 @@ public class CodeIntegrator
 		}		
 	}
 
-//  [Last modified: 2015 07 10 at 23:36:48 GMT]
+//  [Last modified: 2015 07 11 at 00:04:45 GMT]

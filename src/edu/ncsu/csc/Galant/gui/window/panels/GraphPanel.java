@@ -780,7 +780,7 @@ public class GraphPanel extends JPanel{
 	// MPM: It's a little odd to me that the graph panel maintains information about whether the algorithm has completed. I think it
 	// might be better to keep a reference to the Algorithm instance and just directly ask it if it is complete.
 	// MPM: And this is not starting the algorithm, it is allowing the algorithm to advance.
-	public boolean resumeAlgorithmExecution(){
+	public void resumeAlgorithmExecution(){
 		
 		dispatch.getWorkingGraph().getGraphState().setStepComplete(false);
 		if ( ! dispatch.getAlgorithmComplete() ) {
@@ -789,14 +789,12 @@ public class GraphPanel extends JPanel{
 				dispatch.getWorkingGraph().getGraphState().notify();
 			}
 			if ( dispatch.getAlgorithmComplete() ) {
-				this.gw.updateStatusLabel("Execution is finished");
 			}
 			//System.out.printf("Algorithm is started");
-			
-		    return true; // algorithm was started
 		}
-		
-		return false; // algorithm not started
+        else {
+            this.gw.updateStatusLabel("Execution is finished");
+		}
 	}
 	
 	/*
@@ -1000,4 +998,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2015 07 10 at 23:34:45 GMT]
+//  [Last modified: 2015 07 11 at 00:46:07 GMT]

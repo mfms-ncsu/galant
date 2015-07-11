@@ -117,6 +117,19 @@ public abstract class Algorithm implements Runnable{
 				algorithms.add(this);
 			}
 
+    /**
+     * Initializes data structures as a convenience
+     * @todo could be used more generally
+     */
+    public void initialize() {
+		nodeQ = new NodeQueue();
+		edgeQ = new EdgeQueue();
+		nodeStack = new NodeStack();
+		edgeStack = new EdgeStack();
+		nodePQ = new NodePriorityQueue();
+		edgePQ = new EdgePriorityQueue();
+    }
+
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph */
 		public Graph getGraph(){
 				return graph;
@@ -269,4 +282,4 @@ public abstract class Algorithm implements Runnable{
 		public abstract void run();
 	}
 
-//  [Last modified: 2015 07 10 at 18:55:16 GMT]
+//  [Last modified: 2015 07 11 at 00:03:45 GMT]

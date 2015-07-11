@@ -21,6 +21,7 @@ public class guiStepExecutor extends SwingWorker<Void,Long>{
 	
 	// This is the function that gets executed when the user clicks on the nextStep button or hits the right arrow key.  It's what's actually executed by the incrementDisplayState function
 	/* It is responsible for making sure that the GUI is updated properly (& doesn't hang) during execution */
+    @Override
 	protected Void doInBackground(){
 		if(gp.getDisplayState() < dispatch.getWorkingGraph().getGraphState().getState()){
 			//increment the graphState array position
@@ -69,6 +70,7 @@ public class guiStepExecutor extends SwingWorker<Void,Long>{
 	 This function handles warning the user if execution has taken a long time.
 	 It will update the status label to alert the user of the time elapsed if the single step execution time goes over the 5-second mark
 	 */
+    @Override
 	public void process(List<Long> a){
 		int numUpdates = a.size();
 		Long lastElapsedTime = a.get(numUpdates - 1);
@@ -79,4 +81,4 @@ public class guiStepExecutor extends SwingWorker<Void,Long>{
 	
 }
 
-//  [Last modified: 2015 07 10 at 23:33:10 GMT]
+//  [Last modified: 2015 07 11 at 00:40:42 GMT]

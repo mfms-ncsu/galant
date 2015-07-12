@@ -91,10 +91,10 @@ function edgeSift( Node x, Edge maxCrossingsEdge ) {
 
 algorithm {
 
- iteration = 0;
-pass = 0;
-minIteration = 0;
-minPass = 0;
+    iteration = 0;
+    pass = 0;
+    minIteration = 0;
+    minPass = 0;
 
     beginStep();
     layeredGraph = new LayeredGraph( getGraph() );
@@ -157,4 +157,5 @@ minPass = 0;
 
     System.out.println( "Minimum edge crossings = " + minEdgeCrossings );
 }
-//  [Last modified: 2015 07 03 at 18:58:06 GMT]
+
+//  [Last modified: 2015 07 12 at 21:02:43 GMT]

@@ -158,12 +158,13 @@ function boolean siftDecreasing( List<Node> nodes ) {
 }
 
 algorithm {
+
     setDirected( true );
 
-iteration = 1;
-pass = 1;
-minCrossings = Integer.MAX_VALUE;
-minIteration = -1;
+    iteration = 1;
+    pass = 1;
+    minCrossings = Integer.MAX_VALUE;
+    minIteration = -1;
 
     beginStep();
     layeredGraph = new LayeredGraph( getGraph() );
@@ -202,4 +203,4 @@ minIteration = -1;
 
 }
 
-//  [Last modified: 2015 06 30 at 19:45:05 GMT]
+//  [Last modified: 2015 07 12 at 21:03:48 GMT]

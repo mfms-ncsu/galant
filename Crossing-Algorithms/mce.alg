@@ -17,10 +17,10 @@ import edu.ncsu.csc.Galant.local.LayeredGraph;
 int MAX_ITERATIONS = 100;
 int minCrossings = Integer.MAX_VALUE;
 int minEdgeCrossings = Integer.MAX_VALUE;
-int iteration = 0;
-int pass = 0;
-int minIteration = 0;
-int minPass = 0;
+int iteration;
+int pass;
+int minIteration;
+int minPass;
 
 Edge maxCrossingsEdge;
 LayeredGraph layeredGraph;
@@ -90,6 +90,11 @@ function edgeSift( Node x, Edge maxCrossingsEdge ) {
 }
 
 algorithm {
+
+ iteration = 0;
+pass = 0;
+minIteration = 0;
+minPass = 0;
 
     beginStep();
     layeredGraph = new LayeredGraph( getGraph() );

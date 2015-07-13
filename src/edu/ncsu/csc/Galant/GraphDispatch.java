@@ -36,6 +36,7 @@ public class GraphDispatch {
 	private boolean algorithmComplete = false;
 	public void setAlgorithmComplete( boolean algorithmComplete ){
         System.out.println("**** setAlgorithmComplete = " + algorithmComplete);
+        count = 0;
 		this.algorithmComplete = algorithmComplete;
 	}
 	public boolean getAlgorithmComplete(){
@@ -186,4 +187,4 @@ public class GraphDispatch {
 
 }
 
-//  [Last modified: 2015 07 10 at 23:24:41 GMT]
+//  [Last modified: 2015 07 13 at 19:22:33 GMT]

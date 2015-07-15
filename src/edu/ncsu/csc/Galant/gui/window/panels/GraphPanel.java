@@ -346,6 +346,10 @@ public class GraphPanel extends JPanel{
 	
 	/**
 	 * Draws the specified node and its properties to the screen
+   * the positions of nodes to be drawn are determined by their state
+   * dependent position, which may not be the best solution since only one
+   * position that going through the algorithm is used if algorithm don't move
+   * nodes in the middle of execution, which is the most usual case.
 	 * 
 	 * @param n The node to be drawn (assumed to be non-null)
 	 * @param g2d The graphics object used to draw the elements
@@ -854,6 +858,15 @@ public class GraphPanel extends JPanel{
 		LogHelper.exitMethod(getClass(), "setDisplayState");
 	}
 	
+  /**
+   * This method is used for user to select node, then change the
+   * property or position of selected node. Since this method only used
+   * in the situation that users are allowed to move nodes, which no change of positions
+   * caused by algorithm will happen, and there is no need for state dependent positions
+   * to be concerned, only the position associated with node itself need to be compared.
+   * @param p the point user clicked
+   * @return the selected node, or null if no selected node 
+   */
 	public Node selectTopClickedNode(Point p) {
 		LogHelper.enterMethod(getClass(), "selectTopClickedNode");
 		

@@ -105,19 +105,18 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
 	    
 		restoreLastState();
 		
-		addEmptyTabs();
+		addTabIfNeeded();
 		addChangeListener(this);
 	}
 	
-	private void addEmptyTabs() {
-		boolean hasAlgorithm = false;
-		boolean hasGraph = false;
-		for(GEditorPanel gep : editorPanels) {
-			if(gep instanceof GAlgorithmEditorPanel) hasAlgorithm = true;
-			if(gep instanceof GGraphEditorPanel) hasGraph = true;
-		}
-// 		if(!hasAlgorithm) addEmptyAlgorithm();
-		if(!hasGraph) addEmptyGraph();
+    /**
+     * Adds a tab (for an empty graph) if the only remaining tabs are the
+     * icons for creating an empty graph or algorithm.
+     */
+	private void addTabIfNeeded() {
+        if ( getTabCount() <= 2 ) {
+            addEmptyGraph();
+        }
 	}
 	
     /**
@@ -234,7 +233,7 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
 	}
 
     /**
-     * @return the selected panel, cast GEditorPanel
+     * @return the selected panel, cast as GEditorPanel
      */
 	public GEditorPanel getSelectedPanel() {
 		if (getSelectedComponent() == null) return null;
@@ -281,7 +280,7 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
 		}
 		
         /**
-         * If the mouse is clicked on (the close icon of?) this tab, close
+         * If the mouse is clicked on (the close icon of?) this tab, closes
          * the panel (unless file has been modified and user answers "no")
          * and do housekeeping.
          *
@@ -297,36 +296,28 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
 // 			if(getTabCount() < 4) return;
 			if(panel != null){
 				GEditorPanel thisEditorPanel = (GEditorPanel) panel;
-				if(thisEditorPanel instanceof GGraphEditorPanel) typeSelected = AlgorithmOrGraph.Graph;
-				if(thisEditorPanel instanceof GAlgorithmEditorPanel) typeSelected = AlgorithmOrGraph.Algorithm;
-				if(thisEditorPanel instanceof GCompiledAlgorithmEditorPanel) typeSelected = AlgorithmOrGraph.CompiledAlgorithm;
-				for(GEditorPanel geditorPanel : editorPanels) {
-					if(geditorPanel instanceof GAlgorithmEditorPanel) {
-						if(!foundAlg) foundAlg = true;
-						else if(typeSelected == AlgorithmOrGraph.Algorithm) foundSelected = true;
-					}
-					if(geditorPanel instanceof GGraphEditorPanel) {
-						if(!foundGraph) foundGraph = true;
-						else if(typeSelected == AlgorithmOrGraph.Graph) foundSelected = true;
-					}
-					/* IMPORTATNT: The following foundGraph/foundSelected processes are necessary
-					 * or listener will give no response when user click on the "close" button.
-					 */
-					if(geditorPanel instanceof GCompiledAlgorithmEditorPanel) {
-						if(!foundGraph) foundGraph = true;
-						else if(typeSelected == AlgorithmOrGraph.CompiledAlgorithm) foundSelected = true;
-					}
-				}
-				if(!foundGraph || !foundAlg || !foundSelected) return;
-				if(thisEditorPanel.getDirty() && thisEditorPanel.getText().length() > 0)
-					if(JOptionPane.showOptionDialog(getParent().getParent(), confirmClose, CONFIRM, 
-					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[] {YES, NO},NO) != 0) return;
+				if ( thisEditorPanel instanceof GGraphEditorPanel )
+                    typeSelected = AlgorithmOrGraph.Graph;
+				if ( thisEditorPanel instanceof GAlgorithmEditorPanel )
+                    typeSelected = AlgorithmOrGraph.Algorithm;
+				if ( thisEditorPanel instanceof GCompiledAlgorithmEditorPanel )
+                    typeSelected = AlgorithmOrGraph.CompiledAlgorithm;
+
+				if ( thisEditorPanel.getDirty() && thisEditorPanel.getText().length() > 0 )
+					if ( JOptionPane.showOptionDialog( getParent().getParent(), confirmClose, CONFIRM, 
+                                                       JOptionPane.YES_NO_OPTION,
+                                                       JOptionPane.QUESTION_MESSAGE,
+                                                       null, new Object[] {YES, NO}, NO ) != 0 )
+                        return;
 			}
 	    	if(getSelectedIndex() == indexOfComponent(panel)) {
 	    		if(getSelectedIndex() > 0) setSelectedIndex(getSelectedIndex()-1);
 	    		else setSelectedIndex(getSelectedIndex()+1);
 	    	}
 	    	GTabbedPane.this.removeEditorTab(panel);
+
+            // need at least one non-empty panel
+            addTabIfNeeded();
 		}
 		@Override
 		public void mouseEntered(MouseEvent arg0) {}
@@ -397,4 +388,4 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
 	}
 }
 
-//  [Last modified: 2015 07 14 at 19:40:28 GMT]
+//  [Last modified: 2015 07 15 at 13:44:29 GMT]

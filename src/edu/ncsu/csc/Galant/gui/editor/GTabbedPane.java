@@ -29,13 +29,13 @@ import edu.ncsu.csc.Galant.prefs.Preference;
  * window. A tabbed panel is created when a file is opened or when the tab
  * with an empty algorithm/graph icon is selected. A panel is removed by
  * clicking it's x icon -- mouseClicked() method. A panel is selected via the
- * stateChanged method. If there are no file-associated tabs, there will
+ * stateChanged method. If there are no other panels, there will
  * always be one for an empty graph. 
  *
  * @todo The dialog for closing a dirty tab should also be invoked when
  * quitting Galant. It works with the menu but not with Command/Alt-Q.
  *
- * @author Michael Owoc
+ * @author Michael Owoc, radically simplified by Matthias Stallmann
  */
 public class GTabbedPane extends JTabbedPane implements ChangeListener {
 	
@@ -169,7 +169,6 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
                       EMPTY_ALGORITHM_CONTENT, 
                       AlgorithmOrGraph.Algorithm ).setDirty(true);
         emptyAlgorithmExists = true;
-        System.out.println( "Added empty algorithm, selectedIndex = " + getSelectedIndex() );
     }
 
 	/**
@@ -183,7 +182,6 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
                       EMPTY_GRAPH_CONTENT,
                       AlgorithmOrGraph.Graph ).setDirty(true);
         emptyGraphExists = true;
-        System.out.println( "Added empty graph, selectedIndex = " + getSelectedIndex() );
     }
 	
     /**
@@ -208,34 +206,15 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
 		
 		if(filepath != null) panel.setFilePath(filepath);
 		TabRenderer tbr = new TabRenderer(filename, panel);
-		
-//         if ( emptyAlgorithmExists && type == AlgorithmOrGraph.Algorithm ) {
-//             System.out.println( "Removing empty algorithm at index " + emptyAlgorithmIndex() );
-//             removeEditorTab( emptyAlgorithmIndex() );
-//             emptyAlgorithmExists = false;
-//         }
-//         else if ( emptyGraphExists && type == AlgorithmOrGraph.Graph ) {
-//             System.out.println( "Removing empty graph at index " + emptyGraphIndex() );
-//             removeEditorTab( emptyGraphIndex() );
-//             emptyGraphExists = false;
-//         }
-
-        System.out.println( "Adding new tab: file = " + filename
-                           + ", emptyGraph = " +  emptyGraphExists
-                           + ", emptyAlg = " + emptyAlgorithmExists
-                            + ", #empty = " + numberOfEmptyPanels() );
-        insertTab(filename, null, panel, fullyQualifiedName, newTabPosition(type));
+        insertTab(filename, null, panel, fullyQualifiedName,
+                  newTabPosition(type));
         setTabComponentAt(newTabPosition(type), tbr);
         setSelectedIndex(newTabPosition(type));
 		
 		panel.setTabRenderer(tbr);
 		editorPanels.add(panel);
 		serializeState();
-        System.out.println( "Done adding new tab: " + "emptyGraph = " +  emptyGraphExists
-                            + ", emptyAlg = " + emptyAlgorithmExists
-                            + ", #empty = " + numberOfEmptyPanels()
-                            + ", selectIndex = " + getSelectedIndex()
-                            );
+
 		return panel;
 	}
 	
@@ -287,12 +266,8 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
      * Removes the tab and panel at the given index
      */
 	public void removeEditorTab(int index) {
-        System.out.println( "removeEditorTab: index = " + index );
         JPanel panel = (JPanel) getComponentAt(index);
- 		remove(index); 
-    	editorPanels.remove(panel);
-    	serializeState();
-        updateEmptiesOnRemoval( index );
+        removeEditorTab(index, panel);
 	}
 
     /**
@@ -300,12 +275,19 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
      */
 	public void removeEditorTab(JPanel panel) {
         int index = indexOfComponent(panel);
-        System.out.println( "removeEditorTab(panel): index = " + index );
-		remove(index); 
+        removeEditorTab(index, panel);
+	}
+
+    /**
+     * Removes the tab at the given index and the given panel; assumes that
+     * index is the index of the tab associated with the panel
+     */
+    private void removeEditorTab(int index, JPanel panel) {
+ 		remove(index); 
     	editorPanels.remove(panel);
     	serializeState();
         updateEmptiesOnRemoval( index );
-	}
+    }
 
     /**
      * @return the selected panel, cast as GEditorPanel
@@ -408,13 +390,11 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
 	@Override
 	public void stateChanged( ChangeEvent arg0 ) {
 		int selectionIndex = getModel().getSelectedIndex();
-        System.out.printf( "stateChanged, index = %d\n", selectionIndex );
 		if ( selectionIndex == algorithmCreationIndex() )
             addEmptyAlgorithm();
 		else if ( selectionIndex == graphCreationIndex() )
             addEmptyGraph();
 		
-        System.out.printf( "stateChanged: selected index after creation = %d\n", getSelectedIndex() );
 		GEditorPanel graphEditPanel = getSelectedPanel();
 		if ( graphEditPanel != null
              && GGraphEditorPanel.class.isInstance(graphEditPanel) ) {
@@ -475,4 +455,4 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
 	}
 }
 
-//  [Last modified: 2015 07 16 at 01:00:01 GMT]
+//  [Last modified: 2015 07 16 at 11:22:08 GMT]

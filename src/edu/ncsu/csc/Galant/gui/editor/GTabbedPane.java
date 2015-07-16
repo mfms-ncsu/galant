@@ -26,13 +26,13 @@ import edu.ncsu.csc.Galant.prefs.Preference;
 
 /**
  * This class handles everything related to the tabs at the top of the text
- * window.
+ * window. A tabbed panel is created when a file is opened or when the tab
+ * with an empty algorithm/graph icon is selected. A panel is removed by
+ * clicking it's x icon -- mouseClicked() method. A panel is selected via the
+ * stateChanged method. 
  *
  * @todo The dialog for closing a dirty tab should also be invoked when
  * quitting Galant. This class is not the place for it.
- *
- * @todo At least one graph and one algorithm is forced to be open. This is
- * not necessary. An empty algorithm is good enough. 
  *
  * @author Michael Owoc
  */
@@ -40,13 +40,53 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
 	
     //	private static final long serialVersionUID = 170081847L;
 	
-	public static final String emptyAlgorithmFilename
+	public static final String EMPTY_ALGORITHM_FILE_NAME
         = "untitled." + AlgorithmOrGraph.Algorithm.getDefaultFileExtension();
-	/* Arrange an emptyAlgorithmContent when creating a new Graph tab. */
-	public static final String emptyAlgorithmContent
-        = "<graphml><graph></graph></graphml>";
-	public static final String emptyGraphFilename
+	public static final String EMPTY_ALGORITHM_CONTENT
+        = "algorithm {\n}";
+	public static final String EMPTY_GRAPH_FILE_NAME
         = "untitled." + AlgorithmOrGraph.Graph.getDefaultFileExtension();
+	public static final String EMPTY_GRAPH_CONTENT
+        = "<graphml><graph></graph></graphml>";
+
+    // a lot of what follows will not be needed if we're willing to have
+    // multiple empty graphs and algorithms; probably the easiest solution
+    // and there's no compelling reason to do otherwise
+
+    /**
+     * The icons for creating empty algorithms and graphs, respectively, will
+     * be in indexes 0 and 1; the panel for an empty graph, if one exists
+     * will always be at index 2; an empty algorithm will be at 2 or 3,
+     * depending on whether there is an empty graph.
+     */
+    private boolean emptyAlgorithmExists = false;
+    private boolean emptyGraphExists = false;
+
+    /**
+     * The following indexes are functions rather than constants so that
+     * their calculation can be changed, e.g., to put creation tabs on the
+     * right instead of the left.
+     */
+    private int algorithmCreationIndex() { return 0; }
+    private int graphCreationIndex() { return 1; }
+    /**
+     * Index at which to insert any new tab, i.e., just to the right of
+     * the creation tabs
+     */
+    private int newTabPosition(AlgorithmOrGraph type) {
+        return 2;
+    }
+
+    private int numberOfEmptyPanels() {
+        int count = 0;
+        if ( emptyAlgorithmExists ) count++;
+        if ( emptyGraphExists ) count++;
+        return count;
+    }
+
+    private int emptyGraphIndex() { return 2; }
+    private int emptyAlgorithmIndex() { return emptyGraphExists ? 3 : 2; }
+
 	public static final String newAlgorithm = "Create new algorithm";
 	public static final String newGraph = "Create new graph";
 	public static final String CLOSE_TAB = "Close tab";
@@ -122,23 +162,29 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
     /**
      * Adds a tab for an empty algorithm.
      */
-	public void addEmptyAlgorithm(){addEditorTab(emptyAlgorithmFilename, null, "", AlgorithmOrGraph.Algorithm).setDirty(true);}
+	public void addEmptyAlgorithm() {
+        addEditorTab( EMPTY_ALGORITHM_FILE_NAME, 
+                      null,
+                      EMPTY_ALGORITHM_CONTENT, 
+                      AlgorithmOrGraph.Algorithm ).setDirty(true);
+        emptyAlgorithmExists = true;
+        System.out.println( "Added empty algorithm, selectedIndex = " + getSelectedIndex() );
+    }
 
 	/**
      * Adds a tab for an empty graph; the pane contains wrapper GraphML text
 	 * to avoid a NullPointerException when the GraphMLParser tries to parse
 	 * it tab is created or an algorithm is fired.
      */
-	public void addEmptyGraph(){addEditorTab(emptyGraphFilename, null, emptyAlgorithmContent, AlgorithmOrGraph.Graph).setDirty(true);}
+	public void addEmptyGraph() {
+        addEditorTab( EMPTY_GRAPH_FILE_NAME,
+                      null,
+                      EMPTY_GRAPH_CONTENT,
+                      AlgorithmOrGraph.Graph ).setDirty(true);
+        emptyGraphExists = true;
+        System.out.println( "Added empty graph, selectedIndex = " + getSelectedIndex() );
+    }
 	
-    /**
-     * Adds a new tab for a graph or an algorithm. Calls the extended version
-     * with serialize == true
-     */
-	public GEditorPanel addEditorTab(String filename, String filepath, String content, AlgorithmOrGraph type) {
-		return addEditorTab(filename, filepath, content, type, true);
-	}
-
     /**
      * Adds a new editor tab and the associated panel and returns the latter.
      * @param filename the name of the file whose contents are displayed
@@ -146,11 +192,9 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
      * @param filepath the path to the directory containing the file
      * @param content the text contained in the file
      * @param type whether this is an algorithm or a graph
-     * @param serialize if true, this tab will be recovered in the next edit
-     * session (my best guess)
      */
-	public GEditorPanel addEditorTab(String filename, String filepath, String content,
-                                     AlgorithmOrGraph type, boolean serialize) {
+	public GEditorPanel addEditorTab( String filename, String filepath, String content,
+                                      AlgorithmOrGraph type ) {
 		String fullyQualifiedName = (filepath != null) ? filepath + "/" + filename : null;
 		GEditorPanel panel;
 		if(type == AlgorithmOrGraph.Graph)
@@ -164,26 +208,33 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
 		if(filepath != null) panel.setFilePath(filepath);
 		TabRenderer tbr = new TabRenderer(filename, panel);
 		
-		if(getSelectedPanel() != null 
-			&& getSelectedPanel().getText().equals("") && getSelectedPanel().getFilePath() == null
-			&& ((getSelectedPanel() instanceof GAlgorithmEditorPanel && type == AlgorithmOrGraph.Algorithm)
-			|| (getSelectedPanel() instanceof GGraphEditorPanel && type == AlgorithmOrGraph.Graph))) {
+//         if ( emptyAlgorithmExists && type == AlgorithmOrGraph.Algorithm ) {
+//             System.out.println( "Removing empty algorithm at index " + emptyAlgorithmIndex() );
+//             removeEditorTab( emptyAlgorithmIndex() );
+//             emptyAlgorithmExists = false;
+//         }
+//         else if ( emptyGraphExists && type == AlgorithmOrGraph.Graph ) {
+//             System.out.println( "Removing empty graph at index " + emptyGraphIndex() );
+//             removeEditorTab( emptyGraphIndex() );
+//             emptyGraphExists = false;
+//         }
 
-			insertTab(filename, null, panel, fullyQualifiedName, getSelectedIndex());
-			setSelectedIndex(getSelectedIndex()-1);
-			setTabComponentAt(getSelectedIndex(), tbr);
-			removeEditorTab((JPanel) getComponentAt(getSelectedIndex()+1));
-			
-		} else {
-			setSelectedIndex(0);
-			insertTab(filename, null, panel, fullyQualifiedName, (getTabCount() == 0 ? 0 : getTabCount()-2));
-			setTabComponentAt((getTabCount() == 2 ? 0 : getTabCount()-3), tbr);
-			setSelectedIndex(getTabCount() == 2 ? 0 : getTabCount()-3);
-		}
+        System.out.println( "Adding new tab: file = " + filename
+                           + ", emptyGraph = " +  emptyGraphExists
+                           + ", emptyAlg = " + emptyAlgorithmExists
+                            + ", #empty = " + numberOfEmptyPanels() );
+        insertTab(filename, null, panel, fullyQualifiedName, newTabPosition(type));
+        setTabComponentAt(newTabPosition(type), tbr);
+        setSelectedIndex(newTabPosition(type));
 		
 		panel.setTabRenderer(tbr);
 		editorPanels.add(panel);
-		if(serialize) serializeState();
+		serializeState();
+        System.out.println( "Done adding new tab: " + "emptyGraph = " +  emptyGraphExists
+                            + ", emptyAlg = " + emptyAlgorithmExists
+                            + ", #empty = " + numberOfEmptyPanels()
+                            + ", selectIndex = " + getSelectedIndex()
+                            );
 		return panel;
 	}
 	
@@ -201,7 +252,7 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
 		while ( tabIndex < numberOfFiles ) {
             tabIndex++;
 			file = new File(Preference.PREFERENCES_NODE.get("editSession" + tabIndex, ""));
-			open(file);
+			open( file );
 		}
 	}
 	
@@ -223,13 +274,36 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
 	}
 	
     /**
+     * Updates information about existence of empty graphs and algorithms on
+     * removal of a tab
+     */
+    public void updateEmptiesOnRemoval( int removedIndex ) {
+        if ( removedIndex == emptyGraphIndex() ) emptyGraphExists = false;
+        else if ( removedIndex == emptyAlgorithmIndex() ) emptyAlgorithmExists = false;
+    }
+
+    /**
+     * Removes the tab and panel at the given index
+     */
+	public void removeEditorTab(int index) {
+        System.out.println( "removeEditorTab: index = " + index );
+        JPanel panel = (JPanel) getComponentAt(index);
+ 		remove(index); 
+    	editorPanels.remove(panel);
+    	serializeState();
+        updateEmptiesOnRemoval( index );
+	}
+
+    /**
      * Removes the tab associated with the given panel and the panel itself
      */
 	public void removeEditorTab(JPanel panel) {
-		removeTabAt(indexOfComponent(panel)); 
-    	remove(panel);
+        int index = indexOfComponent(panel);
+        System.out.println( "removeEditorTab(panel): index = " + index );
+		remove(index); 
     	editorPanels.remove(panel);
     	serializeState();
+        updateEmptiesOnRemoval( index );
 	}
 
     /**
@@ -241,7 +315,8 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
 	}
 	
     /**
-     * Determines what a tab will look like.
+     * Determines what a tab will look like and how it will react to the
+     * mouse.
      */
 	class TabRenderer extends JPanel implements MouseListener { 
 		private JPanel panel;
@@ -310,14 +385,10 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
                                                        null, new Object[] {YES, NO}, NO ) != 0 )
                         return;
 			}
-	    	if(getSelectedIndex() == indexOfComponent(panel)) {
-	    		if(getSelectedIndex() > 0) setSelectedIndex(getSelectedIndex()-1);
-	    		else setSelectedIndex(getSelectedIndex()+1);
-	    	}
 	    	GTabbedPane.this.removeEditorTab(panel);
 
-            // need at least one non-empty panel
-            addTabIfNeeded();
+            // need at least one non-empty panel (deprecated)
+            // addTabIfNeeded();
 		}
 		@Override
 		public void mouseEntered(MouseEvent arg0) {}
@@ -329,15 +400,24 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
 		public void mouseReleased(MouseEvent arg0) {}
 	}
 
+    /**
+     * The following is called whenever a tab is clicked.
+     * if index is 0 or 1, creates an empty algorithm or graph, respectively
+     */
 	@Override
-	public void stateChanged(ChangeEvent arg0) {
+	public void stateChanged( ChangeEvent arg0 ) {
 		int selectionIndex = getModel().getSelectedIndex();
-		if(selectionIndex == getTabCount()-2) {	addEmptyAlgorithm(); }
-		else if(selectionIndex == getTabCount()-1) { addEmptyGraph() ;}
+        System.out.printf( "stateChanged, index = %d\n", selectionIndex );
+		if ( selectionIndex == algorithmCreationIndex() )
+            addEmptyAlgorithm();
+		else if ( selectionIndex == graphCreationIndex() )
+            addEmptyGraph();
 		
-		GEditorPanel gp = getSelectedPanel();
-		if (gp != null && GGraphEditorPanel.class.isInstance(gp)) {
-			GGraphEditorPanel geditorPanel = (GGraphEditorPanel) gp;
+        System.out.printf( "stateChanged: selected index after creation = %d\n", getSelectedIndex() );
+		GEditorPanel graphEditPanel = getSelectedPanel();
+		if ( graphEditPanel != null
+             && GGraphEditorPanel.class.isInstance(graphEditPanel) ) {
+			GGraphEditorPanel geditorPanel = (GGraphEditorPanel) graphEditPanel;
 			try {
                 String panelText = geditorPanel.getText();
                 if ( ! panelText.equals( "" ) ) {
@@ -352,23 +432,29 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
 			}
 		}
 	}
-	
-	private void open(File file) {
-        if( file.getName().endsWith( ".alg" )
-            || file.getName().endsWith( ".txt" )
-            || file.getName().endsWith( ".graphml" )) {
-       	 Scanner scanner = null;
-       	  try {
-       		 GTabbedPane.AlgorithmOrGraph type;
-       		 if(file.getName().endsWith(".alg") || file.getName().endsWith(".txt")) type = GTabbedPane.AlgorithmOrGraph.Algorithm;
-       		 else type = GTabbedPane.AlgorithmOrGraph.Graph;
-       		 
-        	 scanner = new Scanner(file);
-        	 scanner.useDelimiter("\\A");
-        	 addEditorTab(file.getName(), file.getPath(), scanner.next(), type, false);
 
-       	  } catch(Exception e) { ExceptionDialog.displayExceptionInDialog(e); }
-       	  	finally { if(scanner != null) scanner.close(); }
+    /**
+     * Creates a new tab for the given file. Called when a file is opened via
+     * the file menu.
+     */
+	private void open( File file ) {
+        if ( file.getName().endsWith( ".alg" )
+             || file.getName().endsWith( ".txt" )
+             || file.getName().endsWith( ".graphml" ) ) {
+            Scanner scanner = null;
+            try {
+                GTabbedPane.AlgorithmOrGraph type;
+                if ( file.getName().endsWith(".alg")
+                     || file.getName().endsWith(".txt") )
+                    type = GTabbedPane.AlgorithmOrGraph.Algorithm;
+                else type = GTabbedPane.AlgorithmOrGraph.Graph;
+       		 
+                scanner = new Scanner(file);
+                scanner.useDelimiter("\\A");
+                addEditorTab( file.getName(), file.getPath(), scanner.next(), type );
+
+            } catch (Exception e) { ExceptionDialog.displayExceptionInDialog(e); }
+       	  	finally { if (scanner != null) scanner.close(); }
         }
 	}
 	
@@ -388,4 +474,4 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
 	}
 }
 
-//  [Last modified: 2015 07 15 at 13:44:29 GMT]
+//  [Last modified: 2015 07 16 at 00:28:32 GMT]

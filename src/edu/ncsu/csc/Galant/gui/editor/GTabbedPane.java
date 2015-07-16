@@ -50,18 +50,12 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
 	public static final String EMPTY_GRAPH_CONTENT
         = "<graphml><graph></graph></graphml>";
 
-    // a lot of what follows will not be needed if we're willing to have
-    // multiple empty graphs and algorithms; probably the easiest solution
-    // and there's no compelling reason to do otherwise
-
     /**
      * The icons for creating empty algorithms and graphs, respectively, will
      * be in indexes 0 and 1; the panel for an empty graph, if one exists
      * will always be at index 2; an empty algorithm will be at 2 or 3,
      * depending on whether there is an empty graph.
      */
-    private boolean emptyAlgorithmExists = false;
-    private boolean emptyGraphExists = false;
 
     /**
      * The following indexes are functions rather than constants so that
@@ -77,16 +71,6 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
     private int newTabPosition(AlgorithmOrGraph type) {
         return 2;
     }
-
-    private int numberOfEmptyPanels() {
-        int count = 0;
-        if ( emptyAlgorithmExists ) count++;
-        if ( emptyGraphExists ) count++;
-        return count;
-    }
-
-    private int emptyGraphIndex() { return 2; }
-    private int emptyAlgorithmIndex() { return emptyGraphExists ? 3 : 2; }
 
 	public static final String newAlgorithm = "Create new algorithm";
 	public static final String newGraph = "Create new graph";
@@ -167,8 +151,7 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
         addEditorTab( EMPTY_ALGORITHM_FILE_NAME, 
                       null,
                       EMPTY_ALGORITHM_CONTENT, 
-                      AlgorithmOrGraph.Algorithm ).setDirty(true);
-        emptyAlgorithmExists = true;
+                      AlgorithmOrGraph.Algorithm );
     }
 
 	/**
@@ -180,8 +163,7 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
         addEditorTab( EMPTY_GRAPH_FILE_NAME,
                       null,
                       EMPTY_GRAPH_CONTENT,
-                      AlgorithmOrGraph.Graph ).setDirty(true);
-        emptyGraphExists = true;
+                      AlgorithmOrGraph.Graph );
     }
 	
     /**
@@ -254,15 +236,6 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
 	}
 	
     /**
-     * Updates information about existence of empty graphs and algorithms on
-     * removal of a tab
-     */
-    public void updateEmptiesOnRemoval( int removedIndex ) {
-        if ( removedIndex == emptyGraphIndex() ) emptyGraphExists = false;
-        else if ( removedIndex == emptyAlgorithmIndex() ) emptyAlgorithmExists = false;
-    }
-
-    /**
      * Removes the tab and panel at the given index
      */
 	public void removeEditorTab(int index) {
@@ -286,7 +259,6 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
  		remove(index); 
     	editorPanels.remove(panel);
     	serializeState();
-        updateEmptiesOnRemoval( index );
     }
 
     /**
@@ -455,4 +427,4 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
 	}
 }
 
-//  [Last modified: 2015 07 16 at 11:22:08 GMT]
+//  [Last modified: 2015 07 16 at 12:41:14 GMT]

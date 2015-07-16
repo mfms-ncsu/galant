@@ -29,10 +29,11 @@ import edu.ncsu.csc.Galant.prefs.Preference;
  * window. A tabbed panel is created when a file is opened or when the tab
  * with an empty algorithm/graph icon is selected. A panel is removed by
  * clicking it's x icon -- mouseClicked() method. A panel is selected via the
- * stateChanged method. 
+ * stateChanged method. If there are no file-associated tabs, there will
+ * always be one for an empty graph. 
  *
  * @todo The dialog for closing a dirty tab should also be invoked when
- * quitting Galant. This class is not the place for it.
+ * quitting Galant. It works with the menu but not with Command/Alt-Q.
  *
  * @author Michael Owoc
  */
@@ -145,7 +146,7 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
 	    
 		restoreLastState();
 		
-		addTabIfNeeded();
+        addTabIfNeeded();
 		addChangeListener(this);
 	}
 	
@@ -474,4 +475,4 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
 	}
 }
 
-//  [Last modified: 2015 07 16 at 00:28:32 GMT]
+//  [Last modified: 2015 07 16 at 01:00:01 GMT]

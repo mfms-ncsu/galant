@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import edu.ncsu.csc.Galant.algorithm.AlgorithmExecutor;
 import edu.ncsu.csc.Galant.graph.component.Graph;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow;
 import edu.ncsu.csc.Galant.logging.LogHelper;
@@ -31,11 +32,30 @@ public class GraphDispatch {
 	private GraphWindow graphWindow;
 
     private boolean algorithmMovesNodes = false;
+    
+    private AlgorithmExecutor ae; 
+    
+    /**
+     * The GraphDispatch will be responsible for keeping a reference to the Algorithm Executor object; this is what is responsible for handling much of the threading and synchronization
+     * @param ae The AlgorithmExecutor object to keep a reference to
+     */
+    public void setAlgorithmExecutor(AlgorithmExecutor ae){
+    	this.ae = ae;
+    }
+    
+    /**
+     * 
+     * @return AlgorithmExecutor object
+     */
+    public AlgorithmExecutor getAlgorithmExecutor(){
+    	return this.ae;
+    }
 
     private int count = 0;
 	private boolean algorithmComplete = false;
 	public void setAlgorithmComplete( boolean algorithmComplete ){
         System.out.println("**** setAlgorithmComplete = " + algorithmComplete);
+        count = 0;
 		this.algorithmComplete = algorithmComplete;
 	}
 	public boolean getAlgorithmComplete(){
@@ -186,4 +206,4 @@ public class GraphDispatch {
 
 }
 
-//  [Last modified: 2015 07 10 at 23:24:41 GMT]
+//  [Last modified: 2015 07 13 at 19:22:33 GMT]

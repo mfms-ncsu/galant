@@ -785,7 +785,7 @@ public class GraphPanel extends JPanel{
 		dispatch.getWorkingGraph().getGraphState().setStepComplete(false);
 		if ( ! dispatch.getAlgorithmComplete() ) {
 			//System.out.println("GraphPanel is notifying the worker thread so it will wake up and work.");
-			synchronized(dispatch.getWorkingGraph().getGraphState()){
+			synchronized(dispatch.getInstance().getAlgorithmExecutor()){
 				dispatch.getWorkingGraph().getGraphState().notify();
 			}
 			if ( dispatch.getAlgorithmComplete() ) {
@@ -998,4 +998,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2015 07 11 at 00:46:07 GMT]
+//  [Last modified: 2015 07 13 at 18:19:31 GMT]

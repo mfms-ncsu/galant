@@ -1,6 +1,7 @@
 package edu.ncsu.csc.Galant.algorithm.code;
 
 import java.util.regex.Matcher;
+import edu.ncsu.csc.Galant.GraphDispatch;
 import java.util.regex.Pattern;
 import java.util.Scanner;
 import javax.tools.DiagnosticCollector;
@@ -298,10 +299,16 @@ public class CodeIntegrator
                     		continue;
 	                	} else if (char1 == '\n') {
 	                    	inSlashSlashComment = false;
-	                    	sb.append((char)char2);
+	                    	// This is where bug happens. I mistakely append char2 to the string.
+	                    	// In this case, Return was captured in char1 so char 2 will the first character after Return 
+	                    	// So there is a extra 'N' from Node[] parent in log when running kruskal.alg;
+	                    	
+	                    	// It should be char1 here. 
+	                    	sb.append((char)char1);
 	                    	char1 = char2;
 	                    	continue;
 	                	} else {
+	                		/* ignore everything else than return */
 	                    	char1 = reader.read();
 	                    	continue;
 	                	}

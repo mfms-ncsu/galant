@@ -1,33 +1,26 @@
 package edu.ncsu.csc.Galant.gui.window;
 
-import java.util.Random;
-import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.GridLayout;
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.KeyListener;
-import java.awt.KeyboardFocusManager;
-import java.awt.KeyEventDispatcher;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import javax.swing.BoxLayout;
-import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -43,16 +36,14 @@ import edu.ncsu.csc.Galant.graph.component.Edge;
 import edu.ncsu.csc.Galant.graph.component.Graph;
 import edu.ncsu.csc.Galant.graph.component.GraphState;
 import edu.ncsu.csc.Galant.graph.component.Node;
-import edu.ncsu.csc.Galant.graph.component.NodeState;
 import edu.ncsu.csc.Galant.gui.prefs.PreferencesPanel;
 import edu.ncsu.csc.Galant.gui.util.WindowUtil;
 import edu.ncsu.csc.Galant.gui.window.panels.ComponentEditPanel;
 import edu.ncsu.csc.Galant.gui.window.panels.GraphPanel;
 import edu.ncsu.csc.Galant.logging.LogHelper;
 import edu.ncsu.csc.Galant.prefs.Preference;
-import edu.ncsu.csc.Galant.GalantException;
-import edu.ncsu.csc.Galant.gui.util.EdgeEditDialog;
-import edu.ncsu.csc.Galant.gui.util.DeleteNodeDialog;
+// for confirmation dialog
+// for confirmation dialog
 
 /**
  * Window for displaying the <code>Graph</code>, containing all necessary
@@ -70,6 +61,10 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	   
 	/** Refers to the singleton GraphDispatch to push global information */
 	private final GraphDispatch dispatch;
+	
+	public GraphDispatch getGraphDispatch(){
+		return this.dispatch;
+	}
 	
 	/** The main frame for the Visual Graph Editor **/
 	private static JFrame frame;
@@ -1025,8 +1020,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	@Override
 	public void componentShown(ComponentEvent arg0) {
 		// TODO Auto-generated method stub
-		
 	}
 }
 
-//  [Last modified: 2015 07 03 at 14:16:12 GMT]
+//  [Last modified: 2015 07 16 at 00:53:38 GMT]

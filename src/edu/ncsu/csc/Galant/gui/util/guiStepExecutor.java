@@ -19,8 +19,11 @@ public class guiStepExecutor extends SwingWorker<Void,Long>{
     this.dispatch = GraphDispatch.getInstance();
 	}
 	
-	// This is the function that gets executed when the user clicks on the nextStep button or hits the right arrow key.  It's what's actually executed by the incrementDisplayState function
-	/* It is responsible for making sure that the GUI is updated properly (& doesn't hang) during execution */
+	/** This is the function that gets executed when the user clicks on the nextStep button or hits the right arrow key.  It's what's actually executed by the incrementDisplayState function
+	 It is responsible for making sure that the GUI is updated properly (& doesn't hang) during execution
+	 @param none
+	 @return none
+    */
     @Override
 	protected Void doInBackground(){
 		if(gp.getDisplayState() < dispatch.getWorkingGraph().getGraphState().getState()){
@@ -58,15 +61,15 @@ public class guiStepExecutor extends SwingWorker<Void,Long>{
 		return null;
 	}
 	
-	/*
-	 This is the function that gets called after the preceeding one finishes.  It is run on the GUI thread and is responsible for updating the graph panel
+	/**
+	 This 'done' function is called when the doInBackground function returns.  It is run on the GUI thread and is responsible for updating the graph panel
 	*/
 	public void done(){
 		dispatch.getGraphWindow().updateStatusLabel(gp.getDisplayState());
 		dispatch.getGraphWindow().getGraphFrame().repaint();
 	}
 	
-	/*
+	/**
 	 This function handles warning the user if execution has taken a long time.
 	 It will update the status label to alert the user of the time elapsed if the single step execution time goes over the 5-second mark
 	 */

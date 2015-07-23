@@ -39,6 +39,9 @@ public class WindowUtil
 		/**
 		 * An {@link Action} that quits the program, with name "Quit", mnemonic Q, and accelerator
 		 * ctrl/cmd + Q.
+         *
+         * @todo Oddly this invokes the dialog from the menu but not from the
+         * keyboard shortcut.
 		 */
 		public static final Action QUIT_ACTION = new AbstractAction("Quit"){
 				{
@@ -221,4 +224,4 @@ public class WindowUtil
 			}
 	}
 
-//  [Last modified: 2014 06 18 at 15:42:23 GMT]
+//  [Last modified: 2015 07 16 at 00:54:49 GMT]

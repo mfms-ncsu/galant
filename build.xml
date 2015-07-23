@@ -58,6 +58,8 @@
 	<target name="javadoc" description="generate documentation">
 		<delete dir="${doc.dir}" />
 		<mkdir dir="${doc.dir}" />
-		<javadoc sourcepath="${src.dir}" destdir="${doc.dir}" />
+		<javadoc sourcepath="${src.dir}" destdir="${doc.dir}">
+        <tag name="todo" scope="all" description="To do:"/>
+        </javadoc>
 	</target>
 </project>

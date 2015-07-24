@@ -25,7 +25,22 @@ public abstract class GraphElement {
     public static final String COLOR = "color";
     
     private AttributeList attributes;
+
+    /**
+     * The state of the graph corresponding to the most recent state of this
+     * element. Other elements may have changed since the last change of this
+     * one, but the state of the graph changes only as the result of an
+     * algorithm step.
+     *
+     * @todo In future we may want an algorithm state independent of a graph
+     * state.
+     */
 	private GraphState graphCurrentState;
+
+    /**
+     * The list of states that this element has been in up to this point --
+     * essentially the list of all changes.
+     */
 	private List<ElementState> states;
 
     public GraphElement() {
@@ -50,7 +65,7 @@ public abstract class GraphElement {
     }
 
     /**
-     * adds the given state to the list of states for this element and
+     * Adds the given state to the list of states for this element and
      * prompts synchronization with the master thread to indicate that the
      * changes corresponding to the added state are completed (contingent on
      * whether we're in the middle of a step -- if locked, then addState will
@@ -63,9 +78,52 @@ public abstract class GraphElement {
 		graphCurrentState.pauseExecution();
 	}
 
+    /**
+     * This method is vital for retrieving the most recent information about
+     * a graph element (node or edge), where most recent is defined relative
+     * to a given time stamp, as defined by forward and backward stepping
+     * through the animation.
+     * @param stateNumber the numerical indicator (timestamp) of a state,
+     * usually the current one in the animation
+     * @return the latest instance of ElementState that was created before the
+     * given time stamp, or null if the element did not exist before the time
+     * stamp.
+     */
+	public NodeState getLatestValidState(int stateNumber)
+    {
+		for ( int i = states.size() - 1; i >= 0; i-- ) {
+			ElementState state = states.get(i);
+			if ( states.getState() <= stateNumber ) {
+				return state;
+			}
+		}
+        return null;
+	}
+	
+	/**
+     * Adds the given state to the list of states for this element. If there
+     * is already a state having the same time stamp, there is no need to add
+     * another one. Such a situation might arise if there are multiple state
+     * changes to this element between a beginStep()/endStep() pair.
+     */
+	private void addNodeState(ElementState stateToAdd) {
+		for ( int i = states.size() - 1; i >= 0; i-- ) {
+			ElementState state = states.get(i);
+			if ( state.getState() == stateToAdd.getState() ) {
+				states.set(i, stateToAdd);
+				return;
+			}
+		}
+		states.add(stateToAdd);
+		stateToAdd.graphState.pauseExecution();
+	}
+
+    /************** Integer attributes ***************/
 	public boolean setAttribute(String key, Integer value) {
         ElementState newState = newState();
-        return newState.setAttribute(key, value);
+        boolean found = newState.setAttribute(key, value);
+        addState(newState);
+        return found;
 	}
 	public Integer getIntegerAttribute(String key) {
 		return latestState().getAttributes().getInteger(key);
@@ -76,9 +134,12 @@ public abstract class GraphElement {
 	}
 
 
+    /************** Double attributes ***************/
 	public boolean setAttribute(String key, Double value) {
         ElementState newState = newState();
-        return newState.setAttribute(key, value);
+        boolean found = newState.setAttribute(key, value);
+        addState(newState);
+        return found;
 	}
 	public Double getDoubleAttribute(String key) {
 		return attributes.getDouble(key);
@@ -88,9 +149,12 @@ public abstract class GraphElement {
 		return validState == null ? null : validState.getAttributes().getDouble(key);
 	}
 
+    /************** Boolean attributes ***************/
 	public boolean setBooleanAttribute(String key, Boolean value) {
         ElementState newState = newState();
-        return newState.setAttribute(key, value);
+        boolean found = newState.setAttribute(key, value);
+        addState(newState);
+        return found;
 	}
 	public Boolean getBooleanAttribute(String key) {
 		return latestState().getAttributes().getBoolean(key);
@@ -100,9 +164,12 @@ public abstract class GraphElement {
 		return validState == null ? null : validState.getAttributes().getBoolean(key);
 	}
 
+    /************** String attributes ***************/
 	public boolean setStringAttribute(String key, String value) {
         ElementState newState = newState();
-        return newState.setAttribute(key, value);
+        boolean found = newState.setAttribute(key, value);
+        addState(newState);
+        return found;
 	}
 	public String getStringAttribute(String key) {
 		return latestState().getAttributes().getString(key);
@@ -112,9 +179,14 @@ public abstract class GraphElement {
 		return validState == null ? null : validState.getAttributes().getString(key);
 	}
 
+    /**
+     * Removes the attribute with the given key from the list and updates
+     * state information appropriately.
+     */
     public void removeAttribute(String key) {
         ElementState newState = newState();
         newState.removeAttribute(key);
+        addState(newState);
     }
 	
 	public boolean inScope() {
@@ -203,4 +275,4 @@ public abstract class GraphElement {
 	
 }
 
-//  [Last modified: 2015 07 23 at 21:50:21 GMT]
+//  [Last modified: 2015 07 24 at 01:40:04 GMT]

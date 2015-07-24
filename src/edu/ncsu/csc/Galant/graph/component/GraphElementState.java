@@ -18,6 +18,8 @@ public class GraphElementState {
      * The sequence number of this state.
      */
 	private int state;
+
+    public int getState() { return state; }
 	
     /**
      * The actual algorithm state corresponding to this state.
@@ -27,6 +29,8 @@ public class GraphElementState {
      * retrieved from its sequence number.
      */
     private GraphState algorithmState;
+
+    public GraphState getAlgorithmState() { return algorithmState; }
 
     /**
      * Attribute list for the snapshot representing this element state
@@ -47,9 +51,9 @@ public class GraphElementState {
      * in a different graph state and copies all the information for the node
      * (state) - except, of course, the state
      */
-    public GraphElementState(GraphElementState elementState, GraphState graphState) {
-        this.graphState = graphState;
-        this.state = graphState.getState();
+    public GraphElementState(GraphElementState elementState, GraphState algorithmState) {
+        this.algorithmState = algorithmState;
+        this.state = algorithmState.getState();
         this.myList = elementState.getAttributeList();
     }
 
@@ -71,7 +75,7 @@ public class GraphElementState {
 
     /************** Boolean attributes ***************/
 	public boolean setAttribute(String key, Boolean value) {
-        return List.set(key, value);
+        return myList.set(key, value);
 	}
 	public Boolean getBooleanAttribute(String key) {
 		return myList.getBoolean(key);
@@ -92,5 +96,6 @@ public class GraphElementState {
     public void removeAttribute(String key) {
         myList.remove(key);
     }
+}
  
-//  [Last modified: 2015 07 24 at 16:20:44 GMT]
+//  [Last modified: 2015 07 24 at 21:55:45 GMT]

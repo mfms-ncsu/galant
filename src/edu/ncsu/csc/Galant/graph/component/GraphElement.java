@@ -1,6 +1,10 @@
 package edu.ncsu.csc.Galant.graph.component;
 
+import java.util.List;
+import java.util.ArrayList;
+
 import edu.ncsu.csc.Galant.GalantException;
+import edu.ncsu.csc.Galant.logging.LogHelper;
 
 /**
  * Abstract class containing graph element manipulation methods
@@ -18,7 +22,7 @@ import edu.ncsu.csc.Galant.GalantException;
  *   - otherwise, go through the possibilities in the following order:
  *     Integer, Double, Boolean, String   
  */
-public abstract class GraphElement {
+public class GraphElement {
 
     public static final String WEIGHT = "weight";
     public static final String LABEL = "label";
@@ -43,7 +47,7 @@ public abstract class GraphElement {
      * The list of states that this element has been in up to this point --
      * essentially the list of all changes.
      */
-	private List<ElementState> states;
+	protected List<GraphElementState> states;
 
     /**
      * Constructor to be used during parsing; all additional information is
@@ -52,7 +56,7 @@ public abstract class GraphElement {
      */
     public GraphElement(GraphState algorithmState) {
         attributes = new AttributeList();
-        states = new ArrayList<ElementState>;
+        states = new ArrayList<GraphElementState>();
         this.algorithmState = algorithmState;
     }
 
@@ -62,35 +66,21 @@ public abstract class GraphElement {
      * current graph state number; subsequent changes to this GraphElement
      * will take place in the new state.
      */
-    private ElementState newState() {
+    private GraphElementState newState() {
 		algorithmState.incrementState();
-		ElementState latest = latestState();
-		ElementState elementState
-            = new ElementState(latest, this.algorithmState);
+		GraphElementState latest = latestState();
+		GraphElementState elementState
+            = new GraphElementState(latest, this.algorithmState);
 		
         LogHelper.logDebug( "newState (elememt) = " + elementState );
 		return elementState;
     }
 
     /**
-     * Adds the given state to the list of states for this element and
-     * prompts synchronization with the master thread to indicate that the
-     * changes corresponding to the added state are completed (contingent on
-     * whether we're in the middle of a step -- if locked, then addState will
-     * not result in synchronization);
-     */
-	public void addState(ElementState elementState) {
-		states.add(elementState);
-        // the pauseExecution call will be replaced by something different
-        // when threading is sorted out
-		algorithmState.pauseExecution();
-	}
-
-    /**
      * @return The last state on the list of states. This is the default for
      * retrieving information about any attribute.
      */
-    public ElementState latestState() {
+    public GraphElementState latestState() {
         return states.get(states.size() - 1); 
     }
 
@@ -101,15 +91,15 @@ public abstract class GraphElement {
      * through the animation.
      * @param stateNumber the numerical indicator (timestamp) of a state,
      * usually the current one in the animation
-     * @return the latest instance of ElementState that was created before the
+     * @return the latest instance of GraphElementState that was created before the
      * given time stamp, or null if the element did not exist before the time
      * stamp.
      */
-	public ElementState getLatestValidState(int stateNumber)
+	public GraphElementState getLatestValidState(int stateNumber)
     {
 		for ( int i = states.size() - 1; i >= 0; i-- ) {
-			ElementState state = states.get(i);
-			if ( states.getState() <= stateNumber ) {
+			GraphElementState state = states.get(i);
+			if ( state.getState() <= stateNumber ) {
 				return state;
 			}
 		}
@@ -126,12 +116,12 @@ public abstract class GraphElement {
      * whether we're in the middle of a step -- if locked, then addState will
      * not result in synchronization);
      *
-     * @invariant states is always sorted by state number.
+     * @invariant states are always sorted by state number.
      */
-	private void addState(ElementState stateToAdd) {
+	private void addState(GraphElementState stateToAdd) {
         int stateNumber = stateToAdd.getState();
 		for ( int i = states.size() - 1; i >= stateNumber; i-- ) {
-			ElementState state = states.get(i);
+			GraphElementState state = states.get(i);
 			if ( state.getState() == stateNumber ) {
 				states.set(i, stateToAdd);
 				return;
@@ -143,63 +133,63 @@ public abstract class GraphElement {
 
     /************** Integer attributes ***************/
 	public boolean setAttribute(String key, Integer value) {
-        ElementState newState = newState();
+        GraphElementState newState = newState();
         boolean found = newState.setAttribute(key, value);
         addState(newState);
         return found;
 	}
 	public Integer getIntegerAttribute(String key) {
-		return latestState().getAttributes().getInteger(key);
+		return latestState().getAttributeList().getInteger(key);
 	}
 	public Integer getIntegerAttribute(int state, String key) {
-        validState = getLatestValidState(state);
-		return validState == null ? null : validState.getAttributes().getInteger(key);
+        GraphElementState validState = getLatestValidState(state);
+		return validState == null ? null : validState.getAttributeList().getInteger(key);
 	}
 
 
     /************** Double attributes ***************/
 	public boolean setAttribute(String key, Double value) {
-        ElementState newState = newState();
+        GraphElementState newState = newState();
         boolean found = newState.setAttribute(key, value);
         addState(newState);
         return found;
 	}
 	public Double getDoubleAttribute(String key) {
-		return  latestState().getAttributes.getDouble(key);
+		return latestState().getAttributeList().getDouble(key);
 	}
 	public Double getDoubleAttribute(int state, String key) {
-        validState = getLatestValidState(state);
-		return validState == null ? null : validState.getAttributes().getDouble(key);
+        GraphElementState validState = getLatestValidState(state);
+		return validState == null ? null : validState.getAttributeList().getDouble(key);
 	}
 
     /************** Boolean attributes ***************/
 	public boolean setAttribute(String key, Boolean value) {
-        ElementState newState = newState();
+        GraphElementState newState = newState();
         boolean found = newState.setAttribute(key, value);
         addState(newState);
         return found;
 	}
 	public Boolean getBooleanAttribute(String key) {
-		return latestState().getAttributes().getBoolean(key);
+		return latestState().getAttributeList().getBoolean(key);
 	}
 	public Boolean getBooleanAttribute(int state, String key) {
-        validState = getLatestValidState(state);
-		return validState == null ? null : validState.getAttributes().getBoolean(key);
+        GraphElementState validState = getLatestValidState(state);
+		return validState == null ? null : validState.getAttributeList().getBoolean(key);
 	}
 
     /************** String attributes ***************/
 	public boolean setAttribute(String key, String value) {
-        ElementState newState = newState();
+        GraphElementState newState = newState();
         boolean found = newState.setAttribute(key, value);
         addState(newState);
         return found;
 	}
 	public String getStringAttribute(String key) {
-		return latestState().getAttributes().getString(key);
+		return latestState().getAttributeList().getString(key);
 	}
 	public String getStringAttribute(int state, String key) {
-        validState = getLatestValidState(state);
-		return validState == null ? null : validState.getAttributes().getString(key);
+        GraphElementState validState = getLatestValidState(state);
+		return validState == null ? null : validState.getAttributeList().getString(key);
 	}
 
     /**
@@ -207,7 +197,7 @@ public abstract class GraphElement {
      * state information appropriately.
      */
     public void removeAttribute(String key) {
-        ElementState newState = newState();
+        GraphElementState newState = newState();
         newState.removeAttribute(key);
         addState(newState);
     }
@@ -215,7 +205,7 @@ public abstract class GraphElement {
     public boolean isDeleted() {
         return getBooleanAttribute(DELETED);
     }
-    public boolean isDeleted(state) {
+    public boolean isDeleted(int state) {
         return getBooleanAttribute(state, DELETED);
     }
     /**
@@ -223,7 +213,7 @@ public abstract class GraphElement {
      */
     public void setDeleted(boolean deleted) {
         if (deleted) {
-            setBooleanAttribute(DELETED, true);
+            setAttribute(DELETED, true);
         }
         else removeAttribute(DELETED);
     }
@@ -232,8 +222,8 @@ public abstract class GraphElement {
      * @return true if this element existed in the latest state prior to the
      * given one.
      */
-    public boolean isCreated(state) {
-        NodeState creationState = getLatestValidState(state);
+    public boolean isCreated(int state) {
+        GraphElementState creationState = getLatestValidState(state);
         return creationState == null ? false : true;
     }
 
@@ -351,7 +341,7 @@ public abstract class GraphElement {
         setAttribute(HIGHLIGHTED, true);
     }
 	public void unHighlight() {
-        clearAttribute(HIGHLIGHTED);
+        removeAttribute(HIGHLIGHTED);
     }
 
     /**
@@ -362,7 +352,18 @@ public abstract class GraphElement {
      * initialized properly. Also establishes the initial state for this
      * element. 
      */
-    public abstract void initializeAfterParsing();
+    public void initializeAfterParsing() {
+        // the only attribute that may cause trouble is the weight, which
+        // should be stored as a double but might show up as an integer in
+        // the GraphML representation
+        Double weight = getDoubleAttribute(WEIGHT);
+        if ( getWeight() == null ) {
+            Integer weightAsInteger = getIntegerAttribute(WEIGHT);
+            if ( weightAsInteger != null ) {
+                setAttribute(WEIGHT, (double) weightAsInteger.getIntegerValue());
+            }
+        }
+    }
 
     /**
      * Creates a string that can be used to form the "interior" of a GraphML
@@ -370,11 +371,11 @@ public abstract class GraphElement {
      */
     public String toString() {
         String s = " "; 
-        for ( Attribute attribute : myList ) {
+        for ( Attribute attribute : attributes ) {
             s += attribute + " ";
         }
         return s;
     }
 }
 
-//  [Last modified: 2015 07 24 at 17:38:41 GMT]
+//  [Last modified: 2015 07 24 at 21:54:31 GMT]

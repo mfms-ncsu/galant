@@ -1,5 +1,7 @@
 package edu.ncsu.csc.Galant.graph.component;
 
+import java.util.ArrayList;
+
 /**
  * An AttributeList plays the role of a Map. A list is used so that
  * attributes will appeare in the order they were added rather than
@@ -13,7 +15,7 @@ public class AttributeList {
      */
     abstract class Attribute {
         protected String key;
-        public Attribute(String key, Object value) { this.key = key; }
+        public Attribute(String key) { this.key = key; }
         public String getKey() { return key; } 
         public Integer getIntegerValue() { return null; }
         public Double getDoubleValue() { return null; }
@@ -42,7 +44,7 @@ public class AttributeList {
             this.value = value;
         }
         public Double getDoubleValue() { return value; }
-        public void set(Integer value) { this.value = value; }
+        public void set(Double value) { this.value = value; }
         public String toString() {
             return key + "=\"" + value + "\"";
         }
@@ -55,7 +57,7 @@ public class AttributeList {
             this.value = value;
         }
         public Boolean getBooleanValue() { return value; }
-        public void set(Integer value) { this.value = value; }
+        public void set(Boolean value) { this.value = value; }
         public String toString() {
             return key + "=\"" + value + "\"";
         }
@@ -68,7 +70,7 @@ public class AttributeList {
             this.value = value;
         }
         public String getStringValue() { return value; }
-        public void set(Integer value) { this.value = value; }
+        public void set(String value) { this.value = value; }
         public String toString() {
             return key + "=\"" + value + "\"";
         }
@@ -82,7 +84,7 @@ public class AttributeList {
      * The getters traverse the list until they find a matching key or return
      * null if they don't.
      */
-    public Integer getIntegerValue(String key) {
+    public Integer getInteger(String key) {
         for ( Attribute attribute : myList ) {
             if ( attribute.getKey().equals(key) ) {
                 return attribute.getIntegerValue();
@@ -91,7 +93,7 @@ public class AttributeList {
         return null;
     }
 
-    public Double getDoubleValue(String key) {
+    public Double getDouble(String key) {
         for ( Attribute attribute : myList ) {
             if ( attribute.getKey().equals(key) ) {
                 return attribute.getDoubleValue();
@@ -100,7 +102,7 @@ public class AttributeList {
         return null;
     }
 
-    public Boolean getBooleanValue(String key) {
+    public Boolean getBoolean(String key) {
         for ( Attribute attribute : myList ) {
             if ( attribute.getKey().equals(key) ) {
                 return attribute.getBooleanValue();
@@ -109,7 +111,7 @@ public class AttributeList {
         return null;
     }
 
-    public String getStringValue(String key) {
+    public String getString(String key) {
         for ( Attribute attribute : myList ) {
             if ( attribute.getKey().equals(key) ) {
                 return attribute.getStringValue();
@@ -130,7 +132,7 @@ public class AttributeList {
                 return true;
             }
         }
-        addInteger(key, value);
+        add(key, value);
         return false;
     }
 
@@ -141,7 +143,7 @@ public class AttributeList {
                 return true;
             }
         }
-        addDouble(key, value);
+        add(key, value);
         return false;
     }
 
@@ -152,7 +154,7 @@ public class AttributeList {
                 return true;
             }
         }
-        addBoolean(key, value);
+        add(key, value);
         return false;
     }
 
@@ -163,7 +165,7 @@ public class AttributeList {
                 return true;
             }
         }
-        addString(key, value);
+        add(key, value);
         return false;
     }
 
@@ -214,4 +216,4 @@ public class AttributeList {
 
 }
 
-//  [Last modified: 2015 07 24 at 16:10:44 GMT]
+//  [Last modified: 2015 07 24 at 21:49:25 GMT]

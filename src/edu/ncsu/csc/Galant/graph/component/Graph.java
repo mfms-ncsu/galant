@@ -325,7 +325,7 @@ public class Graph {
 		currentGraphState.setLocked(true);
 		
 		n.setDeleted(true);
-		for (Edge e : n.getEdges()) {
+		for (Edge e : n.getIncidentEdges()) {
 			e.setDeleted(true);
 		}
 		
@@ -664,9 +664,9 @@ public class Graph {
 		edges.remove(e);
 		
 		Node source = e.getSourceNode();
-		source.getEdges().remove(e);		
+		source.getIncidentEdges().remove(e);		
 		Node dest = e.getDestNode();
-		dest.getEdges().remove(e);
+		dest.getIncidentEdges().remove(e);
 	}
 	
 	/**
@@ -674,7 +674,7 @@ public class Graph {
 	 * @param n the <code>Node</code> to remove
 	 */
 	public void removeNode(Node n) {
-		List<Edge> n_edges = n.getEdges();
+		List<Edge> n_edges = n.getIncidentEdges();
 		
 		currentGraphState.setLocked(true);
 		while (n_edges.size() > 0) {
@@ -683,11 +683,6 @@ public class Graph {
 		}
 
 		nodes.remove(n);
-		
-		for (int i=0; i < this.nodes.size(); i++) {
-			this.nodes.get(i).setId(i);
-		}
-		
 		currentGraphState.setLocked(false);
 	}
 	
@@ -804,4 +799,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2015 05 28 at 15:11:03 GMT]
+//  [Last modified: 2015 07 24 at 20:47:29 GMT]

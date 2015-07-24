@@ -906,7 +906,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
             Graph g = dispatch.getWorkingGraph();
             Node n = g.addInitialNode();
             LogHelper.logDebug( " addInitial: node = " + n );
-            // choice a position to place new node
+            // choose a random position to place new node
             Point p = Node.genRandomPosition();
             n.setFixedPosition(p);
             LogHelper.logDebug( " setFixedPosition: node = " + n );
@@ -1031,4 +1031,4 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	}
 }
 
-//  [Last modified: 2015 07 16 at 00:53:38 GMT]
+//  [Last modified: 2015 07 24 at 20:48:35 GMT]

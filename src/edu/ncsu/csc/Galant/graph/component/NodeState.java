@@ -85,29 +85,30 @@ public class NodeState {
 		graphState = s;
 	}
 /*
-	This constructor has been deprecated by a need to have a GraphState attached to the NodeState object.  Use at your own risk.
-	
-	public NodeState( int s, boolean _highlighted,
-                      boolean _visited,
-                      int _id,
-                      double _weight,
-                      String _color,
-                      String _label,
-                      Point _position,
-                      boolean _deleted
-                      ) {
-		this.state = s;
+ *	This constructor has been deprecated by a need to have a GraphState attached to the NodeState object.  Use at your own risk.
+ */
+
+// 	public NodeState( int s, boolean _highlighted,
+//                       boolean _visited,
+//                       int _id,
+//                       double _weight,
+//                       String _color,
+//                       String _label,
+//                       Point _position,
+//                       boolean _deleted
+//                       ) {
+// 		this.state = s;
 		
-		this.selected = _highlighted;
-		this.visited = _visited;
-		this.id = _id;
-		this.weight = _weight;
-		this.color = _color;
-		this.label = _label;
-        this.position = _position;
+// 		this.selected = _highlighted;
+// 		this.visited = _visited;
+// 		this.id = _id;
+// 		this.weight = _weight;
+// 		this.color = _color;
+// 		this.label = _label;
+//         this.position = _position;
 		
-		this.deleted = _deleted;
-	}*/
+// 		this.deleted = _deleted;
+// 	}
 	
     /**
      * Constructor for layered graphs; nodes are never added or deleted in
@@ -239,4 +240,4 @@ public class NodeState {
 	
 }
 
-//  [Last modified: 2015 05 26 at 15:20:46 GMT]
+//  [Last modified: 2015 07 24 at 15:40:00 GMT]

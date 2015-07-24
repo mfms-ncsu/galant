@@ -11,7 +11,7 @@ public class AttributeList {
      * A generic item in an AttributeList. Usually only one of the four
      * possible getters other than getKey() will return a non-null value.
      */
-    class Attribute {
+    abstract class Attribute {
         protected String key;
         public Attribute(String key, Object value) { this.key = key; }
         public String getKey() { return key; } 
@@ -19,6 +19,7 @@ public class AttributeList {
         public Double getDoubleValue() { return null; }
         public Boolean getBooleanValue() { return null; } 
         public String getStringValue() { return null; }
+        public abstract String toString();
     }
 
     class IntegerAttribute extends Attribute {
@@ -29,6 +30,9 @@ public class AttributeList {
         }
         public Integer getIntegerValue() { return value; }
         public void set(Integer value) { this.value = value; }
+        public String toString() {
+            return key + "=\"" + value + "\"";
+        }
     }
 
     public class DoubleAttribute extends Attribute {
@@ -39,6 +43,9 @@ public class AttributeList {
         }
         public Double getDoubleValue() { return value; }
         public void set(Integer value) { this.value = value; }
+        public String toString() {
+            return key + "=\"" + value + "\"";
+        }
     }
 
     public class BooleanAttribute extends Attribute {
@@ -49,6 +56,9 @@ public class AttributeList {
         }
         public Boolean getBooleanValue() { return value; }
         public void set(Integer value) { this.value = value; }
+        public String toString() {
+            return key + "=\"" + value + "\"";
+        }
     }
 
     public class StringAttribute extends Attribute {
@@ -59,6 +69,9 @@ public class AttributeList {
         }
         public String getStringValue() { return value; }
         public void set(Integer value) { this.value = value; }
+        public String toString() {
+            return key + "=\"" + value + "\"";
+        }
     }
 
     private ArrayList<Attribute> myList;
@@ -159,19 +172,19 @@ public class AttributeList {
      * is not taken there may be duplicate attributes with the same key --
      * only the first of these will matter
      */
-    public void addInteger(String key, Integer value) {
+    public void add(String key, Integer value) {
         myList.add(new IntegerAttribute(key, value));
     }
 
-    public void addDouble(String key, Double value) {
+    public void add(String key, Double value) {
         myList.add(new DoubleAttribute(key, value));
     }
 
-    public void addBoolean(String key, Boolean value) {
+    public void add(String key, Boolean value) {
         myList.add(new BooleanAttribute(key, value));
     }
 
-    public void addString(String key, String value) {
+    public void add(String key, String value) {
         myList.add(new StringAttribute(key, value));
     }
 
@@ -188,6 +201,17 @@ public class AttributeList {
         }
     }
 
+    // The following does not work; the toString() method for ArrayList
+    // always takes over, but that's useful for debugging.
+//     public String toString() {
+//         StringBuilder builder = new StringBuilder();
+//         builder.append(" ");
+//         for ( Attribute attribute : myList ) {
+//             builder.append( "" + attribute + " " );
+//         }
+//         return builder.toString();
+//     }
+
 }
 
-//  [Last modified: 2015 07 23 at 21:38:12 GMT]
+//  [Last modified: 2015 07 24 at 16:10:44 GMT]

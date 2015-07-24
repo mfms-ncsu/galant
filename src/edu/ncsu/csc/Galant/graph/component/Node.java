@@ -19,33 +19,28 @@ import edu.ncsu.csc.Galant.logging.LogHelper;
  *
  */
 public class Node extends GraphElement implements Comparable<Node> {
-	
-	private Map<String, Object> attributes;
-	
-	private GraphState graphCurrentState;
-	private List<NodeState> nodeStates;
-	private List<Edge> edges;
-	
+	private List<Edge> incidentEdges;
 	private Point position;
+    private Integer id;
 	
 	public Node(GraphState currentState, int id) {
+        super(currentState);
 		this.graphCurrentState = currentState;
-		nodeStates = new ArrayList<NodeState>();
-		attributes = new HashMap<String, Object>();
-		
 		this.position = genRandomPosition();
 		
 		NodeState ns = new NodeState(currentState, id);
 		addNodeState(ns);
 		
-		edges = new ArrayList<Edge>();
+		incidentEdges = new ArrayList<Edge>();
 	}
+
+    
 	
 	public Node(GraphState currentState, int _id, double _weight, String _color, String _label, boolean _selected, boolean _visited) {
 		this(currentState, _selected, _visited, new ArrayList<Edge>(), _id, _weight, _color, _label, genRandomPosition());
 	}
 
-	public Node(GraphState currentState, boolean _selected, boolean _visited, List<Edge> _edges, int _id, double _weight, String _color, String _label, Point _position) { //TODO sanitize
+	public Node(GraphState currentState, boolean _selected, boolean _visited, List<Edge> _incidentEdges, int _id, double _weight, String _color, String _label, Point _position) { //TODO sanitize
         LogHelper.enterConstructor( getClass(), "not layered" );
 		this.graphCurrentState = currentState;
 		nodeStates = new ArrayList<NodeState>();
@@ -56,7 +51,7 @@ public class Node extends GraphElement implements Comparable<Node> {
 		NodeState ns = new NodeState(currentState, _selected, _visited, _id, _weight, _color, _label, _position);
 		addNodeState(ns);
 		
-		edges = _edges;
+		incidentEdges = _incidentEdges;
 
         LogHelper.exitConstructor( getClass(), "ns = " + ns );
 	}
@@ -80,9 +75,13 @@ public class Node extends GraphElement implements Comparable<Node> {
 		NodeState ns = new NodeState(currentState, _selected, _visited, _id, _weight, _color, _label, _layer, _positionInLayer);
 		addNodeState(ns);
 
-        edges = new ArrayList<Edge>();
+        incidentEdges = new ArrayList<Edge>();
         LogHelper.exitConstructor( getClass(), "ns = " + ns );
 	}
+
+    public void initializeAfterParsing() {
+        
+    }
 
 	public boolean inScope(){
 		return !isDeleted();
@@ -221,7 +220,7 @@ public class Node extends GraphElement implements Comparable<Node> {
 	public List<Edge> getOutgoingEdges() {
 		List<Edge> currentEdges = new ArrayList<Edge>();
 		
-		for ( Edge e : edges ) {
+		for ( Edge e : incidentEdges ) {
 			if ( e.inScope() && ! e.isDeleted() ) {
 				if ( this.equals( e.getSourceNode() ) 
                     || ! graphCurrentState.isDirected() ) {
@@ -244,7 +243,7 @@ public class Node extends GraphElement implements Comparable<Node> {
 	public List<Edge> getIncomingEdges() {
 		List<Edge> currentEdges = new ArrayList<Edge>();
 		
-		for ( Edge e : edges ) {
+		for ( Edge e : incidentEdges ) {
 			if ( e.inScope() && ! e.isDeleted() ) {
 				if ( this.equals( e.getDestNode() )
                      || ! graphCurrentState.isDirected() ) {
@@ -267,7 +266,7 @@ public class Node extends GraphElement implements Comparable<Node> {
     public List<Edge> getIncidentEdges() {
  		List<Edge> currentEdges = new ArrayList<Edge>();
 		
-		for ( Edge e : edges ) {
+		for ( Edge e : incidentEdges ) {
 			if ( e.inScope() && ! e.isDeleted() ) {
                 currentEdges.add(e);
             }
@@ -295,7 +294,7 @@ public class Node extends GraphElement implements Comparable<Node> {
 	 */
 	public List<Edge> getUnvisitedPaths() {
 		List<Edge> unvisited = new ArrayList<Edge>();
-		for (Edge e : edges) {
+		for (Edge e : incidentEdges) {
 			if (!e.inScope() || e.isDeleted()) {
 				continue;
 			}
@@ -324,7 +323,7 @@ public class Node extends GraphElement implements Comparable<Node> {
 	 */
 	public List<Edge> getVisitedPaths() {
 		List<Edge> visited = new ArrayList<Edge>();
-		for (Edge e : edges) {
+		for (Edge e : incidentEdges) {
 			if (!e.inScope() || e.isDeleted()) {
 				continue;
 			}
@@ -349,7 +348,7 @@ public class Node extends GraphElement implements Comparable<Node> {
 	
 	public List<Node> getUnvisitedAdjacentNodes() {
 		List<Node> nodes = new ArrayList<Node>();
-		for (Edge e : edges) {
+		for (Edge e : incidentEdges) {
 			if (!e.inScope() || e.isDeleted()) {
 				continue;
 			}
@@ -413,18 +412,18 @@ public class Node extends GraphElement implements Comparable<Node> {
     }
 
 	public List<Edge> getEdges() {
-		return this.edges;
+		return this.incidentEdges;
 	}
 	
 	public void addEdge(Edge _edge) {
-		edges.add(_edge);
+		incidentEdges.add(_edge);
 	}
 
 	/**
 	 * @param edges the edges to set
 	 */
 	public void setEdges(List<Edge> edges) {
-		this.edges = edges;
+		this.incidentEdges = edges;
 	}
 
 	/**
@@ -864,4 +863,4 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 }
 
-//  [Last modified: 2015 05 26 at 15:25:57 GMT]
+//  [Last modified: 2015 07 24 at 17:40:06 GMT]

@@ -23,6 +23,8 @@ public abstract class GraphElement {
     public static final String WEIGHT = "weight";
     public static final String LABEL = "label";
     public static final String COLOR = "color";
+    public static final String DELETED = "deleted";
+    public static final String HIGHLIGHTED = "highlighted";
     
     private AttributeList attributes;
 
@@ -35,7 +37,7 @@ public abstract class GraphElement {
      * @todo In future we may want an algorithm state independent of a graph
      * state.
      */
-	private GraphState graphCurrentState;
+	private GraphState algorithmState;
 
     /**
      * The list of states that this element has been in up to this point --
@@ -43,9 +45,15 @@ public abstract class GraphElement {
      */
 	private List<ElementState> states;
 
-    public GraphElement() {
+    /**
+     * Constructor to be used during parsing; all additional information is
+     * filled in by initializeAfterParsing(). The algorithm state is
+     * initialized elsewhere, currently in Graph.
+     */
+    public GraphElement(GraphState algorithmState) {
         attributes = new AttributeList();
         states = new ArrayList<ElementState>;
+        this.algorithmState = algorithmState;
     }
 
     /**
@@ -55,10 +63,10 @@ public abstract class GraphElement {
      * will take place in the new state.
      */
     private ElementState newState() {
-		graphCurrentState.incrementState();
+		algorithmState.incrementState();
 		ElementState latest = latestState();
 		ElementState elementState
-            = new ElementState(latest, this.graphCurrentState);
+            = new ElementState(latest, this.algorithmState);
 		
         LogHelper.logDebug( "newState (elememt) = " + elementState );
 		return elementState;
@@ -75,8 +83,16 @@ public abstract class GraphElement {
 		states.add(elementState);
         // the pauseExecution call will be replaced by something different
         // when threading is sorted out
-		graphCurrentState.pauseExecution();
+		algorithmState.pauseExecution();
 	}
+
+    /**
+     * @return The last state on the list of states. This is the default for
+     * retrieving information about any attribute.
+     */
+    public ElementState latestState() {
+        return states.get(states.size() - 1); 
+    }
 
     /**
      * This method is vital for retrieving the most recent information about
@@ -89,7 +105,7 @@ public abstract class GraphElement {
      * given time stamp, or null if the element did not exist before the time
      * stamp.
      */
-	public NodeState getLatestValidState(int stateNumber)
+	public ElementState getLatestValidState(int stateNumber)
     {
 		for ( int i = states.size() - 1; i >= 0; i-- ) {
 			ElementState state = states.get(i);
@@ -104,18 +120,25 @@ public abstract class GraphElement {
      * Adds the given state to the list of states for this element. If there
      * is already a state having the same time stamp, there is no need to add
      * another one. Such a situation might arise if there are multiple state
-     * changes to this element between a beginStep()/endStep() pair.
+     * changes to this element between a beginStep()/endStep() pair. Also
+     * prompts synchronization with the master thread to indicate that the
+     * changes corresponding to the added state are completed (contingent on
+     * whether we're in the middle of a step -- if locked, then addState will
+     * not result in synchronization);
+     *
+     * @invariant states is always sorted by state number.
      */
-	private void addNodeState(ElementState stateToAdd) {
-		for ( int i = states.size() - 1; i >= 0; i-- ) {
+	private void addState(ElementState stateToAdd) {
+        int stateNumber = stateToAdd.getState();
+		for ( int i = states.size() - 1; i >= stateNumber; i-- ) {
 			ElementState state = states.get(i);
-			if ( state.getState() == stateToAdd.getState() ) {
+			if ( state.getState() == stateNumber ) {
 				states.set(i, stateToAdd);
 				return;
 			}
 		}
 		states.add(stateToAdd);
-		stateToAdd.graphState.pauseExecution();
+		stateToAdd.getAlgorithmState().pauseExecution();
 	}
 
     /************** Integer attributes ***************/
@@ -142,7 +165,7 @@ public abstract class GraphElement {
         return found;
 	}
 	public Double getDoubleAttribute(String key) {
-		return attributes.getDouble(key);
+		return  latestState().getAttributes.getDouble(key);
 	}
 	public Double getDoubleAttribute(int state, String key) {
         validState = getLatestValidState(state);
@@ -150,7 +173,7 @@ public abstract class GraphElement {
 	}
 
     /************** Boolean attributes ***************/
-	public boolean setBooleanAttribute(String key, Boolean value) {
+	public boolean setAttribute(String key, Boolean value) {
         ElementState newState = newState();
         boolean found = newState.setAttribute(key, value);
         addState(newState);
@@ -165,7 +188,7 @@ public abstract class GraphElement {
 	}
 
     /************** String attributes ***************/
-	public boolean setStringAttribute(String key, String value) {
+	public boolean setAttribute(String key, String value) {
         ElementState newState = newState();
         boolean found = newState.setAttribute(key, value);
         addState(newState);
@@ -189,6 +212,35 @@ public abstract class GraphElement {
         addState(newState);
     }
 	
+    public boolean isDeleted() {
+        return getBooleanAttribute(DELETED);
+    }
+    public boolean isDeleted(state) {
+        return getBooleanAttribute(state, DELETED);
+    }
+    /**
+     * @param true iff this element is to be deleted in the current state.
+     */
+    public void setDeleted(boolean deleted) {
+        if (deleted) {
+            setBooleanAttribute(DELETED, true);
+        }
+        else removeAttribute(DELETED);
+    }
+
+    /**
+     * @return true if this element existed in the latest state prior to the
+     * given one.
+     */
+    public boolean isCreated(state) {
+        NodeState creationState = getLatestValidState(state);
+        return creationState == null ? false : true;
+    }
+
+    /**
+     * @return true if the element has been created but has not been
+     * deleted.
+     */
 	public boolean inScope() {
 		return ! isDeleted();
 	}
@@ -207,7 +259,7 @@ public abstract class GraphElement {
     }
 
 	public void setWeight(Double weight) {
-        setDoubleAttribute(WEIGHT, weight);
+        setAttribute(WEIGHT, weight);
     }
 
     public boolean hasWeight() {
@@ -232,7 +284,7 @@ public abstract class GraphElement {
     }
 
 	public void setLabel(String label) {
-        setStringAttribute(LABEL, label);
+        setAttribute(LABEL, label);
     }
 
     public boolean hasLabel() {
@@ -257,7 +309,7 @@ public abstract class GraphElement {
     }
 
 	public void setColor(String color) {
-        setStringAttribute(COLOR, color);
+        setAttribute(COLOR, color);
     }
 
     public boolean hasColor() {
@@ -272,7 +324,57 @@ public abstract class GraphElement {
     public void clearColor() {
         removeAttribute(COLOR);
     }
-	
+
+    /**************************** highlighting ***********************/
+    /**
+     * In case it matters, setSelected simply changes the value of the
+     * HIGHLIGHTED attribute (if it's already there) while unHighlight
+     * actually removes the entry corresponding to that attribute. The effect
+     * is the same, but the nature of the list traversal might not be.
+     */
+	public boolean isSelected() {
+        return getBooleanAttribute(HIGHLIGHTED);
+    }
+	public Boolean isSelected(int state) {
+        return getBooleanAttribute(state, HIGHLIGHTED);
+    }
+	public void setSelected(Boolean highlighted) {
+        setAttribute(HIGHLIGHTED, highlighted);
+    }
+	public boolean isHighlighted() {
+        return getBooleanAttribute(HIGHLIGHTED);
+    }
+	public Boolean isHighlighted(int state) {
+        return getBooleanAttribute(state, HIGHLIGHTED);
+    }
+	public void highlight() {
+        setAttribute(HIGHLIGHTED, true);
+    }
+	public void unHighlight() {
+        clearAttribute(HIGHLIGHTED);
+    }
+
+    /**
+     * Cleans up specific attributes and initializes important information in
+     * an element-specific way. This allows the GraphMLParser to create each
+     * element without knowing its attributes, then collect them in order of
+     * appearance, and finally postprocess so that the essential ones are
+     * initialized properly. Also establishes the initial state for this
+     * element. 
+     */
+    public abstract void initializeAfterParsing();
+
+    /**
+     * Creates a string that can be used to form the "interior" of a GraphML
+     * representation of this element.
+     */
+    public String toString() {
+        String s = " "; 
+        for ( Attribute attribute : myList ) {
+            s += attribute + " ";
+        }
+        return s;
+    }
 }
 
-//  [Last modified: 2015 07 24 at 01:40:04 GMT]
+//  [Last modified: 2015 07 24 at 17:38:41 GMT]

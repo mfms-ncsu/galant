@@ -106,6 +106,7 @@ public class Node extends GraphElement implements Comparable<Node> {
     public void initializeAfterParsing()
     throws GalantException {
         LogHelper.enterMethod( getClass(), "initializeAfterParsing: " + this );
+        super.initializeAfterParsing();
         id = getIntegerAttribute("id");
         if ( id == null )
             throw new GalantException("missing or malformed id for node " + this);
@@ -134,7 +135,6 @@ public class Node extends GraphElement implements Comparable<Node> {
                     y = r.nextInt( GraphDispatch.getInstance().getWindowHeight() );
             }
         }
-        super.intializeAfterParsing();
         LogHelper.exitMethod(getClass(), "initializeAfterParsing: id = " + id
                              + ", x = " + getX() + ", y = " + getY()
                              + ", node = " + this);
@@ -487,4 +487,4 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 }
 
-//  [Last modified: 2015 07 24 at 21:21:21 GMT]
+//  [Last modified: 2015 07 25 at 22:25:57 GMT]

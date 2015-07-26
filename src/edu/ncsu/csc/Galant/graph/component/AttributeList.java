@@ -9,76 +9,11 @@ import java.util.ArrayList;
  */
 public class AttributeList {
 
-    /**
-     * A generic item in an AttributeList. Usually only one of the four
-     * possible getters other than getKey() will return a non-null value.
-     */
-    abstract class Attribute {
-        protected String key;
-        public Attribute(String key) { this.key = key; }
-        public String getKey() { return key; } 
-        public Integer getIntegerValue() { return null; }
-        public Double getDoubleValue() { return null; }
-        public Boolean getBooleanValue() { return null; } 
-        public String getStringValue() { return null; }
-        public abstract String toString();
-    }
-
-    class IntegerAttribute extends Attribute {
-        private Integer value;
-        public IntegerAttribute(String key, Integer value) {
-            super(key);
-            this.value = value;
-        }
-        public Integer getIntegerValue() { return value; }
-        public void set(Integer value) { this.value = value; }
-        public String toString() {
-            return key + "=\"" + value + "\"";
-        }
-    }
-
-    public class DoubleAttribute extends Attribute {
-        private Double value;
-        public DoubleAttribute(String key, Double value) {
-            super(key);
-            this.value = value;
-        }
-        public Double getDoubleValue() { return value; }
-        public void set(Double value) { this.value = value; }
-        public String toString() {
-            return key + "=\"" + value + "\"";
-        }
-    }
-
-    public class BooleanAttribute extends Attribute {
-        private Boolean value;
-        public BooleanAttribute(String key, Boolean value) {
-            super(key);
-            this.value = value;
-        }
-        public Boolean getBooleanValue() { return value; }
-        public void set(Boolean value) { this.value = value; }
-        public String toString() {
-            return key + "=\"" + value + "\"";
-        }
-    }
-
-    public class StringAttribute extends Attribute {
-        private String value;
-        public StringAttribute(String key, String value) {
-            super(key);
-            this.value = value;
-        }
-        public String getStringValue() { return value; }
-        public void set(String value) { this.value = value; }
-        public String toString() {
-            return key + "=\"" + value + "\"";
-        }
-    }
-
     private ArrayList<Attribute> myList;
 
     public AttributeList() { myList = new ArrayList<Attribute>(); }
+
+    public ArrayList<Attribute> getAttributes() { return myList; }
 
     /**
      * The getters traverse the list until they find a matching key or return
@@ -191,6 +126,27 @@ public class AttributeList {
     }
 
     /**
+     * The following unconditionally insert items at the beginnibg of the
+     * list; if care is not taken there may be duplicate attributes with the
+     * same key -- only the first of these will matter
+     */
+    public void push(String key, Integer value) {
+        myList.add(0, new IntegerAttribute(key, value));
+    }
+
+    public void push(String key, Double value) {
+        myList.add(0, new DoubleAttribute(key, value));
+    }
+
+    public void push(String key, Boolean value) {
+        myList.add(0, new BooleanAttribute(key, value));
+    }
+
+    public void push(String key, String value) {
+        myList.add(0, new StringAttribute(key, value));
+    }
+
+    /**
      * The following method removes an item from the list. It does nothing if
      * there was no item with the given key.
      */
@@ -201,6 +157,16 @@ public class AttributeList {
                 return;
             }
         }
+    }
+
+    /**
+     * @return a deep copy of the list
+     */
+    public AttributeList duplicate() {
+        ArrayList<Attribute> newList = (ArrayList<Attribute>) myList.clone();
+        for ( Attribute attribute : newList ) {
+            newList.add((Attribute) attribute.clone());
+        } 
     }
 
     // The following does not work; the toString() method for ArrayList
@@ -216,4 +182,4 @@ public class AttributeList {
 
 }
 
-//  [Last modified: 2015 07 24 at 21:49:25 GMT]
+//  [Last modified: 2015 07 25 at 22:20:19 GMT]

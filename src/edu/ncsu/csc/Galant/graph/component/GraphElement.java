@@ -352,7 +352,7 @@ public class GraphElement {
      * initialized properly. Also establishes the initial state for this
      * element. 
      */
-    public void initializeAfterParsing() {
+    public void initializeAfterParsing() throws GalantException {
         // the only attribute that may cause trouble is the weight, which
         // should be stored as a double but might show up as an integer in
         // the GraphML representation
@@ -360,7 +360,7 @@ public class GraphElement {
         if ( getWeight() == null ) {
             Integer weightAsInteger = getIntegerAttribute(WEIGHT);
             if ( weightAsInteger != null ) {
-                setAttribute(WEIGHT, (double) weightAsInteger.getIntegerValue());
+                setAttribute(WEIGHT, (double) weightAsInteger);
             }
         }
     }
@@ -371,11 +371,11 @@ public class GraphElement {
      */
     public String toString() {
         String s = " "; 
-        for ( Attribute attribute : attributes ) {
+        for ( Attribute attribute : attributes.getAttributes() ) {
             s += attribute + " ";
         }
         return s;
     }
 }
 
-//  [Last modified: 2015 07 24 at 21:54:31 GMT]
+//  [Last modified: 2015 07 25 at 22:22:58 GMT]

@@ -16,6 +16,8 @@ public class GraphElementState {
 
     /**
      * The sequence number of this state.
+     * @todo This is redundant information and easy to lose track of. Either
+     * we should access everything by actual state or by state number.
      */
 	private int state;
 
@@ -43,6 +45,7 @@ public class GraphElementState {
      */
     public GraphElementState(GraphState algorithmState, AttributeList list) {
         this.algorithmState = algorithmState;
+        this.state = algorithmState.getState();
         this.attributes = list;
     }
 
@@ -98,4 +101,4 @@ public class GraphElementState {
     }
 }
  
-//  [Last modified: 2015 07 26 at 20:37:47 GMT]
+//  [Last modified: 2015 07 27 at 18:18:49 GMT]

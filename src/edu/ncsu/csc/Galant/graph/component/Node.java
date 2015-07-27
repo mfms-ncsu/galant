@@ -22,9 +22,10 @@ import edu.ncsu.csc.Galant.logging.LogHelper;
  * version of the GraphElement class.
  */
 public class Node extends GraphElement implements Comparable<Node> {
-    private Integer id;
-	private List<Edge> incidentEdges;
+    private static final String MARKED = "marked";
 
+    private int id;
+	private List<Edge> incidentEdges;
 
     /**
      * When a node is created during parsing and id is not known.
@@ -32,15 +33,18 @@ public class Node extends GraphElement implements Comparable<Node> {
 	public Node(GraphState currentState) {
         super(currentState.getGraph(), currentState);
 		incidentEdges = new ArrayList<Edge>();
+        super.attributes.set(MARKED, false);
 	}
 
     /**
-     * To add a node while editing: id is the next available one as
-     * determined by the graph.
+     * To add a node while editing or during algorithm execution: id is the
+     * next available one as determined by the graph.
      */
-    public Node(GraphState algorithmState, Integer id) {
+    public Node(GraphState algorithmState, int id) {
         super(algorithmState.getGraph(), algorithmState);
         this.id = id;
+		incidentEdges = new ArrayList<Edge>();
+        super.attributes.set(MARKED, false);
     }
 
     /**
@@ -115,16 +119,17 @@ public class Node extends GraphElement implements Comparable<Node> {
     throws GalantException {
         LogHelper.enterMethod( getClass(), "initializeAfterParsing: " + this );
         super.initializeAfterParsing();
-        id = super.getInteger("id");
-        if ( id == null ) {
+        Integer idAttribute = super.getInteger("id");
+        if ( idAttribute == null ) {
             throw new GalantException("Missing or malformed id for node " + this);
         }
-        else if ( super.graph.nodeIdExists(id) ) {
+        else if ( super.graph.nodeIdExists(idAttribute) ) {
                 throw new GalantException("Duplicate id: " + id 
                                            + " when processing node " + this);
         }
         else {
             // don't want or need to track the id -- it won't ever change
+            id = idAttribute;
             super.remove("id");
         }
         if ( super.graph.isLayered() ) {
@@ -142,10 +147,14 @@ public class Node extends GraphElement implements Comparable<Node> {
             Integer y = super.getInteger("y");
             if ( x == null || y == null ) {
                 Random r = new Random();
-                if ( x == null )
+                if ( x == null ) {
                     x = r.nextInt( GraphDispatch.getInstance().getWindowWidth() );
-                if ( y == null )
+                    super.set("x", x);
+                }
+                if ( y == null ) {
                     y = r.nextInt( GraphDispatch.getInstance().getWindowHeight() );
+                    super.set("y", y);
+                }
             }
         }
         LogHelper.exitMethod(getClass(), "initializeAfterParsing: id = " + id
@@ -155,10 +164,10 @@ public class Node extends GraphElement implements Comparable<Node> {
 
     /**************** marking *******************/
 	public Boolean isVisited() {
-		return super.getBoolean("marked");
+		return super.getBoolean(MARKED);
 	}
 	public Boolean isVisited(int state) {
-		return super.getBoolean(state, "marked");
+		return super.getBoolean(state, MARKED);
 	}
 	
 	public boolean isMarked() {
@@ -169,7 +178,7 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 
 	public void setVisited(Boolean visited) {
-        super.set("marked", visited);
+        super.set(MARKED, visited);
 	}
 
     public void mark() {
@@ -218,7 +227,7 @@ public class Node extends GraphElement implements Comparable<Node> {
 		
 		for ( Edge e : incidentEdges ) {
 			if ( e.inScope() && ! e.isDeleted() ) {
-				if ( this.equals( e.getDestNode() )
+				if ( this.equals( e.getTargetNode() )
                      || ! algorithmState.isDirected() ) {
 					currentEdges.add( e );
 				}
@@ -252,6 +261,17 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 	
     /**
+     * The following are used at various other parts of the code.
+     */
+    public List<Edge> getEdges() {
+        return getIncidentEdges();
+    }
+
+	public List<Edge> getEdges(int state) {
+		return getIncidentEdges(state);
+	}
+
+    /**
      * The following methods use the edge list getters to return degrees
      */
     public int getOutdegree() { return getOutgoingEdges().size(); }
@@ -273,10 +293,10 @@ public class Node extends GraphElement implements Comparable<Node> {
 			}
 			
 			Node source = e.getSourceNode();
-			Node dest = e.getDestNode();
+			Node target = e.getTargetNode();
 			Node adjacent;
 			if (source.getId() == this.getId()) {
-				adjacent = dest;
+				adjacent = target;
 			} else {
 				if (algorithmState.isDirected()) continue;
 				adjacent = source;
@@ -302,10 +322,10 @@ public class Node extends GraphElement implements Comparable<Node> {
 			}
 			
 			Node source = e.getSourceNode();
-			Node dest = e.getDestNode();
+			Node target = e.getTargetNode();
 			Node adjacent;
 			if (source.getId() == this.getId()) {
-				adjacent = dest;
+				adjacent = target;
 			} else {
 				if (algorithmState.isDirected()) continue;
 				adjacent = source;
@@ -327,10 +347,10 @@ public class Node extends GraphElement implements Comparable<Node> {
 			}
 			
 			Node source = e.getSourceNode();
-			Node dest = e.getDestNode();
+			Node target = e.getTargetNode();
 			Node adjacent;
 			if (source.getId() == this.getId()) {
-				adjacent = dest;
+				adjacent = target;
 			} else {
 				if (algorithmState.isDirected()) continue;
 				adjacent = source;
@@ -359,8 +379,8 @@ public class Node extends GraphElement implements Comparable<Node> {
 	 */
 	public Node travel(Edge e) {
 		if (e.getSourceNode().equals(this)) {
-			return e.getDestNode();
-		} else if (e.getDestNode().equals(this)){
+			return e.getTargetNode();
+		} else if (e.getTargetNode().equals(this)){
 			return e.getSourceNode();
 		}
 		
@@ -443,6 +463,8 @@ public class Node extends GraphElement implements Comparable<Node> {
 	public String toString()
     {
         String s = "<node" + " id=\"" + this.getId() + "\"";
+        s += " x=\"" + this.getX() + "\"";
+        s += " y=\"" + this.getY() + "\" ";
 //         if ( GraphDispatch.getInstance().getWorkingGraph().isLayered() ) {
 //             s += " layer=\"" + latestState.getInteger("layer") + "\""
 //                 + " positionInLayer=\""
@@ -467,6 +489,8 @@ public class Node extends GraphElement implements Comparable<Node> {
             return "";
         }
         String s = "<node" + " id=\"" + this.getId() + "\"";
+//             + " x=\"" + this.getX(state) + "\""
+//             + " y=\"" + this.getY(state) + "\" ";
 //         if ( GraphDispatch.getInstance().getWorkingGraph().isLayered() ) {
 //             s += " layer=\"" + latestState.getInteger("layer") + "\""
 //                 + " positionInLayer=\""
@@ -477,7 +501,7 @@ public class Node extends GraphElement implements Comparable<Node> {
 //                 + " y=\"" + latestState.getInteger("y") + "\"";
 //         }
         s += super.toString(state);
-        s += " />";
+        s += "/>";
 		return s;
 	}
 
@@ -489,4 +513,4 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 }
 
-//  [Last modified: 2015 07 27 at 01:51:52 GMT]
+//  [Last modified: 2015 07 27 at 20:44:55 GMT]

@@ -36,12 +36,7 @@ import org.xml.sax.InputSource;
 
 import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.GraphDispatch;
-import edu.ncsu.csc.Galant.graph.component.Edge;
-import edu.ncsu.csc.Galant.graph.component.Graph;
-import edu.ncsu.csc.Galant.graph.component.GraphState;
-import edu.ncsu.csc.Galant.graph.component.Node;
-import edu.ncsu.csc.Galant.graph.component.GraphElement;
-import edu.ncsu.csc.Galant.graph.component.AttributeList;
+import edu.ncsu.csc.Galant.graph.component.*;
 import edu.ncsu.csc.Galant.logging.LogHelper;
 
 /**
@@ -55,6 +50,7 @@ public class GraphMLParser {
 	Graph graph;
 	File graphMLFile;
 	Document document;
+    LogHelper logHelper = LogHelper.getInstance();
 	
 	public GraphMLParser(File graphMLFile) {
 		this.graph = generateGraph(graphMLFile);
@@ -118,7 +114,7 @@ public class GraphMLParser {
      * as a string; the attribute name,value pair is then stored as an
      * attribute of the graph node. 
      */
-    private void processAttribute(GraphElement graphElement, Node xmlNode) {
+    private void processAttribute(GraphElement graphElement, org.w3c.dom.Node xmlNode) {
         String attributeName = xmlNode.getNodeName();
         String attributeValueString = xmlNode.getTextContent();
         try {
@@ -191,52 +187,52 @@ public class GraphMLParser {
             graphUnderConstruction.setLayered( false );
         }
 		
-        LogHelper.logDebug( "Created new graph:\n" + g );
+        LogHelper.logDebug( "Created new graph:\n" + graphUnderConstruction );
         LogHelper.logDebug( " number of nodes = " + nodes.getLength() );
         LogHelper.logDebug( " number of edges = " + edges.getLength() );
 
         LogHelper.beginIndent();
 		for ( int nodeIndex = 0; nodeIndex < nodes.getLength(); nodeIndex++ ) {
             LogHelper.logDebug( " processing " + nodeIndex + "th node." );
-            Node node = nodes.get(nodeIndex);
-            Node graphNode = new GraphElement(graphUnderConstruction, graphState);
-            NamedNodeMap attributes = node.getAttributes();
+            org.w3c.dom.Node xmlNode = nodes.item(nodeIndex);
+            Node graphNode = new Node(graphState);
+            NamedNodeMap nodeAttributes = xmlNode.getAttributes();
             if ( attributes != null ) {
-                for ( int i = 0; i < attributes.getLength(); i++ ) {
-                    Node attribute = attributes.item(i);
+                for ( int i = 0; i < nodeAttributes.getLength(); i++ ) {
+                    org.w3c.dom.Node attribute = nodeAttributes.item(i);
                     processAttribute(graphNode, attribute);
                     logHelper.logDebug("Node attribute " + attribute.getNodeName()
                                        + ", value = " + attribute.getTextContent());
                 }
             }
-            LogHelper.logDebug( "adding node " + graphNode );
             graphNode.initializeAfterParsing();
+            LogHelper.logDebug( "adding node " + graphNode );
             graphUnderConstruction.addNode(graphNode);
 		}
         LogHelper.endIndent();
 
         LogHelper.beginIndent();
-		for ( int edgeIndex = 0; edgeIndex < edges.getLength(); edgeIndex++ ) {
+		for ( int nodeIndex = 0; nodeIndex < edges.getLength(); nodeIndex++ ) {
             LogHelper.logDebug( " processing " + nodeIndex + "th edge." );
-            Node node = edges.get(edgeIndex);
-            Node graphEdge = new Edge(graphUnderConstruction, graphState);
-            NamedNodeMap attributes = node.getAttributes();
+            org.w3c.dom.Node xmlNode = edges.item(nodeIndex);
+            Edge graphEdge = new Edge(graphState);
+            NamedNodeMap edgeAttributes = xmlNode.getAttributes();
             if ( attributes != null ) {
-                for ( int i = 0; i < attributes.getLength(); i++ ) {
-                    Node attribute = attributes.item(i);
+                for ( int i = 0; i < edgeAttributes.getLength(); i++ ) {
+                    org.w3c.dom.Node attribute = edgeAttributes.item(i);
                     processAttribute(graphEdge, attribute);
-                    logHelper.logDebug("Node attribute " + attribute.getNodeName()
+                    logHelper.logDebug("Edge attribute " + attribute.getNodeName()
                                        + ", value = " + attribute.getTextContent());
                 }
             }
-            LogHelper.logDebug( "adding node " + graphNode );
-            graphNode.initializeAfterParsing();
-            graphUnderConstruction.addNode(graphNode);
+            graphEdge.initializeAfterParsing();
+            LogHelper.logDebug( "adding edge " + graphEdge );
+            graphUnderConstruction.addEdge(graphEdge, nodeIndex);
 		}
         LogHelper.endIndent();
 
         graphUnderConstruction.getGraphState().setLocked(false);
-        LogHelper.exitMethod( getClass(), "buildGraphFromInput:\n" + g );
+        LogHelper.exitMethod( getClass(), "buildGraphFromInput:\n" + graphUnderConstruction );
         return graphUnderConstruction;
     } // buildGraphFromInput
 	
@@ -330,4 +326,4 @@ public class GraphMLParser {
 	
 }
 
-//  [Last modified: 2015 07 26 at 21:05:54 GMT]
+//  [Last modified: 2015 07 27 at 20:19:46 GMT]

@@ -163,7 +163,7 @@ public class EdgeEditDialog extends JDialog
                         ArrayList<Edge> edges = new ArrayList<Edge>();
                         if (n1.equals(n2)) {
                             for (Edge e1 : n1.getEdges()) {
-                                if (e1.getSourceNode().equals(e1.getDestNode())) {
+                                if (e1.getSourceNode().equals(e1.getTargetNode())) {
                                     edges.add(e1);
                                 }
 		                        }
@@ -212,3 +212,5 @@ public class EdgeEditDialog extends JDialog
         setVisible(false);
     }
 }
+
+//  [Last modified: 2015 07 27 at 12:32:52 GMT]

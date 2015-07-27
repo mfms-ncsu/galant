@@ -64,6 +64,11 @@ public class GraphElement {
         states = new ArrayList<GraphElementState>();
         this.graph = graph;
         this.algorithmState = algorithmState;
+        this.addState(new GraphElementState(algorithmState, attributes));
+        // need to initialize all Booleans -- they're typically used to check to
+        // existence of some property
+        this.set(DELETED, false);
+        this.set(HIGHLIGHTED, false);
     }
 
     /**
@@ -78,7 +83,7 @@ public class GraphElement {
 		GraphElementState elementState
             = new GraphElementState(latest, this.algorithmState);
 		
-        LogHelper.logDebug( "newState (elememt) = " + elementState );
+        LogHelper.logDebug( "newState (element) = " + elementState.getState() );
 		return elementState;
     }
 
@@ -400,4 +405,4 @@ public class GraphElement {
     }
 }
 
-//  [Last modified: 2015 07 27 at 01:48:24 GMT]
+//  [Last modified: 2015 07 27 at 19:27:50 GMT]

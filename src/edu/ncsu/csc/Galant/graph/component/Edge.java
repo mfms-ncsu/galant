@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import edu.ncsu.csc.Galant.GalantException;
+import edu.ncsu.csc.Galant.GraphDispatch;
+import edu.ncsu.csc.Galant.logging.LogHelper;
 
 /**
  * Edge graph object. Connects two <code>Node<code>s, and can be directored or undirected.
@@ -14,19 +16,27 @@ import edu.ncsu.csc.Galant.GalantException;
  */
 public class Edge extends GraphElement implements Comparable<Edge> {
 	private List<EdgeState> edgeStates;
-    Integer Id;
-    Node sourceNode;
-    Node targetNode;
+    Integer id;
+    Node source;
+    Node target;
 	
     /**
-     * To add a node while editing: id is the next available one as
-     * determined by the graph.
+     * When an edge is created during parsing and source, target and id are not known.
      */
-    public Edge(GraphState algorithmState, Integer id, Node sourceNode, Node targetNode) {
+	public Edge(GraphState currentState) {
+        super(currentState.getGraph(), currentState);
+	}
+
+    /**
+     * To add an edge while editing: id, source and target are known at the
+     * time.
+     */
+    public Edge(GraphState algorithmState, int id, Node source, Node target) {
         super(algorithmState.getGraph(), algorithmState);
+        super.graph = algorithmState.getGraph();
         this.id = id;
-        this.sourceNode = sourceNode;
-        this.targetNode = targetNode;
+        this.source = source;
+        this.target = target;
     }
 
     /**
@@ -37,11 +47,18 @@ public class Edge extends GraphElement implements Comparable<Edge> {
     }
 
     public Node getSourceNode() {
-        return sourceNode;
+        return source;
     }
 
     public Node getTargetNode() {
-        return targetNode;
+        return target;
+    }
+
+    /** 
+     * Careful! To be used only when done parsing.
+     */
+    void setId(int id) {
+        this.id = id;
     }
 
     /**
@@ -50,19 +67,26 @@ public class Edge extends GraphElement implements Comparable<Edge> {
      */
     public void initializeAfterParsing()
     throws GalantException {
-        LogHelper.enterMethod( getClass(), "initializeAfterParsing: " + this );
+        LogHelper.enterMethod( getClass(), "initializeAfterParsing");
         super.initializeAfterParsing();
         this.id = getInteger("id");
-        this.source = getInteger("source");
-        if (source == null) {
-            throw new GalantException("Missing or malformed source: " + source 
-                                           + " when processing edge " + this);
+        Integer sourceId = super.getInteger("source");
+        if ( sourceId == null ) {
+             throw new GalantException("Missing attribute source when processing edge " + this.id);
         }
-        this.target = getInteger("target");
+        this.source = super.graph.getNodeById(sourceId);
         if (source == null) {
-            throw new GalantException("Missing or malformed source: " + source 
-                                           + " when processing edge " + this);
+            throw new GalantException("Source node missing when processing edge " + this.id);
         }
+        Integer targetId = super.getInteger("target");
+        if ( targetId == null ) {
+             throw new GalantException("Missing attribute target when processing edge " + this.id);
+        }
+        this.target = super.graph.getNodeById(targetId);
+        if (target == null) {
+            throw new GalantException("Target node missing when processing edge " + this.id);
+        }
+
         // no longer need these to be stored in attribute list -- they're
         // instance variables now
         attributes.remove("id");
@@ -73,11 +97,11 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 	@Override
 	public String toString() {
         // id may not exist for an edge; not really essential
-        String idComponent = (id == null) ? "" : "id=\"" + this.getId();
-		String s = "<edge "
-            + idComponent
-            + "\" source=\"" + this.sourceNode
-            + "\" target=\"" + this.targetNode;
+        String idComponent = (id == null) ? "" : "id=\"" + this.getId() + "\"";
+        System.out.println("Edge toString: source = " + source + ", target = " + target);
+ 		String s = "<edge " + idComponent;
+        s += " source=\"" + this.source.getId() + "\"";
+        s += " target=\"" + this.target.getId() + "\"";
         s += super.toString();
         s += " />";
 		return s;
@@ -92,10 +116,12 @@ public class Edge extends GraphElement implements Comparable<Edge> {
         if ( ! inScope(state) ) {
             return "";
         }
+        // id may not exist for an edge; not really essential
+        String idComponent = (id == null) ? "" : "id=\"" + this.getId() + "\"";
 		String s = "<edge "
             + idComponent
-            + "\" source=\"" + this.sourceNode
-            + "\" target=\"" + this.targetNode;
+            + " source=\"" + this.source.getId() + "\""
+            + " target=\"" + this.target.getId() + "\"";
         s += super.toString(state);
         s += " />";
 		return s;
@@ -109,4 +135,4 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 	}
 }
 
-//  [Last modified: 2015 07 27 at 01:27:35 GMT]
+//  [Last modified: 2015 07 27 at 20:30:40 GMT]

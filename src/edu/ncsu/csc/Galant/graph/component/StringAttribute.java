@@ -1,6 +1,6 @@
 package edu.ncsu.csc.Galant.graph.component;
 
-public class StringAttribute extends Attribute {
+public class StringAttribute extends Attribute implements Cloneable {
     private String value;
     public StringAttribute(String key, String value) {
         super(key);
@@ -8,9 +8,10 @@ public class StringAttribute extends Attribute {
     }
     public String getStringValue() { return value; }
     public void set(String value) { this.value = value; }
+    public Attribute clone() { return new StringAttribute(key, value); }
     public String toString() {
         return key + "=\"" + value + "\"";
     }
 }
 
-//  [Last modified: 2015 07 25 at 22:07:00 GMT]
+//  [Last modified: 2015 07 27 at 15:55:04 GMT]

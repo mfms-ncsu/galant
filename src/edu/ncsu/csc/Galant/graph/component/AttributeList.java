@@ -48,7 +48,8 @@ public class AttributeList {
                 return attribute.getBooleanValue();
             }
         }
-        return null;
+        // if missing, return a default, safe value
+        return false;
     }
 
     public String getString(String key) {
@@ -165,13 +166,22 @@ public class AttributeList {
     }
 
     /**
+     * Need a generic add for the method below. The atribute gets cloned just
+     * in case.
+     */
+    void add(Attribute attribute) {
+        attributes.add(attribute.clone());
+    }
+
+    /**
      * @return a deep copy of the list
      */
     public AttributeList duplicate() {
-        ArrayList<Attribute> newList = (ArrayList<Attribute>) attributes.clone();
-        for ( Attribute attribute : newList ) {
-            newList.add((Attribute) attribute.clone());
+        AttributeList newAttributeList = new AttributeList();
+        for ( Attribute attribute : this.attributes ) {
+            newAttributeList.add(attribute);
         } 
+        return newAttributeList;
     }
 
     // The following does not work; the toString() method for ArrayList
@@ -187,4 +197,4 @@ public class AttributeList {
 
 }
 
-//  [Last modified: 2015 07 27 at 01:17:33 GMT]
+//  [Last modified: 2015 07 27 at 18:29:40 GMT]

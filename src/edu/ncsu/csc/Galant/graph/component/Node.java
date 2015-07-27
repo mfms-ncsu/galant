@@ -25,8 +25,21 @@ public class Node extends GraphElement implements Comparable<Node> {
     private Integer id;
 	private List<Edge> incidentEdges;
 
-    public Node(GraphState algorithmState, int id) {
-        super(algorithmState);
+
+    /**
+     * When a node is created during parsing and id is not known.
+     */
+	public Node(GraphState currentState) {
+        super(currentState.getGraph(), currentState);
+		incidentEdges = new ArrayList<Edge>();
+	}
+
+    /**
+     * To add a node while editing: id is the next available one as
+     * determined by the graph.
+     */
+    public Node(GraphState algorithmState, Integer id) {
+        super(algorithmState.getGraph(), algorithmState);
         this.id = id;
     }
 
@@ -44,16 +57,16 @@ public class Node extends GraphElement implements Comparable<Node> {
      * during algorithm execution.
      */
     public Integer getX() {
-        return super.getIntegerAttribute("x");
+        return super.getInteger("x");
     }
     public Integer getY() {
-        return super.getIntegerAttribute("y");
+        return super.getInteger("y");
     }
     public Integer getX(int state) {
-        return super.getIntegerAttribute(state, "x");
+        return super.getInteger(state, "x");
     }
     public Integer getY(int state) {
-        return super.getIntegerAttribute(state, "y");
+        return super.getInteger(state, "y");
     }
     public Point getPosition() {
         return new Point(getX(), getY());
@@ -62,8 +75,8 @@ public class Node extends GraphElement implements Comparable<Node> {
         return new Point(getX(state), getY(state));
     }
 
-    public void setX(Integer x) { setAttribute("x", x); }
-    public void setY(Integer y) { setAttribute("y", y); }
+    public void setX(Integer x) { super.set("x", x); }
+    public void setY(Integer y) { super.set("y", y); }
     public void setPosition(Integer x, Integer y) {
         setX(x);
         setY(y);
@@ -74,29 +87,24 @@ public class Node extends GraphElement implements Comparable<Node> {
     }
 
     public Integer getLayer() {
-        return getIntegerAttribute("layer");
+        return super.getInteger("layer");
     }
     public Integer getPositionInLayer() {
-        return getIntegerAttribute("positionInLayer");
+        return super.getInteger("positionInLayer");
     }
     public Integer getLayer(int state) {
-        return getIntegerAttribute(state, "layer");
+        return super.getInteger(state, "layer");
     }
     public Integer getPositionInLayer(int state) {
-        return getIntegerAttribute(state, "positionInLayer");
+        return super.getInteger(state, "positionInLayer");
     }
     public void setLayer(Integer layer) {
-        setAttribute("layer", layer);
+        super.set("layer", layer);
     }
     public void setPositionInLayer(Integer positionInLayer) {
-        setAttribute("positionInLayer", positionInLayer);
+        super.set("positionInLayer", positionInLayer);
     }
 	
-	public Node(GraphState currentState) {
-        super(currentState);
-		incidentEdges = new ArrayList<Edge>();
-	}
-
     /**
      * Makes sure that all the attributes specific to nodes are properly
      * initialized.
@@ -107,26 +115,31 @@ public class Node extends GraphElement implements Comparable<Node> {
     throws GalantException {
         LogHelper.enterMethod( getClass(), "initializeAfterParsing: " + this );
         super.initializeAfterParsing();
-        id = getIntegerAttribute("id");
-        if ( id == null )
-            throw new GalantException("missing or malformed id for node " + this);
+        id = super.getInteger("id");
+        if ( id == null ) {
+            throw new GalantException("Missing or malformed id for node " + this);
+        }
+        else if ( super.graph.nodeIdExists(id) ) {
+                throw new GalantException("Duplicate id: " + id 
+                                           + " when processing node " + this);
+        }
         else {
             // don't want or need to track the id -- it won't ever change
-            removeAttribute("id");
+            super.remove("id");
         }
-        if ( GraphDispatch.getInstance().getWorkingGraph().isLayered() ) {
-            Integer layer = getIntegerAttribute("layer");
+        if ( super.graph.isLayered() ) {
+            Integer layer = super.getInteger("layer");
             if ( layer == null )
                 throw new GalantException("missing or malformed layer for"
                                           + " layered graph node " + this);
-            Integer positionInLayer = getIntegerAttribute("positiionInLayer");
+            Integer positionInLayer = super.getInteger("positiionInLayer");
             if ( positionInLayer == null )
                 throw new GalantException("missing or malformed positionInLayer for"
                                           + " layered graph node " + this);
         }
         else {
-            Integer x = getIntegerAttribute("x");
-            Integer y = getIntegerAttribute("y");
+            Integer x = super.getInteger("x");
+            Integer y = super.getInteger("y");
             if ( x == null || y == null ) {
                 Random r = new Random();
                 if ( x == null )
@@ -142,10 +155,10 @@ public class Node extends GraphElement implements Comparable<Node> {
 
     /**************** marking *******************/
 	public Boolean isVisited() {
-		return super.getBooleanAttribute("marked");
+		return super.getBoolean("marked");
 	}
 	public Boolean isVisited(int state) {
-		return super.getBooleanAttribute(state, "marked");
+		return super.getBoolean(state, "marked");
 	}
 	
 	public boolean isMarked() {
@@ -156,7 +169,7 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 
 	public void setVisited(Boolean visited) {
-        super.setAttribute("marked", visited);
+        super.set("marked", visited);
 	}
 
     public void mark() {
@@ -374,11 +387,11 @@ public class Node extends GraphElement implements Comparable<Node> {
     private static final int INITIAL_STATE = 1;
 
     public Integer getFixedX() {
-        return getIntegerAttribute(INITIAL_STATE, "x");
+        return getInteger(INITIAL_STATE, "x");
     }
 
     public Integer getFixedY() {
-        return getIntegerAttribute(INITIAL_STATE, "y");
+        return getInteger(INITIAL_STATE, "y");
     }
 
     public Point getFixedPosition() {
@@ -395,8 +408,8 @@ public class Node extends GraphElement implements Comparable<Node> {
                                + "\n node = " + this );
         for ( int i = super.states.size() - 1; i >= 0; i-- ) {
             GraphElementState state = super.states.get(i);
-            state.setAttribute("x", position.x);
-            state.setAttribute("y", position.y);
+            state.set("x", position.x);
+            state.set("y", position.y);
         }
         LogHelper.exitMethod( getClass(), "setFixedPosition"
                               + "\n node = " + this );
@@ -408,8 +421,8 @@ public class Node extends GraphElement implements Comparable<Node> {
                                + "\n node = " + this );
         for ( int i = super.states.size() - 1; i >= 0; i-- ) {
             GraphElementState state = super.states.get(i);
-            state.setAttribute("x", x);
-            state.setAttribute("y", y);
+            state.set("x", x);
+            state.set("y", y);
         }
         LogHelper.exitMethod( getClass(), "setFixedPosition"
                               + "\n node = " + this );
@@ -423,58 +436,47 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 
     /**
-     * This version is called when the graph window editor pushes changes to
-     * the text editor and at various other points.
-     *
-     * @todo perhaps need some way to distinguish between the text window
-     * function and others such as debugging
+     * This version is used after the graph is originally read or when it is
+     * refreshed during editing. Also when saved to a file.
      */
-	@Override
-	public String toString() {
-		double weight = this.getWeight();
-		String label = "";
-		if (this.getLabel() != null) {
-			label = this.getLabel();
-		}
-		
-		String s = "<node"
-            + " id=\"" + this.getId() + "\"";
-        if ( GraphDispatch.getInstance().getWorkingGraph().isLayered() ) {
-            s += " layer=\"" + this.getLayer() + "\""
-                + " positionInLayer=\"" + this.getPositionInLayer() + "\"";
-        }
-        else {
-            s += " x=\"" + this.getX() + "\""
-                + " y=\"" + this.getY() + "\"";
-        }
+    @Override
+	public String toString()
+    {
+        String s = "<node" + " id=\"" + this.getId() + "\"";
+//         if ( GraphDispatch.getInstance().getWorkingGraph().isLayered() ) {
+//             s += " layer=\"" + latestState.getInteger("layer") + "\""
+//                 + " positionInLayer=\""
+//                 + latestState.getInteger("positionInLayer") + "\"";
+//         }
+//         else {
+//             s += " x=\"" + latestState.getInteger("x") + "\""
+//                 + " y=\"" + latestState.getInteger("y") + "\"";
+//         }
         s += super.toString();
         s += " />";
 		return s;
 	}
-	
+
     /**
      * This version is called when the current state of the animation is
      * exported.
      */
-	public String toString(int state)
-    {
+    @Override
+	public String toString(int state) {
         if ( ! inScope(state) ) {
             return "";
         }
-
-        GraphElementState latestState = super.getLatestValidState(state);
-
         String s = "<node" + " id=\"" + this.getId() + "\"";
-        if ( GraphDispatch.getInstance().getWorkingGraph().isLayered() ) {
-            s += " layer=\"" + latestState.getIntegerAttribute("layer") + "\""
-                + " positionInLayer=\""
-                + latestState.getIntegerAttribute("positionInLayer") + "\"";
-        }
-        else {
-            s += " x=\"" + latestState.getIntegerAttribute("x") + "\""
-                + " y=\"" + latestState.getIntegerAttribute("y") + "\"";
-        }
-        s += super.toString();
+//         if ( GraphDispatch.getInstance().getWorkingGraph().isLayered() ) {
+//             s += " layer=\"" + latestState.getInteger("layer") + "\""
+//                 + " positionInLayer=\""
+//                 + latestState.getInteger("positionInLayer") + "\"";
+//         }
+//         else {
+//             s += " x=\"" + latestState.getInteger("x") + "\""
+//                 + " y=\"" + latestState.getInteger("y") + "\"";
+//         }
+        s += super.toString(state);
         s += " />";
 		return s;
 	}
@@ -487,4 +489,4 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 }
 
-//  [Last modified: 2015 07 25 at 22:25:57 GMT]
+//  [Last modified: 2015 07 27 at 01:51:52 GMT]

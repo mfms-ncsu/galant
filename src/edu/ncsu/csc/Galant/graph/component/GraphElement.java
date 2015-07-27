@@ -30,7 +30,12 @@ public class GraphElement {
     public static final String DELETED = "deleted";
     public static final String HIGHLIGHTED = "highlighted";
     
-    private AttributeList attributes;
+    protected AttributeList attributes;
+
+    /**
+     * The graph with which this element is associated.
+     */
+    protected Graph graph;
 
     /**
      * The state of the graph corresponding to the most recent state of this
@@ -41,7 +46,7 @@ public class GraphElement {
      * @todo In future we may want an algorithm state independent of a graph
      * state.
      */
-	private GraphState algorithmState;
+	protected GraphState algorithmState;
 
     /**
      * The list of states that this element has been in up to this point --
@@ -54,9 +59,10 @@ public class GraphElement {
      * filled in by initializeAfterParsing(). The algorithm state is
      * initialized elsewhere, currently in Graph.
      */
-    public GraphElement(GraphState algorithmState) {
+    public GraphElement(Graph graph, GraphState algorithmState) {
         attributes = new AttributeList();
         states = new ArrayList<GraphElementState>();
+        this.graph = graph;
         this.algorithmState = algorithmState;
     }
 
@@ -132,90 +138,90 @@ public class GraphElement {
 	}
 
     /************** Integer attributes ***************/
-	public boolean setAttribute(String key, Integer value) {
+	public boolean set(String key, Integer value) {
         GraphElementState newState = newState();
-        boolean found = newState.setAttribute(key, value);
+        boolean found = newState.set(key, value);
         addState(newState);
         return found;
 	}
-	public Integer getIntegerAttribute(String key) {
-		return latestState().getAttributeList().getInteger(key);
+	public Integer getInteger(String key) {
+		return latestState().getAttributes().getInteger(key);
 	}
-	public Integer getIntegerAttribute(int state, String key) {
+	public Integer getInteger(int state, String key) {
         GraphElementState validState = getLatestValidState(state);
-		return validState == null ? null : validState.getAttributeList().getInteger(key);
+		return validState == null ? null : validState.getAttributes().getInteger(key);
 	}
 
 
     /************** Double attributes ***************/
-	public boolean setAttribute(String key, Double value) {
+	public boolean set(String key, Double value) {
         GraphElementState newState = newState();
-        boolean found = newState.setAttribute(key, value);
+        boolean found = newState.set(key, value);
         addState(newState);
         return found;
 	}
-	public Double getDoubleAttribute(String key) {
-		return latestState().getAttributeList().getDouble(key);
+	public Double getDouble(String key) {
+		return latestState().getAttributes().getDouble(key);
 	}
-	public Double getDoubleAttribute(int state, String key) {
+	public Double getDouble(int state, String key) {
         GraphElementState validState = getLatestValidState(state);
-		return validState == null ? null : validState.getAttributeList().getDouble(key);
+		return validState == null ? null : validState.getAttributes().getDouble(key);
 	}
 
     /************** Boolean attributes ***************/
-	public boolean setAttribute(String key, Boolean value) {
+	public boolean set(String key, Boolean value) {
         GraphElementState newState = newState();
-        boolean found = newState.setAttribute(key, value);
+        boolean found = newState.set(key, value);
         addState(newState);
         return found;
 	}
-	public Boolean getBooleanAttribute(String key) {
-		return latestState().getAttributeList().getBoolean(key);
+	public Boolean getBoolean(String key) {
+		return latestState().getAttributes().getBoolean(key);
 	}
-	public Boolean getBooleanAttribute(int state, String key) {
+	public Boolean getBoolean(int state, String key) {
         GraphElementState validState = getLatestValidState(state);
-		return validState == null ? null : validState.getAttributeList().getBoolean(key);
+		return validState == null ? null : validState.getAttributes().getBoolean(key);
 	}
 
     /************** String attributes ***************/
-	public boolean setAttribute(String key, String value) {
+	public boolean set(String key, String value) {
         GraphElementState newState = newState();
-        boolean found = newState.setAttribute(key, value);
+        boolean found = newState.set(key, value);
         addState(newState);
         return found;
 	}
-	public String getStringAttribute(String key) {
-		return latestState().getAttributeList().getString(key);
+	public String getString(String key) {
+		return latestState().getAttributes().getString(key);
 	}
-	public String getStringAttribute(int state, String key) {
+	public String getString(int state, String key) {
         GraphElementState validState = getLatestValidState(state);
-		return validState == null ? null : validState.getAttributeList().getString(key);
+		return validState == null ? null : validState.getAttributes().getString(key);
 	}
 
     /**
      * Removes the attribute with the given key from the list and updates
      * state information appropriately.
      */
-    public void removeAttribute(String key) {
+    public void remove(String key) {
         GraphElementState newState = newState();
-        newState.removeAttribute(key);
+        newState.remove(key);
         addState(newState);
     }
 	
     public boolean isDeleted() {
-        return getBooleanAttribute(DELETED);
+        return getBoolean(DELETED);
     }
     public boolean isDeleted(int state) {
-        return getBooleanAttribute(state, DELETED);
+        return getBoolean(state, DELETED);
     }
     /**
      * @param true iff this element is to be deleted in the current state.
      */
     public void setDeleted(boolean deleted) {
         if (deleted) {
-            setAttribute(DELETED, true);
+            set(DELETED, true);
         }
-        else removeAttribute(DELETED);
+        else remove(DELETED);
     }
 
     /**
@@ -242,14 +248,14 @@ public class GraphElement {
 
     /**************************** weights **************************/
 	public Double getWeight() {
-        return getDoubleAttribute(WEIGHT);
+        return getDouble(WEIGHT);
     }
 	public Double getWeight(int state) {
-        return getDoubleAttribute(state, WEIGHT);
+        return getDouble(state, WEIGHT);
     }
 
 	public void setWeight(Double weight) {
-        setAttribute(WEIGHT, weight);
+        set(WEIGHT, weight);
     }
 
     public boolean hasWeight() {
@@ -262,19 +268,19 @@ public class GraphElement {
      * removes the weight from the property list
      */
     public void clearWeight() {
-        removeAttribute(WEIGHT);
+        remove(WEIGHT);
     }
 	
     /**************************** labels *************************/
 	public String getLabel() {
-        return getStringAttribute(LABEL);
+        return getString(LABEL);
     }
 	public String getLabel(int state) {
-        return getStringAttribute(state, LABEL);
+        return getString(state, LABEL);
     }
 
 	public void setLabel(String label) {
-        setAttribute(LABEL, label);
+        set(LABEL, label);
     }
 
     public boolean hasLabel() {
@@ -287,19 +293,19 @@ public class GraphElement {
      * removes the label from the property list
      */
     public void clearLabel() {
-        removeAttribute(LABEL);
+        remove(LABEL);
     }
 	
     /**************************** colors *************************/
 	public String getColor() {
-        return getStringAttribute(COLOR);
+        return getString(COLOR);
     }
 	public String getColor(int state) {
-        return getStringAttribute(state, COLOR);
+        return getString(state, COLOR);
     }
 
 	public void setColor(String color) {
-        setAttribute(COLOR, color);
+        set(COLOR, color);
     }
 
     public boolean hasColor() {
@@ -312,7 +318,7 @@ public class GraphElement {
      * removes the color from the property list
      */
     public void clearColor() {
-        removeAttribute(COLOR);
+        remove(COLOR);
     }
 
     /**************************** highlighting ***********************/
@@ -323,25 +329,25 @@ public class GraphElement {
      * is the same, but the nature of the list traversal might not be.
      */
 	public boolean isSelected() {
-        return getBooleanAttribute(HIGHLIGHTED);
+        return getBoolean(HIGHLIGHTED);
     }
 	public Boolean isSelected(int state) {
-        return getBooleanAttribute(state, HIGHLIGHTED);
+        return getBoolean(state, HIGHLIGHTED);
     }
 	public void setSelected(Boolean highlighted) {
-        setAttribute(HIGHLIGHTED, highlighted);
+        set(HIGHLIGHTED, highlighted);
     }
 	public boolean isHighlighted() {
-        return getBooleanAttribute(HIGHLIGHTED);
+        return getBoolean(HIGHLIGHTED);
     }
 	public Boolean isHighlighted(int state) {
-        return getBooleanAttribute(state, HIGHLIGHTED);
+        return getBoolean(state, HIGHLIGHTED);
     }
 	public void highlight() {
-        setAttribute(HIGHLIGHTED, true);
+        set(HIGHLIGHTED, true);
     }
 	public void unHighlight() {
-        removeAttribute(HIGHLIGHTED);
+        remove(HIGHLIGHTED);
     }
 
     /**
@@ -356,11 +362,11 @@ public class GraphElement {
         // the only attribute that may cause trouble is the weight, which
         // should be stored as a double but might show up as an integer in
         // the GraphML representation
-        Double weight = getDoubleAttribute(WEIGHT);
+        Double weight = getDouble(WEIGHT);
         if ( getWeight() == null ) {
-            Integer weightAsInteger = getIntegerAttribute(WEIGHT);
+            Integer weightAsInteger = getInteger(WEIGHT);
             if ( weightAsInteger != null ) {
-                setAttribute(WEIGHT, (double) weightAsInteger);
+                set(WEIGHT, (double) weightAsInteger);
             }
         }
     }
@@ -376,6 +382,22 @@ public class GraphElement {
         }
         return s;
     }
+
+    /**
+     * Same as the unparameterized version except that the attributes are
+     * ones of the latest valid state. This is used when exporting the state
+     * of the graph in the middle of execution.
+     */
+    public String toString(int state) {
+        if ( ! inScope(state) ) return "";
+        GraphElementState elementState = getLatestValidState(state);
+        AttributeList stateAttributes = elementState.getAttributes();
+        String s = " "; 
+        for ( Attribute attribute : stateAttributes.getAttributes() ) {
+            s += attribute + " ";
+        }
+        return s;
+    }
 }
 
-//  [Last modified: 2015 07 25 at 22:22:58 GMT]
+//  [Last modified: 2015 07 27 at 01:48:24 GMT]

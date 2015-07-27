@@ -35,15 +35,15 @@ public class GraphElementState {
     /**
      * Attribute list for the snapshot representing this element state
      */
-    private AttributeList myList;
-    public AttributeList getAttributeList() { return myList; }
+    private AttributeList attributes;
+    public AttributeList getAttributes() { return attributes; }
 
     /**
      * Constructor for a state of this element during any given algorithm state.
      */
     public GraphElementState(GraphState algorithmState, AttributeList list) {
         this.algorithmState = algorithmState;
-        this.myList = list;
+        this.attributes = list;
     }
 
     /**
@@ -54,48 +54,48 @@ public class GraphElementState {
     public GraphElementState(GraphElementState elementState, GraphState algorithmState) {
         this.algorithmState = algorithmState;
         this.state = algorithmState.getState();
-        this.myList = elementState.getAttributeList();
+        this.attributes = elementState.getAttributes().duplicate();
     }
 
     /************** Integer attributes ***************/
-	public boolean setAttribute(String key, Integer value) {
-        return myList.set(key, value);
+	public boolean set(String key, Integer value) {
+        return attributes.set(key, value);
 	}
 	public Integer getIntegerAttribute(String key) {
-		return myList.getInteger(key);
+		return attributes.getInteger(key);
 	}
 
     /************** Double attributes ***************/
-	public boolean setAttribute(String key, Double value) {
-        return myList.set(key, value);
+	public boolean set(String key, Double value) {
+        return attributes.set(key, value);
 	}
 	public Double getDoubleAttribute(String key) {
-		return myList.getDouble(key);
+		return attributes.getDouble(key);
 	}
 
     /************** Boolean attributes ***************/
-	public boolean setAttribute(String key, Boolean value) {
-        return myList.set(key, value);
+	public boolean set(String key, Boolean value) {
+        return attributes.set(key, value);
 	}
 	public Boolean getBooleanAttribute(String key) {
-		return myList.getBoolean(key);
+		return attributes.getBoolean(key);
 	}
 
     /************** String attributes ***************/
-	public boolean setAttribute(String key, String value) {
-        return myList.set(key, value);
+	public boolean set(String key, String value) {
+        return attributes.set(key, value);
 	}
 	public String getStringAttribute(String key) {
-		return myList.getString(key);
+		return attributes.getString(key);
 	}
 
     /**
      * Removes the attribute with the given key from the list and updates
      * state information appropriately.
      */
-    public void removeAttribute(String key) {
-        myList.remove(key);
+    public void remove(String key) {
+        attributes.remove(key);
     }
 }
  
-//  [Last modified: 2015 07 24 at 21:55:45 GMT]
+//  [Last modified: 2015 07 26 at 20:37:47 GMT]

@@ -665,7 +665,7 @@ public class Graph {
 		
 		Node source = e.getSourceNode();
 		source.getIncidentEdges().remove(e);		
-		Node dest = e.getDestNode();
+		Node dest = e.getTargetNode();
 		dest.getIncidentEdges().remove(e);
 	}
 	
@@ -799,4 +799,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2015 07 24 at 20:47:29 GMT]
+//  [Last modified: 2015 07 27 at 01:30:11 GMT]

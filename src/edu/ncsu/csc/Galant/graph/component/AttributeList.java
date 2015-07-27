@@ -9,18 +9,23 @@ import java.util.ArrayList;
  */
 public class AttributeList {
 
-    private ArrayList<Attribute> myList;
+    private ArrayList<Attribute> attributes;
 
-    public AttributeList() { myList = new ArrayList<Attribute>(); }
+    public AttributeList() { attributes = new ArrayList<Attribute>(); }
 
-    public ArrayList<Attribute> getAttributes() { return myList; }
+    /**
+     * The purpose of this method is to allow the outside world to retrieve
+     * the attributes as a list so that an iterator can be applied. There's
+     * probably a more elegant solution, but ...
+     */
+    public ArrayList<Attribute> getAttributes() { return attributes; }
 
     /**
      * The getters traverse the list until they find a matching key or return
      * null if they don't.
      */
     public Integer getInteger(String key) {
-        for ( Attribute attribute : myList ) {
+        for ( Attribute attribute : attributes ) {
             if ( attribute.getKey().equals(key) ) {
                 return attribute.getIntegerValue();
             }
@@ -29,7 +34,7 @@ public class AttributeList {
     }
 
     public Double getDouble(String key) {
-        for ( Attribute attribute : myList ) {
+        for ( Attribute attribute : attributes ) {
             if ( attribute.getKey().equals(key) ) {
                 return attribute.getDoubleValue();
             }
@@ -38,7 +43,7 @@ public class AttributeList {
     }
 
     public Boolean getBoolean(String key) {
-        for ( Attribute attribute : myList ) {
+        for ( Attribute attribute : attributes ) {
             if ( attribute.getKey().equals(key) ) {
                 return attribute.getBooleanValue();
             }
@@ -47,7 +52,7 @@ public class AttributeList {
     }
 
     public String getString(String key) {
-        for ( Attribute attribute : myList ) {
+        for ( Attribute attribute : attributes ) {
             if ( attribute.getKey().equals(key) ) {
                 return attribute.getStringValue();
             }
@@ -61,7 +66,7 @@ public class AttributeList {
      * only if the attribute was in the list already.
      */
     public boolean set(String key, Integer value) {
-        for ( Attribute attribute : myList ) {
+        for ( Attribute attribute : attributes ) {
             if ( attribute.getKey().equals(key) ) {
                 ((IntegerAttribute)attribute).set(value);
                 return true;
@@ -72,7 +77,7 @@ public class AttributeList {
     }
 
     public boolean set(String key, Double value) {
-        for ( Attribute attribute : myList ) {
+        for ( Attribute attribute : attributes ) {
             if ( attribute.getKey().equals(key) ) {
                 ((DoubleAttribute)attribute).set(value);
                 return true;
@@ -83,7 +88,7 @@ public class AttributeList {
     }
 
     public boolean set(String key, Boolean value) {
-        for ( Attribute attribute : myList ) {
+        for ( Attribute attribute : attributes ) {
             if ( attribute.getKey().equals(key) ) {
                 ((BooleanAttribute)attribute).set(value);
                 return true;
@@ -94,7 +99,7 @@ public class AttributeList {
     }
 
     public boolean set(String key, String value) {
-        for ( Attribute attribute : myList ) {
+        for ( Attribute attribute : attributes ) {
             if ( attribute.getKey().equals(key) ) {
                 ((StringAttribute)attribute).set(value);
                 return true;
@@ -110,19 +115,19 @@ public class AttributeList {
      * only the first of these will matter
      */
     public void add(String key, Integer value) {
-        myList.add(new IntegerAttribute(key, value));
+        attributes.add(new IntegerAttribute(key, value));
     }
 
     public void add(String key, Double value) {
-        myList.add(new DoubleAttribute(key, value));
+        attributes.add(new DoubleAttribute(key, value));
     }
 
     public void add(String key, Boolean value) {
-        myList.add(new BooleanAttribute(key, value));
+        attributes.add(new BooleanAttribute(key, value));
     }
 
     public void add(String key, String value) {
-        myList.add(new StringAttribute(key, value));
+        attributes.add(new StringAttribute(key, value));
     }
 
     /**
@@ -131,19 +136,19 @@ public class AttributeList {
      * same key -- only the first of these will matter
      */
     public void push(String key, Integer value) {
-        myList.add(0, new IntegerAttribute(key, value));
+        attributes.add(0, new IntegerAttribute(key, value));
     }
 
     public void push(String key, Double value) {
-        myList.add(0, new DoubleAttribute(key, value));
+        attributes.add(0, new DoubleAttribute(key, value));
     }
 
     public void push(String key, Boolean value) {
-        myList.add(0, new BooleanAttribute(key, value));
+        attributes.add(0, new BooleanAttribute(key, value));
     }
 
     public void push(String key, String value) {
-        myList.add(0, new StringAttribute(key, value));
+        attributes.add(0, new StringAttribute(key, value));
     }
 
     /**
@@ -151,9 +156,9 @@ public class AttributeList {
      * there was no item with the given key.
      */
     public void remove(String key) {
-        for ( int i = 0; i < myList.size(); i++ ) {
-            if ( myList.get(i).getKey().equals(key) ) {
-                myList.remove(i);
+        for ( int i = 0; i < attributes.size(); i++ ) {
+            if ( attributes.get(i).getKey().equals(key) ) {
+                attributes.remove(i);
                 return;
             }
         }
@@ -163,7 +168,7 @@ public class AttributeList {
      * @return a deep copy of the list
      */
     public AttributeList duplicate() {
-        ArrayList<Attribute> newList = (ArrayList<Attribute>) myList.clone();
+        ArrayList<Attribute> newList = (ArrayList<Attribute>) attributes.clone();
         for ( Attribute attribute : newList ) {
             newList.add((Attribute) attribute.clone());
         } 
@@ -174,7 +179,7 @@ public class AttributeList {
 //     public String toString() {
 //         StringBuilder builder = new StringBuilder();
 //         builder.append(" ");
-//         for ( Attribute attribute : myList ) {
+//         for ( Attribute attribute : attributes ) {
 //             builder.append( "" + attribute + " " );
 //         }
 //         return builder.toString();
@@ -182,4 +187,4 @@ public class AttributeList {
 
 }
 
-//  [Last modified: 2015 07 25 at 22:20:19 GMT]
+//  [Last modified: 2015 07 27 at 01:17:33 GMT]

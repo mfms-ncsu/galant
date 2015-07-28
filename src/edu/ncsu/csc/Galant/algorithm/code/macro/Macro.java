@@ -1,3 +1,4 @@
+/** Package for macroes */
 package edu.ncsu.csc.Galant.algorithm.code.macro;
 
 import java.util.ArrayList;
@@ -53,12 +54,13 @@ public abstract class Macro
 				this(Pattern.compile(regex));
 			}
 
+		/** Return the pattern of this macro. Will be used for modify() */
 		public Pattern getPattern()
 			{
 				return pattern;
 			}
 
-		/** return the name of the macro. Mainly used for macro syntax highlighting. */
+		/** Return the name of the macro. Mainly used for macro syntax highlighting. */
 		public abstract String getName();	
 
 		protected abstract String includeInAlgorithm();

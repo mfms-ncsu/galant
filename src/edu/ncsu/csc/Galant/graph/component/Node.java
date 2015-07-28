@@ -17,6 +17,7 @@ import edu.ncsu.csc.Galant.logging.LogHelper;
  * @author Michael Owoc
  * @author Ty Devries
  *
+ * @todo For some reason the id of a node changes when another node is deleted.
  */
 public class Node extends GraphElement implements Comparable<Node> {
 	
@@ -862,4 +863,4 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 }
 
-//  [Last modified: 2015 05 26 at 15:25:57 GMT]
+//  [Last modified: 2015 07 28 at 14:39:55 GMT]

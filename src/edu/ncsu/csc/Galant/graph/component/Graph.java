@@ -191,6 +191,20 @@ public class Graph {
 		return count;
 	}
 	
+    /**
+     * @return the largest id of any node + 1; this should be used when
+     * allocating an array of nodes, as there is no longer a guarantee that
+     * id's start at 0 and are contiguous.
+     */
+    public int nodeIds() {
+		int maxId = 0;
+		for ( Node currentNode : nodes ) {
+			if ( currentNode.inScope() && currentNode.getId() > maxId )
+				maxId = currentNode.getId();
+		}
+		return maxId + 1;
+    }
+
 	/**
 	 * @return the number of <code>Edge</code>s in the current <code>Graph</code>
 	 */
@@ -205,6 +219,21 @@ public class Graph {
 		return count;
 	}
 	
+    /**
+     * @return the largest id of any edge + 1; this should be used when
+     * allocating an array of edges; unlike the case of nodes, it should not
+     * really be needed -- edge id's are assigned contiguously; we provide it
+     * to avoid confusion.
+     */
+    public int edgeIds() {
+		int maxId = 0;
+		for ( Edge currentEdge : edges ) {
+			if ( currentEdge.inScope() && currentEdge.getId() > maxId )
+				maxId = currentEdge.getId();
+		}
+		return maxId + 1;
+    }
+
 	/**
 	 * @return true if the graph is directed, false otherwise
 	 */
@@ -390,6 +419,22 @@ public class Graph {
 		
 		return n;
 	}
+
+    /**
+     * @return the id of the given node; allows more natural syntax,
+     * especially when the node is used as an arry index, as in A[id(node)]
+     */
+    public int id(Node node) {
+        return node.getId();
+    }
+	
+    /**
+     * @return the id of the given edge; allows more natural syntax,
+     * especially when the edge is used as an array index, as in A[id(edge)]
+     */
+    public int id(Edge edge) {
+        return edge.getId();
+    }
 	
 	/**
 	 * Provides the root <code>Node</code>. If none has been specified, the method returns the first <code>Node</code>
@@ -804,4 +849,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2015 05 28 at 15:11:03 GMT]
+//  [Last modified: 2015 07 28 at 20:59:04 GMT]

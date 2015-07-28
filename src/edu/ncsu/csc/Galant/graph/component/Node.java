@@ -458,6 +458,10 @@ public class Node extends GraphElement implements Comparable<Node> {
     /**
      * This version is used after the graph is originally read or when it is
      * refreshed during editing. Also when saved to a file.
+     *
+     * @todo Leads to complaint of x already been specified. If you omit the
+     * printing of x and y, nodes that were not moved during the algorithm
+     * execution end up in random positions when the algorithm quits.
      */
     @Override
 	public String toString()
@@ -513,4 +517,4 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 }
 
-//  [Last modified: 2015 07 27 at 20:44:55 GMT]
+//  [Last modified: 2015 07 28 at 01:46:10 GMT]

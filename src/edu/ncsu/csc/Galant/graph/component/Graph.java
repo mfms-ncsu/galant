@@ -728,11 +728,6 @@ public class Graph {
 		}
 
 		nodes.remove(n);
-		
-		for (int i=0; i < this.nodes.size(); i++) {
-			this.nodes.get(i).setId(i);
-		}
-		
 		currentGraphState.setLocked(false);
 	}
 	
@@ -849,4 +844,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2015 07 28 at 20:59:04 GMT]
+//  [Last modified: 2015 07 29 at 13:32:52 GMT]

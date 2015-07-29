@@ -8,7 +8,7 @@ public class LogHelper {
 
     private static final String INDENT_STRING = "..";
 	private static LogHelper logHelper = null;
-	private static boolean loggingEnabled = true;
+	private static boolean loggingEnabled = false;
     private static boolean savedState = loggingEnabled;
 	
 	private static int spaces = 0;
@@ -117,4 +117,4 @@ public class LogHelper {
 	}
 }
 
-//  [Last modified: 2015 07 27 at 19:22:15 GMT]
+//  [Last modified: 2015 07 29 at 12:18:54 GMT]

@@ -137,7 +137,7 @@ public class Node extends GraphElement implements Comparable<Node> {
             if ( layer == null )
                 throw new GalantException("missing or malformed layer for"
                                           + " layered graph node " + this);
-            Integer positionInLayer = super.getInteger("positiionInLayer");
+            Integer positionInLayer = super.getInteger("positionInLayer");
             if ( positionInLayer == null )
                 throw new GalantException("missing or malformed positionInLayer for"
                                           + " layered graph node " + this);
@@ -517,4 +517,4 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 }
 
-//  [Last modified: 2015 07 28 at 01:46:10 GMT]
+//  [Last modified: 2015 07 29 at 12:16:53 GMT]

@@ -435,8 +435,8 @@ public class GraphPanel extends JPanel{
                                     2 * nodeRadius );
 
         /* draw node interior */
-        System.out.println("check if marked: node = " + n);
-        System.out.println(" isMarked: state = " + state + ", isMarked = " + n.isMarked(state));
+        LogHelper.logDebug("check if marked: node = " + n);
+        LogHelper.logDebug(" isMarked: state = " + state + ", isMarked = " + n.isMarked(state));
         if ( n.isMarked(state) ) {
             g2d.setColor( Color.LIGHT_GRAY );
         }
@@ -792,13 +792,11 @@ public class GraphPanel extends JPanel{
 		
 		dispatch.getWorkingGraph().getGraphState().setStepComplete(false);
 		if ( ! dispatch.getAlgorithmComplete() ) {
-			//System.out.println("GraphPanel is notifying the worker thread so it will wake up and work.");
 			synchronized(dispatch.getWorkingGraph().getGraphState()){
 				dispatch.getWorkingGraph().getGraphState().notify();
 			}
 			if ( dispatch.getAlgorithmComplete() ) {
 			}
-			//System.out.printf("Algorithm is started");
 		}
         else {
             this.gw.updateStatusLabel("Execution is finished");
@@ -1006,4 +1004,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2015 07 27 at 18:53:58 GMT]
+//  [Last modified: 2015 07 29 at 12:33:04 GMT]

@@ -35,13 +35,13 @@ public class GraphDispatch {
     private int count = 0;
 	private boolean algorithmComplete = false;
 	public void setAlgorithmComplete( boolean algorithmComplete ){
-        System.out.println("**** setAlgorithmComplete = " + algorithmComplete);
+        LogHelper.logDebug("**** setAlgorithmComplete = " + algorithmComplete);
         count = 0;
 		this.algorithmComplete = algorithmComplete;
 	}
 	public boolean getAlgorithmComplete(){
         count++;
-        System.out.println("getAlgorithmComplete = " + algorithmComplete + ", " + count);
+        LogHelper.logDebug("getAlgorithmComplete = " + algorithmComplete + ", " + count);
  		return algorithmComplete;
 	}
 
@@ -187,4 +187,4 @@ public class GraphDispatch {
 
 }
 
-//  [Last modified: 2015 07 13 at 19:22:33 GMT]
+//  [Last modified: 2015 07 29 at 12:27:47 GMT]

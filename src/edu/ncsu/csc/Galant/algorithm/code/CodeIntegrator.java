@@ -111,7 +111,7 @@ public class CodeIntegrator
 
 				/* Try remove all the comment line*/
 				try {
-					System.out.println("->" + removeAllComment(userCode) + "<-");
+					LogHelper.logDebug("->" + removeAllComment(userCode) + "<-");
 					userCode = removeAllComment(userCode);
 				} catch (IOException e) {
 					throw new MalformedMacroException();
@@ -320,4 +320,4 @@ public class CodeIntegrator
 		}				
 	}
 
-//  [Last modified: 2015 07 11 at 14:44:58 GMT]
+//  [Last modified: 2015 07 29 at 12:26:46 GMT]

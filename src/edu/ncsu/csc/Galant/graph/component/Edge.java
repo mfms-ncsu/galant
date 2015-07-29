@@ -103,7 +103,7 @@ public class Edge extends GraphElement implements Comparable<Edge> {
         String idComponent = "";
         if ( super.graph.inputHasEdgeIds() )
             idComponent = "id=\"" + this.id + "\"";
-        System.out.println("Edge toString: source = " + source + ", target = " + target);
+        LogHelper.logDebug("Edge toString: source = " + source + ", target = " + target);
  		String s = "<edge " + idComponent;
         s += " source=\"" + this.source.getId() + "\"";
         s += " target=\"" + this.target.getId() + "\"";
@@ -140,4 +140,4 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 	}
 }
 
-//  [Last modified: 2015 07 29 at 01:04:40 GMT]
+//  [Last modified: 2015 07 29 at 12:30:01 GMT]

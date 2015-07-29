@@ -17,6 +17,7 @@ import edu.ncsu.csc.Galant.logging.LogHelper;
  * 
  * @author Michael Owoc
  * @author Ty Devries
+ * @author Matthias Stallmann, major modifications
  *
  * a major refactoring by Matthias Stallmann, based on a more extended
  * version of the GraphElement class.
@@ -517,4 +518,4 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 }
 
-//  [Last modified: 2015 07 29 at 12:16:53 GMT]
+//  [Last modified: 2015 07 29 at 15:52:06 GMT]

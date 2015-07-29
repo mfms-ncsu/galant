@@ -17,7 +17,7 @@ import edu.ncsu.csc.Galant.logging.LogHelper;
  * </p>
  * <p>
  * Fetch and return Node/Edges on the graph. Declare the variable as global 
- * and initiliza them inside of algorithm{}.
+ * and initilizae them inside of algorithm{}.
  * </p>
  */
 public abstract class FetchingMacro extends Macro
@@ -36,12 +36,6 @@ public abstract class FetchingMacro extends Macro
 				super(name + "(.*)(\\;)");
 				this.initializationPrefix = initializationPrefix;
 				this.name = name;
-		}
-
-		@Override
-		public String toString()
-		{
-				return super.toString();
 		}
 
 		@Override

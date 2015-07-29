@@ -204,6 +204,20 @@ public class Graph {
 		return count;
 	}
 	
+    /**
+     * @return the largest id of any node + 1; this should be used when
+     * allocating an array of nodes, as there is no longer a guarantee that
+     * id's start at 0 and are contiguous.
+     */
+    public int nodeIds() {
+		int maxId = 0;
+		for ( Node currentNode : nodes ) {
+			if ( currentNode.inScope() && currentNode.getId() > maxId )
+				maxId = currentNode.getId();
+		}
+		return maxId + 1;
+    }
+
 	/**
 	 * @return the number of <code>Edge</code>s in the current <code>Graph</code>
 	 */
@@ -218,6 +232,21 @@ public class Graph {
 		return count;
 	}
 	
+    /**
+     * @return the largest id of any edge + 1; this should be used when
+     * allocating an array of edges; unlike the case of nodes, it should not
+     * really be needed -- edge id's are assigned contiguously; we provide it
+     * to avoid confusion.
+     */
+    public int edgeIds() {
+		int maxId = 0;
+		for ( Edge currentEdge : edges ) {
+			if ( currentEdge.inScope() && currentEdge.getId() > maxId )
+				maxId = currentEdge.getId();
+		}
+		return maxId + 1;
+    }
+
 	/**
 	 * @return true if the graph is directed, false otherwise
 	 */
@@ -334,15 +363,18 @@ public class Graph {
 	 * @param n
 	 */
 	public void deleteNode(Node n) {
+        LogHelper.enterMethod(getClass(), "deleteNode " + n);
 		currentGraphState.incrementState();
 		currentGraphState.setLocked(true);
 		
 		n.setDeleted(true);
 		for (Edge e : n.getIncidentEdges()) {
 			e.setDeleted(true);
+            removeEdge(e);
 		}
 		
 		currentGraphState.setLocked(false);
+        LogHelper.exitMethod(getClass(), "deleteNode");
 	}
 
 	/**
@@ -678,12 +710,14 @@ public class Graph {
 	 * @param e the <code>Edge</code> to remove
 	 */
 	public void removeEdge(Edge e) {
+        LogHelper.enterMethod(getClass(), "removeEdge " + e);
 		edges.remove(e);
 		
 		Node source = e.getSourceNode();
 		source.getIncidentEdges().remove(e);		
 		Node dest = e.getTargetNode();
 		dest.getIncidentEdges().remove(e);
+        LogHelper.exitMethod(getClass(), "removeEdge");
 	}
 	
 	/**
@@ -692,15 +726,17 @@ public class Graph {
 	 */
 	public void removeNode(Node n) {
 		List<Edge> n_edges = n.getIncidentEdges();
+        LogHelper.enterMethod(getClass(), "removeNode " + n + ", deg = " + n_edges.size());
 		
 		currentGraphState.setLocked(true);
-		while (n_edges.size() > 0) {
-			Edge e = n_edges.remove(0);
+		for ( Edge e : n_edges ) {
+			n_edges.remove(e);
 			removeEdge(e);
 		}
 
 		nodes.remove(n);
 		currentGraphState.setLocked(false);
+        LogHelper.exitMethod(getClass(), "removeNode");
 	}
 	
 	/**
@@ -816,4 +852,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2015 07 29 at 01:13:17 GMT]
+//  [Last modified: 2015 07 29 at 16:44:27 GMT]

@@ -107,8 +107,17 @@ public class Graph {
     private TreeMap<Integer,Node> nodeById = new TreeMap<Integer,Node>();
 
 	private List<Edge> edges;
+    /**
+     * @todo Never clear what this meant. A better name might be startNode.
+     */
 	private Node rootNode;
 	
+    /**
+     * An integer that can be used as the id of the next edge if id's are not
+     * explicit in the input.
+     */
+    private int nextEdgeId =0;
+
 	/**
 	 * Default constructor.
 	 */
@@ -394,7 +403,25 @@ public class Graph {
 		
 		return n;
 	}
+
+    /**
+     * @return the next available edge id; these are in numerical sequence
+     * starting at 0; to be used only when the input has no explicit id's for
+     * edges.
+     */
+    int getNextEdgeId() {
+        return nextEdgeId++;
+    }
 	
+    /**
+     * @return true if the input had explicit edge id's as determined by the
+     * fact that none had to be assigned internally -- the assumption being
+     * that either all or none of the edges have explicit id's.
+     */
+    boolean inputHasEdgeIds() {
+        return nextEdgeId == 0;
+    }
+
 	/**
 	 * Provides the root <code>Node</code>. If none has been specified, the method returns the first <code>Node</code>
 	 * in the <code>List</code> of <code>Node</code>s
@@ -789,4 +816,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2015 07 27 at 18:55:26 GMT]
+//  [Last modified: 2015 07 29 at 01:13:17 GMT]

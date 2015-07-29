@@ -70,6 +70,9 @@ public class Edge extends GraphElement implements Comparable<Edge> {
         LogHelper.enterMethod( getClass(), "initializeAfterParsing");
         super.initializeAfterParsing();
         this.id = getInteger("id");
+        if ( id == null ) {
+            id = super.graph.getNextEdgeId();
+        }
         Integer sourceId = super.getInteger("source");
         if ( sourceId == null ) {
              throw new GalantException("Missing attribute source when processing edge " + this.id);
@@ -97,7 +100,9 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 	@Override
 	public String toString() {
         // id may not exist for an edge; not really essential
-        String idComponent = (id == null) ? "" : "id=\"" + this.getId() + "\"";
+        String idComponent = "";
+        if ( super.graph.inputHasEdgeIds() )
+            idComponent = "id=\"" + this.id + "\"";
         System.out.println("Edge toString: source = " + source + ", target = " + target);
  		String s = "<edge " + idComponent;
         s += " source=\"" + this.source.getId() + "\"";
@@ -135,4 +140,4 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 	}
 }
 
-//  [Last modified: 2015 07 27 at 20:30:40 GMT]
+//  [Last modified: 2015 07 29 at 01:04:40 GMT]

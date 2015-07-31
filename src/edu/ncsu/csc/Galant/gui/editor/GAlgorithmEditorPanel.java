@@ -118,6 +118,9 @@ public class GAlgorithmEditorPanel extends GEditorPanel {
 	public void run() {
 		GraphDispatch.getInstance().setAnimationMode(true);
 		
+		/*
+		 Create an algorithmExecutor instance each time that the algorithm is run.  This is responsible for handling threading and execution
+		 */
 		AlgorithmExecutor ae = new AlgorithmExecutor();
 		GraphDispatch.getInstance().setAlgorithmExecutor(ae);
 

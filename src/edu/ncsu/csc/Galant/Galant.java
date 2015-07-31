@@ -20,9 +20,9 @@ public class Galant {
 			public void run(){
 				GraphDispatch gd = GraphDispatch.getInstance();
 				GalantPreferences.initPrefs();
-				GraphWindow g = new GraphWindow(gd);
-				gd.setGraphWindow(g);
-				g.updateStatusLabel("No algorithm running".toCharArray());
+				GraphWindow gw = new GraphWindow(gd);
+				gd.setGraphWindow(gw);
+				gw.updateStatusLabel("No algorithm running".toCharArray());
 				GEditorFrame gef = new GEditorFrame();
 				GraphWindow.getGraphFrame().addWindowListener(gef);
 				WindowUtil.linkWindows();

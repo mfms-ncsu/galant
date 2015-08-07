@@ -67,12 +67,12 @@ public abstract class GEditorPanel extends JPanel implements DocumentListener, P
 	protected boolean isDirty;
 	
 	/**
-	 * The name of the file including a .txt/.alg extension.
+	 * The name of the file including the .alg or .graphml extension.
 	 */
 	protected String fileName;
 	
 	/**
-	 * Confusingly, the path and name of the file including an extension.
+	 * The path and name of the file including the extension.
 	 */
 	protected String filePath;
 	
@@ -224,3 +224,5 @@ public abstract class GEditorPanel extends JPanel implements DocumentListener, P
 				.putProperty(PlainDocument.tabSizeAttribute, size);
 	}
 }
+
+//  [Last modified: 2015 08 07 at 16:49:12 GMT]

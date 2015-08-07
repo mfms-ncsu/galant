@@ -259,8 +259,12 @@ public class GraphElement {
         return getDouble(state, WEIGHT);
     }
 
-	public void setWeight(Double weight) {
-        set(WEIGHT, weight);
+    /**
+     * Need to convert the argument to a double because it eventually
+     * converts to Double -- see cleanupAfterParsing()
+     */
+	public void setWeight(double weight) {
+        set(WEIGHT, (double) weight);
     }
 
     public boolean hasWeight() {
@@ -405,4 +409,4 @@ public class GraphElement {
     }
 }
 
-//  [Last modified: 2015 07 27 at 19:27:50 GMT]
+//  [Last modified: 2015 08 07 at 19:11:20 GMT]

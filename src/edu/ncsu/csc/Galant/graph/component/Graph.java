@@ -633,6 +633,8 @@ public class Graph {
 	 */
 	public void addEdge(Edge edge, int id) {
         edge.setId(id);
+		edge.getSourceNode().addEdge(edge);
+		edge.getTargetNode().addEdge(edge);
         edges.add(edge);
 	}
 	
@@ -730,7 +732,7 @@ public class Graph {
 		
 		currentGraphState.setLocked(true);
 		for ( Edge e : n_edges ) {
-			n_edges.remove(e);
+            //			n_edges.remove(e);
 			removeEdge(e);
 		}
 
@@ -852,4 +854,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2015 07 29 at 16:44:27 GMT]
+//  [Last modified: 2015 08 07 at 16:32:29 GMT]

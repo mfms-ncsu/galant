@@ -26,6 +26,8 @@ public class Node extends GraphElement implements Comparable<Node> {
     private static final String MARKED = "marked";
 
     private int id;
+    private int xCoordinate;
+    private int yCoordinate;
 	private List<Edge> incidentEdges;
 
     /**
@@ -157,6 +159,9 @@ public class Node extends GraphElement implements Comparable<Node> {
                     super.set("y", y);
                 }
             }
+            // establish fixed positions
+            xCoordinate = x;
+            yCoordinate = y;
         }
         LogHelper.exitMethod(getClass(), "initializeAfterParsing: id = " + id
                              + ", x = " + getX() + ", y = " + getY()
@@ -186,6 +191,12 @@ public class Node extends GraphElement implements Comparable<Node> {
         setVisited(true);
     }
     public void unmark() {
+        setVisited(false);
+    }
+    /**
+     * Some algorithms use this alternate "spelling"
+     */
+    public void unMark() {
         setVisited(false);
     }
 
@@ -405,14 +416,14 @@ public class Node extends GraphElement implements Comparable<Node> {
      * the latter case, the user is prevented from changing position. 
      */
 
-    private static final int INITIAL_STATE = 1;
+    private static final int INITIAL_STATE = GraphState.GRAPH_START_STATE;
 
     public Integer getFixedX() {
-        return getInteger(INITIAL_STATE, "x");
+        return xCoordinate;
     }
 
     public Integer getFixedY() {
-        return getInteger(INITIAL_STATE, "y");
+        return yCoordinate;
     }
 
     public Point getFixedPosition() {
@@ -518,4 +529,4 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 }
 
-//  [Last modified: 2015 07 29 at 15:52:06 GMT]
+//  [Last modified: 2015 08 07 at 20:52:54 GMT]

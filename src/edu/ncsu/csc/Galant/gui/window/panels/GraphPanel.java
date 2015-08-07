@@ -305,7 +305,8 @@ public class GraphPanel extends JPanel{
 
         // ns is the latest state in the animation if in animation mode
         GraphElementState currentState = null;
-        if ( dispatch.isAnimationMode() )
+        if ( dispatch.isAnimationMode()
+             && GraphDispatch.getInstance().algorithmMovesNodes() )
             currentState = n.getLatestValidState(state);
 
         Point nodeCenter = n.getFixedPosition();
@@ -1017,4 +1018,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2015 08 07 at 19:53:49 GMT]
+//  [Last modified: 2015 08 07 at 21:14:59 GMT]

@@ -438,11 +438,7 @@ public class Node extends GraphElement implements Comparable<Node> {
 	public void setFixedPosition(Point position) {
         LogHelper.enterMethod( getClass(), "setFixedPosition: " + position 
                                + "\n node = " + this );
-        for ( int i = super.states.size() - 1; i >= 0; i-- ) {
-            GraphElementState state = super.states.get(i);
-            state.set("x", position.x);
-            state.set("y", position.y);
-        }
+        setFixedPosition(position.x, position.y);
         LogHelper.exitMethod( getClass(), "setFixedPosition"
                               + "\n node = " + this );
 	}
@@ -451,11 +447,10 @@ public class Node extends GraphElement implements Comparable<Node> {
         LogHelper.enterMethod( getClass(), "setFixedPosition: x = " + x
                                + ", y = " + y
                                + "\n node = " + this );
-        for ( int i = super.states.size() - 1; i >= 0; i-- ) {
-            GraphElementState state = super.states.get(i);
-            state.set("x", x);
-            state.set("y", y);
-        }
+        xCoordinate = x;
+        yCoordinate = y;
+        if ( getX() == null ) setX(x);
+        if ( getY() == null ) setY(y);
         LogHelper.exitMethod( getClass(), "setFixedPosition"
                               + "\n node = " + this );
 	}
@@ -529,4 +524,4 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 }
 
-//  [Last modified: 2015 08 07 at 20:52:54 GMT]
+//  [Last modified: 2015 08 07 at 21:34:11 GMT]

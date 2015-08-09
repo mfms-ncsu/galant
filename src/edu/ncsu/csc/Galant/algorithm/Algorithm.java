@@ -286,6 +286,13 @@ public abstract class Algorithm implements Runnable{
 				graph.smartReposition();
 			}
 
+    /**
+     * used by algorithm to declare that it moves nodes
+     */
+    public void movesNodes() {
+        GraphDispatch.getInstance().setAlgorithmMovesNodes(true);
+    }
+
 		/** @see edu.ncsu.csc.Galant.graph.component.GraphState */
 		public void beginStep(){
 				if(graph.getGraphState().isLocked()) endStep();
@@ -303,4 +310,4 @@ public abstract class Algorithm implements Runnable{
 		public abstract void run();
 	}
 
-//  [Last modified: 2015 07 29 at 15:54:21 GMT]
+//  [Last modified: 2015 08 09 at 00:26:00 GMT]

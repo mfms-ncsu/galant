@@ -48,6 +48,7 @@ function Node createTree( int tree_height,
 }
 
 algorithm {
+	movesNodes();
 	graph = getGraph();
 	int padding = height / (TREE_HEIGHT + 1);
 	Node root = createTree( TREE_HEIGHT, width / 2, padding, width / 2, padding );

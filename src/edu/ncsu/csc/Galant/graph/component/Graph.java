@@ -574,18 +574,22 @@ public class Graph {
 			this.rootNode = n;
 		}
 		
-        LogHelper.exitMethod( getClass(), "addNode()" + n.toString() );
+        LogHelper.exitMethod( getClass(), "addNode() " + n.toString() );
         LogHelper.restoreState();
 		return n;
 	}
 	
 	/**
-	 * Adds a node to the graph during editing.
+	 * Adds a node to the graph during editing. This is followed up by an
+	 * addFixedPosition() call to establish a position, which may be
+	 * determined by a mouse click or, in case of a Ctrl-n key press,
+	 * randomly.
+     *
 	 * @return the added node
 	 */
 	public Node addInitialNode() {
 		int state = currentGraphState.getState();
-		currentGraphState.setState(1);
+		currentGraphState.setState(GraphState.GRAPH_START_STATE);
 		currentGraphState.setLocked(true);
 
         Integer newId = nextNodeId();
@@ -854,4 +858,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2015 08 07 at 16:32:29 GMT]
+//  [Last modified: 2015 08 09 at 01:15:04 GMT]

@@ -85,12 +85,20 @@ public class Node extends GraphElement implements Comparable<Node> {
     public void setX(Integer x) { super.set("x", x); }
     public void setY(Integer y) { super.set("y", y); }
     public void setPosition(Integer x, Integer y) {
+        LogHelper.enterMethod(getClass(), "setPosition, x = " + x + ", y = " + y);
         setX(x);
         setY(y);
+        LogHelper.exitMethod(getClass(),
+                             "setPosition, node = "
+                             + this.toString(GraphDispatch.getInstance().getWorkingGraph().getState()));
     }
     public void setPosition(Point point) {
+        LogHelper.enterMethod(getClass(), "setPosition, point = " + point);
         setX(point.x);
         setY(point.y);
+        LogHelper.exitMethod(getClass(),
+                             "setPosition, node = "
+                             + this.toString(GraphDispatch.getInstance().getWorkingGraph().getState()));
     }
 
     public Integer getLayer() {
@@ -149,14 +157,15 @@ public class Node extends GraphElement implements Comparable<Node> {
             Integer x = super.getInteger("x");
             Integer y = super.getInteger("y");
             if ( x == null || y == null ) {
+                // note: use of super.attributes.set() avoids state change
                 Random r = new Random();
                 if ( x == null ) {
                     x = r.nextInt( GraphDispatch.getInstance().getWindowWidth() );
-                    super.set("x", x);
+                    super.attributes.set("x", x);
                 }
                 if ( y == null ) {
                     y = r.nextInt( GraphDispatch.getInstance().getWindowHeight() );
-                    super.set("y", y);
+                    super.attributes.set("y", y);
                 }
             }
             // establish fixed positions
@@ -430,11 +439,6 @@ public class Node extends GraphElement implements Comparable<Node> {
         return new Point(getFixedX(), getFixedY());
     }
 
-    /**
-     * Right now this is a hack that changes positions in all previous states
-     * to guarantee that it looks to the user like the position has been
-     * permanently changed (as desired).
-     */
 	public void setFixedPosition(Point position) {
         LogHelper.enterMethod( getClass(), "setFixedPosition: " + position 
                                + "\n node = " + this );
@@ -449,8 +453,9 @@ public class Node extends GraphElement implements Comparable<Node> {
                                + "\n node = " + this );
         xCoordinate = x;
         yCoordinate = y;
-        if ( getX() == null ) setX(x);
-        if ( getY() == null ) setY(y);
+        // note: use of super.attributes.set() avoids state change
+        if ( getX() == null ) super.attributes.set("x", x);
+        if ( getY() == null ) super.attributes.set("y", y);
         LogHelper.exitMethod( getClass(), "setFixedPosition"
                               + "\n node = " + this );
 	}
@@ -474,8 +479,8 @@ public class Node extends GraphElement implements Comparable<Node> {
 	public String toString()
     {
         String s = "<node" + " id=\"" + this.getId() + "\"";
-        s += " x=\"" + this.getX() + "\"";
-        s += " y=\"" + this.getY() + "\" ";
+        s += " x=\"" + this.getFixedX() + "\"";
+        s += " y=\"" + this.getFixedY() + "\" ";
 //         if ( GraphDispatch.getInstance().getWorkingGraph().isLayered() ) {
 //             s += " layer=\"" + latestState.getInteger("layer") + "\""
 //                 + " positionInLayer=\""
@@ -485,7 +490,15 @@ public class Node extends GraphElement implements Comparable<Node> {
 //             s += " x=\"" + latestState.getInteger("x") + "\""
 //                 + " y=\"" + latestState.getInteger("y") + "\"";
 //         }
+        // in order to avoid duplication, we need to remove and then restore
+        // the x and y coordinates here.
+        Integer savedX = super.attributes.getInteger("x");
+        Integer savedY = super.attributes.getInteger("y");
+        super.attributes.remove("x");
+        super.attributes.remove("y");
         s += super.toString();
+        super.attributes.set("x", savedX);
+        super.attributes.set("y", savedY);
         s += " />";
 		return s;
 	}
@@ -524,4 +537,4 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 }
 
-//  [Last modified: 2015 08 07 at 21:34:11 GMT]
+//  [Last modified: 2015 08 09 at 01:28:17 GMT]

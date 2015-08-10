@@ -558,24 +558,31 @@ public class Graph {
      */
 
 	/**
-	 * Adds a new <code>Node</code> to the <code>Graph</code> and increments the <code>GraphState</code>
-	 * @return the added <code>Node</code>; called only during algorithm
-	 * execution
+	 * Adds a new <code>Node</code> to the <code>Graph</code> and increments
+	 * the <code>GraphState</code>
+     *
+	 * @param x the x coordinate of the new node 
+	 * @param y the y coordinate of the new node 
+     * @return the added <code>Node</code>; called only during algorithm
+	 * execution; the assumption here is that the algorithm has to "know" the
+	 * position of the node it is adding.
 	 */
-	public Node addNode() {
-        LogHelper.enterMethod( getClass(), "addNode()" );
+	public Node addNode(Integer x, Integer y) {
+        LogHelper.enterMethod( getClass(), "addNode(), x = " + x + ", y = " + y);
 		currentGraphState.incrementState();
         Integer newId = nextNodeId();
-		Node n = new Node(currentGraphState, newId);
+		Node n = new Node(currentGraphState, newId, x, y);
 		nodes.add(n);
         nodeById.put( newId, n ); 
 		
 		if (this.rootNode == null) {
 			this.rootNode = n;
 		}
-		
+
+        // seems like we need an addState call as is the case with state
+        // changes in GraphElement.java
+
         LogHelper.exitMethod( getClass(), "addNode() " + n.toString() );
-        LogHelper.restoreState();
 		return n;
 	}
 	
@@ -858,4 +865,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2015 08 09 at 01:15:04 GMT]
+//  [Last modified: 2015 08 10 at 19:14:52 GMT]

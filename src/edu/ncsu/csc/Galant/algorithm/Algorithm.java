@@ -174,8 +174,8 @@ public abstract class Algorithm implements Runnable{
 			}
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#addNode() */
-		public Node addNode(){
-				return graph.addNode();
+    public Node addNode(Integer x, Integer y){
+        return graph.addNode(x, y);
 			}
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#isDirected() */
@@ -194,6 +194,10 @@ public abstract class Algorithm implements Runnable{
             return graph.getNodes();
         }
 
+    public Integer numberOfNodes() {
+        return graph.getNodes().size();
+    }
+
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#setNodes(java.util.List) */
 		public void setNodes(List<Node> nodes){
 				graph.setNodes(nodes);
@@ -204,6 +208,10 @@ public abstract class Algorithm implements Runnable{
         {
             return graph.getEdges();
         }
+
+    public Integer numberOfEdges() {
+        return graph.getEdges().size();
+    }
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#setEdges(java.util.List) */
 		public void setEdges(List<Edge> edges){
@@ -310,4 +318,4 @@ public abstract class Algorithm implements Runnable{
 		public abstract void run();
 	}
 
-//  [Last modified: 2015 08 09 at 00:26:00 GMT]
+//  [Last modified: 2015 08 10 at 20:06:59 GMT]

@@ -40,13 +40,28 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 
     /**
-     * To add a node while editing or during algorithm execution: id is the
-     * next available one as determined by the graph.
+     * To add a node while editing: id is the next available one as
+     * determined by the graph.
      */
     public Node(GraphState algorithmState, int id) {
         super(algorithmState.getGraph(), algorithmState);
         this.id = id;
 		incidentEdges = new ArrayList<Edge>();
+        super.attributes.set(MARKED, false);
+    }
+
+    /**
+     * To add a node during algorithm execution: id is the next available one as
+     * determined by the graph and the position of the node is known to the algorithm.
+     */
+    public Node(GraphState algorithmState, int id, Integer x, Integer y) {
+        super(algorithmState.getGraph(), algorithmState);
+        this.id = id;
+		incidentEdges = new ArrayList<Edge>();
+        xCoordinate = x;
+        yCoordinate = y;
+        super.attributes.set("x", x);
+        super.attributes.set("y", y);
         super.attributes.set(MARKED, false);
     }
 
@@ -79,7 +94,10 @@ public class Node extends GraphElement implements Comparable<Node> {
         return new Point(getX(), getY());
     }
     public Point getPosition(int state) {
-        return new Point(getX(state), getY(state));
+        LogHelper.enterMethod(getClass(), "getPosition, state = " + state + ", node = " + this);
+        Point p = new Point(getX(state), getY(state));
+        LogHelper.exitMethod(getClass(), "getPosition, point = " + p);
+        return p;
     }
 
     public void setX(Integer x) { super.set("x", x); }
@@ -478,20 +496,17 @@ public class Node extends GraphElement implements Comparable<Node> {
     @Override
 	public String toString()
     {
+        /* The code that follows has the undesirable effect of making new
+         * nodes disappear when algorithm execution is complete, even when
+         * the user does not choose to terminate the algorithm, which raises
+         * a more general issue: the user should really be asked whether
+         * they really want to stop. */
+//         if ( ! inScope(GraphState.GRAPH_START_STATE) ) {
+//             return "";
+//         }
         String s = "<node" + " id=\"" + this.getId() + "\"";
         s += " x=\"" + this.getFixedX() + "\"";
         s += " y=\"" + this.getFixedY() + "\" ";
-//         if ( GraphDispatch.getInstance().getWorkingGraph().isLayered() ) {
-//             s += " layer=\"" + latestState.getInteger("layer") + "\""
-//                 + " positionInLayer=\""
-//                 + latestState.getInteger("positionInLayer") + "\"";
-//         }
-//         else {
-//             s += " x=\"" + latestState.getInteger("x") + "\""
-//                 + " y=\"" + latestState.getInteger("y") + "\"";
-//         }
-        // in order to avoid duplication, we need to remove and then restore
-        // the x and y coordinates here.
         Integer savedX = super.attributes.getInteger("x");
         Integer savedY = super.attributes.getInteger("y");
         super.attributes.remove("x");
@@ -513,17 +528,6 @@ public class Node extends GraphElement implements Comparable<Node> {
             return "";
         }
         String s = "<node" + " id=\"" + this.getId() + "\"";
-//             + " x=\"" + this.getX(state) + "\""
-//             + " y=\"" + this.getY(state) + "\" ";
-//         if ( GraphDispatch.getInstance().getWorkingGraph().isLayered() ) {
-//             s += " layer=\"" + latestState.getInteger("layer") + "\""
-//                 + " positionInLayer=\""
-//                 + latestState.getInteger("positionInLayer") + "\"";
-//         }
-//         else {
-//             s += " x=\"" + latestState.getInteger("x") + "\""
-//                 + " y=\"" + latestState.getInteger("y") + "\"";
-//         }
         s += super.toString(state);
         s += "/>";
 		return s;
@@ -537,4 +541,4 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 }
 
-//  [Last modified: 2015 08 09 at 01:28:17 GMT]
+//  [Last modified: 2015 08 10 at 19:56:29 GMT]

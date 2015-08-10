@@ -22,8 +22,7 @@ function Node createTree( int tree_height,
                           int local_width, int local_height ) {
 
     beginStep();
-    Node root = addNode();
-    root.setPosition( new Point( root_x, root_y ) );
+    Node root = addNode(root_x, root_y);
     root.setSelected( true );
     endStep();
 
@@ -48,10 +47,9 @@ function Node createTree( int tree_height,
 }
 
 algorithm {
-	movesNodes();
 	graph = getGraph();
 	int padding = height / (TREE_HEIGHT + 1);
 	Node root = createTree( TREE_HEIGHT, width / 2, padding, width / 2, padding );
 }	
 
-//  [Last modified: 2014 04 04 at 21:19:10 GMT]
+//  [Last modified: 2015 08 10 at 19:26:02 GMT]

@@ -19,8 +19,10 @@
 
 int time;
 Graph graph;
-int [] discovery;
+// int [] discovery;
 // Append initialization in algorithm{} or in Fectching Macro way: nodesList
+nodesList discovery;
+
 // discovery;
 int [] finish;
 // Append initialization in algorithm{} or in Fectching Macro way: nodesList
@@ -61,7 +63,7 @@ function visit( Node v ) {
 
 algorithm { 
     graph = getGraph();
-    discovery = new int[ graph.numberOfNodes() ];
+    // discovery = new int[ graph.numberOfNodes() ];
     finish = new int[ graph.numberOfNodes() ];
     setDirected( true );
 

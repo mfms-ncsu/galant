@@ -14,6 +14,7 @@ import java.util.PriorityQueue;
 double INFINITY = Double.POSITIVE_INFINITY;
 
 Edge [] chosenEdge;
+nodesList discovery;
 Graph graph;
 
 function decreaseKey( Node v, double newKey ) {

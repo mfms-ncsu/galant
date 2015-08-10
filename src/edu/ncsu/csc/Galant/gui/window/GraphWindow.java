@@ -37,13 +37,13 @@ import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
+import javax.swing.JOptionPane;
 
 import edu.ncsu.csc.Galant.GraphDispatch;
 import edu.ncsu.csc.Galant.graph.component.Edge;
 import edu.ncsu.csc.Galant.graph.component.Graph;
 import edu.ncsu.csc.Galant.graph.component.GraphState;
 import edu.ncsu.csc.Galant.graph.component.Node;
-import edu.ncsu.csc.Galant.graph.component.NodeState;
 import edu.ncsu.csc.Galant.gui.prefs.PreferencesPanel;
 import edu.ncsu.csc.Galant.gui.util.WindowUtil;
 import edu.ncsu.csc.Galant.gui.window.panels.ComponentEditPanel;
@@ -53,6 +53,8 @@ import edu.ncsu.csc.Galant.prefs.Preference;
 import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.gui.util.EdgeEditDialog;
 import edu.ncsu.csc.Galant.gui.util.DeleteNodeDialog;
+import edu.ncsu.csc.Galant.gui.editor.GTabbedPane; // for confirmation dialog
+import edu.ncsu.csc.Galant.gui.editor.GEditorFrame; // for confirmation dialog
 
 /**
  * Window for displaying the <code>Graph</code>, containing all necessary
@@ -903,7 +905,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
             Graph g = dispatch.getWorkingGraph();
             Node n = g.addInitialNode();
             LogHelper.logDebug( " addInitial: node = " + n );
-            // choice a position to place new node
+            // choose a random position to place new node
             Point p = Node.genRandomPosition();
             n.setFixedPosition(p);
             LogHelper.logDebug( " setFixedPosition: node = " + n );
@@ -1025,8 +1027,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	@Override
 	public void componentShown(ComponentEvent arg0) {
 		// TODO Auto-generated method stub
-		
 	}
 }
 
-//  [Last modified: 2015 07 03 at 14:16:12 GMT]
+//  [Last modified: 2015 07 26 at 19:41:17 GMT]

@@ -54,7 +54,6 @@ public abstract class FetchingMacro extends Macro
 			Matcher matcher = getPattern().matcher(code); 
 				if(matcher.find()) {
 					String originalExpression = matcher.group(0);	
-					System.out.println("for testing ->" + originalExpression + "<--");
 					matcher = Pattern.compile("(\\s)(.*)(\\;)").matcher(originalExpression);
 					try{
 						matcher.find();

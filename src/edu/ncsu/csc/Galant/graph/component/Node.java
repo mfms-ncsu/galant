@@ -60,9 +60,12 @@ public class Node extends GraphElement implements Comparable<Node> {
 		incidentEdges = new ArrayList<Edge>();
         xCoordinate = x;
         yCoordinate = y;
-        super.attributes.set("x", x);
-        super.attributes.set("y", y);
-        super.attributes.set(MARKED, false);
+        // set up essential attributes based on the first, and also the
+        // latest, state for the GraphElement on which this node is based
+        GraphElementState startingState = latestState();
+        startingState.set("x", x);
+        startingState.set("y", y);
+        startingState.set(MARKED, false);
     }
 
     /**
@@ -497,10 +500,10 @@ public class Node extends GraphElement implements Comparable<Node> {
 	public String toString()
     {
         /* The code that follows has the undesirable effect of making new
-         * nodes disappear when algorithm execution is complete, even when
-         * the user does not choose to terminate the algorithm, which raises
-         * a more general issue: the user should really be asked whether
-         * they really want to stop. */
+         * nodes disappear when algorithm execution is complete. One might
+         * consider this a feature - graph reverts to original state after
+         * execution; if user wants to preserve intermediate state, they
+         * export during execution (or save) */
 //         if ( ! inScope(GraphState.GRAPH_START_STATE) ) {
 //             return "";
 //         }
@@ -541,4 +544,4 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 }
 
-//  [Last modified: 2015 08 10 at 19:56:29 GMT]
+//  [Last modified: 2015 08 11 at 11:40:36 GMT]

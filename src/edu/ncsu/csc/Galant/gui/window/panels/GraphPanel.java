@@ -303,16 +303,17 @@ public class GraphPanel extends JPanel{
     private Point getNodeCenter( Node n ) throws GalantException{
         LogHelper.guiEnterMethod( getClass(), "getNodeCenter, n = " + n );
 
-        // ns is the latest state in the animation if in animation mode
-        GraphElementState currentState = null;
+        Point nodeCenter = null;
+
+        int algorithmState
+            = GraphDispatch.getInstance().getWorkingGraph().getState();
+
         if ( dispatch.isAnimationMode()
-             && GraphDispatch.getInstance().algorithmMovesNodes() )
-            currentState = n.getLatestValidState(state);
-
-        Point nodeCenter = n.getFixedPosition();
-
-        if ( currentState != null ) {
-            nodeCenter = n.getPosition(currentState.getState());
+             && GraphDispatch.getInstance().algorithmMovesNodes() ) {
+            nodeCenter = n.getPosition(algorithmState);
+        }
+        else {
+            nodeCenter = n.getFixedPosition();
         }
             
         // if graph is layered and node has layer and position in layer
@@ -326,9 +327,7 @@ public class GraphPanel extends JPanel{
         if ( dispatch.getWorkingGraph().isLayered() ) {
             int layer = n.getLayer(); // should not change during an
                                       // animation of a layered graph algorithm
-            int position = n.getPositionInLayer();
-            if ( currentState != null )
-                position = n.getPositionInLayer(currentState.getState());
+            int position = n.getPositionInLayer(algorithmState);
             int layerSize
                 = dispatch.getWorkingGraph().numberOfNodesOnLayer( layer );
             int width = dispatch.getWindowWidth();
@@ -1018,4 +1017,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2015 08 08 at 13:51:52 GMT]
+//  [Last modified: 2015 08 11 at 12:36:14 GMT]

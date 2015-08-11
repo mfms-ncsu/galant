@@ -18,20 +18,20 @@ function visit( Node v ) {
     time = time + 1;
     discovery[id(v)] = time;
     beginStep();
-    v.setLabel( "" + discovery[ v.getId() ] );
+    v.setLabel( "" + discovery[id(v)] );
     v.setSelected( true );
     endStep();
     for_outgoing( v, e, w ) {
         beginStep();
         if ( ! w.isSelected() ) {
             e.setSelected( true ); // make edge thicker if easy to do
-            visit( w );
+            visit(w);
         }
-        else if ( finish[ w.getId() ] == 0 ) { /* ancestor */
+        else if ( finish[id(w)] == 0 ) { /* ancestor */
             e.setLabel( "B" );
         }
-        else if ( finish[ w.getId() ] 
-                  > discovery[ v.getId() ] ) { /* descendant */
+        else if ( finish[id(w)] 
+                  > discovery[id(v)] ) { /* descendant */
             e.setLabel( "F" );
         }
         else {
@@ -49,10 +49,10 @@ function visit( Node v ) {
 
 algorithm {
     time = 0;
-    discovery = new int[ graph.nodeIds() ];
-    finish = new int[ graph.nodeIds() ];
+    discovery = new int[nodeIds()];
+    finish = new int[nodeIds()];
 
-    setDirected( true );
+    setDirected(true);
 
     beginStep();
     for_nodes( u ) {
@@ -70,4 +70,4 @@ algorithm {
     }
 }
 
-//  [Last modified: 2015 07 28 at 20:56:44 GMT]
+//  [Last modified: 2015 08 11 at 12:58:58 GMT]

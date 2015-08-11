@@ -23,10 +23,9 @@ final int VERTICAL_GAP = 50;
 /**
  * For convenience - to make the algorithm look more transparent.
  */
-int n;
 int [] xCoord;  // x coordinates of nodes
-double [] A;// array elements (as weights of nodes)
-Node [] nodes; // actual nodes
+double [] A;    // array elements (as weights of nodes)
+Node [] nodes;  // actual nodes
 Graph graph;
 
 /**
@@ -35,7 +34,7 @@ Graph graph;
 function lineUpNodes() {
     int xPosition = HORIZONTAL_GAP;
     int yPosition = 2 * VERTICAL_GAP;
-    for ( int i = 0; i < n; i++ ) { 
+    for ( int i = 0; i < numberOfNodes(); i++ ) { 
         nodes[i] = getNodeById( i );
         xCoord[i] = xPosition;
         A[i] = nodes[i].getWeight();
@@ -46,9 +45,8 @@ function lineUpNodes() {
 
 algorithm {
     movesNodes();
-    graph = getGraph();
 
-    n = numberOfNodes() + 1;    // to accomodate toInsert later
+    int n = numberOfNodes();
     A = new double[ n ];
     xCoord = new int[ n ];
     nodes = new Node[ n ];
@@ -63,8 +61,8 @@ algorithm {
     nodes[0].mark();
 
     for ( int i = 1; i < n; i++ ) {
-        double x = A[i]; toInsert.setWeight( A[i] );
-        toInsert.setX( xCoord[i] );
+        double x = A[i]; toInsert.setWeight(A[i]);
+        toInsert.setX(xCoord[i]);
         endStep();
         int j = i - 1;
         while ( j >= 0 && A[j] > x ) {  
@@ -72,7 +70,7 @@ algorithm {
             toInsert.setX( xCoord[j] );
             nodes[j].highlight();
             endStep(); beginStep();
-            A[j+1] = A[j]; nodes[j+1].setWeight( A[j] );
+            A[j+1] = A[j]; nodes[j+1].setWeight(A[j]);
             nodes[j].unMark();
             nodes[j].unHighlight();
             nodes[j+1].mark();
@@ -80,11 +78,11 @@ algorithm {
             j = j - 1;
         }
         beginStep();
-        A[j+1] = x; nodes[j+1].setWeight( x );
+        A[j+1] = x; nodes[j+1].setWeight(x);
         nodes[j+1].mark();
     }
-    graph.deleteNode( toInsert );
+    graph.deleteNode(toInsert);
     endStep();
 }
 
-//  [Last modified: 2015 08 10 at 20:03:51 GMT]
+//  [Last modified: 2015 08 11 at 01:44:33 GMT]

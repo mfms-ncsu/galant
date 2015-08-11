@@ -1,0 +1,24 @@
+Current Galant bugs and features:
+
+Features:
+—————————-
+
+- an array with node or edge indices can now be handled as follows:
+	type A[] = new type[nodeIds()]  // allocates enough space for largest id
+        type x = A[id(n)]               // access element corresponding to node n
+Here A is an array of elements of the given type
+
+
+Either Feature or Bug:
+—————————————————————— 
+
+- if user creates a node using ctrl-n while in create edge mode, the node is created with an edge attached to it
+
+- binary tree algorithm, or any other algorithm that creates nodes and does not declare node movement allows users to move nodes and to save the new positions via export
+
+
+Bugs:
+————-
+
+- display states keep incrementing after algorithm is through running even though the forward button is greyed out; probably an easy fix
+

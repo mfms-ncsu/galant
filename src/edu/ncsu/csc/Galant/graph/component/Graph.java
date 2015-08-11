@@ -593,6 +593,12 @@ public class Graph {
 	 * randomly.
      *
 	 * @return the added node
+     *
+     * @todo The locking and unlocking seems bizarre since we know there
+     * should not be a state change. Looks like the node is being created in
+     * the initial graph state and then the state is reset to whatever it
+     * currently is -- not necessary if there are no state changes during
+     * editing (?)
 	 */
 	public Node addInitialNode() {
 		int state = currentGraphState.getState();
@@ -612,12 +618,9 @@ public class Graph {
 	
 	/**
 	 * Adds a node to the graph during parsing. The node has already been created.
-     *
-     * @todo Not clear why we need to increment state.
-	 */
+ 	 */
 	public void addNode(Node n) {
         LogHelper.enterMethod( getClass(), "addNode: node = " + n.toString() );
-		currentGraphState.incrementState();
 
         /**
          * @todo subclass method for layered graphs
@@ -630,7 +633,6 @@ public class Graph {
         nodeById.put( n.getId(), n );
 
         LogHelper.exitMethod( getClass(), "addNode( Node )" );
-        LogHelper.restoreState();
 	}
 	
 	/**
@@ -688,9 +690,10 @@ public class Graph {
 	 * Adds a new <code>Edge</code> to the <code>Graph</code> with the specified source and target <code>Node</code>s.
 	 * Sets the <code>GraphState</code> to 1.
 	 * Note: for undirected <code>Graph</code>s, "source" and "target" are meaningless.
-	 * @param source
-	 * @param target
-	 * @return
+	 * @return the added edge
+     *
+     * @todo Again, the locking of states is puzzling since this variant is
+     * used only during editing.
 	 */
 	public Edge addInitialEdge(Node source, Node target) {
 		int state = currentGraphState.getState();
@@ -865,4 +868,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2015 08 10 at 19:14:52 GMT]
+//  [Last modified: 2015 08 11 at 01:29:01 GMT]

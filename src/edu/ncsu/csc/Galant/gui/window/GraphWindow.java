@@ -808,6 +808,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
     static final long DELAY_TIME = 17;
     boolean ctrlPressed = false;
     boolean deletePressed = false;
+    boolean shiftPressed = false;
     @Override
     /**
      * This method is called by the current KeyboardFocusManager requesting that
@@ -876,6 +877,16 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
       // "Ctrl" released
       if(e.getID()==KeyEvent.KEY_RELEASED && e.getKeyCode()==KeyEvent.VK_CONTROL){
         ctrlPressed = false;
+        return true;
+      }
+      // "Shift" pressed
+      if(e.getID()==KeyEvent.KEY_PRESSED && e.getKeyCode()==KeyEvent.VK_SHIFT){
+          shiftPressed = true;
+        return true;
+      }
+      // "Shift" released
+      if(e.getID()==KeyEvent.KEY_RELEASED && e.getKeyCode()==KeyEvent.VK_SHIFT){
+        shiftPressed = false;
         return true;
       }
       // "Delete" pressed
@@ -984,37 +995,29 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
         }
         return true;
       }
-      // "ctrl+l" display labels
+      // "ctrl+l" display node labels "ctrl+L" display edge labels
       if(e.getID()==KeyEvent.KEY_PRESSED && e.getKeyCode()==KeyEvent.VK_L && ctrlPressed){
         synchronized(this){
-          if (nodeLabels.isSelected() && edgeLabels.isSelected()) {
-            GraphDisplays.NODE_LABELS.setShown(false);
-            GraphDisplays.EDGE_LABELS.setShown(false);
-            nodeLabels.setSelected(false);
-            edgeLabels.setSelected(false);
+          if (shiftPressed) {
+            GraphDisplays.EDGE_LABELS.setShown(!edgeLabels.isSelected());
+            edgeLabels.setSelected(!edgeLabels.isSelected());
           } else {
-            GraphDisplays.NODE_LABELS.setShown(true);
-            GraphDisplays.EDGE_LABELS.setShown(true);
-            nodeLabels.setSelected(true);
-            edgeLabels.setSelected(true);
+            GraphDisplays.NODE_LABELS.setShown(!nodeLabels.isSelected());
+            nodeLabels.setSelected(!nodeLabels.isSelected());
           }
           frame.repaint(); 
         }
         return true;
       }
-      // "ctrl+w" display weights
+      // "ctrl+w" display node weights "ctrl+W" display edge weights
       if(e.getID()==KeyEvent.KEY_PRESSED && e.getKeyCode()==KeyEvent.VK_W && ctrlPressed){
         synchronized(this){
-          if (nodeWeights.isSelected() && edgeWeights.isSelected()) {
-            GraphDisplays.NODE_WEIGHTS.setShown(false);
-            GraphDisplays.EDGE_WEIGHTS.setShown(false);
-            nodeWeights.setSelected(false);
-            edgeWeights.setSelected(false);
+          if (shiftPressed) {
+            GraphDisplays.EDGE_WEIGHTS.setShown(!edgeWeights.isSelected());
+            edgeWeights.setSelected(!edgeWeights.isSelected());
           } else {
-            GraphDisplays.NODE_WEIGHTS.setShown(true);
-            GraphDisplays.EDGE_WEIGHTS.setShown(true);
-            nodeWeights.setSelected(true);
-            edgeWeights.setSelected(true);
+            GraphDisplays.NODE_WEIGHTS.setShown(!nodeWeights.isSelected());
+            nodeWeights.setSelected(!nodeWeights.isSelected());
           }
           frame.repaint(); 
         }

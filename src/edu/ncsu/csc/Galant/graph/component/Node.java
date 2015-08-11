@@ -12,209 +12,231 @@ import edu.ncsu.csc.Galant.GraphDispatch;
 import edu.ncsu.csc.Galant.logging.LogHelper;
 
 /**
- * Represents node entities as elements of a graph.
+ * Represents node entities as elements of a graph. Encapsulates attributes
+ * that are unique to nodes.
  * 
  * @author Michael Owoc
  * @author Ty Devries
+ * @author Matthias Stallmann, major modifications
  *
- * @todo For some reason the id of a node changes when another node is deleted.
+ * a major refactoring by Matthias Stallmann, based on a more extended
+ * version of the GraphElement class.
  */
 public class Node extends GraphElement implements Comparable<Node> {
-	
-	private Map<String, Object> attributes;
-	
-	private GraphState graphCurrentState;
-	private List<NodeState> nodeStates;
-	private List<Edge> edges;
-	
-	private Point position;
-	
-	public Node(GraphState currentState, int id) {
-		this.graphCurrentState = currentState;
-		nodeStates = new ArrayList<NodeState>();
-		attributes = new HashMap<String, Object>();
-		
-		this.position = genRandomPosition();
-		
-		NodeState ns = new NodeState(currentState, id);
-		addNodeState(ns);
-		
-		edges = new ArrayList<Edge>();
-	}
-	
-	public Node(GraphState currentState, int _id, double _weight, String _color, String _label, boolean _selected, boolean _visited) {
-		this(currentState, _selected, _visited, new ArrayList<Edge>(), _id, _weight, _color, _label, genRandomPosition());
-	}
+    private static final String MARKED = "marked";
 
-	public Node(GraphState currentState, boolean _selected, boolean _visited, List<Edge> _edges, int _id, double _weight, String _color, String _label, Point _position) { //TODO sanitize
-        LogHelper.enterConstructor( getClass(), "not layered" );
-		this.graphCurrentState = currentState;
-		nodeStates = new ArrayList<NodeState>();
-		attributes = new HashMap<String, Object>();
-		
-		this.position = _position;
-		
-		NodeState ns = new NodeState(currentState, _selected, _visited, _id, _weight, _color, _label, _position);
-		addNodeState(ns);
-		
-		edges = _edges;
+    private int id;
+    private int xCoordinate;
+    private int yCoordinate;
+	private List<Edge> incidentEdges;
 
-        LogHelper.exitConstructor( getClass(), "ns = " + ns );
+    /**
+     * When a node is created during parsing and id is not known.
+     */
+	public Node(GraphState currentState) {
+        super(currentState.getGraph(), currentState);
+		incidentEdges = new ArrayList<Edge>();
+        super.attributes.set(MARKED, false);
 	}
 
     /**
-     * Constructor for layered graphs
+     * To add a node while editing: id is the next available one as
+     * determined by the graph.
      */
-	public Node(GraphState currentState, boolean _selected, boolean _visited, int _id, double _weight, String _color, String _label, int _layer, int _positionInLayer) { //TODO sanitize
-        LogHelper.enterConstructor( getClass(), "layered" );
-		this.graphCurrentState = currentState;
-		nodeStates = new ArrayList<NodeState>();
-		attributes = new HashMap<String, Object>();
+    public Node(GraphState algorithmState, int id) {
+        super(algorithmState.getGraph(), algorithmState);
+        this.id = id;
+		incidentEdges = new ArrayList<Edge>();
+        super.attributes.set(MARKED, false);
+    }
 
-        /**
-         * @todo The following is just a hack to give the node <em>some</em>
-         * fixed position intially. The actual position will be determined
-         * later by window dimensions.
-         */
-        position = new Point( positionInLayer * 100 + 50, layer * 100 + 50 );
-		
-		NodeState ns = new NodeState(currentState, _selected, _visited, _id, _weight, _color, _label, _layer, _positionInLayer);
-		addNodeState(ns);
+    /**
+     * To add a node during algorithm execution: id is the next available one as
+     * determined by the graph and the position of the node is known to the algorithm.
+     */
+    public Node(GraphState algorithmState, int id, Integer x, Integer y) {
+        super(algorithmState.getGraph(), algorithmState);
+        this.id = id;
+		incidentEdges = new ArrayList<Edge>();
+        xCoordinate = x;
+        yCoordinate = y;
+        // set up essential attributes based on the first, and also the
+        // latest, state for the GraphElement on which this node is based
+        GraphElementState startingState = latestState();
+        startingState.set("x", x);
+        startingState.set("y", y);
+        startingState.set(MARKED, false);
+    }
 
-        edges = new ArrayList<Edge>();
-        LogHelper.exitConstructor( getClass(), "ns = " + ns );
-	}
+    /**
+     * Setters and getters for node-specific information that does not change.
+     */
+    public Integer getId() { return id; }
 
-	public boolean inScope(){
-		return !isDeleted();
-	}
+    public void setIncidentEdges(List<Edge> edges) {
+        this.incidentEdges = edges;
+    }
+
+    /**
+     * Setters and getters for node-specific information that may change
+     * during algorithm execution.
+     */
+    public Integer getX() {
+        return super.getInteger("x");
+    }
+    public Integer getY() {
+        return super.getInteger("y");
+    }
+    public Integer getX(int state) {
+        return super.getInteger(state, "x");
+    }
+    public Integer getY(int state) {
+        return super.getInteger(state, "y");
+    }
+    public Point getPosition() {
+        return new Point(getX(), getY());
+    }
+    public Point getPosition(int state) {
+        LogHelper.enterMethod(getClass(), "getPosition, state = " + state + ", node = " + this);
+        Point p = new Point(getX(state), getY(state));
+        LogHelper.exitMethod(getClass(), "getPosition, point = " + p);
+        return p;
+    }
+
+    public void setX(Integer x) { super.set("x", x); }
+    public void setY(Integer y) { super.set("y", y); }
+    public void setPosition(Integer x, Integer y) {
+        LogHelper.enterMethod(getClass(), "setPosition, x = " + x + ", y = " + y);
+        setX(x);
+        setY(y);
+        LogHelper.exitMethod(getClass(),
+                             "setPosition, node = "
+                             + this.toString(GraphDispatch.getInstance().getWorkingGraph().getState()));
+    }
+    public void setPosition(Point point) {
+        LogHelper.enterMethod(getClass(), "setPosition, point = " + point);
+        setX(point.x);
+        setY(point.y);
+        LogHelper.exitMethod(getClass(),
+                             "setPosition, node = "
+                             + this.toString(GraphDispatch.getInstance().getWorkingGraph().getState()));
+    }
+
+    public Integer getLayer() {
+        return super.getInteger("layer");
+    }
+    public Integer getPositionInLayer() {
+        return super.getInteger("positionInLayer");
+    }
+    public Integer getLayer(int state) {
+        return super.getInteger(state, "layer");
+    }
+    public Integer getPositionInLayer(int state) {
+        return super.getInteger(state, "positionInLayer");
+    }
+    public void setLayer(Integer layer) {
+        super.set("layer", layer);
+    }
+    public void setPositionInLayer(Integer positionInLayer) {
+        super.set("positionInLayer", positionInLayer);
+    }
 	
-	public boolean inScope(int state) 
-    {
-		return isCreated(state) && !isDeleted(state);
-	}
-	
-	/**
-	 * @return the weight of the edge
-	 */
-	@Override
-	public double getWeight() {
-		return latestState().getWeight();
-	}
-	
-	@Override
-	public double getWeight(int state)
-        {
-            NodeState ns = getLatestValidState(state);
-            return ns==null ? null : ns.getWeight();
+    /**
+     * Makes sure that all the attributes specific to nodes are properly
+     * initialized.
+     *
+     * @todo still need to make LayeredGraphNode a subclass of Node.
+     */
+    public void initializeAfterParsing()
+    throws GalantException {
+        LogHelper.enterMethod( getClass(), "initializeAfterParsing: " + this );
+        super.initializeAfterParsing();
+        Integer idAttribute = super.getInteger("id");
+        if ( idAttribute == null ) {
+            throw new GalantException("Missing or malformed id for node " + this);
         }
-
-	/**
-	 * @param weight the weight of the edge
-	 */
-	@Override
-	public void setWeight(double weight) {
-		NodeState ns = newState();
-		ns.setWeight(weight);
-		nodeStates.add(ns);
-	}
-
-    /**
-     * @return true if the node has a weight in the current state
-     */
-    public boolean hasWeight() {
-        return latestState().hasWeight();
-    }
-
-    /**
-     * @return true if this node had a non-empty weight at the given state
-     */
-    @Override
-        public boolean hasWeight(int state)
-        {
-            NodeState ns = getLatestValidState(state);
-            return ns == null ? false : ns.hasWeight();
+        else if ( super.graph.nodeIdExists(idAttribute) ) {
+                throw new GalantException("Duplicate id: " + id 
+                                           + " when processing node " + this);
         }
+        else {
+            // don't want or need to track the id -- it won't ever change
+            id = idAttribute;
+            super.remove("id");
+        }
+        if ( super.graph.isLayered() ) {
+            Integer layer = super.getInteger("layer");
+            if ( layer == null )
+                throw new GalantException("missing or malformed layer for"
+                                          + " layered graph node " + this);
+            Integer positionInLayer = super.getInteger("positionInLayer");
+            if ( positionInLayer == null )
+                throw new GalantException("missing or malformed positionInLayer for"
+                                          + " layered graph node " + this);
+        }
+        else {
+            Integer x = super.getInteger("x");
+            Integer y = super.getInteger("y");
+            if ( x == null || y == null ) {
+                // note: use of super.attributes.set() avoids state change
+                Random r = new Random();
+                if ( x == null ) {
+                    x = r.nextInt( GraphDispatch.getInstance().getWindowWidth() );
+                    super.attributes.set("x", x);
+                }
+                if ( y == null ) {
+                    y = r.nextInt( GraphDispatch.getInstance().getWindowHeight() );
+                    super.attributes.set("y", y);
+                }
+            }
+            // establish fixed positions
+            xCoordinate = x;
+            yCoordinate = y;
+        }
+        LogHelper.exitMethod(getClass(), "initializeAfterParsing: id = " + id
+                             + ", x = " + getX() + ", y = " + getY()
+                             + ", node = " + this);
+   }
 
-	/**
-	 * Postcondition: hasWeight() == false
-	 */
-	@Override
-        public void clearWeight() {
-		NodeState ns = newState();
-		ns.clearWeight();
-		addNodeState(ns);
+    /**************** marking *******************/
+	public Boolean isVisited() {
+		return super.getBoolean(MARKED);
 	}
-
-	/**
-	 * @return true if the node is highlighted, false otherwise
-	 */
-	public boolean isSelected() {
-		return latestState().isSelected();
-	}
-	
-	public boolean isSelected(int state)
-    {
-		NodeState ns = getLatestValidState(state);
-		
-		return ns==null ? null : ns.isSelected();
-	}
-
-    public boolean isHighlighted() {
-        return isSelected();
-    }
-	
-    public boolean isHighlighted(int state)
-    {
-        return isSelected(state);
-    }
-	
-	public boolean isVisited() {
-		return this.latestState().isVisited();
-	}
-
-	public Boolean isVisited(int state)
-    {
-		NodeState ns = getLatestValidState(state);
-		return ns==null ? null : ns.isVisited();
+	public Boolean isVisited(int state) {
+		return super.getBoolean(state, MARKED);
 	}
 	
 	public boolean isMarked() {
-		return this.latestState().isVisited();
+		return isVisited();
+	}
+	public Boolean isMarked(int state) {
+        return isVisited(state);
 	}
 
-	public Boolean isMarked(int state)
-    {
-		NodeState ns = getLatestValidState(state);
-		return ns==null ? null : ns.isVisited();
+	public void setVisited(Boolean visited) {
+        super.set(MARKED, visited);
 	}
 
-	public void setVisited(boolean b) {
-		NodeState ns = newState();
-		ns.setVisited(b);
-		addNodeState(ns);
+    public void mark() {
+        setVisited(true);
+    }
+    public void unmark() {
+        setVisited(false);
+    }
+    /**
+     * Some algorithms use this alternate "spelling"
+     */
+    public void unMark() {
+        setVisited(false);
+    }
+
+
+    /********************** incident edges **********************/
+
+    public void addEdge(Edge edge) {
+		incidentEdges.add(edge);
 	}
 
-	/**
-	 * sets the latest state of the node to marked without adding a new
-	 * state; synonym for setVisited(true)
-	 */
-	public void mark() {
-		NodeState ns = newState();
-		ns.setVisited(true);
-		addNodeState(ns);
-	}
-	
-	/**
-	 * sets the latest state of the node to unmarked without adding a new
-	 * state; synonym for setVisited(false)
-	 */
-	public void unMark() {
-		NodeState ns = newState();
-		ns.setVisited(false);
-		addNodeState(ns);
-	}
-	
 	/**
 	 * @return the node's outgoing edges, based on source and target
 	 * specs. ignoring whether the graph is directed or not
@@ -222,10 +244,10 @@ public class Node extends GraphElement implements Comparable<Node> {
 	public List<Edge> getOutgoingEdges() {
 		List<Edge> currentEdges = new ArrayList<Edge>();
 		
-		for ( Edge e : edges ) {
+		for ( Edge e : incidentEdges ) {
 			if ( e.inScope() && ! e.isDeleted() ) {
 				if ( this.equals( e.getSourceNode() ) 
-                    || ! graphCurrentState.isDirected() ) {
+                    || ! algorithmState.isDirected() ) {
 					currentEdges.add(e);
 				}
 			}
@@ -245,10 +267,10 @@ public class Node extends GraphElement implements Comparable<Node> {
 	public List<Edge> getIncomingEdges() {
 		List<Edge> currentEdges = new ArrayList<Edge>();
 		
-		for ( Edge e : edges ) {
+		for ( Edge e : incidentEdges ) {
 			if ( e.inScope() && ! e.isDeleted() ) {
-				if ( this.equals( e.getDestNode() )
-                     || ! graphCurrentState.isDirected() ) {
+				if ( this.equals( e.getTargetNode() )
+                     || ! algorithmState.isDirected() ) {
 					currentEdges.add( e );
 				}
 			}
@@ -268,7 +290,7 @@ public class Node extends GraphElement implements Comparable<Node> {
     public List<Edge> getIncidentEdges() {
  		List<Edge> currentEdges = new ArrayList<Edge>();
 		
-		for ( Edge e : edges ) {
+		for ( Edge e : incidentEdges ) {
 			if ( e.inScope() && ! e.isDeleted() ) {
                 currentEdges.add(e);
             }
@@ -280,6 +302,17 @@ public class Node extends GraphElement implements Comparable<Node> {
 		return getIncidentEdges();
 	}
 	
+    /**
+     * The following are used at various other parts of the code.
+     */
+    public List<Edge> getEdges() {
+        return getIncidentEdges();
+    }
+
+	public List<Edge> getEdges(int state) {
+		return getIncidentEdges(state);
+	}
+
     /**
      * The following methods use the edge list getters to return degrees
      */
@@ -296,18 +329,18 @@ public class Node extends GraphElement implements Comparable<Node> {
 	 */
 	public List<Edge> getUnvisitedPaths() {
 		List<Edge> unvisited = new ArrayList<Edge>();
-		for (Edge e : edges) {
+		for (Edge e : incidentEdges) {
 			if (!e.inScope() || e.isDeleted()) {
 				continue;
 			}
 			
 			Node source = e.getSourceNode();
-			Node dest = e.getDestNode();
+			Node target = e.getTargetNode();
 			Node adjacent;
 			if (source.getId() == this.getId()) {
-				adjacent = dest;
+				adjacent = target;
 			} else {
-				if (graphCurrentState.isDirected()) continue;
+				if (algorithmState.isDirected()) continue;
 				adjacent = source;
 			}
 			
@@ -325,18 +358,18 @@ public class Node extends GraphElement implements Comparable<Node> {
 	 */
 	public List<Edge> getVisitedPaths() {
 		List<Edge> visited = new ArrayList<Edge>();
-		for (Edge e : edges) {
+		for (Edge e : incidentEdges) {
 			if (!e.inScope() || e.isDeleted()) {
 				continue;
 			}
 			
 			Node source = e.getSourceNode();
-			Node dest = e.getDestNode();
+			Node target = e.getTargetNode();
 			Node adjacent;
 			if (source.getId() == this.getId()) {
-				adjacent = dest;
+				adjacent = target;
 			} else {
-				if (graphCurrentState.isDirected()) continue;
+				if (algorithmState.isDirected()) continue;
 				adjacent = source;
 			}
 			
@@ -350,18 +383,18 @@ public class Node extends GraphElement implements Comparable<Node> {
 	
 	public List<Node> getUnvisitedAdjacentNodes() {
 		List<Node> nodes = new ArrayList<Node>();
-		for (Edge e : edges) {
+		for (Edge e : incidentEdges) {
 			if (!e.inScope() || e.isDeleted()) {
 				continue;
 			}
 			
 			Node source = e.getSourceNode();
-			Node dest = e.getDestNode();
+			Node target = e.getTargetNode();
 			Node adjacent;
 			if (source.getId() == this.getId()) {
-				adjacent = dest;
+				adjacent = target;
 			} else {
-				if (graphCurrentState.isDirected()) continue;
+				if (algorithmState.isDirected()) continue;
 				adjacent = source;
 			}
 			
@@ -388,479 +421,127 @@ public class Node extends GraphElement implements Comparable<Node> {
 	 */
 	public Node travel(Edge e) {
 		if (e.getSourceNode().equals(this)) {
-			return e.getDestNode();
-		} else if (e.getDestNode().equals(this)){
+			return e.getTargetNode();
+		} else if (e.getTargetNode().equals(this)){
 			return e.getSourceNode();
 		}
 		
 		return null;
 	}
 
-	/**
-	 * @param selected toggles highlighting on the node
-	 */
-	public void setSelected(boolean selected) {
-		NodeState ns = newState();
-		ns.setSelected(selected);
-		addNodeState(ns);
-	}
-
-    public void highlight() {
-        setSelected( true );
-    }
-
-    public void unHighlight() {
-        setSelected( false );
-    }
-
-	public List<Edge> getEdges() {
-		return this.edges;
-	}
-	
-	public void addEdge(Edge _edge) {
-		edges.add(_edge);
-	}
-
-	/**
-	 * @param edges the edges to set
-	 */
-	public void setEdges(List<Edge> edges) {
-		this.edges = edges;
-	}
-
-	/**
-	 * @return the unique ID of the node
-	 */
-	public int getId() {
-		return latestState().getId();
-	}
-	
-	public void setId(int id) {
-		NodeState ns = newState();
-		ns.setId(id);
-		addNodeState(ns);
-	}
-
-	/**
-	 * @return the color of the node stored in six-digit hex representation
-	 */
-	@Override
-	public String getColor() {
-		return latestState().getColor();
-	}
-	
-	@Override
-	public String getColor(int state)
-        {
-            NodeState ns = getLatestValidState(state);
-            return ns==null ? null : ns.getColor();
-        }
-
-	/**
-	 * @param color the color of the node to set, stored in six-digit hex representation
-	 */
-	@Override
-	public void setColor(String color) {
-		NodeState ns = newState();
-		ns.setColor(color);
-		addNodeState(ns);
-	}
-
-	/**
-	 * @return the label
-	 */
-	@Override
-	public String getLabel() {
-		return latestState().getLabel();
-	}
-
-	@Override
-	public String getLabel(int state)
-        {
-            NodeState ns = getLatestValidState(state);
-            return ns==null ? null : ns.getLabel();
-        }
-
-	/**
-	 * @param label the label to set
-	 */
-	@Override
-	public void setLabel(String label) {
-		NodeState ns = newState();
-		ns.setLabel(label);
-		addNodeState(ns);
-	}
-
-    /**
-     * @return true if the node has a label in the current state
-     */
-    public boolean hasLabel() {
-        return latestState().hasLabel();
-    }
-
-    /**
-     * @return true if this node had a non-empty label at the given state
-     */
-    @Override
-        public boolean hasLabel(int state)
-        {
-            NodeState ns = getLatestValidState(state);
-            return ns == null ? false : ns.hasLabel();
-        }
-
-	/**
-	 * Postcondition: hasLabel() == false
-	 */
-	@Override
-        public void clearLabel() {
-		NodeState ns = newState();
-		ns.clearLabel();
-		addNodeState(ns);
-	}
-	
-	public boolean isCreated(int state)
-    {
-		NodeState ns = getLatestValidState(state);
-		return (ns != null);
-	}
-	
-	public boolean isDeleted() {
-		return latestState().isDeleted();
-	}
-	
-	public boolean isDeleted(int state)
-    {
-		NodeState ns = getLatestValidState(state);
-		return ns==null ? false : ns.isDeleted();
-	}
-
-	public void setDeleted(boolean deleted) {
-		NodeState ns = newState();
-		ns.setDeleted(deleted);
-		addNodeState(ns);
-	}
-	
-    /**
-     * The methods getPosition() and setPosition() are intended for use by
-     * the creator of an algorithm to, for example, exchange positions of
-     * nodes during sorting or a crossing minimization algorithm. Once
-     * setPosition() is invoked for a node it is no longer possible for the
-     * user to change the position of that node via mouse dragging.
-     */
-	
-	public Point getPosition() {
-		return latestState().getPosition();
-	}
-
-	public Point getPosition(int state)
-    {
-		NodeState ns = getLatestValidState(state);
-		return ns==null ? null : ns.getPosition();
-    }
-
-	public int getX() {
-		return latestState().getPosition().x;
-	}
-
-	public int getX(int state)
-    {
-		NodeState ns = getLatestValidState(state);
-		return ns==null ? null : ns.getPosition().x;
-    }
-
-	public int getY() {
-		return latestState().getPosition().y;
-	}
-
-	public int getY(int state)
-    {
-		NodeState ns = getLatestValidState(state);
-		return ns==null ? null : ns.getPosition().y;
-    }
-
-	public void setPosition(Point position) {
-        LogHelper.enterMethod( getClass(), "setPosition: " + position 
-                               + "\n node = " + this );
-		NodeState ns = newState();
-        ns.setPosition( position );
-        addNodeState(ns);
-        LogHelper.exitMethod( getClass(), "setPosition"
-                              + "\n node = " + this );
-	}
-	
-	public void setPosition(int x, int y) {
-		NodeState ns = newState();
-        ns.setPosition( new Point( x, y ) );
-        addNodeState(ns);
- 	}
-
-    public void setX( int x ) {
-		NodeState ns = newState();
-        ns.setX( x );
-        addNodeState(ns);
-    }        
-	
-    public void setY( int y ) {
-		NodeState ns = newState();
-        ns.setY( y );
-        addNodeState(ns);
-    }        
-	
     /**
      * The fixed versions, getFixedPosition() and setFixedPosition() are used
      * within the Galant software to access/modify positions of nodes during
      * parsing of GraphML input, in response to mouse dragging, or when the
      * force directed heuristic is applied to reposition nodes. During
-     * execution of an algorithm, a node can only be moved by dragging if algorithm don't
-     * move node.
+     * execution of an algorithm, a position set by the algorithm takes
+     * precedence, i.e., a node moved by the algorithm can no longer be moved
+     * via dragging. However, any node that is *not* moved by the algorithm
+     * *can* still be moved by the user.
+     *
+     * The "right way to handle this is to have the algorithm declare whether
+     * or not it intends to move nodes -- the hook for that is already there
+     * -- and use this information to allow arbitrary position changes by the
+     * user during execution *unless* the algorithm wants to make them. In
+     * the latter case, the user is prevented from changing position. 
      */
-    public Point getFixedPosition() {
-        return position;
+
+    private static final int INITIAL_STATE = GraphState.GRAPH_START_STATE;
+
+    public Integer getFixedX() {
+        return xCoordinate;
     }
 
-  /**
-   * This method set state dependent positions and the position associated with node itself.
-   * Ideally, setFixedPosition should only set the position associate with node itself.
-   * However, since the drawNode() method in GraphPanel.java drawing nodes based on its state
-   * dependent position, in order to make dragging works during algorithm execution, all kinds of
-   * positions of nodes need to be updated.
-   * @param position new position to be updated   
-   */
+    public Integer getFixedY() {
+        return yCoordinate;
+    }
+
+    public Point getFixedPosition() {
+        return new Point(getFixedX(), getFixedY());
+    }
+
 	public void setFixedPosition(Point position) {
         LogHelper.enterMethod( getClass(), "setFixedPosition: " + position 
                                + "\n node = " + this );
-		this.position = position;
-        for (int i=nodeStates.size()-1; i >= 0; i--) {
-			      NodeState ns = nodeStates.get(i);
-			      ns.setPosition( position );
-		    }
+        setFixedPosition(position.x, position.y);
         LogHelper.exitMethod( getClass(), "setFixedPosition"
                               + "\n node = " + this );
 	}
 	
 	public void setFixedPosition(int x, int y) {
-		Point p = new Point(x, y);
-		this.position = p;
-        for (int i=nodeStates.size()-1; i >= 0; i--) {
-			      NodeState ns = nodeStates.get(i);
-			  ns.setPosition( p );
-		    }
-	}
-	
-    /**
-     * The following have been added for layered graphs. The value -1 is used
-     * to denote that the attribute has not been set.
-     * @todo See comment in GraphMLParser for more
-     */
-    private int layer = -1;
-    private int positionInLayer = -1;
-
-    public int getLayer() { 
-        return latestState().getLayer();
-    }
-    public int getLayer( int state )
-    { 
-		NodeState ns = getLatestValidState(state);
-		return ns==null ? null : ns.getLayer();
-    }
-    public int getPositionInLayer() {
-        return latestState().getPositionInLayer();
-    }
-    public int getPositionInLayer( int state )
-    { 
-		NodeState ns = getLatestValidState(state);
-		return ns==null ? null : ns.getPositionInLayer();
-    }
-    public void setLayer( int layer ) {
-		NodeState ns = newState();
-        ns.setLayer( layer );
-        addNodeState(ns);
-    }
-    public void setPositionInLayer( int positionInLayer ) { 
-		NodeState ns = newState();
-        ns.setPositionInLayer( positionInLayer );
-        addNodeState(ns);
-    }
-
-    /**
-     * The following allow the addition of arbitrary logical attributes for
-     * nodes and edges.
-     */
-	public void setStringAttribute(String key, String value) {
-		attributes.put(key, value);
-	}
-	public String getStringAttribute(String key) {
-		Object o = attributes.get(key);
-		
-		if (o != null && String.class.isInstance(o)) {
-			return (String) o;
-		}
-		
-		return null;
-	}
-	
-	public void setIntegerAttribute(String key, Integer value) {
-		attributes.put(key, value);
-	}
-	public Integer getIntegerAttribute(String key) {
-		Object o = attributes.get(key);
-		
-		if (o != null && Integer.class.isInstance(o)) {
-			return (Integer) o;
-		}
-		
-		return null;
-	}
-	
-	public void setDoubleAttribute(String key, Double value) {
-		attributes.put(key, value);
-	}
-	public Double getDoubleAttribute(String key) {
-		Object o = attributes.get(key);
-		
-		if (o != null && Double.class.isInstance(o)) {
-			return (Double) o;
-		}
-		
-		return null;
-	}
-	
-	private NodeState newState() {
-		graphCurrentState.incrementState();
-		NodeState latest = latestState();
-		NodeState ns = new NodeState ( latest, this.graphCurrentState );
-		
-        LogHelper.logDebug( "newState (node) = " + ns );
-		return ns;
+        LogHelper.enterMethod( getClass(), "setFixedPosition: x = " + x
+                               + ", y = " + y
+                               + "\n node = " + this );
+        xCoordinate = x;
+        yCoordinate = y;
+        // note: use of super.attributes.set() avoids state change
+        if ( getX() == null ) super.attributes.set("x", x);
+        if ( getY() == null ) super.attributes.set("y", y);
+        LogHelper.exitMethod( getClass(), "setFixedPosition"
+                              + "\n node = " + this );
 	}
 
-    private NodeState getInitialState() {
-        return nodeStates.get(0);
-    }
-	
-	private NodeState latestState() {
-		return nodeStates.get(nodeStates.size()-1);
-	}
-	
-    /**
-     * This method is vital for retrieving the most recent information about
-     * a node, where most recent is defined relative to a given time stamp,
-     * as defined by forward and backward stepping through the animation.
-     * @param stateNumber the numerical indicator (timestamp) of a state,
-     * usually the current one in the animation
-     * @return the latest instance of NodeState that was created before the
-     * given time stamp, or null if the node did not exist before the time
-     * stamp.
-     */
-	public NodeState getLatestValidState( int stateNumber )
-    {
-		for ( int i = nodeStates.size() - 1; i >= 0; i-- ) {
-			NodeState ns = nodeStates.get(i);
-			if ( ns.getState() <= stateNumber ) {
-				return ns;
-			}
-		}
-		
-        return null;
-	}
-	
-	
-	private void addNodeState(NodeState n) {
-		for (int i=nodeStates.size()-1; i >= 0; i--) {
-			NodeState ns = nodeStates.get(i);
-			if (ns.getState() == n.getState()) {
-				nodeStates.set(i, n);
-				return;
-			}
-		}
-		
-		nodeStates.add(n);
-				
-		n.graphState.pauseExecution();
-		
-
-	}
-	
-	public static Point genRandomPosition() {
+    public static Point genRandomPosition() {
 		Random r = new Random();
-		int x = r.nextInt( GraphDispatch.getInstance().getWindowWidth() );
-		int y = r.nextInt( GraphDispatch.getInstance().getWindowHeight() );
-		return new Point(x,y);
+		int x = r.nextInt(GraphDispatch.getInstance().getWindowWidth());
+		int y = r.nextInt(GraphDispatch.getInstance().getWindowHeight());
+		return new Point(x, y);
 	}
-	
 
     /**
-     * This version is called when the graph window editor pushes changes to
-     * the text editor and at various other points.
+     * This version is used after the graph is originally read or when it is
+     * refreshed during editing. Also when saved to a file.
      *
-     * @todo perhaps need some way to distinguish between the text window
-     * function and others such as debugging
-     *
-     * @todo both toString() methods need to be fixed so that they write only
-     * the attributes that are actually present.
+     * @todo Leads to complaint of x already been specified. If you omit the
+     * printing of x and y, nodes that were not moved during the algorithm
+     * execution end up in random positions when the algorithm quits.
      */
-	@Override
-	public String toString() {
-		double weight = this.getWeight();
-		String label = "";
-		if (this.getLabel() != null) {
-			label = this.getLabel();
-		}
-		
-		String s = "<node"
-            + " id=\"" + this.getId() + "\""
-            + " weight=\"" + weight + "\""
-            + " label=\"" + label + "\""
-            + " x=\"" + this.position.x + "\""
-            + " y=\"" + this.position.y + "\""
-            + " color=\"" + this.getColor() + "\"";
-        /**
-         * @todo Need to decide whether to include ...
-         *    + "\" highlighted=\"" + this.isSelected() + "\" />";
-         * It might make a lot of sense for exports
-         */
-        if ( GraphDispatch.getInstance().getWorkingGraph().isLayered() ) {
-            s = s 
-                + " layer=\"" + this.getLayer() + "\""
-                + " positionInLayer=\"" + this.getPositionInLayer() + "\"";
-        }
+    @Override
+	public String toString()
+    {
+        /* The code that follows has the undesirable effect of making new
+         * nodes disappear when algorithm execution is complete. One might
+         * consider this a feature - graph reverts to original state after
+         * execution; if user wants to preserve intermediate state, they
+         * export during execution (or save) */
+//         if ( ! inScope(GraphState.GRAPH_START_STATE) ) {
+//             return "";
+//         }
+        String s = "<node" + " id=\"" + this.getId() + "\"";
+        s += " x=\"" + this.getFixedX() + "\"";
+        s += " y=\"" + this.getFixedY() + "\" ";
+        Integer savedX = super.attributes.getInteger("x");
+        Integer savedY = super.attributes.getInteger("y");
+        super.attributes.remove("x");
+        super.attributes.remove("y");
+        s += super.toString();
+        super.attributes.set("x", savedX);
+        super.attributes.set("y", savedY);
         s += " />";
 		return s;
 	}
-	
+
     /**
      * This version is called when the current state of the animation is
      * exported.
      */
-	public String toString(int state)
-    {
+    @Override
+	public String toString(int state) {
         if ( ! inScope(state) ) {
             return "";
         }
-
-        NodeState ns = getLatestValidState( state );
-
-        String s = "<node" + " id=\"" + this.getId() + "\""
-            + " weight=\"" + ns.getWeight() + "\""
-            + " label=\"" + ns.getLabel() + "\""
-            + " x=\"" + ns.getPosition().x + "\""
-            + " y=\"" + ns.getPosition().y + "\""
-            + " color=\"" + ns.getColor() + "\"";
-        
-        if ( GraphDispatch.getInstance().getWorkingGraph().isLayered() )
-            s = s 
-                + " layer=\"" + ns.getLayer() + "\""
-                + " positionInLayer=\"" + ns.getPositionInLayer() + "\"";
-        s += " />";
-        return s;
+        String s = "<node" + " id=\"" + this.getId() + "\"";
+        s += super.toString(state);
+        s += "/>";
+		return s;
 	}
 
 	@Override
-	public int compareTo(Node n) {
+	public int compareTo(Node other) {
         Double thisDouble = new Double( this.getWeight() );
-        Double otherDouble = new Double( n.getWeight() );
+        Double otherDouble = new Double( other.getWeight() );
 		return thisDouble.compareTo( otherDouble );
 	}
 }
 
-//  [Last modified: 2015 07 28 at 14:39:55 GMT]
+//  [Last modified: 2015 08 11 at 11:40:36 GMT]

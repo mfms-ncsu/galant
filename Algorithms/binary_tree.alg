@@ -22,9 +22,8 @@ function Node createTree( int tree_height,
                           int local_width, int local_height ) {
 
     beginStep();
-    Node root = addNode();
-    root.setPosition( new Point( root_x, root_y ) );
-    root.setSelected( true );
+    Node root = addNode(root_x, root_y);
+    root.highlight();
     endStep();
 
     if ( tree_height == 1 ) return root;
@@ -36,14 +35,14 @@ function Node createTree( int tree_height,
                              root_x + local_width / 2, root_y + local_height,
                              local_width / 2, local_height );
     beginStep();
-    addEdge( root, left );
-    addEdge( root, right );
-    // Edge left_edge = addEdge( root, left );
-    // Edge right_edge = addEdge( root, right );
-    // left_edge.setSelected( true );
-    // right_edge.setSelected( true );
-    root.setVisited( true );
+    Edge left_edge = addEdge( root, left );
+    left_edge.setSelected( true );
     endStep();
+    beginStep();
+    Edge right_edge = addEdge( root, right );
+    right_edge.setSelected( true );
+    endStep();
+    root.mark();
     return root;
 }
 
@@ -53,4 +52,4 @@ algorithm {
 	Node root = createTree( TREE_HEIGHT, width / 2, padding, width / 2, padding );
 }	
 
-//  [Last modified: 2014 04 04 at 21:19:10 GMT]
+//  [Last modified: 2015 08 11 at 18:02:56 GMT]

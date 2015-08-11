@@ -1,0 +1,40 @@
+Current Galant bugs and features:
+
+Features:
+—————————-
+
+- an array with node or edge indices can now be handled as follows:
+	type A[] = new type[nodeIds()]  // allocates enough space for largest id
+        type x = A[id(n)]               // access element corresponding to node n
+Here A is an array of elements of the given type
+
+
+Either Feature or Bug:
+—————————————————————— 
+
+- if user creates a node using ctrl-n while in create edge mode, the node is created with an edge attached to it
+
+- binary tree algorithm, or any other algorithm that creates nodes and does not declare node movement allows users to move nodes and to save the new positions via export
+[this has been fixed; turns out it happened only when binary_tree was preceded by an algorithm that moves nodes; now algorithmMovesNodes is initialized to false by algorithm initialize() method and user movement is allowed; graph stays in position set by user]
+
+- attempt to delete an edge via del-e when no edge exists with the given endpoints does not result in any error or warning.
+
+- modes are annoying; if you happen to be in add node, add edge, or, worse, delete mode, you can easily forget and accidentally do something unintended; editing needs to be mode free; the best way to do this is to emulate the keyboard shortcuts via mouse "commands", i.e., use the shift and/or ctrl keys along with mouse clicks
+
+- boolean values default to false if they're missing; might have unintended side effects
+
+Bugs:
+————-
+
+- display states keep incrementing after algorithm is through running even though the forward button is greyed out; probably an easy fix
+
+- layered graph algorithms barycenter and mce get into busy wait loops after a few steps; I’m guessing it’s at the point where they move nodes; there is likely to be a serious conflict between positions as determined by x and y coordinates and those determined by layer and positionInLayer
+
+- getDestNode(() should not have been eliminated entirely; also, all method calls of the form element.method() should have an algorithm call of the form method(element)
+
+- syntax highlighting for algorithm methods needs to be updated
+
+- attributes other than the essential ones go away if any editing takes place; need to examine what happens when the dispatcher pushes changes
+
+- id's, sources, and targets for edges end up being duplicated when a graph is exported during execution
+

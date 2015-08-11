@@ -877,7 +877,7 @@ public class LayeredGraph {
      */
     public void resetNodeWeights( int i ) {
         for ( Node v: getLayer( i ) ) {
-            v.setWeight( 0 );
+            v.setWeight(0.0);
         }
     }
 
@@ -1250,7 +1250,7 @@ public class LayeredGraph {
         int maxCrossings = Integer.MIN_VALUE;
         for ( Edge e: graph.getEdges() ) {
             if ( ( ! isMarked[ e.getSourceNode().getId() ]
-                   || ! isMarked[ e.getDestNode().getId() ] )
+                   || ! isMarked[ e.getTargetNode().getId() ] )
                  && crossingsOfEdge[ e.getId() ] > maxCrossings ) {
                 maxEdge = e;
                 maxCrossings = crossingsOfEdge[ e.getId() ];
@@ -1284,7 +1284,7 @@ public class LayeredGraph {
             LogHelper.logDebug( "    e = " + e );
             LogHelper.logDebug( "    maxEdge = " + maxEdge );
             if ( ( ! isMarked[ e.getSourceNode().getId() ]
-                   || ! isMarked[ e.getDestNode().getId() ] )
+                   || ! isMarked[ e.getTargetNode().getId() ] )
                  && crossingsOfEdge[ e.getId() ] > maxCrossings ) {
                 maxEdgeIndex = i;
                 maxEdge = e;
@@ -1362,8 +1362,8 @@ public class LayeredGraph {
             Edge toBeInserted = edgeList.get(i);
             int j = i - 1;
             while ( j >= 0
-                    && ( getPosition( edgeList.get(j).getDestNode() )
-                         > getPosition( toBeInserted.getDestNode() ) ) ) {
+                    && ( getPosition( edgeList.get(j).getTargetNode() )
+                         > getPosition( toBeInserted.getTargetNode() ) ) ) {
                 updateEdgeCrossings( edgeList.get(j), toBeInserted, diff );
                 edgeList.set( j + 1, edgeList.get(j) );
                 j--;
@@ -1404,8 +1404,8 @@ public class LayeredGraph {
         ArrayList<Edge> outgoingEdges = new ArrayList<Edge>();
         List<Edge> leftNodeEdges = leftNode.getOutgoingEdges();
         List<Edge> rightNodeEdges = rightNode.getOutgoingEdges();
-        sortByDestPosition( leftNodeEdges );
-        sortByDestPosition( rightNodeEdges );
+        sortByTargetPosition( leftNodeEdges );
+        sortByTargetPosition( rightNodeEdges );
         outgoingEdges.addAll( leftNodeEdges );
         outgoingEdges.addAll( rightNodeEdges );
         return outgoingEdges;
@@ -1485,7 +1485,7 @@ public class LayeredGraph {
         ArrayList<Edge> channelEdges = new ArrayList<Edge>();
         for ( Node v: getLayer( sourceLayer ) ) {
             List<Edge> outgoingEdges = v.getOutgoingEdges();
-            sortByDestPosition( outgoingEdges );
+            sortByTargetPosition( outgoingEdges );
             for ( Edge e: outgoingEdges ) {
                 crossingsOfEdge[ e.getId() ] = 0;
                 insertAndUpdateCrossings( e, channelEdges );
@@ -1507,13 +1507,13 @@ public class LayeredGraph {
     /**
      * Sorts the edges in the list by their destination positions
      */
-    void sortByDestPosition( List<Edge> edgeList ) {
+    void sortByTargetPosition( List<Edge> edgeList ) {
         for ( int i = 1; i < edgeList.size(); i++ ) {
             Edge e = edgeList.remove( i );
             int j = i - 1;
-            int destPosition = positionOfNode[ e.getDestNode().getId() ];
+            int targetPosition = positionOfNode[ e.getTargetNode().getId() ];
             while ( j >= 0
-                    && destPosition < positionOfNode[ edgeList.get( j ).getDestNode().getId() ] ) {
+                    && targetPosition < positionOfNode[ edgeList.get( j ).getTargetNode().getId() ] ) {
                 j--;
             }
             edgeList.add( j + 1, e );
@@ -1548,9 +1548,9 @@ public class LayeredGraph {
      */
     void insertAndUpdateCrossings( Edge e, List<Edge> edgeList ) {
         int index = edgeList.size() - 1;
-        int destPosition = positionOfNode[ e.getDestNode().getId() ];
+        int targetPosition = positionOfNode[ e.getTargetNode().getId() ];
         while ( index >= 0
-                && destPosition < positionOfNode[ edgeList.get( index ).getDestNode().getId() ] ) {
+                && targetPosition < positionOfNode[ edgeList.get( index ).getTargetNode().getId() ] ) {
             crossingsOfEdge[ e.getId() ]++;
             crossingsOfEdge[ edgeList.get( index ).getId() ]++;
             index--;
@@ -1566,7 +1566,7 @@ public class LayeredGraph {
     public void setEdgeWeights() 
     {
         for ( Edge e: graph.getEdges() ) {
-            e.setWeight( crossingsOfEdge[ e.getId() ] );
+            e.setWeight((double) crossingsOfEdge[e.getId()]);
         }
     }
 
@@ -1589,7 +1589,7 @@ public class LayeredGraph {
     List<Integer> getDestinationPositions( List<Edge> edges ) {
         List<Integer> positions = new ArrayList<Integer>();
         for ( Edge e: edges ) {
-            positions.add( positionOfNode[ e.getDestNode().getId() ] );
+            positions.add( positionOfNode[ e.getTargetNode().getId() ] );
         }
         return positions;
     }
@@ -1615,4 +1615,4 @@ public class LayeredGraph {
 
 } // end, class LayeredGraph
 
-//  [Last modified: 2015 07 07 at 14:41:54 GMT]
+//  [Last modified: 2015 07 27 at 13:01:37 GMT]

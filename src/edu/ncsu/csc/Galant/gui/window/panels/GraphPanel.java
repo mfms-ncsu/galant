@@ -24,10 +24,10 @@ import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.GalantPreferences;
 import edu.ncsu.csc.Galant.GraphDispatch;
 import edu.ncsu.csc.Galant.graph.component.Edge;
+import edu.ncsu.csc.Galant.graph.component.Node;
 import edu.ncsu.csc.Galant.graph.component.Graph;
 import edu.ncsu.csc.Galant.graph.component.GraphState;
-import edu.ncsu.csc.Galant.graph.component.Node;
-import edu.ncsu.csc.Galant.graph.component.NodeState;
+import edu.ncsu.csc.Galant.graph.component.GraphElementState;
 import edu.ncsu.csc.Galant.gui.util.guiStepExecutor;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow.GraphDisplays;
@@ -221,7 +221,7 @@ public class GraphPanel extends JPanel{
 	 * @param _dispatch A reference to the GraphDispatch
 	 */
 	public GraphPanel(GraphDispatch _dispatch, GraphWindow a) {
-		LogHelper.enterConstructor(getClass());
+		LogHelper.guiEnterConstructor(getClass());
 		
 		this.dispatch = _dispatch;
 		this.gw = a;
@@ -230,7 +230,7 @@ public class GraphPanel extends JPanel{
 		//this.setMinimumSize(new Dimension(600, 600));
 		
         this.setBackground(Color.WHITE);
-		LogHelper.exitConstructor(getClass());
+		LogHelper.guiExitConstructor(getClass());
 	}
 
 	@Override
@@ -266,8 +266,16 @@ public class GraphPanel extends JPanel{
             }
 		
             if (graph != null) {
-                List<Node> nodes = graph.getNodes(state);
-                List<Edge> edges = graph.getEdges(state);
+                List<Node> nodes = null;
+                List<Edge> edges = null;
+                if ( GraphDispatch.getInstance().isAnimationMode() ) {
+                    nodes = graph.getNodes(state);
+                    edges = graph.getEdges(state);
+                }
+                else {
+                    nodes = graph.getNodes();
+                    edges = graph.getEdges();
+                }
 			
                 // Draw edges first to put them behind nodes
                 for (Edge e : edges) {
@@ -301,17 +309,19 @@ public class GraphPanel extends JPanel{
      * LayeredNode() so that they do the right thing.
      */
     private Point getNodeCenter( Node n ) throws GalantException{
-        LogHelper.enterMethod( getClass(), "getNodeCenter, n = " + n );
+        LogHelper.guiEnterMethod( getClass(), "getNodeCenter, n = " + n );
 
-        // ns is the latest state in the animation if in animation mode
-        NodeState ns = null;
-        if ( dispatch.isAnimationMode() )
-            ns = n.getLatestValidState(state);
+        Point nodeCenter = null;
 
-        Point nodeCenter = n.getFixedPosition();
+        int algorithmState
+            = GraphDispatch.getInstance().getWorkingGraph().getState();
 
-        if ( ns != null ) {
-            nodeCenter = ns.getPosition();
+        if ( dispatch.isAnimationMode()
+             && GraphDispatch.getInstance().algorithmMovesNodes() ) {
+            nodeCenter = n.getPosition(algorithmState);
+        }
+        else {
+            nodeCenter = n.getFixedPosition();
         }
             
         // if graph is layered and node has layer and position in layer
@@ -325,9 +335,7 @@ public class GraphPanel extends JPanel{
         if ( dispatch.getWorkingGraph().isLayered() ) {
             int layer = n.getLayer(); // should not change during an
                                       // animation of a layered graph algorithm
-            int position = n.getPositionInLayer();
-            if ( ns != null )
-                position = ns.getPositionInLayer();
+            int position = n.getPositionInLayer(algorithmState);
             int layerSize
                 = dispatch.getWorkingGraph().numberOfNodesOnLayer( layer );
             int width = dispatch.getWindowWidth();
@@ -338,38 +346,44 @@ public class GraphPanel extends JPanel{
             int layerGap = height / (numberOfLayers + 1);
             int y = (numberOfLayers - n.getLayer()) * layerGap;
             nodeCenter = new Point( x, y );
-            LogHelper.logDebug( " getNodeCenter: layered graph, center = " + nodeCenter );
+            LogHelper.guiLogDebug( " getNodeCenter: layered graph, center = " + nodeCenter );
         }
-        LogHelper.exitMethod( getClass(), "getNodeCenter, nodeCenter = " + nodeCenter );
+        LogHelper.guiExitMethod( getClass(), "getNodeCenter, nodeCenter = " + nodeCenter );
         return nodeCenter;
     }
 	
 	/**
 	 * Draws the specified node and its properties to the screen
-   * the positions of nodes to be drawn are determined by their state
-   * dependent position, which may not be the best solution since only one
-   * position that going through the algorithm is used if algorithm don't move
-   * nodes in the middle of execution, which is the most usual case.
+     * the positions of nodes to be drawn are determined by their state
+     * dependent position, which may not be the best solution since only one
+     * position that going through the algorithm is used if algorithm don't move
+     * nodes in the middle of execution, which is the most usual case.
 	 * 
 	 * @param n The node to be drawn (assumed to be non-null)
 	 * @param g2d The graphics object used to draw the elements
+     *
+     * @todo Because the class NodeState no longer exists, we have to use
+     * n.hasX(stateNumber) instead of currentState.hasX(), for example. The
+     * former adds a level of indirection. There's probably a way to avoid
+     * this.
 	 */
 	private void drawNode(Node n, Graphics2D g2d)
         throws GalantException
     {
-		NodeState ns = n.getLatestValidState(state);
-        if ( ns == null ) return;
+		GraphElementState currentState = n.getLatestValidState(state);
+        if ( currentState == null ) return;
         Point nodeCenter = getNodeCenter( n );
         if ( nodeCenter == null ) return;
-        LogHelper.logDebug( "drawing node: node = " + n.getId()
+        LogHelper.guiLogDebug( "drawing node: node = " + n.getId()
                             + ", position = " + nodeCenter );
 
+        int stateNumber = currentState.getState();
         g2d.setColor(Color.BLACK);
 		
         // If there is a label and drawing node labels is on, show it
         if ( GraphDisplays.NODE_LABELS.isShown()
-             && ns.hasLabel() ) {
-            String label = ns.getLabel();
+             && n.hasLabel(stateNumber) ) {
+            String label = n.getLabel(stateNumber);
             if ( ! label.trim().equals("") ) {
                 TextLayout layout
                     = new TextLayout( label, NODE_LABEL_FONT,
@@ -399,8 +413,8 @@ public class GraphPanel extends JPanel{
 			
         // If drawing node weights is on, show weight
         if ( GraphDisplays.NODE_WEIGHTS.isShown() 
-             && ns.hasWeight() ) {
-            String weight = doubleToString( ns.getWeight() );
+             && n.hasWeight(stateNumber) ) {
+            String weight = doubleToString(n.getWeight(stateNumber));
             TextLayout layout = new TextLayout( weight, NODE_WEIGHT_FONT,
                                                 g2d.getFontRenderContext() );
             Rectangle2D bounds = layout.getBounds();
@@ -433,6 +447,8 @@ public class GraphPanel extends JPanel{
                                     2 * nodeRadius );
 
         /* draw node interior */
+        LogHelper.guiLogDebug("check if marked: node = " + n);
+        LogHelper.guiLogDebug(" isMarked: state = " + state + ", isMarked = " + n.isMarked(state));
         if ( n.isMarked(state) ) {
             g2d.setColor( Color.LIGHT_GRAY );
         }
@@ -442,18 +458,18 @@ public class GraphPanel extends JPanel{
         g2d.fill( nodeCircle );
 
         /* draw node boundary */
-        if ( ns.isSelected() ) {
+        if ( n.isSelected(stateNumber) ) {
             g2d.setColor( SELECTED_NODE_LINE_COLOR );
             g2d.setStroke( new BasicStroke( highlightWidth ) );
         }
-        else if ( ns.getColor().equals( Graph.NOT_A_COLOR ) ) {
+        else if ( n.getColor(stateNumber) == null ) {
             // no declared color, use default color with default line width 
             g2d.setColor( DEFAULT_COLOR );
             g2d.setStroke( new BasicStroke( lineWidth ) );
         }
         else {
             // color declared, use it and make stroke thicker
-            String nodeColor = ns.getColor();
+            String nodeColor = n.getColor(stateNumber);
             Color c = Color.decode( nodeColor );
             g2d.setColor(c);
             g2d.setStroke( new BasicStroke( highlightWidth ) );
@@ -501,12 +517,12 @@ public class GraphPanel extends JPanel{
 	private void drawEdge(Graph g, Edge e, Graphics2D g2d) 
         throws GalantException
     {
-		
+		LogHelper.enterMethod(getClass(), "drawEdge, edge = " + e);
 		int thickness = lineWidth; 
 		
 		if (e != null) {
-			Node dest = e.getDestNode(state);
-			Node source = e.getSourceNode(state);
+			Node dest = e.getTargetNode();
+			Node source = e.getSourceNode();
             if (dest != null && source != null) {
                 Point p1 = getNodeCenter( source );
                 Point p2 = getNodeCenter( dest );
@@ -528,7 +544,7 @@ public class GraphPanel extends JPanel{
 				
 				//only draw if edge exists at current state
 				if (p1 != null && p2 != null) {
-					
+					LogHelper.logDebug("drawing edge, p1 = " + p1 + ", p2 = " + p2);
 					// Self loop
 					if (dest.equals(source)) {
 						Stroke oldStroke = g2d.getStroke();
@@ -560,7 +576,7 @@ public class GraphPanel extends JPanel{
 				g2d.setColor(Color.BLACK);
 			}
 		}
-		
+		LogHelper.exitMethod(getClass(), "drawEdge, edge = " + e);
 	}
 	
 	/**
@@ -788,13 +804,11 @@ public class GraphPanel extends JPanel{
 		
 		dispatch.getWorkingGraph().getGraphState().setStepComplete(false);
 		if ( ! dispatch.getAlgorithmComplete() ) {
-			//System.out.println("GraphPanel is notifying the worker thread so it will wake up and work.");
 			synchronized(dispatch.getWorkingGraph().getGraphState()){
 				dispatch.getWorkingGraph().getGraphState().notify();
 			}
 			if ( dispatch.getAlgorithmComplete() ) {
 			}
-			//System.out.printf("Algorithm is started");
 		}
         else {
             this.gw.updateStatusLabel("Execution is finished");
@@ -824,7 +838,7 @@ public class GraphPanel extends JPanel{
 	}
 	
 	public void decrementDisplayState() {
-		LogHelper.enterMethod(getClass(), "decrementDisplayState");
+		LogHelper.guiEnterMethod(getClass(), "decrementDisplayState");
 		
 		if (this.state > 1) {
 			this.state--;
@@ -832,7 +846,7 @@ public class GraphPanel extends JPanel{
 		System.out.printf("(-) Decrementing the graph display state: displayState = %d, graphState = %d\n",
                           state, dispatch.getWorkingGraph().getState() );
 		
-		LogHelper.exitMethod(getClass(), "decrementDisplayState");
+		LogHelper.guiExitMethod(getClass(), "decrementDisplayState");
 		
 		/* This is responsible for updating the status label at the top of the Galant screen so that it displays the correct graph state
 		 * This happens whenever the user hits the right arrow key or the right arrow button
@@ -842,20 +856,20 @@ public class GraphPanel extends JPanel{
 	}
 	
 	public int getDisplayState() {
-		LogHelper.enterMethod(getClass(), "getDisplayState");
-		LogHelper.exitMethod(getClass(), "getDisplayState");
+		LogHelper.guiEnterMethod(getClass(), "getDisplayState");
+		LogHelper.guiExitMethod(getClass(), "getDisplayState");
 		return this.state;
 	}
 	
 	public void setDisplayState(int _state) {
-		LogHelper.enterMethod(getClass(), "setDisplayState");
+		LogHelper.guiEnterMethod(getClass(), "setDisplayState");
 		
 		Graph graph = dispatch.getWorkingGraph(); 
 		if (_state > 0 && _state <= graph.getState()) {
 			this.state = _state;
 		}
 		
-		LogHelper.exitMethod(getClass(), "setDisplayState");
+		LogHelper.guiExitMethod(getClass(), "setDisplayState");
 	}
 	
   /**
@@ -868,15 +882,15 @@ public class GraphPanel extends JPanel{
    * @return the selected node, or null if no selected node 
    */
 	public Node selectTopClickedNode(Point p) {
-		LogHelper.enterMethod(getClass(), "selectTopClickedNode");
+		LogHelper.guiEnterMethod(getClass(), "selectTopClickedNode");
 		
 		Graph g = dispatch.getWorkingGraph();
 		
 		Node top = null;
 		
 		for (Node n : g.getNodes()) {
-            LogHelper.logDebug( "next node = " + n.getId() + " position = " + n.getPosition() );
-			if ( p.distance(n.getPosition()) < NODE_SELECTION_RADIUS ) {
+            LogHelper.guiLogDebug( "next node = " + n.getId() + " position = " + n.getFixedPosition() );
+			if ( p.distance(n.getFixedPosition()) < NODE_SELECTION_RADIUS ) {
 				top = n;
 			}
 		}
@@ -886,24 +900,24 @@ public class GraphPanel extends JPanel{
 		
 		selectedEdge = null;
 		
-		LogHelper.exitMethod( getClass(), "selectTopClickedNode, node = "
+		LogHelper.guiExitMethod( getClass(), "selectTopClickedNode, node = "
                               + (selectedNode == null ? "null"
                                  : selectedNode.getId() ) );
 		return top;
 	}
 	
 	public void setSelectedNode(Node n) {
-		LogHelper.enterMethod(getClass(), "setSelectedNode");
+		LogHelper.guiEnterMethod(getClass(), "setSelectedNode");
 		
 		this.previousNode = (n == null) ? null : this.selectedNode;
 		this.selectedNode = n;
 		
-		LogHelper.exitMethod(getClass(), "setSelectedNode");
+		LogHelper.guiExitMethod(getClass(), "setSelectedNode");
 	}
 	
 	public Node getSelectedNode() {
-		LogHelper.enterMethod( getClass(), "getSelectedNode" );
-		LogHelper.exitMethod( getClass(), "getSelectedNode, node = "
+		LogHelper.guiEnterMethod( getClass(), "getSelectedNode" );
+		LogHelper.guiExitMethod( getClass(), "getSelectedNode, node = "
                               + selectedNode );
 		return this.selectedNode;
 	}
@@ -917,7 +931,7 @@ public class GraphPanel extends JPanel{
 	}
 	
 	public Edge selectTopClickedEdge(Point p) {
-		LogHelper.enterMethod(getClass(), "selectTopClickedEdge");
+		LogHelper.guiEnterMethod(getClass(), "selectTopClickedEdge");
 		
 		Graph g = dispatch.getWorkingGraph();
 		
@@ -926,12 +940,12 @@ public class GraphPanel extends JPanel{
 		for (int i=1; i <= EDGE_SELECTION_WIDTH; i++) {
 			double width = i;
 			double centerVal = width/2;
-            LogHelper.logDebug( "centerVal = " + centerVal );
+            LogHelper.guiLogDebug( "centerVal = " + centerVal );
 			Rectangle2D clickArea = new Rectangle2D.Double(p.getX() - centerVal, p.getY() - centerVal - 1, i, i);
 			
             for (Edge e : g.getEdges()) {
                 Point p1 = e.getSourceNode().getFixedPosition();
-                Point p2 = e.getDestNode().getFixedPosition();
+                Point p2 = e.getTargetNode().getFixedPosition();
 
                 Line2D l = new Line2D.Double(p1, p2);
 				
@@ -949,14 +963,14 @@ public class GraphPanel extends JPanel{
 		this.selectedNode = null;
 		this.previousNode = null;
 		
-		LogHelper.exitMethod(getClass(), "selectTopClickedEdge");
+		LogHelper.guiExitMethod(getClass(), "selectTopClickedEdge");
 		return top;
 	}
 	
 	public void setSelectedEdge(Edge e) {
-		LogHelper.enterMethod(getClass(), "setSelectedEdge");
+		LogHelper.guiEnterMethod(getClass(), "setSelectedEdge");
 		this.selectedEdge = e;
-		LogHelper.exitMethod(getClass(), "setSelectedEdge");
+		LogHelper.guiExitMethod(getClass(), "setSelectedEdge");
 	}
 	
 	public void setEdgeTracker(Point p) {
@@ -1011,4 +1025,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2015 07 13 at 18:19:31 GMT]
+//  [Last modified: 2015 08 11 at 19:54:09 GMT]

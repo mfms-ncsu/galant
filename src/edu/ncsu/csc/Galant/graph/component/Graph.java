@@ -78,10 +78,6 @@ public class Graph {
 	
 	public GraphWindow graphWindow;
 
-    /**
-     * The items below are deprecated; all attributes are objects, so we
-     * simply check for null.
-     */
     public final static Double NOT_A_WEIGHT = Double.NaN;
     public final static String NOT_A_LABEL = "";
 
@@ -329,7 +325,7 @@ public class Graph {
 		currentGraphState.setLocked(true);
 		
 		n.setDeleted(true);
-		for (Edge e : n.getIncidentEdges()) {
+		for (Edge e : n.getEdges()) {
 			e.setDeleted(true);
 		}
 		
@@ -507,7 +503,7 @@ public class Graph {
         LogHelper.enterMethod( getClass(), "addNode()" );
 		currentGraphState.incrementState();
         Integer newId = nextNodeId();
-		Node n = new Node(currentGraphState, newId);
+		Node n = new Node(currentGraphState, newId );
 		nodes.add(n);
         nodeById.put( newId, n ); 
 		
@@ -521,8 +517,8 @@ public class Graph {
 	}
 	
 	/**
-	 * Adds a node to the graph during editing.
-	 * @return the added node
+	 * Adds a new <code>Node</code> to the <code>Graph</code> and sets the <code>GraphState</code> to 1.
+	 * @return the added <code>Node</code>
 	 */
 	public Node addInitialNode() {
 		int state = currentGraphState.getState();
@@ -541,9 +537,8 @@ public class Graph {
 	}
 	
 	/**
-	 * Adds a node to the graph during parsing. The node has already been created.
-     *
-     * @todo Not clear why we need to increment state.
+	 * Adds the specified <code>Node</code> and increments the <code>GraphState</code>
+	 * @param n the <code>Node</code> to add
 	 */
 	public void addNode(Node n) {
         LogHelper.enterMethod( getClass(), "addNode: node = " + n.toString() );
@@ -564,17 +559,35 @@ public class Graph {
 	}
 	
 	/**
+	 * Adds the specified <code>Node</code> at the specified index and increments the <code>GraphState</code>
+	 * @param n the <code>Node</code> to add
+	 * @param index the index at which to add the <code>Node</code>
+     * (does not appear to be used)
+	 */
+// 	public void addNode(Node n, int index) {
+// 		currentGraphState.incrementState();
+// 		nodes.add(index, n);
+// 	}
+	
+	/**
 	 * Adds a new <code>Edge</code> to the <code>Graph</code> with the specified source and target <code>Node</code> IDs and increments the <code>GraphState</code>
-	 * Note: for undirected <code>Graph</code>s, "source" and "target" are
-	 * interchangeable.
+	 * Note: for undirected <code>Graph</code>s, "source" and "target" are meaningless.
 	 * @param sourceId the ID of the source <code>Node</code>
 	 * @param targetId the ID of the target <code>Node</code>
-     *
-     * This variant is used during parsing.
 	 */
-	public void addEdge(Edge edge, int id) {
-        edge.setId(id);
-        edges.add(edge);
+	public void addEdge(int sourceId, int targetId) {
+		if (sourceId < nodes.size() && targetId < nodes.size()) {
+			currentGraphState.incrementState();
+			
+			Node source = nodes.get(sourceId);
+			Node target = nodes.get(targetId);
+			
+			Edge e = new Edge(currentGraphState, edges.size(), source, target);
+			
+			//TODO add edge to nodes
+			
+			edges.add(e);
+		}
 	}
 	
 	/**
@@ -583,9 +596,6 @@ public class Graph {
 	 * @param source the source <code>Node</code>
 	 * @param target the target <code>Node</code>
 	 * @return the <code>Edge</code> added
-     *
-     * This variant is used during editing or algorithm execution if the
-     * actual nodes are known.
 	 */
 	public Edge addEdge(Node source, Node target) {	
 		currentGraphState.incrementState();
@@ -600,16 +610,16 @@ public class Graph {
 	}
 	
 	/**
-	 * Adds a new <code>Edge</code> to the <code>Graph</code> with the specified source and target <code>Node</code>s and increments the <code>GraphState</code>
-	 * Note: for undirected</code>Graph</code>s, "source" and "target" are meaningless.
-	 * @param source the source <code>Node</code>
-	 * @param target the target <code>Node</code>
-	 * @return the <code>Edge</code> added
-     *
-     * This variant is used during algorithm execution when only the id's are known.
+	 * Adds the specified <code>Edge</code> to the <code>Graph</code> at the specified index.
+	 * @param e the <code>Edge</code> to add
+	 * @param index the index in the <code>List</code> of <code>Edge</code>s at which to add the <code>Edge</code>
+	 * @return the added <code>Edge</code>
 	 */
-	public Edge addEdge(int sourceId, int targetId) {	
-        return addEdge(getNodeById(sourceId), getNodeById(targetId));
+	public Edge addEdge(Edge e, int index) {
+		currentGraphState.incrementState();
+		edges.add(index, e);
+		
+		return e;
 	}
 	
 	/**
@@ -654,9 +664,9 @@ public class Graph {
 		edges.remove(e);
 		
 		Node source = e.getSourceNode();
-		source.getIncidentEdges().remove(e);		
-		Node dest = e.getTargetNode();
-		dest.getIncidentEdges().remove(e);
+		source.getEdges().remove(e);		
+		Node dest = e.getDestNode();
+		dest.getEdges().remove(e);
 	}
 	
 	/**
@@ -664,7 +674,7 @@ public class Graph {
 	 * @param n the <code>Node</code> to remove
 	 */
 	public void removeNode(Node n) {
-		List<Edge> n_edges = n.getIncidentEdges();
+		List<Edge> n_edges = n.getEdges();
 		
 		currentGraphState.setLocked(true);
 		while (n_edges.size() > 0) {
@@ -673,6 +683,11 @@ public class Graph {
 		}
 
 		nodes.remove(n);
+		
+		for (int i=0; i < this.nodes.size(); i++) {
+			this.nodes.get(i).setId(i);
+		}
+		
 		currentGraphState.setLocked(false);
 	}
 	
@@ -789,4 +804,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2015 07 27 at 18:55:26 GMT]
+//  [Last modified: 2015 05 28 at 15:11:03 GMT]

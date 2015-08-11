@@ -125,9 +125,9 @@ public class ComponentEditPanel extends JPanel {
 			return;
 		} else {
 			this.setVisible(true);
-            //make sure the weight change spinner always gets the first focus
-            //so user can use up/down key to change the weights of nodes or edges
-            weight.requestFocusInWindow();
+      //make sure the weight change spinner always gets the first focus
+      //so user can use up/down key to change the weights of nodes or edges
+      weight.requestFocusInWindow();
 		}
 
 		this.remove(cp);
@@ -141,12 +141,11 @@ public class ComponentEditPanel extends JPanel {
 		}
 		label.setText(text);
 
-		Double wgt = ge.getWeight();
-        if ( wgt == null ) wgt = 0.0;
+		double wgt = ge.getWeight();
 		weight.setValue(wgt);
 	}
 }
 
 
 
-//  [Last modified: 2015 07 27 at 19:08:42 GMT]
+//  [Last modified: 2014 07 08 at 19:13:44 GMT]

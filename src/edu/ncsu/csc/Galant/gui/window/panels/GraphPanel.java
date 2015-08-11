@@ -24,10 +24,10 @@ import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.GalantPreferences;
 import edu.ncsu.csc.Galant.GraphDispatch;
 import edu.ncsu.csc.Galant.graph.component.Edge;
-import edu.ncsu.csc.Galant.graph.component.Node;
 import edu.ncsu.csc.Galant.graph.component.Graph;
 import edu.ncsu.csc.Galant.graph.component.GraphState;
-import edu.ncsu.csc.Galant.graph.component.GraphElementState;
+import edu.ncsu.csc.Galant.graph.component.Node;
+import edu.ncsu.csc.Galant.graph.component.NodeState;
 import edu.ncsu.csc.Galant.gui.util.guiStepExecutor;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow.GraphDisplays;
@@ -304,14 +304,14 @@ public class GraphPanel extends JPanel{
         LogHelper.enterMethod( getClass(), "getNodeCenter, n = " + n );
 
         // ns is the latest state in the animation if in animation mode
-        GraphElementState currentState = null;
+        NodeState ns = null;
         if ( dispatch.isAnimationMode() )
-            currentState = n.getLatestValidState(state);
+            ns = n.getLatestValidState(state);
 
         Point nodeCenter = n.getFixedPosition();
 
-        if ( currentState != null ) {
-            nodeCenter = n.getPosition(currentState.getState());
+        if ( ns != null ) {
+            nodeCenter = ns.getPosition();
         }
             
         // if graph is layered and node has layer and position in layer
@@ -326,8 +326,8 @@ public class GraphPanel extends JPanel{
             int layer = n.getLayer(); // should not change during an
                                       // animation of a layered graph algorithm
             int position = n.getPositionInLayer();
-            if ( currentState != null )
-                position = n.getPositionInLayer(currentState.getState());
+            if ( ns != null )
+                position = ns.getPositionInLayer();
             int layerSize
                 = dispatch.getWorkingGraph().numberOfNodesOnLayer( layer );
             int width = dispatch.getWindowWidth();
@@ -349,29 +349,23 @@ public class GraphPanel extends JPanel{
 	 * 
 	 * @param n The node to be drawn (assumed to be non-null)
 	 * @param g2d The graphics object used to draw the elements
-     *
-     * @todo Because the class NodeState no longer exists, we have to use
-     * n.hasX(stateNumber) instead of currentState.hasX(), for example. The
-     * former adds a level of indirection. There's probably a way to avoid
-     * this.
 	 */
 	private void drawNode(Node n, Graphics2D g2d)
         throws GalantException
     {
-		GraphElementState currentState = n.getLatestValidState(state);
-        if ( currentState == null ) return;
+		NodeState ns = n.getLatestValidState(state);
+        if ( ns == null ) return;
         Point nodeCenter = getNodeCenter( n );
         if ( nodeCenter == null ) return;
         LogHelper.logDebug( "drawing node: node = " + n.getId()
                             + ", position = " + nodeCenter );
 
-        int stateNumber = currentState.getState();
         g2d.setColor(Color.BLACK);
 		
         // If there is a label and drawing node labels is on, show it
         if ( GraphDisplays.NODE_LABELS.isShown()
-             && n.hasLabel(stateNumber) ) {
-            String label = n.getLabel(stateNumber);
+             && ns.hasLabel() ) {
+            String label = ns.getLabel();
             if ( ! label.trim().equals("") ) {
                 TextLayout layout
                     = new TextLayout( label, NODE_LABEL_FONT,
@@ -401,8 +395,8 @@ public class GraphPanel extends JPanel{
 			
         // If drawing node weights is on, show weight
         if ( GraphDisplays.NODE_WEIGHTS.isShown() 
-             && n.hasWeight(stateNumber) ) {
-            String weight = doubleToString(n.getWeight(stateNumber));
+             && ns.hasWeight() ) {
+            String weight = doubleToString( ns.getWeight() );
             TextLayout layout = new TextLayout( weight, NODE_WEIGHT_FONT,
                                                 g2d.getFontRenderContext() );
             Rectangle2D bounds = layout.getBounds();
@@ -435,8 +429,6 @@ public class GraphPanel extends JPanel{
                                     2 * nodeRadius );
 
         /* draw node interior */
-        System.out.println("check if marked: node = " + n);
-        System.out.println(" isMarked: state = " + state + ", isMarked = " + n.isMarked(state));
         if ( n.isMarked(state) ) {
             g2d.setColor( Color.LIGHT_GRAY );
         }
@@ -446,18 +438,18 @@ public class GraphPanel extends JPanel{
         g2d.fill( nodeCircle );
 
         /* draw node boundary */
-        if ( n.isSelected(stateNumber) ) {
+        if ( ns.isSelected() ) {
             g2d.setColor( SELECTED_NODE_LINE_COLOR );
             g2d.setStroke( new BasicStroke( highlightWidth ) );
         }
-        else if ( n.getColor(stateNumber) == null ) {
+        else if ( ns.getColor().equals( Graph.NOT_A_COLOR ) ) {
             // no declared color, use default color with default line width 
             g2d.setColor( DEFAULT_COLOR );
             g2d.setStroke( new BasicStroke( lineWidth ) );
         }
         else {
             // color declared, use it and make stroke thicker
-            String nodeColor = n.getColor(stateNumber);
+            String nodeColor = ns.getColor();
             Color c = Color.decode( nodeColor );
             g2d.setColor(c);
             g2d.setStroke( new BasicStroke( highlightWidth ) );
@@ -509,8 +501,8 @@ public class GraphPanel extends JPanel{
 		int thickness = lineWidth; 
 		
 		if (e != null) {
-			Node dest = e.getTargetNode();
-			Node source = e.getSourceNode();
+			Node dest = e.getDestNode(state);
+			Node source = e.getSourceNode(state);
             if (dest != null && source != null) {
                 Point p1 = getNodeCenter( source );
                 Point p2 = getNodeCenter( dest );
@@ -926,7 +918,7 @@ public class GraphPanel extends JPanel{
 			
             for (Edge e : g.getEdges()) {
                 Point p1 = e.getSourceNode().getFixedPosition();
-                Point p2 = e.getTargetNode().getFixedPosition();
+                Point p2 = e.getDestNode().getFixedPosition();
 
                 Line2D l = new Line2D.Double(p1, p2);
 				
@@ -1006,4 +998,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2015 07 27 at 18:53:58 GMT]
+//  [Last modified: 2015 07 13 at 18:19:31 GMT]

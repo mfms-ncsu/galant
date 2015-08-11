@@ -36,7 +36,10 @@ import org.xml.sax.InputSource;
 
 import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.GraphDispatch;
-import edu.ncsu.csc.Galant.graph.component.*;
+import edu.ncsu.csc.Galant.graph.component.Edge;
+import edu.ncsu.csc.Galant.graph.component.Graph;
+import edu.ncsu.csc.Galant.graph.component.GraphState;
+import edu.ncsu.csc.Galant.graph.component.Node;
 import edu.ncsu.csc.Galant.logging.LogHelper;
 
 /**
@@ -50,7 +53,6 @@ public class GraphMLParser {
 	Graph graph;
 	File graphMLFile;
 	Document document;
-    LogHelper logHelper = LogHelper.getInstance();
 	
 	public GraphMLParser(File graphMLFile) {
 		this.graph = generateGraph(graphMLFile);
@@ -108,38 +110,6 @@ public class GraphMLParser {
 		}
 	}
 	
-    /**
-     * Parses the value stored in the xml node, trying first to interpret it
-     * as an integer, then as a double, then as a boolean, and the leaving it
-     * as a string; the attribute name,value pair is then stored as an
-     * attribute of the graph node. 
-     */
-    private void processAttribute(GraphElement graphElement, org.w3c.dom.Node xmlNode) {
-        String attributeName = xmlNode.getNodeName();
-        String attributeValueString = xmlNode.getTextContent();
-        try {
-            Integer intVal = Integer.parseInt(attributeValueString);
-            graphElement.set(attributeName, intVal);
-        }
-        catch (NumberFormatException intE) {
-            try {
-                Double doubleVal = Double.parseDouble(attributeValueString);
-                graphElement.set(attributeName, doubleVal);
-            }
-            catch (NumberFormatException doubleE) {
-                if ( attributeValueString.equalsIgnoreCase("true") ) {
-                    graphElement.set(attributeName, true);
-                }
-                else if ( attributeValueString.equalsIgnoreCase("false") ) {
-                    graphElement.set(attributeName, false);
-                }
-                else {
-                    graphElement.set(attributeName, attributeValueString);
-                }
-            }
-        }
-    }
-
 	public Graph buildGraphFromInput( DocumentBuilder db ) 
         throws GalantException
     {
@@ -147,16 +117,18 @@ public class GraphMLParser {
 		GraphDispatch dispatch = GraphDispatch.getInstance();
 		
 		//TODO populate Graph g
-		Graph graphUnderConstruction = new Graph();
+		Graph g = new Graph();
 		NodeList nodes;
 		NodeList edges;
 		NodeList graph;
-		GraphState graphState = graphUnderConstruction.getGraphState();
-		graphState.setLocked(true);
+		GraphState gs = g.getGraphState();
+		gs.setLocked(true);
 		nodes = getNodes();
 		edges = getEdges();
 		graph = getGraphNode();
 
+        boolean [] idHasBeenSeen = new boolean[ nodes.getLength() ];
+		
 		NamedNodeMap attributes = graph.item(0).getAttributes(); //only one graph => hardcode 0th index
 
         // the awkward ?: construction is needed because org.w3c.dom.Node
@@ -164,16 +136,16 @@ public class GraphMLParser {
 		String directed = ((attributes.getNamedItem("edgedefault") != null)
                            ? attributes.getNamedItem("edgedefault").getNodeValue()
                            : "undirected");
-		graphUnderConstruction.setDirected(directed.equalsIgnoreCase("directed"));
+		g.setDirected(directed.equalsIgnoreCase("directed"));
 
         String name = (attributes.getNamedItem( "name" ) != null )
             ? attributes.getNamedItem("name").getNodeValue()
             : null;
-        graphUnderConstruction.setName( name );
+        g.setName( name );
         String comment = ( attributes.getNamedItem( "comment" ) != null )
                        ? attributes.getNamedItem("comment").getNodeValue()
                        : null;
-        graphUnderConstruction.setComment( comment );
+        g.setComment( comment );
         String type = ( attributes.getNamedItem( "type" ) != null )
                        ? attributes.getNamedItem("type").getNodeValue()
                        : null;
@@ -181,59 +153,209 @@ public class GraphMLParser {
                        ? attributes.getNamedItem("type").getNodeValue()
                        : null;
         if ( typename != null && typename.equalsIgnoreCase( "layered" ) ) {
-            graphUnderConstruction.setLayered( true );
+            g.setLayered( true );
         }
         else {
-            graphUnderConstruction.setLayered( false );
+            g.setLayered( false );
         }
 		
-        LogHelper.logDebug( "Created new graph:\n" + graphUnderConstruction );
+        LogHelper.logDebug( "Created new graph:\n" + g );
         LogHelper.logDebug( " number of nodes = " + nodes.getLength() );
         LogHelper.logDebug( " number of edges = " + edges.getLength() );
 
+        /** @todo instead of retrieving specific attributes by name, go
+         * through all the attributes and use special handling for the ones
+         * below if and when they occur, setting up default values initially */
+
+        // to ensure that there are no duplicate node id's
+
         LogHelper.beginIndent();
-		for ( int nodeIndex = 0; nodeIndex < nodes.getLength(); nodeIndex++ ) {
-            LogHelper.logDebug( " processing " + nodeIndex + "th node." );
-            org.w3c.dom.Node xmlNode = nodes.item(nodeIndex);
-            Node graphNode = new Node(graphState);
-            NamedNodeMap nodeAttributes = xmlNode.getAttributes();
-            if ( attributes != null ) {
-                for ( int i = 0; i < nodeAttributes.getLength(); i++ ) {
-                    org.w3c.dom.Node attribute = nodeAttributes.item(i);
-                    processAttribute(graphNode, attribute);
-                    logHelper.logDebug("Node attribute " + attribute.getNodeName()
-                                       + ", value = " + attribute.getTextContent());
+		for (int nodeIndex = 0; nodeIndex < nodes.getLength(); nodeIndex++) {
+            LogHelper.logDebug( " processing node " + nodeIndex );
+			attributes = nodes.item(nodeIndex).getAttributes();
+            String idString = ((attributes.getNamedItem("id") != null)
+                               ? attributes.getNamedItem("id").getNodeValue()
+                               : "_");
+            int id = -1;
+            try {
+                id = Integer.parseInt( idString );
+            }
+            catch (NumberFormatException e) {
+                throw new GalantException( e.getMessage()
+                                           + "\n bad node id number "
+                                           + idString,
+                                           e );
+            }
+            if ( g.nodeIdExists( id ) ) {
+                throw new GalantException( "Duplicate id: " + id 
+                                           + "\n when processing nodes"
+                                           + "\n in buildGraphFrom Input");
+            }
+			String color = ((attributes.getNamedItem("color") != null) ? attributes.getNamedItem("color").getNodeValue() : Graph.NOT_A_COLOR );
+			String label = ((attributes.getNamedItem("label") != null) ? attributes.getNamedItem("label").getNodeValue() : Graph.NOT_A_LABEL);
+            String weightString
+                = (attributes.getNamedItem("weight") != null )
+                ? (attributes.getNamedItem("weight").getNodeValue())
+                : null;
+            double weight = Graph.NOT_A_WEIGHT;
+            if ( weightString != null ) { 
+                try {
+                    weight = Double.parseDouble( weightString );
+                }
+                catch (NumberFormatException e) {
+                    weight = Graph.NOT_A_WEIGHT;
                 }
             }
-            graphNode.initializeAfterParsing();
-            LogHelper.logDebug( "adding node " + graphNode );
-            graphUnderConstruction.addNode(graphNode);
+			Boolean highlighted = (attributes.getNamedItem("highlighted") != null) ? Boolean.parseBoolean(attributes.getNamedItem("highlighted").getNodeValue()) : false;
+			
+			Point position = null;
+			if (attributes.getNamedItem("x") != null && attributes.getNamedItem("y") != null) {
+				String sX = attributes.getNamedItem("x").getNodeValue();
+				String sY = attributes.getNamedItem("y").getNodeValue();
+				
+				try {
+					int x = Integer.parseInt(sX);
+					int y = Integer.parseInt(sY);
+					
+					position = new Point(x, y);
+				} catch (Exception e) {
+                    System.out.println( "Warning: "
+                                        + sX + "," + sY
+                                        + "is not a legitimate point.");
+                    System.out.println( "Choosing a random point instead" );
+                    position = Node.genRandomPosition();
+                }
+			}
+            else {
+                position = Node.genRandomPosition();
+            }
+
+            LogHelper.logDebug( "standard attributes set" );
+            LogHelper.logDebug( " id = " + id );
+            LogHelper.logDebug( " color = " + color );
+            LogHelper.logDebug( " weight = " + weight );
+            LogHelper.logDebug( " label = " + label );
+            LogHelper.logDebug( " position = " + position );
+
+            Node n = null;
+
+            /**
+             * Added this for layered graphs.
+             * @todo The right way to do it is to read all named attributes
+             * and do the following with each:
+             * - if it parses as an int, make it an integer attribute
+             * - if it parses as a double, make it a double
+             * - otherwise make it a string
+             */
+            if ( g.isLayered() ) {
+                int layer = 0;
+                int positionInLayer = 0;
+                LogHelper.logDebug( "adding node to layered graph" );
+                try {
+                    if ( attributes.getNamedItem( "layer" ) != null ) {
+                        String layerString
+                            = attributes.getNamedItem( "layer" ).getNodeValue();
+                        layer = Integer.parseInt( layerString );
+                    }
+                    if ( attributes.getNamedItem( "positionInLayer" ) != null ) {
+                        String positionString
+                            = attributes.getNamedItem( "positionInLayer" ).getNodeValue();
+                        positionInLayer = Integer.parseInt( positionString );
+                    }
+
+				
+                    n = new Node(gs, highlighted, false, id, weight, color, label,
+                                 layer, positionInLayer );
+
+				} catch (Exception e) {
+                    System.out.println( "Warning: something went wrong with layering:" );
+                    System.out.println( "" + e );
+                    System.out.println( "Treating as not layered." );
+                    g.setLayered( false );
+                    n = new Node(gs, id, weight, color, label, highlighted, false);
+                }
+
+                LogHelper.logDebug( "done adding node to layered graph: " + n );
+            }
+            else {
+                // not layered
+                n = new Node(gs, id, weight, color, label, highlighted, false);
+            }
+            if (position != null) {
+                n.setFixedPosition(position);
+            }
+            LogHelper.logDebug( "adding node " + n );
+            g.addNode(n);
 		}
         LogHelper.endIndent();
 
-        LogHelper.beginIndent();
-		for ( int nodeIndex = 0; nodeIndex < edges.getLength(); nodeIndex++ ) {
-            LogHelper.logDebug( " processing " + nodeIndex + "th edge." );
-            org.w3c.dom.Node xmlNode = edges.item(nodeIndex);
-            Edge graphEdge = new Edge(graphState);
-            NamedNodeMap edgeAttributes = xmlNode.getAttributes();
-            if ( attributes != null ) {
-                for ( int i = 0; i < edgeAttributes.getLength(); i++ ) {
-                    org.w3c.dom.Node attribute = edgeAttributes.item(i);
-                    processAttribute(graphEdge, attribute);
-                    logHelper.logDebug("Edge attribute " + attribute.getNodeName()
-                                       + ", value = " + attribute.getTextContent());
+		for(int i = 0; i < edges.getLength(); i++) {
+            String sourceString = null; // for exception handling (no longer needed?)
+            String targetString = null;
+            Node source = null;
+            Node target = null;
+            String color = Graph.NOT_A_COLOR;
+            Boolean highlighted = false;
+            double weight = Graph.NOT_A_WEIGHT;
+            String label = Graph.NOT_A_LABEL;
+                
+            attributes = edges.item(i).getAttributes();
+//             try {
+                sourceString
+                    = attributes.getNamedItem("source").getNodeValue();
+                source = g.getNodeById( Integer.parseInt( sourceString ) );
+                if ( source == null ) {
+                    throw new GalantException( "Bad source id " + sourceString );
+                }
+                targetString
+                    = attributes.getNamedItem("target").getNodeValue();
+                target = g.getNodeById( Integer.parseInt( targetString ) );
+                if ( target == null ) {
+                    throw new GalantException( "Bad target id " + targetString );
+                }
+//             }
+//             catch ( Exception e ) {
+//                 throw new GalantException( e.getMessage() + " \n - bad source or target for edge " + i );
+//             }
+                
+            if ( attributes.getNamedItem("color") != null ) {
+                color = attributes.getNamedItem("color").getNodeValue();
+            }
+            if ( attributes.getNamedItem("label") != null ) {
+                label = attributes.getNamedItem("label").getNodeValue();
+            }
+            String highlightedString = null;
+            if ( attributes.getNamedItem("highlighted") != null ) {
+                highlightedString
+                    = attributes.getNamedItem("highlighted").getNodeValue();
+                    
+            }
+            if ( highlightedString != null ) {
+                highlighted = Boolean.parseBoolean( highlightedString );
+            }
+            String weightString = null; 
+            if ( attributes.getNamedItem("weight") != null ) {
+                weightString
+                    = attributes.getNamedItem("weight").getNodeValue();
+            }
+            try {
+                if ( weightString != null ) {
+                    weight = Double.parseDouble( weightString );
                 }
             }
-            graphEdge.initializeAfterParsing();
-            LogHelper.logDebug( "adding edge " + graphEdge );
-            graphUnderConstruction.addEdge(graphEdge, nodeIndex);
-		}
-        LogHelper.endIndent();
+            catch ( Exception e ) {
+                throw new GalantException( e.getMessage() + " \n - bad weight for edge " + i );
+            }
 
-        graphUnderConstruction.getGraphState().setLocked(false);
-        LogHelper.exitMethod( getClass(), "buildGraphFromInput:\n" + graphUnderConstruction );
-        return graphUnderConstruction;
+            Edge e = new Edge(gs, Integer.valueOf(i), source, target, highlighted, weight, color, label);
+            g.addEdge(e);
+            source.addEdge(e);
+            target.addEdge(e);
+            LogHelper.logDebug( "adding edge " + e );
+		} // adding edge
+        g.getGraphState().setLocked(false);
+        LogHelper.exitMethod( getClass(), "buildGraphFromInput:\n" + g );
+        return g;
     } // buildGraphFromInput
 	
     /**
@@ -326,4 +448,4 @@ public class GraphMLParser {
 	
 }
 
-//  [Last modified: 2015 07 27 at 20:19:46 GMT]
+//  [Last modified: 2015 05 31 at 18:33:19 GMT]

@@ -10,5 +10,3 @@ build/
 Sandbox/*
 # Graph-Gallery is used for WTEiR experiments
 Graph-Gallery
-# the doc directory is where javadoc files land
-doc/

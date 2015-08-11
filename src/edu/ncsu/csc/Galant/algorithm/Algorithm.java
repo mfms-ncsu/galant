@@ -222,10 +222,10 @@ public abstract class Algorithm implements Runnable{
 				graph.select(n);
 			}
 
-    /** id does not matter; hence the -1 */
+		/** @see edu.ncsu.csc.Galant.graph.component.Graph#addEdge(int, int) */
 		public void addEdge(int sourceId, int targetId){
-            graph.addEdge(sourceId, targetId);
-        }
+				graph.addEdge(sourceId, targetId);
+			}
 
 		/**
 		 * @see edu.ncsu.csc.Galant.graph.component.Graph#addEdge(edu.ncsu.csc.Galant.graph.component.Node,
@@ -282,4 +282,4 @@ public abstract class Algorithm implements Runnable{
 		public abstract void run();
 	}
 
-//  [Last modified: 2015 07 27 at 15:51:26 GMT]
+//  [Last modified: 2015 07 11 at 15:27:02 GMT]

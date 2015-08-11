@@ -111,6 +111,7 @@ public class CodeIntegrator
 
 				/* Try remove all the comment line*/
 				try {
+					System.out.println("->" + removeAllComment(userCode) + "<-");
 					userCode = removeAllComment(userCode);
 				} catch (IOException e) {
 					throw new MalformedMacroException();

@@ -72,6 +72,7 @@ public abstract class ParameterizedMacro extends Macro
 			}
 
 		@Override
+
 		protected String includeInAlgorithm() {
 			return null;
 		}

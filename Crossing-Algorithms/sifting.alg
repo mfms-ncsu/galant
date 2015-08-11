@@ -15,10 +15,10 @@
 
 import edu.ncsu.csc.Galant.local.LayeredGraph;
 
-int iteration;
-int pass;
-int minCrossings;
-int minIteration;
+int iteration = 1;
+int pass = 1;
+int minCrossings = Integer.MAX_VALUE;
+int minIteration = -1;
 
 LayeredGraph layeredGraph;
 
@@ -158,16 +158,11 @@ function boolean siftDecreasing( List<Node> nodes ) {
 }
 
 algorithm {
-
     setDirected( true );
 
-    iteration = 1;
-    pass = 1;
-    minCrossings = Integer.MAX_VALUE;
-    minIteration = -1;
+    layeredGraph = new LayeredGraph( getGraph() );
 
     beginStep();
-    layeredGraph = new LayeredGraph( getGraph() );
     displayMessage();
     endStep();
 
@@ -203,4 +198,4 @@ algorithm {
 
 }
 
-//  [Last modified: 2015 07 12 at 21:03:48 GMT]
+//  [Last modified: 2015 06 30 at 19:45:05 GMT]

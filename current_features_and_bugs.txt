@@ -15,10 +15,17 @@ Either Feature or Bug:
 - if user creates a node using ctrl-n while in create edge mode, the node is created with an edge attached to it
 
 - binary tree algorithm, or any other algorithm that creates nodes and does not declare node movement allows users to move nodes and to save the new positions via export
+[this has been fixed; turns out it happened only when binary_tree was preceded by an algorithm that moves nodes; now algorithmMovesNodes is initialized to false by algorithm initialize() method and user movement is allowed; graph stays in position set by user]
 
 
 Bugs:
 ————-
 
 - display states keep incrementing after algorithm is through running even though the forward button is greyed out; probably an easy fix
+
+- layered graph algorithms barycenter and mce get into busy wait loops after a few steps; I’m guessing it’s at the point where they move nodes; there is likely to be a serious conflict between positions as determined by x and y coordinates and those determined by layer and positionInLayer
+
+- getDestNode(() should not have been eliminated entirely; also, all method calls of the form element.method() should have an algorithm call of the form method(element)
+
+- syntax highlighting for algorithm methods needs to be updated
 

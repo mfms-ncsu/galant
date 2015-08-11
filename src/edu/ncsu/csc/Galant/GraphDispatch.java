@@ -11,11 +11,16 @@ import edu.ncsu.csc.Galant.gui.window.GraphWindow;
 import edu.ncsu.csc.Galant.logging.LogHelper;
 
 /**
- * Dispatch for managing working graphs in the editor;
- * also used for passing information about window width and height to other
- * classes as appropriate;
- * and for passing information about current mode (animation vs. editing) 
- * @author Jason Cockrell, Ty Devries, Alex McCabe, Michael Owoc
+ * Dispatch for managing working graphs in the editor; also used for passing
+ * information about window width and height to other classes as appropriate;
+ * and for passing information about current mode (animation vs. editing)
+ *
+ * @author Jason Cockrell, Ty Devries, Alex McCabe, Michael Owoc; edited by
+ * Matthias Stallmann, Weijia Li, and Yuang Ni.
+ *
+ * @todo I'm puzzled by the need for getIntance() when there is only one
+ * instance at any given time. Seems like all information should be static
+ * and initialized appropriately when Galant execution begins.
  */
 public class GraphDispatch {
 
@@ -115,6 +120,13 @@ public class GraphDispatch {
 		notifyListeners(ANIMATION_MODE, new Boolean(old), new Boolean(this.animationMode) );
 	}
 
+    /**
+     * @todo algorithmMovesNodes is the only piece of information that is
+     * relevant only during execution and must be initialized (to false) when
+     * an algorithm starts. For now, I've built this into the Algorithm
+     * initialize() method, but it probably should not be a part of
+     * GraphDispatch at all.
+     */
   public boolean algorithmMovesNodes() {
 		return this.algorithmMovesNodes;
 	}
@@ -187,4 +199,4 @@ public class GraphDispatch {
 
 }
 
-//  [Last modified: 2015 07 29 at 12:27:47 GMT]
+//  [Last modified: 2015 08 11 at 14:36:09 GMT]

@@ -128,6 +128,7 @@ public abstract class Algorithm implements Runnable{
 		edgeStack = new EdgeStack();
 		nodePQ = new NodePriorityQueue();
 		edgePQ = new EdgePriorityQueue();
+        GraphDispatch.getInstance().setAlgorithmMovesNodes(false);
     }
 
     /** @see edu.ncsu.csc.Galant.graph.component.Graph */
@@ -318,4 +319,4 @@ public abstract class Algorithm implements Runnable{
 		public abstract void run();
 	}
 
-//  [Last modified: 2015 08 10 at 20:06:59 GMT]
+//  [Last modified: 2015 08 11 at 14:36:53 GMT]

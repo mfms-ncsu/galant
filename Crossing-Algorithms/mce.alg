@@ -112,7 +112,7 @@ algorithm {
             maxCrossingsEdge.highlight();
             iteration++;
             Node v = maxCrossingsEdge.getSourceNode();
-            Node w = maxCrossingsEdge.getDestNode();
+            Node w = maxCrossingsEdge.getTargetNode();
             checkCrossings();
             displayCrossings();
             endStep(); beginStep();

@@ -10,7 +10,22 @@ import java.util.regex.Pattern;
  * The macros used in preprocessing. 
  */
 public class Macros
-	{
+	{	
+		/** 
+		 * <p> Define macro and add it to an array list: MACROS </p>
+		 * 
+		 * <p> Current implementation includes: </p>
+		 * <p> SimpleReplacementMacro "bool" </p>
+		 * <p> FetchingMacro "numOfNodes" <br>
+		 * FetchingMacro "numOfEdges" <br>
+		 * FetchingMacro "nodesList" <br>
+		 * FetchingMacro "edgesList" </p>
+		 * <p>  ParamterizedMacro "for_outgoing"<br>
+		 * ParamterizedMacro "for_incoming"<br>
+		 * ParamterizedMacro "for_adjacent"<br>
+		 * ParamterizedMacro "for_nodes"<br>
+		 * ParamterizedMacro "function (.., ..) {...}"</p>
+		 */
 		public static void macros()
 			{	
 				

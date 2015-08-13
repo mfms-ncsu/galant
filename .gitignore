@@ -4,11 +4,13 @@
 *.~*~
 # stuff in the build directory is the result of compilation
 build/
+# stuff in the doc directory: created when building javadoc
+doc/
 # graphs created on the fly
 *.graphml
 # anything in the Sandbox -- used for trying things out
 Sandbox/*
 # Graph-Gallery is used for WTEiR experiments
 Graph-Gallery
-#the doc directory is where javadoc files land
+# the doc directory is where javadoc files land
 doc/

@@ -30,6 +30,7 @@ import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
+import javax.swing.JOptionPane;
 
 import edu.ncsu.csc.Galant.GraphDispatch;
 import edu.ncsu.csc.Galant.graph.component.Edge;
@@ -42,8 +43,11 @@ import edu.ncsu.csc.Galant.gui.window.panels.ComponentEditPanel;
 import edu.ncsu.csc.Galant.gui.window.panels.GraphPanel;
 import edu.ncsu.csc.Galant.logging.LogHelper;
 import edu.ncsu.csc.Galant.prefs.Preference;
-// for confirmation dialog
-// for confirmation dialog
+import edu.ncsu.csc.Galant.GalantException;
+import edu.ncsu.csc.Galant.gui.util.EdgeEditDialog;
+import edu.ncsu.csc.Galant.gui.util.DeleteNodeDialog;
+import edu.ncsu.csc.Galant.gui.editor.GTabbedPane; // for confirmation dialog
+import edu.ncsu.csc.Galant.gui.editor.GEditorFrame; // for confirmation dialog
 
 /**
  * Window for displaying the <code>Graph</code>, containing all necessary
@@ -800,7 +804,30 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
     static final long DELAY_TIME = 17;
     boolean ctrlPressed = false;
     boolean deletePressed = false;
+    boolean shiftPressed = false;
     @Override
+    /**
+     * This method is called by the current KeyboardFocusManager requesting that
+     * this KeyEventDispatcher dispatch the specified event on its behalf.
+     * This KeyEventDispatcher is free to retarget the event, consume it, dispatch it itself,
+     * or make other changes. This capability is typically used to deliver KeyEvents to Components other
+     * than the focus owner. This can be useful when navigating children of non-focusable Windows in
+     * an accessible environment, for example. Note that if a KeyEventDispatcher dispatches the KeyEvent
+     * itself, it must use redispatchEvent to prevent the current KeyboardFocusManager from recursively 
+     * requesting that this KeyEventDispatcher dispatch the event again.
+     * 
+     * If an implementation of this method returns false, then the KeyEvent is passed to the next
+     * KeyEventDispatcher in the chain, ending with the current KeyboardFocusManager. If an implementation
+     * returns true, the KeyEvent is assumed to have been dispatched (although this need not be the case),
+     * and the current KeyboardFocusManager will take no further action with regard to the KeyEvent.
+     * In such a case, KeyboardFocusManager.dispatchEvent should return true as well. If an implementation
+     * consumes the KeyEvent, but returns false, the consumed event will still be passed to the next
+     * KeyEventDispatcher in the chain. It is important for developers to check whether the KeyEvent has been
+     * consumed before dispatching it to a target. By default, the current KeyboardFocusManager will not
+     * dispatch a consumed KeyEvent.
+     * @param e the KeyEvent to dispatch
+     * @return true if the KeyboardFocusManager should take no further action with regard to the KeyEvent; false otherwise
+     */
     public boolean dispatchKeyEvent(KeyEvent e) {
       //"left" step backward when in animation mode
       if(dispatch.isAnimationMode() && e.getID()==KeyEvent.KEY_PRESSED && e.getKeyCode()==KeyEvent.VK_LEFT){
@@ -846,6 +873,16 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
       // "Ctrl" released
       if(e.getID()==KeyEvent.KEY_RELEASED && e.getKeyCode()==KeyEvent.VK_CONTROL){
         ctrlPressed = false;
+        return true;
+      }
+      // "Shift" pressed
+      if(e.getID()==KeyEvent.KEY_PRESSED && e.getKeyCode()==KeyEvent.VK_SHIFT){
+          shiftPressed = true;
+        return true;
+      }
+      // "Shift" released
+      if(e.getID()==KeyEvent.KEY_RELEASED && e.getKeyCode()==KeyEvent.VK_SHIFT){
+        shiftPressed = false;
         return true;
       }
       // "Delete" pressed
@@ -954,37 +991,29 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
         }
         return true;
       }
-      // "ctrl+l" display labels
+      // "ctrl+l" display node labels "ctrl+L" display edge labels
       if(e.getID()==KeyEvent.KEY_PRESSED && e.getKeyCode()==KeyEvent.VK_L && ctrlPressed){
         synchronized(this){
-          if (nodeLabels.isSelected() && edgeLabels.isSelected()) {
-            GraphDisplays.NODE_LABELS.setShown(false);
-            GraphDisplays.EDGE_LABELS.setShown(false);
-            nodeLabels.setSelected(false);
-            edgeLabels.setSelected(false);
+          if (shiftPressed) {
+            GraphDisplays.EDGE_LABELS.setShown(!edgeLabels.isSelected());
+            edgeLabels.setSelected(!edgeLabels.isSelected());
           } else {
-            GraphDisplays.NODE_LABELS.setShown(true);
-            GraphDisplays.EDGE_LABELS.setShown(true);
-            nodeLabels.setSelected(true);
-            edgeLabels.setSelected(true);
+            GraphDisplays.NODE_LABELS.setShown(!nodeLabels.isSelected());
+            nodeLabels.setSelected(!nodeLabels.isSelected());
           }
           frame.repaint(); 
         }
         return true;
       }
-      // "ctrl+w" display weights
+      // "ctrl+w" display node weights "ctrl+W" display edge weights
       if(e.getID()==KeyEvent.KEY_PRESSED && e.getKeyCode()==KeyEvent.VK_W && ctrlPressed){
         synchronized(this){
-          if (nodeWeights.isSelected() && edgeWeights.isSelected()) {
-            GraphDisplays.NODE_WEIGHTS.setShown(false);
-            GraphDisplays.EDGE_WEIGHTS.setShown(false);
-            nodeWeights.setSelected(false);
-            edgeWeights.setSelected(false);
+          if (shiftPressed) {
+            GraphDisplays.EDGE_WEIGHTS.setShown(!edgeWeights.isSelected());
+            edgeWeights.setSelected(!edgeWeights.isSelected());
           } else {
-            GraphDisplays.NODE_WEIGHTS.setShown(true);
-            GraphDisplays.EDGE_WEIGHTS.setShown(true);
-            nodeWeights.setSelected(true);
-            edgeWeights.setSelected(true);
+            GraphDisplays.NODE_WEIGHTS.setShown(!nodeWeights.isSelected());
+            nodeWeights.setSelected(!nodeWeights.isSelected());
           }
           frame.repaint(); 
         }
@@ -1023,4 +1052,4 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	}
 }
 
-//  [Last modified: 2015 07 16 at 00:53:38 GMT]
+//  [Last modified: 2015 08 13 at 17:38:28 GMT]

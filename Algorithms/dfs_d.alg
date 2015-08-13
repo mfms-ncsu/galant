@@ -15,8 +15,8 @@ int [] discovery;
 int [] finish;
 
 function visit( Node v ) {
-    time++;
-    discovery[ v.getId() ] = time;
+    time = time + 1;
+    discovery[id(v)] = time;
     beginStep();
     v.setLabel( "" + discovery[ v.getId() ] );
     v.setSelected( true );
@@ -39,8 +39,8 @@ function visit( Node v ) {
         }
         endStep();
     }
-    time++;
-    finish[ v.getId() ] = time;
+    time = time + 1;
+    finish[id(v)] = time;
     beginStep();
     v.mark();
     v.setLabel( "" + discovery[ v.getId() ] + "/" + finish[ v.getId() ] );
@@ -49,8 +49,8 @@ function visit( Node v ) {
 
 algorithm {
     time = 0;
-    discovery = new int[ graph.numberOfNodes() ];
-    finish = new int[ graph.numberOfNodes() ];
+    discovery = new int[ graph.nodeIds() ];
+    finish = new int[ graph.nodeIds() ];
 
     setDirected( true );
 
@@ -70,4 +70,4 @@ algorithm {
     }
 }
 
-//  [Last modified: 2015 07 11 at 15:34:18 GMT]
+//  [Last modified: 2015 07 28 at 20:56:44 GMT]

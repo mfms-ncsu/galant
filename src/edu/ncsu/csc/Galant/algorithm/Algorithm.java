@@ -130,10 +130,31 @@ public abstract class Algorithm implements Runnable{
 		edgePQ = new EdgePriorityQueue();
     }
 
-		/** @see edu.ncsu.csc.Galant.graph.component.Graph */
-		public Graph getGraph(){
-				return graph;
-			}
+    /** @see edu.ncsu.csc.Galant.graph.component.Graph */
+    public Graph getGraph() {
+        return graph;
+    }
+
+    /**
+     * The following methods are designed to make convenient graph methods
+     * accessible to the algorithm program. For more details, see the
+     * corresponding methods in class Graph.
+     */
+    public int id(Node n) {
+        return n.getId();
+    }
+
+    public int id(Edge e) {
+        return e.getId();
+    }
+
+    public int nodeIds() {
+        return graph.nodeIds();
+    }
+
+    public int edgeIds() {
+        return graph.edgeIds();
+    }
 
 		/**
 		 * Sets the current <code>Graph</code> to the specified </code>Graph</code>
@@ -282,4 +303,4 @@ public abstract class Algorithm implements Runnable{
 		public abstract void run();
 	}
 
-//  [Last modified: 2015 07 11 at 15:27:02 GMT]
+//  [Last modified: 2015 07 28 at 21:07:28 GMT]

@@ -17,6 +17,7 @@ import edu.ncsu.csc.Galant.logging.LogHelper;
  * @author Michael Owoc
  * @author Ty Devries
  *
+ * @todo For some reason the id of a node changes when another node is deleted.
  */
 public class Node extends GraphElement implements Comparable<Node> {
 	
@@ -610,23 +611,21 @@ public class Node extends GraphElement implements Comparable<Node> {
      * within the Galant software to access/modify positions of nodes during
      * parsing of GraphML input, in response to mouse dragging, or when the
      * force directed heuristic is applied to reposition nodes. During
-     * execution of an algorithm, a position set by the algorithm takes
-     * precedence, i.e., a node moved by the algorithm can no longer be moved
-     * via dragging. However, any node that is *not* moved by the algorithm
-     * *can* still be moved by the user.
-     *
-     * The main issue is that it is desirable not to have a state change when
-     * the position of a node is modified during editing.
-     *
-     * @todo There needs to be a more elegant way to handle this so that, if
-     * an algorithm does not move nodes, the user can move them during
-     * execution.  
+     * execution of an algorithm, a node can only be moved by dragging if algorithm don't
+     * move node.
      */
-
     public Point getFixedPosition() {
         return position;
     }
 
+  /**
+   * This method set state dependent positions and the position associated with node itself.
+   * Ideally, setFixedPosition should only set the position associate with node itself.
+   * However, since the drawNode() method in GraphPanel.java drawing nodes based on its state
+   * dependent position, in order to make dragging works during algorithm execution, all kinds of
+   * positions of nodes need to be updated.
+   * @param position new position to be updated   
+   */
 	public void setFixedPosition(Point position) {
         LogHelper.enterMethod( getClass(), "setFixedPosition: " + position 
                                + "\n node = " + this );
@@ -684,7 +683,7 @@ public class Node extends GraphElement implements Comparable<Node> {
     }
 
     /**
-     * Thefollowing allow the addition of arbitrary logical attributes for
+     * The following allow the addition of arbitrary logical attributes for
      * nodes and edges.
      */
 	public void setStringAttribute(String key, String value) {
@@ -864,4 +863,4 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 }
 
-//  [Last modified: 2015 05 26 at 15:25:57 GMT]
+//  [Last modified: 2015 07 28 at 14:39:55 GMT]

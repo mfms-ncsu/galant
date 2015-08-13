@@ -782,13 +782,13 @@ public class GraphPanel extends JPanel{
 	// MPM: And this is not starting the algorithm, it is allowing the algorithm to advance.
 	public void resumeAlgorithmExecution(){
 		
-		dispatch.getWorkingGraph().getGraphState().setStepComplete(false);
+		dispatch.getInstance().getAlgorithmExecutor().setStepIncomplete();
 		if ( ! dispatch.getAlgorithmComplete() ) {
 			//System.out.println("GraphPanel is notifying the worker thread so it will wake up and work.");
 			synchronized(dispatch.getInstance().getAlgorithmExecutor()){
-				dispatch.getWorkingGraph().getGraphState().notify();
+				dispatch.getInstance().getAlgorithmExecutor().notify();
 			}
-			if ( dispatch.getAlgorithmComplete() ) {
+			if ( dispatch.getInstance().getAlgorithmExecutor().getAlgorithmComplete() ) {
 			}
 			//System.out.printf("Algorithm is started");
 		}
@@ -809,6 +809,7 @@ public class GraphPanel extends JPanel{
                           state, dispatch.getWorkingGraph().getState() );
 		guiStepExecutor t = new guiStepExecutor(this);
 		t.execute();
+		dispatch.getInstance().getAlgorithmExecutor().incrementDisplayState();
 		
 		
 	}
@@ -824,6 +825,7 @@ public class GraphPanel extends JPanel{
 		
 		if (this.state > 1) {
 			this.state--;
+			dispatch.getInstance().getAlgorithmExecutor().decrementDisplayState();
 		}
 		System.out.printf("(-) Decrementing the graph display state: displayState = %d, graphState = %d\n",
                           state, dispatch.getWorkingGraph().getState() );
@@ -833,7 +835,7 @@ public class GraphPanel extends JPanel{
 		/* This is responsible for updating the status label at the top of the Galant screen so that it displays the correct graph state
 		 * This happens whenever the user hits the right arrow key or the right arrow button
 		 */
-		dispatch.getGraphWindow().updateStatusLabel(this.getDisplayState());
+		dispatch.getGraphWindow().updateStatusLabel(dispatch.getInstance().getAlgorithmExecutor().getDisplayState());
 		
 	}
 	

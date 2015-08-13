@@ -64,8 +64,8 @@ public class CodeIntegrator
         /**
          * Here is the real code that appears before and after the algorithm.
          */
-        private static final String REAL_ALGORITHM_HEAD = "initialize();GraphState gs = this.getGraph().getGraphState(); GraphDispatch.getInstance().setAlgorithmComplete(false); synchronized(gs){ try{gs.wait(); } catch (InterruptedException e){e.printStackTrace(System.out); } }";
-        private static final String REAL_ALGORITHM_TAIL = "if(gs.isLocked()) endStep(); GraphDispatch.getInstance().setAlgorithmComplete(true);";
+        private static final String REAL_ALGORITHM_HEAD = "initialize(); AlgorithmExecutor ae = GraphDispatch.getInstance().getAlgorithmExecutor(); GraphState gs = this.getGraph().getGraphState(); ae.setAlgorithmComplete(false); synchronized(ae){ try{ae.wait(); } catch (InterruptedException e){e.printStackTrace(System.out); } }";
+        private static final String REAL_ALGORITHM_TAIL = "if(gs.isLocked()) endStep(); ae.setAlgorithmComplete(true);";
 
 		// The basic class structure into which the user's code can be inserted so it can be
 		// compiled.
@@ -82,6 +82,7 @@ public class CodeIntegrator
 			"import edu.ncsu.csc.Galant.algorithm.code.macro.Pair;" +
             "import edu.ncsu.csc.Galant.GalantException;" +
             "import edu.ncsu.csc.Galant.GraphDispatch;" +
+            "import edu.ncsu.csc.Galant.algorithm.AlgorithmExecutor" +
 			IMPORTS_FIELD +
 			"public class " + NAME_FIELD + " extends Algorithm" + "{" + CODE_FIELD + "}";
 

@@ -185,6 +185,9 @@ public class Macros
 						}
 				});
 				
+				/**
+				 * This macro has been deprecated; can be re-instated if desired but support not required or necessary
+				 */
 				/*
 				 * initializationComplete(); : marks the end of the initialization portion of the algorithm
 				 * Usage:
@@ -194,7 +197,7 @@ public class Macros
 				 * 
 				 * Parameters: none
 				 */
-                //				Macro.MACROS.add(new SimpleReplacementMacro("initializationComplete\\(\\);","gs.setInitializationComplete();"));
+                //				Macro.MACROS.add(new SimpleReplacementMacro("initializationComplete\\(\\);","ae.setInitializationComplete();"));
 				
 
 				Macro.MACROS.add(new ParameterizedMacro(MacroUtil.replaceWhitespace("function (\\S+)?  (\\S+)"), true){

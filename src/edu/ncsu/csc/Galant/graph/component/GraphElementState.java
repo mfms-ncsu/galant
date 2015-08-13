@@ -1,6 +1,7 @@
 package edu.ncsu.csc.Galant.graph.component;
 import java.awt.Point;
 import edu.ncsu.csc.Galant.GraphDispatch; 
+import edu.ncsu.csc.Galant.logging.LogHelper;
 
 /**
  * The state of a GraphElement, used akin to a frame in an animation. As the
@@ -99,6 +100,20 @@ public class GraphElementState {
     public void remove(String key) {
         attributes.remove(key);
     }
-}
  
-//  [Last modified: 2015 07 27 at 18:18:49 GMT]
+    /**
+     * Creates a string that can be used to form the "interior" of a GraphML
+     * representation of this element.
+     */
+    public String toString() {
+        String s = " ";
+        LogHelper.logDebug("GraphElementState toString, attributes = "
+                           + attributes.attributes);
+        for ( Attribute attribute : attributes.getAttributes() ) {
+            s += attribute + " ";
+        }
+        return s;
+    }
+}
+
+//  [Last modified: 2015 08 13 at 01:02:59 GMT]

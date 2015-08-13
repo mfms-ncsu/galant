@@ -15,7 +15,6 @@ import edu.ncsu.csc.Galant.logging.LogHelper;
  *
  */
 public class Edge extends GraphElement implements Comparable<Edge> {
-	private List<EdgeState> edgeStates;
     Integer id;
     Node source;
     Node target;
@@ -67,7 +66,7 @@ public class Edge extends GraphElement implements Comparable<Edge> {
      */
     public void initializeAfterParsing()
     throws GalantException {
-        LogHelper.enterMethod( getClass(), "initializeAfterParsing");
+        LogHelper.enterMethod(getClass(), "initializeAfterParsing");
         super.initializeAfterParsing();
         this.id = getInteger("id");
         if ( id == null ) {
@@ -95,15 +94,16 @@ public class Edge extends GraphElement implements Comparable<Edge> {
         attributes.remove("id");
         attributes.remove("source");
         attributes.remove("target");
+        LogHelper.exitMethod(getClass(), "initializeAfterParsing, edge = "
+                               + this);
     }
 
 	@Override
 	public String toString() {
-        // the following should not be needed, but ...
-        super.attributes.remove("id");
-        super.attributes.remove("source");
-        super.attributes.remove("target");
-        // id may not exist for an edge; not really essential
+        // id may not exist for an edge; not really essential;
+        // inputHasEdgeIds() returns true if they appeared in the input, in
+        // which case they should be rendered in the output as the first
+        // attribute.
         String idComponent = "";
         if ( super.graph.inputHasEdgeIds() )
             idComponent = "id=\"" + this.id + "\"";
@@ -126,15 +126,10 @@ public class Edge extends GraphElement implements Comparable<Edge> {
         if ( ! inScope(state) ) {
             return "";
         }
-        // id may not exist for an edge; not really essential
-//         String idComponent = (id == null) ? "" : "id=\"" + this.getId() + "\"";
-        // the following should not be needed, but ...
-        super.attributes.remove("id");
-        super.attributes.remove("source");
-        super.attributes.remove("target");
-        String idComponent = "";
+        // id may not exist for an edge; not really essential; no id added to
+        // the output regardless of whether it existed in the input -- we're
+        // not attempting to be faithful to the input.
 		String s = "<edge "
-            + idComponent
             + " source=\"" + this.source.getId() + "\""
             + " target=\"" + this.target.getId() + "\"";
         s += super.toString(state);
@@ -150,4 +145,4 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 	}
 }
 
-//  [Last modified: 2015 08 12 at 01:26:50 GMT]
+//  [Last modified: 2015 08 13 at 01:17:43 GMT]

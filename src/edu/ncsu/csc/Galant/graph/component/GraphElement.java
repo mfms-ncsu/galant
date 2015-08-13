@@ -65,10 +65,6 @@ public class GraphElement {
         this.graph = graph;
         this.algorithmState = algorithmState;
         this.addState(new GraphElementState(algorithmState, attributes));
-        // need to initialize all Booleans -- they're typically used to check to
-        // existence of some property
-        this.set(DELETED, false);
-        this.set(HIGHLIGHTED, false);
     }
 
     /**
@@ -392,15 +388,10 @@ public class GraphElement {
 
     /**
      * Creates a string that can be used to form the "interior" of a GraphML
-     * representation of this element.
+     * representation of the attributes associated with this state.
      */
     public String toString() {
-        String s = " ";
-        LogHelper.logDebug("GraphElement toString, attributes = " + attributes.attributes);
-        for ( Attribute attribute : attributes.getAttributes() ) {
-            s += attribute + " ";
-        }
-        return s;
+        return latestState().toString();
     }
 
     /**
@@ -409,15 +400,8 @@ public class GraphElement {
      * of the graph in the middle of execution.
      */
     public String toString(int state) {
-        if ( ! inScope(state) ) return "";
-        GraphElementState elementState = getLatestValidState(state);
-        AttributeList stateAttributes = elementState.getAttributes();
-        String s = " "; 
-        for ( Attribute attribute : stateAttributes.getAttributes() ) {
-            s += attribute + " ";
-        }
-        return s;
+        return getLatestValidState(state).toString();
     }
 }
 
-//  [Last modified: 2015 08 12 at 01:50:05 GMT]
+//  [Last modified: 2015 08 13 at 01:06:36 GMT]

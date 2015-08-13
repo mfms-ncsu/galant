@@ -496,25 +496,19 @@ public class Node extends GraphElement implements Comparable<Node> {
     @Override
 	public String toString()
     {
-        /* The code that follows has the undesirable effect of making new
-         * nodes disappear when algorithm execution is complete. One might
-         * consider this a feature - graph reverts to original state after
-         * execution; if user wants to preserve intermediate state, they
-         * export during execution (or save) */
-//         if ( ! inScope(GraphState.GRAPH_START_STATE) ) {
-//             return "";
-//         }
         String s = "<node" + " id=\"" + this.getId() + "\"";
         s += " x=\"" + this.getFixedX() + "\"";
         s += " y=\"" + this.getFixedY() + "\" ";
+        // fixed position is used here so have to remove the state-dependent
+        // position temporarily.
         Integer savedX = super.attributes.getInteger("x");
         Integer savedY = super.attributes.getInteger("y");
-        super.attributes.remove("x");
-        super.attributes.remove("y");
+        super.latestState().remove("x");
+        super.latestState().remove("y");
         LogHelper.logDebug("Node toString: super = " + super.toString());
         s += super.toString();
-        super.attributes.set("x", savedX);
-        super.attributes.set("y", savedY);
+        super.latestState().set("x", savedX);
+        super.latestState().set("y", savedY);
         s += " />";
 		return s;
 	}
@@ -542,4 +536,4 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 }
 
-//  [Last modified: 2015 08 12 at 01:26:56 GMT]
+//  [Last modified: 2015 08 13 at 01:32:44 GMT]

@@ -48,7 +48,7 @@ algorithm {
  for ( Edge e: edgeList ) {
      beginStep();
      Node h = e.getSourceNode();
-     Node t = e.getTargetNode();
+     Node t = e.getDestNode();
      // show e's endpoints as it's being considered
      // marking is used for display purposes only
      h.mark();
@@ -75,4 +75,4 @@ algorithm {
 
  graph.writeMessage( "MST has total weight " + totalWeight );
 }
-/*  [Last modified: 2015 08 07 at 19:42:54 GMT] */
+/*  [Last modified: 2014 05 12 at 16:45:47 GMT] */

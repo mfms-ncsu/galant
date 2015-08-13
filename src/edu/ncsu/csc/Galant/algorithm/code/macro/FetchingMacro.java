@@ -8,7 +8,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import edu.ncsu.csc.Galant.algorithm.code.macro.MacroUtil.IdentifierPartLocation;
 import edu.ncsu.csc.Galant.algorithm.code.macro.MacroUtil.NestedRegexResult;
-import edu.ncsu.csc.Galant.logging.LogHelper;
 
 /**
  * <p>
@@ -55,7 +54,7 @@ public abstract class FetchingMacro extends Macro
 			Matcher matcher = getPattern().matcher(code); 
 				if(matcher.find()) {
 					String originalExpression = matcher.group(0);	
-					LogHelper.logDebug("getVariableName ->" + originalExpression + "<--");
+					System.out.println("for testing ->" + originalExpression + "<--");
 					matcher = Pattern.compile("(\\s)(.*)(\\;)").matcher(originalExpression);
 					try{
 						matcher.find();
@@ -73,5 +72,3 @@ public abstract class FetchingMacro extends Macro
 			return initializationPrefix + getVariableName(code);	
 		}
 	}
-
-//  [Last modified: 2015 07 29 at 12:36:30 GMT]

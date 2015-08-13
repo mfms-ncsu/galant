@@ -128,7 +128,6 @@ public abstract class Algorithm implements Runnable{
 		edgeStack = new EdgeStack();
 		nodePQ = new NodePriorityQueue();
 		edgePQ = new EdgePriorityQueue();
-        GraphDispatch.getInstance().setAlgorithmMovesNodes(false);
     }
 
     /** @see edu.ncsu.csc.Galant.graph.component.Graph */
@@ -175,8 +174,8 @@ public abstract class Algorithm implements Runnable{
 			}
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#addNode() */
-    public Node addNode(Integer x, Integer y){
-        return graph.addNode(x, y);
+		public Node addNode(){
+				return graph.addNode();
 			}
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#isDirected() */
@@ -195,10 +194,6 @@ public abstract class Algorithm implements Runnable{
             return graph.getNodes();
         }
 
-    public Integer numberOfNodes() {
-        return graph.getNodes().size();
-    }
-
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#setNodes(java.util.List) */
 		public void setNodes(List<Node> nodes){
 				graph.setNodes(nodes);
@@ -209,10 +204,6 @@ public abstract class Algorithm implements Runnable{
         {
             return graph.getEdges();
         }
-
-    public Integer numberOfEdges() {
-        return graph.getEdges().size();
-    }
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#setEdges(java.util.List) */
 		public void setEdges(List<Edge> edges){
@@ -252,13 +243,10 @@ public abstract class Algorithm implements Runnable{
 				graph.select(n);
 			}
 
-    /**
-     * adds an edge based on the integer id's of the two endpoints
-     * @see edu.ncsu.csc.Galant.graph.component.Graph#addEdge(int, int)
-     */
+		/** @see edu.ncsu.csc.Galant.graph.component.Graph#addEdge(int, int) */
 		public void addEdge(int sourceId, int targetId){
-            graph.addEdge(sourceId, targetId);
-        }
+				graph.addEdge(sourceId, targetId);
+			}
 
 		/**
 		 * @see edu.ncsu.csc.Galant.graph.component.Graph#addEdge(edu.ncsu.csc.Galant.graph.component.Node,
@@ -266,6 +254,11 @@ public abstract class Algorithm implements Runnable{
 		 */
 		public void addEdge(Node source, Node target){
 				graph.addEdge(source, target);
+			}
+
+		/** @see edu.ncsu.csc.Galant.graph.component.Graph#addEdge(edu.ncsu.csc.Galant.graph.component.Edge) */
+		public void addEdge(Edge e){
+				graph.addEdge(e);
 			}
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#getState() */
@@ -293,13 +286,6 @@ public abstract class Algorithm implements Runnable{
 				graph.smartReposition();
 			}
 
-    /**
-     * used by algorithm to declare that it moves nodes
-     */
-    public void movesNodes() {
-        GraphDispatch.getInstance().setAlgorithmMovesNodes(true);
-    }
-
 		/** @see edu.ncsu.csc.Galant.graph.component.GraphState */
 		public void beginStep(){
 				if(graph.getGraphState().isLocked()) endStep();
@@ -317,4 +303,4 @@ public abstract class Algorithm implements Runnable{
 		public abstract void run();
 	}
 
-//  [Last modified: 2015 08 11 at 19:42:56 GMT]
+//  [Last modified: 2015 07 28 at 21:07:28 GMT]

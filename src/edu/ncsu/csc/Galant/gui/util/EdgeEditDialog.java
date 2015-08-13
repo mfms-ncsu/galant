@@ -143,10 +143,10 @@ public class EdgeEditDialog extends JDialog
                         isInt = false;
                     }
                     Graph g = dispatch.getWorkingGraph();
-                    int numNodes = g.nodeIds();
+                    int numNodes = g.getNodes().size();
+                if (isInt && point1 < numNodes && point2 < numNodes && point1 >= 0 && point2 >= 0) {
                     Node n1 = g.getNodeById(point1);
                     Node n2 = g.getNodeById(point2);
-                    if ( isInt && n1 != null && n2 != null ) {
                     if (mode == GraphMode.CREATE_EDGE) {
                         //create a new edge from point1 to point2
                         Edge edge = g.addInitialEdge(n1, n2);
@@ -163,7 +163,7 @@ public class EdgeEditDialog extends JDialog
                         ArrayList<Edge> edges = new ArrayList<Edge>();
                         if (n1.equals(n2)) {
                             for (Edge e1 : n1.getEdges()) {
-                                if (e1.getSourceNode().equals(e1.getTargetNode())) {
+                                if (e1.getSourceNode().equals(e1.getDestNode())) {
                                     edges.add(e1);
                                 }
 		                        }
@@ -190,7 +190,7 @@ public class EdgeEditDialog extends JDialog
                     point1TextField.selectAll();
                     JOptionPane.showMessageDialog(
                                     EdgeEditDialog.this,
-                                    "Sorry, one of the endpoints does not exist",
+                                    "Sorry, End Point Must Between 0 and " + (numNodes - 1),
                                     "Try again",
                                     JOptionPane.ERROR_MESSAGE);
                     point1Text = null;
@@ -212,5 +212,3 @@ public class EdgeEditDialog extends JDialog
         setVisible(false);
     }
 }
-
-//  [Last modified: 2015 08 11 at 20:40:46 GMT]

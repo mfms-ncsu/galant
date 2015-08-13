@@ -2,19 +2,13 @@ package edu.ncsu.csc.Galant.logging;
 
 /**
  * Debug class for monitoring GALANT's actions
- * @author Michael Owoc, modified by Matthias Stallmann
+ * @author Michael Owoc
  */
 public class LogHelper {
 
     private static final String INDENT_STRING = "..";
 	private static LogHelper logHelper = null;
-	private static boolean loggingEnabled = true;
-    /**
-     * Logging related to the graph panel, i.e., mouse actions and drawing,
-     * clutter the loggin unnecessarily unless they are specifically
-     * desired. - mfms
-     */
-    private static boolean guiLoggingEnabled = false;
+	private static boolean loggingEnabled = false;
     private static boolean savedState = loggingEnabled;
 	
 	private static int spaces = 0;
@@ -38,12 +32,6 @@ public class LogHelper {
         return loggingEnabled;
     }
 
-    /**
-     * Restores the state that existed before the last call to setEnabled,
-     * whether enabled or disabled. This allows for local logging and is, in
-     * fact, necessary for compiler output in the current implementation.
-     * - mfms
-     */
     public static void restoreState() {
         loggingEnabled = savedState;
     }
@@ -51,10 +39,15 @@ public class LogHelper {
 	public static void logDebug(String msg) {
 		int lineCounter = 0;
 		if (loggingEnabled) {
+			/*
+			if (loggingEnabled)
+				System.out.println(spaceString() + msg);
+			*/
+
 			// Split the msg/source code with new line,
 			// then increment line counter
 			for (String line: msg.split("\n")){
-				lineCounter++;
+				lineCounter ++;
          		System.out.println("Line " + lineCounter + ": " + line);
       		}
 		}	
@@ -74,6 +67,20 @@ public class LogHelper {
 		spaces--;
 	}
 	
+	public static void enterConstructor(Class<?> cls, String message) {
+		spaces++;
+		
+		if (loggingEnabled)
+			System.out.println(spaceString() + "=> " + cls.getName() + "(): " + message);
+	}
+	
+	public static void exitConstructor(Class<?> cls, String message) {
+		if (loggingEnabled)
+			System.out.println(spaceString() + "<= " + cls.getName() + "(): " + message);
+		
+		spaces--;
+	}
+	
 	public static void enterMethod(Class<?> cls, String methodName) {
 		spaces++;
 		
@@ -83,46 +90,6 @@ public class LogHelper {
 	
 	public static void exitMethod(Class<?> cls, String methodName) {
 		if (loggingEnabled)
-			System.out.println(spaceString() + "<- " + cls.getName() + "." + methodName);
-		
-		spaces--;
-	}
-	
-	public static void guiLogDebug(String msg) {
-		int lineCounter = 0;
-		if ( guiLoggingEnabled ) {
-			// Split the msg/source code with new line,
-			// then increment line counter
-			for (String line: msg.split("\n")){
-				lineCounter++;
-         		System.out.println("Line " + lineCounter + ": " + line);
-      		}
-		}	
-	}
-	
-	public static void guiEnterConstructor(Class<?> cls) {
-		spaces++;
-		
-		if ( guiLoggingEnabled )
-			System.out.println(spaceString() + "=> " + cls.getName() + "()");
-	}
-	
-	public static void guiExitConstructor(Class<?> cls) {
-		if ( guiLoggingEnabled )
-			System.out.println(spaceString() + "<= " + cls.getName() + "()");
-		
-		spaces--;
-	}
-	
-	public static void guiEnterMethod(Class<?> cls, String methodName) {
-		spaces++;
-		
-		if ( guiLoggingEnabled )
-			System.out.println(spaceString() + "-> " + cls.getName() + "." + methodName);
-	}
-	
-	public static void guiExitMethod(Class<?> cls, String methodName) {
-		if ( guiLoggingEnabled )
 			System.out.println(spaceString() + "<- " + cls.getName() + "." + methodName);
 		
 		spaces--;
@@ -150,4 +117,4 @@ public class LogHelper {
 	}
 }
 
-//  [Last modified: 2015 08 13 at 15:45:54 GMT]
+//  [Last modified: 2015 04 30 at 16:45:15 GMT]

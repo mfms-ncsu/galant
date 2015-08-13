@@ -44,6 +44,7 @@ import edu.ncsu.csc.Galant.graph.component.Edge;
 import edu.ncsu.csc.Galant.graph.component.Graph;
 import edu.ncsu.csc.Galant.graph.component.GraphState;
 import edu.ncsu.csc.Galant.graph.component.Node;
+import edu.ncsu.csc.Galant.graph.component.NodeState;
 import edu.ncsu.csc.Galant.gui.prefs.PreferencesPanel;
 import edu.ncsu.csc.Galant.gui.util.WindowUtil;
 import edu.ncsu.csc.Galant.gui.window.panels.ComponentEditPanel;
@@ -302,7 +303,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                 @Override
                     public void mousePressed(MouseEvent e) {
                         Point location = e.getPoint();
-                        LogHelper.guiLogDebug( "CLICK, location = " + location );
+                        LogHelper.logDebug( "CLICK, location = " + location );
 					
                         prevNode = gp.getSelectedNode();
                         Node n = gp.selectTopClickedNode(location);
@@ -311,11 +312,11 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                 @Override
                     public void mouseReleased(MouseEvent arg0) {       
                         Point location = arg0.getPoint();
-                        LogHelper.guiLogDebug("RELEASE");
-                        LogHelper.guiLogDebug(mode.toString());
+                        LogHelper.logDebug("RELEASE");
+                        LogHelper.logDebug(mode.toString());
 				
                         if ( gp.isDragging() ) {
-                            LogHelper.guiLogDebug( "End of drag: location = " + location );
+                            LogHelper.logDebug( "End of drag: location = " + location );
                             // Finished dragging a node, now reset the
                             // GraphPanel's tracking info
                             gp.setDragging(false);
@@ -352,20 +353,23 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                                  && clickNode == null ) {
                                 // Create a new node if you haven't clicked on
                                 // any existing nodes
-                                LogHelper.guiLogDebug("CREATE NODE");
+                                LogHelper.logDebug("CREATE NODE");
 							
                                 // add a new default node to the working
                                 // graph at this position
 				
                                 Graph g = dispatch.getWorkingGraph();
-                                Node n = g.addInitialNode(location.x, location.y);
+                                Node n = g.addInitialNode();
+                                LogHelper.logDebug( " addInitial: node = " + n );
+                                n.setFixedPosition(location);
+                                LogHelper.logDebug( " setFixedPosition: node = " + n );
 							
                                 // select the new node
                                 Node nNew = gp.selectTopClickedNode(location);
-                                LogHelper.guiLogDebug( " select: node = " + n );
+                                LogHelper.logDebug( " select: node = " + n );
 
                                 componentEditPanel.setWorkingComponent(nNew);
-                                LogHelper.guiLogDebug( " setWorking: node = " + n );
+                                LogHelper.logDebug( " setWorking: node = " + n );
                                 
                                 dispatch.pushToTextEditor(); 
 							
@@ -373,7 +377,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                             else if ( mode == GraphMode.CREATE_EDGE
                                       && clickNode != null && prevNode != null) {
                                 // Create an edge if you've selected two nodes
-                                LogHelper.guiLogDebug("CREATE EDGE");
+                                LogHelper.logDebug("CREATE EDGE");
 							
                                 // add a new edge between the clicked nodes
                                 Graph g = dispatch.getWorkingGraph();
@@ -474,7 +478,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	 * @param mode The new active Edit mode
 	 */
 	private void changeMode(GraphMode mode) {
-		LogHelper.guiEnterMethod(getClass(), "changeMode");
+		LogHelper.enterMethod(getClass(), "changeMode");
 		
 		this.mode = mode;
 		gp.setEdgeTracker(null);
@@ -500,7 +504,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		
 		frame.repaint();
 		
-		LogHelper.guiExitMethod(getClass(), "changeMode");
+		LogHelper.exitMethod(getClass(), "changeMode");
 	}
 	
 	/**
@@ -508,7 +512,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	 * @param mode
 	 */
 	private void changeDirectedness(Directedness mode) {
-		LogHelper.guiEnterMethod(getClass(), "changeDirectedness " + mode);
+		LogHelper.enterMethod(getClass(), "changeDirectedness " + mode);
 		
 		switch(mode){
 				case DIRECTED:{
@@ -527,7 +531,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		
 		frame.repaint();
 		
-		LogHelper.guiExitMethod(getClass(), "changeDirectedNess");
+		LogHelper.exitMethod(getClass(), "changeDirectedNess");
 	}
 	
 	@Override
@@ -581,7 +585,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	 * @return menuBar the menu bar
 	 */
 	private static JMenuBar initMenu() {
-		LogHelper.guiEnterMethod(GraphWindow.class, "initMenu");
+		LogHelper.enterMethod(GraphWindow.class, "initMenu");
 		
 		menuBar = new JMenuBar();
 		
@@ -594,7 +598,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		menuBar.add(fileMenu);
 
 
-		LogHelper.guiExitMethod(GraphWindow.class, "initMenu");
+		LogHelper.exitMethod(GraphWindow.class, "initMenu");
 		return menuBar;
 	}
 	
@@ -603,7 +607,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	 * @return
 	 */
 	private JToolBar initToolbar() {
-		LogHelper.guiEnterMethod(getClass(), "initToolbar");
+		LogHelper.enterMethod(getClass(), "initToolbar");
 		
 		toolBar = new JToolBar(SwingConstants.HORIZONTAL);
 		toolBar.setFloatable(false);
@@ -668,7 +672,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		toolBar.add(repositionBtn);
 		
 
-		LogHelper.guiExitMethod(this.getClass(), "initToolbar");
+		LogHelper.exitMethod(this.getClass(), "initToolbar");
 		return toolBar;
 	}
 	
@@ -739,7 +743,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	 * @return
 	 */
 	private JPanel initAnimationPanel() {
-		LogHelper.guiEnterMethod(getClass(), "initAnimationPanel");
+		LogHelper.enterMethod(getClass(), "initAnimationPanel");
 		animationButtons = new JPanel();
 		
 		stepBack.setEnabled(false);
@@ -902,7 +906,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
         synchronized(this){
           // "ctrl" already pressed, create new edge
           if(ctrlPressed){
-            LogHelper.guiLogDebug("CREATE EDGE");
+            LogHelper.logDebug("CREATE EDGE");
 						//prompt user for the id of two nodes	
             edgeEditDialog = new EdgeEditDialog(frame, dispatch, GraphMode.CREATE_EDGE);
             edgeEditDialog.pack();
@@ -912,7 +916,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
           } //Create new edge
           //delete edge
           if(deletePressed){
-            LogHelper.guiLogDebug("DELETE EDGE");
+            LogHelper.logDebug("DELETE EDGE");
 						//prompt user for the id of two nodes	
             edgeEditDialog = new EdgeEditDialog(frame, dispatch, GraphMode.DELETE);
             edgeEditDialog.pack();
@@ -929,27 +933,30 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
         synchronized(this){
           // "ctrl" already pressed, create new node
           if(ctrlPressed){
-            LogHelper.guiLogDebug("CREATE NODE");
+            LogHelper.logDebug("CREATE NODE");
 							
             // add a new default node to the working
             Graph g = dispatch.getWorkingGraph();
-            // choose a random position to place new node
+            Node n = g.addInitialNode();
+            LogHelper.logDebug( " addInitial: node = " + n );
+            // choice a position to place new node
             Point p = Node.genRandomPosition();
-            Node n = g.addInitialNode(p.x, p.y);
+            n.setFixedPosition(p);
+            LogHelper.logDebug( " setFixedPosition: node = " + n );
 							
             // select the new node
             Node nNew = gp.selectTopClickedNode(p);
             componentEditPanel.setWorkingComponent(nNew);
-            LogHelper.guiLogDebug( " select: node = " + n );
+            LogHelper.logDebug( " select: node = " + n );
 
             componentEditPanel.setWorkingComponent(nNew);
-            LogHelper.guiLogDebug( " setWorking: node = " + n );
+            LogHelper.logDebug( " setWorking: node = " + n );
             
             dispatch.pushToTextEditor();
           } //Create new node
           //delete already pressed, delete node
           if (deletePressed) {
-            LogHelper.guiLogDebug("DELETE NODE");	
+            LogHelper.logDebug("DELETE NODE");	
             //hide edit panel
             componentEditPanel.setWorkingComponent(null);
             deleteNodeDialog = new DeleteNodeDialog(frame, dispatch);
@@ -1020,7 +1027,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
     }
   });
 
-		LogHelper.guiExitMethod(getClass(), "initAnimationPanel");
+		LogHelper.exitMethod(getClass(), "initAnimationPanel");
 		return animationButtons;
 	}
 
@@ -1049,4 +1056,4 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	}
 }
 
-//  [Last modified: 2015 08 13 at 15:44:39 GMT]
+//  [Last modified: 2015 07 16 at 00:53:38 GMT]

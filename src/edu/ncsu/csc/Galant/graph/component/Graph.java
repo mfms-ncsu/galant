@@ -78,10 +78,6 @@ public class Graph {
 	
 	public GraphWindow graphWindow;
 
-    /**
-     * The items below are deprecated; all attributes are objects, so we
-     * simply check for null.
-     */
     public final static Double NOT_A_WEIGHT = Double.NaN;
     public final static String NOT_A_LABEL = "";
 
@@ -107,17 +103,8 @@ public class Graph {
     private TreeMap<Integer,Node> nodeById = new TreeMap<Integer,Node>();
 
 	private List<Edge> edges;
-    /**
-     * @todo Never clear what this meant. A better name might be startNode.
-     */
 	private Node rootNode;
 	
-    /**
-     * An integer that can be used as the id of the next edge if id's are not
-     * explicit in the input.
-     */
-    private int nextEdgeId =0;
-
 	/**
 	 * Default constructor.
 	 */
@@ -363,18 +350,15 @@ public class Graph {
 	 * @param n
 	 */
 	public void deleteNode(Node n) {
-        LogHelper.enterMethod(getClass(), "deleteNode " + n);
 		currentGraphState.incrementState();
 		currentGraphState.setLocked(true);
 		
 		n.setDeleted(true);
-		for (Edge e : n.getIncidentEdges()) {
+		for (Edge e : n.getEdges()) {
 			e.setDeleted(true);
-            removeEdge(e);
 		}
 		
 		currentGraphState.setLocked(false);
-        LogHelper.exitMethod(getClass(), "deleteNode");
 	}
 
 	/**
@@ -437,23 +421,21 @@ public class Graph {
 	}
 
     /**
-     * @return the next available edge id; these are in numerical sequence
-     * starting at 0; to be used only when the input has no explicit id's for
-     * edges.
+     * @return the id of the given node; allows more natural syntax,
+     * especially when the node is used as an arry index, as in A[id(node)]
      */
-    int getNextEdgeId() {
-        return nextEdgeId++;
+    public int id(Node node) {
+        return node.getId();
     }
 	
     /**
-     * @return true if the input had explicit edge id's as determined by the
-     * fact that none had to be assigned internally -- the assumption being
-     * that either all or none of the edges have explicit id's.
+     * @return the id of the given edge; allows more natural syntax,
+     * especially when the edge is used as an array index, as in A[id(edge)]
      */
-    boolean inputHasEdgeIds() {
-        return nextEdgeId == 0;
+    public int id(Edge edge) {
+        return edge.getId();
     }
-
+	
 	/**
 	 * Provides the root <code>Node</code>. If none has been specified, the method returns the first <code>Node</code>
 	 * in the <code>List</code> of <code>Node</code>s
@@ -551,67 +533,61 @@ public class Graph {
 		currentGraphState.setLocked(false);
 	}
 	
-	/**
-	 * Adds a new <code>Node</code> to the <code>Graph</code> and increments
-	 * the <code>GraphState</code> if appropriate
-     *
-	 * @param x the x coordinate of the new node 
-	 * @param y the y coordinate of the new node 
-     * @return the added <code>Node</code>; called only during editing
-	 */
-	public Node addInitialNode(Integer x, Integer y) {
-        LogHelper.enterMethod( getClass(), "addInitialNode(), x = " + x + ", y = " + y);
-        Integer newId = nextNodeId();
-		Node n = new Node(currentGraphState, newId, x, y);
-		nodes.add(n);
-        nodeById.put( newId, n ); 
-		
-		if (this.rootNode == null) {
-			this.rootNode = n;
-		}
+    /**
+     * @todo There is a time during which a newly added node does not have a
+     * position. In an algorithm, this is a problem unless the adding of a
+     * node and giving it a position is within the same step.
+     */
 
-        // seems like we need an addState call as is the case with state
-        // changes in GraphElement.java
-
-        LogHelper.exitMethod( getClass(), "addInitialNode() " + n.toString() );
-		return n;
-	}
-	
 	/**
-	 * Adds a new <code>Node</code> to the <code>Graph</code> and increments
-	 * the <code>GraphState</code> if appropriate
-     *
-	 * @param x the x coordinate of the new node 
-	 * @param y the y coordinate of the new node 
-     * @return the added <code>Node</code>; called only during algorithm
-	 * execution; the assumption here is that the algorithm has to "know" the
-	 * position of the node it is adding. The only difference from the above
-	 * is that the state is incremented.
+	 * Adds a new <code>Node</code> to the <code>Graph</code> and increments the <code>GraphState</code>
+	 * @return the added <code>Node</code>; called only during algorithm
+	 * execution
 	 */
-	public Node addNode(Integer x, Integer y) {
-        LogHelper.enterMethod( getClass(), "addNode(), x = " + x + ", y = " + y);
+	public Node addNode() {
+        LogHelper.enterMethod( getClass(), "addNode()" );
 		currentGraphState.incrementState();
         Integer newId = nextNodeId();
-		Node n = new Node(currentGraphState, newId, x, y);
+		Node n = new Node(currentGraphState, newId );
 		nodes.add(n);
         nodeById.put( newId, n ); 
 		
 		if (this.rootNode == null) {
 			this.rootNode = n;
 		}
-
-        // seems like we need an addState call as is the case with state
-        // changes in GraphElement.java
-
-        LogHelper.exitMethod( getClass(), "addNode() " + n.toString() );
+		
+        LogHelper.exitMethod( getClass(), "addNode()" + n.toString() );
+        LogHelper.restoreState();
 		return n;
 	}
 	
 	/**
-	 * Adds a node to the graph during parsing. The node has already been created.
- 	 */
+	 * Adds a new <code>Node</code> to the <code>Graph</code> and sets the <code>GraphState</code> to 1.
+	 * @return the added <code>Node</code>
+	 */
+	public Node addInitialNode() {
+		int state = currentGraphState.getState();
+		currentGraphState.setState(1);
+		currentGraphState.setLocked(true);
+
+        Integer newId = nextNodeId();
+		Node n = new Node( currentGraphState, newId );
+		nodes.add(n);
+        nodeById.put( newId, n ); 
+
+		currentGraphState.setLocked(false);
+		currentGraphState.setState(state);
+		
+		return n;
+	}
+	
+	/**
+	 * Adds the specified <code>Node</code> and increments the <code>GraphState</code>
+	 * @param n the <code>Node</code> to add
+	 */
 	public void addNode(Node n) {
         LogHelper.enterMethod( getClass(), "addNode: node = " + n.toString() );
+		currentGraphState.incrementState();
 
         /**
          * @todo subclass method for layered graphs
@@ -624,23 +600,39 @@ public class Graph {
         nodeById.put( n.getId(), n );
 
         LogHelper.exitMethod( getClass(), "addNode( Node )" );
+        LogHelper.restoreState();
 	}
 	
 	/**
+	 * Adds the specified <code>Node</code> at the specified index and increments the <code>GraphState</code>
+	 * @param n the <code>Node</code> to add
+	 * @param index the index at which to add the <code>Node</code>
+     * (does not appear to be used)
+	 */
+// 	public void addNode(Node n, int index) {
+// 		currentGraphState.incrementState();
+// 		nodes.add(index, n);
+// 	}
+	
+	/**
 	 * Adds a new <code>Edge</code> to the <code>Graph</code> with the specified source and target <code>Node</code> IDs and increments the <code>GraphState</code>
-	 * Note: for undirected <code>Graph</code>s, "source" and "target" are
-	 * interchangeable.
+	 * Note: for undirected <code>Graph</code>s, "source" and "target" are meaningless.
 	 * @param sourceId the ID of the source <code>Node</code>
 	 * @param targetId the ID of the target <code>Node</code>
-     *
-     * This variant is used during parsing; also does the work of adding the
-     * edge to the list of edges and those of its source and target.
 	 */
-	public void addEdge(Edge edge, int id) {
-        edge.setId(id);
-		edge.getSourceNode().addEdge(edge);
-		edge.getTargetNode().addEdge(edge);
-        edges.add(edge);
+	public void addEdge(int sourceId, int targetId) {
+		if (sourceId < nodes.size() && targetId < nodes.size()) {
+			currentGraphState.incrementState();
+			
+			Node source = nodes.get(sourceId);
+			Node target = nodes.get(targetId);
+			
+			Edge e = new Edge(currentGraphState, edges.size(), source, target);
+			
+			//TODO add edge to nodes
+			
+			edges.add(e);
+		}
 	}
 	
 	/**
@@ -649,39 +641,39 @@ public class Graph {
 	 * @param source the source <code>Node</code>
 	 * @param target the target <code>Node</code>
 	 * @return the <code>Edge</code> added
-     *
-     * This variant is used during algorithm execution if the actual nodes
-     * are known.
 	 */
 	public Edge addEdge(Node source, Node target) {	
 		currentGraphState.incrementState();
-        int id = edges.size();
-		Edge e = new Edge(currentGraphState, id, source, target);
-        addEdge(e, id);
+		Edge e = new Edge(currentGraphState, edges.size(), source, target);
+		
+		source.addEdge(e);
+		target.addEdge(e);
+		
+		edges.add(e);
+		
 		return e;
 	}
 	
 	/**
-	 * Adds a new <code>Edge</code> to the <code>Graph</code> with the specified source and target <code>Node</code>s and increments the <code>GraphState</code>
-	 * Note: for undirected</code>Graph</code>s, "source" and "target" are meaningless.
-	 * @param source the source <code>Node</code>
-	 * @param target the target <code>Node</code>
-	 * @return the <code>Edge</code> added
-     *
-     * This variant is used during algorithm execution when only the id's are known.
+	 * Adds the specified <code>Edge</code> to the <code>Graph</code> at the specified index.
+	 * @param e the <code>Edge</code> to add
+	 * @param index the index in the <code>List</code> of <code>Edge</code>s at which to add the <code>Edge</code>
+	 * @return the added <code>Edge</code>
 	 */
-	public Edge addEdge(int sourceId, int targetId) {	
-        return addEdge(getNodeById(sourceId), getNodeById(targetId));
+	public Edge addEdge(Edge e, int index) {
+		currentGraphState.incrementState();
+		edges.add(index, e);
+		
+		return e;
 	}
 	
 	/**
 	 * Adds a new <code>Edge</code> to the <code>Graph</code> with the specified source and target <code>Node</code>s.
 	 * Sets the <code>GraphState</code> to 1.
 	 * Note: for undirected <code>Graph</code>s, "source" and "target" are meaningless.
-	 * @return the added edge
-     *
-     * @todo Again, the locking of states is puzzling since this variant is
-     * used only during editing.
+	 * @param source
+	 * @param target
+	 * @return
 	 */
 	public Edge addInitialEdge(Node source, Node target) {
 		int state = currentGraphState.getState();
@@ -701,18 +693,25 @@ public class Graph {
 	}
 	
 	/**
+	 * Adds the specified <code>Edge</code> to the <code>Graph</code> and increments the <code>GraphState</code>
+	 * @param e the <code>Edge</code> to add.
+	 */
+	public void addEdge(Edge e) {
+		currentGraphState.incrementState();
+		edges.add(e);
+	}
+	
+	/**
 	 * Removes the specified <code>Edge</code> from the <code>Graph</code>
 	 * @param e the <code>Edge</code> to remove
 	 */
 	public void removeEdge(Edge e) {
-        LogHelper.enterMethod(getClass(), "removeEdge " + e);
 		edges.remove(e);
 		
 		Node source = e.getSourceNode();
-		source.getIncidentEdges().remove(e);		
-		Node dest = e.getTargetNode();
-		dest.getIncidentEdges().remove(e);
-        LogHelper.exitMethod(getClass(), "removeEdge");
+		source.getEdges().remove(e);		
+		Node dest = e.getDestNode();
+		dest.getEdges().remove(e);
 	}
 	
 	/**
@@ -720,18 +719,16 @@ public class Graph {
 	 * @param n the <code>Node</code> to remove
 	 */
 	public void removeNode(Node n) {
-		List<Edge> n_edges = n.getIncidentEdges();
-        LogHelper.enterMethod(getClass(), "removeNode " + n + ", deg = " + n_edges.size());
+		List<Edge> n_edges = n.getEdges();
 		
 		currentGraphState.setLocked(true);
-		for ( Edge e : n_edges ) {
-            //			n_edges.remove(e);
+		while (n_edges.size() > 0) {
+			Edge e = n_edges.remove(0);
 			removeEdge(e);
 		}
 
 		nodes.remove(n);
 		currentGraphState.setLocked(false);
-        LogHelper.exitMethod(getClass(), "removeNode");
 	}
 	
 	/**
@@ -739,12 +736,8 @@ public class Graph {
 	 * added. This will always be the largest id so far + 1 
 	 */
 	private int nextNodeId() {
-        LogHelper.enterMethod(getClass(), "nextNodeId");
-        int id = 0;
-        if ( ! nodeById.isEmpty() )
-            id =nodeById.lastKey() + 1;
-        LogHelper.exitMethod(getClass(), "nextNodeId, id = " + id);
-        return id;
+        if ( nodeById.isEmpty() ) return 0;
+        else return nodeById.lastKey() + 1;
 	}
 	
 	/**
@@ -851,4 +844,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2015 08 13 at 14:21:38 GMT]
+//  [Last modified: 2015 07 29 at 13:32:52 GMT]

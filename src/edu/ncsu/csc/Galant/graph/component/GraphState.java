@@ -30,9 +30,9 @@ public class GraphState {
 		return stepComplete;
 	}
 
-	public static final int GRAPH_START_STATE = 0;
+	public static final int GRAPH_START_STATE = 1;
 
-	private int state;
+	private int state = 0;
 	
 	static private int initializationComplete = 0;
 
@@ -45,7 +45,7 @@ public class GraphState {
 	private boolean directed;
 	
 	public GraphState() {
-		state = GRAPH_START_STATE;
+		state = 1;
 	}
 	
 	/**
@@ -119,4 +119,4 @@ public class GraphState {
 	
 }
 
-//  [Last modified: 2015 08 07 at 13:43:01 GMT]
+//  [Last modified: 2015 07 03 at 14:26:53 GMT]

@@ -786,13 +786,13 @@ public class GraphPanel extends JPanel{
 	// MPM: And this is not starting the algorithm, it is allowing the algorithm to advance.
 	public void resumeAlgorithmExecution(){
 		
-		dispatch.getInstance().getAlgorithmExecutor().setStepIncomplete();
+		dispatch.getWorkingGraph().getGraphState().setStepComplete(false);
 		if ( ! dispatch.getAlgorithmComplete() ) {
 			//System.out.println("GraphPanel is notifying the worker thread so it will wake up and work.");
-			synchronized(dispatch.getInstance().getAlgorithmExecutor()){
-				dispatch.getInstance().getAlgorithmExecutor().notify();
+			synchronized(dispatch.getWorkingGraph().getGraphState()){
+				dispatch.getWorkingGraph().getGraphState().notify();
 			}
-			if ( dispatch.getInstance().getAlgorithmExecutor().getAlgorithmComplete() ) {
+			if ( dispatch.getAlgorithmComplete() ) {
 			}
 			//System.out.printf("Algorithm is started");
 		}
@@ -813,7 +813,6 @@ public class GraphPanel extends JPanel{
                           state, dispatch.getWorkingGraph().getState() );
 		guiStepExecutor t = new guiStepExecutor(this);
 		t.execute();
-		dispatch.getInstance().getAlgorithmExecutor().incrementDisplayState();
 		
 		
 	}
@@ -829,7 +828,6 @@ public class GraphPanel extends JPanel{
 		
 		if (this.state > 1) {
 			this.state--;
-			dispatch.getInstance().getAlgorithmExecutor().decrementDisplayState();
 		}
 		System.out.printf("(-) Decrementing the graph display state: displayState = %d, graphState = %d\n",
                           state, dispatch.getWorkingGraph().getState() );
@@ -839,7 +837,7 @@ public class GraphPanel extends JPanel{
 		/* This is responsible for updating the status label at the top of the Galant screen so that it displays the correct graph state
 		 * This happens whenever the user hits the right arrow key or the right arrow button
 		 */
-		dispatch.getGraphWindow().updateStatusLabel(dispatch.getInstance().getAlgorithmExecutor().getDisplayState());
+		dispatch.getGraphWindow().updateStatusLabel(this.getDisplayState());
 		
 	}
 	

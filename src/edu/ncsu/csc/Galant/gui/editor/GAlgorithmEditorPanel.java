@@ -9,15 +9,13 @@ import java.beans.PropertyChangeEvent;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.tools.Diagnostic;
-
-import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.GraphDispatch;
 import edu.ncsu.csc.Galant.algorithm.Algorithm;
-import edu.ncsu.csc.Galant.algorithm.AlgorithmExecutor;
 import edu.ncsu.csc.Galant.algorithm.code.CodeIntegrator;
 import edu.ncsu.csc.Galant.algorithm.code.CompilationException;
 import edu.ncsu.csc.Galant.algorithm.code.macro.MalformedMacroException;
 import edu.ncsu.csc.Galant.logging.LogHelper;
+import edu.ncsu.csc.Galant.GalantException;
 
 /**
  * Each instance of GAlgorithmEditorPanel corresponds to a particular
@@ -117,12 +115,6 @@ public class GAlgorithmEditorPanel extends GEditorPanel {
 	 */
 	public void run() {
 		GraphDispatch.getInstance().setAnimationMode(true);
-		
-		/*
-		 Create an algorithmExecutor instance each time that the algorithm is run.  This is responsible for handling threading and execution
-		 */
-		AlgorithmExecutor ae = new AlgorithmExecutor();
-		GraphDispatch.getInstance().setAlgorithmExecutor(ae);
 
 		Algorithm ca = getCompiledAlgorithm();
 		ca.setGraph(GraphDispatch.getInstance().getWorkingGraph());

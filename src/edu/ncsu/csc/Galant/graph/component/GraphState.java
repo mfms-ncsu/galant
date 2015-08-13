@@ -78,7 +78,7 @@ public class GraphState {
 	
 	public boolean pauseExecution(){	
 		this.setStepComplete(true);
-		synchronized(this.graph.graphWindow.getGraphDispatch().getInstance().getAlgorithmExecutor()){
+		synchronized(this){
 			try{
 				if ( !locked ) {
                     // Suspend algorithm execution until notified to complete

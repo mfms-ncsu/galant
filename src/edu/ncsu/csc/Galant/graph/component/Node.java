@@ -36,7 +36,6 @@ public class Node extends GraphElement implements Comparable<Node> {
 	public Node(GraphState currentState) {
         super(currentState.getGraph(), currentState);
 		incidentEdges = new ArrayList<Edge>();
-        super.attributes.set(MARKED, false);
 	}
 
     /**
@@ -47,7 +46,6 @@ public class Node extends GraphElement implements Comparable<Node> {
         super(algorithmState.getGraph(), algorithmState);
         this.id = id;
 		incidentEdges = new ArrayList<Edge>();
-        super.attributes.set(MARKED, false);
     }
 
     /**
@@ -65,7 +63,6 @@ public class Node extends GraphElement implements Comparable<Node> {
         GraphElementState startingState = latestState();
         startingState.set("x", x);
         startingState.set("y", y);
-        startingState.set(MARKED, false);
     }
 
     /**
@@ -514,6 +511,7 @@ public class Node extends GraphElement implements Comparable<Node> {
         Integer savedY = super.attributes.getInteger("y");
         super.attributes.remove("x");
         super.attributes.remove("y");
+        LogHelper.logDebug("Node toString: super = " + super.toString());
         s += super.toString();
         super.attributes.set("x", savedX);
         super.attributes.set("y", savedY);
@@ -544,4 +542,4 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 }
 
-//  [Last modified: 2015 08 11 at 11:40:36 GMT]
+//  [Last modified: 2015 08 12 at 01:26:56 GMT]

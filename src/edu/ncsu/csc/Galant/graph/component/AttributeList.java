@@ -1,6 +1,7 @@
 package edu.ncsu.csc.Galant.graph.component;
 
 import java.util.ArrayList;
+import edu.ncsu.csc.Galant.logging.LogHelper;
 
 /**
  * An AttributeList plays the role of a Map. A list is used so that
@@ -9,7 +10,7 @@ import java.util.ArrayList;
  */
 public class AttributeList {
 
-    private ArrayList<Attribute> attributes;
+    protected ArrayList<Attribute> attributes;
 
     public AttributeList() { attributes = new ArrayList<Attribute>(); }
 
@@ -78,13 +79,16 @@ public class AttributeList {
     }
 
     public boolean set(String key, Double value) {
+        LogHelper.enterMethod(getClass(), "set, key = " + key + ", value = " + value);
         for ( Attribute attribute : attributes ) {
             if ( attribute.getKey().equals(key) ) {
                 ((DoubleAttribute)attribute).set(value);
+                LogHelper.exitMethod(getClass(), "set, list = " + attributes);
                 return true;
             }
         }
         add(key, value);
+        LogHelper.exitMethod(getClass(), "set, list = " + attributes);
         return false;
     }
 
@@ -197,4 +201,4 @@ public class AttributeList {
 
 }
 
-//  [Last modified: 2015 07 27 at 18:29:40 GMT]
+//  [Last modified: 2015 08 12 at 01:49:45 GMT]

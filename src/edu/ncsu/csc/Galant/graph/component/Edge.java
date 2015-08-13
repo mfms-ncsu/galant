@@ -99,6 +99,10 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 
 	@Override
 	public String toString() {
+        // the following should not be needed, but ...
+        super.attributes.remove("id");
+        super.attributes.remove("source");
+        super.attributes.remove("target");
         // id may not exist for an edge; not really essential
         String idComponent = "";
         if ( super.graph.inputHasEdgeIds() )
@@ -107,6 +111,7 @@ public class Edge extends GraphElement implements Comparable<Edge> {
  		String s = "<edge " + idComponent;
         s += " source=\"" + this.source.getId() + "\"";
         s += " target=\"" + this.target.getId() + "\"";
+        LogHelper.logDebug("Edge toString: super = " + super.toString());
         s += super.toString();
         s += " />";
 		return s;
@@ -123,7 +128,11 @@ public class Edge extends GraphElement implements Comparable<Edge> {
         }
         // id may not exist for an edge; not really essential
 //         String idComponent = (id == null) ? "" : "id=\"" + this.getId() + "\"";
-        idComponent = "";
+        // the following should not be needed, but ...
+        super.attributes.remove("id");
+        super.attributes.remove("source");
+        super.attributes.remove("target");
+        String idComponent = "";
 		String s = "<edge "
             + idComponent
             + " source=\"" + this.source.getId() + "\""
@@ -141,4 +150,4 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 	}
 }
 
-//  [Last modified: 2015 08 11 at 21:17:24 GMT]
+//  [Last modified: 2015 08 12 at 01:26:50 GMT]

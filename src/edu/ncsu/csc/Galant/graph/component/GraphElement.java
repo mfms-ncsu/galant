@@ -395,7 +395,8 @@ public class GraphElement {
      * representation of this element.
      */
     public String toString() {
-        String s = " "; 
+        String s = " ";
+        LogHelper.logDebug("GraphElement toString, attributes = " + attributes.attributes);
         for ( Attribute attribute : attributes.getAttributes() ) {
             s += attribute + " ";
         }
@@ -419,4 +420,4 @@ public class GraphElement {
     }
 }
 
-//  [Last modified: 2015 08 11 at 20:04:04 GMT]
+//  [Last modified: 2015 08 12 at 01:50:05 GMT]

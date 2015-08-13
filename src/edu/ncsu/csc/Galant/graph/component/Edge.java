@@ -88,12 +88,9 @@ public class Edge extends GraphElement implements Comparable<Edge> {
         if (target == null) {
             throw new GalantException("Target node missing when processing edge " + this.id);
         }
-
-        // no longer need these to be stored in attribute list -- they're
-        // instance variables now
-        attributes.remove("id");
-        attributes.remove("source");
-        attributes.remove("target");
+        super.remove("id");
+        super.remove("source");
+        super.remove("target");
         LogHelper.exitMethod(getClass(), "initializeAfterParsing, edge = "
                                + this);
     }
@@ -112,7 +109,7 @@ public class Edge extends GraphElement implements Comparable<Edge> {
         s += " source=\"" + this.source.getId() + "\"";
         s += " target=\"" + this.target.getId() + "\"";
         LogHelper.logDebug("Edge toString: super = " + super.toString());
-        s += super.toString();
+        s += super.attributesWithoutId();
         s += " />";
 		return s;
 	}
@@ -126,9 +123,6 @@ public class Edge extends GraphElement implements Comparable<Edge> {
         if ( ! inScope(state) ) {
             return "";
         }
-        // id may not exist for an edge; not really essential; no id added to
-        // the output regardless of whether it existed in the input -- we're
-        // not attempting to be faithful to the input.
 		String s = "<edge "
             + " source=\"" + this.source.getId() + "\""
             + " target=\"" + this.target.getId() + "\"";
@@ -145,4 +139,4 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 	}
 }
 
-//  [Last modified: 2015 08 13 at 01:17:43 GMT]
+//  [Last modified: 2015 08 13 at 12:53:47 GMT]

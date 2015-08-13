@@ -54,16 +54,17 @@ public class Node extends GraphElement implements Comparable<Node> {
      */
     public Node(GraphState algorithmState, int id, Integer x, Integer y) {
         super(algorithmState.getGraph(), algorithmState);
+        LogHelper.logDebug("-> Node, id = " + id + ", x =" + x + ", y =" + y);
         this.id = id;
 		incidentEdges = new ArrayList<Edge>();
         xCoordinate = x;
         yCoordinate = y;
-        // set up essential attributes based on the first, and also the
-        // latest, state for the GraphElement on which this node is based
+        // set starting position based on the initial one
         GraphElementState startingState = latestState();
         startingState.set("x", x);
         startingState.set("y", y);
-    }
+        LogHelper.logDebug("<- Node, node = " + this);
+   }
 
     /**
      * Setters and getters for node-specific information that does not change.
@@ -175,15 +176,14 @@ public class Node extends GraphElement implements Comparable<Node> {
             Integer x = super.getInteger("x");
             Integer y = super.getInteger("y");
             if ( x == null || y == null ) {
-                // note: use of super.attributes.set() avoids state change
                 Random r = new Random();
                 if ( x == null ) {
                     x = r.nextInt( GraphDispatch.getInstance().getWindowWidth() );
-                    super.attributes.set("x", x);
+                    super.set("x", x);
                 }
                 if ( y == null ) {
                     y = r.nextInt( GraphDispatch.getInstance().getWindowHeight() );
-                    super.attributes.set("y", y);
+                    super.set("y", y);
                 }
             }
             // establish fixed positions
@@ -471,9 +471,8 @@ public class Node extends GraphElement implements Comparable<Node> {
                                + "\n node = " + this );
         xCoordinate = x;
         yCoordinate = y;
-        // note: use of super.attributes.set() avoids state change
-        if ( getX() == null ) super.attributes.set("x", x);
-        if ( getY() == null ) super.attributes.set("y", y);
+        if ( getX() == null ) super.set("x", x);
+        if ( getY() == null ) super.set("y", y);
         LogHelper.exitMethod( getClass(), "setFixedPosition"
                               + "\n node = " + this );
 	}
@@ -499,16 +498,7 @@ public class Node extends GraphElement implements Comparable<Node> {
         String s = "<node" + " id=\"" + this.getId() + "\"";
         s += " x=\"" + this.getFixedX() + "\"";
         s += " y=\"" + this.getFixedY() + "\" ";
-        // fixed position is used here so have to remove the state-dependent
-        // position temporarily.
-        Integer savedX = super.attributes.getInteger("x");
-        Integer savedY = super.attributes.getInteger("y");
-        super.latestState().remove("x");
-        super.latestState().remove("y");
-        LogHelper.logDebug("Node toString: super = " + super.toString());
-        s += super.toString();
-        super.latestState().set("x", savedX);
-        super.latestState().set("y", savedY);
+        s += super.attributesWithoutPosition();
         s += " />";
 		return s;
 	}
@@ -536,4 +526,4 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 }
 
-//  [Last modified: 2015 08 13 at 01:32:44 GMT]
+//  [Last modified: 2015 08 13 at 14:26:53 GMT]

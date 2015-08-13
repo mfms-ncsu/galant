@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 import edu.ncsu.csc.Galant.GalantException;
+import edu.ncsu.csc.Galant.GraphDispatch;
 import edu.ncsu.csc.Galant.logging.LogHelper;
 
 /**
@@ -30,8 +31,6 @@ public class GraphElement {
     public static final String DELETED = "deleted";
     public static final String HIGHLIGHTED = "highlighted";
     
-    protected AttributeList attributes;
-
     /**
      * The graph with which this element is associated.
      */
@@ -60,18 +59,23 @@ public class GraphElement {
      * initialized elsewhere, currently in Graph.
      */
     public GraphElement(Graph graph, GraphState algorithmState) {
-        attributes = new AttributeList();
+        LogHelper.logDebug("-> GraphElement, state = " + algorithmState.getState());
         states = new ArrayList<GraphElementState>();
         this.graph = graph;
         this.algorithmState = algorithmState;
-        this.addState(new GraphElementState(algorithmState, attributes));
+        this.addState(new GraphElementState(algorithmState));
+        LogHelper.logDebug("<- GraphElement, element = " + this);
     }
 
     /**
      * @return a new state for this element; the new state will be identical
      * to the current (latest one) except that it will be tagged with the
-     * current graph state number; subsequent changes to this GraphElement
-     * will take place in the new state.
+     * current graph state number -- after an incrementState(); subsequent
+     * changes to this GraphElement will take place in the new state.
+     *
+     * @todo if this is called during parsing or editing mode, no state
+     * change is necessary, so this should just return the current one and
+     * not do an incrementState()
      */
     private GraphElementState newState() {
 		algorithmState.incrementState();
@@ -124,18 +128,31 @@ public class GraphElement {
      * not result in synchronization);
      *
      * @invariant states are always sorted by state number.
+     *
+     * @todo Once newState() is fixed appropriately, this method should do
+     * nothing in parsing or edit mode
      */
 	private void addState(GraphElementState stateToAdd) {
+        LogHelper.enterMethod(getClass(), "addState, state number  = "
+                              + stateToAdd.getState());
         int stateNumber = stateToAdd.getState();
-		for ( int i = states.size() - 1; i >= stateNumber; i-- ) {
-			GraphElementState state = states.get(i);
-			if ( state.getState() == stateNumber ) {
-				states.set(i, stateToAdd);
-				return;
-			}
-		}
-		states.add(stateToAdd);
-		stateToAdd.getAlgorithmState().pauseExecution();
+        boolean found = false;
+        for ( int i = states.size() - 1; i >= stateNumber; i-- ) {
+            GraphElementState state = states.get(i);
+            LogHelper.logDebug("addState loop, i = " + i + ", state(i) = " + state.getState());
+            if ( state.getState() == stateNumber ) {
+                states.set(i, stateToAdd);
+                found = true;
+                break;
+            }
+        }
+        if ( ! found ) {
+            states.add(stateToAdd);
+            if (  GraphDispatch.getInstance().isAnimationMode() ) {
+                stateToAdd.getAlgorithmState().pauseExecution();
+            }
+        }
+        LogHelper.exitMethod(getClass(), "addState, found = " + found);
 	}
 
     /************** Integer attributes ***************/
@@ -395,6 +412,23 @@ public class GraphElement {
     }
 
     /**
+     * Like toString(), except that it omits the "x" and "y" attributes; to
+     * be used in cases where these attributes are superceded by the
+     * corresponding fixed ones of a Node.
+     */
+    public String attributesWithoutPosition() {
+        return latestState().attributesWithoutPosition();
+    }
+
+    /**
+     * Like toString(), except that it omits the "id" attribute; to be used
+     * in cases where the id is optional, as is the case with an Edge
+     */
+    public String attributesWithoutId() {
+        return latestState().attributesWithoutId();
+    }
+
+    /**
      * Same as the unparameterized version except that the attributes are
      * ones of the latest valid state. This is used when exporting the state
      * of the graph in the middle of execution.
@@ -404,4 +438,4 @@ public class GraphElement {
     }
 }
 
-//  [Last modified: 2015 08 13 at 01:06:36 GMT]
+//  [Last modified: 2015 08 13 at 15:40:29 GMT]

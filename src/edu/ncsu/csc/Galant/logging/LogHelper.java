@@ -14,7 +14,7 @@ public class LogHelper {
      * clutter the loggin unnecessarily unless they are specifically
      * desired. - mfms
      */
-    private static boolean guiLoggingEnabled = true;
+    private static boolean guiLoggingEnabled = false;
     private static boolean savedState = loggingEnabled;
 	
 	private static int spaces = 0;
@@ -150,4 +150,4 @@ public class LogHelper {
 	}
 }
 
-//  [Last modified: 2015 08 11 at 19:01:07 GMT]
+//  [Last modified: 2015 08 13 at 15:45:54 GMT]

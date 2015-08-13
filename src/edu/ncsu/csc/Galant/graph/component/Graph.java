@@ -551,21 +551,42 @@ public class Graph {
 		currentGraphState.setLocked(false);
 	}
 	
-    /**
-     * @todo There is a time during which a newly added node does not have a
-     * position. In an algorithm, this is a problem unless the adding of a
-     * node and giving it a position is within the same step.
-     */
-
 	/**
 	 * Adds a new <code>Node</code> to the <code>Graph</code> and increments
-	 * the <code>GraphState</code>
+	 * the <code>GraphState</code> if appropriate
+     *
+	 * @param x the x coordinate of the new node 
+	 * @param y the y coordinate of the new node 
+     * @return the added <code>Node</code>; called only during editing
+	 */
+	public Node addInitialNode(Integer x, Integer y) {
+        LogHelper.enterMethod( getClass(), "addInitialNode(), x = " + x + ", y = " + y);
+        Integer newId = nextNodeId();
+		Node n = new Node(currentGraphState, newId, x, y);
+		nodes.add(n);
+        nodeById.put( newId, n ); 
+		
+		if (this.rootNode == null) {
+			this.rootNode = n;
+		}
+
+        // seems like we need an addState call as is the case with state
+        // changes in GraphElement.java
+
+        LogHelper.exitMethod( getClass(), "addInitialNode() " + n.toString() );
+		return n;
+	}
+	
+	/**
+	 * Adds a new <code>Node</code> to the <code>Graph</code> and increments
+	 * the <code>GraphState</code> if appropriate
      *
 	 * @param x the x coordinate of the new node 
 	 * @param y the y coordinate of the new node 
      * @return the added <code>Node</code>; called only during algorithm
 	 * execution; the assumption here is that the algorithm has to "know" the
-	 * position of the node it is adding.
+	 * position of the node it is adding. The only difference from the above
+	 * is that the state is incremented.
 	 */
 	public Node addNode(Integer x, Integer y) {
         LogHelper.enterMethod( getClass(), "addNode(), x = " + x + ", y = " + y);
@@ -583,36 +604,6 @@ public class Graph {
         // changes in GraphElement.java
 
         LogHelper.exitMethod( getClass(), "addNode() " + n.toString() );
-		return n;
-	}
-	
-	/**
-	 * Adds a node to the graph during editing. This is followed up by an
-	 * addFixedPosition() call to establish a position, which may be
-	 * determined by a mouse click or, in case of a Ctrl-n key press,
-	 * randomly.
-     *
-	 * @return the added node
-     *
-     * @todo The locking and unlocking seems bizarre since we know there
-     * should not be a state change. Looks like the node is being created in
-     * the initial graph state and then the state is reset to whatever it
-     * currently is -- not necessary if there are no state changes during
-     * editing (?)
-	 */
-	public Node addInitialNode() {
-		int state = currentGraphState.getState();
-		currentGraphState.setState(GraphState.GRAPH_START_STATE);
-		currentGraphState.setLocked(true);
-
-        Integer newId = nextNodeId();
-		Node n = new Node( currentGraphState, newId );
-		nodes.add(n);
-        nodeById.put( newId, n ); 
-
-		currentGraphState.setLocked(false);
-		currentGraphState.setState(state);
-		
 		return n;
 	}
 	
@@ -748,8 +739,12 @@ public class Graph {
 	 * added. This will always be the largest id so far + 1 
 	 */
 	private int nextNodeId() {
-        if ( nodeById.isEmpty() ) return 0;
-        else return nodeById.lastKey() + 1;
+        LogHelper.enterMethod(getClass(), "nextNodeId");
+        int id = 0;
+        if ( ! nodeById.isEmpty() )
+            id =nodeById.lastKey() + 1;
+        LogHelper.exitMethod(getClass(), "nextNodeId, id = " + id);
+        return id;
 	}
 	
 	/**
@@ -856,4 +851,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2015 08 11 at 19:37:05 GMT]
+//  [Last modified: 2015 08 13 at 14:21:38 GMT]

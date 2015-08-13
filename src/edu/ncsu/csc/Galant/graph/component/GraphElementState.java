@@ -38,16 +38,19 @@ public class GraphElementState {
     /**
      * Attribute list for the snapshot representing this element state
      */
-    private AttributeList attributes;
+    protected AttributeList attributes;
     public AttributeList getAttributes() { return attributes; }
 
     /**
-     * Constructor for a state of this element during any given algorithm state.
+     * Constructor used during parsing and editing, when no attributes are
+     * known yet.
      */
-    public GraphElementState(GraphState algorithmState, AttributeList list) {
+    public GraphElementState(GraphState algorithmState) {
+        LogHelper.logDebug("-> GraphElementState, state = " + algorithmState.getState());
         this.algorithmState = algorithmState;
         this.state = algorithmState.getState();
-        this.attributes = list;
+        this.attributes = new AttributeList();
+        LogHelper.logDebug("<- GraphElementState, elementState = " + this);
     }
 
     /**
@@ -114,6 +117,36 @@ public class GraphElementState {
         }
         return s;
     }
+
+    /**
+     * Like toString(), except that it omits the "x" and "y" attributes; to
+     * be used in cases where these attributes are superceded by the
+     * corresponding fixed ones of a Node.
+     */
+    public String attributesWithoutPosition() {
+        String s = " ";
+        for ( Attribute attribute : attributes.getAttributes() ) {
+            if ( ! attribute.getKey().equals("x")
+                 && ! attribute.getKey().equals("y") ) {
+                s += attribute + " ";
+            }
+        }
+        return s;
+    }
+
+    /**
+     * Like toString(), except that it omits the "id" attribute; to be used
+     * in cases where the id is optional, as is the case with an Edge
+     */
+    public String attributesWithoutId() {
+        String s = " ";
+        for ( Attribute attribute : attributes.getAttributes() ) {
+            if ( ! attribute.getKey().equals("id") ) {
+                s += attribute + " ";
+            }
+        }
+        return s;
+    }
 }
 
-//  [Last modified: 2015 08 13 at 01:02:59 GMT]
+//  [Last modified: 2015 08 13 at 14:32:38 GMT]

@@ -475,6 +475,8 @@ public class GraphPanel extends JPanel{
             g2d.setStroke( new BasicStroke( highlightWidth ) );
         }
 
+        LogHelper.guiLogDebug("drawing node boundary: color = " + g2d.getColor());
+
         // draw node boundary
         g2d.draw( nodeCircle );
 
@@ -517,7 +519,7 @@ public class GraphPanel extends JPanel{
 	private void drawEdge(Graph g, Edge e, Graphics2D g2d) 
         throws GalantException
     {
-		LogHelper.enterMethod(getClass(), "drawEdge, edge = " + e);
+		LogHelper.guiEnterMethod(getClass(), "drawEdge, edge = " + e);
 		int thickness = lineWidth; 
 		
 		if (e != null) {
@@ -544,7 +546,7 @@ public class GraphPanel extends JPanel{
 				
 				//only draw if edge exists at current state
 				if (p1 != null && p2 != null) {
-					LogHelper.logDebug("drawing edge, p1 = " + p1 + ", p2 = " + p2);
+					LogHelper.guiLogDebug("drawing edge, p1 = " + p1 + ", p2 = " + p2);
 					// Self loop
 					if (dest.equals(source)) {
 						Stroke oldStroke = g2d.getStroke();
@@ -576,7 +578,7 @@ public class GraphPanel extends JPanel{
 				g2d.setColor(Color.BLACK);
 			}
 		}
-		LogHelper.exitMethod(getClass(), "drawEdge, edge = " + e);
+		LogHelper.guiExitMethod(getClass(), "drawEdge, edge = " + e);
 	}
 	
 	/**
@@ -1025,4 +1027,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2015 08 11 at 19:54:09 GMT]
+//  [Last modified: 2015 08 13 at 15:48:16 GMT]

@@ -684,18 +684,11 @@ public class Graph {
      * used only during editing.
 	 */
 	public Edge addInitialEdge(Node source, Node target) {
-		int state = currentGraphState.getState();
-		currentGraphState.setState(1);
-		currentGraphState.setLocked(true);
-
 		Edge e = new Edge(currentGraphState, edges.size(), source, target);
 		
 		edges.add(e);
 		source.addEdge(e);
 		target.addEdge(e);
-		
-		currentGraphState.setLocked(false);
-		currentGraphState.setState(state);
 		
 		return e;
 	}
@@ -851,4 +844,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2015 08 13 at 14:21:38 GMT]
+//  [Last modified: 2015 08 13 at 22:40:28 GMT]

@@ -11,8 +11,10 @@ import edu.ncsu.csc.Galant.logging.LogHelper;
 /**
  * Edge graph object. Connects two <code>Node<code>s, and can be directored or undirected.
  * For undirected graphs, "source" and "destination" are meaningless.
- * @author Jason Cockrell, Ty Devries, Alex McCabe, Michael Owoc
+ * @author Jason Cockrell, Ty Devries, Alex McCabe, Michael Owoc, with major
+ * modifications by Matthias Stallmann.
  *
+ * 
  */
 public class Edge extends GraphElement implements Comparable<Edge> {
     Integer id;
@@ -106,8 +108,12 @@ public class Edge extends GraphElement implements Comparable<Edge> {
             idComponent = "id=\"" + this.id + "\"";
         LogHelper.logDebug("Edge toString: source = " + source + ", target = " + target);
  		String s = "<edge " + idComponent;
-        s += " source=\"" + this.source.getId() + "\"";
-        s += " target=\"" + this.target.getId() + "\"";
+        // need this to get past here when the edge is first created and this
+        // function is used for debugging.
+        if ( this.source != null && this.target != null ) {
+            s += " source=\"" + this.source.getId() + "\"";
+            s += " target=\"" + this.target.getId() + "\"";
+        }
         LogHelper.logDebug("Edge toString: super = " + super.toString());
         s += super.attributesWithoutId();
         s += " />";
@@ -139,4 +145,4 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 	}
 }
 
-//  [Last modified: 2015 08 13 at 12:53:47 GMT]
+//  [Last modified: 2015 09 10 at 20:47:01 GMT]

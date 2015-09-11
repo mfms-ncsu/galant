@@ -4,15 +4,15 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns 
 http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
  <graph  name="my_name" edgedefault="directed">
-  <node id="0" weight="0.0" label="" x="344" y="185" color="#005533" />
-  <node id="1" weight="NaN" label="" x="248" y="97" />
-  <node id="2" weight="0.0" label="" x="408" y="109" color="#000000" />
-  <node id="3" weight="NaN" label="" x="254" y="313" color="#000000" />
-  <node id="4" weight="0.0" label="" x="477" y="336" color="#000000" />
-  <node id="5" weight="0.0" label="" x="657" y="237" color="#000000" />
-  <edge id="0" label="" weight="NaN" source="1" target="0" color="#000000" />
-  <edge id="1" label="" weight="NaN" source="2" target="0" color="#000000" />
-  <edge id="2" label="" weight="0.0" source="0" target="3" />
-  <edge id="3" label="" weight="0.0" source="0" target="4" color="#000000" />
-  <edge id="4" label="" weight="0.0" source="0" target="5" color="#000000" />
+  <node id="0" x="344" y="185"  color="#005533" label="" weight="0.0"  />
+  <node id="1" x="248" y="97"  label="" weight="NaN"  />
+  <node id="2" x="408" y="109"  color="#000000" label="" weight="0.0"  />
+  <node id="3" x="254" y="313"  color="#000000" label="" weight="-Infinity"  />
+  <node id="4" x="552" y="327"  color="#000000" label="" weight="0.0"  />
+  <node id="5" x="589" y="165"  color="#000000" label="" weight="0.0"  />
+  <edge id="0" source="1" target="0" color="#000000" label="" weight="NaN"  />
+  <edge id="1" source="2" target="0" color="#000000" label="" weight="NaN"  />
+  <edge id="2" source="0" target="3" label="" weight="0.0"  />
+  <edge id="3" source="0" target="4" color="#000000" label="" weight="Infinity"  />
+  <edge id="4" source="0" target="5" color="#000000" label="" weight="0.0"  />
  </graph></graphml>

@@ -153,9 +153,13 @@ public class GraphLayout {
 	}
 	
 	/**
-	 * Repositions the graph so that the nodes are arranged in an aesthetically pleasing way.
+	 * Repositions the graph so that the nodes are arranged in an
+	 * aesthetically pleasing way.
 	 * 
-	 * This only applies forces to connected subgraphs, otherwise disconnected pieces would repel each other nonstop
+	 * @todo Currently, only works if graph is connected, otherwise
+	 * disconnected pieces repel each other nonstop; the fix is add back in
+	 * the test for connectivity, which is currently an O(n^4) algorithm in
+	 * the worst case.
 	 * 
 	 * @see <a href="http://www.mathematica-journal.com/issue/v10i1/contents/graph_draw/graph_draw_3.html">Force-Directed Algorithms (2006); Hu, Yifan</a>
 
@@ -549,4 +553,4 @@ public class GraphLayout {
 
 }	
 
-//  [Last modified: 2015 07 27 at 12:36:58 GMT]
+//  [Last modified: 2015 09 11 at 19:57:01 GMT]

@@ -177,6 +177,7 @@ public class Graph {
      * else; I guess this is awkward because of the map.
 	 */
 	public void writeMessage(String message) {
+        currentGraphState.incrementState();
 		int state = this.currentGraphState.getState();
 		messages.put(state, message);
 	}
@@ -844,4 +845,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2015 08 13 at 22:40:28 GMT]
+//  [Last modified: 2015 09 23 at 17:02:41 GMT]

@@ -55,6 +55,7 @@ algorithm {
      t.mark();
      endStep();
 
+     beginStep();
      // if the vertices aren't part of the same set
      if ( FIND_SET(h) != FIND_SET(t) ) {
          // add the edge to the MST and highlight it
@@ -66,6 +67,7 @@ algorithm {
      else {
          graph.writeMessage( "Vertices are already in the same component." );
      }
+     endStep();
 
      beginStep();
      h.unMark();
@@ -75,4 +77,4 @@ algorithm {
 
  graph.writeMessage( "MST has total weight " + totalWeight );
 }
-/*  [Last modified: 2015 08 07 at 19:42:54 GMT] */
+/*  [Last modified: 2015 09 23 at 17:05:55 GMT] */

@@ -142,11 +142,11 @@ public class ComponentEditPanel extends JPanel {
 		label.setText(text);
 
 		Double wgt = ge.getWeight();
-        if ( wgt == null ) wgt = 0.0;
+        if ( wgt == null ) wgt = Double.NaN;
 		weight.setValue(wgt);
 	}
 }
 
 
 
-//  [Last modified: 2015 07 27 at 19:08:42 GMT]
+//  [Last modified: 2015 09 28 at 01:28:18 GMT]

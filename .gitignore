@@ -12,5 +12,7 @@ doc/
 Sandbox/*
 # Graph-Gallery is used for WTEiR experiments
 Graph-Gallery
+# graphs used for research, mostly crossing minimization
+Research-Graphs/
 # the doc directory is where javadoc files land
 doc/

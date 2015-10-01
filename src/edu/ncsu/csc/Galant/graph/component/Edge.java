@@ -9,8 +9,10 @@ import edu.ncsu.csc.Galant.GalantException;
 /**
  * Edge graph object. Connects two <code>Node<code>s, and can be directored or undirected.
  * For undirected graphs, "source" and "destination" are meaningless.
- * @author Jason Cockrell, Ty Devries, Alex McCabe, Michael Owoc
+ * @author Jason Cockrell, Ty Devries, Alex McCabe, Michael Owoc, with major
+ * modifications by Matthias Stallmann.
  *
+ * 
  */
 public class Edge extends GraphElement implements Comparable<Edge> {
 
@@ -241,22 +243,26 @@ public class Edge extends GraphElement implements Comparable<Edge> {
             return es==null ? null : es.getColor();
         }
 
-	/**
-	 * @param color the color of the edge to set, stored in six-digit hex representation
-	 */
-	@Override
-	public void setColor(String color) {
-		EdgeState es = newState();
-		es.setColor(color);
-		addEdgeState(es);;
-	}
-
-	/**
-	 * @return the label
-	 */
-	@Override
-	public String getLabel() {
-		return latestState().getLabel();
+	public String toString() {
+        // id may not exist for an edge; not really essential;
+        // inputHasEdgeIds() returns true if they appeared in the input, in
+        // which case they should be rendered in the output as the first
+        // attribute.
+        String idComponent = "";
+        if ( super.graph.inputHasEdgeIds() )
+            idComponent = "id=\"" + this.id + "\"";
+        LogHelper.logDebug("Edge toString: source = " + source + ", target = " + target);
+ 		String s = "<edge " + idComponent;
+        // need this to get past here when the edge is first created and this
+        // function is used for debugging.
+        if ( this.source != null && this.target != null ) {
+            s += " source=\"" + this.source.getId() + "\"";
+            s += " target=\"" + this.target.getId() + "\"";
+        }
+        LogHelper.logDebug("Edge toString: super = " + super.toString());
+        s += super.attributesWithoutId();
+        s += " />";
+		return s;
 	}
 	
 	@Override
@@ -458,4 +464,5 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 	
 }
 
-//  [Last modified: 2015 05 26 at 11:22:46 GMT]
+
+//  [Last modified: 2015 09 28 at 00:59:37 GMT]

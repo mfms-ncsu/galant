@@ -47,8 +47,9 @@ public class LogHelper {
 			// Split the msg/source code with new line,
 			// then increment line counter
 			for (String line: msg.split("\n")){
-				lineCounter ++;
-         		System.out.println("Line " + lineCounter + ": " + line);
+// 				lineCounter++;
+//          		System.out.println("Line " + lineCounter + ": " + line);
+         		System.out.println(line);
       		}
 		}	
 	}
@@ -117,4 +118,4 @@ public class LogHelper {
 	}
 }
 
-//  [Last modified: 2015 04 30 at 16:45:15 GMT]
+//  [Last modified: 2015 09 28 at 00:55:37 GMT]

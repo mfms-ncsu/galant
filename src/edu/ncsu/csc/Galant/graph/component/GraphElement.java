@@ -4,7 +4,8 @@ import edu.ncsu.csc.Galant.GalantException;
 
 /**
  * Abstract class containing graph element manipulation methods
- * @author Jason Cockrell, Ty Devries, Alex McCabe, Michael Owoc
+ * @author Jason Cockrell, Ty Devries, Alex McCabe, Michael Owoc,
+ *         completely rewritten by Matthias Stallmann
  */
 public abstract class GraphElement {
 
@@ -28,4 +29,4 @@ public abstract class GraphElement {
 	
 }
 
-//  [Last modified: 2015 05 26 at 11:53:05 GMT]
+//  [Last modified: 2015 10 02 at 00:55:15 GMT]

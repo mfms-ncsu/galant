@@ -9,19 +9,8 @@ import edu.ncsu.csc.Galant.logging.LogHelper;
 
 /**
  * Abstract class containing graph element manipulation methods
- * @author Jason Cockrell, Ty Devries, Alex McCabe, Michael Owoc
- *
- * @todo Instead of having specific attributes fixed, how about setting up
- * attributes as a map from name (String) to Object, where the latter can be
- * instanceof Boolean, Integer, Double, or String. Converting a Node
- * or Edge to a String for output is simple -- we just need to invoke
- * instanceOf to determine the type of the object and call the right
- * toString() method, implicitly or explicitly. Parsing is slightly more
- * complicated:
- *   - first determine whether the name matches one of the standard ones and
- *     interpret appropriately, as is done in the parser code already
- *   - otherwise, go through the possibilities in the following order:
- *     Integer, Double, Boolean, String   
+ * @author Jason Cockrell, Ty Devries, Alex McCabe, Michael Owoc,
+ *         completely rewritten by Matthias Stallmann
  */
 public class GraphElement {
 
@@ -438,4 +427,4 @@ public class GraphElement {
     }
 }
 
-//  [Last modified: 2015 08 13 at 15:40:29 GMT]
+//  [Last modified: 2015 09 28 at 01:35:39 GMT]

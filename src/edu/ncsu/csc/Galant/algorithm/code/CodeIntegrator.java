@@ -111,8 +111,8 @@ public class CodeIntegrator
 
 				/* Try remove all the comment line*/
 				try {
-					System.out.println("->" + removeAllComment(userCode) + "<-");
-					userCode = removeAllComment(userCode);
+					LogHelper.logDebug("->" + removeAllComments(userCode) + "<-");
+					userCode = removeAllComments(userCode);
 				} catch (IOException e) {
 					throw new MalformedMacroException();
 				}
@@ -251,11 +251,11 @@ public class CodeIntegrator
 		}
 
 		/** 
-		 * Remove all the comment lines in a easy way. 
+		 * Remove all the comment lines in an easy way. 
 		 * Has been tested by test_comment.alg
-		 * @param code code to be proceessed 
+		 * @param code code to be processed 
 		 */
-		private static String removeAllComment(String code) throws IOException {
+		private static String removeAllComments(String code) throws IOException {
 			// http://www.coderanch.com/t/519147/java/java/ignore-remove-comments-java-file
 			InputStream codeInput = new ByteArrayInputStream(code.getBytes());
 			BufferedReader reader = new BufferedReader(new InputStreamReader(codeInput));
@@ -320,4 +320,4 @@ public class CodeIntegrator
 		}				
 	}
 
-//  [Last modified: 2015 07 11 at 14:44:58 GMT]
+//  [Last modified: 2015 08 11 at 18:58:07 GMT]

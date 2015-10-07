@@ -107,7 +107,7 @@ algorithm {
             maxCrossingsEdge.highlight();
             iteration++;
             Node v = maxCrossingsEdge.getSourceNode();
-            Node w = maxCrossingsEdge.getDestNode();
+            Node w = maxCrossingsEdge.getTargetNode();
             checkCrossings();
             displayCrossings();
             endStep(); beginStep();
@@ -152,4 +152,4 @@ algorithm {
 
     System.out.println( "Minimum edge crossings = " + minEdgeCrossings );
 }
-//  [Last modified: 2015 07 03 at 18:58:06 GMT]
+//  [Last modified: 2015 10 07 at 17:52:06 GMT]

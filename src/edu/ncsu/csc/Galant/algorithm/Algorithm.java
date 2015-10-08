@@ -179,6 +179,11 @@ public abstract class Algorithm implements Runnable{
         return graph.addNode(x, y);
 			}
 
+		/** @see edu.ncsu.csc.Galant.graph.component.Graph#deleteNode(Node) */
+		public void deleteNode(Node n){
+				graph.deleteNode(n);
+			}
+
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#isDirected() */
 		public boolean isDirected(){
 				return graph.isDirected();
@@ -256,16 +261,21 @@ public abstract class Algorithm implements Runnable{
      * adds an edge based on the integer id's of the two endpoints
      * @see edu.ncsu.csc.Galant.graph.component.Graph#addEdge(int, int)
      */
-		public void addEdge(int sourceId, int targetId){
-            graph.addEdge(sourceId, targetId);
+		public Edge addEdge(int sourceId, int targetId){
+            return graph.addEdge(sourceId, targetId);
         }
 
 		/**
 		 * @see edu.ncsu.csc.Galant.graph.component.Graph#addEdge(edu.ncsu.csc.Galant.graph.component.Node,
 		 *      edu.ncsu.csc.Galant.graph.component.Node)
 		 */
-		public void addEdge(Node source, Node target){
-				graph.addEdge(source, target);
+		public Edge addEdge(Node source, Node target){
+            return graph.addEdge(source, target);
+        }
+
+		/** @see edu.ncsu.csc.Galant.graph.component.Graph#deleteEdge(Node) */
+		public void deleteEdge(Edge e){
+				graph.deleteEdge(e);
 			}
 
 		/** @see edu.ncsu.csc.Galant.graph.component.Graph#getState() */
@@ -317,4 +327,4 @@ public abstract class Algorithm implements Runnable{
 		public abstract void run();
 	}
 
-//  [Last modified: 2015 08 11 at 19:42:56 GMT]
+//  [Last modified: 2015 10 08 at 20:01:54 GMT]

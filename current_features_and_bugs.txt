@@ -23,6 +23,10 @@ Either Feature or Bug:
 
 - boolean values default to false if they're missing; might have unintended side effects
 
+- weights are initially 0; setting them to NaN (or null) creates problems with the spinner
+
+- binary_tree, when started with a nonempty graph, simply adds nodes and edges to it; the alternative is either to blow it away or create a new graph on the fly
+
 Bugs:
 ————-
 
@@ -30,11 +34,17 @@ Bugs:
 
 - layered graph algorithms barycenter and mce get into busy wait loops after a few steps; I’m guessing it’s at the point where they move nodes; there is likely to be a serious conflict between positions as determined by x and y coordinates and those determined by layer and positionInLayer
 
-- getDestNode(() should not have been eliminated entirely; also, all method calls of the form element.method() should have an algorithm call of the form method(element)
+- getDestNode() should not have been eliminated entirely; also, all method calls of the form element.method() should have an algorithm call of the form method(element)
 
 - syntax highlighting for algorithm methods needs to be updated
 
 - attributes other than the essential ones go away if any editing takes place; need to examine what happens when the dispatcher pushes changes
 
 - id's, sources, and targets for edges end up being duplicated when a graph is exported during execution
+
+- if nodes are moved during execution (and their positions are supposed to persist), the values of (some?) other attributes persist as well; also, future executions do not do anything
+
+- when several consecutive runs of the same algorithm on the same graph are done, the thread synchronization (sometimes?) gets into a race condition; observed (so far) only when node positions are changed and only with dfs_d
+
+- it sometimes does not work to enter weights in the text field; observed for nodes only so far; another reason to dispense with the spinner
 

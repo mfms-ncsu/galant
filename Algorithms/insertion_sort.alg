@@ -33,12 +33,14 @@ Node [] nodes;  // actual nodes
 function lineUpNodes() {
     int xPosition = HORIZONTAL_GAP;
     int yPosition = 2 * VERTICAL_GAP;
-    for ( int i = 0; i < numberOfNodes(); i++ ) { 
-        nodes[i] = getNodeById( i );
+    int i = 0;
+    for_nodes ( n ) { 
+        nodes[i] = n;
         xCoord[i] = xPosition;
         A[i] = nodes[i].getWeight();
         nodes[i].setPosition( xPosition, yPosition );
         xPosition += HORIZONTAL_GAP;
+        i++;
     }
 }
 
@@ -58,8 +60,10 @@ algorithm {
     Node toInsert = addNode(HORIZONTAL_GAP, VERTICAL_GAP);
     toInsert.highlight();
     nodes[0].mark();
+    endStep();
 
     for ( int i = 1; i < n; i++ ) {
+        beginStep();
         double x = A[i]; toInsert.setWeight(A[i]);
         toInsert.setX(xCoord[i]);
         endStep();
@@ -79,9 +83,9 @@ algorithm {
         beginStep();
         A[j+1] = x; nodes[j+1].setWeight(x);
         nodes[j+1].mark();
+        endStep();
     }
     deleteNode(toInsert);
-    endStep();
 }
 
-//  [Last modified: 2015 08 11 at 18:24:59 GMT]
+//  [Last modified: 2015 10 08 at 19:45:16 GMT]

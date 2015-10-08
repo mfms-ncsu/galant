@@ -836,6 +836,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
      * @return true if the KeyboardFocusManager should take no further action with regard to the KeyEvent; false otherwise
      */
     public boolean dispatchKeyEvent(KeyEvent e) {
+        LogHelper.guiEnterMethod(getClass(), "dispatchKeyEvent, e = " + e);
       //"left" step backward when in animation mode
       if(dispatch.isAnimationMode() && e.getID()==KeyEvent.KEY_PRESSED && e.getKeyCode()==KeyEvent.VK_LEFT){
         synchronized (this) { //Handle delay
@@ -849,6 +850,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
             }
             frame.repaint();
         }
+        LogHelper.guiExitMethod(getClass(), "step backward");
         return true;
       }
       //"right" step forward when in animation mode
@@ -864,43 +866,51 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
             }
             frame.repaint();
         }
+        LogHelper.guiExitMethod(getClass(), "step forward");
         return true;
       }
       // "Esc" leave animation mode when in animation mode
       if(dispatch.isAnimationMode() && e.getID()==KeyEvent.KEY_PRESSED
                                     && e.getKeyCode()==KeyEvent.VK_ESCAPE){
         dispatch.setAnimationMode(false);
+        LogHelper.guiExitMethod(getClass(), "exit animation");
         return true;
       }
       // "Ctrl" pressed
       if(e.getID()==KeyEvent.KEY_PRESSED && e.getKeyCode()==KeyEvent.VK_CONTROL){
           ctrlPressed = true;
+        LogHelper.guiExitMethod(getClass(), "Ctrl pressed");
         return true;
       }
       // "Ctrl" released
       if(e.getID()==KeyEvent.KEY_RELEASED && e.getKeyCode()==KeyEvent.VK_CONTROL){
         ctrlPressed = false;
+        LogHelper.guiExitMethod(getClass(), "Ctrl released");
         return true;
       }
       // "Shift" pressed
       if(e.getID()==KeyEvent.KEY_PRESSED && e.getKeyCode()==KeyEvent.VK_SHIFT){
           shiftPressed = true;
+        LogHelper.guiExitMethod(getClass(), "shift pressed");
         return true;
       }
       // "Shift" released
       if(e.getID()==KeyEvent.KEY_RELEASED && e.getKeyCode()==KeyEvent.VK_SHIFT){
         shiftPressed = false;
+        LogHelper.guiExitMethod(getClass(), "shift released");
         return true;
       }
       // "Delete" pressed
       if(!dispatch.isAnimationMode() && e.getID()==KeyEvent.KEY_PRESSED
                                      && e.getKeyCode()==KeyEvent.VK_DELETE){
         deletePressed = true;
+        LogHelper.guiExitMethod(getClass(), "delete pressed");
         return true;
       }
       // "Delete" released
       if(e.getID()==KeyEvent.KEY_RELEASED && e.getKeyCode()==KeyEvent.VK_DELETE){
         deletePressed = false;
+        LogHelper.guiExitMethod(getClass(), "delete released");
         return true;
       }
       // "E" pressed
@@ -928,6 +938,8 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
             dispatch.pushToTextEditor();
           }//delete edge
         }
+        LogHelper.guiExitMethod(getClass(), "step backward");
+        LogHelper.guiExitMethod(getClass(), "'e' pressed");
         return true;
       }
       // "N" pressed
@@ -966,6 +978,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
             dispatch.pushToTextEditor();
           }//delete node
         }
+        LogHelper.guiExitMethod(getClass(), "'n' pressed");
         return true;
       }
       //"ctrl + i" intelligent rearrange
@@ -981,6 +994,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
             //todo - undo smartReposition
           }
         }
+        LogHelper.guiExitMethod(getClass(), "'i' pressed");
         return true;
       }
       // "ctrl+d" switch between directed and undirected
@@ -993,6 +1007,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 				    changeDirectedness(Directedness.UNDIRECTED);
 			    }
         }
+        LogHelper.guiExitMethod(getClass(), "'d' pressed");
         return true;
       }
       // "ctrl+l" display node labels "ctrl+L" display edge labels
@@ -1007,6 +1022,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
           }
           frame.repaint(); 
         }
+        LogHelper.guiExitMethod(getClass(), "'ell' pressed");
         return true;
       }
       // "ctrl+w" display node weights "ctrl+W" display edge weights
@@ -1021,8 +1037,10 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
           }
           frame.repaint(); 
         }
+        LogHelper.guiExitMethod(getClass(), "'w' pressed");
         return true;
       }
+      LogHelper.guiExitMethod(getClass(), "unrecognized key pressed");
       return false;
     }
   });
@@ -1056,4 +1074,4 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	}
 }
 
-//  [Last modified: 2015 09 11 at 19:39:17 GMT]
+//  [Last modified: 2015 10 08 at 18:25:19 GMT]

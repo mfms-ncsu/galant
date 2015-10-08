@@ -78,22 +78,7 @@ public class Graph {
 	
 	public GraphWindow graphWindow;
 
-    /**
-     * The items below are deprecated; all attributes are objects, so we
-     * simply check for null.
-     */
-    public final static Double NOT_A_WEIGHT = Double.NaN;
-    public final static String NOT_A_LABEL = "";
-
-    /**
-     * NOT_A_COLOR is used when no color is specified; when the GraphElement
-     * is drawn on the panel NOT_A_COLOR is rendered as the default color
-     * (black); in other situations (e.g., when converting to text), it may
-     * be omitted
-     */
-    public final static String NOT_A_COLOR = "";
-
-	private GraphState currentGraphState;
+ 	private GraphState currentGraphState;
 
     private String name;
     private String comment;
@@ -845,4 +830,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2015 09 23 at 17:02:41 GMT]
+//  [Last modified: 2015 10 08 at 16:42:28 GMT]

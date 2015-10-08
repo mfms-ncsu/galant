@@ -142,11 +142,15 @@ public class ComponentEditPanel extends JPanel {
 		label.setText(text);
 
 		Double wgt = ge.getWeight();
-        if ( wgt == null ) wgt = Double.NaN;
+        /**
+         * @todo use NaN here and a text field in place of the spinner; NaN
+         * causes spinner to crash.
+         */
+        if ( wgt == null ) wgt = 0.0;
 		weight.setValue(wgt);
 	}
 }
 
 
 
-//  [Last modified: 2015 09 28 at 01:28:18 GMT]
+//  [Last modified: 2015 10 08 at 16:40:44 GMT]

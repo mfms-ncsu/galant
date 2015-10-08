@@ -16,6 +16,9 @@ import edu.ncsu.csc.Galant.algorithm.code.CompilationException;
 import edu.ncsu.csc.Galant.algorithm.code.macro.MalformedMacroException;
 import edu.ncsu.csc.Galant.logging.LogHelper;
 import edu.ncsu.csc.Galant.GalantException;
+import edu.ncsu.csc.Galant.graph.component.Graph;
+import edu.ncsu.csc.Galant.graph.component.GraphState;
+import edu.ncsu.csc.Galant.gui.window.panels.GraphPanel;
 
 /**
  * Each instance of GAlgorithmEditorPanel corresponds to a particular
@@ -117,10 +120,15 @@ public class GAlgorithmEditorPanel extends GEditorPanel {
 		GraphDispatch.getInstance().setAnimationMode(true);
 
 		Algorithm ca = getCompiledAlgorithm();
-		ca.setGraph(GraphDispatch.getInstance().getWorkingGraph());
+        Graph theGraph = GraphDispatch.getInstance().getWorkingGraph();
+        GraphPanel thePanel = GraphDispatch.getInstance().getGraphWindow().getGraphPanel(); 
+		ca.setGraph(theGraph);
+        // the following will go away once threading is straightened out
+        thePanel.setState(GraphState.GRAPH_START_STATE);
 		Thread t = new Thread(ca);
 		t.setName("Execution thread");
 		t.start();
+        
 	}
 	
 	/**
@@ -183,4 +191,4 @@ public class GAlgorithmEditorPanel extends GEditorPanel {
 
 }
 
-//  [Last modified: 2015 07 03 at 14:20:24 GMT]
+//  [Last modified: 2015 08 07 at 20:20:28 GMT]

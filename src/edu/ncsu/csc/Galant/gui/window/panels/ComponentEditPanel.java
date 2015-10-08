@@ -125,9 +125,9 @@ public class ComponentEditPanel extends JPanel {
 			return;
 		} else {
 			this.setVisible(true);
-      //make sure the weight change spinner always gets the first focus
-      //so user can use up/down key to change the weights of nodes or edges
-      weight.requestFocusInWindow();
+            //make sure the weight change spinner always gets the first focus
+            //so user can use up/down key to change the weights of nodes or edges
+            weight.requestFocusInWindow();
 		}
 
 		this.remove(cp);
@@ -147,4 +147,6 @@ public class ComponentEditPanel extends JPanel {
 	}
 }
 
-//  [Last modified: 2015 10 02 at 00:54:05 GMT]
+
+
+//  [Last modified: 2015 09 28 at 01:28:18 GMT]

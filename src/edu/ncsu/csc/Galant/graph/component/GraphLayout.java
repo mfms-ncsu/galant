@@ -227,16 +227,16 @@ public class GraphLayout {
 //                     System.out.printf( "source: index = %d, node = %s\n",
 //                                        nodeToIndex.get( e.getSourceNode() ).intValue(), e.getSourceNode() );
 //                     System.out.printf( "dest:   index = %d, node = %s\n",
-//                                        nodeToIndex.get( e.getDestNode() ).intValue(), e.getDestNode() );
+//                                        nodeToIndex.get( e.getTargetNode() ).intValue(), e.getTargetNode() );
 //                     if (e.getSourceNode().getId() == i) {
-//                         j = e.getDestNode().getId();
-//                     } else if (e.getDestNode().getId() == i) {
+//                         j = e.getTargetNode().getId();
+//                     } else if (e.getTargetNode().getId() == i) {
 //                         j = e.getSourceNode().getId();
 //                     }
 					if ( nodeToIndex.get( e.getSourceNode() ).intValue() == i ) {
-						j = nodeToIndex.get( e.getDestNode() );
+						j = nodeToIndex.get( e.getTargetNode() );
                     }
-                    else if ( nodeToIndex.get( e.getDestNode() ).intValue() == i ) {
+                    else if ( nodeToIndex.get( e.getTargetNode() ).intValue() == i ) {
 						j = nodeToIndex.get( e.getSourceNode() );
 					}
 					if (j != -1 && j != i) {
@@ -538,7 +538,7 @@ public class GraphLayout {
 					frontier.add(current);
 				}
 				
-				current = e.getDestNode();
+				current = e.getTargetNode();
 				if (current.equals(destination)) {
 					return true;
 				} else if (!visited.contains(current)) {
@@ -553,4 +553,4 @@ public class GraphLayout {
 
 }	
 
-//  [Last modified: 2015 09 28 at 00:57:19 GMT]
+//  [Last modified: 2015 09 11 at 19:57:01 GMT]

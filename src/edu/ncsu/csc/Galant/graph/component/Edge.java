@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import edu.ncsu.csc.Galant.GalantException;
+import edu.ncsu.csc.Galant.GraphDispatch;
+import edu.ncsu.csc.Galant.logging.LogHelper;
 
 /**
  * Edge graph object. Connects two <code>Node<code>s, and can be directored or undirected.
@@ -15,234 +17,87 @@ import edu.ncsu.csc.Galant.GalantException;
  * 
  */
 public class Edge extends GraphElement implements Comparable<Edge> {
-
-	private Map<String, Object> attributes;
+    Integer id;
+    Node source;
+    Node target;
 	
-	private GraphState graphCurrentState;
-	private List<EdgeState> edgeStates;
-	
-	public void addEdgeState(EdgeState e){
-		edgeStates.add(e);
-		graphCurrentState.pauseExecution();
+    /**
+     * When an edge is created during parsing and source, target and id are not known.
+     */
+	public Edge(GraphState currentState) {
+        super(currentState.getGraph(), currentState);
 	}
-	
-	public Edge(GraphState currentState, int id, Node _source, Node _dest) {
-		this.graphCurrentState = currentState;
-		edgeStates = new ArrayList<EdgeState>();
-		attributes = new HashMap<String, Object>();
-		
-		EdgeState es = new EdgeState(currentState, id, _source, _dest);
-		addEdgeState(es);
-	}
-	
-	public Edge(GraphState currentState, int _id, Node _source, Node _target, boolean _highlighted, double _weight, String _color, String _label) {
-		graphCurrentState = currentState;
-		edgeStates = new ArrayList<EdgeState>();
-		attributes = new HashMap<String, Object>();
-		
-		EdgeState es = new EdgeState(currentState, _highlighted, _weight, _source, _target, _id, _color, _label, false);
-		addEdgeState(es);;
-	}
-
-	public boolean inScope() {
-		return !(isDeleted());
-	}
-	
-	public boolean inScope(int state)
-    {
-		return isCreated(state) && !isDeleted(state);
-	}
-	
-	/**
-	 * @return true if the edge is highlighted, false otherwise
-	 */
-	public boolean isSelected() {
-		return latestState().isHighlighted();
-	}
-
-	/**
-	 * @return true if the edge is highlighted, false otherwise
-	 */
-	public boolean isSelected(int state)
-    {
-		EdgeState es = getLatestValidState(state);
-		return es == null ? false : es.isHighlighted();
-		
-	}
-	
-    public boolean isHighlighted() {
-        return isSelected();
-    }
-	
-    public boolean isHighlighted(int state)
-    {
-        return isSelected(state);
-    }
-	
-	/**
-	 * @param selected toggles highlighting on the edge
-	 */
-	public void setSelected(boolean selected) {
-		EdgeState es = newState();
-		es.setHighlighted(selected);
-		
-		addEdgeState(es);;
-	}
-	
-    public void highlight() {
-        setSelected( true );
-    }
-
-    public void unHighlight() {
-        setSelected( false );
-    }
-
-	/**
-	 * @return the weight of the edge
-	 */
-	@Override
-	public double getWeight() {
-		return latestState().getWeight();
-	}
-	
-	@Override
-	public double getWeight(int state) {
-        EdgeState es = getLatestValidState(state);
-        return es==null ? null : es.getWeight();
-    }
-
-	/**
-	 * @param weight the weight of the edge
-	 */
-	@Override
-        public void setWeight(double weight)
-        {
-            EdgeState es = newState();
-            es.setWeight(weight);
-            addEdgeState(es);;
-        }
 
     /**
-     * @return true if the edge has a weight in the current state
+     * To add an edge while editing or during algorithm execution: id, source
+     * and target are known at the time.
      */
-    public boolean hasWeight() {
-        return latestState().hasWeight();
+    public Edge(GraphState algorithmState, int id, Node source, Node target) {
+        super(algorithmState.getGraph(), algorithmState);
+        super.graph = algorithmState.getGraph();
+        this.id = id;
+        this.source = source;
+        this.target = target;
     }
 
     /**
-     * @return true if this edge had a non-empty weight at the given state
+     * Getters for source and target (destination).
      */
-    @Override
-        public boolean hasWeight(int state)
-        {
-            EdgeState es = getLatestValidState(state);
-            return es == null ? false : es.hasWeight();
+    public Integer getId() {
+        return id;
+    }
+
+    public Node getSourceNode() {
+        return source;
+    }
+
+    public Node getTargetNode() {
+        return target;
+    }
+
+    /** 
+     * Careful! To be used only when done parsing.
+     */
+    void setId(int id) {
+        this.id = id;
+    }
+
+    /**
+     * Makes sure that all the attributes specific to edges are properly
+     * initialized.
+     */
+    public void initializeAfterParsing()
+    throws GalantException {
+        LogHelper.enterMethod(getClass(), "initializeAfterParsing");
+        super.initializeAfterParsing();
+        this.id = getInteger("id");
+        if ( id == null ) {
+            id = super.graph.getNextEdgeId();
         }
-
-	/**
-	 * Postcondition: hasWeight() == false
-	 */
-	@Override
-        public void clearWeight()
-        {
-            EdgeState es = newState();
-            es.clearWeight();
-            addEdgeState(es);;
+        Integer sourceId = super.getInteger("source");
+        if ( sourceId == null ) {
+             throw new GalantException("Missing attribute source when processing edge " + this.id);
         }
-
-	/**
-	 * @return the source node. If the graph is undirected, source and destination nodes are treated similarly.
-	 */
-	public Node getSourceNode() {
-		return latestState().getSource();
-	}
-	
-	public Node getSourceNode(int state)
-    {
-		EdgeState es = getLatestValidState(state);
-		return es==null ? null : es.getSource();
-	}
-
-	/**
-	 * @param sourceNode the source node to set
-	 */
-	public void setSourceNode(Node sourceNode) {
-		EdgeState es = newState();
-		es.setSource(sourceNode);
-		addEdgeState(es);;
-	}
-
-	/**
-	 * @return the destination node. If the graph is undirected, source and destination nodes are treated similarly.
-	 */
-	public Node getDestNode() {
-		return latestState().getDestination();
-	}
-
-	public Node getDestNode(int state) 
-    {
-		EdgeState es = getLatestValidState(state);
-		return es==null ? null : es.getDestination();
-	}
-
-	/**
-	 * @param destNode the destination node to set
-	 */
-	public void setDestNode(Node destNode) {
-		EdgeState es = newState();
-		es.setDestination(destNode);
-		addEdgeState(es);;
-	}
-
-	public Node getOtherEndpoint(Node in) {
-		EdgeState es = latestState();
-		
-		if (es.getSource().equals(in)) {
-			return es.getDestination();
-		} else if (es.getDestination().equals(in)) {
-			return es.getSource();
-		} else {
-			return null;
-		}
-	}
-	
-	/**
-	 * @return the unique ID of the edge
-	 */
-	public int getId() {
-		return latestState().getId();
-	}
-	
-	public int getId(int state)
-    {
-		EdgeState es = getLatestValidState(state);
-		return es==null ? null : es.getId();
-	}
-
-	/**
-	 * @param id the unique ID to set
-	 */
-	public void setId(int id) {
-		EdgeState es = newState();
-		es.setId(id);
-		addEdgeState(es);;
-	}
-
-	/**
-	 * @return the color of the edge stored in six-digit hex representation
-	 */
-	@Override
-	public String getColor() {
-		return latestState().getColor();
-	}
-	
-	@Override
-        public String getColor(int state)
-        {
-            EdgeState es = getLatestValidState(state);
-            return es==null ? null : es.getColor();
+        this.source = super.graph.getNodeById(sourceId);
+        if (source == null) {
+            throw new GalantException("Source node missing when processing edge " + this.id);
         }
+        Integer targetId = super.getInteger("target");
+        if ( targetId == null ) {
+             throw new GalantException("Missing attribute target when processing edge " + this.id);
+        }
+        this.target = super.graph.getNodeById(targetId);
+        if (target == null) {
+            throw new GalantException("Target node missing when processing edge " + this.id);
+        }
+        super.remove("id");
+        super.remove("source");
+        super.remove("target");
+        LogHelper.exitMethod(getClass(), "initializeAfterParsing, edge = "
+                               + this);
+    }
 
+	@Override
 	public String toString() {
         // id may not exist for an edge; not really essential;
         // inputHasEdgeIds() returns true if they appeared in the input, in
@@ -265,194 +120,22 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 		return s;
 	}
 	
-	@Override
-        public String getLabel(int state)
-        {
-            EdgeState es = getLatestValidState(state);
-            return es==null ? null : es.getLabel();
-        }
-
-	/**
-	 * @param label the label to set
-	 */
-	@Override
-	public void setLabel(String label) {
-		EdgeState es = newState();
-		es.setLabel(label);
-		addEdgeState(es);;
-	}
-
     /**
-     * @return true if the edge has a label in the current state
-     */
-    public boolean hasLabel() {
-        return latestState().hasLabel();
-    }
-
-    /**
-     * @return true if this edge had a non-empty label at the given state
+     * This version is called when the current state of the animation is
+     * exported.
      */
     @Override
-        public boolean hasLabel(int state)
-        {
-            EdgeState es = getLatestValidState(state);
-            return es == null ? false : es.hasLabel();
-        }
-
-	/**
-	 * Postcondition: hasLabel() == false
-	 */
-	@Override
-        public void clearLabel()
-        {
-            EdgeState es = newState();
-            es.clearLabel();
-            addEdgeState(es);;
-        }
-	
-	public boolean isCreated(int state)
-    {
-		EdgeState ns = getLatestValidState(state);
-		return ! (ns == null);
-	}
-	
-	public boolean isDeleted() {
-		return latestState().isDeleted();
-	}
-	
-	public boolean isDeleted(int state)
-    {
-		EdgeState es = getLatestValidState(state);
-		return es==null ? false : es.isDeleted();
-	}
-
-	public void setDeleted(boolean deleted) {
-		EdgeState es = newState();
-		es.setDeleted(deleted);
-		addEdgeState(es);;
-	}
-	
-	public void setStringAttribute(String key, String value) {
-		attributes.put(key, value);
-	}
-	public String getStringAttribute(String key) {
-		Object o = attributes.get(key);
-		
-		if (o != null && String.class.isInstance(o)) {
-			return (String) o;
-		}
-		
-		return null;
-	}
-	
-	public void setIntegerAttribute(String key, Integer value) {
-		attributes.put(key, value);
-	}
-	public Integer getIntegerAttribute(String key) {
-		Object o = attributes.get(key);
-		
-		if (o != null && Integer.class.isInstance(o)) {
-			return (Integer) o;
-		}
-		
-		return null;
-	}
-	
-	public void setDoubleAttribute(String key, Double value) {
-		attributes.put(key, value);
-	}
-	public Double getDoubleAttribute(String key) {
-		Object o = attributes.get(key);
-		
-		if (o != null && Double.class.isInstance(o)) {
-			return (Double) o;
-		}
-		
-		return null;
-	}
-	
-	private EdgeState newState() {
-		graphCurrentState.incrementState();
-		EdgeState latest = edgeStates.get(edgeStates.size()-1);
-		EdgeState es = new EdgeState( latest, this.graphCurrentState );
-		
-		return es;
-	}
-	
-	private EdgeState latestState() {
-		return edgeStates.get(edgeStates.size()-1);
-	}
-	
-    /**
-     * This method is vital for retrieving the most recent information about
-     * an edge, where most recent is defined relative to a given time stamp,
-     * as defined by forward and backward stepping through the animation.
-     * @param stateNumber the numerical indicator (timestamp) of a state,
-     * usually the current one in the animation
-     * @return the latest instance of EdgeState that was created before the
-     * given time stamp, or null if the edge did not exist before the time
-     * stamp.
-     */
-	private EdgeState getLatestValidState( int stateNumber ) 
-    {
-		for ( int i = edgeStates.size() - 1; i >= 0; i-- ) {
-			EdgeState es = edgeStates.get(i);
-			if ( es.getState() <= stateNumber ) {
-				return es;
-			}
-		}
-		
-        return null;
-	}
-	
-	@Override
-	public String toString() {
-		String label = "";
-		if (this.getLabel() != null) {
-			label = this.getLabel();
-		}
-		
-		Node sNode = this.latestState().getSource();
-		Node tNode = this.latestState().getDestination();
-		int sourceId = (sNode != null) ? sNode.getId() : -1;
-		int targetId = (tNode != null) ? tNode.getId() : -1;
-		double weight = this.latestState().getWeight();
-		
-		String s = "<edge "
-				+ "id=\"" + this.getId() 
-				+ "\" label=\"" + label  
-				+ "\" weight=\"" + weight
-				+ "\" source=\"" + sourceId 
-				+ "\" target=\"" + targetId  
-				+ "\" color=\"" + getColor() + "\" />";
-		return s;
-	}
-	
-	public String toString(int state) 
-    {
+	public String toString(int state) {
         if ( ! inScope(state) ) {
             return "";
         }
-        
-        EdgeState es = getLatestValidState(state);
-
-        int sourceId = (es.getSource() != null) ? es.getSource().getId() : -1;
-        int targetId = (es.getDestination() != null) ? es.getDestination().getId() : -1;
-			
-        double weight = es.getWeight();
-        String label = "";
-        if (es.getLabel() != null) {
-            label = this.getLabel();
-        }
-			
-        String s = "<edge id=\"" + es.getId() +
-            "\" weight=\"" + weight +
-            "\" label=\"" + label + 
-            "\" source=\"" + sourceId + 
-            "\" target=\"" + targetId +  
-            "\" color=\"" + es.getColor() + "\" />";
-        return s;
-    }
+		String s = "<edge "
+            + " source=\"" + this.source.getId() + "\""
+            + " target=\"" + this.target.getId() + "\"";
+        s += super.toString(state);
+        s += " />";
+		return s;
+	}
 
 	@Override
 	public int compareTo(Edge e) {
@@ -460,9 +143,6 @@ public class Edge extends GraphElement implements Comparable<Edge> {
         Double otherDouble = new Double( e.getWeight() );
 		return thisDouble.compareTo( otherDouble );
 	}
-	
-	
 }
 
-
-//  [Last modified: 2015 09 28 at 00:59:37 GMT]
+//  [Last modified: 2015 09 10 at 20:47:01 GMT]

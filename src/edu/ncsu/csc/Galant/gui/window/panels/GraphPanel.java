@@ -817,13 +817,6 @@ public class GraphPanel extends JPanel{
 		}
 	}
 	
-	/*
-	 * This is THE function to call whenever the graph state needs to be updated.  Currently it is called whenever the user clicks on the
-	 * "next" button or the right arrow key, but also aught to be the one called for future extensions that change the interface used
-	 * It will determine if the display state merely needs to be updated, or if first a new graphState must be calculated
-	 * If the latter, it will wake up the waiting algorithm, wait for it to run one step, and then increment the graphState
-	 * Then whatever called it can re-paint the frame 
-	 */
 	public void incrementDisplayState() {
 		System.out.printf("(+) Incrementing the graph display state: displayState = %d, graphState = %d\n",
                           state, dispatch.getWorkingGraph().getState() );
@@ -1027,4 +1020,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2015 08 13 at 15:48:16 GMT]
+//  [Last modified: 2015 11 18 at 19:40:04 GMT]

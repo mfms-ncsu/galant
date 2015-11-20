@@ -19,6 +19,7 @@ import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.graph.component.Graph;
 import edu.ncsu.csc.Galant.graph.component.GraphState;
 import edu.ncsu.csc.Galant.gui.window.panels.GraphPanel;
+import edu.ncsu.csc.Galant.algorithm.AlgorithmThreadManager;
 
 /**
  * Each instance of GAlgorithmEditorPanel corresponds to a particular
@@ -119,16 +120,16 @@ public class GAlgorithmEditorPanel extends GEditorPanel {
 	public void run() {
 		GraphDispatch.getInstance().setAnimationMode(true);
 
-		Algorithm ca = getCompiledAlgorithm();
+		Algorithm algorithm = getCompiledAlgorithm();
         Graph theGraph = GraphDispatch.getInstance().getWorkingGraph();
-        GraphPanel thePanel = GraphDispatch.getInstance().getGraphWindow().getGraphPanel(); 
-		ca.setGraph(theGraph);
-        // the following will go away once threading is straightened out
-        thePanel.setState(GraphState.GRAPH_START_STATE);
-		Thread t = new Thread(ca);
-		t.setName("Execution thread");
-		t.start();
-        
+		algorithm.setGraph(theGraph);
+
+        AlgorithmStateManager stateManager = new AlgorithmStateManager();
+        AlgorithmThreadManager threadManager
+            = new AlgorithmThreadManager(algorithm, stateManager);
+        GraphDispatch.getInstance.setThreadManager(threadManager);
+        GraphDispatch.getInstance.setStateManager(stateManager);
+        threadManager.startAlgorithm();
 	}
 	
 	/**
@@ -191,4 +192,4 @@ public class GAlgorithmEditorPanel extends GEditorPanel {
 
 }
 
-//  [Last modified: 2015 08 07 at 20:20:28 GMT]
+//  [Last modified: 2015 11 18 at 20:03:54 GMT]

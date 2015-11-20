@@ -387,6 +387,8 @@ public class GraphElement {
         if ( getWeight() == null ) {
             Integer weightAsInteger = getInteger(WEIGHT);
             if ( weightAsInteger != null ) {
+                // get rid of the integer value first
+                clearWeight();
                 set(WEIGHT, (double) weightAsInteger);
             }
         }
@@ -427,4 +429,4 @@ public class GraphElement {
     }
 }
 
-//  [Last modified: 2015 09 28 at 01:35:39 GMT]
+//  [Last modified: 2015 11 14 at 02:46:53 GMT]

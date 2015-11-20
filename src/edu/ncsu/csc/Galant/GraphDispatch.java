@@ -9,6 +9,7 @@ import java.util.UUID;
 import edu.ncsu.csc.Galant.graph.component.Graph;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow;
 import edu.ncsu.csc.Galant.logging.LogHelper;
+import edu.ncsu.csc.Galant.algorithm.AlgorithmThreadManager;
 
 /**
  * Dispatch for managing working graphs in the editor; also used for passing
@@ -31,7 +32,13 @@ public class GraphDispatch {
 	private int windowWidth;
 	private int windowHeight;
 
+    /** true if animating an algorithm instead of editing */
 	private boolean animationMode = false;
+    /** reference to manager of the algorithm thread */
+    private AlgorithmThreadManager threadManager;
+    /** the algorithm state needs to be accessed by both the algorithm and
+     * the thread manager */
+    private AlgorithmStateManager stateManager;
 
 	private GraphWindow graphWindow;
 
@@ -51,7 +58,7 @@ public class GraphDispatch {
 	}
 
     /** if true, this goes through the animation in slow motion but does not
-     * allow backtracking */
+     * allow backtracking (NOT IMPLEMENTED) */
     private boolean movieMode = false;
 
 	public static final String ANIMATION_MODE = "animationMode";
@@ -120,6 +127,16 @@ public class GraphDispatch {
 		notifyListeners(ANIMATION_MODE, new Boolean(old), new Boolean(this.animationMode) );
 	}
 
+    public AlgorithmThreadManager getThreadManager() { return threadManager; }
+    public void setThreadManager(AlgorithmThreadManager threadManager) {
+        this.threadManager = threadManager;
+    }
+
+    public AlgorithmStateManager getStateManager() { return stateManager; }
+    public void setStateManager(AlgorithmStateManager stateManager) {
+        this.stateManager = stateManager;
+    }
+
     /**
      * @todo algorithmMovesNodes is the only piece of information that is
      * relevant only during execution and must be initialized (to false) when
@@ -127,13 +144,13 @@ public class GraphDispatch {
      * initialize() method, but it probably should not be a part of
      * GraphDispatch at all.
      */
-  public boolean algorithmMovesNodes() {
-		return this.algorithmMovesNodes;
-	}
+    public boolean algorithmMovesNodes() {
+        return this.algorithmMovesNodes;
+    }
   
-  public void setAlgorithmMovesNodes(boolean algmovnod) {
-    this.algorithmMovesNodes = algmovnod;
-  }
+    public void setAlgorithmMovesNodes(boolean algmovnod) {
+        this.algorithmMovesNodes = algmovnod;
+    }
   
 	public void pushToGraphEditor() {
 		notifyListeners(GRAPH_UPDATE, null, null);
@@ -199,4 +216,4 @@ public class GraphDispatch {
 
 }
 
-//  [Last modified: 2015 08 11 at 14:36:09 GMT]
+//  [Last modified: 2015 11 18 at 20:05:21 GMT]

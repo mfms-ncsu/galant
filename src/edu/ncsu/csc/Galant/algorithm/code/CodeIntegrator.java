@@ -18,13 +18,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 /**
- * @todo Exception handling needs work, but the bigger issue is creation of a
- * separate method that runs the algorithm along with an
- * "algorithm { <body> }"
- * syntax.
- * This would mitigate the weirdness of function declarations and global
- * variables.
- *
  * <p>
  * The "pseudo-compiler" &mdash; a rather misleading name, which is why I've called it something
  * that I think is more accurate.
@@ -63,8 +56,8 @@ public class CodeIntegrator
         /**
          * Here is the real code that appears before and after the algorithm.
          */
-        private static final String REAL_ALGORITHM_HEAD = "initialize();GraphState gs = this.getGraph().getGraphState(); GraphDispatch.getInstance().setAlgorithmComplete(false); synchronized(gs){ try{gs.wait(); } catch (InterruptedException e){e.printStackTrace(System.out); } }";
-        private static final String REAL_ALGORITHM_TAIL = "if(gs.isLocked()) endStep(); GraphDispatch.getInstance().setAlgorithmComplete(true);";
+        private static final String REAL_ALGORITHM_HEAD = "initialize(); AlgorithmStateManager asm = new AlgorithmStateManager(); GraphDispatch.getInstance().setStateManager(asm); incrementAlgorithmState();";
+        private static final String REAL_ALGORITHM_TAIL = "finishAlgorithm();";
 
 		// The basic class structure into which the user's code can be inserted so it can be
 		// compiled.
@@ -81,16 +74,19 @@ public class CodeIntegrator
 			"import edu.ncsu.csc.Galant.algorithm.code.macro.Pair;" +
             "import edu.ncsu.csc.Galant.GalantException;" +
             "import edu.ncsu.csc.Galant.GraphDispatch;" +
+            "import edu.ncsu.csc.Galant.algorithm.AlgorithmStateManager;" +
 			IMPORTS_FIELD +
 			"public class " + NAME_FIELD + " extends Algorithm" + "{" + CODE_FIELD + "}";
 
-		public static final String ALGORITHM_STRUCTURE = "public void run(){ try {" +
-						    ALGORITHM_HEAD + ALGORITHM_BODY + ALGORITHM_TAIL + "}" + "catch (Exception e)"
-                                      + " { \n if ( e instanceof GalantException )"
-                                      + " { GalantException ge = (GalantException) e;"
-                                      + " ge.report(\"\"); ge.display(); }"
-                                      + " \n else {e.printStackTrace(System.out);}}}" ;
-		//@formatter:on
+		public static final String ALGORITHM_STRUCTURE
+            = "public void run(){ try {" +
+            ALGORITHM_HEAD + ALGORITHM_BODY + ALGORITHM_TAIL
+            + "}" + "catch (Exception e)"
+            + " { if ( e instanceof Termination ) {} "
+            + " else if ( e instanceof GalantException )"
+            + " { GalantException ge = (GalantException) e;"
+            + " ge.report(\"\"); ge.display(); }"
+            + " else {e.printStackTrace(System.out);}}}" ;
 
 		/**
 		 * Converts the unmodified user algorithm code into a proper Java class, as would be found
@@ -320,4 +316,4 @@ public class CodeIntegrator
 		}				
 	}
 
-//  [Last modified: 2015 08 11 at 18:58:07 GMT]
+//  [Last modified: 2015 11 20 at 15:11:14 GMT]

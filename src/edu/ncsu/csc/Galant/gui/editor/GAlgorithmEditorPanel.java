@@ -19,7 +19,8 @@ import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.graph.component.Graph;
 import edu.ncsu.csc.Galant.graph.component.GraphState;
 import edu.ncsu.csc.Galant.gui.window.panels.GraphPanel;
-import edu.ncsu.csc.Galant.algorithm.AlgorithmThreadManager;
+import edu.ncsu.csc.Galant.algorithm.AlgorithmExecutor;
+import edu.ncsu.csc.Galant.algorithm.AlgorithmSynchronizer;
 
 /**
  * Each instance of GAlgorithmEditorPanel corresponds to a particular
@@ -124,12 +125,12 @@ public class GAlgorithmEditorPanel extends GEditorPanel {
         Graph theGraph = GraphDispatch.getInstance().getWorkingGraph();
 		algorithm.setGraph(theGraph);
 
-        AlgorithmStateManager stateManager = new AlgorithmStateManager();
-        AlgorithmThreadManager threadManager
-            = new AlgorithmThreadManager(algorithm, stateManager);
-        GraphDispatch.getInstance.setThreadManager(threadManager);
-        GraphDispatch.getInstance.setStateManager(stateManager);
-        threadManager.startAlgorithm();
+        AlgorithmSynchronizer algorithmSynchronizer = new AlgorithmSynchronizer();
+        AlgorithmExecutor algorithmExecutor
+            = new AlgorithmExecutor(algorithm, algorithmSynchronizer);
+        GraphDispatch.getInstance.setAlgorithmSynchronizer(algorithmSynchronizer);
+        GraphDispatch.getInstance.setAlgorithmExecutor(algorithmExecutor);
+        algorithmExecutor.startAlgorithm();
 	}
 	
 	/**
@@ -192,4 +193,4 @@ public class GAlgorithmEditorPanel extends GEditorPanel {
 
 }
 
-//  [Last modified: 2015 11 18 at 20:03:54 GMT]
+//  [Last modified: 2015 12 01 at 21:08:58 GMT]

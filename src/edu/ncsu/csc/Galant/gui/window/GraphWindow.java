@@ -55,6 +55,7 @@ import edu.ncsu.csc.Galant.gui.util.EdgeEditDialog;
 import edu.ncsu.csc.Galant.gui.util.DeleteNodeDialog;
 import edu.ncsu.csc.Galant.gui.editor.GTabbedPane; // for confirmation dialog
 import edu.ncsu.csc.Galant.gui.editor.GEditorFrame; // for confirmation dialog
+import edu.ncsu.csc.Galant.algorithm.AlgorithmSynchronizer;
 
 /**
  * Window for displaying the <code>Graph</code>, containing all necessary
@@ -81,7 +82,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	private static JToolBar toolBar;
 	
 	/** The Graph panel used to draw the active graph **/
-	private static GraphPanel gp;
+	private static GraphPanel graphPanel;
 	
 	/** A panel used to edit Graph element's properties **/ 
 	public static ComponentEditPanel componentEditPanel;
@@ -93,7 +94,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		return stepForward;
 	}
 	private final JButton stepBack;
-  public JButton getStepBack(){
+    public JButton getStepBack(){
 		return stepBack;
 	}
     private final JButton done;
@@ -246,7 +247,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	
 	public static GraphPanel getGraphPanel()
 	{
-		return gp;
+		return graphPanel;
 	}
 	
 	/**
@@ -262,19 +263,19 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		_dispatch.addChangeListener(this);
 		
 		// Create the panel that renders the active Graph
-		gp = new GraphPanel(dispatch, this);
+		graphPanel = new GraphPanel(dispatch, this);
 
 		// Add a listener to handle visual editing of the Graph
-		gp.addMouseMotionListener( new MouseMotionListener() {
+		graphPanel.addMouseMotionListener( new MouseMotionListener() {
                 @Override
                     public void mouseDragged(MouseEvent arg0) {
                     // If you start dragging, set dragging mode so you don't
                     // perform any other operations on the Node after
                     // releasing it
-                    Node sel = gp.getSelectedNode();
+                    Node sel = graphPanel.getSelectedNode();
                     if (sel != null) {
-                        gp.setDragging(true);
-                        gp.setEdgeTracker(null);
+                        graphPanel.setDragging(true);
+                        graphPanel.setEdgeTracker(null);
                         if ( !dispatch.isAnimationMode() || !dispatch.algorithmMovesNodes()) {
                             sel.setFixedPosition( arg0.getPoint() );
                         }
@@ -288,7 +289,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                     // follow the mouse with an edge
                     if ( ! dispatch.isAnimationMode() ) {
                         if (mode == GraphMode.CREATE_EDGE) {
-                            gp.setEdgeTracker(arg0.getPoint());
+                            graphPanel.setEdgeTracker(arg0.getPoint());
                             frame.repaint();
                         }
                     }
@@ -296,7 +297,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
             }); // addMouseMotionListener
 		
 		// Add a listener to handle visual editing of the Graph
-		gp.addMouseListener( new MouseAdapter() {
+		graphPanel.addMouseListener( new MouseAdapter() {
                 Node prevNode;
 			
                 @Override
@@ -304,8 +305,8 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                         Point location = e.getPoint();
                         LogHelper.guiLogDebug( "CLICK, location = " + location );
 					
-                        prevNode = gp.getSelectedNode();
-                        Node n = gp.selectTopClickedNode(location);
+                        prevNode = graphPanel.getSelectedNode();
+                        Node n = graphPanel.selectTopClickedNode(location);
                 }
 
                 @Override
@@ -314,14 +315,14 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                         LogHelper.guiLogDebug("RELEASE");
                         LogHelper.guiLogDebug(mode.toString());
 				
-                        if ( gp.isDragging() ) {
+                        if ( graphPanel.isDragging() ) {
                             LogHelper.guiLogDebug( "End of drag: location = " + location );
                             // Finished dragging a node, now reset the
                             // GraphPanel's tracking info
-                            gp.setDragging(false);
-                            gp.setSelectedNode(null);
-                            gp.setPrevSelectedNode(null);
-                            gp.setEdgeTracker(null);
+                            graphPanel.setDragging(false);
+                            graphPanel.setSelectedNode(null);
+                            graphPanel.setPrevSelectedNode(null);
+                            graphPanel.setEdgeTracker(null);
 					
                             // Unselected the node, so hide the edit panel
                             componentEditPanel.setWorkingComponent(null);
@@ -332,11 +333,11 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                         else if ( ! dispatch.isAnimationMode() ){
                             // release after click
                             // not in animation mode
-                            Node clickNode = gp.getSelectedNode();
+                            Node clickNode = graphPanel.getSelectedNode();
                             Edge clickEdge = null;
                             if (clickNode == null) {
                                 prevNode = null;
-                                clickEdge = gp.selectTopClickedEdge(location);
+                                clickEdge = graphPanel.selectTopClickedEdge(location);
                             }
 				
                             // Perform the Edit action associated with the
@@ -361,7 +362,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                                 Node n = g.addInitialNode(location.x, location.y);
 							
                                 // select the new node
-                                Node nNew = gp.selectTopClickedNode(location);
+                                Node nNew = graphPanel.selectTopClickedNode(location);
                                 LogHelper.guiLogDebug( " select: node = " + n );
 
                                 componentEditPanel.setWorkingComponent(nNew);
@@ -381,9 +382,9 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 							
                                 // select the new edge and clear the edge
                                 // trackers
-                                gp.setSelectedNode(null);
-                                gp.setSelectedEdge(e);
-                                gp.setEdgeTracker(null);
+                                graphPanel.setSelectedNode(null);
+                                graphPanel.setSelectedEdge(e);
+                                graphPanel.setEdgeTracker(null);
 							
                                 componentEditPanel.setWorkingComponent(e);
 							
@@ -399,7 +400,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                                 if (clickNode != null) {
                                     Graph g = dispatch.getWorkingGraph();
                                     g.removeNode(clickNode);
-                                    gp.setSelectedNode(null);
+                                    graphPanel.setSelectedNode(null);
 								
                                     if (repositionBtn.isSelected())
                                         g.smartReposition();
@@ -410,7 +411,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                                     // for an edge
                                     Graph g = dispatch.getWorkingGraph();
                                     g.removeEdge(clickEdge);
-                                    gp.setSelectedEdge(null);
+                                    graphPanel.setSelectedEdge(null);
 								
                                     if (repositionBtn.isSelected())
                                         g.smartReposition();
@@ -456,7 +457,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		
 		this.add(initToolbar());
 		this.add(statusLabel);
-		this.add(gp);
+		this.add(graphPanel);
 		this.add(initAnimationPanel());
 		this.add(componentEditPanel);
 
@@ -464,7 +465,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		WindowUtil.preserveWindowBounds(frame, 0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
 		frame.setVisible(true);
 		
-		dispatch.setWindowSize(gp.getHeight(), gp.getWidth());
+		dispatch.setWindowSize(graphPanel.getHeight(), graphPanel.getWidth());
 		
 		LogHelper.exitConstructor(getClass());
 	} // constructor
@@ -477,7 +478,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		LogHelper.guiEnterMethod(getClass(), "changeMode");
 		
 		this.mode = mode;
-		gp.setEdgeTracker(null);
+		graphPanel.setEdgeTracker(null);
 				
 		switch(mode) {
 				case SELECT:{
@@ -486,7 +487,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 				}
 				case CREATE_EDGE:{
 					addEdge.setSelected(true);
-					gp.setSelectedNode(null);
+					graphPanel.setSelectedNode(null);
 					break;
 				}
 				case CREATE_NODE:{
@@ -536,32 +537,30 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		if (evt.getPropertyName().equals(GraphDispatch.ANIMATION_MODE)) {
 			if ( (Boolean) evt.getNewValue() ) {
 				componentEditPanel.setWorkingComponent(null);
-				gp.setDisplayState(GraphState.GRAPH_START_STATE);
 				stepForward.setEnabled(true);
 				stepBack.setEnabled(false);
 				animationButtons.setVisible(true);
                 animationButtons.setFocusable(true);
                 animationButtons.requestFocusInWindow();
 
-        directedBtn.setVisible(false);
-        undirectedBtn.setVisible(false);
+                directedBtn.setVisible(false);
+                undirectedBtn.setVisible(false);
 				select.setVisible(false);
-        addNode.setVisible(false);
-        addEdge.setVisible(false);
-        deleteBtn.setVisible(false);
-        repositionBtn.setVisible(false);
-			} else {
-				animationButtons.setVisible(false);
-        directedBtn.setVisible(true);
-        undirectedBtn.setVisible(true);
-				select.setVisible(true);
-        addNode.setVisible(true);
-        addEdge.setVisible(true);
-        deleteBtn.setVisible(true);
-        repositionBtn.setVisible(true);
+                addNode.setVisible(false);
+                addEdge.setVisible(false);
+                deleteBtn.setVisible(false);
+                repositionBtn.setVisible(false);
 			}
-			
-		// Update the graph directedness flag to the new working graph's flag
+            else {
+				animationButtons.setVisible(false);
+                directedBtn.setVisible(true);
+                undirectedBtn.setVisible(true);
+				select.setVisible(true);
+                addNode.setVisible(true);
+                addEdge.setVisible(true);
+                deleteBtn.setVisible(true);
+                repositionBtn.setVisible(true);
+			}
 		} 
 		else if (evt.getPropertyName().equals(GraphDispatch.GRAPH_UPDATE)) {
 			if (dispatch.getWorkingGraph().isDirected()) {
@@ -733,6 +732,26 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		return button;
 	}
 
+    private void performStepBack() {
+        AlgorithmExecutor executor = dispatch.getAlgorithmExecutor();
+        executor.decrementDisplayState();
+        stepForward.setEnabled(executor.hasNextState());
+        stepBack.setEnabled(executor.hasPreviousState());
+    }
+
+    private void performStepForward() {
+        AlgorithmExecutor executor = dispatch.getAlgorithmExecutor();
+        executor.incrementDisplayState();
+        stepForward.setEnabled(executor.hasNextState());
+        stepBack.setEnabled(executor.hasPreviousState());
+    }
+
+    private void performDone() {
+        AlgorithmExecutor executor = dispatch.getAlgorithmExecutor();
+        executor.stopAlgorithm();
+        dispatch.setAnimationMode(false);
+    }
+
 	/**
 	 * Initialize the animation panel controls
 	 * Steps through an Algorithm or exits the mode
@@ -746,12 +765,8 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		stepBack.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				gp.decrementDisplayState();
-				
-				stepForward.setEnabled(gp.hasNextState());
-				stepBack.setEnabled(gp.hasPreviousState());
-				
-				frame.repaint();
+                performStepBack();
+                frame.repaint();
 			}
 		});
     		
@@ -759,13 +774,8 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		stepForward.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				
+                performStepForward();
 				updateStatusLabel("Algorithm execution in progress");
-				gp.incrementDisplayState();
-				
-				stepForward.setEnabled(gp.hasNextState());
-				stepBack.setEnabled(gp.hasPreviousState());
-				
 				frame.repaint();
 			}
 		});
@@ -774,7 +784,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		done.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				dispatch.setAnimationMode(false);
+                performDone();
 			}
 		});
     
@@ -794,7 +804,8 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		});
 
   // add keyboard shortcuts    
-  KeyboardFocusManager keyManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+  KeyboardFocusManager keyManager
+      = KeyboardFocusManager.getCurrentKeyboardFocusManager();
   keyManager.addKeyEventDispatcher(new KeyEventDispatcher() {
     /** 
      * Intent is to delay for about 1/60 second = roughly 17 milliseconds
@@ -838,49 +849,45 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
     public boolean dispatchKeyEvent(KeyEvent e) {
         LogHelper.guiEnterMethod(getClass(), "dispatchKeyEvent, e = " + e);
       //"left" step backward when in animation mode
-      if(dispatch.isAnimationMode() && e.getID()==KeyEvent.KEY_PRESSED && e.getKeyCode()==KeyEvent.VK_LEFT){
-        synchronized (this) { //Handle delay
-            gp.decrementDisplayState();
-            stepForward.setEnabled(gp.hasNextState());
-				    stepBack.setEnabled(gp.hasPreviousState());
-            try {
+      if ( dispatch.isAnimationMode()
+           && e.getID() == KeyEvent.KEY_PRESSED
+           && e.getKeyCode()==KeyEvent.VK_LEFT ) {
+          performStepBack();
+          // may need to delay to allow display to catch up if user holds
+          // down key
+          try {
               Thread.sleep(DELAY_TIME);
-            } catch (InterruptedException f) {
-              //Handle exception
-            }
-            frame.repaint();
-        }
-        LogHelper.guiExitMethod(getClass(), "step backward");
-        return true;
+          } catch (InterruptedException f) {}
+          frame.repaint();
+          LogHelper.guiExitMethod(getClass(), "step backward");
+          return true;
       }
       //"right" step forward when in animation mode
-      if(dispatch.isAnimationMode() && e.getID()==KeyEvent.KEY_PRESSED && e.getKeyCode()==KeyEvent.VK_RIGHT){
-        synchronized (this) { //Handle delay
-            gp.incrementDisplayState();
-            stepForward.setEnabled(gp.hasNextState());
-				    stepBack.setEnabled(gp.hasPreviousState());
-            try {
+      if ( dispatch.isAnimationMode()
+           && e.getID() == KeyEvent.KEY_PRESSED
+           && e.getKeyCode() == KeyEvent.VK_RIGHT ) {
+          performStepForward();
+          try {
               Thread.sleep(DELAY_TIME);
-            } catch (InterruptedException f) {
-              //Handle exception
-            }
-            frame.repaint();
-        }
-        LogHelper.guiExitMethod(getClass(), "step forward");
-        return true;
+          } catch (InterruptedException f) {}
+          frame.repaint();
+          LogHelper.guiExitMethod(getClass(), "step forward");
+          return true;
       }
       // "Esc" leave animation mode when in animation mode
-      if(dispatch.isAnimationMode() && e.getID()==KeyEvent.KEY_PRESSED
-                                    && e.getKeyCode()==KeyEvent.VK_ESCAPE){
-        dispatch.setAnimationMode(false);
-        LogHelper.guiExitMethod(getClass(), "exit animation");
-        return true;
+      if ( dispatch.isAnimationMode()
+           && e.getID() == KeyEvent.KEY_PRESSED
+           && e.getKeyCode() == KeyEvent.VK_ESCAPE ) {
+          performDone();
+          LogHelper.guiExitMethod(getClass(), "exit animation");
+          return true;
       }
       // "Ctrl" pressed
-      if(e.getID()==KeyEvent.KEY_PRESSED && e.getKeyCode()==KeyEvent.VK_CONTROL){
+      if( e.getID() == KeyEvent.KEY_PRESSED
+          && e.getKeyCode() == KeyEvent.VK_CONTROL) {
           ctrlPressed = true;
-        LogHelper.guiExitMethod(getClass(), "Ctrl pressed");
-        return true;
+          LogHelper.guiExitMethod(getClass(), "Ctrl pressed");
+          return true;
       }
       // "Ctrl" released
       if(e.getID()==KeyEvent.KEY_RELEASED && e.getKeyCode()==KeyEvent.VK_CONTROL){
@@ -957,7 +964,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
             Node n = g.addInitialNode(p.x, p.y);
 							
             // select the new node
-            Node nNew = gp.selectTopClickedNode(p);
+            Node nNew = graphPanel.selectTopClickedNode(p);
             componentEditPanel.setWorkingComponent(nNew);
             LogHelper.guiLogDebug( " select: node = " + n );
 
@@ -1063,7 +1070,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 
     @Override
 	public void componentResized(ComponentEvent e){
-        dispatch.setWindowSize(gp.getHeight(), gp.getWidth());
+        dispatch.setWindowSize(graphPanel.getHeight(), graphPanel.getWidth());
         frame.repaint();
     }
 
@@ -1074,4 +1081,4 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	}
 }
 
-//  [Last modified: 2015 10 08 at 18:25:19 GMT]
+//  [Last modified: 2015 12 01 at 21:58:55 GMT]

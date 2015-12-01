@@ -9,7 +9,8 @@ import java.util.UUID;
 import edu.ncsu.csc.Galant.graph.component.Graph;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow;
 import edu.ncsu.csc.Galant.logging.LogHelper;
-import edu.ncsu.csc.Galant.algorithm.AlgorithmThreadManager;
+import edu.ncsu.csc.Galant.algorithm.AlgorithmExecutor;
+import edu.ncsu.csc.Galant.algorithm.AlgorithmSynchronizer;
 
 /**
  * Dispatch for managing working graphs in the editor; also used for passing
@@ -34,32 +35,27 @@ public class GraphDispatch {
 
     /** true if animating an algorithm instead of editing */
 	private boolean animationMode = false;
-    /** reference to manager of the algorithm thread */
-    private AlgorithmThreadManager threadManager;
-    /** the algorithm state needs to be accessed by both the algorithm and
-     * the thread manager */
-    private AlgorithmStateManager stateManager;
+
+    /**
+     * reference to controller of algorithm execution from the point of view
+     * of the display, i.e., the object whose methods are called when user
+     * starts/stops algorithm and steps forward or backward.
+     */
+    private AlgorithmExecutor algorithmExecutor;
+
+    /**
+     * reference to the object whose methods are called when the algorithm
+     * changes the state of the graph in response to user actions
+     */
+    private AlgorithmSynchronizer algorithmSynchronizer;
 
 	private GraphWindow graphWindow;
 
+    /**
+     * true if the algorithm moves nodes; an algorithm should set this if it
+     * does not want the user to move nodes during execution.
+     */
     private boolean algorithmMovesNodes = false;
-
-    private int count = 0;
-	private boolean algorithmComplete = false;
-	public void setAlgorithmComplete( boolean algorithmComplete ){
-        LogHelper.logDebug("**** setAlgorithmComplete = " + algorithmComplete);
-        count = 0;
-		this.algorithmComplete = algorithmComplete;
-	}
-	public boolean getAlgorithmComplete(){
-        count++;
-        LogHelper.logDebug("getAlgorithmComplete = " + algorithmComplete + ", " + count);
- 		return algorithmComplete;
-	}
-
-    /** if true, this goes through the animation in slow motion but does not
-     * allow backtracking (NOT IMPLEMENTED) */
-    private boolean movieMode = false;
 
 	public static final String ANIMATION_MODE = "animationMode";
 	public static final String GRAPH_UPDATE = "graphUpdate";
@@ -99,7 +95,6 @@ public class GraphDispatch {
 			workingGraph = new Graph();
 			workingGraph.graphWindow = graphWindow;
 		}
-		
 		return workingGraph;
 	}
 
@@ -127,14 +122,18 @@ public class GraphDispatch {
 		notifyListeners(ANIMATION_MODE, new Boolean(old), new Boolean(this.animationMode) );
 	}
 
-    public AlgorithmThreadManager getThreadManager() { return threadManager; }
-    public void setThreadManager(AlgorithmThreadManager threadManager) {
-        this.threadManager = threadManager;
+    public AlgorithmExecutor getAlgorithmExecutor() {
+        return algorithmExecutor;
+    }
+    public void setAlgorithmExecutor(AlgorithmExecutor algorithmExecutor) {
+        this.algorithmExecutor = algorithmExecutor;
     }
 
-    public AlgorithmStateManager getStateManager() { return stateManager; }
-    public void setStateManager(AlgorithmStateManager stateManager) {
-        this.stateManager = stateManager;
+    public AlgorithmSynchronizer getAlgorithmSynchronizer() {
+        return algorithmSynchronizer;
+    }
+    public void setAlgorithmSynchronizer(AlgorithmSynchronizer algorithmSynchronizer) {
+        this.algorithmSynchronizer = algorithmSynchronizer;
     }
 
     /**
@@ -148,8 +147,8 @@ public class GraphDispatch {
         return this.algorithmMovesNodes;
     }
   
-    public void setAlgorithmMovesNodes(boolean algmovnod) {
-        this.algorithmMovesNodes = algmovnod;
+    public void setAlgorithmMovesNodes(boolean algorithmMovesNodes) {
+        this.algorithmMovesNodes = algorithmMovesNodes;
     }
   
 	public void pushToGraphEditor() {
@@ -160,19 +159,6 @@ public class GraphDispatch {
 		notifyListeners(TEXT_UPDATE, null, null);
 	}
 	
-	/*
-	public void notifyAddNode(Node n) {
-		notifyListeners(ADD_NODE, n, n);
-	}
-	
-	public void notifyAddEdge(Edge e) {
-		notifyListeners(ADD_EDGE, e, e);
-	}
-	
-	public void notifyDeleteComponent() {
-		notifyListeners(DELETE_COMPONENT, null, null);
-	}*/
-
 	private void notifyListeners(String property, Object oldValue, Object newValue) {
 		for (PropertyChangeListener name : listener) {
 			name.propertyChange(new PropertyChangeEvent(this, property, oldValue, newValue));
@@ -216,4 +202,4 @@ public class GraphDispatch {
 
 }
 
-//  [Last modified: 2015 11 18 at 20:05:21 GMT]
+//  [Last modified: 2015 12 01 at 21:24:09 GMT]

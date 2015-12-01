@@ -5,6 +5,8 @@
  * firing up the algorithm and keeping track of the relationship between the
  * display state and the algorithm state. It is also responsible for
  * signaling the algorithm to terminate and then terminating the thread.
+ * @see edu.ncsu.csc.Galant.algorithm.AlgorithmSynchronizer for the worker
+ * thread end of the synchronization.
  */
 
 import java.lang.Thread;
@@ -136,4 +138,4 @@ public class AlgorithmExecutor {
     }
 }
 
-//  [Last modified: 2015 11 20 at 22:06:45 GMT]
+//  [Last modified: 2015 12 01 at 21:02:50 GMT]

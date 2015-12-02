@@ -9,6 +9,8 @@
  * thread end of the synchronization.
  */
 
+package edu.ncsu.csc.Galant.algorithm;
+
 import java.lang.Thread;
 import edu.ncsu.csc.Galant.algorithm.Algorithm;
 
@@ -27,7 +29,7 @@ public class AlgorithmExecutor {
      * Makes a note of the algorithm and its synchronizer and creates a
      * thread to run the algorithm
      */
-    AlgorithmExecutor(Algorithm algorithm,
+    public AlgorithmExecutor(Algorithm algorithm,
                       AlgorithmSynchronizer synchronizer) {
         this.algorithm = algorithm;
         this.synchronizer = synchronizer;
@@ -138,4 +140,4 @@ public class AlgorithmExecutor {
     }
 }
 
-//  [Last modified: 2015 12 01 at 21:02:50 GMT]
+//  [Last modified: 2015 12 02 at 13:30:28 GMT]

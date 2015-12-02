@@ -1,3 +1,12 @@
+/**
+ * Component used to manage <code>Graph</code> actions and visual graph
+ * manipulations.
+ *
+ * @author Jason Cockrell, Ty Devries, Alex McCabe, Michael Owoc; modified by
+ * Matthias Stallmann
+ *
+ */
+
 package edu.ncsu.csc.Galant.gui.window.panels;
 
 import java.awt.BasicStroke;
@@ -15,7 +24,7 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.text.DecimalFormat;             // DecimalFormat
+import java.text.DecimalFormat;
 import java.util.List;
 
 import javax.swing.JPanel;
@@ -33,11 +42,6 @@ import edu.ncsu.csc.Galant.gui.window.GraphWindow;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow.GraphDisplays;
 import edu.ncsu.csc.Galant.logging.LogHelper;
 
-/**
- * Component used to manage <code>Graph</code> actions and visual graph manipulations.
- * @author Jason Cockrell, Ty Devries, Alex McCabe, Michael Owoc
- *
- */
 public class GraphPanel extends JPanel{
 	
 	private GraphWindow gw;
@@ -799,74 +803,6 @@ public class GraphPanel extends JPanel{
 		g2d.setColor(prevColor);
 	}
 	
-	// MPM: It's a little odd to me that the graph panel maintains information about whether the algorithm has completed. I think it
-	// might be better to keep a reference to the Algorithm instance and just directly ask it if it is complete.
-	// MPM: And this is not starting the algorithm, it is allowing the algorithm to advance.
-	public void resumeAlgorithmExecution(){
-		
-		dispatch.getWorkingGraph().getGraphState().setStepComplete(false);
-		if ( ! dispatch.getAlgorithmComplete() ) {
-			synchronized(dispatch.getWorkingGraph().getGraphState()){
-				dispatch.getWorkingGraph().getGraphState().notify();
-			}
-			if ( dispatch.getAlgorithmComplete() ) {
-			}
-		}
-        else {
-            this.gw.updateStatusLabel("Execution is finished");
-		}
-	}
-	
-	public void incrementDisplayState() {
-		System.out.printf("(+) Incrementing the graph display state: displayState = %d, graphState = %d\n",
-                          state, dispatch.getWorkingGraph().getState() );
-		guiStepExecutor t = new guiStepExecutor(this);
-		t.execute();
-		
-		
-	}
-	public int getState(){
-		return this.state;
-	}
-	public void setState(int state){
-		this.state = state;
-	}
-	
-	public void decrementDisplayState() {
-		LogHelper.guiEnterMethod(getClass(), "decrementDisplayState");
-		
-		if (this.state > 1) {
-			this.state--;
-		}
-		System.out.printf("(-) Decrementing the graph display state: displayState = %d, graphState = %d\n",
-                          state, dispatch.getWorkingGraph().getState() );
-		
-		LogHelper.guiExitMethod(getClass(), "decrementDisplayState");
-		
-		/* This is responsible for updating the status label at the top of the Galant screen so that it displays the correct graph state
-		 * This happens whenever the user hits the right arrow key or the right arrow button
-		 */
-		dispatch.getGraphWindow().updateStatusLabel(this.getDisplayState());
-		
-	}
-	
-	public int getDisplayState() {
-		LogHelper.guiEnterMethod(getClass(), "getDisplayState");
-		LogHelper.guiExitMethod(getClass(), "getDisplayState");
-		return this.state;
-	}
-	
-	public void setDisplayState(int _state) {
-		LogHelper.guiEnterMethod(getClass(), "setDisplayState");
-		
-		Graph graph = dispatch.getWorkingGraph(); 
-		if (_state > 0 && _state <= graph.getState()) {
-			this.state = _state;
-		}
-		
-		LogHelper.guiExitMethod(getClass(), "setDisplayState");
-	}
-	
   /**
    * This method is used for user to select node, then change the
    * property or position of selected node. Since this method only used
@@ -976,17 +912,6 @@ public class GraphPanel extends JPanel{
 		return this.edgeTracker;
 	}
 	
-	public boolean hasNextState() {
-		int graphState = dispatch.getWorkingGraph().getState();
-        if ( graphState > this.state ) return true;
-		if ( ! dispatch.getAlgorithmComplete() ) return true;
-        return false;
-	}
-	
-	public boolean hasPreviousState() {
-		return (this.state > 1);
-	}
-	
 	private class TransformData {
 		private int len;
 		private boolean flip;
@@ -1020,4 +945,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2015 11 18 at 19:40:04 GMT]
+//  [Last modified: 2015 12 02 at 13:29:32 GMT]

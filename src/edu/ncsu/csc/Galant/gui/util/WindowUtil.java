@@ -87,7 +87,7 @@ public class WindowUtil
 								file = new File(file.getPath() + ".graphml");
 							}
 							
-							int state = GraphWindow.getGraphPanel().getDisplayState();
+							int state = gd.getAlgorithmExecutor().getDisplayState();
 							outfile = new FileWriter(file);
 							outfile.write(g.toString(state));
 						} catch (Exception ex) {
@@ -224,4 +224,4 @@ public class WindowUtil
 			}
 	}
 
-//  [Last modified: 2015 07 16 at 00:54:49 GMT]
+//  [Last modified: 2015 12 02 at 13:36:04 GMT]

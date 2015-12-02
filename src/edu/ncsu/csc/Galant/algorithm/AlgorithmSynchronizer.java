@@ -24,6 +24,8 @@
  *   manager waits to be woken up again
  */
 
+package edu.ncsu.csc.Galant.algorithm;
+
 public class AlgorithmSynchronizer {
 
     protected boolean stepFinished = false;
@@ -101,4 +103,4 @@ public class AlgorithmSynchronizer {
     }
 }
 
-//  [Last modified: 2015 11 20 at 22:25:29 GMT]
+//  [Last modified: 2015 12 02 at 13:18:14 GMT]

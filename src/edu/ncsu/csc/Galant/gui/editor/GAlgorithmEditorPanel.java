@@ -128,8 +128,8 @@ public class GAlgorithmEditorPanel extends GEditorPanel {
         AlgorithmSynchronizer algorithmSynchronizer = new AlgorithmSynchronizer();
         AlgorithmExecutor algorithmExecutor
             = new AlgorithmExecutor(algorithm, algorithmSynchronizer);
-        GraphDispatch.getInstance.setAlgorithmSynchronizer(algorithmSynchronizer);
-        GraphDispatch.getInstance.setAlgorithmExecutor(algorithmExecutor);
+        GraphDispatch.getInstance().setAlgorithmSynchronizer(algorithmSynchronizer);
+        GraphDispatch.getInstance().setAlgorithmExecutor(algorithmExecutor);
         algorithmExecutor.startAlgorithm();
 	}
 	
@@ -193,4 +193,4 @@ public class GAlgorithmEditorPanel extends GEditorPanel {
 
 }
 
-//  [Last modified: 2015 12 01 at 21:08:58 GMT]
+//  [Last modified: 2015 12 02 at 13:31:37 GMT]

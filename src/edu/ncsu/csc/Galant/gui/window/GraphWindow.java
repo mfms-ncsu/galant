@@ -1,3 +1,13 @@
+/**
+ * Window for displaying the <code>Graph</code>, containing all necessary
+ * window components, and reacting to mouse events.
+ *
+ * @author Jason Cockrell, Ty Devries, Alex McCabe, Michael Owoc; keyboard
+ * shortcuts added by Weijia Li and Matthias Stallmann; thread
+ * synchronization added by Kai Pressler-Marshall and modified by Matthias
+ * Stallmann
+ */
+
 package edu.ncsu.csc.Galant.gui.window;
 
 import java.util.Random;
@@ -55,16 +65,8 @@ import edu.ncsu.csc.Galant.gui.util.EdgeEditDialog;
 import edu.ncsu.csc.Galant.gui.util.DeleteNodeDialog;
 import edu.ncsu.csc.Galant.gui.editor.GTabbedPane; // for confirmation dialog
 import edu.ncsu.csc.Galant.gui.editor.GEditorFrame; // for confirmation dialog
-import edu.ncsu.csc.Galant.algorithm.AlgorithmSynchronizer;
+import edu.ncsu.csc.Galant.algorithm.AlgorithmExecutor;
 
-/**
- * Window for displaying the <code>Graph</code>, containing all necessary
- * window components, and reacting to mouse events.
- *
- * @author Jason Cockrell, Ty Devries, Alex McCabe, Michael Owoc
- *
- * $Id: GraphWindow.java 109 2015-04-30 17:02:27Z mfms $
- */
 public class GraphWindow extends JPanel implements PropertyChangeListener, ComponentListener {
 	
 	public static final int DEFAULT_WIDTH = 600, DEFAULT_HEIGHT = 750;
@@ -1081,4 +1083,4 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	}
 }
 
-//  [Last modified: 2015 12 01 at 21:58:55 GMT]
+//  [Last modified: 2015 12 02 at 13:24:11 GMT]

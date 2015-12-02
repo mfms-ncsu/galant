@@ -137,7 +137,7 @@ public class GraphElement {
         }
         if ( ! found ) {
             states.add(stateToAdd);
-            if (  GraphDispatch.getInstance().isAnimationMode() ) {
+            if ( GraphDispatch.getInstance().isAnimationMode() ) {
                 stateToAdd.getAlgorithmState().pauseExecution();
             }
         }
@@ -429,4 +429,4 @@ public class GraphElement {
     }
 }
 
-//  [Last modified: 2015 11 14 at 02:46:53 GMT]
+//  [Last modified: 2015 12 02 at 16:36:50 GMT]

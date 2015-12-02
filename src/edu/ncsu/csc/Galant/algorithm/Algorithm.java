@@ -28,6 +28,22 @@ import edu.ncsu.csc.Galant.gui.window.GraphWindow;
 
 public abstract class Algorithm implements Runnable {
 		
+    /** A list of all the runnable algorithms. */
+    public static final List<Algorithm> algorithms = new ArrayList<Algorithm>();
+
+    /** The graph on which the algorithm is being run. */
+    public Graph graph;
+
+    /** The dispatch instance used to communicate among the algorithm, the
+     * graph and the display */
+    public GraphDispatch dispatch;
+
+    /**
+     * The object that communicates with the display (user interaction) to
+     * accomplish forward and backward steps and termination of execution.
+     */
+    public AlgorithmSynchronizer synchronizer;
+
     // Specialized Node/Edge types for Queues/Stacks/Priority Queues
     public class NodeQueue extends AbstractQueue<Node>
     {
@@ -95,12 +111,6 @@ public abstract class Algorithm implements Runnable {
     public class EdgePriorityQueue extends PriorityQueue<Edge>
     {}
 
-    /** A list of all the runnable algorithms. */
-    public static final List<Algorithm> algorithms = new ArrayList<Algorithm>();
-
-    /** The graph on which the algorithm is being run. */
-    public Graph graph;
-
     // Pre-existing queue/stack/priority queue objects
     public NodeQueue nodeQ = new NodeQueue();
     public EdgeQueue edgeQ = new EdgeQueue();
@@ -124,7 +134,9 @@ public abstract class Algorithm implements Runnable {
 		edgeStack = new EdgeStack();
 		nodePQ = new NodePriorityQueue();
 		edgePQ = new EdgePriorityQueue();
-        GraphDispatch.getInstance().setAlgorithmMovesNodes(false);
+        dispatch = GraphDispatch.getInstance();
+        dispatch.setAlgorithmMovesNodes(false);
+        synchronizer = dispatch.getAlgorithmSynchronizer();
     }
 
     /** @see edu.ncsu.csc.Galant.graph.component.Graph */
@@ -286,12 +298,12 @@ public abstract class Algorithm implements Runnable {
 
     /** @see edu.ncsu.csc.Galant.GraphDispatch#getWindowWidth() */
     public int windowWidth(){
-        return GraphDispatch.getInstance().getWindowWidth();
+        return dispatch.getWindowWidth();
     }
 
     /** @see edu.ncsu.csc.Galant.GraphDispatch#getWindowHeight() */
     public int windowHeight(){
-        return GraphDispatch.getInstance().getWindowHeight();
+        return dispatch.getWindowHeight();
     }
 
     /** @see edu.ncsu.csc.Galant.graph.component.Graph#smartReposition() */
@@ -303,12 +315,12 @@ public abstract class Algorithm implements Runnable {
      * used by algorithm to declare that it moves nodes
      */
     public void movesNodes() {
-        GraphDispatch.getInstance().setAlgorithmMovesNodes(true);
+        dispatch.setAlgorithmMovesNodes(true);
     }
 
     /** @see edu.ncsu.csc.Galant.graph.component.GraphState */
-    public void beginStep(){
-        if ( graph.getGraphState().isLocked() ) endStep();
+    public void beginStep() {
+        if ( dispatch.getAlgorithmSynchronizer().isLocked() ) endStep();
         graph.getGraphState().incrementState();
         graph.getGraphState().setLocked(true);
     }
@@ -323,4 +335,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2015 12 02 at 13:17:01 GMT]
+//  [Last modified: 2015 12 02 at 17:33:50 GMT]

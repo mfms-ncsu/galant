@@ -28,9 +28,17 @@ package edu.ncsu.csc.Galant.algorithm;
 
 public class AlgorithmSynchronizer {
 
+    /** true if done with current algorithm step */
     protected boolean stepFinished = false;
+    /** true if algorithm has reached the end of execution; may still be
+     * animating */
     protected boolean algorithmFinished = false;
+    /** true if user has ended animation; set via the Terminate exception */
     protected boolean terminated = false;
+    /** true if current state is "locked" -- changes in graph state continue to
+     * take place until algorithm has an explicit endStep(); a lock is
+     * initiated by a beginStep() */
+    protected boolean locked = false;
 
     /**
      * Signals the algorithm that it needs to stop running. The signal is
@@ -54,6 +62,10 @@ public class AlgorithmSynchronizer {
     public synchronized boolean algorithmFinished() {
         return algorithmFinished;
     }
+
+    public void lock() { locked = true; }
+    public void unlock() { locked = false; }
+    public boolean isLocked() { return locked; }
 
     /**
      * Signals the beginning of a step: the algorithm calls startStep() and
@@ -87,9 +99,10 @@ public class AlgorithmSynchronizer {
      * Called at the end of each algorithm step; yields control back to the
      * main thread
      */
-    public synchronized void incrementAlgorithmState() {
-        System.out.printf("-> incrementAlgorithmState\n");
+    public synchronized void pauseExecution() {
+        System.out.printf("-> pauseExecution\n");
 
+        finishStep();
         synchronized( this ) {
             try {
                 this.wait();
@@ -99,8 +112,8 @@ public class AlgorithmSynchronizer {
                 e.printStackTrace(System.out);
             }
         }
-        System.out.printf("<- incrementAlgorithmState\n");
+        System.out.printf("<- pauseExecution\n");
     }
 }
 
-//  [Last modified: 2015 12 02 at 13:18:14 GMT]
+//  [Last modified: 2015 12 02 at 16:28:26 GMT]

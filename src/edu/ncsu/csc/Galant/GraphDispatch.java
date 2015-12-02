@@ -68,6 +68,7 @@ public class GraphDispatch {
 	private List<PropertyChangeListener> listener = new ArrayList<PropertyChangeListener>();
 	
 	private GraphDispatch() {
+		LogHelper.enterConstructor(getClass());
 		LogHelper.exitConstructor(getClass());
 	}
 
@@ -125,6 +126,7 @@ public class GraphDispatch {
     public AlgorithmExecutor getAlgorithmExecutor() {
         return algorithmExecutor;
     }
+
     public void setAlgorithmExecutor(AlgorithmExecutor algorithmExecutor) {
         this.algorithmExecutor = algorithmExecutor;
     }
@@ -134,6 +136,24 @@ public class GraphDispatch {
     }
     public void setAlgorithmSynchronizer(AlgorithmSynchronizer algorithmSynchronizer) {
         this.algorithmSynchronizer = algorithmSynchronizer;
+    }
+
+    /**
+     * @return the current display state or 0 if not in animation mode; used
+     * when the context does not know whether or not algorithm is running
+     */
+    public int getDisplayState() {
+        if ( animationMode ) return algorithmExecutor.getDisplayState();
+        return 0;
+    }
+
+    /**
+     * @return the current algorithm state or 0 if not in animation mode; used
+     * when the context does not know whether or not algorithm is running
+     */
+    public int getAlgorithmState() {
+        if ( animationMode ) return algorithmExecutor.getAlgorithmState();
+        return 0;
     }
 
     /**
@@ -202,4 +222,4 @@ public class GraphDispatch {
 
 }
 
-//  [Last modified: 2015 12 01 at 21:24:09 GMT]
+//  [Last modified: 2015 12 02 at 14:22:39 GMT]

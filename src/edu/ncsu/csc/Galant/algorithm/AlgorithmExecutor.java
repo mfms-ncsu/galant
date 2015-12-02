@@ -13,6 +13,7 @@ package edu.ncsu.csc.Galant.algorithm;
 
 import java.lang.Thread;
 import edu.ncsu.csc.Galant.algorithm.Algorithm;
+import edu.ncsu.csc.Galant.logging.LogHelper;
 
 public class AlgorithmExecutor {
 
@@ -30,7 +31,9 @@ public class AlgorithmExecutor {
      * thread to run the algorithm
      */
     public AlgorithmExecutor(Algorithm algorithm,
-                      AlgorithmSynchronizer synchronizer) {
+                             AlgorithmSynchronizer synchronizer) {
+        LogHelper.logDebug("=> AlgorithmExecutor: algorithm = " + algorithm
+                           + ", synchronizer = " + synchronizer);
         this.algorithm = algorithm;
         this.synchronizer = synchronizer;
         this.algorithmThread = new Thread(algorithm);
@@ -62,6 +65,10 @@ public class AlgorithmExecutor {
     }
 
 
+    public void incrementAlgorithmState() {
+        algorithmState++;
+    }
+
     /**
      * Needed so that graph elements can record their modifications based on
      * current algorithm state.
@@ -69,7 +76,14 @@ public class AlgorithmExecutor {
     public int getAlgorithmState() { return algorithmState; }
 
     /**
-     * Called whenever user interaction requests a step forward
+     * Needed for code that relies on knowing what the current display is showing
+     */
+    public int getDisplayState() { return displayState; }
+
+    /**
+     * Called whenever user interaction requests a step forward; the
+     * algorithm is then responsible for calling incrementAlgorithmState() to
+     * put the algorithm in sync with the display 
      */
     public synchronized void incrementDisplayState() {
         System.out.printf("-> incrementDisplayState\n");
@@ -95,13 +109,12 @@ public class AlgorithmExecutor {
                 }
             } while ( ! synchronizer.stepFinished() );
             System.out.println();
-            algorithmState++;
         }
         else {
             System.out.printf(" algorithm is ahead, displayState = %d,"
                               + " algorithmState = %d\n",
                               displayState, algorithmState);
-         }
+        }
         displayState++;
         System.out.printf("<- incrementDisplayState\n");
     }
@@ -140,4 +153,4 @@ public class AlgorithmExecutor {
     }
 }
 
-//  [Last modified: 2015 12 02 at 13:30:28 GMT]
+//  [Last modified: 2015 12 02 at 22:28:28 GMT]

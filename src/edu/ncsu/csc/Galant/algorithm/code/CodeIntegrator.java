@@ -56,7 +56,7 @@ public class CodeIntegrator
         /**
          * Here is the real code that appears before and after the algorithm.
          */
-        private static final String REAL_ALGORITHM_HEAD = "initialize(); AlgorithmStateManager asm = new AlgorithmStateManager(); GraphDispatch.getInstance().setStateManager(asm); incrementAlgorithmState();";
+        private static final String REAL_ALGORITHM_HEAD = "initialize();";
         private static final String REAL_ALGORITHM_TAIL = "finishAlgorithm();";
 
 		// The basic class structure into which the user's code can be inserted so it can be
@@ -74,7 +74,7 @@ public class CodeIntegrator
 			"import edu.ncsu.csc.Galant.algorithm.code.macro.Pair;" +
             "import edu.ncsu.csc.Galant.GalantException;" +
             "import edu.ncsu.csc.Galant.GraphDispatch;" +
-            "import edu.ncsu.csc.Galant.algorithm.AlgorithmStateManager;" +
+            "import edu.ncsu.csc.Galant.algorithm.Terminate;" +
 			IMPORTS_FIELD +
 			"public class " + NAME_FIELD + " extends Algorithm" + "{" + CODE_FIELD + "}";
 
@@ -82,7 +82,7 @@ public class CodeIntegrator
             = "public void run(){ try {" +
             ALGORITHM_HEAD + ALGORITHM_BODY + ALGORITHM_TAIL
             + "}" + "catch (Exception e)"
-            + " { if ( e instanceof Termination ) {} "
+            + " { if ( e instanceof Terminate ) {} "
             + " else if ( e instanceof GalantException )"
             + " { GalantException ge = (GalantException) e;"
             + " ge.report(\"\"); ge.display(); }"
@@ -316,4 +316,4 @@ public class CodeIntegrator
 		}				
 	}
 
-//  [Last modified: 2015 11 20 at 15:11:14 GMT]
+//  [Last modified: 2015 12 02 at 22:22:11 GMT]

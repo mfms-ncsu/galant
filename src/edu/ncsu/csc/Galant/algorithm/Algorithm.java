@@ -25,6 +25,8 @@ import edu.ncsu.csc.Galant.graph.component.Graph;
 import edu.ncsu.csc.Galant.graph.component.GraphState;
 import edu.ncsu.csc.Galant.graph.component.Node;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow;
+import edu.ncsu.csc.Galant.algorithm.AlgorithmSynchronizer;
+import edu.ncsu.csc.Galant.algorithm.AlgorithmExecutor;
 
 public abstract class Algorithm implements Runnable {
 		
@@ -124,8 +126,7 @@ public abstract class Algorithm implements Runnable {
     }
 
     /**
-     * Initializes data structures as a convenience
-     * @todo could be used more generally
+     * Initializes data structures and synchronization object
      */
     public void initialize() {
 		nodeQ = new NodeQueue();
@@ -136,7 +137,16 @@ public abstract class Algorithm implements Runnable {
 		edgePQ = new EdgePriorityQueue();
         dispatch = GraphDispatch.getInstance();
         dispatch.setAlgorithmMovesNodes(false);
-        synchronizer = dispatch.getAlgorithmSynchronizer();
+        synchronizer = new AlgorithmSynchronizer();
+        dispatch.setAlgorithmSynchronizer(synchronizer);
+        synchronizer.pauseExecution();
+    }
+
+    /**
+     * Signals the synchronizer that the algorithm has reached the end
+     */
+    public void finishAlgorithm() {
+        synchronizer.finishAlgorithm();
     }
 
     /** @see edu.ncsu.csc.Galant.graph.component.Graph */
@@ -320,19 +330,19 @@ public abstract class Algorithm implements Runnable {
 
     /** @see edu.ncsu.csc.Galant.graph.component.GraphState */
     public void beginStep() {
-        if ( dispatch.getAlgorithmSynchronizer().isLocked() ) endStep();
-        graph.getGraphState().incrementState();
-        graph.getGraphState().setLocked(true);
+        if ( synchronizer.isLocked() ) endStep();
+        dispatch.getAlgorithmExecutor().incrementAlgorithmState();
+        synchronizer.lock();
     }
 
     /** @see edu.ncsu.csc.Galant.graph.component.GraphState */
     public void endStep(){
-        graph.getGraphState().setLocked(false);
-        graph.getGraphState().pauseExecution();
+        synchronizer.unlock();
+        synchronizer.pauseExecution();
     }
 
     /** Runs this algorithm on the given graph. */
     public abstract void run();
 }
 
-//  [Last modified: 2015 12 02 at 17:33:50 GMT]
+//  [Last modified: 2015 12 02 at 22:16:06 GMT]

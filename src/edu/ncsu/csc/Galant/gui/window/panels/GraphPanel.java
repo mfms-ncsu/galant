@@ -37,7 +37,6 @@ import edu.ncsu.csc.Galant.graph.component.Node;
 import edu.ncsu.csc.Galant.graph.component.Graph;
 import edu.ncsu.csc.Galant.graph.component.GraphState;
 import edu.ncsu.csc.Galant.graph.component.GraphElementState;
-import edu.ncsu.csc.Galant.gui.util.guiStepExecutor;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow.GraphDisplays;
 import edu.ncsu.csc.Galant.logging.LogHelper;
@@ -945,4 +944,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2015 12 02 at 13:29:32 GMT]
+//  [Last modified: 2015 12 02 at 21:51:54 GMT]

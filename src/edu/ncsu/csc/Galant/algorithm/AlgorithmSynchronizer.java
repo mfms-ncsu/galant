@@ -7,21 +7,21 @@
  * the algorithm, i.e., not when the display shows a state that has already
  * been executed.
  *
- * The name AlgorithmStateManager is a bit misleading. The algorithmState is
- * actually maintained by an AlgorithmThreadManager. The
- * incrementAlgorithmState method does not increment anything; it merely
- * waits for the thread manager to do the appropiate updates. The sequence of
- * events surrounding an incrementAlgorithmState is ...
+ * The sequence of events surrounding a synchronization is ...
  *
- * - user steps forward leading to an incrementDisplayState in the thread
+ * - user steps forward leading to an incrementDisplayState() in the thread
  *   manager
  *
  * - if the current display state is the same as the algorithm state, the
- *   algorithm wakes up and executes until it reaches the next
- *   incrementAlgorithmState call
+ *   algorithm wakes up and executes
  *
- * - the thread manager increments the algorithm state while the state
- *   manager waits to be woken up again
+ * - at some point during execution the algorithm must call the
+ *   incrementAlgorithmState() method of the AlgorithmExecutor object 
+ *
+ * - when the current algorithm step is done the pauseExecution() method is
+ *   called to wake up the AlgorithmExecutor
+ *
+ * - this synchronizer waits to be woken up again
  */
 
 package edu.ncsu.csc.Galant.algorithm;
@@ -105,7 +105,8 @@ public class AlgorithmSynchronizer {
         finishStep();
         synchronized( this ) {
             try {
-                this.wait();
+                if ( ! locked )
+                    this.wait();
             }
             catch(InterruptedException e){
                 System.out.printf("Error occured while trying to wait");
@@ -116,4 +117,4 @@ public class AlgorithmSynchronizer {
     }
 }
 
-//  [Last modified: 2015 12 02 at 16:28:26 GMT]
+//  [Last modified: 2015 12 02 at 22:05:44 GMT]

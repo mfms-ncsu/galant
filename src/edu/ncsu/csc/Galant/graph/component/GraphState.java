@@ -13,40 +13,15 @@ import edu.ncsu.csc.Galant.GraphDispatch;
  */
 public class GraphState {
 	
-	public String toString(){
-		return String.format("Graph state: %d; initialization is: %s; graph is: %s; graph is: %s\n",state, initializationComplete>0 ? "complete" : "incomplete", directed ? "directed" : "undirected", locked ? "locked" : "unlocked");
+	public String toString() {
+		return String.format("Graph state: graph is: %s\n",
+                             directed ? "directed" : "undirected");
 	}
 	
 	
 	private Graph graph;
-	
-	private boolean stepComplete = false;
-	
-	public void setStepComplete(boolean stepComplete){
-		this.stepComplete = stepComplete;
-	}
-	
-	public boolean getStepComplete(){
-		return stepComplete;
-	}
-
-	public static final int GRAPH_START_STATE = 0;
-
-	private int state;
-	
-	static private int initializationComplete = 0;
-
-    /**
-     * non-zero if in the middle of a step, i.e., between beginStep() and
-     * endStep()
-     */
-	private boolean locked;
-
+	private static GraphDispatch dispatch = GraphDispatch.getInstance();
 	private boolean directed;
-	
-	public GraphState() {
-		state = GRAPH_START_STATE;
-	}
 	
 	/**
 	 * @return true if the graph is directed, false otherwise
@@ -63,50 +38,36 @@ public class GraphState {
 	}
 	
 	public int getState() {
-		return state;
+		return dispatch.getAlgorithmState();
 	}
 
-	public void setState(int state) {
-		if(locked==false) this.state = state;
-	}
-	
 	public void incrementState() {
-		if(locked==false) {
-			this.state++;
+		if ( dispatch.isAnimationMode()
+             && ! dispatch.getAlgorithmSynchronizer().isLocked() ) {
+            dispatch.getAlgorithmExecutor.incrementAlgorithmState();
 		}
 	}
 	
-	public boolean pauseExecution(){	
-		this.setStepComplete(true);
-		synchronized(this){
-			try{
-				if ( !locked ) {
-                    // Suspend algorithm execution until notified to complete
-                    // another step
-					this.wait();
-				}
-			}
-			catch (InterruptedException e){
-				e.printStackTrace(System.out);
-			}
-		}
-		return this != null ? true : false;
+	public boolean pauseExecution() {
+        dispatch.getAlgorithmSynchronizer().pauseExecution();
 	}
-	
-	
-	public void setLocked(boolean lock) {
-		this.locked = lock;
-		
-	}
-	
-	public boolean isLocked() {
-		return locked;
-	}
-	
-	public void resetLocks() {
-		this.locked = false;
-		
-	}	
+
+    /**
+     * Locks the current algorithm state if algorithm is running
+     */
+    public void lockIfRunning() {
+        if ( dispatch.isAnimationMode() )
+            dispatch.getAlgorithmSynchronizer().lock();       
+    }
+
+    /**
+     * Unlocks the current algorithm state if algorithm is running
+     */
+    public void unlockIfRunning() {
+        if ( dispatch.isAnimationMode() )
+            dispatch.getAlgorithmSynchronizer().unlock();       
+    }
+
 	public Graph getGraph(){
 		return graph;
 	}
@@ -115,8 +76,6 @@ public class GraphState {
 		this.graph = g;
 		return true;
 	}
-	
-	
 }
 
-//  [Last modified: 2015 08 07 at 13:43:01 GMT]
+//  [Last modified: 2015 12 03 at 02:29:16 GMT]

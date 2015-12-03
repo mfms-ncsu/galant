@@ -27,6 +27,7 @@ import edu.ncsu.csc.Galant.graph.component.Node;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow;
 import edu.ncsu.csc.Galant.algorithm.AlgorithmSynchronizer;
 import edu.ncsu.csc.Galant.algorithm.AlgorithmExecutor;
+import edu.ncsu.csc.Galant.logging.LogHelper;
 
 public abstract class Algorithm implements Runnable {
 		
@@ -129,6 +130,7 @@ public abstract class Algorithm implements Runnable {
      * Initializes data structures and synchronization object
      */
     public void initialize() {
+        LogHelper.enterMethod(getClass(), "initialize");
 		nodeQ = new NodeQueue();
 		edgeQ = new EdgeQueue();
 		nodeStack = new NodeStack();
@@ -137,9 +139,9 @@ public abstract class Algorithm implements Runnable {
 		edgePQ = new EdgePriorityQueue();
         dispatch = GraphDispatch.getInstance();
         dispatch.setAlgorithmMovesNodes(false);
-        synchronizer = new AlgorithmSynchronizer();
-        dispatch.setAlgorithmSynchronizer(synchronizer);
+        synchronizer = dispatch.getAlgorithmSynchronizer();
         synchronizer.pauseExecution();
+        LogHelper.exitMethod(getClass(), "initialize");
     }
 
     /**
@@ -345,4 +347,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2015 12 02 at 22:16:06 GMT]
+//  [Last modified: 2015 12 03 at 01:39:11 GMT]

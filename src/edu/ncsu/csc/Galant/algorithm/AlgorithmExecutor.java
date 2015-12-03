@@ -65,6 +65,10 @@ public class AlgorithmExecutor {
     }
 
 
+    /**
+     * Needs to be called from the algorithm at some point after control is
+     * yielded to it and before it pauses execution.
+     */
     public void incrementAlgorithmState() {
         algorithmState++;
     }
@@ -86,7 +90,7 @@ public class AlgorithmExecutor {
      * put the algorithm in sync with the display 
      */
     public synchronized void incrementDisplayState() {
-        System.out.printf("-> incrementDisplayState\n");
+        System.out.printf("-> incrementDisplayState %s\n", synchronizer);
         if ( displayState >= algorithmState) {
             System.out.printf(" algorithm needs to wake up: displayState = %d," 
                               + " algorithmState = %d\n",
@@ -94,7 +98,7 @@ public class AlgorithmExecutor {
 						
             // wake up the algorithmThread, have it do something	
             synchronized ( synchronizer ) {
-                algorithm.notify();							
+                synchronizer.notify();							
             }
 
             // checking until it's accomplished the task
@@ -153,4 +157,4 @@ public class AlgorithmExecutor {
     }
 }
 
-//  [Last modified: 2015 12 02 at 22:28:28 GMT]
+//  [Last modified: 2015 12 03 at 02:23:05 GMT]

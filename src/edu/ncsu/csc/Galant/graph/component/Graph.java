@@ -351,7 +351,7 @@ public class Graph {
 	public void deleteNode(Node n) {
         LogHelper.enterMethod(getClass(), "deleteNode " + n);
 		currentGraphState.incrementState();
-		currentGraphState.setLocked(true);
+		currentGraphState.lockIfRunning();
 		
 		n.setDeleted(true);
 		for (Edge e : n.getIncidentEdges()) {
@@ -359,7 +359,7 @@ public class Graph {
             removeEdge(e);
 		}
 		
-		currentGraphState.setLocked(false);
+		currentGraphState.unlockIfRunning();
         LogHelper.exitMethod(getClass(), "deleteNode");
 	}
 
@@ -451,10 +451,10 @@ public class Graph {
 				Node n = this.nodes.get(0);
 			
 				currentGraphState.incrementState();
-				currentGraphState.setLocked(true);
+				currentGraphState.lockIfRunning();
 				n.setSelected(true);
 				n.setVisited(true);
-				currentGraphState.setLocked(false);
+				currentGraphState.unlockIfRunning();
 			
 				return n;
 			} else {
@@ -462,10 +462,10 @@ public class Graph {
 			}
 		} else {
 			currentGraphState.incrementState();
-			currentGraphState.setLocked(true);
+			currentGraphState.lockIfRunning();
 			rootNode.setSelected(true);
 			rootNode.setVisited(true);
-			currentGraphState.setLocked(false);
+			currentGraphState.unlockIfRunning();
 			
 			return rootNode;
 		}
@@ -509,7 +509,7 @@ public class Graph {
 	 */
 	public void select(int id) {
 		currentGraphState.incrementState();
-		currentGraphState.setLocked(true);
+		currentGraphState.lockIfRunning();
 		for (Node n : nodes) {
 			if (n.getId() == id) {
 				n.setSelected(true);
@@ -517,7 +517,7 @@ public class Graph {
 				n.setSelected(false);
 			}
 		}
-		currentGraphState.setLocked(false);
+		currentGraphState.unlockIfRunning();
 	}
 	
 	/**
@@ -526,7 +526,7 @@ public class Graph {
 	 */
 	public void select(Node _n) {
 		currentGraphState.incrementState();
-		currentGraphState.setLocked(true);
+		currentGraphState.lockIfRunning();
 		for (Node n : nodes) {
 			if (n.getId() == _n.getId()) {
 				n.setSelected(true);
@@ -534,7 +534,7 @@ public class Graph {
 				n.setSelected(false);
 			}
 		}
-		currentGraphState.setLocked(false);
+		currentGraphState.unlockIfRunning();
 	}
 	
 	/**
@@ -702,14 +702,14 @@ public class Graph {
 		List<Edge> n_edges = n.getIncidentEdges();
         LogHelper.enterMethod(getClass(), "removeNode " + n + ", deg = " + n_edges.size());
 		
-		currentGraphState.setLocked(true);
+		currentGraphState.lockIfRunning();
 		for ( Edge e : n_edges ) {
             //			n_edges.remove(e);
 			removeEdge(e);
 		}
 
 		nodes.remove(n);
-		currentGraphState.setLocked(false);
+		currentGraphState.unlockIfRunning();
         LogHelper.exitMethod(getClass(), "removeNode");
 	}
 	
@@ -830,4 +830,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2015 10 08 at 16:42:28 GMT]
+//  [Last modified: 2015 12 03 at 02:30:51 GMT]

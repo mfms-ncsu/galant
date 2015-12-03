@@ -34,7 +34,7 @@ public class GraphElement {
      * @todo In future we may want an algorithm state independent of a graph
      * state.
      */
-	protected GraphState algorithmState;
+	protected GraphState graphState;
 
     /**
      * The list of states that this element has been in up to this point --
@@ -47,30 +47,31 @@ public class GraphElement {
      * filled in by initializeAfterParsing(). The algorithm state is
      * initialized elsewhere, currently in Graph.
      */
-    public GraphElement(Graph graph, GraphState algorithmState) {
-        LogHelper.logDebug("-> GraphElement, state = " + algorithmState.getState());
+    public GraphElement(Graph graph, GraphState graphState) {
+        LogHelper.logDebug("-> GraphElement, state = " + graphState.getState());
         states = new ArrayList<GraphElementState>();
         this.graph = graph;
-        this.algorithmState = algorithmState;
-        this.addState(new GraphElementState(algorithmState));
+        this.graphState = graphState;
+        this.addState(new GraphElementState(graphState));
         LogHelper.logDebug("<- GraphElement, element = " + this);
     }
 
     /**
      * @return a new state for this element; the new state will be identical
      * to the current (latest one) except that it will be tagged with the
-     * current graph state number -- after an incrementState(); subsequent
-     * changes to this GraphElement will take place in the new state.
+     * current graph state, which will have an incremented algorithm state if
+     * the algorithm is running; subsequent changes to this GraphElement will
+     * take place in the new state.
      *
-     * @todo if this is called during parsing or editing mode, no state
-     * change is necessary, so this should just return the current one and
-     * not do an incrementState()
+     * @todo there is no reason to create new states when parsing and the
+     * only reason to do it when editing is for a possible "undo" mechanism,
+     * which is not yet implemented
      */
     private GraphElementState newState() {
-		algorithmState.incrementState();
+		graphState.incrementStateIfRunning();
 		GraphElementState latest = latestState();
 		GraphElementState elementState
-            = new GraphElementState(latest, this.algorithmState);
+            = new GraphElementState(latest, this.graphState);
 		
         LogHelper.logDebug( "newState (element) = " + elementState.getState() );
 		return elementState;
@@ -89,8 +90,9 @@ public class GraphElement {
      * a graph element (node or edge), where most recent is defined relative
      * to a given time stamp, as defined by forward and backward stepping
      * through the animation.
+     * @see edu.ncsu.csc.Galant.algorithm.AlgorithmExecutor
      * @param stateNumber the numerical indicator (timestamp) of a state,
-     * usually the current one in the animation
+     * usually the current display state
      * @return the latest instance of GraphElementState that was created before the
      * given time stamp, or null if the element did not exist before the time
      * stamp.
@@ -108,18 +110,15 @@ public class GraphElement {
 	
 	/**
      * Adds the given state to the list of states for this element. If there
-     * is already a state having the same time stamp, there is no need to add
-     * another one. Such a situation might arise if there are multiple state
-     * changes to this element between a beginStep()/endStep() pair. Also
-     * prompts synchronization with the master thread to indicate that the
-     * changes corresponding to the added state are completed (contingent on
-     * whether we're in the middle of a step -- if locked, then addState will
-     * not result in synchronization);
+     * is already a state having the same algorithm state (time stamp), there
+     * is no need to add another one. Such a situation might arise if there
+     * are multiple state changes to this element between a
+     * beginStep()/endStep() pair or if no algorithm is running.  If an
+     * algorithm is running, this method initiates synchronization with the
+     * master thread to indicate that the changes corresponding to the added
+     * state are completed
      *
      * @invariant states are always sorted by state number.
-     *
-     * @todo Once newState() is fixed appropriately, this method should do
-     * nothing in parsing or edit mode
      */
 	private void addState(GraphElementState stateToAdd) {
         LogHelper.enterMethod(getClass(), "addState, state number  = "
@@ -137,9 +136,7 @@ public class GraphElement {
         }
         if ( ! found ) {
             states.add(stateToAdd);
-            if ( GraphDispatch.getInstance().isAnimationMode() ) {
-                stateToAdd.getAlgorithmState().pauseExecution();
-            }
+            stateToAdd.getAlgorithmState().pauseExecutionIfRunning();
         }
         LogHelper.exitMethod(getClass(), "addState, found = " + found);
 	}
@@ -429,4 +426,4 @@ public class GraphElement {
     }
 }
 
-//  [Last modified: 2015 12 02 at 16:36:50 GMT]
+//  [Last modified: 2015 12 03 at 13:41:23 GMT]

@@ -152,7 +152,6 @@ public class GraphMLParser {
 		NodeList edges;
 		NodeList graph;
 		GraphState graphState = graphUnderConstruction.getGraphState();
-		graphState.setLocked(true);
 		nodes = getNodes();
 		edges = getEdges();
 		graph = getGraphNode();
@@ -231,7 +230,6 @@ public class GraphMLParser {
 		}
         LogHelper.endIndent();
 
-        graphUnderConstruction.getGraphState().setLocked(false);
         LogHelper.exitMethod( getClass(), "buildGraphFromInput:\n" + graphUnderConstruction );
         return graphUnderConstruction;
     } // buildGraphFromInput
@@ -326,4 +324,4 @@ public class GraphMLParser {
 	
 }
 
-//  [Last modified: 2015 07 27 at 20:19:46 GMT]
+//  [Last modified: 2015 12 03 at 16:37:41 GMT]

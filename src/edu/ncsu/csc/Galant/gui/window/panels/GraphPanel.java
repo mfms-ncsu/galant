@@ -146,12 +146,6 @@ public class GraphPanel extends JPanel{
 	/** Refers to the singleton GraphDispatch to push global information */
 	private final GraphDispatch dispatch;
 	
-	/** 
-	 * Holds the integer value of the graph state to be displayed.
-	 * By default, this is the initial state of a graph
-	 */
-	private int state = GraphState.GRAPH_START_STATE;
-	
 	/**
 	 * Holds the width to draw edges and node boundaries. Pulled on each
 	 * repaint from the Galant Preferences 
@@ -239,10 +233,12 @@ public class GraphPanel extends JPanel{
 	@Override
 	public void paintComponent(Graphics g) {
         try {
+            // Get the display state: 0 means no algorithm running
+            int state = dispatch.getDisplayState();
 
             // Get the graph to draw
             Graph graph = dispatch.getWorkingGraph();
-		
+
             // Get the normal width of an edge or node boundary
             this.lineWidth = GalantPreferences.NORMAL_WIDTH.get();
 
@@ -271,7 +267,12 @@ public class GraphPanel extends JPanel{
             if (graph != null) {
                 List<Node> nodes = null;
                 List<Edge> edges = null;
-                if ( GraphDispatch.getInstance().isAnimationMode() ) {
+                if ( dispatch.isAnimationMode() ) {
+                    // If there is a message, draw it
+                    String message = graph.getMessage(state);
+                    if ( message != null ) {
+                        drawMessageBanner(message, g2d);
+                    }
                     nodes = graph.getNodes(state);
                     edges = graph.getEdges(state);
                 }
@@ -289,11 +290,6 @@ public class GraphPanel extends JPanel{
                     drawNode(n, g2d);
                 }
 			
-                // If there is a message, draw it
-                String message = graph.getMessage(state);
-                if (message != null) {
-                    drawMessageBanner(message, g2d);
-                }
 		
             }
         }
@@ -314,14 +310,12 @@ public class GraphPanel extends JPanel{
     private Point getNodeCenter( Node n ) throws GalantException{
         LogHelper.guiEnterMethod( getClass(), "getNodeCenter, n = " + n );
 
+        int state = dispatch.getDisplayState();
         Point nodeCenter = null;
-
-        int algorithmState
-            = GraphDispatch.getInstance().getWorkingGraph().getState();
 
         if ( dispatch.isAnimationMode()
              && GraphDispatch.getInstance().algorithmMovesNodes() ) {
-            nodeCenter = n.getPosition(algorithmState);
+            nodeCenter = n.getPosition(state);
         }
         else {
             nodeCenter = n.getFixedPosition();
@@ -338,9 +332,9 @@ public class GraphPanel extends JPanel{
         if ( dispatch.getWorkingGraph().isLayered() ) {
             int layer = n.getLayer(); // should not change during an
                                       // animation of a layered graph algorithm
-            int position = n.getPositionInLayer(algorithmState);
+            int position = n.getPositionInLayer(state);
             int layerSize
-                = dispatch.getWorkingGraph().numberOfNodesOnLayer( layer );
+                = dispatch.getWorkingGraph().numberOfNodesOnLayer(layer);
             int width = dispatch.getWindowWidth();
             int positionGap = width / ( layerSize + 1 );
             int x = ( position + 1 ) * positionGap;
@@ -373,6 +367,7 @@ public class GraphPanel extends JPanel{
 	private void drawNode(Node n, Graphics2D g2d)
         throws GalantException
     {
+        int state = dispatch.getDisplayState();
 		GraphElementState currentState = n.getLatestValidState(state);
         if ( currentState == null ) return;
         Point nodeCenter = getNodeCenter( n );
@@ -523,6 +518,7 @@ public class GraphPanel extends JPanel{
         throws GalantException
     {
 		LogHelper.guiEnterMethod(getClass(), "drawEdge, edge = " + e);
+        int state = dispatch.getDisplayState();
 		int thickness = lineWidth; 
 		
 		if (e != null) {
@@ -944,4 +940,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2015 12 02 at 21:51:54 GMT]
+//  [Last modified: 2015 12 03 at 17:05:42 GMT]

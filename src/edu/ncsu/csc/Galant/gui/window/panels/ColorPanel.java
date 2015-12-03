@@ -59,10 +59,8 @@ public class ColorPanel extends JPanel
 								GraphDispatch dispatch = GraphDispatch.getInstance();
 								Graph g = dispatch.getWorkingGraph();
 								
-								g.getGraphState().setLocked(true);
 								LogHelper.logDebug(label.getText());
 								workingElement.setColor(label.getText());
-								g.getGraphState().setLocked(false);
 								
 								dispatch.pushToTextEditor();
 								dispatch.pushToGraphEditor();
@@ -103,3 +101,5 @@ public class ColorPanel extends JPanel
 			}
 		
 	}
+
+//  [Last modified: 2015 12 03 at 16:36:36 GMT]

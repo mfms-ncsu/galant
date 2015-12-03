@@ -41,15 +41,16 @@ public class GraphState {
 		return dispatch.getAlgorithmState();
 	}
 
-	public void incrementState() {
+	public void incrementStateIfRunning() {
 		if ( dispatch.isAnimationMode()
              && ! dispatch.getAlgorithmSynchronizer().isLocked() ) {
-            dispatch.getAlgorithmExecutor.incrementAlgorithmState();
+            dispatch.getAlgorithmExecutor().incrementAlgorithmState();
 		}
 	}
 	
-	public boolean pauseExecution() {
-        dispatch.getAlgorithmSynchronizer().pauseExecution();
+	public void pauseExecutionIfRunning() {
+		if ( dispatch.isAnimationMode() )
+            dispatch.getAlgorithmSynchronizer().pauseExecution();
 	}
 
     /**
@@ -78,4 +79,4 @@ public class GraphState {
 	}
 }
 
-//  [Last modified: 2015 12 03 at 02:29:16 GMT]
+//  [Last modified: 2015 12 03 at 16:39:09 GMT]

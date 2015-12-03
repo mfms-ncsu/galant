@@ -93,7 +93,10 @@ public class Graph {
 
 	private List<Edge> edges;
     /**
-     * @todo Never clear what this meant. A better name might be startNode.
+     * @todo Never clear what this meant. A better name might be startNode,
+     * but then there's getStartNode(), which has lots of side effects, and
+     * is apparently not used anywhere (probably intended for algorithms that
+     * have a start node such as dfs, bfs, and Dijkstra's).
      */
 	private Node rootNode;
 	
@@ -162,7 +165,7 @@ public class Graph {
      * else; I guess this is awkward because of the map.
 	 */
 	public void writeMessage(String message) {
-        currentGraphState.incrementState();
+        currentGraphState.incrementStateIfRunning();
 		int state = this.currentGraphState.getState();
 		messages.put(state, message);
 	}
@@ -350,7 +353,7 @@ public class Graph {
 	 */
 	public void deleteNode(Node n) {
         LogHelper.enterMethod(getClass(), "deleteNode " + n);
-		currentGraphState.incrementState();
+		currentGraphState.incrementStateIfRunning();
 		currentGraphState.lockIfRunning();
 		
 		n.setDeleted(true);
@@ -450,7 +453,7 @@ public class Graph {
 			if (this.nodes.size() > 0) {
 				Node n = this.nodes.get(0);
 			
-				currentGraphState.incrementState();
+				currentGraphState.incrementStateIfRunning();
 				currentGraphState.lockIfRunning();
 				n.setSelected(true);
 				n.setVisited(true);
@@ -461,7 +464,7 @@ public class Graph {
 				return null;
 			}
 		} else {
-			currentGraphState.incrementState();
+			currentGraphState.incrementStateIfRunning();
 			currentGraphState.lockIfRunning();
 			rootNode.setSelected(true);
 			rootNode.setVisited(true);
@@ -508,7 +511,7 @@ public class Graph {
 	 * @param id the ID of the <code>Node</code> to select
 	 */
 	public void select(int id) {
-		currentGraphState.incrementState();
+		currentGraphState.incrementStateIfRunning();
 		currentGraphState.lockIfRunning();
 		for (Node n : nodes) {
 			if (n.getId() == id) {
@@ -525,7 +528,7 @@ public class Graph {
 	 * @param _n the <code>Node</code> to select
 	 */
 	public void select(Node _n) {
-		currentGraphState.incrementState();
+		currentGraphState.incrementStateIfRunning();
 		currentGraphState.lockIfRunning();
 		for (Node n : nodes) {
 			if (n.getId() == _n.getId()) {
@@ -576,7 +579,7 @@ public class Graph {
 	 */
 	public Node addNode(Integer x, Integer y) {
         LogHelper.enterMethod( getClass(), "addNode(), x = " + x + ", y = " + y);
-		currentGraphState.incrementState();
+		currentGraphState.incrementStateIfRunning();
         Integer newId = nextNodeId();
 		Node n = new Node(currentGraphState, newId, x, y);
 		nodes.add(n);
@@ -640,7 +643,7 @@ public class Graph {
      * are known.
 	 */
 	public Edge addEdge(Node source, Node target) {	
-		currentGraphState.incrementState();
+		currentGraphState.incrementStateIfRunning();
         int id = edges.size();
 		Edge e = new Edge(currentGraphState, id, source, target);
         addEdge(e, id);
@@ -830,4 +833,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2015 12 03 at 02:30:51 GMT]
+//  [Last modified: 2015 12 03 at 16:31:04 GMT]

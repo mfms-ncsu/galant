@@ -42,8 +42,8 @@ public class Node extends GraphElement implements Comparable<Node> {
      * To add a node while editing: id is the next available one as
      * determined by the graph.
      */
-    public Node(GraphState algorithmState, int id) {
-        super(algorithmState.getGraph(), algorithmState);
+    public Node(GraphState graphState, int id) {
+        super(graphState.getGraph(), graphState);
         this.id = id;
 		incidentEdges = new ArrayList<Edge>();
     }
@@ -52,8 +52,8 @@ public class Node extends GraphElement implements Comparable<Node> {
      * To add a node during algorithm execution: id is the next available one as
      * determined by the graph and the position of the node is known to the algorithm.
      */
-    public Node(GraphState algorithmState, int id, Integer x, Integer y) {
-        super(algorithmState.getGraph(), algorithmState);
+    public Node(GraphState graphState, int id, Integer x, Integer y) {
+        super(graphState.getGraph(), graphState);
         LogHelper.logDebug("-> Node, id = " + id + ", x =" + x + ", y =" + y);
         this.id = id;
 		incidentEdges = new ArrayList<Edge>();
@@ -244,7 +244,7 @@ public class Node extends GraphElement implements Comparable<Node> {
 		for ( Edge e : incidentEdges ) {
 			if ( e.inScope() && ! e.isDeleted() ) {
 				if ( this.equals( e.getSourceNode() ) 
-                    || ! algorithmState.isDirected() ) {
+                    || ! graphState.isDirected() ) {
 					currentEdges.add(e);
 				}
 			}
@@ -267,7 +267,7 @@ public class Node extends GraphElement implements Comparable<Node> {
 		for ( Edge e : incidentEdges ) {
 			if ( e.inScope() && ! e.isDeleted() ) {
 				if ( this.equals( e.getTargetNode() )
-                     || ! algorithmState.isDirected() ) {
+                     || ! graphState.isDirected() ) {
 					currentEdges.add( e );
 				}
 			}
@@ -337,7 +337,7 @@ public class Node extends GraphElement implements Comparable<Node> {
 			if (source.getId() == this.getId()) {
 				adjacent = target;
 			} else {
-				if (algorithmState.isDirected()) continue;
+				if (graphState.isDirected()) continue;
 				adjacent = source;
 			}
 			
@@ -366,7 +366,7 @@ public class Node extends GraphElement implements Comparable<Node> {
 			if (source.getId() == this.getId()) {
 				adjacent = target;
 			} else {
-				if (algorithmState.isDirected()) continue;
+				if (graphState.isDirected()) continue;
 				adjacent = source;
 			}
 			
@@ -391,7 +391,7 @@ public class Node extends GraphElement implements Comparable<Node> {
 			if (source.getId() == this.getId()) {
 				adjacent = target;
 			} else {
-				if (algorithmState.isDirected()) continue;
+				if (graphState.isDirected()) continue;
 				adjacent = source;
 			}
 			
@@ -442,8 +442,6 @@ public class Node extends GraphElement implements Comparable<Node> {
      * user during execution *unless* the algorithm wants to make them. In
      * the latter case, the user is prevented from changing position. 
      */
-
-    private static final int INITIAL_STATE = GraphState.GRAPH_START_STATE;
 
     public Integer getFixedX() {
         return xCoordinate;
@@ -526,4 +524,4 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 }
 
-//  [Last modified: 2015 08 13 at 14:26:53 GMT]
+//  [Last modified: 2015 12 03 at 16:33:02 GMT]

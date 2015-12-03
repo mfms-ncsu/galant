@@ -332,7 +332,9 @@ public abstract class Algorithm implements Runnable {
 
     /** @see edu.ncsu.csc.Galant.graph.component.GraphState */
     public void beginStep() {
+        synchronizer.startStep(); // needed to check for termination
         if ( synchronizer.isLocked() ) endStep();
+        synchronizer.startStep();
         dispatch.getAlgorithmExecutor().incrementAlgorithmState();
         synchronizer.lock();
     }
@@ -347,4 +349,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2015 12 03 at 01:39:11 GMT]
+//  [Last modified: 2015 12 03 at 18:44:01 GMT]

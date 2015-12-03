@@ -1,6 +1,7 @@
 package edu.ncsu.csc.Galant.graph.component;
 
 import edu.ncsu.csc.Galant.GraphDispatch;
+import edu.ncsu.csc.Galant.algorithm.Terminate;
 
 /**
  * 
@@ -41,9 +42,10 @@ public class GraphState {
 		return dispatch.getAlgorithmState();
 	}
 
-	public void incrementStateIfRunning() {
+	public void incrementStateIfRunning() throws Terminate {
 		if ( dispatch.isAnimationMode()
              && ! dispatch.getAlgorithmSynchronizer().isLocked() ) {
+            dispatch.getAlgorithmSynchronizer().startStep();
             dispatch.getAlgorithmExecutor().incrementAlgorithmState();
 		}
 	}
@@ -79,4 +81,4 @@ public class GraphState {
 	}
 }
 
-//  [Last modified: 2015 12 03 at 16:39:09 GMT]
+//  [Last modified: 2015 12 03 at 18:47:58 GMT]

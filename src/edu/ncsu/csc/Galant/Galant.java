@@ -22,7 +22,7 @@ public class Galant {
 				GalantPreferences.initPrefs();
 				GraphWindow g = new GraphWindow(gd);
 				gd.setGraphWindow(g);
-				g.updateStatusLabel("No algorithm running".toCharArray());
+				g.updateStatusLabel("No algorithm running");
 				GEditorFrame gef = new GEditorFrame();
 				GraphWindow.getGraphFrame().addWindowListener(gef);
 				WindowUtil.linkWindows();
@@ -33,4 +33,4 @@ public class Galant {
 	
 }
 
-//  [Last modified: 2015 07 03 at 14:42:20 GMT]
+//  [Last modified: 2015 12 03 at 18:28:16 GMT]

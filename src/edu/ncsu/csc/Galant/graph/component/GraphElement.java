@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.GraphDispatch;
 import edu.ncsu.csc.Galant.logging.LogHelper;
+import edu.ncsu.csc.Galant.algorithm.Terminate;
 
 /**
  * Abstract class containing graph element manipulation methods
@@ -67,7 +68,7 @@ public class GraphElement {
      * only reason to do it when editing is for a possible "undo" mechanism,
      * which is not yet implemented
      */
-    private GraphElementState newState() {
+    private GraphElementState newState() throws Terminate {
 		graphState.incrementStateIfRunning();
 		GraphElementState latest = latestState();
 		GraphElementState elementState
@@ -426,4 +427,4 @@ public class GraphElement {
     }
 }
 
-//  [Last modified: 2015 12 03 at 13:41:23 GMT]
+//  [Last modified: 2015 12 03 at 18:55:30 GMT]

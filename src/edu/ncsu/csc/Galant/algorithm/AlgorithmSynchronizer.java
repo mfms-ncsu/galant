@@ -47,7 +47,7 @@ public class AlgorithmSynchronizer {
     public synchronized void stop() {
         System.out.println("-> stop");
         terminated = true;
-    }
+     }
     
     /**
      * The algorithm signals that it has reached the end of execution on its own.
@@ -117,4 +117,4 @@ public class AlgorithmSynchronizer {
     }
 }
 
-//  [Last modified: 2015 12 02 at 22:05:44 GMT]
+//  [Last modified: 2015 12 03 at 18:44:42 GMT]

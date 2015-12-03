@@ -17,6 +17,7 @@ import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.GraphDispatch;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow;
 import edu.ncsu.csc.Galant.logging.LogHelper;
+import edu.ncsu.csc.Galant.algorithm.Terminate;
 
 /**
  * Stores information peculiar to layered graphs.
@@ -164,7 +165,7 @@ public class Graph {
      * @todo writing a message should create a new graph state like anything
      * else; I guess this is awkward because of the map.
 	 */
-	public void writeMessage(String message) {
+	public void writeMessage(String message) throws Terminate {
         currentGraphState.incrementStateIfRunning();
 		int state = this.currentGraphState.getState();
 		messages.put(state, message);
@@ -351,7 +352,7 @@ public class Graph {
 	 * Increments the <code>GraphState</code>.
 	 * @param n
 	 */
-	public void deleteNode(Node n) {
+	public void deleteNode(Node n) throws Terminate {
         LogHelper.enterMethod(getClass(), "deleteNode " + n);
 		currentGraphState.incrementStateIfRunning();
 		currentGraphState.lockIfRunning();
@@ -448,7 +449,7 @@ public class Graph {
 	 * in the <code>List</code> of <code>Node</code>s
 	 * @return
 	 */
-	public Node getStartNode() {
+	public Node getStartNode() throws Terminate {
 		if (rootNode == null && this.nodes.size() > 0) {
 			if (this.nodes.size() > 0) {
 				Node n = this.nodes.get(0);
@@ -510,7 +511,7 @@ public class Graph {
 	 * Selects the <code>Node</code> with the specified ID and increments the <code>GraphState</code>
 	 * @param id the ID of the <code>Node</code> to select
 	 */
-	public void select(int id) {
+	public void select(int id) throws Terminate {
 		currentGraphState.incrementStateIfRunning();
 		currentGraphState.lockIfRunning();
 		for (Node n : nodes) {
@@ -527,7 +528,7 @@ public class Graph {
 	 * Selects the given <code>Node</code> if it exists and increments the <code>GraphState</code>
 	 * @param _n the <code>Node</code> to select
 	 */
-	public void select(Node _n) {
+	public void select(Node _n) throws Terminate {
 		currentGraphState.incrementStateIfRunning();
 		currentGraphState.lockIfRunning();
 		for (Node n : nodes) {
@@ -541,9 +542,7 @@ public class Graph {
 	}
 	
 	/**
-	 * Adds a new <code>Node</code> to the <code>Graph</code> and increments
-	 * the <code>GraphState</code> if appropriate
-     *
+	 * Adds a new <code>Node</code> to the <code>Graph</code>
 	 * @param x the x coordinate of the new node 
 	 * @param y the y coordinate of the new node 
      * @return the added <code>Node</code>; called only during editing
@@ -567,9 +566,7 @@ public class Graph {
 	}
 	
 	/**
-	 * Adds a new <code>Node</code> to the <code>Graph</code> and increments
-	 * the <code>GraphState</code> if appropriate
-     *
+	 * Adds a new <code>Node</code> to the <code>Graph</code>
 	 * @param x the x coordinate of the new node 
 	 * @param y the y coordinate of the new node 
      * @return the added <code>Node</code>; called only during algorithm
@@ -577,7 +574,7 @@ public class Graph {
 	 * position of the node it is adding. The only difference from the above
 	 * is that the state is incremented.
 	 */
-	public Node addNode(Integer x, Integer y) {
+	public Node addNode(Integer x, Integer y) throws Terminate {
         LogHelper.enterMethod( getClass(), "addNode(), x = " + x + ", y = " + y);
 		currentGraphState.incrementStateIfRunning();
         Integer newId = nextNodeId();
@@ -616,7 +613,7 @@ public class Graph {
 	}
 	
 	/**
-	 * Adds a new <code>Edge</code> to the <code>Graph</code> with the specified source and target <code>Node</code> IDs and increments the <code>GraphState</code>
+	 * Adds a new <code>Edge</code> to the <code>Graph</code> with the specified source and target <code>Node</code> IDs.
 	 * Note: for undirected <code>Graph</code>s, "source" and "target" are
 	 * interchangeable.
 	 * @param sourceId the ID of the source <code>Node</code>
@@ -642,7 +639,7 @@ public class Graph {
      * This variant is used during algorithm execution if the actual nodes
      * are known.
 	 */
-	public Edge addEdge(Node source, Node target) {	
+	public Edge addEdge(Node source, Node target) throws Terminate {	
 		currentGraphState.incrementStateIfRunning();
         int id = edges.size();
 		Edge e = new Edge(currentGraphState, id, source, target);
@@ -651,7 +648,7 @@ public class Graph {
 	}
 	
 	/**
-	 * Adds a new <code>Edge</code> to the <code>Graph</code> with the specified source and target <code>Node</code>s and increments the <code>GraphState</code>
+	 * Adds a new <code>Edge</code> to the <code>Graph</code> with the specified source and target <code>Node</code>s
 	 * Note: for undirected</code>Graph</code>s, "source" and "target" are meaningless.
 	 * @param source the source <code>Node</code>
 	 * @param target the target <code>Node</code>
@@ -659,13 +656,12 @@ public class Graph {
      *
      * This variant is used during algorithm execution when only the id's are known.
 	 */
-	public Edge addEdge(int sourceId, int targetId) {	
+	public Edge addEdge(int sourceId, int targetId) throws Terminate {	
         return addEdge(getNodeById(sourceId), getNodeById(targetId));
 	}
 	
 	/**
 	 * Adds a new <code>Edge</code> to the <code>Graph</code> with the specified source and target <code>Node</code>s.
-	 * Sets the <code>GraphState</code> to 1.
 	 * Note: for undirected <code>Graph</code>s, "source" and "target" are meaningless.
 	 * @return the added edge
      *
@@ -833,4 +829,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2015 12 03 at 16:31:04 GMT]
+//  [Last modified: 2015 12 03 at 18:54:05 GMT]

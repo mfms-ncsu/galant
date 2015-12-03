@@ -118,37 +118,30 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	
 	private JToggleButton repositionBtn;
 
-	// MPM: I would recommend that all the instance variables be grouped together, and the status label-modifying methods
-	// go at the bottom of this class.
-	// MPM: The status label has been a handy GUI debug tool, but I think it's really useful for ordinary users too.
-	// Think about what would be good to display in this field, and then discuss it with the rest of your team.
+    /**
+     * Another message text label, used primarily to show current algorithm
+     * and display states
+     */
 	private JLabel statusLabel;
 	
-	
-	/* Update the status message to display the graph state
-	 * @param s the integer state to display as part of a message
+	/**
+     * Updates the status message to display the current states
 	 */
-	public void updateStatusLabel(int s){
-		String t = "Display state is " + s;
-		statusLabel.setText(t);
-		//System.out.printf("\nUpdating status label to a number %d; caller is %s\n",s, Thread.currentThread().getName());
+	public void updateStatusLabel() {
+        AlgorithmExecutor executor
+            = dispatch.getAlgorithmExecutor();
+        int algorithmState = executor.getAlgorithmState();
+        int displayState = executor.getDisplayState();
+		String message = "algorithm state is "
+            + algorithmState + ", display state is " + displayState;
+		statusLabel.setText(message);
 	}
-	/*
-	 * Want to display a custom message?  We've got you covered.  Lets the status message be anything desired
-	 * @param a Character array to display as the status message
+
+	/**
+	 * @param message a String to display as status message
 	 */
-	public void updateStatusLabel(char [] a){
-		statusLabel.setText(new String(a));
-		//System.out.printf("\nUpdating status label to chara array: %s; caller is %s\n", new String(a), Thread.currentThread().getName());
-	}
-	
-	/*
-	 * Same as above, but it takes a string object instead of a character array
-	 * @param s String to display as status message
-	 */
-	public void updateStatusLabel(String s) {
-		//System.out.printf("\n in the update status label function: %s; caller is %s \n",s, Thread.currentThread().getName());
-		statusLabel.setText(s);
+	public void updateStatusLabel(String message) {
+		statusLabel.setText(message);
 	}
 	
 
@@ -739,6 +732,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
         executor.decrementDisplayState();
         stepForward.setEnabled(executor.hasNextState());
         stepBack.setEnabled(executor.hasPreviousState());
+        updateStatusLabel();
     }
 
     private void performStepForward() {
@@ -746,6 +740,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
         executor.incrementDisplayState();
         stepForward.setEnabled(executor.hasNextState());
         stepBack.setEnabled(executor.hasPreviousState());
+        updateStatusLabel();
     }
 
     private void performDone() {
@@ -1083,4 +1078,4 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	}
 }
 
-//  [Last modified: 2015 12 02 at 13:24:11 GMT]
+//  [Last modified: 2015 12 03 at 18:14:32 GMT]

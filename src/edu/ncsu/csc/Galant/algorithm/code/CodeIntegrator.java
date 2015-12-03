@@ -82,7 +82,7 @@ public class CodeIntegrator
             = "public void run(){ try {" +
             ALGORITHM_HEAD + ALGORITHM_BODY + ALGORITHM_TAIL
             + "}" + "catch (Exception e)"
-            + " { if ( e instanceof Terminate ) {} "
+            + " { if ( e instanceof Terminate ) { System.out.println(\"Terminate\"); } "
             + " else if ( e instanceof GalantException )"
             + " { GalantException ge = (GalantException) e;"
             + " ge.report(\"\"); ge.display(); }"
@@ -316,4 +316,4 @@ public class CodeIntegrator
 		}				
 	}
 
-//  [Last modified: 2015 12 02 at 22:22:11 GMT]
+//  [Last modified: 2015 12 03 at 18:01:04 GMT]

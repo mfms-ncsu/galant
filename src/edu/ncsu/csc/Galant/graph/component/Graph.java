@@ -16,8 +16,8 @@ import java.util.TreeMap;
 import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.GraphDispatch;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow;
-import edu.ncsu.csc.Galant.logging.LogHelper;
 import edu.ncsu.csc.Galant.algorithm.Terminate;
+import edu.ncsu.csc.Galant.logging.LogHelper;
 
 /**
  * Stores information peculiar to layered graphs.
@@ -343,7 +343,7 @@ public class Graph {
 	 * Does not increment the <code>GraphState</code>
 	 * @param e the edge to remove
 	 */
-	public void deleteEdge(Edge e) {
+	public void deleteEdge(Edge e) throws Terminate {
 		e.setDeleted(true);
 	}
 	
@@ -829,4 +829,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2015 12 03 at 18:54:05 GMT]
+//  [Last modified: 2015 12 04 at 21:30:26 GMT]

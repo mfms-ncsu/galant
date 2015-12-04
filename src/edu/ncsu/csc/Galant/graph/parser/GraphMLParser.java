@@ -37,6 +37,7 @@ import org.xml.sax.InputSource;
 import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.GraphDispatch;
 import edu.ncsu.csc.Galant.graph.component.*;
+import edu.ncsu.csc.Galant.algorithm.Terminate;
 import edu.ncsu.csc.Galant.logging.LogHelper;
 
 /**
@@ -118,25 +119,31 @@ public class GraphMLParser {
         String attributeName = xmlNode.getNodeName();
         String attributeValueString = xmlNode.getTextContent();
         try {
-            Integer intVal = Integer.parseInt(attributeValueString);
-            graphElement.set(attributeName, intVal);
-        }
-        catch (NumberFormatException intE) {
             try {
-                Double doubleVal = Double.parseDouble(attributeValueString);
-                graphElement.set(attributeName, doubleVal);
+                Integer intVal = Integer.parseInt(attributeValueString);
+                graphElement.set(attributeName, intVal);
             }
-            catch (NumberFormatException doubleE) {
-                if ( attributeValueString.equalsIgnoreCase("true") ) {
-                    graphElement.set(attributeName, true);
+            catch (NumberFormatException intE) {
+                try {
+                    Double doubleVal = Double.parseDouble(attributeValueString);
+                    graphElement.set(attributeName, doubleVal);
                 }
-                else if ( attributeValueString.equalsIgnoreCase("false") ) {
-                    graphElement.set(attributeName, false);
-                }
-                else {
-                    graphElement.set(attributeName, attributeValueString);
+                catch (NumberFormatException doubleE) {
+                    if ( attributeValueString.equalsIgnoreCase("true") ) {
+                        graphElement.set(attributeName, true);
+                    }
+                    else if ( attributeValueString.equalsIgnoreCase("false") ) {
+                        graphElement.set(attributeName, false);
+                    }
+                    else {
+                        graphElement.set(attributeName, attributeValueString);
+                    }
                 }
             }
+        }
+        catch ( Terminate t ) {
+            // should not happen
+            t.printStackTrace();
         }
     }
 
@@ -324,4 +331,4 @@ public class GraphMLParser {
 	
 }
 
-//  [Last modified: 2015 12 03 at 16:37:41 GMT]
+//  [Last modified: 2015 12 04 at 22:03:18 GMT]

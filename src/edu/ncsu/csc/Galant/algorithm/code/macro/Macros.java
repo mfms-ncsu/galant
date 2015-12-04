@@ -306,7 +306,7 @@ public class Macros
 								String declaredReturnType = nameMatch.group(1);
 								String returnType = declaredReturnType == null ? " void" : getObjectType(declaredReturnType);
 
-								return Matcher.quoteReplacement("public" + returnType + " " + name + " ( " + mainParam.toString() + ")" + "{" 
+								return Matcher.quoteReplacement("public" + returnType + " " + name + " ( " + mainParam.toString() + ")" + " throws Terminate {" 
 									+  block + "}" ); 
 							}
 					});				
@@ -322,4 +322,4 @@ public class Macros
 			}
 	}
 
-//  [Last modified: 2015 07 03 at 14:46:18 GMT]
+//  [Last modified: 2015 12 04 at 22:26:55 GMT]

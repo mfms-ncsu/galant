@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.GraphDispatch;
+import edu.ncsu.csc.Galant.algorithm.Terminate;
 import edu.ncsu.csc.Galant.logging.LogHelper;
 
 /**
@@ -67,7 +68,7 @@ public class Edge extends GraphElement implements Comparable<Edge> {
      * initialized.
      */
     public void initializeAfterParsing()
-    throws GalantException {
+        throws GalantException {
         LogHelper.enterMethod(getClass(), "initializeAfterParsing");
         super.initializeAfterParsing();
         this.id = getInteger("id");
@@ -90,9 +91,15 @@ public class Edge extends GraphElement implements Comparable<Edge> {
         if (target == null) {
             throw new GalantException("Target node missing when processing edge " + this.id);
         }
-        super.remove("id");
-        super.remove("source");
-        super.remove("target");
+        try {
+            super.remove("id");
+            super.remove("source");
+            super.remove("target");
+        }
+        catch ( Terminate t ) {
+            // should not happen
+            t.printStackTrace();
+        }
         LogHelper.exitMethod(getClass(), "initializeAfterParsing, edge = "
                                + this);
     }
@@ -145,4 +152,4 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 	}
 }
 
-//  [Last modified: 2015 09 10 at 20:47:01 GMT]
+//  [Last modified: 2015 12 04 at 21:52:35 GMT]

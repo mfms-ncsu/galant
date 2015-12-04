@@ -70,7 +70,12 @@ public class ComponentEditPanel extends JPanel {
 			@Override
 			public void keyReleased(KeyEvent arg0) {
 				Graph g = dispatch.getWorkingGraph();
-				workingElement.setLabel(label.getText());
+                try {
+                    workingElement.setLabel(label.getText());
+                }
+                catch ( Exception e ) {
+                    e.printStackTrace();
+                }
 				dispatch.pushToTextEditor();
 				dispatch.pushToGraphEditor();
 			}
@@ -93,7 +98,12 @@ public class ComponentEditPanel extends JPanel {
 				Double wgt = (Double) weight.getValue();
 				
 				Graph g = dispatch.getWorkingGraph();
-				workingElement.setWeight(wgt);
+                try {
+                    workingElement.setWeight(wgt);
+                }
+                catch ( Exception e ) {
+                    e.printStackTrace();
+                }
 				dispatch.pushToTextEditor();
 				dispatch.pushToGraphEditor();
 			}
@@ -145,4 +155,4 @@ public class ComponentEditPanel extends JPanel {
 
 
 
-//  [Last modified: 2015 12 03 at 16:35:49 GMT]
+//  [Last modified: 2015 12 04 at 21:38:45 GMT]

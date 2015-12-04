@@ -272,7 +272,12 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                         graphPanel.setDragging(true);
                         graphPanel.setEdgeTracker(null);
                         if ( !dispatch.isAnimationMode() || !dispatch.algorithmMovesNodes()) {
-                            sel.setFixedPosition( arg0.getPoint() );
+                            try {
+                                sel.setFixedPosition( arg0.getPoint() );
+                            }
+                            catch ( Exception e ) {
+                                e.printStackTrace();
+                            }
                         }
                     }
                     frame.repaint();
@@ -1078,4 +1083,4 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	}
 }
 
-//  [Last modified: 2015 12 03 at 18:14:32 GMT]
+//  [Last modified: 2015 12 04 at 21:20:40 GMT]

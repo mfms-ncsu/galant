@@ -143,7 +143,7 @@ public class GraphElement {
 	}
 
     /************** Integer attributes ***************/
-	public boolean set(String key, Integer value) {
+	public boolean set(String key, Integer value) throws Terminate {
         GraphElementState newState = newState();
         boolean found = newState.set(key, value);
         addState(newState);
@@ -159,7 +159,7 @@ public class GraphElement {
 
 
     /************** Double attributes ***************/
-	public boolean set(String key, Double value) {
+	public boolean set(String key, Double value) throws Terminate {
         GraphElementState newState = newState();
         boolean found = newState.set(key, value);
         addState(newState);
@@ -174,7 +174,7 @@ public class GraphElement {
 	}
 
     /************** Boolean attributes ***************/
-	public boolean set(String key, Boolean value) {
+	public boolean set(String key, Boolean value) throws Terminate {
         GraphElementState newState = newState();
         boolean found = newState.set(key, value);
         addState(newState);
@@ -199,7 +199,7 @@ public class GraphElement {
 	}
 
     /************** String attributes ***************/
-	public boolean set(String key, String value) {
+	public boolean set(String key, String value) throws Terminate {
         GraphElementState newState = newState();
         boolean found = newState.set(key, value);
         addState(newState);
@@ -217,7 +217,7 @@ public class GraphElement {
      * Removes the attribute with the given key from the list and updates
      * state information appropriately.
      */
-    public void remove(String key) {
+    public void remove(String key) throws Terminate {
         GraphElementState newState = newState();
         newState.remove(key);
         addState(newState);
@@ -232,7 +232,7 @@ public class GraphElement {
     /**
      * @param true iff this element is to be deleted in the current state.
      */
-    public void setDeleted(boolean deleted) {
+    public void setDeleted(boolean deleted) throws Terminate {
         if (deleted) {
             set(DELETED, true);
         }
@@ -273,7 +273,7 @@ public class GraphElement {
      * Need to convert the argument to a double because it eventually
      * converts to Double -- see cleanupAfterParsing()
      */
-	public void setWeight(double weight) {
+	public void setWeight(double weight) throws Terminate {
         set(WEIGHT, (double) weight);
     }
 
@@ -286,7 +286,7 @@ public class GraphElement {
     /**
      * removes the weight from the property list
      */
-    public void clearWeight() {
+    public void clearWeight() throws Terminate {
         remove(WEIGHT);
     }
 	
@@ -298,7 +298,7 @@ public class GraphElement {
         return getString(state, LABEL);
     }
 
-	public void setLabel(String label) {
+	public void setLabel(String label) throws Terminate {
         set(LABEL, label);
     }
 
@@ -311,7 +311,7 @@ public class GraphElement {
     /**
      * removes the label from the property list
      */
-    public void clearLabel() {
+    public void clearLabel() throws Terminate {
         remove(LABEL);
     }
 	
@@ -323,7 +323,7 @@ public class GraphElement {
         return getString(state, COLOR);
     }
 
-	public void setColor(String color) {
+	public void setColor(String color) throws Terminate {
         set(COLOR, color);
     }
 
@@ -336,7 +336,7 @@ public class GraphElement {
     /**
      * removes the color from the property list
      */
-    public void clearColor() {
+    public void clearColor() throws Terminate {
         remove(COLOR);
     }
 
@@ -353,7 +353,7 @@ public class GraphElement {
 	public Boolean isSelected(int state) {
         return getBoolean(state, HIGHLIGHTED);
     }
-	public void setSelected(Boolean highlighted) {
+	public void setSelected(Boolean highlighted) throws Terminate {
         set(HIGHLIGHTED, highlighted);
     }
 	public boolean isHighlighted() {
@@ -362,10 +362,10 @@ public class GraphElement {
 	public Boolean isHighlighted(int state) {
         return getBoolean(state, HIGHLIGHTED);
     }
-	public void highlight() {
+	public void highlight() throws Terminate {
         set(HIGHLIGHTED, true);
     }
-	public void unHighlight() {
+	public void unHighlight() throws Terminate {
         remove(HIGHLIGHTED);
     }
 
@@ -386,8 +386,14 @@ public class GraphElement {
             Integer weightAsInteger = getInteger(WEIGHT);
             if ( weightAsInteger != null ) {
                 // get rid of the integer value first
-                clearWeight();
-                set(WEIGHT, (double) weightAsInteger);
+                try {
+                    clearWeight();
+                    set(WEIGHT, (double) weightAsInteger);
+                }
+                catch ( Terminate t ) {
+                    // should not happen
+                    t.printStackTrace();
+                }
             }
         }
     }
@@ -427,4 +433,4 @@ public class GraphElement {
     }
 }
 
-//  [Last modified: 2015 12 03 at 18:55:30 GMT]
+//  [Last modified: 2015 12 04 at 21:58:39 GMT]

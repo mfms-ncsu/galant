@@ -9,6 +9,7 @@ import java.util.Random;
 
 import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.GraphDispatch;
+import edu.ncsu.csc.Galant.algorithm.Terminate;
 import edu.ncsu.csc.Galant.logging.LogHelper;
 
 /**
@@ -101,9 +102,9 @@ public class Node extends GraphElement implements Comparable<Node> {
         return p;
     }
 
-    public void setX(Integer x) { super.set("x", x); }
-    public void setY(Integer y) { super.set("y", y); }
-    public void setPosition(Integer x, Integer y) {
+    public void setX(Integer x) throws Terminate { super.set("x", x); }
+    public void setY(Integer y) throws Terminate { super.set("y", y); }
+    public void setPosition(Integer x, Integer y) throws Terminate {
         LogHelper.enterMethod(getClass(), "setPosition, x = " + x + ", y = " + y);
         setX(x);
         setY(y);
@@ -111,7 +112,7 @@ public class Node extends GraphElement implements Comparable<Node> {
                              "setPosition, node = "
                              + this.toString(GraphDispatch.getInstance().getWorkingGraph().getState()));
     }
-    public void setPosition(Point point) {
+    public void setPosition(Point point) throws Terminate {
         LogHelper.enterMethod(getClass(), "setPosition, point = " + point);
         setX(point.x);
         setY(point.y);
@@ -132,10 +133,10 @@ public class Node extends GraphElement implements Comparable<Node> {
     public Integer getPositionInLayer(int state) {
         return super.getInteger(state, "positionInLayer");
     }
-    public void setLayer(Integer layer) {
+    public void setLayer(Integer layer) throws Terminate {
         super.set("layer", layer);
     }
-    public void setPositionInLayer(Integer positionInLayer) {
+    public void setPositionInLayer(Integer positionInLayer) throws Terminate {
         super.set("positionInLayer", positionInLayer);
     }
 	
@@ -146,7 +147,7 @@ public class Node extends GraphElement implements Comparable<Node> {
      * @todo still need to make LayeredGraphNode a subclass of Node.
      */
     public void initializeAfterParsing()
-    throws GalantException {
+        throws GalantException {
         LogHelper.enterMethod( getClass(), "initializeAfterParsing: " + this );
         super.initializeAfterParsing();
         Integer idAttribute = super.getInteger("id");
@@ -160,7 +161,13 @@ public class Node extends GraphElement implements Comparable<Node> {
         else {
             // don't want or need to track the id -- it won't ever change
             id = idAttribute;
-            super.remove("id");
+            try {
+                super.remove("id");
+            }
+            catch ( Terminate t ) {
+                // should not happen
+                t.printStackTrace();
+            }
         }
         if ( super.graph.isLayered() ) {
             Integer layer = super.getInteger("layer");
@@ -175,16 +182,22 @@ public class Node extends GraphElement implements Comparable<Node> {
         else {
             Integer x = super.getInteger("x");
             Integer y = super.getInteger("y");
-            if ( x == null || y == null ) {
-                Random r = new Random();
-                if ( x == null ) {
-                    x = r.nextInt( GraphDispatch.getInstance().getWindowWidth() );
-                    super.set("x", x);
+            try {
+                if ( x == null || y == null ) {
+                    Random r = new Random();
+                    if ( x == null ) {
+                        x = r.nextInt( GraphDispatch.getInstance().getWindowWidth() );
+                        super.set("x", x);
+                    }
+                    if ( y == null ) {
+                        y = r.nextInt( GraphDispatch.getInstance().getWindowHeight() );
+                        super.set("y", y);
+                    }
                 }
-                if ( y == null ) {
-                    y = r.nextInt( GraphDispatch.getInstance().getWindowHeight() );
-                    super.set("y", y);
-                }
+            }
+            catch ( Terminate t ) {
+                // should not happen
+                t.printStackTrace();
             }
             // establish fixed positions
             xCoordinate = x;
@@ -210,20 +223,20 @@ public class Node extends GraphElement implements Comparable<Node> {
         return isVisited(state);
 	}
 
-	public void setVisited(Boolean visited) {
+	public void setVisited(Boolean visited) throws Terminate {
         super.set(MARKED, visited);
 	}
 
-    public void mark() {
+    public void mark() throws Terminate {
         setVisited(true);
     }
-    public void unmark() {
+    public void unmark() throws Terminate {
         setVisited(false);
     }
     /**
      * Some algorithms use this alternate "spelling"
      */
-    public void unMark() {
+    public void unMark() throws Terminate {
         setVisited(false);
     }
 
@@ -469,8 +482,14 @@ public class Node extends GraphElement implements Comparable<Node> {
                                + "\n node = " + this );
         xCoordinate = x;
         yCoordinate = y;
-        if ( getX() == null ) super.set("x", x);
-        if ( getY() == null ) super.set("y", y);
+        try {
+            if ( getX() == null ) super.set("x", x);
+            if ( getY() == null ) super.set("y", y);
+        }
+        catch ( Terminate t ) {
+            // should not happen
+            t.printStackTrace();
+        }
         LogHelper.exitMethod( getClass(), "setFixedPosition"
                               + "\n node = " + this );
 	}
@@ -524,4 +543,4 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 }
 
-//  [Last modified: 2015 12 03 at 16:33:02 GMT]
+//  [Last modified: 2015 12 04 at 21:57:13 GMT]

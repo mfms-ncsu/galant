@@ -93,9 +93,14 @@ public class GraphLayout {
      *    ones determined by algorithm
      */
     public void scale( double xScale, double yScale ) {
-        for ( Node n: graph.getNodes() ) {
-            n.setFixedPosition( (int) (xScale * n.getX()),
-                                (int) (yScale * n.getY()) );
+        try {
+            for ( Node n: graph.getNodes() ) {
+                n.setFixedPosition( (int) (xScale * n.getX()),
+                                    (int) (yScale * n.getY()) );
+            }
+        }
+        catch ( Exception e ) {
+            e.printStackTrace();
         }
     }
 
@@ -121,12 +126,17 @@ public class GraphLayout {
 			x_least = (node.getX() < x_least) ? node.getX() : x_least;
 			y_least = (node.getY() < y_least) ? node.getY() : y_least;
 		}
-		
-		for ( Node node: graph.getNodes() ) {
-			// padding because 0,0 will be half off screen for a node
-			node.setFixedPosition( node.getX() - x_least + WINDOW_OFFSET,
-                                   node.getY() - y_least + WINDOW_OFFSET );
-		}
+        
+		try {
+            for ( Node node: graph.getNodes() ) {
+                // padding because 0,0 will be half off screen for a node
+                node.setFixedPosition( node.getX() - x_least + WINDOW_OFFSET,
+                                       node.getY() - y_least + WINDOW_OFFSET );
+            }
+        }
+        catch ( Exception e ) {
+            e.printStackTrace();
+        }
 	}
 	
 	/**
@@ -288,15 +298,20 @@ public class GraphLayout {
 		// we've converged, now scale it and center it in the window
 		points = centerInWindow(points);
 		
-		// update the nodes with their new positions and push to the display
-		for (int i=0; i < this.nodes.size(); i++) {
-			int x = (int) points[i].getX();
-			int y = (int) points[i].getY();
+        try {
+            // update the nodes with their new positions and push to the display
+            for (int i=0; i < this.nodes.size(); i++) {
+                int x = (int) points[i].getX();
+                int y = (int) points[i].getY();
 
-			indexToNode[i].setFixedPosition( new Point(x,y) );
+                indexToNode[i].setFixedPosition( new Point(x,y) );
 			
-			GraphDispatch.getInstance().pushToGraphEditor();
+                GraphDispatch.getInstance().pushToGraphEditor();
+            }
 		}
+        catch ( Exception e ) {
+            e.printStackTrace();
+        }
 	}
 	
 	/**
@@ -553,4 +568,4 @@ public class GraphLayout {
 
 }	
 
-//  [Last modified: 2015 09 11 at 19:57:01 GMT]
+//  [Last modified: 2015 12 04 at 21:46:58 GMT]

@@ -21,85 +21,89 @@ import edu.ncsu.csc.Galant.logging.LogHelper;
  * @author Alex McCabe
  */
 public class ColorPanel extends JPanel
-	{
-		private Color color;
-		private JLabel label = new JLabel();
+{
+    private Color color;
+    private JLabel label = new JLabel();
 		
-		private final GraphElement workingElement;
+    private final GraphElement workingElement;
 
-		/** Creates a <code>ColorPanel</code> for the given preference. */
-		public ColorPanel(GraphElement _workingElement)
-			{
-				super();
+    /** Creates a <code>ColorPanel</code> for the given preference. */
+    public ColorPanel(GraphElement _workingElement)
+    {
+        super();
 				
-				this.workingElement = _workingElement;
+        this.workingElement = _workingElement;
 				
-				this.add(label);
+        this.add(label);
 				
-				Color c;
-				try  {
-					String color = workingElement.getColor();
-					c = Color.decode(color);
-				} catch (Exception e) {
-					c = Color.BLACK;
-				}
-				this.setValue(c);
+        Color c;
+        try  {
+            String color = workingElement.getColor();
+            c = Color.decode(color);
+        } catch (Exception e) {
+            c = Color.BLACK;
+        }
+        this.setValue(c);
 
-				// when clicked, brings up a color chooser
-				this.addMouseListener(new MouseAdapter(){
-					@Override
-					public void mouseClicked(MouseEvent e)
-						{
-							Color newColor =
-								JColorChooser.showDialog(e.getComponent(), "Choose a Color",
-									getValue());
-							if(newColor != null) {
-								setValue(newColor);
+        // when clicked, brings up a color chooser
+        this.addMouseListener(new MouseAdapter(){
+                @Override
+					public void mouseClicked(MouseEvent event) {
+                    Color newColor =
+                        JColorChooser.showDialog(event.getComponent(), "Choose a Color",
+                                                 getValue());
+                    if(newColor != null) {
+                        setValue(newColor);
 								
-								GraphDispatch dispatch = GraphDispatch.getInstance();
-								Graph g = dispatch.getWorkingGraph();
+                        GraphDispatch dispatch = GraphDispatch.getInstance();
+                        Graph g = dispatch.getWorkingGraph();
 								
-								LogHelper.logDebug(label.getText());
-								workingElement.setColor(label.getText());
+                        LogHelper.logDebug(label.getText());
+                        try {
+                            workingElement.setColor(label.getText());
+                        }
+                        catch ( Exception e ) {
+                            e.printStackTrace();
+                        }
 								
-								dispatch.pushToTextEditor();
-								dispatch.pushToGraphEditor();
-							}
-						}
-				});
-			}
+                        dispatch.pushToTextEditor();
+                        dispatch.pushToGraphEditor();
+                    }
+                }
+            });
+    }
 
-		public Color getValue()
-			{
-				return color;
-			}
-		public void setValue(final Color color)
-			{
-				this.color = color;
-				label.setText("#" + Integer.toHexString(color.getRGB()).toUpperCase().substring(2));
-				label.setIcon(new Icon(){
-					@Override
+    public Color getValue()
+    {
+        return color;
+    }
+    public void setValue(final Color color)
+    {
+        this.color = color;
+        label.setText("#" + Integer.toHexString(color.getRGB()).toUpperCase().substring(2));
+        label.setIcon(new Icon(){
+                @Override
 					public void paintIcon(Component c, Graphics g, int x, int y)
-						{
-							g.setColor(color);
-							g.fillRect(x, y, getIconWidth(), getIconHeight());
-						}
+                {
+                    g.setColor(color);
+                    g.fillRect(x, y, getIconWidth(), getIconHeight());
+                }
 
-					@Override
+                @Override
 					public int getIconWidth()
-						{
-							return getIconHeight();
-						}
+                {
+                    return getIconHeight();
+                }
 
-					@Override
+                @Override
 					public int getIconHeight()
-						{
-							return label.getFontMetrics(label.getFont()).getAscent();
-						}
-				});
-				this.validate();
-			}
+                {
+                    return label.getFontMetrics(label.getFont()).getAscent();
+                }
+            });
+        this.validate();
+    }
 		
-	}
+}
 
-//  [Last modified: 2015 12 03 at 16:36:36 GMT]
+//  [Last modified: 2015 12 04 at 21:41:49 GMT]

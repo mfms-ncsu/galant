@@ -5,6 +5,14 @@
  *
  * @author Jason Cockrell, Ty Devries, Alex McCabe, Michael Owoc; with major
  * enhancements by Matthias Stallmann
+ *
+ * @todo Once the thread situation is straightened out, it is high time to
+ * consider two methods used in GDR:
+ * - Node getNodeByQuery(String message)
+ * - String query(String message)
+ * These should prompt the display to pop up a window with the message and
+ * pause execution, to be resumed when the user has produced the appropriate
+ * response.
  */
 
 package edu.ncsu.csc.Galant.algorithm;
@@ -195,12 +203,12 @@ public abstract class Algorithm implements Runnable {
     }
 
     /** @see edu.ncsu.csc.Galant.graph.component.Graph#addNode() */
-    public Node addNode(Integer x, Integer y){
+    public Node addNode(Integer x, Integer y) throws Terminate {
         return graph.addNode(x, y);
     }
 
     /** @see edu.ncsu.csc.Galant.graph.component.Graph#deleteNode(Node) */
-    public void deleteNode(Node n){
+    public void deleteNode(Node n) throws Terminate {
         graph.deleteNode(n);
     }
 
@@ -268,12 +276,12 @@ public abstract class Algorithm implements Runnable {
     }
 
     /** @see edu.ncsu.csc.Galant.graph.component.Graph#select(int) */
-    public void select(int id){
+    public void select(int id) throws Terminate {
         graph.select(id);
     }
 
     /** @see edu.ncsu.csc.Galant.graph.component.Graph#select(edu.ncsu.csc.Galant.graph.component.Node) */
-    public void select(Node n){
+    public void select(Node n) throws Terminate {
         graph.select(n);
     }
 
@@ -281,7 +289,7 @@ public abstract class Algorithm implements Runnable {
      * adds an edge based on the integer id's of the two endpoints
      * @see edu.ncsu.csc.Galant.graph.component.Graph#addEdge(int, int)
      */
-    public Edge addEdge(int sourceId, int targetId){
+    public Edge addEdge(int sourceId, int targetId) throws Terminate {
         return graph.addEdge(sourceId, targetId);
     }
 
@@ -289,12 +297,12 @@ public abstract class Algorithm implements Runnable {
      * @see edu.ncsu.csc.Galant.graph.component.Graph#addEdge(edu.ncsu.csc.Galant.graph.component.Node,
      *      edu.ncsu.csc.Galant.graph.component.Node)
      */
-    public Edge addEdge(Node source, Node target){
+    public Edge addEdge(Node source, Node target) throws Terminate {
         return graph.addEdge(source, target);
     }
 
     /** @see edu.ncsu.csc.Galant.graph.component.Graph#deleteEdge(Node) */
-    public void deleteEdge(Edge e){
+    public void deleteEdge(Edge e) throws Terminate {
         graph.deleteEdge(e);
     }
 
@@ -331,7 +339,7 @@ public abstract class Algorithm implements Runnable {
     }
 
     /** @see edu.ncsu.csc.Galant.graph.component.GraphState */
-    public void beginStep() {
+    public void beginStep() throws Terminate {
         synchronizer.startStep(); // needed to check for termination
         if ( synchronizer.isLocked() ) endStep();
         synchronizer.startStep();
@@ -340,7 +348,7 @@ public abstract class Algorithm implements Runnable {
     }
 
     /** @see edu.ncsu.csc.Galant.graph.component.GraphState */
-    public void endStep(){
+    public void endStep() {
         synchronizer.unlock();
         synchronizer.pauseExecution();
     }
@@ -349,4 +357,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2015 12 03 at 18:44:01 GMT]
+//  [Last modified: 2015 12 04 at 22:08:55 GMT]

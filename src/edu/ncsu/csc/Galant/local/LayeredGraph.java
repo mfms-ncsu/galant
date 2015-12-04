@@ -41,6 +41,7 @@ import edu.ncsu.csc.Galant.graph.component.Edge;
 import edu.ncsu.csc.Galant.graph.component.Graph;
 import edu.ncsu.csc.Galant.graph.component.Node;
 import edu.ncsu.csc.Galant.GraphDispatch;
+import edu.ncsu.csc.Galant.algorithm.Terminate;
 import edu.ncsu.csc.Galant.logging.LogHelper;
 
 /**
@@ -120,7 +121,7 @@ class Layer {
     /**
      * Displays the marked/unmarked state of all nodes on this layer
      */
-    public void displayMarks() {
+    public void displayMarks() throws Terminate {
         for ( Node v: nodes ) {
             v.setVisited( graph.isMarked( v ) );
         }
@@ -130,7 +131,7 @@ class Layer {
      * Removes displayed marks from all nodes on this layer without affecting
      * their logical status.
      */
-    public void removeMarks() {
+    public void removeMarks() throws Terminate {
         for ( Node v: nodes ) {
             v.setVisited( false );
         }
@@ -148,7 +149,7 @@ class Layer {
     /**
      * Sets node labels to be blank
      */
-    public void clearLabels() {
+    public void clearLabels() throws Terminate {
         for ( Node v: nodes ) {
             v.setLabel("");
         }
@@ -158,7 +159,7 @@ class Layer {
      * Highlights nodes on this layer and, if appropriate, incident edges --
      * see "enum Scope"
      */
-    public void highlight( LayeredGraph.Scope scope ) {
+    public void highlight( LayeredGraph.Scope scope ) throws Terminate {
         for ( Node v: nodes ) {
             v.setSelected( true );
             if ( scope == LayeredGraph.Scope.UP
@@ -180,7 +181,7 @@ class Layer {
      * Highlights the nodes between the two given positions, inclusive (used
      * to highlight an insertion)
      */
-    public void highlightNodes( int positionOne, int positionTwo ) {
+    public void highlightNodes( int positionOne, int positionTwo ) throws Terminate {
         for ( int i = positionOne; i <= positionTwo; i++ ) {
             nodes.get(i).setSelected( true );
         }
@@ -189,7 +190,7 @@ class Layer {
     /**
      * undoes highlighting for the nodes and any edges incident on this layer
      */
-    public void unHighlight() {
+    public void unHighlight() throws Terminate {
         for ( Node v: nodes ) {
             v.setSelected( false );
             for ( Edge e: v.getIncidentEdges() ) {
@@ -202,7 +203,7 @@ class Layer {
     /**
      * Displays logical weights assigned to the nodes
      */
-    public void displayWeights() {
+    public void displayWeights() throws Terminate {
         for ( Node v: nodes ) {
             v.setWeight( graph.getWeight( v ) );
         }
@@ -211,7 +212,7 @@ class Layer {
     /**
      * Gives node weights a default value that makes them invisible
      */
-    public void clearWeights() {
+    public void clearWeights() throws Terminate {
         for ( Node v: nodes ) {
             v.clearWeight();
         }
@@ -313,7 +314,7 @@ class Layer {
      * assumes the only y-coordinate changes occurred for nodes whose
      * positions changed: see previewPositionChanges()
      */
-    public void displayPositions() {
+    public void displayPositions() throws Terminate {
         int i = 0;
         for ( Node v: nodes ) {
             if ( v.getPositionInLayer() != i ) {
@@ -354,7 +355,7 @@ class Layer {
     /**
      * Updates the display based on previously saved positions
      */
-    public void displaySavedPositions() {
+    public void displaySavedPositions() throws Terminate {
         for ( Node v: nodes ) {
             int position = graph.getSavedPosition( v );
             if ( v.getPositionInLayer() != position ) {
@@ -367,7 +368,7 @@ class Layer {
      * Puts node v at position i on the display (does nothing to its logical
      * position)
      */
-    public void displayPosition( Node v, int i ) {
+    public void displayPosition( Node v, int i ) throws Terminate {
         if ( v.getPositionInLayer() != i ) {
             v.setPositionInLayer( i );
         }
@@ -592,7 +593,7 @@ public class LayeredGraph {
      * Displays the node v (as if it were) at position i on its layer. The
      * logical position of node v is not changed.
      */
-    public void displayPosition( Node v, int i ) {
+    public void displayPosition( Node v, int i ) throws Terminate {
         layers.get( layerOfNode[ v.getId() ] ).displayPosition( v, i );
     }
 
@@ -600,7 +601,7 @@ public class LayeredGraph {
      * Updates the display to reflect the logical position information of
      * nodes in layer i.
      */
-    public void displayPositions( int i ) {
+    public void displayPositions( int i ) throws Terminate {
         layers.get( i ).displayPositions();
     }
 
@@ -608,7 +609,7 @@ public class LayeredGraph {
      * Updates the display to reflect the logical position information of
      * all nodes.
      */
-    public void displayPositions() {
+    public void displayPositions() throws Terminate {
         for ( int layer = 0; layer < numberOfLayers(); layer++ ) {
             displayPositions( layer );
         }
@@ -675,7 +676,7 @@ public class LayeredGraph {
     /**
      * Displays the previously saved positions.
      */
-    public void displaySavedPositions() {
+    public void displaySavedPositions() throws Terminate {
         for ( Layer layer: layers ) {
             layer.displaySavedPositions();
         }
@@ -875,7 +876,7 @@ public class LayeredGraph {
     /**
      * Sets weights of all nodes on layer i to 0
      */
-    public void resetNodeWeights( int i ) {
+    public void resetNodeWeights( int i ) throws Terminate {
         for ( Node v: getLayer( i ) ) {
             v.setWeight(0.0);
         }
@@ -884,7 +885,7 @@ public class LayeredGraph {
     /**
      * Sets all node weights to 0.
      */
-    public void resetNodeWeights() {
+    public void resetNodeWeights() throws Terminate {
         for ( int layer = 0; layer < numberOfLayers(); layer++ ) {
             resetNodeWeights( layer );
         }
@@ -893,7 +894,7 @@ public class LayeredGraph {
     /**
      * Gives nodes on layer i default weights that make them invisible
      */
-    public void clearNodeWeights( int i ) {
+    public void clearNodeWeights( int i ) throws Terminate {
         layers.get(i).clearWeights();
     }
 
@@ -918,14 +919,14 @@ public class LayeredGraph {
     /**
      * Displays the weights of nodes on the given layer.
      */
-    public void displayWeights( int layer ) {
+    public void displayWeights( int layer ) throws Terminate {
         layers.get( layer ).displayWeights();
     }
 
     /**
      * Displays the weights of all nodes.
      */
-    public void displayWeights() {
+    public void displayWeights() throws Terminate {
         for ( int layer = 0; layer < numberOfLayers(); layer++ ) {
             displayWeights( layer );
         }
@@ -961,7 +962,7 @@ public class LayeredGraph {
     /**
      * Makes all node labels on layer i blank
      */
-    public void clearNodeLabels( int i ) {
+    public void clearNodeLabels( int i ) throws Terminate {
         layers.get( i ).clearLabels();
     }
 
@@ -1005,14 +1006,14 @@ public class LayeredGraph {
     /**
      * Displays all the current logical marks on layer i.
      */
-    public void displayMarks( int i ) {
+    public void displayMarks( int i ) throws Terminate {
         layers.get(i).displayMarks();
     }
 
     /**
      * Displays the current logical marks of all nodes.
      */
-    public void displayMarks() {
+    public void displayMarks() throws Terminate {
         for ( Node v: graph.getNodes() ) {
             v.setVisited( isMarked[ v.getId() ] );
         }
@@ -1022,7 +1023,7 @@ public class LayeredGraph {
      * Removes all displayed marks from layer i without affecting their
      * logical status.
      */
-    public void removeMarks( int i ) {
+    public void removeMarks( int i ) throws Terminate {
         layers.get(i).removeMarks();
     }
 
@@ -1030,7 +1031,7 @@ public class LayeredGraph {
      * Removes displayed marks from all nodes without affecting their logical
      * status.
      */
-    public void removeMarks() {
+    public void removeMarks() throws Terminate {
         for ( Node v: graph.getNodes() ) {
             v.setVisited( false );
         }
@@ -1066,7 +1067,7 @@ public class LayeredGraph {
      * Displays the marked layers: all of the nodes on each marked layer are
      * shown as marked.
      */
-    public void displayLayerMarks() {
+    public void displayLayerMarks() throws Terminate {
         for ( int i = 0; i < layers.size(); i++ ) {
             layers.get( i ).displayMarks();
         }
@@ -1075,7 +1076,7 @@ public class LayeredGraph {
     /**
      * highlights the edges incident on node v.
      */
-    public void highlightEdges( Node v ) {
+    public void highlightEdges( Node v ) throws Terminate {
         for ( Edge e: v.getIncidentEdges() ) {
             e.setSelected( true );
         }
@@ -1084,7 +1085,7 @@ public class LayeredGraph {
     /**
      * Undoes highlighting of the edges incident on node v.
      */
-    public void unHighlightEdges( Node v ) {
+    public void unHighlightEdges( Node v ) throws Terminate {
         for ( Edge e: v.getIncidentEdges() ) {
             e.setSelected( false );
         }
@@ -1097,21 +1098,21 @@ public class LayeredGraph {
      * layers are highlighted; if DOWN, those to the lower-numbered layer; if
      * both, all incident edges; if LAYER, the nodes only.
      */
-    public void highlight( int i, Scope scope ) {
+    public void highlight( int i, Scope scope ) throws Terminate {
         layers.get(i).highlight( scope );
     }
 
     /**
      * Undoes any highlighting of nodes on layer i and their incident edges.
      */
-    public void unHighlight( int i ) {
+    public void unHighlight( int i ) throws Terminate {
         layers.get(i).unHighlight();
     }
 
     /**
      * Undoes highlighting for all nodes and edges.
      */
-    public void unHighlight() {
+    public void unHighlight() throws Terminate {
         for ( int layer = 0; layer < numberOfLayers(); layer++ ) {
             unHighlight( layer );
         }
@@ -1121,7 +1122,7 @@ public class LayeredGraph {
      * Highlights the nodes between the two given positions, inclusive; used,
      * for example, to highlight an insertion.
      */
-    public void highlightNodes( int layer, int positionOne, int positionTwo ) {
+    public void highlightNodes( int layer, int positionOne, int positionTwo ) throws Terminate {
         layers.get( layer ).highlightNodes( positionOne, positionTwo );
     }
 
@@ -1564,7 +1565,7 @@ public class LayeredGraph {
      * by Stallmann (JEA, 2012)
      */
     public void setEdgeWeights() 
-    {
+    throws Terminate {
         for ( Edge e: graph.getEdges() ) {
             e.setWeight((double) crossingsOfEdge[e.getId()]);
         }
@@ -1615,4 +1616,4 @@ public class LayeredGraph {
 
 } // end, class LayeredGraph
 
-//  [Last modified: 2015 07 27 at 13:01:37 GMT]
+//  [Last modified: 2015 12 04 at 22:23:07 GMT]

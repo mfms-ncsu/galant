@@ -205,11 +205,9 @@ public class Node extends GraphElement implements Comparable<Node> {
                     Random r = new Random();
                     if ( xString == null ) {
                         x = r.nextInt(GraphDispatch.getInstance().getWindowWidth());
-                        super.set("x", x);
                     }
                     if ( yString == null ) {
                         y = r.nextInt(GraphDispatch.getInstance().getWindowHeight());
-                        super.set("y", y);
                     }
                 }
                 else {
@@ -226,6 +224,11 @@ public class Node extends GraphElement implements Comparable<Node> {
                         throw new GalantException("Bad y-coordinate " + yString);
                     }
                 } // x and y coordinates specified
+                
+                remove("x");
+                remove("y");
+                set("x", x);
+                set("y", y);
             
                 // establish fixed positions
                 xCoordinate = x;
@@ -583,4 +586,4 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 }
 
-//  [Last modified: 2015 12 05 at 19:02:44 GMT]
+//  [Last modified: 2015 12 05 at 20:17:38 GMT]

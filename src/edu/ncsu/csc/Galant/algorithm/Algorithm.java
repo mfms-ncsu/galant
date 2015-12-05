@@ -343,7 +343,6 @@ public abstract class Algorithm implements Runnable {
         synchronizer.startStep(); // needed to check for termination
         if ( synchronizer.isLocked() ) endStep();
         synchronizer.startStep();
-        dispatch.getAlgorithmExecutor().incrementAlgorithmState();
         synchronizer.lock();
     }
 
@@ -357,4 +356,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2015 12 04 at 22:08:55 GMT]
+//  [Last modified: 2015 12 05 at 14:04:35 GMT]

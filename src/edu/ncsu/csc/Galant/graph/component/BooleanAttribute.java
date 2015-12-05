@@ -14,4 +14,4 @@ public class BooleanAttribute extends Attribute implements Cloneable {
     }
 }
 
-//  [Last modified: 2015 07 27 at 15:55:31 GMT]
+//  [Last modified: 2015 12 05 at 18:07:28 GMT]

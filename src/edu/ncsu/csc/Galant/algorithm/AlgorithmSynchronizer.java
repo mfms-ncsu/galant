@@ -13,18 +13,19 @@
  *   manager
  *
  * - if the current display state is the same as the algorithm state, the
- *   algorithm wakes up and executes
+ *   algorithm wakes up and executes, doing a startStep(), i.e., setting
+ *   stepFinished false and checking for termination
  *
- * - at some point during execution the algorithm must call the
- *   incrementAlgorithmState() method of the AlgorithmExecutor object 
- *
- * - when the current algorithm step is done the pauseExecution() method is
- *   called to wake up the AlgorithmExecutor
+ * - when the current algorithm step is done, tha algorithm calls
+ *   finishStep() and pauseExecution() to wake up the AlgorithmExecutor
  *
  * - this synchronizer waits to be woken up again
  */
 
 package edu.ncsu.csc.Galant.algorithm;
+
+import edu.ncsu.csc.Galant.GraphDispatch;
+import edu.ncsu.csc.Galant.algorithm.AlgorithmExecutor;
 
 public class AlgorithmSynchronizer {
 
@@ -100,21 +101,21 @@ public class AlgorithmSynchronizer {
      * main thread
      */
     public synchronized void pauseExecution() {
-        System.out.printf("-> pauseExecution\n");
-
+        AlgorithmExecutor executor
+            = GraphDispatch.getInstance().getAlgorithmExecutor();
         finishStep();
         synchronized( this ) {
             try {
-                if ( ! locked )
+                if ( ! locked ) {
                     this.wait();
+                }
             }
             catch(InterruptedException e){
                 System.out.printf("Error occured while trying to wait");
                 e.printStackTrace(System.out);
             }
         }
-        System.out.printf("<- pauseExecution\n");
     }
 }
 
-//  [Last modified: 2015 12 03 at 18:44:42 GMT]
+//  [Last modified: 2015 12 05 at 14:09:52 GMT]

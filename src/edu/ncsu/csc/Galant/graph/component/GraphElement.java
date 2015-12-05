@@ -15,6 +15,7 @@ import edu.ncsu.csc.Galant.algorithm.Terminate;
  */
 public class GraphElement {
 
+    public static final String ID = "id";
     public static final String WEIGHT = "weight";
     public static final String LABEL = "label";
     public static final String COLOR = "color";
@@ -370,31 +371,63 @@ public class GraphElement {
     }
 
     /**
-     * Cleans up specific attributes and initializes important information in
-     * an element-specific way. This allows the GraphMLParser to create each
-     * element without knowing its attributes, then collect them in order of
-     * appearance, and finally postprocess so that the essential ones are
-     * initialized properly. Also establishes the initial state for this
-     * element. 
+     * Parses specific attributes that are not to be stored internally as
+     * strings.  This allows the GraphMLParser to create each element without
+     * knowing its attributes, then collect them in order of appearance, and
+     * finally postprocess so that the essential ones are initialized
+     * properly. Also establishes the initial state for this element.
+     *
+     * Relevant attributes for all graph elements are ...
+     * - id: integer
+     * - weight: double
+     * - highlighted: boolean
+     * - deleted: boolean (not clear if this ever becomes an issue; not implemented)
+     * 
+     * Attributes for nodes are ...
+     * - x, y: integer
+     * - layer, positionInLayer: integer
+     * - marked: boolean
+     *
+     * Attributes for edges are ...
+     * - source, target: integer (id's of nodes)
      */
     public void initializeAfterParsing() throws GalantException {
-        // the only attribute that may cause trouble is the weight, which
-        // should be stored as a double but might show up as an integer in
-        // the GraphML representation
-        Double weight = getDouble(WEIGHT);
-        if ( getWeight() == null ) {
-            Integer weightAsInteger = getInteger(WEIGHT);
-            if ( weightAsInteger != null ) {
-                // get rid of the integer value first
+        try { // need to catch Terminate exception -- should not happen
+            String idString = getString(ID);
+            if ( idString != null ) {
+                Integer id = Integer.MIN_VALUE;
                 try {
-                    clearWeight();
-                    set(WEIGHT, (double) weightAsInteger);
+                    id = Integer.parseInt(idString);
                 }
-                catch ( Terminate t ) {
-                    // should not happen
-                    t.printStackTrace();
+                catch ( NumberFormatException e ) {
+                    throw new GalantException("Bad id " + idString);
                 }
+                remove(ID);
+                set(ID, id); 
             }
+            String weightString = getString(WEIGHT);
+            if ( weightString != null ) {
+                Double weight = Double.NaN;
+                try {
+                    weight = Double.parseDouble(weightString);
+                }
+                catch ( NumberFormatException e ) {
+                    throw new GalantException("Bad weight " + weightString);
+                }
+                remove(WEIGHT);
+                set(WEIGHT, weight); 
+            }
+            String highlightString = getString(HIGHLIGHTED);
+            if ( highlightString != null ) {
+                Boolean highlighted = Boolean.parseBoolean(highlightString);
+                remove(HIGHLIGHTED);
+                if ( highlighted )
+                    set(HIGHLIGHTED, highlighted); 
+            }
+        }
+        catch ( Terminate t ) {
+            // should not happen
+            t.printStackTrace();
         }
     }
 
@@ -433,4 +466,4 @@ public class GraphElement {
     }
 }
 
-//  [Last modified: 2015 12 04 at 21:58:39 GMT]
+//  [Last modified: 2015 12 05 at 19:06:54 GMT]

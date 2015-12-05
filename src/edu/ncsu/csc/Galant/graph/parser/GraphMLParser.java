@@ -110,36 +110,17 @@ public class GraphMLParser {
 	}
 	
     /**
-     * Parses the value stored in the xml node, trying first to interpret it
-     * as an integer, then as a double, then as a boolean, and the leaving it
-     * as a string; the attribute name,value pair is then stored as an
-     * attribute of the graph node. 
+     * Sets the value stored in the xml node. Parsing is left to the
+     * graphElement via initializeAfterParsing().
+     * @see edu.ncsu.csc.Galant.graph.component.GraphElement
+     * @see edu.ncsu.csc.Galant.graph.component.Edge
+     * @see edu.ncsu.csc.Galant.graph.component.Node
      */
     private void processAttribute(GraphElement graphElement, org.w3c.dom.Node xmlNode) {
         String attributeName = xmlNode.getNodeName();
         String attributeValueString = xmlNode.getTextContent();
         try {
-            try {
-                Integer intVal = Integer.parseInt(attributeValueString);
-                graphElement.set(attributeName, intVal);
-            }
-            catch (NumberFormatException intE) {
-                try {
-                    Double doubleVal = Double.parseDouble(attributeValueString);
-                    graphElement.set(attributeName, doubleVal);
-                }
-                catch (NumberFormatException doubleE) {
-                    if ( attributeValueString.equalsIgnoreCase("true") ) {
-                        graphElement.set(attributeName, true);
-                    }
-                    else if ( attributeValueString.equalsIgnoreCase("false") ) {
-                        graphElement.set(attributeName, false);
-                    }
-                    else {
-                        graphElement.set(attributeName, attributeValueString);
-                    }
-                }
-            }
+            graphElement.set(attributeName, attributeValueString);
         }
         catch ( Terminate t ) {
             // should not happen
@@ -331,4 +312,4 @@ public class GraphMLParser {
 	
 }
 
-//  [Last modified: 2015 12 04 at 22:03:18 GMT]
+//  [Last modified: 2015 12 05 at 17:23:04 GMT]

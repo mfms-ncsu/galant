@@ -142,8 +142,13 @@ public class Node extends GraphElement implements Comparable<Node> {
 	
     /**
      * Makes sure that all the attributes specific to nodes are properly
-     * initialized.
+     * initialized. The relevant one are ...
+     * - x, y: integer
+     * - layer, positionInLayer: integer (layered graphs -- these will go away) 
+     * - marked: boolean
      *
+     * @todo this is too long; consider breaking out a method that deals with
+     * handling integer attributes
      * @todo still need to make LayeredGraphNode a subclass of Node.
      */
     public void initializeAfterParsing()
@@ -152,61 +157,96 @@ public class Node extends GraphElement implements Comparable<Node> {
         super.initializeAfterParsing();
         Integer idAttribute = super.getInteger("id");
         if ( idAttribute == null ) {
-            throw new GalantException("Missing or malformed id for node " + this);
+            throw new GalantException("Missing id for node " + this);
         }
         else if ( super.graph.nodeIdExists(idAttribute) ) {
-                throw new GalantException("Duplicate id: " + id 
-                                           + " when processing node " + this);
+            throw new GalantException("Duplicate id: " + id 
+                                      + " when processing node " + this);
         }
-        else {
+        try { // need to catch a Terminate exception - should not happen
             // don't want or need to track the id -- it won't ever change
             id = idAttribute;
-            try {
-                super.remove("id");
-            }
-            catch ( Terminate t ) {
-                // should not happen
-                t.printStackTrace();
-            }
-        }
-        if ( super.graph.isLayered() ) {
-            Integer layer = super.getInteger("layer");
-            if ( layer == null )
-                throw new GalantException("missing or malformed layer for"
-                                          + " layered graph node " + this);
-            Integer positionInLayer = super.getInteger("positionInLayer");
-            if ( positionInLayer == null )
-                throw new GalantException("missing or malformed positionInLayer for"
-                                          + " layered graph node " + this);
-        }
-        else {
-            Integer x = super.getInteger("x");
-            Integer y = super.getInteger("y");
-            try {
-                if ( x == null || y == null ) {
+            super.remove("id");
+            if ( super.graph.isLayered() ) {
+                String layerString = getString("layer");
+                String positionString = getString("position");
+                if ( layerString == null )
+                    throw new GalantException("missing layer for"
+                                              + " layered graph node " + this);
+                if ( positionString == null )
+                    throw new GalantException("missing positionInLayer for"
+                                              + " layered graph node " + this);
+                Integer layer = Integer.MIN_VALUE;
+                Integer positionInLayer = Integer.MIN_VALUE;
+                try {
+                    layer = Integer.parseInt(layerString);
+                }
+                catch ( NumberFormatException e ) {
+                    throw new GalantException("Bad layer " + layerString);
+                }
+                try {
+                    positionInLayer = Integer.parseInt(positionString);
+                }
+                catch ( NumberFormatException e ) {
+                    throw new GalantException("Bad positionInLayer "
+                                              + positionString);
+                }
+                remove("layer");
+                remove("positionInLayer");
+                set("layer", layer); 
+                set("positionInLayer", positionInLayer); 
+            } // layered graph
+            else { // not a layered graph
+                String xString = super.getString("x");
+                String yString = super.getString("y");
+                Integer x = Integer.MIN_VALUE;
+                Integer y = Integer.MIN_VALUE;
+                if ( xString == null || yString == null ) {
                     Random r = new Random();
-                    if ( x == null ) {
-                        x = r.nextInt( GraphDispatch.getInstance().getWindowWidth() );
+                    if ( xString == null ) {
+                        x = r.nextInt(GraphDispatch.getInstance().getWindowWidth());
                         super.set("x", x);
                     }
-                    if ( y == null ) {
-                        y = r.nextInt( GraphDispatch.getInstance().getWindowHeight() );
+                    if ( yString == null ) {
+                        y = r.nextInt(GraphDispatch.getInstance().getWindowHeight());
                         super.set("y", y);
                     }
                 }
+                else {
+                    try {
+                        x = Integer.parseInt(xString);
+                    }
+                    catch ( NumberFormatException e ) {
+                        throw new GalantException("Bad x-coordinate " + xString);
+                    }
+                    try {
+                        y = Integer.parseInt(yString);
+                    }
+                    catch ( NumberFormatException e ) {
+                        throw new GalantException("Bad y-coordinate " + yString);
+                    }
+                } // x and y coordinates specified
+            
+                // establish fixed positions
+                xCoordinate = x;
+                yCoordinate = y;
+            } // not a layered graph
+            String markedString = getString(MARKED);
+            if ( markedString != null ) {
+                Boolean marked = Boolean.parseBoolean(markedString);
+                remove(MARKED);
+                if ( marked )
+                    set(MARKED, marked); 
             }
-            catch ( Terminate t ) {
-                // should not happen
-                t.printStackTrace();
-            }
-            // establish fixed positions
-            xCoordinate = x;
-            yCoordinate = y;
+        }
+        catch ( Terminate t ) {
+            // should not happen
+            t.printStackTrace();
         }
         LogHelper.exitMethod(getClass(), "initializeAfterParsing: id = " + id
                              + ", x = " + getX() + ", y = " + getY()
                              + ", node = " + this);
-   }
+    } // end, intializeAfterParsing
 
     /**************** marking *******************/
 	public Boolean isVisited() {
@@ -543,4 +583,4 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 }
 
-//  [Last modified: 2015 12 04 at 21:57:13 GMT]
+//  [Last modified: 2015 12 05 at 19:02:44 GMT]

@@ -23,8 +23,8 @@ public class AlgorithmExecutor {
     private Algorithm algorithm;
     private AlgorithmSynchronizer synchronizer;
     private Thread algorithmThread;
-    private int algorithmState = 0;
-    private int displayState = 0;
+    private int algorithmState;
+    private int displayState;
 
     /**
      * Makes a note of the algorithm and its synchronizer and creates a
@@ -45,6 +45,7 @@ public class AlgorithmExecutor {
      * @todo not clear if we want the first step to execute
      */
     public void startAlgorithm() {
+        algorithmState = displayState = 0;
         algorithmThread.start();
         incrementDisplayState();
     }
@@ -66,14 +67,6 @@ public class AlgorithmExecutor {
 
 
     /**
-     * Needs to be called from the algorithm at some point after control is
-     * yielded to it and before it pauses execution.
-     */
-    public void incrementAlgorithmState() {
-        algorithmState++;
-    }
-
-    /**
      * Needed so that graph elements can record their modifications based on
      * current algorithm state.
      */
@@ -87,15 +80,19 @@ public class AlgorithmExecutor {
     /**
      * Called whenever user interaction requests a step forward; the
      * algorithm is then responsible for calling incrementAlgorithmState() to
-     * put the algorithm in sync with the display 
+     * put the algorithm in sync with the display; this is done in
+     * pauseExecution() in the AlgorithmSynchronizer.
      */
     public synchronized void incrementDisplayState() {
         System.out.printf("-> incrementDisplayState %s\n", synchronizer);
-        if ( displayState >= algorithmState) {
+        if ( displayState == algorithmState) {
             System.out.printf(" algorithm needs to wake up: displayState = %d," 
                               + " algorithmState = %d\n",
                               displayState, algorithmState);
 						
+            displayState++;
+            algorithmState++;
+
             // wake up the algorithmThread, have it do something	
             synchronized ( synchronizer ) {
                 synchronizer.notify();							
@@ -114,12 +111,17 @@ public class AlgorithmExecutor {
             } while ( ! synchronizer.stepFinished() );
             System.out.println();
         }
-        else {
+        else if ( displayState < algorithmState ) {
             System.out.printf(" algorithm is ahead, displayState = %d,"
                               + " algorithmState = %d\n",
                               displayState, algorithmState);
+            displayState++;
         }
-        displayState++;
+        else {
+            System.out.printf(" display is ahead, displayState = %d,"
+                              + " algorithmState = %d\n",
+                              displayState, algorithmState);
+        }
         System.out.printf("<- incrementDisplayState\n");
     }
 
@@ -157,4 +159,4 @@ public class AlgorithmExecutor {
     }
 }
 
-//  [Last modified: 2015 12 03 at 02:23:05 GMT]
+//  [Last modified: 2015 12 05 at 14:07:14 GMT]

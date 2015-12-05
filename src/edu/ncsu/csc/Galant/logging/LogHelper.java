@@ -8,7 +8,7 @@ public class LogHelper {
 
     private static final String INDENT_STRING = "..";
 	private static LogHelper logHelper = null;
-	private static boolean loggingEnabled = true;
+	private static boolean loggingEnabled = false;
     /**
      * Logging related to the graph panel, i.e., mouse actions and drawing,
      * clutter the loggin unnecessarily unless they are specifically
@@ -151,4 +151,4 @@ public class LogHelper {
 	}
 }
 
-//  [Last modified: 2015 12 02 at 22:28:55 GMT]
+//  [Last modified: 2015 12 05 at 02:07:02 GMT]

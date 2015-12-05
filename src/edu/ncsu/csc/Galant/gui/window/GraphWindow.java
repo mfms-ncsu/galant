@@ -777,7 +777,6 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
                 performStepForward();
-				updateStatusLabel("Algorithm execution in progress");
 				frame.repaint();
 			}
 		});
@@ -1083,4 +1082,4 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	}
 }
 
-//  [Last modified: 2015 12 04 at 21:20:40 GMT]
+//  [Last modified: 2015 12 05 at 00:50:57 GMT]

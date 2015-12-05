@@ -65,7 +65,8 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 
     /**
      * Makes sure that all the attributes specific to edges are properly
-     * initialized.
+     * initialized. The relevant ones are ...
+     * - source, target: integer (id's of nodes)
      */
     public void initializeAfterParsing()
         throws GalantException {
@@ -75,23 +76,37 @@ public class Edge extends GraphElement implements Comparable<Edge> {
         if ( id == null ) {
             id = super.graph.getNextEdgeId();
         }
-        Integer sourceId = super.getInteger("source");
-        if ( sourceId == null ) {
-             throw new GalantException("Missing attribute source when processing edge " + this.id);
+        String sourceString = getString("source");
+        String targetString = getString("target");
+        Integer sourceId = Integer.MIN_VALUE;
+        Integer targetId = Integer.MIN_VALUE;
+        if ( sourceString == null )
+            throw new GalantException("missing source for " + this);
+        if ( targetString == null )
+            throw new GalantException("missing target for " + this);
+        try {
+            sourceId = Integer.parseInt(sourceString);
         }
-        this.source = super.graph.getNodeById(sourceId);
-        if (source == null) {
-            throw new GalantException("Source node missing when processing edge " + this.id);
-        }
-        Integer targetId = super.getInteger("target");
-        if ( targetId == null ) {
-             throw new GalantException("Missing attribute target when processing edge " + this.id);
-        }
-        this.target = super.graph.getNodeById(targetId);
-        if (target == null) {
-            throw new GalantException("Target node missing when processing edge " + this.id);
+        catch ( NumberFormatException e ) {
+            throw new GalantException("Bad source id " + sourceString);
         }
         try {
+            targetId = Integer.parseInt(targetString);
+        }
+        catch ( NumberFormatException e ) {
+            throw new GalantException("Bad target id " + targetString);
+        }
+        this.source = super.graph.getNodeById(sourceId);
+        if ( this.source == null ) {
+            throw new GalantException("Source node missing when processing edge "
+                                      + this.id);
+        }
+        this.target = super.graph.getNodeById(targetId);
+        if ( this.target == null ) {
+            throw new GalantException("Target node missing when processing edge "
+                                      + this.id);
+        }
+        try { // these attributes are fixed and stored as fields of the edge object
             super.remove("id");
             super.remove("source");
             super.remove("target");
@@ -152,4 +167,4 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 	}
 }
 
-//  [Last modified: 2015 12 04 at 21:52:35 GMT]
+//  [Last modified: 2015 12 05 at 19:13:49 GMT]

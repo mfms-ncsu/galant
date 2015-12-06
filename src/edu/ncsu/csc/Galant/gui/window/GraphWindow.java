@@ -268,10 +268,11 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                     // perform any other operations on the Node after
                     // releasing it
                     Node sel = graphPanel.getSelectedNode();
-                    if (sel != null) {
+                    if ( sel != null ) {
                         graphPanel.setDragging(true);
                         graphPanel.setEdgeTracker(null);
-                        if ( !dispatch.isAnimationMode() || !dispatch.algorithmMovesNodes()) {
+                        if ( ! dispatch.isAnimationMode()
+                             || ! dispatch.algorithmMovesNodes()) {
                             try {
                                 sel.setFixedPosition( arg0.getPoint() );
                             }
@@ -752,6 +753,10 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
         AlgorithmExecutor executor = dispatch.getAlgorithmExecutor();
         executor.stopAlgorithm();
         dispatch.setAnimationMode(false);
+        // in case user changed node positions during execution
+        if ( ! dispatch.algorithmMovesNodes() ) {
+            dispatch.pushToTextEditor();
+        }
     }
 
 	/**
@@ -1082,4 +1087,4 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	}
 }
 
-//  [Last modified: 2015 12 05 at 00:50:57 GMT]
+//  [Last modified: 2015 12 06 at 20:26:31 GMT]

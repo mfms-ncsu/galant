@@ -32,9 +32,6 @@ public class GraphElement {
      * element. Other elements may have changed since the last change of this
      * one, but the state of the graph changes only as the result of an
      * algorithm step.
-     *
-     * @todo In future we may want an algorithm state independent of a graph
-     * state.
      */
 	protected GraphState graphState;
 
@@ -51,11 +48,25 @@ public class GraphElement {
      */
     public GraphElement(Graph graph, GraphState graphState) {
         LogHelper.logDebug("-> GraphElement, state = " + graphState.getState());
-        states = new ArrayList<GraphElementState>();
+        this.states = new ArrayList<GraphElementState>();
         this.graph = graph;
         this.graphState = graphState;
         this.addState(new GraphElementState(graphState));
         LogHelper.logDebug("<- GraphElement, element = " + this);
+    }
+
+    /**
+     * Resets this element to its original state at the end of an animation.
+     * @param graphState the initial state of the graph containing this element
+     */
+    protected void reset(GraphState graphState) {
+        ArrayList<GraphElementState> initialStates
+            = new ArrayList<GraphElementState>();
+        for ( GraphElementState state : this.states ) {
+            if ( state.getState() > 0 ) break;
+            initialStates.add(state);
+        }
+        this.states = initialStates;
     }
 
     /**
@@ -70,7 +81,7 @@ public class GraphElement {
      * which is not yet implemented
      */
     private GraphElementState newState() throws Terminate {
-		graphState.incrementStateIfRunning();
+		graphState.startStepIfRunning();
 		GraphElementState latest = latestState();
 		GraphElementState elementState
             = new GraphElementState(latest, this.graphState);
@@ -466,4 +477,4 @@ public class GraphElement {
     }
 }
 
-//  [Last modified: 2015 12 05 at 19:06:54 GMT]
+//  [Last modified: 2015 12 06 at 22:39:50 GMT]

@@ -32,8 +32,6 @@ public class AlgorithmExecutor {
      */
     public AlgorithmExecutor(Algorithm algorithm,
                              AlgorithmSynchronizer synchronizer) {
-        LogHelper.logDebug("=> AlgorithmExecutor: algorithm = " + algorithm
-                           + ", synchronizer = " + synchronizer);
         this.algorithm = algorithm;
         this.synchronizer = synchronizer;
         this.algorithmThread = new Thread(algorithm);
@@ -84,12 +82,10 @@ public class AlgorithmExecutor {
      * pauseExecution() in the AlgorithmSynchronizer.
      */
     public synchronized void incrementDisplayState() {
-        System.out.printf("-> incrementDisplayState %s\n", synchronizer);
-        if ( displayState == algorithmState) {
-            System.out.printf(" algorithm needs to wake up: displayState = %d," 
-                              + " algorithmState = %d\n",
-                              displayState, algorithmState);
-						
+        System.out.printf("-> incrementDisplayState displayState = %d,"
+                          + " algorithmState = %d\n", displayState, algorithmState);
+        if ( displayState == algorithmState
+             && ! synchronizer.algorithmFinished() ) {
             displayState++;
             algorithmState++;
 
@@ -122,7 +118,9 @@ public class AlgorithmExecutor {
                               + " algorithmState = %d\n",
                               displayState, algorithmState);
         }
-        System.out.printf("<- incrementDisplayState\n");
+        System.out.printf("<- incrementDisplayState, displayState = %d,"
+                              + " algorithmState = %d\n",
+                              displayState, algorithmState);
     }
 
     /**
@@ -159,4 +157,4 @@ public class AlgorithmExecutor {
     }
 }
 
-//  [Last modified: 2015 12 05 at 14:07:14 GMT]
+//  [Last modified: 2015 12 06 at 21:47:41 GMT]

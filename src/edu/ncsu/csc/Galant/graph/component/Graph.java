@@ -80,6 +80,7 @@ public class Graph {
 	public GraphWindow graphWindow;
 
  	private GraphState currentGraphState;
+    private GraphState initialGraphState;
 
     private String name;
     private String comment;
@@ -114,6 +115,7 @@ public class Graph {
 		messages = new TreeMap<Integer, String>();
 		currentGraphState = new GraphState();
 		currentGraphState.setGraph(this);
+        initialGraphState = currentGraphState;
 		nodes = new ArrayList<Node>();
 		edges = new ArrayList<Edge>();
 	}
@@ -131,6 +133,24 @@ public class Graph {
 		this.nodes = nodes;
 		this.rootNode = rootNode;
 	}
+
+    /**
+     * Resets the graph to its original state at the end of an
+     * animation. This involves creating a new graph state and letting all
+     * graph elements know about it.
+     *
+     * @todo it appears that currentGraphState never changes; the algorithm
+     * state number changes and it is obtained via the graph state, but no
+     * longer stored with it; so some of this code might be simplified.
+     */
+    public void reset() {
+        for ( Node node : this.nodes ) {
+            node.reset(initialGraphState);
+        }
+        for ( Edge edge : this.edges ) {
+            edge.reset(initialGraphState);
+        }
+    }
 
     public void setName( String name ) {
         this.name = name;
@@ -166,7 +186,7 @@ public class Graph {
      * else; I guess this is awkward because of the map.
 	 */
 	public void writeMessage(String message) throws Terminate {
-        currentGraphState.incrementStateIfRunning();
+        currentGraphState.startStepIfRunning();
 		int state = this.currentGraphState.getState();
 		messages.put(state, message);
 	}
@@ -354,7 +374,7 @@ public class Graph {
 	 */
 	public void deleteNode(Node n) throws Terminate {
         LogHelper.enterMethod(getClass(), "deleteNode " + n);
-		currentGraphState.incrementStateIfRunning();
+		currentGraphState.startStepIfRunning();
 		currentGraphState.lockIfRunning();
 		
 		n.setDeleted(true);
@@ -454,7 +474,7 @@ public class Graph {
 			if (this.nodes.size() > 0) {
 				Node n = this.nodes.get(0);
 			
-				currentGraphState.incrementStateIfRunning();
+				currentGraphState.startStepIfRunning();
 				currentGraphState.lockIfRunning();
 				n.setSelected(true);
 				n.setVisited(true);
@@ -465,7 +485,7 @@ public class Graph {
 				return null;
 			}
 		} else {
-			currentGraphState.incrementStateIfRunning();
+			currentGraphState.startStepIfRunning();
 			currentGraphState.lockIfRunning();
 			rootNode.setSelected(true);
 			rootNode.setVisited(true);
@@ -512,7 +532,7 @@ public class Graph {
 	 * @param id the ID of the <code>Node</code> to select
 	 */
 	public void select(int id) throws Terminate {
-		currentGraphState.incrementStateIfRunning();
+		currentGraphState.startStepIfRunning();
 		currentGraphState.lockIfRunning();
 		for (Node n : nodes) {
 			if (n.getId() == id) {
@@ -529,7 +549,7 @@ public class Graph {
 	 * @param _n the <code>Node</code> to select
 	 */
 	public void select(Node _n) throws Terminate {
-		currentGraphState.incrementStateIfRunning();
+		currentGraphState.startStepIfRunning();
 		currentGraphState.lockIfRunning();
 		for (Node n : nodes) {
 			if (n.getId() == _n.getId()) {
@@ -576,7 +596,7 @@ public class Graph {
 	 */
 	public Node addNode(Integer x, Integer y) throws Terminate {
         LogHelper.enterMethod( getClass(), "addNode(), x = " + x + ", y = " + y);
-		currentGraphState.incrementStateIfRunning();
+		currentGraphState.startStepIfRunning();
         Integer newId = nextNodeId();
 		Node n = new Node(currentGraphState, newId, x, y);
 		nodes.add(n);
@@ -640,7 +660,7 @@ public class Graph {
      * are known.
 	 */
 	public Edge addEdge(Node source, Node target) throws Terminate {	
-		currentGraphState.incrementStateIfRunning();
+		currentGraphState.startStepIfRunning();
         int id = edges.size();
 		Edge e = new Edge(currentGraphState, id, source, target);
         addEdge(e, id);
@@ -829,4 +849,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2015 12 04 at 21:30:26 GMT]
+//  [Last modified: 2015 12 06 at 22:49:23 GMT]

@@ -110,8 +110,6 @@ public class GraphElementState {
      */
     public String toString() {
         String s = " ";
-        LogHelper.logDebug("GraphElementState toString, attributes = "
-                           + attributes.attributes);
         for ( Attribute attribute : attributes.getAttributes() ) {
             s += attribute + " ";
         }
@@ -149,4 +147,4 @@ public class GraphElementState {
     }
 }
 
-//  [Last modified: 2015 08 13 at 14:32:38 GMT]
+//  [Last modified: 2015 12 06 at 21:50:03 GMT]

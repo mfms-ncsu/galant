@@ -50,8 +50,10 @@ public class Node extends GraphElement implements Comparable<Node> {
     }
 
     /**
-     * To add a node during algorithm execution: id is the next available one as
-     * determined by the graph and the position of the node is known to the algorithm.
+     * To add a node during algorithm execution:
+     * - id is the next available one as determined by the graph
+     * - the position of the node is known to the algorithm, fixed unless the
+     * algorithm moves nodes
      */
     public Node(GraphState graphState, int id, Integer x, Integer y) {
         super(graphState.getGraph(), graphState);
@@ -61,9 +63,15 @@ public class Node extends GraphElement implements Comparable<Node> {
         xCoordinate = x;
         yCoordinate = y;
         // set starting position based on the initial one
-        GraphElementState startingState = latestState();
-        startingState.set("x", x);
-        startingState.set("y", y);
+        if ( GraphDispatch.getInstance().algorithmMovesNodes() ) { 
+            GraphElementState startingState = latestState();
+            startingState.set("x", x);
+            startingState.set("y", y);
+        }
+        else {
+            this.xCoordinate = x;
+            this.yCoordinate = y;
+        }
         LogHelper.logDebug("<- Node, node = " + this);
    }
 
@@ -227,8 +235,6 @@ public class Node extends GraphElement implements Comparable<Node> {
                 
                 remove("x");
                 remove("y");
-                set("x", x);
-                set("y", y);
             
                 // establish fixed positions
                 xCoordinate = x;
@@ -525,14 +531,14 @@ public class Node extends GraphElement implements Comparable<Node> {
                                + "\n node = " + this );
         xCoordinate = x;
         yCoordinate = y;
-        try {
-            if ( getX() == null ) super.set("x", x);
-            if ( getY() == null ) super.set("y", y);
-        }
-        catch ( Terminate t ) {
-            // should not happen
-            t.printStackTrace();
-        }
+//         try {
+//             if ( getX() == null ) super.set("x", x);
+//             if ( getY() == null ) super.set("y", y);
+//         }
+//         catch ( Terminate t ) {
+//             // should not happen
+//             t.printStackTrace();
+//         }
         LogHelper.exitMethod( getClass(), "setFixedPosition"
                               + "\n node = " + this );
 	}
@@ -586,4 +592,4 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 }
 
-//  [Last modified: 2015 12 05 at 20:17:38 GMT]
+//  [Last modified: 2015 12 06 at 18:56:27 GMT]

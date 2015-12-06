@@ -197,8 +197,8 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
 			panel = new GGraphEditorPanel(this, filename, content);
 		else if(type == AlgorithmOrGraph.Algorithm)
 			panel = new GAlgorithmEditorPanel(this, filename, content);
-		else if(type == AlgorithmOrGraph.CompiledAlgorithm)
-			panel = new GCompiledAlgorithmEditorPanel(this, filename, content);
+// 		else if(type == AlgorithmOrGraph.CompiledAlgorithm)
+// 			panel = new GCompiledAlgorithmEditorPanel(this, filename, content);
 		else return null;
 		
 		if(filepath != null) panel.setFilePath(filepath);
@@ -372,8 +372,8 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
                     typeSelected = AlgorithmOrGraph.Graph;
 				if ( thisEditorPanel instanceof GAlgorithmEditorPanel )
                     typeSelected = AlgorithmOrGraph.Algorithm;
-				if ( thisEditorPanel instanceof GCompiledAlgorithmEditorPanel )
-                    typeSelected = AlgorithmOrGraph.CompiledAlgorithm;
+// 				if ( thisEditorPanel instanceof GCompiledAlgorithmEditorPanel )
+//                     typeSelected = AlgorithmOrGraph.CompiledAlgorithm;
 
 				if ( thisEditorPanel.getDirty() && thisEditorPanel.getText().length() > 0 )
 					if ( JOptionPane.showOptionDialog( getParent().getParent(), confirmClose, CONFIRM, 
@@ -469,4 +469,4 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
 	}
 }
 
-//  [Last modified: 2015 08 07 at 18:55:19 GMT]
+//  [Last modified: 2015 12 06 at 17:15:36 GMT]

@@ -118,9 +118,13 @@ public class GraphDispatch {
 	}
 	
 	public void setAnimationMode(boolean mode) {
-		boolean old = this.animationMode;
+		Boolean old = this.animationMode;
 		this.animationMode = mode;
-		notifyListeners(ANIMATION_MODE, new Boolean(old), new Boolean(this.animationMode) );
+        // if at the end of an animation, need to reset the graph 
+        if ( ! mode && old ) {
+            this.workingGraph.reset();
+        }
+		notifyListeners(ANIMATION_MODE, old, this.animationMode);
 	}
 
     public AlgorithmExecutor getAlgorithmExecutor() {
@@ -156,17 +160,14 @@ public class GraphDispatch {
         return 0;
     }
 
-    /**
-     * @todo algorithmMovesNodes is the only piece of information that is
-     * relevant only during execution and must be initialized (to false) when
-     * an algorithm starts. For now, I've built this into the Algorithm
-     * initialize() method, but it probably should not be a part of
-     * GraphDispatch at all.
-     */
     public boolean algorithmMovesNodes() {
         return this.algorithmMovesNodes;
     }
-  
+
+    /**
+     * @todo may need to set positions of nodes using their fixed positions
+     * as starting points.
+     */
     public void setAlgorithmMovesNodes(boolean algorithmMovesNodes) {
         this.algorithmMovesNodes = algorithmMovesNodes;
     }
@@ -175,8 +176,15 @@ public class GraphDispatch {
 		notifyListeners(GRAPH_UPDATE, null, null);
 	}
 	
+    /**
+     * @todo this apparently causes the GraphMLParser to read the text in the
+     * editor and create a new graph from it; probably should be prevented
+     * somewhere.
+     */
 	public void pushToTextEditor() {
-		notifyListeners(TEXT_UPDATE, null, null);
+        if ( ! animationMode ) {
+            notifyListeners(TEXT_UPDATE, null, null);
+        }
 	}
 	
 	private void notifyListeners(String property, Object oldValue, Object newValue) {
@@ -222,4 +230,4 @@ public class GraphDispatch {
 
 }
 
-//  [Last modified: 2015 12 02 at 14:22:39 GMT]
+//  [Last modified: 2015 12 06 at 22:38:27 GMT]

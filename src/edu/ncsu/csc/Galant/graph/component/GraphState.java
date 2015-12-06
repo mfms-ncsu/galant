@@ -32,7 +32,8 @@ public class GraphState {
 	}
 
 	/**
-	 * @param directed true if setting the graph to directed, false if undirected
+	 * @param directed true if setting the graph to directed, false if
+	 * undirected
 	 */
 	public void setDirected(boolean directed) {
 		this.directed = directed;
@@ -42,7 +43,7 @@ public class GraphState {
 		return dispatch.getAlgorithmState();
 	}
 
-	public void incrementStateIfRunning() throws Terminate {
+	public void startStepIfRunning() throws Terminate {
 		if ( dispatch.isAnimationMode()
              && ! dispatch.getAlgorithmSynchronizer().isLocked() ) {
             dispatch.getAlgorithmSynchronizer().startStep();
@@ -80,4 +81,4 @@ public class GraphState {
 	}
 }
 
-//  [Last modified: 2015 12 05 at 02:05:38 GMT]
+//  [Last modified: 2015 12 06 at 18:43:17 GMT]

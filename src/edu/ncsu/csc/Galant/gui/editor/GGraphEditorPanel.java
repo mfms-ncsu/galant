@@ -59,26 +59,37 @@ public class GGraphEditorPanel extends GEditorPanel {
 	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
+        LogHelper.enterMethod(getClass(), "propertyChange");
 		if (evt.getPropertyName().equals(GraphDispatch.ANIMATION_MODE)) {
 			if ( (Boolean) evt.getNewValue() ) { //animation mode
+                LogHelper.logDebug(" to animation mode; disable text panel");
 				this.textPane.setEnabled(false);
-			} else { //edit mode
+			}
+            else { //edit mode
 				this.textPane.setEnabled(true);
+                LogHelper.logDebug(" to edit mode ...");
 				if (GraphDispatch.getInstance().getGraphSource().equals(uuid)) {
-					try {
-						GraphMLParser parser = new GraphMLParser(this.getText());
-						GraphDispatch.getInstance().setWorkingGraph(parser.getGraph(), uuid);
-					} catch (Exception e) {
-						GraphDispatch.getInstance().setWorkingGraph(new Graph(), uuid);
-					}
+                    LogHelper.logDebug("  the right graph, updating");
+                    textPane.setText(GraphDispatch.getInstance().getWorkingGraph().toString(0));
+//                     LogHelper.logDebug("  invoking parser");
+// 					try {
+// 						GraphMLParser parser
+//                             = new GraphMLParser(this.getText());
+// 						GraphDispatch.getInstance().setWorkingGraph(parser.getGraph(), uuid);
+// 					} catch (Exception e) {
+// 						GraphDispatch.getInstance().setWorkingGraph(new Graph(), uuid);
+// 					}
 				}
 			}
-		} else if (GraphDispatch.getInstance().getGraphSource().equals(uuid)) {
+		}
+        else if (GraphDispatch.getInstance().getGraphSource().equals(uuid)) {
+            LogHelper.logDebug(" nothing to do with animation ...");
 			if (evt.getPropertyName().equals(GraphDispatch.TEXT_UPDATE)) {
+                LogHelper.logDebug("  just doing a text update");
 				textPane.setText(GraphDispatch.getInstance().getWorkingGraph().toString());
 			} 
 		}
-		
+        LogHelper.exitMethod(getClass(), "propertyChange");
 	}
 	
 	public UUID getUUID() {
@@ -87,4 +98,4 @@ public class GGraphEditorPanel extends GEditorPanel {
 	
 }
 
-//  [Last modified: 2015 05 02 at 12:27:59 GMT]
+//  [Last modified: 2015 12 06 at 22:22:13 GMT]

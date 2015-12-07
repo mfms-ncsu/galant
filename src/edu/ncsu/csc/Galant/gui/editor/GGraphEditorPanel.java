@@ -71,14 +71,6 @@ public class GGraphEditorPanel extends GEditorPanel {
 				if (GraphDispatch.getInstance().getGraphSource().equals(uuid)) {
                     LogHelper.logDebug("  the right graph, updating");
                     textPane.setText(GraphDispatch.getInstance().getWorkingGraph().toString(0));
-//                     LogHelper.logDebug("  invoking parser");
-// 					try {
-// 						GraphMLParser parser
-//                             = new GraphMLParser(this.getText());
-// 						GraphDispatch.getInstance().setWorkingGraph(parser.getGraph(), uuid);
-// 					} catch (Exception e) {
-// 						GraphDispatch.getInstance().setWorkingGraph(new Graph(), uuid);
-// 					}
 				}
 			}
 		}
@@ -98,4 +90,4 @@ public class GGraphEditorPanel extends GEditorPanel {
 	
 }
 
-//  [Last modified: 2015 12 06 at 22:22:13 GMT]
+//  [Last modified: 2015 12 06 at 22:56:16 GMT]

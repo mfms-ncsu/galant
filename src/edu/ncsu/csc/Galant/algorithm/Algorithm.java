@@ -59,6 +59,14 @@ public abstract class Algorithm implements Runnable {
     public class NodeQueue extends AbstractQueue<Node>
     {
         private Queue<Node> Q = new ArrayDeque<Node>();
+ 
+        public void enqueue(Node v) {
+            Q.offer(v);
+        }
+        public Node dequeue() {
+            return Q.poll();
+        }
+
         @Override
             public boolean offer(Node e)
             {
@@ -85,8 +93,16 @@ public abstract class Algorithm implements Runnable {
                 return Q.size();
             }
     }
-    public class EdgeQueue extends AbstractQueue<Edge>{
+    public class EdgeQueue extends AbstractQueue<Edge> {
         private Queue<Edge> Q = new ArrayDeque<Edge>();
+
+        public void enqueue(Edge e) {
+            Q.offer(e);
+        }
+        public Edge dequeue() {
+            return Q.poll();
+        }
+
         @Override
             public boolean offer(Edge e)
             {
@@ -117,10 +133,30 @@ public abstract class Algorithm implements Runnable {
     {}
     public class EdgeStack extends Stack<Edge>
     {}
-    public class NodePriorityQueue extends PriorityQueue<Node>
-    {}
-    public class EdgePriorityQueue extends PriorityQueue<Edge>
-    {}
+
+    public class NodePriorityQueue extends PriorityQueue<Node> {
+        public Node removeMin() {
+            return this.poll();
+        }
+        // not efficient, but it shouldn't matter with small graphs
+        public void decreaseKey(Node v, double newKey) {
+            this.remove(v);
+            v.setWeight(newKey);
+            this.add(v);
+        }
+    }
+
+    public class EdgePriorityQueue extends PriorityQueue<Edge> {
+        public Edge removeMin() {
+            return this.poll();
+        }
+        // not efficient, but it shouldn't matter with small graphs
+        public void decreaseKey(Edge e, double newKey) {
+            this.remove(e);
+            e.setWeight(newKey);
+            this.add(e);
+        }
+    }
 
     // Pre-existing queue/stack/priority queue objects
     public NodeQueue nodeQ = new NodeQueue();
@@ -356,4 +392,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2015 12 05 at 14:04:35 GMT]
+//  [Last modified: 2015 12 07 at 00:33:30 GMT]

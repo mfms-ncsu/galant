@@ -46,11 +46,9 @@ function lineUpNodes() {
 
 algorithm {
     movesNodes();
-
-    int n = numberOfNodes();
-    A = new double[n];
-    xCoord = new int[n];
-    nodes = new Node[n];
+    A = new double[nodeIds()];
+    xCoord = new int[nodeIds()];
+    nodes = new Node[nodeIds()];
 
     beginStep();
     lineUpNodes();
@@ -88,4 +86,4 @@ algorithm {
     deleteNode(toInsert);
 }
 
-//  [Last modified: 2015 10 08 at 19:45:16 GMT]
+//  [Last modified: 2015 12 07 at 01:20:10 GMT]

@@ -39,7 +39,7 @@ function visit( Node v ) {
     finish[id(v)] = time;
     beginStep();
     v.mark();
-    v.setLabel( "" + discovery[ v.getId() ] + "/" + finish[ v.getId() ] );
+    v.setLabel( "" + discovery[id(v)] + "/" + finish[id(v)] );
     endStep();
 }
 
@@ -66,4 +66,4 @@ algorithm {
     }
 }
 
-//  [Last modified: 2015 08 11 at 18:05:39 GMT]
+//  [Last modified: 2015 12 07 at 01:27:10 GMT]

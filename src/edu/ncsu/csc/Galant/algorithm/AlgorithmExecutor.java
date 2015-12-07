@@ -61,6 +61,7 @@ public class AlgorithmExecutor {
             algorithmThread.join();
         }
         catch (InterruptedException e) {}
+        algorithmState = displayState = 0;
     }
 
 
@@ -157,4 +158,4 @@ public class AlgorithmExecutor {
     }
 }
 
-//  [Last modified: 2015 12 06 at 21:47:41 GMT]
+//  [Last modified: 2015 12 07 at 20:23:45 GMT]

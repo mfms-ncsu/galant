@@ -84,9 +84,15 @@ public class GraphElementState {
 	public boolean set(String key, Boolean value) {
         return attributes.set(key, value);
 	}
+    public boolean set(String key) {
+        return attributes.set(key, true);
+    }
 	public Boolean getBooleanAttribute(String key) {
 		return attributes.getBoolean(key);
 	}
+    public Boolean is(String key) {
+        return attributes.getBoolean(key);
+    }
 
     /************** String attributes ***************/
 	public boolean set(String key, String value) {
@@ -147,4 +153,4 @@ public class GraphElementState {
     }
 }
 
-//  [Last modified: 2015 12 06 at 21:50:03 GMT]
+//  [Last modified: 2015 12 07 at 17:03:14 GMT]

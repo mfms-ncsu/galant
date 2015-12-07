@@ -249,10 +249,11 @@ public class CodeIntegrator
 		/** 
 		 * Remove all the comment lines in an easy way. 
 		 * Has been tested by test_comment.alg
-		 * @param code code to be processed 
+		 * @param code code to be processed
+         *
+         * from http://www.coderanch.com/t/519147/java/java/ignore-remove-comments-java-file
 		 */
 		private static String removeAllComments(String code) throws IOException {
-			// http://www.coderanch.com/t/519147/java/java/ignore-remove-comments-java-file
 			InputStream codeInput = new ByteArrayInputStream(code.getBytes());
 			BufferedReader reader = new BufferedReader(new InputStreamReader(codeInput));
 			
@@ -261,59 +262,53 @@ public class CodeIntegrator
 			boolean inBlockComment = false;
    			boolean inSlashSlashComment = false;
 
-   			int char1 = reader.read();
-   			if (char1 != -1) {
-   				int char2;
-   				while (char1 != -1) {
-		           	if ((char2 = reader.read()) == -1) {
-		                sb.append((char)char1);
+   			int current = reader.read();
+   			if (current != -1) {
+   				int next;
+   				while (current != -1) {
+		           	if ((next = reader.read()) == -1) {
+		                sb.append((char)current);
 		                break;
 		            } 
-		            if (char1 == '/' && char2 == '*') {
+		            if (current == '/' && next == '*') {
                 		inBlockComment = true;
-                		char1 = reader.read();
+                		current = reader.read();
                 		continue;
-            		} else if (char1 == '*' && char2 == '/') {
+            		} else if (current == '*' && next == '/') {
                 		inBlockComment = false;
-                		char1 = reader.read();
+                		current = reader.read();
                 		continue;
-            		} else if (char1 == '/' && char2 == '/' && !inBlockComment) {
+            		} else if (current == '/' && next == '/' && ! inBlockComment) {
                 		inSlashSlashComment = true;
-                		char1 = reader.read();
+                		current = reader.read();
                 		continue;
             		}
             		if (inBlockComment) {
-                		char1 = char2;
+                        if ( current == '\n' ) {
+                            // need to keep newlines so that lines numbers
+                            // stay the same
+                            sb.append((char)current);
+                        }
+                		current = next;
                 		continue;
             		}
             		if (inSlashSlashComment) {
-                		if (char2 == '\n') {
-                    		inSlashSlashComment = false;
-                    		sb.append((char)char2);
-                    		char1 = reader.read();
-                    		continue;
-	                	} else if (char1 == '\n') {
+	                	if (current == '\n') {
 	                    	inSlashSlashComment = false;
-	                    	// This is where bug happens. I mistakely append char2 to the string.
-	                    	// In this case, Return was captured in char1 so char 2 will the first character after Return 
-	                    	// So there is a extra 'N' from Node[] parent in log when running kruskal.alg;
-	                    	
-	                    	// It should be char1 here. 
-	                    	sb.append((char)char1);
-	                    	char1 = char2;
+	                    	sb.append((char)current);
+	                    	current = next;
 	                    	continue;
 	                	} else {
-	                		/* ignore everything else than return */
-	                    	char1 = reader.read();
+	                    	current = reader.read();
 	                    	continue;
 	                	}
             		}
-            		sb.append((char)char1);
-            		char1 = char2;
+            		sb.append((char)current);
+            		current = next;
 				}
 			}
 			return sb.toString();
 		}				
 	}
 
-//  [Last modified: 2015 12 03 at 18:01:04 GMT]
+//  [Last modified: 2015 12 07 at 21:21:11 GMT]

@@ -139,7 +139,7 @@ public abstract class Algorithm implements Runnable {
             return this.poll();
         }
         // not efficient, but it shouldn't matter with small graphs
-        public void decreaseKey(Node v, double newKey) {
+        public void decreaseKey(Node v, double newKey) throws Terminate {
             this.remove(v);
             v.setWeight(newKey);
             this.add(v);
@@ -151,11 +151,20 @@ public abstract class Algorithm implements Runnable {
             return this.poll();
         }
         // not efficient, but it shouldn't matter with small graphs
-        public void decreaseKey(Edge e, double newKey) {
+        public void decreaseKey(Edge e, double newKey) throws Terminate {
             this.remove(e);
             e.setWeight(newKey);
             this.add(e);
         }
+    }
+
+    /**
+     * @todo The NodeList and EdgeList "typedefs" don't appear to work as expected.
+     */
+    public interface NodeList extends List<Node> {
+    }
+
+    public interface EdgeList extends List<Edge> {
     }
 
     // Pre-existing queue/stack/priority queue objects
@@ -231,7 +240,18 @@ public abstract class Algorithm implements Runnable {
 
     // methods for subclasses to access API methods directly
     // can be easily added to in Eclipse with Source > Generate Delegate Methods...
-    // TODO: some of these might not be supposed to be accessible by the user?
+    /**
+     * @todo some of these algorithm methods might not be supposed to be
+     * accessible by the user?
+     */
+
+    /**
+     * Displays a message during algorithm execution
+     * @see edu.ncsu.csc.Galant.graph.component.Graph#writeMessage(String)
+     */
+    public void display(String message) throws Terminate {
+        graph.writeMessage(message);
+    }
 
     /** @see edu.ncsu.csc.Galant.graph.component.Graph#addNode(Node) */
     public void addNode(Node n){
@@ -288,10 +308,10 @@ public abstract class Algorithm implements Runnable {
         graph.setEdges(edges);
     }
 
-    /** @see edu.ncsu.csc.Galant.graph.component.Graph#getRootNode() */
-    public Node getRootNode()
+    /** @see edu.ncsu.csc.Galant.graph.component.Graph#getStartNode() */
+    public Node getStartNode() throws GalantException
     {
-        return graph.getRootNode();
+        return graph.getStartNode();
     }
 
     /** @see edu.ncsu.csc.Galant.graph.component.Graph#setRootNode(edu.ncsu.csc.Galant.graph.component.Node) */
@@ -392,4 +412,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2015 12 07 at 00:33:30 GMT]
+//  [Last modified: 2015 12 07 at 21:30:21 GMT]

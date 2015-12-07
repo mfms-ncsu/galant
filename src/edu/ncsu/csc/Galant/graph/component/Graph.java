@@ -186,9 +186,11 @@ public class Graph {
      * else; I guess this is awkward because of the map.
 	 */
 	public void writeMessage(String message) throws Terminate {
+        LogHelper.enterMethod(getClass(), "writeMessage: " + message);
         currentGraphState.startStepIfRunning();
 		int state = this.currentGraphState.getState();
 		messages.put(state, message);
+        LogHelper.exitMethod(getClass(), "writeMessage: " + message);
 	}
 	
 	/**
@@ -391,7 +393,7 @@ public class Graph {
 	 * @return the root node
 	 */
 	public Node getRootNode()
-//         throws GalantException
+        throws GalantException
     {
 //         if ( rootNode == null ) {
 //             throw new GalantException( "no root node has been set"
@@ -465,35 +467,14 @@ public class Graph {
     }
 
 	/**
-	 * Provides the root <code>Node</code>. If none has been specified, the method returns the first <code>Node</code>
-	 * in the <code>List</code> of <code>Node</code>s
-	 * @return
+	 * @return A node that can be used as a starting node by an algorithm
+	 * that requires it
 	 */
-	public Node getStartNode() throws Terminate {
-		if (rootNode == null && this.nodes.size() > 0) {
-			if (this.nodes.size() > 0) {
-				Node n = this.nodes.get(0);
-			
-				currentGraphState.startStepIfRunning();
-				currentGraphState.lockIfRunning();
-				n.setSelected(true);
-				n.setVisited(true);
-				currentGraphState.unlockIfRunning();
-			
-				return n;
-			} else {
-				return null;
-			}
-		} else {
-			currentGraphState.startStepIfRunning();
-			currentGraphState.lockIfRunning();
-			rootNode.setSelected(true);
-			rootNode.setVisited(true);
-			currentGraphState.unlockIfRunning();
-			
-			return rootNode;
-		}
-		
+	public Node getStartNode() throws GalantException {
+        if ( this.nodes.size() == 0 ) {
+            throw new GalantException("getStartNode: graph is empty.");
+        }
+        return this.nodes.get(0);
 	}
 	
 	/**
@@ -849,4 +830,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2015 12 06 at 22:49:23 GMT]
+//  [Last modified: 2015 12 07 at 20:52:51 GMT]

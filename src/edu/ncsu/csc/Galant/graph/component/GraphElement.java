@@ -194,6 +194,13 @@ public class GraphElement {
 	}
 
     /**
+     * If value is not specified, assume it's boolean and set to true
+     */
+    public boolean set(String key) throws Terminate {
+        return this.set(key, true);
+    }
+ 
+    /**
      * For boolean attributes, assume that the absense of an attribute means
      * that it's false.
      */
@@ -210,6 +217,16 @@ public class GraphElement {
 		return value;
 	}
 
+    /**
+     * Synonyms (for readability in algorithms)
+     */
+    public Boolean is(String key) {
+        return getBoolean(key);
+    }
+    public Boolean is(int state, String key) {
+        return getBoolean(state, key);
+    }
+    
     /************** String attributes ***************/
 	public boolean set(String key, String value) throws Terminate {
         GraphElementState newState = newState();
@@ -477,4 +494,4 @@ public class GraphElement {
     }
 }
 
-//  [Last modified: 2015 12 06 at 22:39:50 GMT]
+//  [Last modified: 2015 12 07 at 17:00:01 GMT]

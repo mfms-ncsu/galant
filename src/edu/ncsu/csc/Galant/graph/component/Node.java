@@ -579,6 +579,11 @@ public class Node extends GraphElement implements Comparable<Node> {
             return "";
         }
         String s = "<node" + " id=\"" + this.getId() + "\"";
+        // if algorithm doesn't move nodes, only the fixed position is set
+        if ( ! GraphDispatch.getInstance().algorithmMovesNodes() ) {
+            s += " x=\"" + this.getFixedX() + "\"";
+            s += " y=\"" + this.getFixedY() + "\" ";
+        }
         s += super.toString(state);
         s += "/>";
 		return s;
@@ -592,4 +597,4 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 }
 
-//  [Last modified: 2015 12 06 at 18:56:27 GMT]
+//  [Last modified: 2015 12 07 at 20:35:15 GMT]

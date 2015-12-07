@@ -8,7 +8,6 @@
 
 // parent in the disjoint set forest
 Node [] parent;
-Graph graph;
 
 // standard disjoint set untilities; not doing union by rank or path
 // compression; efficiency is not an issue
@@ -61,10 +60,10 @@ algorithm {
             e.setSelected( true );
             UNION(h, t);
             totalWeight += e.getWeight();
-            graph.writeMessage( "Weight so far is " + totalWeight );
+            display( "Weight so far is " + totalWeight );
         }
         else {
-            graph.writeMessage( "Vertices are already in the same component." );
+            display( "Vertices are already in the same component." );
         }
         endStep();
 
@@ -74,7 +73,7 @@ algorithm {
         endStep();
     }
 
-    graph.writeMessage( "MST has total weight " + totalWeight );
+    display( "MST has total weight " + totalWeight );
 }
 
-/*  [Last modified: 2015 12 07 at 01:26:00 GMT] */
+/*  [Last modified: 2015 12 07 at 21:29:48 GMT] */

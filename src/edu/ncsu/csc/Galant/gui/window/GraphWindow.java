@@ -752,6 +752,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
     private void performDone() {
         AlgorithmExecutor executor = dispatch.getAlgorithmExecutor();
         executor.stopAlgorithm();
+        updateStatusLabel("No algorithm running");
         dispatch.setAnimationMode(false);
         // in case user changed node positions during execution
         if ( ! dispatch.algorithmMovesNodes() ) {
@@ -1087,4 +1088,4 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	}
 }
 
-//  [Last modified: 2015 12 06 at 20:26:31 GMT]
+//  [Last modified: 2015 12 08 at 00:00:59 GMT]

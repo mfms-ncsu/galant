@@ -57,7 +57,7 @@ algorithm {
         // if the vertices aren't part of the same set
         if ( FIND_SET(h) != FIND_SET(t) ) {
             // add the edge to the MST and highlight it
-            e.setSelected( true );
+            e.setSelected(true);
             UNION(h, t);
             totalWeight += e.getWeight();
             display( "Weight so far is " + totalWeight );
@@ -76,4 +76,4 @@ algorithm {
     display( "MST has total weight " + totalWeight );
 }
 
-/*  [Last modified: 2015 12 07 at 21:29:48 GMT] */
+/*  [Last modified: 2015 12 08 at 02:03:22 GMT] */

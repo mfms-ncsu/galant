@@ -119,18 +119,21 @@ public class GAlgorithmEditorPanel extends GEditorPanel {
 	 * Not at all related to the run() method in Runnable.
 	 */
 	public void run() {
-		GraphDispatch.getInstance().setAnimationMode(true);
+        GraphDispatch dispatch = GraphDispatch.getInstance();
+		dispatch.setAnimationMode(true);
 
 		Algorithm algorithm = getCompiledAlgorithm();
-        Graph theGraph = GraphDispatch.getInstance().getWorkingGraph();
+        Graph theGraph = dispatch.getWorkingGraph();
 		algorithm.setGraph(theGraph);
 
         AlgorithmSynchronizer algorithmSynchronizer = new AlgorithmSynchronizer();
         AlgorithmExecutor algorithmExecutor
             = new AlgorithmExecutor(algorithm, algorithmSynchronizer);
-        GraphDispatch.getInstance().setAlgorithmSynchronizer(algorithmSynchronizer);
-        GraphDispatch.getInstance().setAlgorithmExecutor(algorithmExecutor);
+        dispatch.setAlgorithmSynchronizer(algorithmSynchronizer);
+        dispatch.setAlgorithmExecutor(algorithmExecutor);
+        dispatch.getGraphWindow().updateStatusLabel();
         algorithmExecutor.startAlgorithm();
+        dispatch.getGraphWindow().updateStatusLabel();
 	}
 	
 	/**
@@ -193,4 +196,4 @@ public class GAlgorithmEditorPanel extends GEditorPanel {
 
 }
 
-//  [Last modified: 2015 12 02 at 13:31:37 GMT]
+//  [Last modified: 2015 12 08 at 00:05:54 GMT]

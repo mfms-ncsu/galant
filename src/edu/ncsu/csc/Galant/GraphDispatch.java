@@ -160,6 +160,34 @@ public class GraphDispatch {
         return 0;
     }
 
+	public void startStepIfRunning() throws Terminate {
+		if ( animationMode()
+             && ! algorithmSynchronizer.isLocked() ) {
+            algorithmSynchronizer.startStep();
+		}
+	}
+	
+	public void pauseExecutionIfRunning() {
+		if ( animationMode )
+            algorithmSynchronizer.pauseExecution();
+	}
+
+    /**
+     * Locks the current algorithm state if algorithm is running
+     */
+    public void lockIfRunning() {
+        if ( animationMode )
+            algorithmSynchronizer.lock();       
+    }
+
+    /**
+     * Unlocks the current algorithm state if algorithm is running
+     */
+    public void unlockIfRunning() {
+        if ( animationMode )
+            algorithmSynchronizer.unlock();       
+    }
+
     public boolean algorithmMovesNodes() {
         return this.algorithmMovesNodes;
     }
@@ -230,4 +258,4 @@ public class GraphDispatch {
 
 }
 
-//  [Last modified: 2015 12 06 at 22:38:27 GMT]
+//  [Last modified: 2015 12 08 at 02:29:11 GMT]

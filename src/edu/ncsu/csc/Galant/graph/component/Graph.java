@@ -84,16 +84,19 @@ public class Graph {
 
     private String name;
     private String comment;
+    private boolean directed;
+
     private boolean layered = false;
     private LayerInformation layerInformation;
-	
-	private Map<Integer, String> messages;
 	
 	private List<Node> nodes;
 
     private TreeMap<Integer,Node> nodeById = new TreeMap<Integer,Node>();
 
 	private List<Edge> edges;
+
+    private MessageBanner banner;
+
     /**
      * @todo Never clear what this meant. A better name might be startNode,
      * but then there's getStartNode(), which has lots of side effects, and
@@ -106,32 +109,19 @@ public class Graph {
      * An integer that can be used as the id of the next edge if id's are not
      * explicit in the input.
      */
-    private int nextEdgeId =0;
+    private int nextEdgeId = 0;
+
+
+    private GraphDispatch dispatch;
 
 	/**
 	 * Default constructor.
 	 */
 	public Graph() {
-		messages = new TreeMap<Integer, String>();
-		currentGraphState = new GraphState();
-		currentGraphState.setGraph(this);
-        initialGraphState = currentGraphState;
+        dispatch = GraphDispatch.getInstance();
 		nodes = new ArrayList<Node>();
 		edges = new ArrayList<Edge>();
-	}
-	
-	/**
-	 * Constructor to instantiate a directed graph with a given <code>List</code> of nodes and a given root <code>Node</code>
-	 * @param directed 	true if the <code>Graph</code> is directed, false otherwise
-	 * @param nodes 	a list of all of the nodes in the <code>Graph</code>
-	 * @param rootNode	the root <code>Node</code> of the <code>Graph</code>
-	 */
-	public Graph(boolean directed, List<Node> nodes, Node rootNode) {
-		this();
-		
-		currentGraphState.setDirected(directed);
-		this.nodes = nodes;
-		this.rootNode = rootNode;
+        banner = new MessageBanner(this, currentGraphState);
 	}
 
     /**
@@ -150,6 +140,7 @@ public class Graph {
         for ( Edge edge : this.edges ) {
             edge.reset(initialGraphState);
         }
+        banner.clear();
     }
 
     public void setName( String name ) {
@@ -180,26 +171,19 @@ public class Graph {
     }
 
 	/**
-	 * Adds a new message to the current <code>GraphState</code>
-	 * @param message the message to add
-     * @todo writing a message should create a new graph state like anything
-     * else; I guess this is awkward because of the map.
+     * Changes the contents of the current message banner
 	 */
 	public void writeMessage(String message) throws Terminate {
         LogHelper.enterMethod(getClass(), "writeMessage: " + message);
-        currentGraphState.startStepIfRunning();
-		int state = this.currentGraphState.getState();
-		messages.put(state, message);
+        banner.set(message);
         LogHelper.exitMethod(getClass(), "writeMessage: " + message);
 	}
 	
 	/**
-	 * Gets all of the messages at the given state of the <code>GraphState</code>
-	 * @param state the state from which to retrieve messages
-	 * @return all of the messages at the given state.
+	 * @return the current message banner
 	 */
 	public String getMessage(int state) {
-		return messages.get(state);
+		return banner.get(state);
 	}
 	
 	/**
@@ -263,14 +247,14 @@ public class Graph {
 	 * @return true if the graph is directed, false otherwise
 	 */
 	public boolean isDirected() {
-		return currentGraphState.isDirected();
+		return directed;
 	}
 
 	/**
 	 * @param directed true if setting the graph to directed, false if undirected
 	 */
 	public void setDirected(boolean directed) {
-		currentGraphState.setDirected(directed);
+		this.directed = directed;
 	}
 
 	/**
@@ -318,7 +302,8 @@ public class Graph {
 	}
 	
 	/**
-	 * @return all <code>Edge</code>s in the <code>Graph</code> at the current <code>GraphState</code>
+	 * @return all edges as a list
+     * @todo get rid of the template
 	 */
 	public List<Edge> getEdges()
     {
@@ -334,10 +319,7 @@ public class Graph {
 	}
 	
 	/**
-	 * Gets all <code>Edge</code>s in the <code>Graph</code> at the current <code>GraphState</code>
-	 * 
-	 * @param state
-	 * @return
+	 * @return all edges at the current algorithm state
 	 */
 	public List<Edge> getEdges(int state) 
     {
@@ -362,7 +344,6 @@ public class Graph {
 	
 	/**
 	 * Removes the specified <code>Edge</code> from the <code>Graph</code>.
-	 * Does not increment the <code>GraphState</code>
 	 * @param e the edge to remove
 	 */
 	public void deleteEdge(Edge e) throws Terminate {
@@ -371,13 +352,12 @@ public class Graph {
 	
 	/**
 	 * Removes the specified <code>Node</code> from the <code>Graph</code>.
-	 * Increments the <code>GraphState</code>.
-	 * @param n
+	 * Increments the algorithm state if appropriate
 	 */
 	public void deleteNode(Node n) throws Terminate {
         LogHelper.enterMethod(getClass(), "deleteNode " + n);
-		currentGraphState.startStepIfRunning();
-		currentGraphState.lockIfRunning();
+		dispatch.startStepIfRunning();
+		disoatch.lockIfRunning();
 		
 		n.setDeleted(true);
 		for (Edge e : n.getIncidentEdges()) {
@@ -385,7 +365,7 @@ public class Graph {
             removeEdge(e);
 		}
 		
-		currentGraphState.unlockIfRunning();
+		dispatch.unlockIfRunning();
         LogHelper.exitMethod(getClass(), "deleteNode");
 	}
 
@@ -509,12 +489,12 @@ public class Graph {
 	}
 
 	/**
-	 * Selects the <code>Node</code> with the specified ID and increments the <code>GraphState</code>
-	 * @param id the ID of the <code>Node</code> to select
+	 * Selects the node with the specified ID and increments the algorithm
+	 * state if appropriate
 	 */
 	public void select(int id) throws Terminate {
-		currentGraphState.startStepIfRunning();
-		currentGraphState.lockIfRunning();
+		dispatch.startStepIfRunning();
+		dispatch.lockIfRunning();
 		for (Node n : nodes) {
 			if (n.getId() == id) {
 				n.setSelected(true);
@@ -522,7 +502,7 @@ public class Graph {
 				n.setSelected(false);
 			}
 		}
-		currentGraphState.unlockIfRunning();
+		dispatch.unlockIfRunning();
 	}
 	
 	/**
@@ -530,8 +510,8 @@ public class Graph {
 	 * @param _n the <code>Node</code> to select
 	 */
 	public void select(Node _n) throws Terminate {
-		currentGraphState.startStepIfRunning();
-		currentGraphState.lockIfRunning();
+		dispatch.startStepIfRunning();
+		dispatch.lockIfRunning();
 		for (Node n : nodes) {
 			if (n.getId() == _n.getId()) {
 				n.setSelected(true);
@@ -539,7 +519,7 @@ public class Graph {
 				n.setSelected(false);
 			}
 		}
-		currentGraphState.unlockIfRunning();
+		dispatch.unlockIfRunning();
 	}
 	
 	/**
@@ -577,7 +557,7 @@ public class Graph {
 	 */
 	public Node addNode(Integer x, Integer y) throws Terminate {
         LogHelper.enterMethod( getClass(), "addNode(), x = " + x + ", y = " + y);
-		currentGraphState.startStepIfRunning();
+		dispatch.startStepIfRunning();
         Integer newId = nextNodeId();
 		Node n = new Node(currentGraphState, newId, x, y);
 		nodes.add(n);
@@ -641,7 +621,7 @@ public class Graph {
      * are known.
 	 */
 	public Edge addEdge(Node source, Node target) throws Terminate {	
-		currentGraphState.startStepIfRunning();
+		dispatch.startStepIfRunning();
         int id = edges.size();
 		Edge e = new Edge(currentGraphState, id, source, target);
         addEdge(e, id);
@@ -702,14 +682,14 @@ public class Graph {
 		List<Edge> n_edges = n.getIncidentEdges();
         LogHelper.enterMethod(getClass(), "removeNode " + n + ", deg = " + n_edges.size());
 		
-		currentGraphState.lockIfRunning();
+		dispatch.lockIfRunning();
 		for ( Edge e : n_edges ) {
             //			n_edges.remove(e);
 			removeEdge(e);
 		}
 
 		nodes.remove(n);
-		currentGraphState.unlockIfRunning();
+		dispatch.unlockIfRunning();
         LogHelper.exitMethod(getClass(), "removeNode");
 	}
 	
@@ -726,22 +706,6 @@ public class Graph {
         return id;
 	}
 	
-	/**
-	 * Provides the integer representation of the current <code>GraphState</code>
-	 * 
-	 * @return the current state of the <code>Graph</code>
-	 */
-	public int getState() {
-		return currentGraphState.getState();
-	}
-	
-	/**
-	 * @return the current <code>GraphState</code>
-	 */
-	public GraphState getGraphState() {
-		return currentGraphState;
-	}
-
     /**
      * @return the number of layers if this is a layered graph
      */
@@ -830,4 +794,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2015 12 07 at 20:52:51 GMT]
+//  [Last modified: 2015 12 08 at 02:46:39 GMT]

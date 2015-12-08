@@ -27,13 +27,7 @@ public class GraphElement {
      */
     protected Graph graph;
 
-    /**
-     * The state of the graph corresponding to the most recent state of this
-     * element. Other elements may have changed since the last change of this
-     * one, but the state of the graph changes only as the result of an
-     * algorithm step.
-     */
-	protected GraphState graphState;
+    private GraphDispatch dispatch;
 
     /**
      * The list of states that this element has been in up to this point --
@@ -46,20 +40,18 @@ public class GraphElement {
      * filled in by initializeAfterParsing(). The algorithm state is
      * initialized elsewhere, currently in Graph.
      */
-    public GraphElement(Graph graph, GraphState graphState) {
-        LogHelper.logDebug("-> GraphElement, state = " + graphState.getState());
+    public GraphElement(Graph graph) {
         this.states = new ArrayList<GraphElementState>();
         this.graph = graph;
-        this.graphState = graphState;
         this.addState(new GraphElementState(graphState));
-        LogHelper.logDebug("<- GraphElement, element = " + this);
+        this.dispatch = GraphDispatch.getInstance();
     }
 
     /**
      * Resets this element to its original state at the end of an animation.
      * @param graphState the initial state of the graph containing this element
      */
-    protected void reset(GraphState graphState) {
+    protected void reset() {
         ArrayList<GraphElementState> initialStates
             = new ArrayList<GraphElementState>();
         for ( GraphElementState state : this.states ) {
@@ -149,7 +141,7 @@ public class GraphElement {
         }
         if ( ! found ) {
             states.add(stateToAdd);
-            stateToAdd.getAlgorithmState().pauseExecutionIfRunning();
+            dispatch.pauseExecutionIfRunning();
         }
         LogHelper.exitMethod(getClass(), "addState, found = " + found);
 	}
@@ -494,4 +486,4 @@ public class GraphElement {
     }
 }
 
-//  [Last modified: 2015 12 07 at 17:00:01 GMT]
+//  [Last modified: 2015 12 08 at 02:55:07 GMT]

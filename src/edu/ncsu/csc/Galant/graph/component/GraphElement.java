@@ -27,7 +27,7 @@ public class GraphElement {
      */
     protected Graph graph;
 
-    private GraphDispatch dispatch;
+    protected GraphDispatch dispatch;
 
     /**
      * The list of states that this element has been in up to this point --
@@ -41,10 +41,10 @@ public class GraphElement {
      * initialized elsewhere, currently in Graph.
      */
     public GraphElement(Graph graph) {
+        this.dispatch = GraphDispatch.getInstance();
         this.states = new ArrayList<GraphElementState>();
         this.graph = graph;
-        this.addState(new GraphElementState(graphState));
-        this.dispatch = GraphDispatch.getInstance();
+        this.addState(new GraphElementState());
     }
 
     /**
@@ -73,10 +73,10 @@ public class GraphElement {
      * which is not yet implemented
      */
     private GraphElementState newState() throws Terminate {
-		graphState.startStepIfRunning();
+		dispatch.startStepIfRunning();
 		GraphElementState latest = latestState();
 		GraphElementState elementState
-            = new GraphElementState(latest, this.graphState);
+            = new GraphElementState(latest);
 		
         LogHelper.logDebug( "newState (element) = " + elementState.getState() );
 		return elementState;
@@ -126,7 +126,7 @@ public class GraphElement {
      * @invariant states are always sorted by state number.
      */
 	private void addState(GraphElementState stateToAdd) {
-        LogHelper.enterMethod(getClass(), "addState, state number  = "
+        LogHelper.enterMethod(getClass(), "addState, state number = "
                               + stateToAdd.getState());
         int stateNumber = stateToAdd.getState();
         boolean found = false;
@@ -486,4 +486,4 @@ public class GraphElement {
     }
 }
 
-//  [Last modified: 2015 12 08 at 02:55:07 GMT]
+//  [Last modified: 2015 12 08 at 14:29:34 GMT]

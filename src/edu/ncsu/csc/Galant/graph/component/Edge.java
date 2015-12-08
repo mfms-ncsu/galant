@@ -25,17 +25,16 @@ public class Edge extends GraphElement implements Comparable<Edge> {
     /**
      * When an edge is created during parsing and source, target and id are not known.
      */
-	public Edge(GraphState currentState) {
-        super(currentState.getGraph(), currentState);
+	public Edge(Graph graph) {
+        super(graph);
 	}
 
     /**
      * To add an edge while editing or during algorithm execution: id, source
      * and target are known at the time.
      */
-    public Edge(GraphState algorithmState, int id, Node source, Node target) {
-        super(algorithmState.getGraph(), algorithmState);
-        super.graph = algorithmState.getGraph();
+    public Edge(Graph graph, int id, Node source, Node target) {
+        super(graph);
         this.id = id;
         this.source = source;
         this.target = target;
@@ -165,4 +164,4 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 	}
 }
 
-//  [Last modified: 2015 12 06 at 21:26:06 GMT]
+//  [Last modified: 2015 12 08 at 13:44:32 GMT]

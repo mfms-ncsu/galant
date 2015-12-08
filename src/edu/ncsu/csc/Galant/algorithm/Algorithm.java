@@ -30,7 +30,6 @@ import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.GraphDispatch;
 import edu.ncsu.csc.Galant.graph.component.Edge;
 import edu.ncsu.csc.Galant.graph.component.Graph;
-import edu.ncsu.csc.Galant.graph.component.GraphState;
 import edu.ncsu.csc.Galant.graph.component.Node;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow;
 import edu.ncsu.csc.Galant.algorithm.AlgorithmSynchronizer;
@@ -362,14 +361,9 @@ public abstract class Algorithm implements Runnable {
         graph.deleteEdge(e);
     }
 
-    /** @see edu.ncsu.csc.Galant.graph.component.Graph#getState() */
+    /** @see edu.ncsu.csc.Galant.GraphDispatch#getAlgorithmState() */
     public int getState(){
-        return graph.getState();
-    }
-
-    /** @see edu.ncsu.csc.Galant.graph.component.Graph#getGraphState() */
-    public GraphState getGraphState(){
-        return graph.getGraphState();
+        return dispatch.getAlgorithmState();
     }
 
     /** @see edu.ncsu.csc.Galant.GraphDispatch#getWindowWidth() */
@@ -394,7 +388,6 @@ public abstract class Algorithm implements Runnable {
         dispatch.setAlgorithmMovesNodes(true);
     }
 
-    /** @see edu.ncsu.csc.Galant.graph.component.GraphState */
     public void beginStep() throws Terminate {
         synchronizer.startStep(); // needed to check for termination
         if ( synchronizer.isLocked() ) endStep();
@@ -402,7 +395,6 @@ public abstract class Algorithm implements Runnable {
         synchronizer.lock();
     }
 
-    /** @see edu.ncsu.csc.Galant.graph.component.GraphState */
     public void endStep() {
         synchronizer.unlock();
         synchronizer.pauseExecution();
@@ -412,4 +404,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2015 12 07 at 21:30:21 GMT]
+//  [Last modified: 2015 12 08 at 14:02:35 GMT]

@@ -34,29 +34,29 @@ public class Node extends GraphElement implements Comparable<Node> {
     /**
      * When a node is created during parsing and id is not known.
      */
-	public Node(GraphState currentState) {
-        super(currentState.getGraph(), currentState);
+	public Node(Graph graph) {
+        super(graph);
 		incidentEdges = new ArrayList<Edge>();
 	}
 
     /**
-     * To add a node while editing: id is the next available one as
-     * determined by the graph.
+     * @param id is the next available id as determined by the graph.
+     * @todo not clear that this is used anywhere
      */
-    public Node(GraphState graphState, int id) {
-        super(graphState.getGraph(), graphState);
+    public Node(Graph graph, int id) {
+        super(graph);
         this.id = id;
 		incidentEdges = new ArrayList<Edge>();
     }
 
     /**
-     * To add a node during algorithm execution:
+     * To add a node during editing or algorithm execution:
      * - id is the next available one as determined by the graph
      * - the position of the node is known to the algorithm, fixed unless the
      * algorithm moves nodes
      */
-    public Node(GraphState graphState, int id, Integer x, Integer y) {
-        super(graphState.getGraph(), graphState);
+    public Node(Graph graph, int id, Integer x, Integer y) {
+        super(graph);
         LogHelper.logDebug("-> Node, id = " + id + ", x =" + x + ", y =" + y);
         this.id = id;
 		incidentEdges = new ArrayList<Edge>();
@@ -118,7 +118,7 @@ public class Node extends GraphElement implements Comparable<Node> {
         setY(y);
         LogHelper.exitMethod(getClass(),
                              "setPosition, node = "
-                             + this.toString(GraphDispatch.getInstance().getWorkingGraph().getState()));
+                             + this.toString(dispatch.getAlgorithmState()));
     }
     public void setPosition(Point point) throws Terminate {
         LogHelper.enterMethod(getClass(), "setPosition, point = " + point);
@@ -126,7 +126,7 @@ public class Node extends GraphElement implements Comparable<Node> {
         setY(point.y);
         LogHelper.exitMethod(getClass(),
                              "setPosition, node = "
-                             + this.toString(GraphDispatch.getInstance().getWorkingGraph().getState()));
+                             + this.toString(dispatch.getAlgorithmState()));
     }
 
     public Integer getLayer() {
@@ -306,7 +306,7 @@ public class Node extends GraphElement implements Comparable<Node> {
 		for ( Edge e : incidentEdges ) {
 			if ( e.inScope() && ! e.isDeleted() ) {
 				if ( this.equals( e.getSourceNode() ) 
-                    || ! graphState.isDirected() ) {
+                    || ! graph.isDirected() ) {
 					currentEdges.add(e);
 				}
 			}
@@ -329,7 +329,7 @@ public class Node extends GraphElement implements Comparable<Node> {
 		for ( Edge e : incidentEdges ) {
 			if ( e.inScope() && ! e.isDeleted() ) {
 				if ( this.equals( e.getTargetNode() )
-                     || ! graphState.isDirected() ) {
+                     || ! graph.isDirected() ) {
 					currentEdges.add( e );
 				}
 			}
@@ -399,7 +399,7 @@ public class Node extends GraphElement implements Comparable<Node> {
 			if (source.getId() == this.getId()) {
 				adjacent = target;
 			} else {
-				if (graphState.isDirected()) continue;
+				if (graph.isDirected()) continue;
 				adjacent = source;
 			}
 			
@@ -428,7 +428,7 @@ public class Node extends GraphElement implements Comparable<Node> {
 			if (source.getId() == this.getId()) {
 				adjacent = target;
 			} else {
-				if (graphState.isDirected()) continue;
+				if (graph.isDirected()) continue;
 				adjacent = source;
 			}
 			
@@ -453,7 +453,7 @@ public class Node extends GraphElement implements Comparable<Node> {
 			if (source.getId() == this.getId()) {
 				adjacent = target;
 			} else {
-				if (graphState.isDirected()) continue;
+				if (graph.isDirected()) continue;
 				adjacent = source;
 			}
 			
@@ -597,4 +597,4 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 }
 
-//  [Last modified: 2015 12 07 at 20:35:15 GMT]
+//  [Last modified: 2015 12 08 at 14:12:32 GMT]

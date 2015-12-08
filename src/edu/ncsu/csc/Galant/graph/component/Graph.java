@@ -1,7 +1,5 @@
 /**
- * Provides access to all information about the graph, and maintains a list
- * of the states the graph can be in.
- * @see GraphState.java
+ * Provides access to all information about the graph
  */
 
 package edu.ncsu.csc.Galant.graph.component;
@@ -23,8 +21,7 @@ import edu.ncsu.csc.Galant.logging.LogHelper;
  * Stores information peculiar to layered graphs.
  *
  * @todo LayeredGraph clearly needs to be a subclass of Graph and
- * LayeredGraphNode a subclass of Node, but this may introduce complications
- * related to GraphState and NodeState.
+ * LayeredGraphNode a subclass of Node.
  */
 class LayerInformation {
     int numberOfLayers;
@@ -67,20 +64,13 @@ class LayerInformation {
 }
 
 /**
- * Stores all <code>Node</code>s and <code>Edge</code>s for use in graph algorithms.
- * Additionally stores its own <code>GraphState</code> that will be used to store changes made to the <code>Graph</code>
- * from compiling and running algorithms on the <code>Graph</code>.
+ * Stores all nodes, edges and related information for use in graph algorithms.
  * 
- * @author Michael Owoc, Ty Devries (modifications by Matt Stallmann)
- *
- * $Id: Graph.java 113 2015-05-05 15:31:47Z mfms $
+ * @author Michael Owoc, Ty Devries (major modifications by Matt Stallmann)
  */
 public class Graph {
 	
 	public GraphWindow graphWindow;
-
- 	private GraphState currentGraphState;
-    private GraphState initialGraphState;
 
     private String name;
     private String comment;
@@ -121,26 +111,20 @@ public class Graph {
         dispatch = GraphDispatch.getInstance();
 		nodes = new ArrayList<Node>();
 		edges = new ArrayList<Edge>();
-        banner = new MessageBanner(this, currentGraphState);
+        banner = new MessageBanner(this);
 	}
 
     /**
      * Resets the graph to its original state at the end of an
-     * animation. This involves creating a new graph state and letting all
-     * graph elements know about it.
-     *
-     * @todo it appears that currentGraphState never changes; the algorithm
-     * state number changes and it is obtained via the graph state, but no
-     * longer stored with it; so some of this code might be simplified.
+     * animation.
      */
     public void reset() {
         for ( Node node : this.nodes ) {
-            node.reset(initialGraphState);
+            node.reset();
         }
         for ( Edge edge : this.edges ) {
-            edge.reset(initialGraphState);
+            edge.reset();
         }
-        banner.clear();
     }
 
     public void setName( String name ) {
@@ -180,6 +164,7 @@ public class Graph {
 	}
 	
 	/**
+     * @param state the algorithm state for the desired message
 	 * @return the current message banner
 	 */
 	public String getMessage(int state) {
@@ -352,12 +337,12 @@ public class Graph {
 	
 	/**
 	 * Removes the specified <code>Node</code> from the <code>Graph</code>.
-	 * Increments the algorithm state if appropriate
+	 * Starts a new algorithm step if appropriate
 	 */
 	public void deleteNode(Node n) throws Terminate {
         LogHelper.enterMethod(getClass(), "deleteNode " + n);
 		dispatch.startStepIfRunning();
-		disoatch.lockIfRunning();
+		dispatch.lockIfRunning();
 		
 		n.setDeleted(true);
 		for (Edge e : n.getIncidentEdges()) {
@@ -489,8 +474,8 @@ public class Graph {
 	}
 
 	/**
-	 * Selects the node with the specified ID and increments the algorithm
-	 * state if appropriate
+	 * Highlights the node with the specified id and starts an algorithm step if
+	 * appropriate
 	 */
 	public void select(int id) throws Terminate {
 		dispatch.startStepIfRunning();
@@ -506,20 +491,10 @@ public class Graph {
 	}
 	
 	/**
-	 * Selects the given <code>Node</code> if it exists and increments the <code>GraphState</code>
-	 * @param _n the <code>Node</code> to select
+	 * Highlights the given node and starts an algorithm step if appropriate
 	 */
-	public void select(Node _n) throws Terminate {
-		dispatch.startStepIfRunning();
-		dispatch.lockIfRunning();
-		for (Node n : nodes) {
-			if (n.getId() == _n.getId()) {
-				n.setSelected(true);
-			} else if (n.isSelected()) {
-				n.setSelected(false);
-			}
-		}
-		dispatch.unlockIfRunning();
+	public void select(Node toHighlight) throws Terminate {
+        this.select(toHighlight.getId());
 	}
 	
 	/**
@@ -531,9 +506,9 @@ public class Graph {
 	public Node addInitialNode(Integer x, Integer y) {
         LogHelper.enterMethod( getClass(), "addInitialNode(), x = " + x + ", y = " + y);
         Integer newId = nextNodeId();
-		Node n = new Node(currentGraphState, newId, x, y);
+		Node n = new Node(this, newId, x, y);
 		nodes.add(n);
-        nodeById.put( newId, n ); 
+        nodeById.put(newId, n);
 		
 		if (this.rootNode == null) {
 			this.rootNode = n;
@@ -553,13 +528,13 @@ public class Graph {
      * @return the added <code>Node</code>; called only during algorithm
 	 * execution; the assumption here is that the algorithm has to "know" the
 	 * position of the node it is adding. The only difference from the above
-	 * is that the state is incremented.
+	 * is that an algorithm step is initiated if appropriate
 	 */
 	public Node addNode(Integer x, Integer y) throws Terminate {
         LogHelper.enterMethod( getClass(), "addNode(), x = " + x + ", y = " + y);
 		dispatch.startStepIfRunning();
         Integer newId = nextNodeId();
-		Node n = new Node(currentGraphState, newId, x, y);
+		Node n = new Node(this, newId, x, y);
 		nodes.add(n);
         nodeById.put( newId, n ); 
 		
@@ -611,11 +586,10 @@ public class Graph {
 	}
 	
 	/**
-	 * Adds a new <code>Edge</code> to the <code>Graph</code> with the specified source and target <code>Node</code>s and increments the <code>GraphState</code>
-	 * Note: for undirected</code>Graph</code>s, "source" and "target" are meaningless.
-	 * @param source the source <code>Node</code>
-	 * @param target the target <code>Node</code>
-	 * @return the <code>Edge</code> added
+	 * Adds a new edge to the graph with the specified source and
+	 * target. Starts an algorithm step if appropriate.
+	 * Note: for undirected graphs, "source" and "target" are meaningless.
+	 * @return the added edge
      *
      * This variant is used during algorithm execution if the actual nodes
      * are known.
@@ -623,17 +597,16 @@ public class Graph {
 	public Edge addEdge(Node source, Node target) throws Terminate {	
 		dispatch.startStepIfRunning();
         int id = edges.size();
-		Edge e = new Edge(currentGraphState, id, source, target);
+		Edge e = new Edge(this, id, source, target);
         addEdge(e, id);
 		return e;
 	}
 	
 	/**
-	 * Adds a new <code>Edge</code> to the <code>Graph</code> with the specified source and target <code>Node</code>s
-	 * Note: for undirected</code>Graph</code>s, "source" and "target" are meaningless.
-	 * @param source the source <code>Node</code>
-	 * @param target the target <code>Node</code>
-	 * @return the <code>Edge</code> added
+	 * Adds a new edge to the graph with the specified source and
+	 * target. Starts an algorithm step if appropriate.
+	 * Note: for undirected graphs, "source" and "target" are meaningless.
+	 * @return the added edge
      *
      * This variant is used during algorithm execution when only the id's are known.
 	 */
@@ -642,15 +615,15 @@ public class Graph {
 	}
 	
 	/**
-	 * Adds a new <code>Edge</code> to the <code>Graph</code> with the specified source and target <code>Node</code>s.
-	 * Note: for undirected <code>Graph</code>s, "source" and "target" are meaningless.
+	 * Adds a new edge to the graph with the specified source and
+	 * target.
+	 * Note: for undirected graphs, "source" and "target" are meaningless.
 	 * @return the added edge
      *
-     * @todo Again, the locking of states is puzzling since this variant is
-     * used only during editing.
+     * This variant is used only during editing.
 	 */
 	public Edge addInitialEdge(Node source, Node target) {
-		Edge e = new Edge(currentGraphState, edges.size(), source, target);
+		Edge e = new Edge(this, edges.size(), source, target);
 		
 		edges.add(e);
 		source.addEdge(e);
@@ -794,4 +767,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2015 12 08 at 02:46:39 GMT]
+//  [Last modified: 2015 12 08 at 14:26:53 GMT]

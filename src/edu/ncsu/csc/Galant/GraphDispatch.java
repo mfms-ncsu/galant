@@ -11,6 +11,7 @@ import edu.ncsu.csc.Galant.gui.window.GraphWindow;
 import edu.ncsu.csc.Galant.logging.LogHelper;
 import edu.ncsu.csc.Galant.algorithm.AlgorithmExecutor;
 import edu.ncsu.csc.Galant.algorithm.AlgorithmSynchronizer;
+import edu.ncsu.csc.Galant.algorithm.Terminate;
 
 /**
  * Dispatch for managing working graphs in the editor; also used for passing
@@ -161,7 +162,7 @@ public class GraphDispatch {
     }
 
 	public void startStepIfRunning() throws Terminate {
-		if ( animationMode()
+		if ( animationMode
              && ! algorithmSynchronizer.isLocked() ) {
             algorithmSynchronizer.startStep();
 		}
@@ -258,4 +259,4 @@ public class GraphDispatch {
 
 }
 
-//  [Last modified: 2015 12 08 at 02:29:11 GMT]
+//  [Last modified: 2015 12 08 at 14:13:07 GMT]

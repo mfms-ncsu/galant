@@ -6,17 +6,7 @@
  * as surrogates for positionInLayer and layer, respectively, when a graph
  * is layered. The only part of the code that needs to know about these
  * attributes is the display in GraphPanel. The change would require changes
- * in GraphPanel, Node, NodeState, and possibly Graph and GraphState.
- *
- * @todo A lot of attributes of nodes, edges, and graphs should be set to
- * null if they don't exist (and then not printed when the graph is saved or
- * exported). Default values can be used during display in GraphPanel instead
- * of forced at time of creation. Numerical attributes should be Integer or
- * Double instead of int or double. Changes would be required here, in
- * GraphPanel, in Node, NodeState, Edge, EdgeState, Graph, GraphState, and
- * various places where the numerical attributes are referred to.
- *
- * $Id: GraphMLParser.java 113 2015-05-05 15:31:47Z mfms $
+ * in GraphPanel, Node, NodeState, and possibly Graph.
  */
 
 package edu.ncsu.csc.Galant.graph.parser;
@@ -139,7 +129,6 @@ public class GraphMLParser {
 		NodeList nodes;
 		NodeList edges;
 		NodeList graph;
-		GraphState graphState = graphUnderConstruction.getGraphState();
 		nodes = getNodes();
 		edges = getEdges();
 		graph = getGraphNode();
@@ -182,7 +171,7 @@ public class GraphMLParser {
 		for ( int nodeIndex = 0; nodeIndex < nodes.getLength(); nodeIndex++ ) {
             LogHelper.logDebug( " processing " + nodeIndex + "th node." );
             org.w3c.dom.Node xmlNode = nodes.item(nodeIndex);
-            Node graphNode = new Node(graphState);
+            Node graphNode = new Node(graphUnderConstruction);
             NamedNodeMap nodeAttributes = xmlNode.getAttributes();
             if ( attributes != null ) {
                 for ( int i = 0; i < nodeAttributes.getLength(); i++ ) {
@@ -202,7 +191,7 @@ public class GraphMLParser {
 		for ( int nodeIndex = 0; nodeIndex < edges.getLength(); nodeIndex++ ) {
             LogHelper.logDebug( " processing " + nodeIndex + "th edge." );
             org.w3c.dom.Node xmlNode = edges.item(nodeIndex);
-            Edge graphEdge = new Edge(graphState);
+            Edge graphEdge = new Edge(graphUnderConstruction);
             NamedNodeMap edgeAttributes = xmlNode.getAttributes();
             if ( attributes != null ) {
                 for ( int i = 0; i < edgeAttributes.getLength(); i++ ) {
@@ -312,4 +301,4 @@ public class GraphMLParser {
 	
 }
 
-//  [Last modified: 2015 12 05 at 17:23:04 GMT]
+//  [Last modified: 2015 12 08 at 13:58:18 GMT]

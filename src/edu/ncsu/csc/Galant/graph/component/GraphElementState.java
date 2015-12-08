@@ -16,52 +16,43 @@ import edu.ncsu.csc.Galant.logging.LogHelper;
 public class GraphElementState {
 
     /**
-     * The sequence number of this state.
-     * @todo This is redundant information and easy to lose track of. Either
-     * we should access everything by actual state or by state number.
+     * The sequence number (algorithm state) of this state.
      */
 	private int state;
 
     public int getState() { return state; }
 	
     /**
-     * The actual algorithm state corresponding to this state.
-     *
-     * @todo Once threading gets sorted out, this wil refer to an algorithm
-     * execution state, or be deprecated if the execution state can be
-     * retrieved from its sequence number.
-     */
-    private GraphState algorithmState;
-
-    public GraphState getAlgorithmState() { return algorithmState; }
-
-    /**
      * Attribute list for the snapshot representing this element state
      */
     protected AttributeList attributes;
     public AttributeList getAttributes() { return attributes; }
 
+    private GraphDispatch dispatch;
+
     /**
      * Constructor used during parsing and editing, when no attributes are
      * known yet.
      */
-    public GraphElementState(GraphState algorithmState) {
-        LogHelper.logDebug("-> GraphElementState, state = " + algorithmState.getState());
-        this.algorithmState = algorithmState;
-        this.state = algorithmState.getState();
+    public GraphElementState() {
+        this.dispatch = GraphDispatch.getInstance();
+        this.state = dispatch.getAlgorithmState();
+        LogHelper.logDebug("-> GraphElementState(), state = " + state);
         this.attributes = new AttributeList();
         LogHelper.logDebug("<- GraphElementState, elementState = " + this);
     }
 
     /**
      * This serves essentially as a copy constructor: creates the new object
-     * in a different graph state and copies all the information for the node
+     * in a different algorithm state and copies all the information for the node
      * (state) - except, of course, the state
      */
-    public GraphElementState(GraphElementState elementState, GraphState algorithmState) {
-        this.algorithmState = algorithmState;
-        this.state = algorithmState.getState();
+    public GraphElementState(GraphElementState elementState) {
+        this.dispatch = GraphDispatch.getInstance();
+        this.state = dispatch.getAlgorithmState();
+        LogHelper.logDebug("-> GraphElementState(copy), state = " + state);
         this.attributes = elementState.getAttributes().duplicate();
+        LogHelper.logDebug("<- GraphElementState(copy), elementState = " + this);
     }
 
     /************** Integer attributes ***************/
@@ -153,4 +144,4 @@ public class GraphElementState {
     }
 }
 
-//  [Last modified: 2015 12 07 at 17:03:14 GMT]
+//  [Last modified: 2015 12 08 at 13:54:04 GMT]

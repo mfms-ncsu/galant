@@ -7,8 +7,8 @@ import edu.ncsu.csc.Galant.GraphDispatch;
 import edu.ncsu.csc.Galant.algorithm.Terminate;
 
 public class MessageBanner extends GraphElement {
-    public MessageBanner(Graph graph, GraphState graphState) {
-        super(graph, graphState);
+    public MessageBanner(Graph graph) {
+        super(graph);
     }
 
     public boolean set(String message) throws Terminate {
@@ -16,7 +16,7 @@ public class MessageBanner extends GraphElement {
     }
 
     public void clear() throws Terminate {
-        super.clear("message");
+        super.remove("message");
     }
 
     /**
@@ -29,4 +29,4 @@ public class MessageBanner extends GraphElement {
     }
 }
 
-//  [Last modified: 2015 12 08 at 02:36:43 GMT]
+//  [Last modified: 2015 12 08 at 14:17:12 GMT]

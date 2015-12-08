@@ -105,7 +105,7 @@ public class GraphElementState {
      * Creates a string that can be used to form the "interior" of a GraphML
      * representation of this element.
      */
-    public String toString() {
+    public String xmlString() {
         String s = " ";
         for ( Attribute attribute : attributes.getAttributes() ) {
             s += attribute + " ";
@@ -114,7 +114,7 @@ public class GraphElementState {
     }
 
     /**
-     * Like toString(), except that it omits the "x" and "y" attributes; to
+     * Like xmlString(), except that it omits the "x" and "y" attributes; to
      * be used in cases where these attributes are superceded by the
      * corresponding fixed ones of a Node.
      */
@@ -130,7 +130,7 @@ public class GraphElementState {
     }
 
     /**
-     * Like toString(), except that it omits the "id" attribute; to be used
+     * Like xmlString(), except that it omits the "id" attribute; to be used
      * in cases where the id is optional, as is the case with an Edge
      */
     public String attributesWithoutId() {
@@ -144,4 +144,4 @@ public class GraphElementState {
     }
 }
 
-//  [Last modified: 2015 12 08 at 13:54:04 GMT]
+//  [Last modified: 2015 12 08 at 16:14:55 GMT]

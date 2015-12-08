@@ -118,8 +118,7 @@ public class Edge extends GraphElement implements Comparable<Edge> {
                                + this);
     }
 
-	@Override
-	public String toString() {
+	public String xmlString() {
         // id may not exist for an edge; not really essential;
         // inputHasEdgeIds() returns true if they appeared in the input, in
         // which case they should be rendered in the output as the first
@@ -143,15 +142,38 @@ public class Edge extends GraphElement implements Comparable<Edge> {
      * This version is called when the current state of the animation is
      * exported.
      */
-    @Override
-	public String toString(int state) {
+	public String xmlString(int state) {
         if ( ! inScope(state) ) {
             return "";
         }
 		String s = "<edge "
             + " source=\"" + this.source.getId() + "\""
             + " target=\"" + this.target.getId() + "\"";
-        s += super.toString(state);
+        s += super.xmlString(state);
+        s += " />";
+		return s;
+	}
+
+    /**
+     * For debugging only
+     */
+	@Override
+	public String toString() {
+        // id may not exist for an edge; not really essential;
+        // inputHasEdgeIds() returns true if they appeared in the input, in
+        // which case they should be rendered in the output as the first
+        // attribute.
+        String idComponent = "";
+        if ( super.graph.inputHasEdgeIds() )
+            idComponent = "id=\"" + this.id + "\"";
+ 		String s = "<edge " + idComponent;
+        // need this to get past here when the edge is first created and this
+        // function is used for debugging.
+        if ( this.source != null && this.target != null ) {
+            s += " source=\"" + this.source.getId() + "\"";
+            s += " target=\"" + this.target.getId() + "\"";
+        }
+        s += super.attributesWithoutId();
         s += " />";
 		return s;
 	}
@@ -164,4 +186,4 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 	}
 }
 
-//  [Last modified: 2015 12 08 at 13:44:32 GMT]
+//  [Last modified: 2015 12 08 at 16:25:48 GMT]

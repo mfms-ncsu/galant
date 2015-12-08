@@ -455,12 +455,12 @@ public class GraphElement {
      * Creates a string that can be used to form the "interior" of a GraphML
      * representation of the attributes associated with this state.
      */
-    public String toString() {
-        return latestState().toString();
+    public String xmlString() {
+        return latestState().xmlString();
     }
 
     /**
-     * Like toString(), except that it omits the "x" and "y" attributes; to
+     * Like xmlString(), except that it omits the "x" and "y" attributes; to
      * be used in cases where these attributes are superceded by the
      * corresponding fixed ones of a Node.
      */
@@ -469,7 +469,7 @@ public class GraphElement {
     }
 
     /**
-     * Like toString(), except that it omits the "id" attribute; to be used
+     * Like xmlString(), except that it omits the "id" attribute; to be used
      * in cases where the id is optional, as is the case with an Edge
      */
     public String attributesWithoutId() {
@@ -481,9 +481,28 @@ public class GraphElement {
      * ones of the latest valid state. This is used when exporting the state
      * of the graph in the middle of execution.
      */
-    public String toString(int state) {
-        return getLatestValidState(state).toString();
+    public String xmlString(int state) {
+        return getLatestValidState(state).xmlString();
     }
+
+    /**
+     * Same as the unparameterized version except that the attributes are
+     * ones of the latest valid state. This is used when exporting the state
+     * of the graph in the middle of execution.
+     */
+    public String attributesWithoutPosition(int state) {
+        return getLatestValidState(state).attributesWithoutPosition();
+    }
+
+    /**
+     * Same as the unparameterized version except that the attributes are
+     * ones of the latest valid state. This is used when exporting the state
+     * of the graph in the middle of execution.
+     */
+    public String attributesWithoutId(int state) {
+        return getLatestValidState(state).attributesWithoutId();
+    }
+
 }
 
-//  [Last modified: 2015 12 08 at 14:29:34 GMT]
+//  [Last modified: 2015 12 08 at 16:28:03 GMT]

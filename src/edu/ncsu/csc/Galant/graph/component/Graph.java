@@ -517,7 +517,7 @@ public class Graph {
         // seems like we need an addState call as is the case with state
         // changes in GraphElement.java
 
-        LogHelper.exitMethod( getClass(), "addInitialNode() " + n.toString() );
+        LogHelper.exitMethod( getClass(), "addInitialNode() " + n );
 		return n;
 	}
 	
@@ -545,7 +545,7 @@ public class Graph {
         // seems like we need an addState call as is the case with state
         // changes in GraphElement.java
 
-        LogHelper.exitMethod( getClass(), "addNode() " + n.toString() );
+        LogHelper.exitMethod( getClass(), "addNode() " + n );
 		return n;
 	}
 	
@@ -553,7 +553,7 @@ public class Graph {
 	 * Adds a node to the graph during parsing. The node has already been created.
  	 */
 	public void addNode(Node n) {
-        LogHelper.enterMethod( getClass(), "addNode: node = " + n.toString() );
+        LogHelper.enterMethod( getClass(), "addNode: node = " + n );
 
         /**
          * @todo subclass method for layered graphs
@@ -704,12 +704,12 @@ public class Graph {
 		graphLayout.forceDirected();
 	}
 	
-	@Override
 	/**
 	 * Returns a valid graphml representation of the <code>Graph</code>.
 	 */
-	public String toString() {
-		String s = "<?xml version=\"1.0\" encoding=\"UTF-8\"?> \n"; 
+	public String xmlString() {
+        String s = "";
+		s += "<?xml version=\"1.0\" encoding=\"UTF-8\"?> \n"; 
 		s += "<graphml xmlns=\"http://graphml.graphdrawing.org/xmlns\" \n";  
 		s += "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" \n" ;
 		s += "xsi:schemaLocation=\"http://graphml.graphdrawing.org/xmlns \n"; 
@@ -725,18 +725,19 @@ public class Graph {
 		s += " edgedefault=\"" + (this.isDirected() ? "directed" : "undirected") + "\"";
 		s += ">\n";
 		for(Node n : this.nodes) {
-			s += "  " + n.toString() + "\n";
+			s += "  " + n.xmlString() + "\n";
 		}
 		for(Edge e : this.edges) {
-			s += "  " + e.toString() + "\n";
+			s += "  " + e.xmlString() + "\n";
 		}
 		s += " </graph>";
 		s += "</graphml>";
 		return s;
 	}
 	
-	public String toString(int state) {
-		String s = "<?xml version=\"1.0\" encoding=\"UTF-8\"?> \n"; 
+	public String xmlString(int state) {
+        String s = "";
+		s += "<?xml version=\"1.0\" encoding=\"UTF-8\"?> \n"; 
 		s += "<graphml xmlns=\"http://graphml.graphdrawing.org/xmlns\" \n";  
 		s += "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" \n" ;
 		s += "xsi:schemaLocation=\"http://graphml.graphdrawing.org/xmlns \n"; 
@@ -752,12 +753,12 @@ public class Graph {
 		s += " edgedefault=\"" + (this.isDirected() ? "directed" : "undirected") + "\""; //directed/undirected
 		s += ">\n";
 		for(Node n : this.nodes) {
-			String sN = n.toString(state);
+			String sN = n.xmlString(state);
 			if ( ! sN.trim().isEmpty() ) 
 				s += "  " + sN + "\n";
 		}
 		for(Edge e : this.edges) {
-			String sE = e.toString(state);
+			String sE = e.xmlString(state);
 			if ( ! sE.trim().isEmpty() ) 
 				s += "  " + sE + "\n";
 		}
@@ -767,4 +768,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2015 12 08 at 14:26:53 GMT]
+//  [Last modified: 2015 12 08 at 16:08:44 GMT]

@@ -66,7 +66,6 @@ public class CodeIntegrator
 			"package " + PACKAGE + ";" +
 			"import java.util.*;" +
 			"import edu.ncsu.csc.Galant.algorithm.Algorithm;" +
-			"import edu.ncsu.csc.Galant.graph.component.GraphState;" +
 			"import edu.ncsu.csc.Galant.graph.component.Graph;" +
 			"import edu.ncsu.csc.Galant.graph.component.Node;" +
 			"import edu.ncsu.csc.Galant.graph.component.Edge;" +
@@ -311,4 +310,4 @@ public class CodeIntegrator
 		}				
 	}
 
-//  [Last modified: 2015 12 07 at 21:21:11 GMT]
+//  [Last modified: 2015 12 08 at 15:56:16 GMT]

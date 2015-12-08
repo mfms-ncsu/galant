@@ -70,7 +70,7 @@ public class GGraphEditorPanel extends GEditorPanel {
                 LogHelper.logDebug(" to edit mode ...");
 				if (GraphDispatch.getInstance().getGraphSource().equals(uuid)) {
                     LogHelper.logDebug("  the right graph, updating");
-                    textPane.setText(GraphDispatch.getInstance().getWorkingGraph().toString(0));
+                    textPane.setText(GraphDispatch.getInstance().getWorkingGraph().xmlString(0));
 				}
 			}
 		}
@@ -78,7 +78,7 @@ public class GGraphEditorPanel extends GEditorPanel {
             LogHelper.logDebug(" nothing to do with animation ...");
 			if (evt.getPropertyName().equals(GraphDispatch.TEXT_UPDATE)) {
                 LogHelper.logDebug("  just doing a text update");
-				textPane.setText(GraphDispatch.getInstance().getWorkingGraph().toString());
+				textPane.setText(GraphDispatch.getInstance().getWorkingGraph().xmlString());
 			} 
 		}
         LogHelper.exitMethod(getClass(), "propertyChange");
@@ -90,4 +90,4 @@ public class GGraphEditorPanel extends GEditorPanel {
 	
 }
 
-//  [Last modified: 2015 12 06 at 22:56:16 GMT]
+//  [Last modified: 2015 12 08 at 16:04:47 GMT]

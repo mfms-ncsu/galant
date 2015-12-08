@@ -89,7 +89,7 @@ public class WindowUtil
 							
 							int state = gd.getAlgorithmExecutor().getDisplayState();
 							outfile = new FileWriter(file);
-							outfile.write(g.toString(state));
+							outfile.write(g.xmlString(state));
 						} catch (Exception ex) {
 							ExceptionDialog.displayExceptionInDialog(ex);
 						} finally {
@@ -224,4 +224,4 @@ public class WindowUtil
 			}
 	}
 
-//  [Last modified: 2015 12 02 at 13:36:04 GMT]
+//  [Last modified: 2015 12 08 at 16:05:10 GMT]

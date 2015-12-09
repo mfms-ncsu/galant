@@ -49,14 +49,9 @@ public class LogHelper {
     }
 	
 	public static void logDebug(String msg) {
-		int lineCounter = 0;
 		if (loggingEnabled) {
-			// Split the msg/source code with new line,
-			// then increment line counter
 			for (String line: msg.split("\n")){
-// 				lineCounter++;
-//          		System.out.println("Line " + lineCounter + ": " + line);
-         		System.out.println(line);
+         		System.out.println(spaceString() + line);
       		}
 		}	
 	}
@@ -90,13 +85,9 @@ public class LogHelper {
 	}
 	
 	public static void guiLogDebug(String msg) {
-		int lineCounter = 0;
 		if ( guiLoggingEnabled ) {
-			// Split the msg/source code with new line,
-			// then increment line counter
 			for (String line: msg.split("\n")){
-				lineCounter++;
-         		System.out.println("Line " + lineCounter + ": " + line);
+         		System.out.println(spaceString() + line);
       		}
 		}	
 	}
@@ -137,6 +128,14 @@ public class LogHelper {
         spaces--;
     }
 
+    public static void showSourceCode(String code) {
+        int lineCounter = 0;
+        for (String line: code.split("\n")) {
+            lineCounter++;
+            System.out.println("" + lineCounter + ": " + line);
+        }
+    }
+
 	private static String spaceString() {
 		String spaceStr = "";
 		if (spaces > 0) {
@@ -151,4 +150,4 @@ public class LogHelper {
 	}
 }
 
-//  [Last modified: 2015 12 07 at 20:53:46 GMT]
+//  [Last modified: 2015 12 08 at 21:22:18 GMT]

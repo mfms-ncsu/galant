@@ -52,7 +52,7 @@ public class GraphElementState {
         this.state = dispatch.getAlgorithmState();
         LogHelper.logDebug("-> GraphElementState(copy), state = " + state);
         this.attributes = elementState.getAttributes().duplicate();
-        LogHelper.logDebug("<- GraphElementState(copy), elementState = " + this);
+        LogHelper.logDebug("<- GraphElementState(copy), " + this);
     }
 
     /************** Integer attributes ***************/
@@ -142,6 +142,14 @@ public class GraphElementState {
         }
         return s;
     }
+
+    public String toString() {
+        String s = "{elementState ";
+        s += "" + state + " ";
+        s += attributes.getAttributes();
+        s += "}";
+        return s;
+    }
 }
 
-//  [Last modified: 2015 12 08 at 16:14:55 GMT]
+//  [Last modified: 2015 12 08 at 19:40:47 GMT]

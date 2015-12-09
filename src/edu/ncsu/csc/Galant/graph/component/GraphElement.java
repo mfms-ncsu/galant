@@ -179,9 +179,13 @@ public class GraphElement {
 
     /************** Boolean attributes ***************/
 	public boolean set(String key, Boolean value) throws Terminate {
+        LogHelper.enterMethod(getClass(),
+                              "set, key = " + key + ", value = " + value);
         GraphElementState newState = newState();
         boolean found = newState.set(key, value);
         addState(newState);
+        LogHelper.exitMethod(getClass(),
+                              "set, object = " + this);
         return found;
 	}
 
@@ -505,4 +509,4 @@ public class GraphElement {
 
 }
 
-//  [Last modified: 2015 12 08 at 16:28:03 GMT]
+//  [Last modified: 2015 12 08 at 20:34:24 GMT]

@@ -237,6 +237,22 @@ public abstract class Algorithm implements Runnable {
         this.graph = graph;
     }
 
+    /**
+     * Methods to make syntax friendlier for procedural programmers
+     */
+    public void highlight(Node n) throws Terminate { n.highlight(); }
+    public void unHighlight(Node n) throws Terminate { n.unHighlight(); }
+    public void highlight(Edge e) throws Terminate {
+        System.out.println(" Highlighting " + e);
+        e.highlight();
+    }
+    public void unHighlight(Edge e) throws Terminate { e.unHighlight(); }
+    public void mark(Node n) throws Terminate { n.mark(); }
+    public void unMark(Node n) throws Terminate { n.unMark(); }
+
+    public Node source(Edge e) { return e.getSourceNode(); }
+    public Node target(Edge e) { return e.getTargetNode(); }
+
     // methods for subclasses to access API methods directly
     // can be easily added to in Eclipse with Source > Generate Delegate Methods...
     /**
@@ -404,4 +420,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2015 12 08 at 14:02:35 GMT]
+//  [Last modified: 2015 12 08 at 20:52:18 GMT]

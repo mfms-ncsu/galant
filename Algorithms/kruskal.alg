@@ -45,19 +45,19 @@ algorithm {
     int totalWeight = 0;
     for ( Edge e: edgeList ) {
         beginStep();
-        Node h = e.getSourceNode();
-        Node t = e.getTargetNode();
+        Node h = source(e);
+        Node t = target(e);
         // show e's endpoints as it's being considered
         // marking is used for display purposes only
-        h.mark();
-        t.mark();
+        mark(h);
+        mark(t);
         endStep();
 
         beginStep();
         // if the vertices aren't part of the same set
         if ( FIND_SET(h) != FIND_SET(t) ) {
             // add the edge to the MST and highlight it
-            e.setSelected(true);
+            highlight(e);
             UNION(h, t);
             totalWeight += e.getWeight();
             display( "Weight so far is " + totalWeight );
@@ -68,12 +68,12 @@ algorithm {
         endStep();
 
         beginStep();
-        h.unMark();
-        t.unMark();
+        unMark(h);
+        unMark(t);
         endStep();
     }
 
     display( "MST has total weight " + totalWeight );
 }
 
-/*  [Last modified: 2015 12 08 at 02:03:22 GMT] */
+/*  [Last modified: 2015 12 08 at 20:45:55 GMT] */

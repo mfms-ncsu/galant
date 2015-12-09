@@ -102,15 +102,22 @@ public class GraphElement {
      * given time stamp, or null if the element did not exist before the time
      * stamp.
      */
-	public GraphElementState getLatestValidState(int stateNumber)
-    {
-		for ( int i = states.size() - 1; i >= 0; i-- ) {
-			GraphElementState state = states.get(i);
+	public GraphElementState getLatestValidState(int stateNumber) {
+        LogHelper.enterMethod(getClass(), "getLatestValidState("
+                              + stateNumber + "), " + this);
+        GraphElementState toReturn = null;
+        int stateIndex = states.size() - 1;
+		while ( stateIndex >= 0 ) {
+			GraphElementState state = states.get(stateIndex);
 			if ( state.getState() <= stateNumber ) {
-				return state;
+				toReturn = state;
+                break;
 			}
+            stateIndex--;
 		}
-        return null;
+        LogHelper.exitMethod(getClass(), "getLatestValidState("
+                              + stateNumber + "), " + toReturn);
+        return toReturn;
 	}
 	
 	/**
@@ -509,4 +516,4 @@ public class GraphElement {
 
 }
 
-//  [Last modified: 2015 12 08 at 20:34:24 GMT]
+//  [Last modified: 2015 12 09 at 21:51:27 GMT]

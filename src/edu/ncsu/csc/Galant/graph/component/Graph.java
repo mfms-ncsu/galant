@@ -705,37 +705,44 @@ public class Graph {
 	}
 	
 	/**
-	 * Returns a valid graphml representation of the <code>Graph</code>.
+	 * Returns a valid graphml representation of the graph; for use when no
+	 * algorithm is running
 	 */
 	public String xmlString() {
-        String s = "";
-		s += "<?xml version=\"1.0\" encoding=\"UTF-8\"?> \n"; 
-		s += "<graphml xmlns=\"http://graphml.graphdrawing.org/xmlns\" \n";  
-		s += "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" \n" ;
-		s += "xsi:schemaLocation=\"http://graphml.graphdrawing.org/xmlns \n"; 
-		s += "http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd\">\n"; 
-		s += " <graph ";
-        if ( name != null )
-            s += " name=\"" + name + "\"";
-        if ( comment != null )
-            s += " comment=\"" + comment + "\"";
-        if ( this.isLayered() ) {
-            s += " type=\"layered\"";
-        }
-		s += " edgedefault=\"" + (this.isDirected() ? "directed" : "undirected") + "\"";
-		s += ">\n";
-		for(Node n : this.nodes) {
-			s += "  " + n.xmlString() + "\n";
-		}
-		for(Edge e : this.edges) {
-			s += "  " + e.xmlString() + "\n";
-		}
-		s += " </graph>";
-		s += "</graphml>";
-		return s;
+        return xmlString(0);
+//         String s = "";
+// 		s += "<?xml version=\"1.0\" encoding=\"UTF-8\"?> \n"; 
+// 		s += "<graphml xmlns=\"http://graphml.graphdrawing.org/xmlns\" \n";  
+// 		s += "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" \n" ;
+// 		s += "xsi:schemaLocation=\"http://graphml.graphdrawing.org/xmlns \n"; 
+// 		s += "http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd\">\n"; 
+// 		s += " <graph ";
+//         if ( name != null )
+//             s += " name=\"" + name + "\"";
+//         if ( comment != null )
+//             s += " comment=\"" + comment + "\"";
+//         if ( this.isLayered() ) {
+//             s += " type=\"layered\"";
+//         }
+// 		s += " edgedefault=\"" + (this.isDirected() ? "directed" : "undirected") + "\"";
+// 		s += ">\n";
+// 		for(Node n : this.nodes) {
+// 			s += "  " + n.xmlString() + "\n";
+// 		}
+// 		for(Edge e : this.edges) {
+// 			s += "  " + e.xmlString() + "\n";
+// 		}
+// 		s += " </graph>";
+// 		s += "</graphml>";
+// 		return s;
 	}
 	
+	/**
+	 * Returns a valid graphml representation of the graph; for use when you
+	 * want to export the current state of a running algorithm.
+	 */
 	public String xmlString(int state) {
+        LogHelper.enterMethod(getClass(), "xmlString(" + state + ")");
         String s = "";
 		s += "<?xml version=\"1.0\" encoding=\"UTF-8\"?> \n"; 
 		s += "<graphml xmlns=\"http://graphml.graphdrawing.org/xmlns\" \n";  
@@ -752,20 +759,24 @@ public class Graph {
         }
 		s += " edgedefault=\"" + (this.isDirected() ? "directed" : "undirected") + "\""; //directed/undirected
 		s += ">\n";
+        LogHelper.logDebug(" nodes = " + this.nodes);
 		for(Node n : this.nodes) {
+            LogHelper.logDebug("  writing xml string for node " + n);
 			String sN = n.xmlString(state);
 			if ( ! sN.trim().isEmpty() ) 
 				s += "  " + sN + "\n";
 		}
 		for(Edge e : this.edges) {
+            LogHelper.logDebug("writing xml string for edge " + e);
 			String sE = e.xmlString(state);
 			if ( ! sE.trim().isEmpty() ) 
 				s += "  " + sE + "\n";
 		}
 		s += " </graph>";
 		s += "</graphml>";
+        LogHelper.exitMethod(getClass(), "xmlString(" + state + ")");
 		return s;
 	}
 }
 
-//  [Last modified: 2015 12 08 at 16:08:44 GMT]
+//  [Last modified: 2015 12 09 at 22:32:43 GMT]

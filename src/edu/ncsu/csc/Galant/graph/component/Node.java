@@ -101,11 +101,27 @@ public class Node extends GraphElement implements Comparable<Node> {
         return super.getInteger(state, "y");
     }
     public Point getPosition() {
-        return new Point(getX(), getY());
+        LogHelper.enterMethod(getClass(), "getPosition, node = " + this);
+        Integer x = getX();
+        Integer y = getY();
+        Point p = null;
+        if ( x == null || y == null )
+            p = getFixedPosition();
+        else
+            p = new Point(x, y);
+        LogHelper.exitMethod(getClass(), "getPosition, point = " + p);
+        return p;
     }
+
     public Point getPosition(int state) {
         LogHelper.enterMethod(getClass(), "getPosition, state = " + state + ", node = " + this);
-        Point p = new Point(getX(state), getY(state));
+        Integer x = getX(state);
+        Integer y = getY(state);
+        Point p = null;
+        if ( x == null || y == null )
+            p = getFixedPosition();
+        else
+            p = new Point(x, y);
         LogHelper.exitMethod(getClass(), "getPosition, point = " + p);
         return p;
     }
@@ -553,10 +569,6 @@ public class Node extends GraphElement implements Comparable<Node> {
     /**
      * This version is used after the graph is originally read or when it is
      * refreshed during editing. Also when saved to a file.
-     *
-     * @todo Leads to complaint of x already been specified. If you omit the
-     * printing of x and y, nodes that were not moved during the algorithm
-     * execution end up in random positions when the algorithm quits.
      */
 	public String xmlString()
     {
@@ -596,11 +608,11 @@ public class Node extends GraphElement implements Comparable<Node> {
     @Override
 	public String toString()
     {
-        String s = "<node" + " id=\"" + this.getId() + "\"";
-        s += " x=\"" + this.getFixedX() + "\"";
-        s += " y=\"" + this.getFixedY() + "\" ";
-        s += super.attributesWithoutPosition();
-        s += " />";
+        String s = "[node " + this.getId() + " (";
+        s += this.getFixedX() + ",";
+        s += this.getFixedY() + ") ";
+        s += super.attributesWithoutId();
+        s += "]";
 		return s;
 	}
 
@@ -612,4 +624,4 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 }
 
-//  [Last modified: 2015 12 08 at 16:20:14 GMT]
+//  [Last modified: 2015 12 09 at 22:10:37 GMT]

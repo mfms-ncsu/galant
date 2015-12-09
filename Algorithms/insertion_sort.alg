@@ -49,18 +49,19 @@ algorithm {
     A = new double[nodeIds()];
     xCoord = new int[nodeIds()];
     nodes = new Node[nodeIds()];
+    int numNodes = numberOfNodes();
 
     beginStep();
     lineUpNodes();
     endStep();
 
     beginStep();
-    Node toInsert = addNode(HORIZONTAL_GAP, VERTICAL_GAP);
+    Node toInsert = addNode(xCoord[1], VERTICAL_GAP);
     toInsert.highlight();
     nodes[0].mark();
     endStep();
 
-    for ( int i = 1; i < n; i++ ) {
+    for ( int i = 1; i < numNodes; i++ ) {
         beginStep();
         double x = A[i]; toInsert.setWeight(A[i]);
         toInsert.setX(xCoord[i]);
@@ -86,4 +87,4 @@ algorithm {
     deleteNode(toInsert);
 }
 
-//  [Last modified: 2015 12 07 at 01:20:10 GMT]
+//  [Last modified: 2015 12 09 at 20:17:07 GMT]

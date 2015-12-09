@@ -734,6 +734,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 
     private void performStepBack() {
         AlgorithmExecutor executor = dispatch.getAlgorithmExecutor();
+        if ( ! executor.hasPreviousState() ) return;
         executor.decrementDisplayState();
         stepForward.setEnabled(executor.hasNextState());
         stepBack.setEnabled(executor.hasPreviousState());
@@ -742,6 +743,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 
     private void performStepForward() {
         AlgorithmExecutor executor = dispatch.getAlgorithmExecutor();
+        if ( ! executor.hasNextState() ) return;
         executor.incrementDisplayState();
         stepForward.setEnabled(executor.hasNextState());
         stepBack.setEnabled(executor.hasPreviousState());
@@ -1087,4 +1089,4 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	}
 }
 
-//  [Last modified: 2015 12 08 at 13:59:40 GMT]
+//  [Last modified: 2015 12 09 at 21:58:38 GMT]

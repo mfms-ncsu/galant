@@ -87,7 +87,11 @@ public class GraphElement {
      * retrieving information about any attribute.
      */
     public GraphElementState latestState() {
-        return states.get(states.size() - 1); 
+        LogHelper.enterMethod(getClass(), "latestState, states = " + states);
+        if ( states.size() == 0 ) return null;
+        GraphElementState state = states.get(states.size() - 1);
+        LogHelper.exitMethod(getClass(), "latestState, state = " + state);
+        return state; 
     }
 
     /**
@@ -161,7 +165,9 @@ public class GraphElement {
         return found;
 	}
 	public Integer getInteger(String key) {
-		return latestState().getAttributes().getInteger(key);
+        GraphElementState state = latestState();
+        if ( state == null ) return null;
+		return state.getAttributes().getInteger(key);
 	}
 	public Integer getInteger(int state, String key) {
         GraphElementState validState = getLatestValidState(state);
@@ -177,7 +183,9 @@ public class GraphElement {
         return found;
 	}
 	public Double getDouble(String key) {
-		return latestState().getAttributes().getDouble(key);
+        GraphElementState state = latestState();
+        if ( state == null ) return null;
+		return state.getAttributes().getDouble(key);
 	}
 	public Double getDouble(int state, String key) {
         GraphElementState validState = getLatestValidState(state);
@@ -208,16 +216,13 @@ public class GraphElement {
      * that it's false.
      */
 	public Boolean getBoolean(String key) {
-        Boolean value = latestState().getAttributes().getBoolean(key);
-        if ( value == null ) return false;
-        return value;
+        GraphElementState state = latestState();
+        if ( state == null ) return null;
+		return state.getAttributes().getBoolean(key);
 	}
 	public Boolean getBoolean(int state, String key) {
         GraphElementState validState = getLatestValidState(state);
-        if ( validState == null ) return false;
-        Boolean value = validState.getAttributes().getBoolean(key);
-        if ( value == null ) return false;
-		return value;
+		return validState == null ? null : validState.getAttributes().getBoolean(key);
 	}
 
     /**
@@ -238,7 +243,9 @@ public class GraphElement {
         return found;
 	}
 	public String getString(String key) {
-		return latestState().getAttributes().getString(key);
+        GraphElementState state = latestState();
+        if ( state == null ) return null;
+		return state.getAttributes().getString(key);
 	}
 	public String getString(int state, String key) {
         GraphElementState validState = getLatestValidState(state);
@@ -467,7 +474,9 @@ public class GraphElement {
      * representation of the attributes associated with this state.
      */
     public String xmlString() {
-        return latestState().xmlString();
+        GraphElementState elementState = latestState();
+        if ( elementState == null ) return "";
+        return elementState.xmlString();
     }
 
     /**
@@ -476,7 +485,9 @@ public class GraphElement {
      * corresponding fixed ones of a Node.
      */
     public String attributesWithoutPosition() {
-        return latestState().attributesWithoutPosition();
+        GraphElementState elementState = latestState();
+        if ( elementState == null ) return "";
+        return elementState.attributesWithoutPosition();
     }
 
     /**
@@ -484,7 +495,9 @@ public class GraphElement {
      * in cases where the id is optional, as is the case with an Edge
      */
     public String attributesWithoutId() {
-        return latestState().attributesWithoutId();
+        GraphElementState elementState = latestState();
+        if ( elementState == null ) return "";
+        return elementState.attributesWithoutId();
     }
 
     /**
@@ -493,7 +506,9 @@ public class GraphElement {
      * of the graph in the middle of execution.
      */
     public String xmlString(int state) {
-        return getLatestValidState(state).xmlString();
+        GraphElementState elementState = getLatestValidState(state);
+        if ( elementState == null ) return "";
+        return elementState.xmlString();
     }
 
     /**
@@ -502,7 +517,9 @@ public class GraphElement {
      * of the graph in the middle of execution.
      */
     public String attributesWithoutPosition(int state) {
-        return getLatestValidState(state).attributesWithoutPosition();
+        GraphElementState elementState = getLatestValidState(state);
+        if ( elementState == null ) return "";
+        return elementState.attributesWithoutPosition();
     }
 
     /**
@@ -511,9 +528,11 @@ public class GraphElement {
      * of the graph in the middle of execution.
      */
     public String attributesWithoutId(int state) {
-        return getLatestValidState(state).attributesWithoutId();
+        GraphElementState elementState = getLatestValidState(state);
+        if ( elementState == null ) return "";
+        return elementState.attributesWithoutId();
     }
 
 }
 
-//  [Last modified: 2015 12 09 at 21:51:27 GMT]
+//  [Last modified: 2015 12 10 at 03:13:32 GMT]

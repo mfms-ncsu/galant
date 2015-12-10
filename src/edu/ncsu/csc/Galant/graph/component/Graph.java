@@ -759,8 +759,8 @@ public class Graph {
         }
 		s += " edgedefault=\"" + (this.isDirected() ? "directed" : "undirected") + "\""; //directed/undirected
 		s += ">\n";
-        LogHelper.logDebug(" nodes = " + this.nodes);
 		for(Node n : this.nodes) {
+            LogHelper.logDebug("  writing xml string for node with id " + n.getId());
             LogHelper.logDebug("  writing xml string for node " + n);
 			String sN = n.xmlString(state);
 			if ( ! sN.trim().isEmpty() ) 
@@ -779,4 +779,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2015 12 09 at 22:32:43 GMT]
+//  [Last modified: 2015 12 10 at 01:34:33 GMT]

@@ -60,17 +60,13 @@ public class Node extends GraphElement implements Comparable<Node> {
         LogHelper.logDebug("-> Node, id = " + id + ", x =" + x + ", y =" + y);
         this.id = id;
 		incidentEdges = new ArrayList<Edge>();
-        xCoordinate = x;
-        yCoordinate = y;
+        this.xCoordinate = x;
+        this.yCoordinate = y;
         // set starting position based on the initial one
         if ( GraphDispatch.getInstance().algorithmMovesNodes() ) { 
             GraphElementState startingState = latestState();
             startingState.set("x", x);
             startingState.set("y", y);
-        }
-        else {
-            this.xCoordinate = x;
-            this.yCoordinate = y;
         }
         LogHelper.logDebug("<- Node, node = " + this);
    }
@@ -609,8 +605,8 @@ public class Node extends GraphElement implements Comparable<Node> {
 	public String toString()
     {
         String s = "[node " + this.getId() + " (";
-        s += this.getFixedX() + ",";
-        s += this.getFixedY() + ") ";
+        s += this.xCoordinate + ",";
+        s += this.yCoordinate + ") ";
         s += super.attributesWithoutId();
         s += "]";
 		return s;
@@ -624,4 +620,4 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 }
 
-//  [Last modified: 2015 12 09 at 22:10:37 GMT]
+//  [Last modified: 2015 12 10 at 02:10:10 GMT]

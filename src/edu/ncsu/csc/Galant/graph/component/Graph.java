@@ -709,32 +709,33 @@ public class Graph {
 	 * algorithm is running
 	 */
 	public String xmlString() {
-        return xmlString(0);
-//         String s = "";
-// 		s += "<?xml version=\"1.0\" encoding=\"UTF-8\"?> \n"; 
-// 		s += "<graphml xmlns=\"http://graphml.graphdrawing.org/xmlns\" \n";  
-// 		s += "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" \n" ;
-// 		s += "xsi:schemaLocation=\"http://graphml.graphdrawing.org/xmlns \n"; 
-// 		s += "http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd\">\n"; 
-// 		s += " <graph ";
-//         if ( name != null )
-//             s += " name=\"" + name + "\"";
-//         if ( comment != null )
-//             s += " comment=\"" + comment + "\"";
-//         if ( this.isLayered() ) {
-//             s += " type=\"layered\"";
-//         }
-// 		s += " edgedefault=\"" + (this.isDirected() ? "directed" : "undirected") + "\"";
-// 		s += ">\n";
-// 		for(Node n : this.nodes) {
-// 			s += "  " + n.xmlString() + "\n";
-// 		}
-// 		for(Edge e : this.edges) {
-// 			s += "  " + e.xmlString() + "\n";
-// 		}
-// 		s += " </graph>";
-// 		s += "</graphml>";
-// 		return s;
+        LogHelper.enterMethod(getClass(), "xmlString");
+        String s = "";
+		s += "<?xml version=\"1.0\" encoding=\"UTF-8\"?> \n"; 
+		s += "<graphml xmlns=\"http://graphml.graphdrawing.org/xmlns\" \n";  
+		s += "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" \n" ;
+		s += "xsi:schemaLocation=\"http://graphml.graphdrawing.org/xmlns \n"; 
+		s += "http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd\">\n"; 
+		s += " <graph ";
+        if ( name != null )
+            s += " name=\"" + name + "\"";
+        if ( comment != null )
+            s += " comment=\"" + comment + "\"";
+        if ( this.isLayered() ) {
+            s += " type=\"layered\"";
+        }
+		s += " edgedefault=\"" + (this.isDirected() ? "directed" : "undirected") + "\"";
+		s += ">\n";
+		for(Node n : this.nodes) {
+			s += "  " + n.xmlString() + "\n";
+		}
+		for(Edge e : this.edges) {
+			s += "  " + e.xmlString() + "\n";
+		}
+		s += " </graph>";
+		s += "</graphml>";
+        LogHelper.exitMethod(getClass(), "xmlString");
+		return s;
 	}
 	
 	/**
@@ -779,4 +780,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2015 12 10 at 01:34:33 GMT]
+//  [Last modified: 2015 12 10 at 18:17:53 GMT]

@@ -85,17 +85,30 @@ public class Node extends GraphElement implements Comparable<Node> {
      * during algorithm execution.
      */
     public Integer getX() {
-        return super.getInteger("x");
+        Integer x = super.getInteger("x");
+        if ( x == null ) x = this.xCoordinate;
+        return x;
     }
     public Integer getY() {
-        return super.getInteger("y");
+        Integer y = super.getInteger("y");
+        if ( y == null ) y = this.yCoordinate;
+        return y;
     }
     public Integer getX(int state) {
-        return super.getInteger(state, "x");
+        Integer x = super.getInteger(state, "x");
+        if ( x == null ) x = this.xCoordinate;
+        return x;
     }
     public Integer getY(int state) {
-        return super.getInteger(state, "y");
+        Integer y = super.getInteger(state, "y");
+        if ( y == null ) y = this.yCoordinate;
+        return y;
     }
+
+    /**
+     * @todo Checking for null in getPosition() is no longer necessary - it's
+     * done by getX() and getY()
+     */
     public Point getPosition() {
         LogHelper.enterMethod(getClass(), "getPosition, node = " + this);
         Integer x = getX();
@@ -586,14 +599,9 @@ public class Node extends GraphElement implements Comparable<Node> {
         }
         String s = "<node" + " id=\"" + this.getId() + "\"";
         // if algorithm doesn't move nodes, only the fixed position is set
-        if ( ! dispatch.algorithmMovesNodes() ) {
-            s += " x=\"" + this.getFixedX() + "\"";
-            s += " y=\"" + this.getFixedY() + "\" ";
-            s += super.attributesWithoutPosition(state);
-        }
-        else {
-            s += super.xmlString(state);
-        }
+        s += " x=\"" + this.getX(state) + "\"";
+        s += " y=\"" + this.getY(state) + "\" ";
+        s += super.attributesWithoutPosition(state);
         s += "/>";
 		return s;
 	}
@@ -620,4 +628,4 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 }
 
-//  [Last modified: 2015 12 10 at 02:10:10 GMT]
+//  [Last modified: 2015 12 10 at 18:48:12 GMT]

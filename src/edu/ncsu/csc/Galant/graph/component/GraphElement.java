@@ -88,8 +88,10 @@ public class GraphElement {
      */
     public GraphElementState latestState() {
         LogHelper.enterMethod(getClass(), "latestState, states = " + states);
-        if ( states.size() == 0 ) return null;
-        GraphElementState state = states.get(states.size() - 1);
+        GraphElementState state = null;
+        if ( states.size() != 0 ) {
+            state = states.get(states.size() - 1);
+        }
         LogHelper.exitMethod(getClass(), "latestState, state = " + state);
         return state; 
     }
@@ -217,12 +219,12 @@ public class GraphElement {
      */
 	public Boolean getBoolean(String key) {
         GraphElementState state = latestState();
-        if ( state == null ) return null;
+        if ( state == null ) return false;
 		return state.getAttributes().getBoolean(key);
 	}
 	public Boolean getBoolean(int state, String key) {
         GraphElementState validState = getLatestValidState(state);
-		return validState == null ? null : validState.getAttributes().getBoolean(key);
+		return validState == null ? false : validState.getAttributes().getBoolean(key);
 	}
 
     /**
@@ -535,4 +537,4 @@ public class GraphElement {
 
 }
 
-//  [Last modified: 2015 12 10 at 03:13:32 GMT]
+//  [Last modified: 2015 12 10 at 18:26:33 GMT]

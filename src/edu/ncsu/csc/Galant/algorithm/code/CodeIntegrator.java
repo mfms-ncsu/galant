@@ -107,7 +107,11 @@ public class CodeIntegrator	{
 
         // Rebuild the algorithm and add head or tail as needed
 
-        StringBuilder sb = new StringBuilder( userCode.substring(0, userCode.indexOf("algorithm")));
+        if ( userCode.indexOf("algorithm") < 0 ) {
+            throw new MalformedMacroException("Algorithm needs to be contained in 'algorithm { ... }'");
+        }
+        StringBuilder sb
+            = new StringBuilder( userCode.substring(0, userCode.indexOf("algorithm")));
         sb.append(modifyAlgorithm( REAL_ALGORITHM_HEAD,
                                    REAL_ALGORITHM_TAIL,
                                    userCode ) );
@@ -241,7 +245,9 @@ public class CodeIntegrator	{
             SLASH,          // not in comment, last char is '/'
             SLASH_STAR,     // in C-style comment, last char not '*'
             STAR,           // in C-style comment, last char is '*'
-            SLASH_SLASH     // in C++-style comment
+            SLASH_SLASH,    // in C++-style comment
+            IN_STRING       // inside a double-quoted string (escapes not
+                            // recognized for now)
             }
 
     /** 
@@ -250,43 +256,59 @@ public class CodeIntegrator	{
      * remain intact.
      */
     private static String removeAllComments(String code) {
-        LogHelper.logDebug("-> removeAllComments");
+        LogHelper.logDebug("-> removeAllComments, code =\n" + code);
 
         String withoutComments = "";
         State state = State.DEFAULT;
 
         for ( int i = 0; i < code.length(); i++ ) {
             char current = code.charAt(i);
+            LogHelper.logDebug("  current = " + current);
             if ( state == State.DEFAULT ) {
+                LogHelper.logDebug("    state = DEFAULT");
                 if ( current == '/' ) state = State.SLASH;
-                else withoutComments += current;
+                else {
+                    if ( current == '"' ) state = State.IN_STRING; 
+                    withoutComments += current;
+                }
             }
             else if ( state == State.SLASH ) {
+                LogHelper.logDebug("    state = SLASH");
                 if ( current == '*' ) state = State.SLASH_STAR;
                 else if ( current == '/' ) state = State.SLASH_SLASH;
                 else withoutComments += '/' + current;
             }
-            if ( state == State.SLASH_STAR ) {
+            else if ( state == State.SLASH_STAR ) {
+                LogHelper.logDebug("    state = SLASH_STAR");
                 if ( current == '*' ) state = State.STAR;
                 else if ( current == '\n' ) withoutComments += current;
                 // do nothing otherwise -- in a comment
             }
-            if ( state == State.STAR ) {
+            else if ( state == State.STAR ) {
+                LogHelper.logDebug("    state = STAR");
                 if ( current == '/' ) state = State.DEFAULT;
-                else if ( current == '\n' ) withoutComments += current;
-                // do nothing otherwise -- in a comment
+                else {
+                    state = State.SLASH_STAR;
+                    if ( current == '\n' ) withoutComments += current;
+                }
             }
-            if ( state == State.SLASH_SLASH ) {
+            else if ( state == State.SLASH_SLASH ) {
+                LogHelper.logDebug("    state = SLASH_SLASH");
                 if ( current == '\n' ) {
                     state = State.DEFAULT;
                     withoutComments += current;
                 }
                 // do nothing otherwise -- in a comment
             }
+            else if ( state == State.IN_STRING ) {
+                if ( current == '"' ) state = state.DEFAULT;
+                withoutComments += current;
+            }
         }
-        LogHelper.logDebug("<- removeAllComments");
+        LogHelper.logDebug("<- removeAllComments, withoutComments =\n"
+                           + withoutComments);
         return withoutComments;
     }
 }
 
-//  [Last modified: 2015 12 09 at 19:41:47 GMT]
+//  [Last modified: 2015 12 10 at 19:42:17 GMT]

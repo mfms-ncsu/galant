@@ -124,6 +124,7 @@ function downSweep( int numLayers ) {
  */
 
 algorithm {
+    movesNodes();
     setDirected( true );
 
     layeredGraph

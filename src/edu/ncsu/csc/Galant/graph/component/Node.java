@@ -202,7 +202,7 @@ public class Node extends GraphElement implements Comparable<Node> {
             super.remove("id");
             if ( super.graph.isLayered() ) {
                 String layerString = getString("layer");
-                String positionString = getString("position");
+                String positionString = getString("positionInLayer");
                 if ( layerString == null )
                     throw new GalantException("missing layer for"
                                               + " layered graph node " + this);
@@ -628,4 +628,4 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 }
 
-//  [Last modified: 2015 12 10 at 18:48:12 GMT]
+//  [Last modified: 2015 12 11 at 17:16:22 GMT]

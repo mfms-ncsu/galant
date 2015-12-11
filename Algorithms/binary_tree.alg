@@ -1,15 +1,7 @@
 /**
  * Draws a binary tree based on current graph window width and height.
- *
- * $Id: binary_tree.alg 65 2014-04-04 21:19:54Z mfms $
  */
-
-import java.awt.Point;
-
-final int TREE_HEIGHT = 4;
-int width = windowWidth();
-int height = windowHeight();
-Graph graph;
+int TREE_HEIGHT = 4;
 
 /**
  * creates a complete binary tree of height tree_height with root at position
@@ -47,9 +39,10 @@ function Node createTree( int tree_height,
 }
 
 algorithm {
-	graph = getGraph();
+    int width = windowWidth();
+    int height = windowHeight();
 	int padding = height / (TREE_HEIGHT + 1);
 	Node root = createTree( TREE_HEIGHT, width / 2, padding, width / 2, padding );
 }	
 
-//  [Last modified: 2015 08 11 at 18:02:56 GMT]
+//  [Last modified: 2015 12 11 at 15:53:20 GMT]

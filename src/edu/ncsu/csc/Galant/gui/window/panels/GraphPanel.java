@@ -518,7 +518,12 @@ public class GraphPanel extends JPanel{
     {
 		LogHelper.guiEnterMethod(getClass(), "drawEdge, edge = " + e);
         int state = dispatch.getDisplayState();
-		int thickness = lineWidth; 
+		GraphElementState currentState = e.getLatestValidState(state);
+        if ( currentState == null ) return;
+
+        int stateNumber = currentState.getState();
+
+		int thickness = lineWidth;
 		
 		if (e != null) {
 			Node dest = e.getTargetNode();
@@ -530,7 +535,7 @@ public class GraphPanel extends JPanel{
 				//determine color of the edge
 				if (selectedEdge != null && selectedEdge.equals(e) && !dispatch.isAnimationMode()) {
 					g2d.setColor(Color.BLUE);
-				} else if (e.isSelected(state)) {
+				} else if (e.isSelected(stateNumber)) {
 					g2d.setColor(Color.RED);
 					thickness = highlightWidth;
 				} else {
@@ -566,10 +571,10 @@ public class GraphPanel extends JPanel{
 							drawDirectedArrow(p1, p2, g2d);
 						} 
 						
-                        if ( e.hasLabel( state ) )
-                            drawEdgeLabel(e.getLabel(state), p1, p2, g2d);
-                        if ( e.hasWeight( state ) )
-                            drawEdgeWeight(e.getWeight(state), p1, p2, g2d);
+                        if ( e.hasLabel( stateNumber ) )
+                            drawEdgeLabel(e.getLabel(stateNumber), p1, p2, g2d);
+                        if ( e.hasWeight( stateNumber ) )
+                            drawEdgeWeight(e.getWeight(stateNumber), p1, p2, g2d);
 					}
 				}
 				
@@ -939,4 +944,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2015 12 08 at 13:59:55 GMT]
+//  [Last modified: 2015 12 11 at 16:54:26 GMT]

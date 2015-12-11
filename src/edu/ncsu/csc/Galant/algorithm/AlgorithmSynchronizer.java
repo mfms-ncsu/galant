@@ -26,6 +26,7 @@ package edu.ncsu.csc.Galant.algorithm;
 
 import edu.ncsu.csc.Galant.GraphDispatch;
 import edu.ncsu.csc.Galant.algorithm.AlgorithmExecutor;
+import edu.ncsu.csc.Galant.logging.LogHelper;
 
 public class AlgorithmSynchronizer {
 
@@ -46,8 +47,9 @@ public class AlgorithmSynchronizer {
      * heeded at the beginning of the next step.
      */
     public synchronized void stop() {
-        System.out.println("-> stop");
+        LogHelper.enterMethod(getClass(), "stop");
         terminated = true;
+        LogHelper.exitMethod(getClass(), "stop");
      }
     
     /**
@@ -118,4 +120,4 @@ public class AlgorithmSynchronizer {
     }
 }
 
-//  [Last modified: 2015 12 05 at 14:09:52 GMT]
+//  [Last modified: 2015 12 11 at 17:01:41 GMT]

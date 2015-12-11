@@ -41,6 +41,7 @@ public class ExceptionDialog
 		 */
 		public static void displayExceptionInDialog(Throwable e)
 			{
+                e.printStackTrace();
 				displayExceptionInDialog(e, (String)null);
 			}
 		/**
@@ -187,4 +188,4 @@ public class ExceptionDialog
 			}
 	}
 
-//  [Last modified: 2015 07 10 at 23:16:12 GMT]
+//  [Last modified: 2015 12 11 at 15:38:23 GMT]

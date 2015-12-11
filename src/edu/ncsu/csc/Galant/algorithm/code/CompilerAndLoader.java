@@ -114,13 +114,9 @@ public class CompilerAndLoader
 					}
 				catch(Exception e)
 					{	
-						if (e instanceof NullPointerException)  {
-							ExceptionDialog.displayExceptionInDialog(new GalantException("LoadAlgorithm Failed: Check if graph call" +  
-								"is inside of algorithm{} or to use a fecthing macro"));
-						}	
 						ExceptionDialog.displayExceptionInDialog(e);
-						return null;
 					}
+                return null;
 			}
 		private static void removeClassFiles(File directory)
 			{
@@ -181,3 +177,5 @@ class DynamicJavaSourceCodeObject extends SimpleJavaFileObject
 				this.sourceCode = sourceCode;
 			}
 	}
+
+//  [Last modified: 2015 12 11 at 15:49:35 GMT]

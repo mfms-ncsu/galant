@@ -276,7 +276,11 @@ public class CodeIntegrator	{
                 LogHelper.logDebug("    state = SLASH");
                 if ( current == '*' ) state = State.SLASH_STAR;
                 else if ( current == '/' ) state = State.SLASH_SLASH;
-                else withoutComments += '/' + current;
+                else {
+                    state = State.DEFAULT;
+                    withoutComments += '/';
+                    withoutComments += current;
+                }
             }
             else if ( state == State.SLASH_STAR ) {
                 LogHelper.logDebug("    state = SLASH_STAR");
@@ -311,4 +315,4 @@ public class CodeIntegrator	{
     }
 }
 
-//  [Last modified: 2015 12 10 at 19:42:17 GMT]
+//  [Last modified: 2015 12 11 at 13:06:05 GMT]

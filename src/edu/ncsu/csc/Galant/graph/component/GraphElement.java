@@ -21,6 +21,9 @@ public class GraphElement {
     public static final String COLOR = "color";
     public static final String DELETED = "deleted";
     public static final String HIGHLIGHTED = "highlighted";
+    public static final String HIDDEN = "hidden";
+    public static final String HIDDEN_LABEL = "hiddenLabel";
+    public static final String HIDDEN_WEIGHT = "hiddenWeight";
     
     /**
      * The graph with which this element is associated.
@@ -213,6 +216,10 @@ public class GraphElement {
         return this.set(key, true);
     }
  
+    public void clear(String key) throws Terminate {
+        this.remove(key);
+    }
+
     /**
      * For boolean attributes, assume that the absense of an attribute means
      * that it's false.
@@ -301,6 +308,16 @@ public class GraphElement {
 		return isCreated(state) && ! isDeleted(state);
 	}
 	
+    /**
+     * @return true if this element is hidden, i.e., will not be drawn on the
+     * graph panel.
+     */
+    public Boolean isHidden() {
+        return getBoolean(HIDDEN);
+    }
+    public void hide() throws Terminate { set(HIDDEN); }
+    public void show() throws Terminate { clear(HIDDEN); }
+
 
     /**************************** weights **************************/
 	public Double getWeight() {
@@ -331,6 +348,17 @@ public class GraphElement {
         remove(WEIGHT);
     }
 	
+    /**
+     * @return true if the weight of this element is hidden, i.e., will not be
+     * drawn on the graph panel.
+     */
+    public Boolean weightIsHidden() {
+        return getBoolean(HIDDEN_WEIGHT);
+    }
+    public void hideWeight() throws Terminate { set(HIDDEN_WEIGHT); }
+    public void showWeight() throws Terminate { clear(HIDDEN_WEIGHT); }
+
+
     /**************************** labels *************************/
 	public String getLabel() {
         return getString(LABEL);
@@ -356,6 +384,16 @@ public class GraphElement {
         remove(LABEL);
     }
 	
+    /**
+     * @return true if the label of this element is hidden, i.e., will not be
+     * drawn on the graph panel.
+     */
+    public Boolean labelIsHidden() {
+        return getBoolean(HIDDEN_LABEL);
+    }
+    public void hideLabel() throws Terminate { set(HIDDEN_LABEL); }
+    public void showLabel() throws Terminate { clear(HIDDEN_LABEL); }
+
     /**************************** colors *************************/
 	public String getColor() {
         return getString(COLOR);
@@ -537,4 +575,4 @@ public class GraphElement {
 
 }
 
-//  [Last modified: 2015 12 10 at 18:26:33 GMT]
+//  [Last modified: 2015 12 23 at 16:14:51 GMT]

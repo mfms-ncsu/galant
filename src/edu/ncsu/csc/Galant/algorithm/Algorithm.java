@@ -25,19 +25,21 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Stack;
+import java.awt.Color;
 
 import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.GraphDispatch;
-import edu.ncsu.csc.Galant.graph.component.Edge;
 import edu.ncsu.csc.Galant.graph.component.Graph;
+import edu.ncsu.csc.Galant.graph.component.GraphElement;
 import edu.ncsu.csc.Galant.graph.component.Node;
+import edu.ncsu.csc.Galant.graph.component.Edge;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow;
+import edu.ncsu.csc.Galant.gui.window.GraphWindow.GraphDisplays;
 import edu.ncsu.csc.Galant.algorithm.AlgorithmSynchronizer;
 import edu.ncsu.csc.Galant.algorithm.AlgorithmExecutor;
 import edu.ncsu.csc.Galant.logging.LogHelper;
 
 public abstract class Algorithm implements Runnable {
-		
     /** A list of all the runnable algorithms. */
     public static final List<Algorithm> algorithms = new ArrayList<Algorithm>();
 
@@ -53,6 +55,31 @@ public abstract class Algorithm implements Runnable {
      * accomplish forward and backward steps and termination of execution.
      */
     public AlgorithmSynchronizer synchronizer;
+
+    /**
+     * Color constants: included for convenience since Galant represents
+     * colors as hexidecimal strings.
+     */
+    public static final String RED       = "ff0000"; 
+    public static final String GREEN     = "00ff00"; 
+    public static final String BLUE      = "0000ff";
+    public static final String YELLOW    = "ffff00"; 
+    public static final String MAGENTA   = "ff00ff"; 
+    public static final String CYAN      = "00ffff"; 
+    public static final String VIOLET    = "8000ff";
+    public static final String ORANGE    = "ff8000"; 
+    public static final String GRAY      = "808080"; 
+    public static final String BLACK     = "000000"; 
+    public static final String WHITE     = "ffffff"; 
+
+    /**
+     * @param graph the Graph object on which this algorithm will run; used
+     * when akgorithm is started up in GAlgorithmEditorPanel
+     */
+    public void setGraph(Graph graph){
+        this.graph = graph;
+    }
+    public Graph getGraph() { return this.graph; }
 
     // Specialized Node/Edge types for Queues/Stacks/Priority Queues
     public class NodeQueue extends AbstractQueue<Node>
@@ -158,7 +185,8 @@ public abstract class Algorithm implements Runnable {
     }
 
     /**
-     * @todo The NodeList and EdgeList "typedefs" don't appear to work as expected.
+     * @todo These NodeList and EdgeList "typedefs" don't appear to work as
+     * expected.
      */
     public interface NodeList extends List<Node> {
     }
@@ -203,10 +231,17 @@ public abstract class Algorithm implements Runnable {
         synchronizer.finishAlgorithm();
     }
 
-    /** @see edu.ncsu.csc.Galant.graph.component.Graph */
-    public Graph getGraph() {
-        return graph;
-    }
+    /**
+     * The following methods control the display of labels and weights.
+     */
+    public void showNodeLabels() { GraphDisplays.NODE_LABELS.setShown(true); }
+    public void showEdgeLabels() { GraphDisplays.EDGE_LABELS.setShown(true); }
+    public void hideNodeLabels() { GraphDisplays.NODE_LABELS.setShown(false); }
+    public void hideEdgeLabels() { GraphDisplays.EDGE_LABELS.setShown(false); }
+    public void showNodeWeights() { GraphDisplays.NODE_WEIGHTS.setShown(true); }
+    public void showEdgeWeights() { GraphDisplays.EDGE_WEIGHTS.setShown(true); }
+    public void hideNodeWeights() { GraphDisplays.NODE_WEIGHTS.setShown(false); }
+    public void hideEdgeWeights() { GraphDisplays.EDGE_WEIGHTS.setShown(false); }
 
     /**
      * The following methods are designed to make convenient graph methods
@@ -221,20 +256,22 @@ public abstract class Algorithm implements Runnable {
         return e.getId();
     }
 
+    /**
+     * @return the largest id of any node + 1; this should be used when
+     * allocating an array of nodes, as there is no longer a guarantee that
+     * id's start at 0 and are contiguous.
+     */
     public int nodeIds() {
         return graph.nodeIds();
     }
 
+    /**
+     * @return the largest id of any edge + 1; this should be used when
+     * allocating an array of nodes, as there is no longer a guarantee that
+     * id's start at 0 and are contiguous.
+     */
     public int edgeIds() {
         return graph.edgeIds();
-    }
-
-    /**
-     * Sets the current <code>Graph</code> to the specified </code>Graph</code>
-     * @param graph the new <code>Graph</code> on which this <code>Algorithm</code> will run
-     */
-    public void setGraph(Graph graph){
-        this.graph = graph;
     }
 
     /**
@@ -242,23 +279,27 @@ public abstract class Algorithm implements Runnable {
      */
     public void highlight(Node n) throws Terminate { n.highlight(); }
     public void unHighlight(Node n) throws Terminate { n.unHighlight(); }
-    public void highlight(Edge e) throws Terminate {
-        System.out.println(" Highlighting " + e);
-        e.highlight();
-    }
+    public void highlight(Edge e) throws Terminate { e.highlight(); }
     public void unHighlight(Edge e) throws Terminate { e.unHighlight(); }
     public void mark(Node n) throws Terminate { n.mark(); }
     public void unMark(Node n) throws Terminate { n.unMark(); }
+    public Boolean isMarked(Node n) { return n.isMarked(); }
 
     public Node source(Edge e) { return e.getSourceNode(); }
     public Node target(Edge e) { return e.getTargetNode(); }
 
-    // methods for subclasses to access API methods directly
-    // can be easily added to in Eclipse with Source > Generate Delegate Methods...
-    /**
-     * @todo some of these algorithm methods might not be supposed to be
-     * accessible by the user?
-     */
+    public void set(GraphElement ge, String s) throws Terminate { ge.set(s); }
+    public void clear(GraphElement ge, String s) throws Terminate { ge.clear(s); }
+
+    public void color(GraphElement ge, String color) throws Terminate { ge.setColor(color); }
+    public void unColor(GraphElement ge) throws Terminate { ge.clearColor(); }
+
+    public void hide(GraphElement ge) throws Terminate { ge.hide(); }
+    public void show(GraphElement ge) throws Terminate { ge.show(); }
+    public void hideLabel(GraphElement ge) throws Terminate { ge.hideLabel(); }
+    public void showLabel(GraphElement ge) throws Terminate { ge.showLabel(); }
+    public void hideWeight(GraphElement ge) throws Terminate { ge.hideWeight(); }
+    public void showWeight(GraphElement ge) throws Terminate { ge.showWeight(); }
 
     /**
      * Displays a message during algorithm execution
@@ -266,6 +307,13 @@ public abstract class Algorithm implements Runnable {
      */
     public void display(String message) throws Terminate {
         graph.writeMessage(message);
+    }
+
+    /**
+     * Prints a string on the console (e.g., for debugging)
+     */
+    public void print(String string) {
+        System.out.println(string);
     }
 
     /** @see edu.ncsu.csc.Galant.graph.component.Graph#addNode(Node) */
@@ -420,4 +468,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2015 12 08 at 20:52:18 GMT]
+//  [Last modified: 2015 12 23 at 16:22:43 GMT]

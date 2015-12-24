@@ -312,8 +312,8 @@ public class GraphElement {
      * @return true if this element is hidden, i.e., will not be drawn on the
      * graph panel.
      */
-    public Boolean isHidden() {
-        return getBoolean(HIDDEN);
+    public Boolean isHidden(int state) {
+        return getBoolean(state, HIDDEN);
     }
     public void hide() throws Terminate { set(HIDDEN); }
     public void show() throws Terminate { clear(HIDDEN); }
@@ -352,8 +352,8 @@ public class GraphElement {
      * @return true if the weight of this element is hidden, i.e., will not be
      * drawn on the graph panel.
      */
-    public Boolean weightIsHidden() {
-        return getBoolean(HIDDEN_WEIGHT);
+    public Boolean weightIsHidden(int state) {
+        return getBoolean(state, HIDDEN_WEIGHT);
     }
     public void hideWeight() throws Terminate { set(HIDDEN_WEIGHT); }
     public void showWeight() throws Terminate { clear(HIDDEN_WEIGHT); }
@@ -388,8 +388,8 @@ public class GraphElement {
      * @return true if the label of this element is hidden, i.e., will not be
      * drawn on the graph panel.
      */
-    public Boolean labelIsHidden() {
-        return getBoolean(HIDDEN_LABEL);
+    public Boolean labelIsHidden(int state) {
+        return getBoolean(state, HIDDEN_LABEL);
     }
     public void hideLabel() throws Terminate { set(HIDDEN_LABEL); }
     public void showLabel() throws Terminate { clear(HIDDEN_LABEL); }
@@ -575,4 +575,4 @@ public class GraphElement {
 
 }
 
-//  [Last modified: 2015 12 23 at 16:14:51 GMT]
+//  [Last modified: 2015 12 24 at 18:06:49 GMT]

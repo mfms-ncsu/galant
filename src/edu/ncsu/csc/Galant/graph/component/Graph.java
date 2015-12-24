@@ -18,59 +18,13 @@ import edu.ncsu.csc.Galant.algorithm.Terminate;
 import edu.ncsu.csc.Galant.logging.LogHelper;
 
 /**
- * Stores information peculiar to layered graphs.
- *
- * @todo LayeredGraph clearly needs to be a subclass of Graph and
- * LayeredGraphNode a subclass of Node.
- */
-class LayerInformation {
-    int numberOfLayers;
-    /**
-     * Stores the number of nodes on each layer
-     */
-    ArrayList<Integer> layerSize;
-    
-    LayerInformation() {
-        layerSize = new ArrayList<Integer>();
-    }
-
-    /**
-     * Uses layer and position in layer information about node v to update
-     * information about number of layers and/or layer size
-     */
-    void addNode( Node v ) {
-        LogHelper.enterMethod( getClass(),
-                               "addNode: node = " + v 
-                               + ", numberOfLayers = " + numberOfLayers );
-        int layer = v.getLayer();
-        if ( layer >= numberOfLayers ) {
-            numberOfLayers = layer + 1;
-            int tempNumberOfLayers = layerSize.size();
-            while ( tempNumberOfLayers < numberOfLayers ) {
-                layerSize.add( 0 );
-                tempNumberOfLayers++;
-            }
-            layerSize.set( layer, 1 );
-        }
-        else {
-            int sizeOfLayer = layerSize.get( layer );
-            layerSize.set( layer, sizeOfLayer + 1 );
-        }
-        LogHelper.exitMethod( getClass(),
-                              "addNode: numberOfLayers = " + numberOfLayers
-                              + ", sizeOfLayer = " + layerSize.get( layer ) );
-    }
-
-}
-
-/**
  * Stores all nodes, edges and related information for use in graph algorithms.
  * 
  * @author Michael Owoc, Ty Devries (major modifications by Matt Stallmann)
  */
 public class Graph {
-	
 	public GraphWindow graphWindow;
+    private GraphDispatch dispatch;
 
     private String name;
     private String comment;
@@ -88,6 +42,14 @@ public class Graph {
     private MessageBanner banner;
 
     /**
+     * The list of states that this graph has been in up to this point --
+     * essentially the list of all changes to the graph (independent of its
+     * nodes and edges). At this point the only relevant attributes relate to
+     * visibility of labels and weights.
+     */
+	protected List<GraphState> states;
+
+    /**
      * @todo Never clear what this meant. A better name might be startNode,
      * but then there's getStartNode(), which has lots of side effects, and
      * is apparently not used anywhere (probably intended for algorithms that
@@ -101,9 +63,6 @@ public class Graph {
      */
     private int nextEdgeId = 0;
 
-
-    private GraphDispatch dispatch;
-
 	/**
 	 * Default constructor.
 	 */
@@ -111,6 +70,8 @@ public class Graph {
         dispatch = GraphDispatch.getInstance();
 		nodes = new ArrayList<Node>();
 		edges = new ArrayList<Edge>();
+        states = new ArrayList<GraphState>();
+        this.addState(new GraphState());
         banner = new MessageBanner(this);
 	}
 
@@ -119,6 +80,16 @@ public class Graph {
      * animation.
      */
     public void reset() {
+        // first, reset any graph visibility attributes
+        ArrayList<GraphState> initialStates
+            = new ArrayList<GraphState>();
+        for ( GraphState state : this.states ) {
+            if ( state.getState() > 0 ) break;
+            initialStates.add(state);
+        }
+        this.states = initialStates;
+
+        // then reset the attributes of all nodes and edges
         for ( Node node : this.nodes ) {
             node.reset();
         }
@@ -126,6 +97,248 @@ public class Graph {
             edge.reset();
         }
     }
+
+    /**
+     * @return a new state for this graph; the new state will be identical
+     * to the current (latest one) except that it will be tagged with the
+     * current algorithm state.
+     *
+     * @todo there is no reason to create new states when parsing and the
+     * only reason to do it when editing is for a possible "undo" mechanism,
+     * which is not yet implemented
+     */
+    private GraphState newState() throws Terminate {
+		dispatch.startStepIfRunning();
+		GraphState latest = latestState();
+		GraphState state
+            = new GraphState(latest);
+		
+        LogHelper.logDebug( "newState (graph) = " + state.getState() );
+		return state;
+    }
+
+    /**
+     * @return The last state on the list of states. This is the default for
+     * retrieving information about any attribute.
+     */
+    public GraphState latestState() {
+        LogHelper.enterMethod(getClass(), "latestState, states = " + states);
+        GraphState state = null;
+        if ( states.size() != 0 ) {
+            state = states.get(states.size() - 1);
+        }
+        LogHelper.exitMethod(getClass(), "latestState, state = " + state);
+        return state; 
+    }
+
+    /**
+     * This method is vital for retrieving the most recent information about
+     * a graph, where most recent is defined relative to a given time stamp,
+     * as defined by forward and backward stepping through the animation.
+     * @see edu.ncsu.csc.Galant.algorithm.AlgorithmExecutor
+     * @param stateNumber the numerical indicator (timestamp) of a state,
+     * usually the current display state
+     * @return the latest instance of GraphState that was created
+     * before the given time stamp, or null if the element did not exist
+     * before the time stamp.
+     */
+	public GraphState getLatestValidState(int stateNumber) {
+        LogHelper.enterMethod(getClass(), "getLatestValidState("
+                              + stateNumber + "), " + this);
+        GraphState toReturn = null;
+        int stateIndex = states.size() - 1;
+		while ( stateIndex >= 0 ) {
+			GraphState state = states.get(stateIndex);
+			if ( state.getState() <= stateNumber ) {
+				toReturn = state;
+                break;
+			}
+            stateIndex--;
+		}
+        LogHelper.exitMethod(getClass(), "getLatestValidState("
+                              + stateNumber + "), " + toReturn);
+        return toReturn;
+	}
+	
+	/**
+     * Adds the given state to the list of states for this graph. If there is
+     * already a state having the same algorithm state (time stamp), there is
+     * no need to add another one. Such a situation might arise if there are
+     * multiple state changes to this element between a beginStep()/endStep()
+     * pair or if no algorithm is running.  If an algorithm is running, this
+     * method initiates synchronization with the master thread to indicate
+     * that the changes corresponding to the added state are completed
+     *
+     * @invariant states are always sorted by state number.
+     */
+	private void addState(GraphState stateToAdd) {
+        LogHelper.enterMethod(getClass(), "addState, state number = "
+                              + stateToAdd.getState());
+        int stateNumber = stateToAdd.getState();
+        boolean found = false;
+        for ( int i = states.size() - 1; i >= stateNumber; i-- ) {
+            GraphState state = states.get(i);
+            LogHelper.logDebug("addState loop, i = " + i + ", state(i) = " + state.getState());
+            if ( state.getState() == stateNumber ) {
+                states.set(i, stateToAdd);
+                found = true;
+                break;
+            }
+        }
+        if ( ! found ) {
+            states.add(stateToAdd);
+            dispatch.pauseExecutionIfRunning();
+        }
+        LogHelper.exitMethod(getClass(), "addState, found = " + found);
+	}
+
+
+    /* Only Boolean and String attributes are needed for now */
+
+    private static final String HIDDEN_EDGE_LABELS = "edgeLabelsHidden";
+    private static final String HIDDEN_EDGE_WEIGHTS = "edgeWeightsHidden";
+    private static final String HIDDEN_NODE_LABELS = "nodeLabelsHidden";
+    private static final String HIDDEN_NODE_WEIGHTS = "nodeWeightsHidden";
+
+
+    /**
+     * Removes the attribute with the given key from the list and updates
+     * state information appropriately.
+     */
+    public void remove(String key) throws Terminate {
+        GraphState newState = newState();
+        newState.remove(key);
+        addState(newState);
+    }
+	
+    /************** Boolean attributes ***************/
+
+	public boolean set(String key, Boolean value) throws Terminate {
+        LogHelper.enterMethod(getClass(),
+                              "set, key = " + key + ", value = " + value);
+        GraphState newState = newState();
+        boolean found = newState.set(key, value);
+        addState(newState);
+        LogHelper.exitMethod(getClass(),
+                              "set, object = " + this);
+        return found;
+	}
+
+    /**
+     * If value is not specified, assume it's boolean and set to true
+     */
+    public boolean set(String key) throws Terminate {
+        return this.set(key, true);
+    }
+ 
+    public void clear(String key) throws Terminate {
+        this.remove(key);
+    }
+
+    /**
+     * For boolean attributes, assume that the absense of an attribute means
+     * that it's false.
+     */
+	public Boolean getBoolean(String key) {
+        GraphState state = latestState();
+        if ( state == null ) return false;
+		return state.getAttributes().getBoolean(key);
+	}
+	public Boolean getBoolean(int state, String key) {
+        GraphState validState = getLatestValidState(state);
+		return validState == null ? false : validState.getAttributes().getBoolean(key);
+	}
+
+    /**
+     * Synonyms (for readability in algorithms)
+     */
+    public Boolean is(String key) {
+        return getBoolean(key);
+    }
+    public Boolean is(int state, String key) {
+        return getBoolean(state, key);
+    }
+    
+    /************** String attributes ***************/
+	public boolean set(String key, String value) throws Terminate {
+        GraphState newState = newState();
+        boolean found = newState.set(key, value);
+        addState(newState);
+        return found;
+	}
+	public String getString(String key) {
+        GraphState state = latestState();
+        if ( state == null ) return null;
+		return state.getAttributes().getString(key);
+	}
+	public String getString(int state, String key) {
+        GraphState validState = getLatestValidState(state);
+		return validState == null ? null : validState.getAttributes().getString(key);
+	}
+
+    /**
+     * Methods that cause labels and weights to be shown or hidden during
+     * algorithm execution. Typically, an algorithm will declare its intent
+     * at the beginning. By default, the status of labels and weights is
+     * determined by the settings in GraphWindow.GraphDisplays.
+     */
+    public void showEdgeLabels() throws Terminate { 
+        clear(HIDDEN_EDGE_LABELS);
+    }
+    public void showEdgeLabels(Boolean show) throws Terminate { 
+        set(HIDDEN_EDGE_LABELS, ! show);
+    }
+    public void hideEdgeLabels() throws Terminate { 
+        set(HIDDEN_EDGE_LABELS);
+    }
+    public void showEdgeWeights() throws Terminate { 
+        clear(HIDDEN_EDGE_WEIGHTS);
+    }
+    public void showEdgeWeights(Boolean show) throws Terminate { 
+        set(HIDDEN_EDGE_WEIGHTS, ! show);
+    }
+    public void hideEdgeWeights() throws Terminate { 
+        set(HIDDEN_EDGE_WEIGHTS);
+    }
+    public void showNodeLabels() throws Terminate { 
+        clear(HIDDEN_NODE_LABELS);
+    }
+    public void showNodeLabels(Boolean show) throws Terminate { 
+        set(HIDDEN_NODE_LABELS, ! show);
+    }
+    public void hideNodeLabels() throws Terminate { 
+        set(HIDDEN_NODE_LABELS);
+    }
+    public void showNodeWeights() throws Terminate { 
+        clear(HIDDEN_NODE_WEIGHTS);
+    }
+    public void showNodeWeights(Boolean show) throws Terminate { 
+        set(HIDDEN_NODE_WEIGHTS, ! show);
+    }
+    public void hideNodeWeights() throws Terminate { 
+        set(HIDDEN_NODE_WEIGHTS);
+    }
+
+    /**
+     * The following are used to query label and weight visibility during
+     * algorithm execution and are called from GraphPanel; note that only the
+     * versions with the state argument are needed -- these are never called
+     * outside of algorithm execution.
+     */
+    public Boolean edgeLabelsAreVisible(int state) {
+        return ! is(state, HIDDEN_EDGE_LABELS);
+    }
+    public Boolean edgeWeightsAreVisible(int state) {
+        return ! is(state, HIDDEN_EDGE_WEIGHTS);
+    }
+    public Boolean nodeLabelsAreVisible(int state) {
+        return ! is(state, HIDDEN_NODE_LABELS);
+    }
+    public Boolean nodeWeightsAreVisible(int state) {
+        return ! is(state, HIDDEN_NODE_WEIGHTS);
+    }
+
+    /** Graph methods that are independent of state */
 
     public void setName( String name ) {
         this.name = name;
@@ -780,4 +993,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2015 12 10 at 18:17:53 GMT]
+//  [Last modified: 2015 12 24 at 18:00:38 GMT]

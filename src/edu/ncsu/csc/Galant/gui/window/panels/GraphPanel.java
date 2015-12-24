@@ -282,14 +282,14 @@ public class GraphPanel extends JPanel{
 			
                 // Draw edges first to put them behind nodes
                 for (Edge e : edges) {
-                    drawEdge(graph, e, g2d);
+                    if ( ! e.isHidden(state) )
+                        drawEdge(graph, e, g2d);
                 }
 			
                 for (Node n : nodes) {
-                    drawNode(n, g2d);
+                    if ( ! n.isHidden(state) )
+                        drawNode(n, g2d);
                 }
-			
-		
             }
         }
         catch (GalantException e) {
@@ -299,12 +299,104 @@ public class GraphPanel extends JPanel{
     }
 
     /**
+     * @return true if the label of the node should be visible; the answer
+     * is controlled by toggle switches when not in animation mode and by the
+     * algorithm otherwise.
+     *
+     * @todo This and the corresponding methods for weights will eventually
+     * be modified so that the toggle switches go away entirely and
+     * everything is visible during parsing and edit mode.
+     */
+    private boolean labelVisible(Node node) {
+        int state = dispatch.getDisplayState(); 
+        boolean visible = node.hasLabel(state);
+        if ( dispatch.isAnimationMode() ) {
+            Graph graph = dispatch.getWorkingGraph();
+            visible = visible
+                && graph.nodeLabelsAreVisible(state)
+                && ! node.labelIsHidden(state);
+        }
+        else {
+            visible = visible
+                && GraphDisplays.NODE_LABELS.isShown();
+        }
+        return visible;
+    }
+
+    /**
+     * @return true if the weight of the node should be visible; the answer
+     * is controlled by toggle switches when not in animation mode and by the
+     * algorithm otherwise.
+     */
+    private boolean weightVisible(Node node) {
+        int state = dispatch.getDisplayState(); 
+        boolean visible = node.hasWeight(state);
+        if ( dispatch.isAnimationMode() ) {
+            Graph graph = dispatch.getWorkingGraph();
+            visible = visible
+                && graph.nodeWeightsAreVisible(state)
+                && ! node.weightIsHidden(state);
+        }
+        else {
+            visible = visible
+                && GraphDisplays.NODE_WEIGHTS.isShown();
+        }
+        return visible;
+    }
+
+    /**
+     * @return true if the label of the edge should be visible; the answer
+     * is controlled by toggle switches when not in animation mode and by the
+     * algorithm otherwise.
+     */
+    private boolean labelVisible(Edge edge) {
+        int state = dispatch.getDisplayState(); 
+        boolean visible = edge.hasLabel(state);
+        if ( dispatch.isAnimationMode() ) {
+            Graph graph = dispatch.getWorkingGraph();
+            visible = visible
+                && graph.edgeLabelsAreVisible(state)
+                && ! edge.labelIsHidden(state);
+        }
+        else {
+            visible = visible
+                && GraphDisplays.EDGE_LABELS.isShown();
+        }
+        return visible;
+    }
+
+    /**
+     * @return true if the weight of the edge should be visible; the answer
+     * is controlled by toggle switches when not in animation mode and by the
+     * algorithm otherwise.
+     */
+    private boolean weightVisible(Edge edge) {
+        int state = dispatch.getDisplayState(); 
+        boolean visible = edge.hasWeight(state);
+        if ( dispatch.isAnimationMode() ) {
+            Graph graph = dispatch.getWorkingGraph();
+            visible = visible
+                && graph.edgeWeightsAreVisible(state)
+                && ! edge.weightIsHidden(state);
+        }
+        else {
+            visible = visible
+                && GraphDisplays.EDGE_WEIGHTS.isShown();
+        }
+        return visible;
+    }
+
+    /**
      * @return the point at the center of node n, based on whether or not
      * you're in animation mode or whether the graph is layered.
      *
      * @todo Once LayeredGraph becomes a subclass of Graph, and LayeredNode a
      * subclass of Node, we can override getPosition(), getX(), and getY() in
      * LayeredNode() so that they do the right thing.
+     * Or, better yet, make getNodeCenter() a Node method that is intended
+     * specifically for drawing, is independent of getPosition() and allows
+     * for a variety of interpretations based on graph type and window
+     * dimensions.
      */
     private Point getNodeCenter( Node n ) throws GalantException{
         LogHelper.guiEnterMethod( getClass(), "getNodeCenter, n = " + n );
@@ -944,4 +1036,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2015 12 11 at 16:54:26 GMT]
+//  [Last modified: 2015 12 24 at 18:10:18 GMT]

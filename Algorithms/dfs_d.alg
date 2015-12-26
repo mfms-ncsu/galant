@@ -51,6 +51,8 @@ algorithm {
     setDirected(true);
 
     beginStep();
+    hideEdgeWeights();
+    hideNodeWeights();
     for_nodes( u ) {
         u.setLabel("");
     }

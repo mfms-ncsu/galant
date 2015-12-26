@@ -67,9 +67,8 @@ public class GraphElement {
     /**
      * @return a new state for this element; the new state will be identical
      * to the current (latest one) except that it will be tagged with the
-     * current graph state, which will have an incremented algorithm state if
-     * the algorithm is running; subsequent changes to this GraphElement will
-     * take place in the new state.
+     * current algorithm state if the algorithm is running; subsequent
+     * changes to this GraphElement will take place in the new state.
      *
      * @todo there is no reason to create new states when parsing and the
      * only reason to do it when editing is for a possible "undo" mechanism,
@@ -575,4 +574,4 @@ public class GraphElement {
 
 }
 
-//  [Last modified: 2015 12 24 at 18:06:49 GMT]
+//  [Last modified: 2015 12 24 at 19:10:00 GMT]

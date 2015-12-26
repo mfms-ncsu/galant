@@ -232,16 +232,18 @@ public abstract class Algorithm implements Runnable {
     }
 
     /**
-     * The following methods control the display of labels and weights.
+     * The following methods control the display of labels and weights during
+     * algorithm execution; usually used at the beginning to hide unnecessary
+     * information.
      */
-    public void showNodeLabels() { GraphDisplays.NODE_LABELS.setShown(true); }
-    public void showEdgeLabels() { GraphDisplays.EDGE_LABELS.setShown(true); }
-    public void hideNodeLabels() { GraphDisplays.NODE_LABELS.setShown(false); }
-    public void hideEdgeLabels() { GraphDisplays.EDGE_LABELS.setShown(false); }
-    public void showNodeWeights() { GraphDisplays.NODE_WEIGHTS.setShown(true); }
-    public void showEdgeWeights() { GraphDisplays.EDGE_WEIGHTS.setShown(true); }
-    public void hideNodeWeights() { GraphDisplays.NODE_WEIGHTS.setShown(false); }
-    public void hideEdgeWeights() { GraphDisplays.EDGE_WEIGHTS.setShown(false); }
+    public void hideNodeLabels() throws Terminate { graph.hideNodeLabels(); }
+    public void hideEdgeLabels() throws Terminate { graph.hideEdgeLabels(); }
+    public void unhideNodeLabels() throws Terminate { graph.unhideNodeLabels(); }
+    public void unhideEdgeLabels() throws Terminate { graph.unhideEdgeLabels(); }
+    public void hideNodeWeights() throws Terminate { graph.hideNodeWeights(); }
+    public void hideEdgeWeights() throws Terminate { graph.hideEdgeWeights(); }
+    public void unhideNodeWeights() throws Terminate { graph.unhideNodeWeights(); }
+    public void unhideEdgeWeights() throws Terminate { graph.unhideEdgeWeights(); }
 
     /**
      * The following methods are designed to make convenient graph methods
@@ -468,4 +470,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2015 12 23 at 16:22:43 GMT]
+//  [Last modified: 2015 12 26 at 00:04:06 GMT]

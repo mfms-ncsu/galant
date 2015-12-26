@@ -308,8 +308,10 @@ public class GraphPanel extends JPanel{
      * everything is visible during parsing and edit mode.
      */
     private boolean labelVisible(Node node) {
+        LogHelper.enterMethod(getClass(), "labelVisible, node = " + node);
         int state = dispatch.getDisplayState(); 
-        boolean visible = node.hasLabel(state);
+        boolean visible = node.hasLabel(state)
+            && ! (node.getLabel(state).length() == 0);
         if ( dispatch.isAnimationMode() ) {
             Graph graph = dispatch.getWorkingGraph();
             visible = visible
@@ -320,6 +322,7 @@ public class GraphPanel extends JPanel{
             visible = visible
                 && GraphDisplays.NODE_LABELS.isShown();
         }
+        LogHelper.exitMethod(getClass(), "labelVisible, visible = " + visible);
         return visible;
     }
 
@@ -329,6 +332,7 @@ public class GraphPanel extends JPanel{
      * algorithm otherwise.
      */
     private boolean weightVisible(Node node) {
+        LogHelper.enterMethod(getClass(), "weightVisible, node = " + node);
         int state = dispatch.getDisplayState(); 
         boolean visible = node.hasWeight(state);
         if ( dispatch.isAnimationMode() ) {
@@ -341,6 +345,7 @@ public class GraphPanel extends JPanel{
             visible = visible
                 && GraphDisplays.NODE_WEIGHTS.isShown();
         }
+        LogHelper.exitMethod(getClass(), "weightVisible, visible = " + visible);
         return visible;
     }
 
@@ -350,8 +355,10 @@ public class GraphPanel extends JPanel{
      * algorithm otherwise.
      */
     private boolean labelVisible(Edge edge) {
+        LogHelper.enterMethod(getClass(), "labelVisible, edge = " + edge);
         int state = dispatch.getDisplayState(); 
-        boolean visible = edge.hasLabel(state);
+        boolean visible = edge.hasLabel(state)
+            && ! (edge.getLabel(state).length() == 0);
         if ( dispatch.isAnimationMode() ) {
             Graph graph = dispatch.getWorkingGraph();
             visible = visible
@@ -362,6 +369,7 @@ public class GraphPanel extends JPanel{
             visible = visible
                 && GraphDisplays.EDGE_LABELS.isShown();
         }
+        LogHelper.exitMethod(getClass(), "labelVisible, visible = " + visible);
         return visible;
     }
 
@@ -371,6 +379,7 @@ public class GraphPanel extends JPanel{
      * algorithm otherwise.
      */
     private boolean weightVisible(Edge edge) {
+        LogHelper.enterMethod(getClass(), "weightVisible, edge = " + edge);
         int state = dispatch.getDisplayState(); 
         boolean visible = edge.hasWeight(state);
         if ( dispatch.isAnimationMode() ) {
@@ -383,6 +392,7 @@ public class GraphPanel extends JPanel{
             visible = visible
                 && GraphDisplays.EDGE_WEIGHTS.isShown();
         }
+        LogHelper.exitMethod(getClass(), "weightVisible, visible = " + visible);
         return visible;
     }
 
@@ -469,9 +479,7 @@ public class GraphPanel extends JPanel{
         int stateNumber = currentState.getState();
         g2d.setColor(Color.BLACK);
 		
-        // If there is a label and drawing node labels is on, show it
-        if ( GraphDisplays.NODE_LABELS.isShown()
-             && n.hasLabel(stateNumber) ) {
+        if ( labelVisible(n) ) {
             String label = n.getLabel(stateNumber);
             if ( ! label.trim().equals("") ) {
                 TextLayout layout
@@ -498,11 +506,9 @@ public class GraphPanel extends JPanel{
                              (float) (labelPosition.getY() 
                                       + bounds.getHeight()) );
             }
-        }
+        } // end, draw node label
 			
-        // If drawing node weights is on, show weight
-        if ( GraphDisplays.NODE_WEIGHTS.isShown() 
-             && n.hasWeight(stateNumber) ) {
+        if ( weightVisible(n) ) {
             String weight = doubleToString(n.getWeight(stateNumber));
             TextLayout layout = new TextLayout( weight, NODE_WEIGHT_FONT,
                                                 g2d.getFontRenderContext() );
@@ -663,9 +669,9 @@ public class GraphPanel extends JPanel{
 							drawDirectedArrow(p1, p2, g2d);
 						} 
 						
-                        if ( e.hasLabel( stateNumber ) )
+                        if ( labelVisible(e) )
                             drawEdgeLabel(e.getLabel(stateNumber), p1, p2, g2d);
-                        if ( e.hasWeight( stateNumber ) )
+                        if ( weightVisible(e) )
                             drawEdgeWeight(e.getWeight(stateNumber), p1, p2, g2d);
 					}
 				}
@@ -732,8 +738,6 @@ public class GraphPanel extends JPanel{
         /** @todo need special handling for self loops, i.e., put label and
          * weight at the bottom of loop */
 		
-		if ( ! GraphDisplays.EDGE_WEIGHTS.isShown() ) return;
-		
 		String weightString = doubleToString( weight );
 
         Point2D edgeMiddle = new Point2D.Double( 0.5 * ( source.x + dest.x ),
@@ -775,9 +779,6 @@ public class GraphPanel extends JPanel{
 	private void drawEdgeLabel( String label, Point source, Point dest, Graphics2D g2d ) {
         /** @todo need special handling for self loops, i.e., put label and
          * weight at the bottom of loop */
-		
-		if ( ! GraphDisplays.EDGE_LABELS.isShown() 
-             || label.trim().equals("") ) return;
 		
         Point2D edgeMiddle = new Point2D.Double( 0.5 * ( source.x + dest.x ),
                                           0.5 * ( source.y + dest.y ) );
@@ -1036,4 +1037,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2015 12 24 at 18:10:18 GMT]
+//  [Last modified: 2015 12 26 at 00:14:22 GMT]

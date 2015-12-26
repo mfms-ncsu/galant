@@ -279,10 +279,10 @@ public class Graph {
     /**
      * Methods that cause labels and weights to be shown or hidden during
      * algorithm execution. Typically, an algorithm will declare its intent
-     * at the beginning. By default, the status of labels and weights is
-     * determined by the settings in GraphWindow.GraphDisplays.
+     * at the beginning. By default, labels and weights are shown unless the
+     * algorithm hides them.
      */
-    public void showEdgeLabels() throws Terminate { 
+    public void unhideEdgeLabels() throws Terminate { 
         clear(HIDDEN_EDGE_LABELS);
     }
     public void showEdgeLabels(Boolean show) throws Terminate { 
@@ -291,7 +291,7 @@ public class Graph {
     public void hideEdgeLabels() throws Terminate { 
         set(HIDDEN_EDGE_LABELS);
     }
-    public void showEdgeWeights() throws Terminate { 
+    public void unhideEdgeWeights() throws Terminate { 
         clear(HIDDEN_EDGE_WEIGHTS);
     }
     public void showEdgeWeights(Boolean show) throws Terminate { 
@@ -300,7 +300,7 @@ public class Graph {
     public void hideEdgeWeights() throws Terminate { 
         set(HIDDEN_EDGE_WEIGHTS);
     }
-    public void showNodeLabels() throws Terminate { 
+    public void unhideNodeLabels() throws Terminate { 
         clear(HIDDEN_NODE_LABELS);
     }
     public void showNodeLabels(Boolean show) throws Terminate { 
@@ -309,7 +309,7 @@ public class Graph {
     public void hideNodeLabels() throws Terminate { 
         set(HIDDEN_NODE_LABELS);
     }
-    public void showNodeWeights() throws Terminate { 
+    public void unhideNodeWeights() throws Terminate { 
         clear(HIDDEN_NODE_WEIGHTS);
     }
     public void showNodeWeights(Boolean show) throws Terminate { 
@@ -993,4 +993,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2015 12 24 at 18:00:38 GMT]
+//  [Last modified: 2015 12 26 at 00:02:35 GMT]

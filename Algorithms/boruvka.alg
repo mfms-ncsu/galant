@@ -17,7 +17,6 @@
  * only) with the given label. Also colors the tree edges green.
  */
 function labelComponent(Node v, String label) {
-    display("labelComponent " + id(v) + " " + label);
     mark(v);
     label(v, label);
     showLabel(v);
@@ -40,9 +39,7 @@ function Edge lowestWeight(Node v) {
     Edge best = null;
     double bestWeight = INFINITY;
     for_adjacent( v, e, w ) {
-        display("scanning edge " + id(v) + " " + id(w));
         if ( label(v).equals(label(w)) ) {
-            display("in same component");
             if ( ! isMarked(w) && e.is("inTree") ) {
                 color(e, BLUE);
                 Edge bestBelow = lowestWeight(w);
@@ -59,10 +56,8 @@ function Edge lowestWeight(Node v) {
             }
         }
         else { //  label(w) != label(v)
-            display("in another tree");
             // in another tree
             if ( weight(e) < bestWeight ) {
-                display("better weight: " + weight(e) + " vs " + bestWeight);
                 if ( best != null ) unHighlight(best);
                 highlight(e);
                 display(e.toString());
@@ -75,9 +70,9 @@ function Edge lowestWeight(Node v) {
 }
 
 function reset() {
+    display("");
     for_nodes( v ) {
         unMark(v);
-        hideLabel(v);
     }
     for_edges( e ) {
         unHighlight(e);
@@ -89,30 +84,48 @@ algorithm {
 
     // number of edges in current spanning forest
     int forestEdges = 0;
+    double totalWeight = 0;
     
     while ( forestEdges < numberOfNodes() - 1 ) {
         // need to label components first
         for_nodes( v ) {
-            display("scanning node " + id(v));
-            if ( ! isMarked(v) )
+            if ( ! isMarked(v) ) {
+                beginStep();
                 labelComponent(v, "" + id(v));
+                endStep();
+            }
         }
+        beginStep();
         reset();
+        endStep();
 
         for_nodes( componentRepresentative ) {
             // search component in forest containing the component
             // representative to find the lowest cost outgoing edge
             if ( ! isMarked(componentRepresentative) ) {
+                display("looking for lowest weight edge from component "
+                        + label(componentRepresentative));
+                beginStep();
                 Edge bestEdge = lowestWeight(componentRepresentative);
                 highlight(bestEdge);
                 if ( ! bestEdge.is("inTree") ) {
                     set(bestEdge, "inTree");
                     forestEdges++;
+                    totalWeight += weight(bestEdge);
+                    display("forest has weight " + totalWeight);
                 }
+                else {
+                    display("lowest weight outgoing edge already in tree");
+                }
+                endStep();
             }
         }
+        beginStep();
         reset();
+        endStep();
     }
+
+    beginStep();
     for_edges(e) {
         if ( e.is("inTree") ) {
             showWeight(e);
@@ -120,6 +133,8 @@ algorithm {
         }
         else hide(e);
     }
+    display("weight of minimum spanning tree is " + totalWeight);
+    endStep();
 }
 
-/*  [Last modified: 2015 12 30 at 19:09:27 GMT] */
+/*  [Last modified: 2015 12 30 at 19:47:24 GMT] */

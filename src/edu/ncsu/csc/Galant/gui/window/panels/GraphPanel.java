@@ -637,7 +637,7 @@ public class GraphPanel extends JPanel{
 					g2d.setColor(Color.RED);
 					thickness = highlightWidth;
 				} else {
-                    Color c = Color.decode(e.getColor());
+                    Color c = Color.decode(e.getColor(stateNumber));
                     g2d.setColor(c);
                     thickness = highlightWidth;
 				}
@@ -1034,4 +1034,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2015 12 30 at 19:00:47 GMT]
+//  [Last modified: 2015 12 30 at 19:55:27 GMT]

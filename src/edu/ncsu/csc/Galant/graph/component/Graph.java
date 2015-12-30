@@ -96,6 +96,8 @@ public class Graph {
         for ( Edge edge : this.edges ) {
             edge.reset();
         }
+        // then reinitialize the message banner
+        banner = new MessageBanner(this);
     }
 
     /**
@@ -993,4 +995,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2015 12 26 at 00:02:35 GMT]
+//  [Last modified: 2015 12 30 at 20:47:57 GMT]

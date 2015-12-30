@@ -28,6 +28,7 @@ import java.util.Stack;
 import java.awt.Color;
 
 import edu.ncsu.csc.Galant.GalantException;
+import edu.ncsu.csc.Galant.gui.util.ExceptionDialog;
 import edu.ncsu.csc.Galant.GraphDispatch;
 import edu.ncsu.csc.Galant.graph.component.Graph;
 import edu.ncsu.csc.Galant.graph.component.GraphElement;
@@ -57,20 +58,26 @@ public abstract class Algorithm implements Runnable {
     public AlgorithmSynchronizer synchronizer;
 
     /**
+     * Numerical constants
+     */
+    public static final Double INFINITY = Double.POSITIVE_INFINITY;
+    public static final Double NEGATIVE_INFINITY = Double.NEGATIVE_INFINITY;
+
+    /**
      * Color constants: included for convenience since Galant represents
      * colors as hexidecimal strings.
      */
-    public static final String RED       = "ff0000"; 
-    public static final String GREEN     = "00ff00"; 
-    public static final String BLUE      = "0000ff";
-    public static final String YELLOW    = "ffff00"; 
-    public static final String MAGENTA   = "ff00ff"; 
-    public static final String CYAN      = "00ffff"; 
-    public static final String VIOLET    = "8000ff";
-    public static final String ORANGE    = "ff8000"; 
-    public static final String GRAY      = "808080"; 
-    public static final String BLACK     = "000000"; 
-    public static final String WHITE     = "ffffff"; 
+    public static final String RED       = "#ff0000"; 
+    public static final String GREEN     = "#00ff00"; 
+    public static final String BLUE      = "#0000ff";
+    public static final String YELLOW    = "#ffff00"; 
+    public static final String MAGENTA   = "#ff00ff"; 
+    public static final String CYAN      = "#00ffff"; 
+    public static final String VIOLET    = "#8000ff";
+    public static final String ORANGE    = "#ff8000"; 
+    public static final String GRAY      = "#808080"; 
+    public static final String BLACK     = "#000000"; 
+    public static final String WHITE     = "#ffffff"; 
 
     /**
      * @param graph the Graph object on which this algorithm will run; used
@@ -279,19 +286,26 @@ public abstract class Algorithm implements Runnable {
     /**
      * Methods to make syntax friendlier for procedural programmers
      */
-    public void highlight(Node n) throws Terminate { n.highlight(); }
-    public void unHighlight(Node n) throws Terminate { n.unHighlight(); }
-    public void highlight(Edge e) throws Terminate { e.highlight(); }
-    public void unHighlight(Edge e) throws Terminate { e.unHighlight(); }
+    public void highlight(GraphElement ge) throws Terminate { ge.highlight(); }
+    public void unHighlight(GraphElement ge) throws Terminate {
+        ge.unHighlight();
+    }
     public void mark(Node n) throws Terminate { n.mark(); }
     public void unMark(Node n) throws Terminate { n.unMark(); }
     public Boolean isMarked(Node n) { return n.isMarked(); }
+
+    public Double weight(GraphElement ge) { return ge.getWeight(); }
+    public String label(GraphElement ge) { return ge.getLabel(); }
+    public void label(GraphElement ge, String s) throws Terminate {
+        ge.setLabel(s);
+    }
 
     public Node source(Edge e) { return e.getSourceNode(); }
     public Node target(Edge e) { return e.getTargetNode(); }
 
     public void set(GraphElement ge, String s) throws Terminate { ge.set(s); }
     public void clear(GraphElement ge, String s) throws Terminate { ge.clear(s); }
+    public Boolean is(GraphElement ge, String s) { return ge.is(s); }
 
     public void color(GraphElement ge, String color) throws Terminate { ge.setColor(color); }
     public void unColor(GraphElement ge) throws Terminate { ge.clearColor(); }
@@ -316,6 +330,13 @@ public abstract class Algorithm implements Runnable {
      */
     public void print(String string) {
         System.out.println(string);
+    }
+
+    /**
+     * Displays the exception in a dialog window
+     */
+    public void displayException(Exception e) {
+        ExceptionDialog.displayExceptionInDialog(e);
     }
 
     /** @see edu.ncsu.csc.Galant.graph.component.Graph#addNode(Node) */
@@ -470,4 +491,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2015 12 26 at 00:04:06 GMT]
+//  [Last modified: 2015 12 30 at 19:02:33 GMT]

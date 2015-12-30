@@ -83,8 +83,10 @@ public class AlgorithmExecutor {
      * pauseExecution() in the AlgorithmSynchronizer.
      */
     public synchronized void incrementDisplayState() {
-        System.out.printf("-> incrementDisplayState displayState = %d,"
-                          + " algorithmState = %d\n", displayState, algorithmState);
+        LogHelper.enterMethod(getClass(),
+                              "incrementDisplayState displayState = "
+                              + displayState
+                              + " algorithmState = " + algorithmState);
         if ( displayState == algorithmState
              && ! synchronizer.algorithmFinished() ) {
             displayState++;
@@ -94,45 +96,45 @@ public class AlgorithmExecutor {
             synchronized ( synchronizer ) {
                 synchronizer.notify();							
             }
-
-            // checking until it's accomplished the task
-            System.out.println(" algorithm is running");
             do {
                 try {
                     Thread.sleep(WAIT_TIME);
-                    System.out.print(".");
                 } catch (InterruptedException e) {
                     System.out.printf("Error occured while trying to wait");
                     e.printStackTrace(System.out);
                 }
             } while ( ! synchronizer.stepFinished() );
-            System.out.println();
         }
         else if ( displayState < algorithmState ) {
-            System.out.printf(" algorithm is ahead, displayState = %d,"
-                              + " algorithmState = %d\n",
-                              displayState, algorithmState);
+            LogHelper.logDebug(" algorithm is ahead, displayState = "
+                              + displayState + " algorithmState = "
+                              + algorithmState);
             displayState++;
         }
         else {
-            System.out.printf(" display is ahead, displayState = %d,"
-                              + " algorithmState = %d\n",
-                              displayState, algorithmState);
+            LogHelper.logDebug(" display is ahead, displayState = "
+                              + displayState + " algorithmState = "
+                              + algorithmState);
         }
-        System.out.printf("<- incrementDisplayState, displayState = %d,"
-                              + " algorithmState = %d\n",
-                              displayState, algorithmState);
+        LogHelper.exitMethod(getClass(),
+                             "incrementDisplayState displayState = "
+                              + displayState
+                             + " algorithmState = " + algorithmState);
     }
 
     /**
      * Called when user requests a step back
      */
     public void decrementDisplayState() {
+        LogHelper.enterMethod(getClass(),
+                              "decrementDisplayState displayState = "
+                              + displayState
+                              + " algorithmState = " + algorithmState);
         if ( displayState >= 0 ) displayState--;
-        System.out.printf("-> decrementDisplayState: displayState = %d,"
-                          + " algorithmState = %d\n",
-                          displayState, algorithmState);
-        System.out.printf("<- decrementDisplayState\n");
+        LogHelper.exitMethod(getClass(),
+                              "decrementDisplayState displayState = "
+                              + displayState
+                              + " algorithmState = " + algorithmState);
     }
 
     /**
@@ -158,4 +160,4 @@ public class AlgorithmExecutor {
     }
 }
 
-//  [Last modified: 2015 12 07 at 20:23:45 GMT]
+//  [Last modified: 2015 12 29 at 23:19:28 GMT]

@@ -84,7 +84,7 @@ public class CodeIntegrator	{
         + " else if ( e instanceof GalantException )"
         + " { GalantException ge = (GalantException) e;"
         + " ge.report(\"\"); ge.display(); }"
-        + " else {e.printStackTrace(System.out);}}}" ;
+        + " else {e.printStackTrace(System.out);displayException(e);}}}" ;
 
     /**
      * Converts the unmodified user algorithm code into a proper Java class, as would be found
@@ -315,4 +315,4 @@ public class CodeIntegrator	{
     }
 }
 
-//  [Last modified: 2015 12 11 at 13:06:05 GMT]
+//  [Last modified: 2015 12 30 at 17:34:58 GMT]

@@ -17,9 +17,14 @@
  * only) with the given label. Also colors the tree edges green.
  */
 function labelComponent(Node v, String label) {
+    display("labelComponent " + id(v) + " " + label);
+    mark(v);
+    label(v, label);
+    showLabel(v);
     for_adjacent( v, e, w ) {
-        if ( is(e, "inTree") ) {
+        if ( ! isMarked(w) && is(e, "inTree") ) {
             color(e, GREEN);
+            hideWeight(e);
             labelComponent(w, label);
         }
     }
@@ -30,42 +35,57 @@ function labelComponent(Node v, String label) {
  * edges
  * @return the lowest cost edge reachable from v that goes to another tree
  */
-function lowestWeight(Node v) {
+function Edge lowestWeight(Node v) {
     mark(v);
+    Edge best = null;
+    double bestWeight = INFINITY;
     for_adjacent( v, e, w ) {
-        Edge best = null;
-        double bestWeight = INFINITY;
-        if ( is(e, "inTree") ) {
-            color(e, BLUE);
-            Edge bestBelow = lowestWeight(w);
-            if ( weight(bestBelow) < bestWeight ) {
-                unHighlight(best);
-                highlight(bestBelow);
-                best = bestBelow;
-                bestWeight = weight(bestBelow);
+        display("scanning edge " + id(v) + " " + id(w));
+        if ( label(v).equals(label(w)) ) {
+            display("in same component");
+            if ( ! isMarked(w) && e.is("inTree") ) {
+                color(e, BLUE);
+                Edge bestBelow = lowestWeight(w);
+                if ( bestBelow != null && weight(bestBelow) < bestWeight ) {
+                    if ( best != null ) unHighlight(best);
+                    highlight(bestBelow);
+                    best = bestBelow;
+                    bestWeight = weight(bestBelow);
+                }
+                else if ( bestBelow != null ) unHighlight(bestBelow);
+            }
+            else if ( ! e.is("inTree") ) {
+                hide(e);
             }
         }
-        else if ( ! getLabel(v).equals(getLabel(w)) ) {
+        else { //  label(w) != label(v)
+            display("in another tree");
             // in another tree
             if ( weight(e) < bestWeight ) {
-                unHighlight(best);
+                display("better weight: " + weight(e) + " vs " + bestWeight);
+                if ( best != null ) unHighlight(best);
                 highlight(e);
+                display(e.toString());
                 best = e;
                 bestWeight = weight(e);
             }
         }
-        else {
-            // edge goes to node in same component, make it disappear
-            hide(e);
-        }
+    }
+    return best;
+}
+
+function reset() {
+    for_nodes( v ) {
+        unMark(v);
+        hideLabel(v);
+    }
+    for_edges( e ) {
+        unHighlight(e);
     }
 }
 
 algorithm {
-    // declare that edge weights and node labels should be made visible,
-    // except as specified for individual elements later
-    showEdgeWeights();
-    showNodeLabels();
+    hideNodeWeights();
 
     // number of edges in current spanning forest
     int forestEdges = 0;
@@ -73,20 +93,33 @@ algorithm {
     while ( forestEdges < numberOfNodes() - 1 ) {
         // need to label components first
         for_nodes( v ) {
-            labelComponent(v, "" + id(v));
+            display("scanning node " + id(v));
+            if ( ! isMarked(v) )
+                labelComponent(v, "" + id(v));
         }
+        reset();
 
         for_nodes( componentRepresentative ) {
             // search component in forest containing the component
             // representative to find the lowest cost outgoing edge
-            Edge bestEdge = lowestCost(componentRepresentative);
-            highlight(bestEdge);
-            set(bestEdge, "inTree");
-            // remove any coloring, marking, etc., that was done during search
-            reset(componentRepresentative);
+            if ( ! isMarked(componentRepresentative) ) {
+                Edge bestEdge = lowestWeight(componentRepresentative);
+                highlight(bestEdge);
+                if ( ! bestEdge.is("inTree") ) {
+                    set(bestEdge, "inTree");
+                    forestEdges++;
+                }
+            }
         }
-        colorTreeEdges();
+        reset();
+    }
+    for_edges(e) {
+        if ( e.is("inTree") ) {
+            showWeight(e);
+            highlight(e);
+        }
+        else hide(e);
     }
 }
 
-/*  [Last modified: 2015 12 22 at 14:22:22 GMT] */
+/*  [Last modified: 2015 12 30 at 19:09:27 GMT] */

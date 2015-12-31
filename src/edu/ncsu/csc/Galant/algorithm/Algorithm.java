@@ -309,6 +309,7 @@ public abstract class Algorithm implements Runnable {
 
     public void color(GraphElement ge, String color) throws Terminate { ge.setColor(color); }
     public void unColor(GraphElement ge) throws Terminate { ge.clearColor(); }
+    public String color(GraphElement ge) { return ge.getColor(); }
 
     public void hide(GraphElement ge) throws Terminate { ge.hide(); }
     public void show(GraphElement ge) throws Terminate { ge.show(); }
@@ -491,4 +492,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2015 12 30 at 19:02:33 GMT]
+//  [Last modified: 2015 12 31 at 01:25:40 GMT]

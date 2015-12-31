@@ -69,6 +69,15 @@ function Edge lowestWeight(Node v) {
     return best;
 }
 
+function recolorComponent(Node v) {
+    for_adjacent(v, e, w) {
+        if ( e.is("inTree") && color(e) != null && color(e).equals(BLUE) ) {
+            color(e, GREEN);
+            recolorComponent(w);
+        }
+    }
+}
+
 function reset() {
     display("");
     for_nodes( v ) {
@@ -99,10 +108,15 @@ algorithm {
         reset();
         endStep();
 
+        Node previousRepresentative = null;
         for_nodes( componentRepresentative ) {
             // search component in forest containing the component
             // representative to find the lowest cost outgoing edge
             if ( ! isMarked(componentRepresentative) ) {
+                beginStep();
+                if ( previousRepresentative != null ) {
+                    recolorComponent(previousRepresentative);
+                }
                 display("looking for lowest weight edge from component "
                         + label(componentRepresentative));
                 beginStep();
@@ -118,6 +132,7 @@ algorithm {
                     display("lowest weight outgoing edge already in tree");
                 }
                 endStep();
+                previousRepresentative = componentRepresentative; 
             }
         }
         beginStep();
@@ -137,4 +152,4 @@ algorithm {
     endStep();
 }
 
-/*  [Last modified: 2015 12 30 at 19:47:24 GMT] */
+/*  [Last modified: 2015 12 31 at 01:59:14 GMT] */

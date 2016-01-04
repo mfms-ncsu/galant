@@ -44,12 +44,14 @@ function Edge lowestWeight(Node v) {
                 color(e, BLUE);
                 Edge bestBelow = lowestWeight(w);
                 if ( bestBelow != null && weight(bestBelow) < bestWeight ) {
-                    if ( best != null ) unHighlight(best);
+                    if ( best != null && ! best.is("inTree") )
+                        unHighlight(best);
                     highlight(bestBelow);
                     best = bestBelow;
                     bestWeight = weight(bestBelow);
                 }
-                else if ( bestBelow != null ) unHighlight(bestBelow);
+                else if ( bestBelow != null && ! best.is("inTree") )
+                    unHighlight(bestBelow);
             }
             else if ( ! e.is("inTree") ) {
                 hide(e);
@@ -58,7 +60,8 @@ function Edge lowestWeight(Node v) {
         else { //  label(w) != label(v)
             // in another tree
             if ( weight(e) < bestWeight ) {
-                if ( best != null ) unHighlight(best);
+                if ( best != null && ! best.is("inTree") )
+                    unHighlight(best);
                 highlight(e);
                 display(e.toString());
                 best = e;
@@ -152,4 +155,4 @@ algorithm {
     endStep();
 }
 
-/*  [Last modified: 2015 12 31 at 01:59:14 GMT] */
+/*  [Last modified: 2016 01 04 at 22:18:25 GMT] */

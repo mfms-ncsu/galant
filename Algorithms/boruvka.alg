@@ -21,7 +21,7 @@ function labelComponent(Node v, String label) {
     label(v, label);
     showLabel(v);
     for_adjacent( v, e, w ) {
-        if ( ! isMarked(w) && is(e, "inTree") ) {
+        if ( ! isMarked(w) && e.is("inTree") ) {
             color(e, GREEN);
             hideWeight(e);
             labelComponent(w, label);
@@ -72,6 +72,10 @@ function Edge lowestWeight(Node v) {
     return best;
 }
 
+/**
+ * Turns the edges of the tree in v's component back to green; they were
+ * turned blue to highlight them when looking for the lowest cost edge
+ */
 function recolorComponent(Node v) {
     for_adjacent(v, e, w) {
         if ( e.is("inTree") && color(e) != null && color(e).equals(BLUE) ) {
@@ -81,6 +85,20 @@ function recolorComponent(Node v) {
     }
 }
 
+/**
+ * Hides all edges that connect nodes already in the same tree
+ */
+function hideExtraneousEdges() {
+    for_edges( e ) {
+        Node v = source(e);
+        Node w = target(e);
+        if ( ! e.is("inTree") && label(v).equals(label(w)) ) hide(e);
+    }
+}
+
+/**
+ * Remove all marking and highlighting
+ */
 function reset() {
     display("");
     for_nodes( v ) {
@@ -108,6 +126,7 @@ algorithm {
             }
         }
         beginStep();
+        hideExtraneousEdges();
         reset();
         endStep();
 
@@ -155,4 +174,4 @@ algorithm {
     endStep();
 }
 
-/*  [Last modified: 2016 01 04 at 22:18:25 GMT] */
+/*  [Last modified: 2016 01 05 at 01:07:55 GMT] */

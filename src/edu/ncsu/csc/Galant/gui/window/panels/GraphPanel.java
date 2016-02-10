@@ -49,6 +49,13 @@ public class GraphPanel extends JPanel{
 	}
 
     /**
+     * padding on sides and top/bottom for layered graph drawing
+     * @todo make this a preference
+     */
+    private final int HORIZONTAL_PADDING = 100;
+    private final int VERTICAL_PADDING = 100;
+
+    /**
      * color of a node boundary or edge if none is specified
      */
     public final Color DEFAULT_COLOR = Color.black;
@@ -435,18 +442,36 @@ public class GraphPanel extends JPanel{
          * calculated.
          */
         if ( dispatch.getWorkingGraph().isLayered() ) {
+            int x = 0;
+            int y = 0;
             int layer = n.getLayer(); // should not change during an
                                       // animation of a layered graph algorithm
             int position = n.getPositionInLayer(state);
             int layerSize
                 = dispatch.getWorkingGraph().numberOfNodesOnLayer(layer);
             int width = dispatch.getWindowWidth();
-            int positionGap = width / ( layerSize + 1 );
-            int x = ( position + 1 ) * positionGap;
+            // center node in layer if it's unique; else do the usual
+            if (layerSize == 1) {
+                x = width / 2;
+            }
+            else {
+                int positionGap
+                    = (width - 2 * HORIZONTAL_PADDING) / (layerSize - 1);
+                x = HORIZONTAL_PADDING + position * positionGap;
+            }
+
             int numberOfLayers = dispatch.getWorkingGraph().numberOfLayers();
             int height = dispatch.getWindowHeight();
-            int layerGap = height / (numberOfLayers + 1);
-            int y = (numberOfLayers - n.getLayer()) * layerGap;
+            // center layer in window if it's unique; else do the usual
+            if (numberOfLayers == 1) {
+                y = height / 2;
+            }
+            else {
+                int layerGap
+                    = (height - 2 * VERTICAL_PADDING) / (numberOfLayers - 1);
+                y = VERTICAL_PADDING
+                    + (numberOfLayers - n.getLayer() - 1) * layerGap;
+            }
             nodeCenter = new Point( x, y );
             LogHelper.guiLogDebug( " getNodeCenter: layered graph, center = " + nodeCenter );
         }
@@ -1049,4 +1074,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2015 12 31 at 01:55:17 GMT]
+//  [Last modified: 2016 02 10 at 22:10:46 GMT]

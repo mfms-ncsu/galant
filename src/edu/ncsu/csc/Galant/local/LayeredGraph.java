@@ -7,14 +7,6 @@
  * It is assumed (for now) that all edges are directed from nodes on layer i
  * to ones on layer i+1 for some i.
  *
- * Also assume is that node id's range from 0 to n-1, where n is the number
- * of nodes, and edge id's are in the range 0 to m-1, where m is the number
- * of edges.
- *
- * @todo When the layered graph is created, original layer and position
- * information in the graph is not retained when the graph is saved or
- * modified. [This may have been fixed]
- *
  * @todo Come up with a way, perhaps via a compile-time option, to run the
  * heuristics decoupled from Galant displays and GUI's, so that their
  * performance can be evaluated before animations are undertaken. This may
@@ -240,7 +232,24 @@ class Layer {
      * sorts the nodes by their weight (as assigned by Galant code)
      */
     public void sort() {
-        Collections.sort( nodes );
+        System.out.println("-> sort: " + nodes);
+        Collections.sort(nodes);
+        updatePositions();
+        System.out.println("<- sort: " + nodes);
+    }
+
+    /**
+     * sorts node by positions in their layers (as assigned by Galant)
+     */
+    final Comparator<Node> POSITION_COMPARATOR = new Comparator<Node>() {
+        public int compare(Node x, Node y) {
+            int state = GraphDispatch.getInstance().getDisplayState();
+            return x.getPositionInLayer(state) - y.getPositionInLayer(state);
+        }
+    };
+
+    public void sortByPosition() {
+        Collections.sort( nodes, POSITION_COMPARATOR );
         updatePositions();
     }
 
@@ -443,27 +452,6 @@ public class LayeredGraph {
      */
     public enum Scope { LAYER, UP, DOWN, BOTH };
 
-    /**
-     * distances used to define layers and positions within each layer, these
-     * gaps are also used as padding between the top edge and left edge of the
-     * window, respectively.
-     *
-     * @todo Eventually layers and positions will be assigned as node attributes
-     * when the graph file is parsed and can be used directly.
-     */
-    final int LAYER_GAP = 100;
-    final int POSITION_GAP = 100;
-
-    /**
-     * The vertical gap between layers when drawing the graph
-     */
-    private int layerGap;
-    /**
-     * true as soon as the positions are displayed for the first time, since
-     * they will not change thereafter
-     */
-    private boolean verticalPositionsFixed = false;
-
     private Graph graph;
     private ArrayList<Layer> layers;
     private int [] positionOfNode;
@@ -488,9 +476,6 @@ public class LayeredGraph {
     {
         LogHelper.enterConstructor( getClass() );
         this.graph = graph;
-        System.out.printf( "-> LayeredGraph, nodes = %d, edges = %d\n",
-                           this.graph.numberOfNodes(),
-                           this.graph.numberOfEdges() );
         layers = new ArrayList<Layer>();
         positionOfNode = new int[ graph.getNodes().size() ];
         savedPositionOfNode = new int[ graph.getNodes().size() ];
@@ -503,7 +488,7 @@ public class LayeredGraph {
         for ( Node u: graph.getNodes() ) {
             int layer = u.getLayer();
             int position = u.getPositionInLayer();
-            LogHelper.logDebug( "  adding node " + u );
+            System.out.println( "  adding node " + u );
             addNode( u, layer, position );
             layerOfNode[ u.getId() ] = layer;
             positionOfNode[ u.getId() ] = position;
@@ -512,7 +497,7 @@ public class LayeredGraph {
         // sort the nodes on each layer by their position and then set the
         // horizontal gap between them based on window width
         for ( Layer theLayer: layers ) {
-            theLayer.sort();
+            theLayer.sortByPosition();
         }
 
         // initialize edge crossing counts
@@ -1616,4 +1601,4 @@ public class LayeredGraph {
 
 } // end, class LayeredGraph
 
-//  [Last modified: 2015 12 04 at 22:23:07 GMT]
+//  [Last modified: 2016 02 10 at 19:56:57 GMT]

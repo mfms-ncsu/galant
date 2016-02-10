@@ -118,16 +118,15 @@ algorithm {
     
     while ( forestEdges < numberOfNodes() - 1 ) {
         // need to label components first
+        beginStep();
         for_nodes( v ) {
             if ( ! isMarked(v) ) {
-                beginStep();
                 labelComponent(v, "" + id(v));
-                endStep();
             }
         }
-        beginStep();
         hideExtraneousEdges();
         reset();
+        display("showing components");
         endStep();
 
         Node previousRepresentative = null;
@@ -174,4 +173,4 @@ algorithm {
     endStep();
 }
 
-/*  [Last modified: 2016 01 05 at 01:07:55 GMT] */
+/*  [Last modified: 2016 02 09 at 21:29:27 GMT] */

@@ -6,16 +6,9 @@
 
 /** Required: edge weights defined, node and edge weights visible */
 
-import java.util.PriorityQueue;
-
-final double INFINITY = Double.POSITIVE_INFINITY;
-
-Edge [] chosenEdge;
-NodePriorityQueue pq;
-
 algorithm {
-    pq = new NodePriorityQueue();
-    chosenEdge = new Edge[nodeIds()]; 
+    NodePriorityQueue pq = new NodePriorityQueue();
+    Edge [] chosenEdge = new Edge[nodeIds()]; 
     beginStep();
     for_nodes(node) {
         node.setWeight(INFINITY);
@@ -50,4 +43,4 @@ algorithm {
     } // stop when priority queue is empty
 } // end, algorithm
 
-//  [Last modified: 2015 12 07 at 01:28:08 GMT]
+//  [Last modified: 2016 02 09 at 22:03:59 GMT]

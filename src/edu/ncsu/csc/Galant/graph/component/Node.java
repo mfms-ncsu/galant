@@ -193,7 +193,7 @@ public class Node extends GraphElement implements Comparable<Node> {
             throw new GalantException("Missing id for node " + this);
         }
         else if ( super.graph.nodeIdExists(idAttribute) ) {
-            throw new GalantException("Duplicate id: " + id 
+            throw new GalantException("Duplicate id: " + idAttribute 
                                       + " when processing node " + this);
         }
         try { // need to catch a Terminate exception - should not happen
@@ -628,4 +628,4 @@ public class Node extends GraphElement implements Comparable<Node> {
 	}
 }
 
-//  [Last modified: 2015 12 11 at 17:16:22 GMT]
+//  [Last modified: 2016 01 06 at 20:58:19 GMT]

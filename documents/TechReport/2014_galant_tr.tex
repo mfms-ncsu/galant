@@ -6,30 +6,48 @@
 
 %\newcommand{\cmt}[1]{\textsf{[#1]}}
 
+\renewcommand{\topfraction}{0.99}
+\setcounter{bottomnumber}{2}
+\setcounter{totalnumber}{4}     % 2 may work better
+\renewcommand{\textfraction}{0.07}	% allow minimal text w. figs
+% Parameters for FLOAT pages (not text pages):
+\renewcommand{\floatpagefraction}{0.7}	% require fuller float pages
+
 \begin{document}
 
 \title{Galant: A Graph Algorithm Animation Tool\thanks{
-    This work is the result of a senior design project at North Carolina
+    This software was conceived by the first author and implemented in
+    two stages.
+    In the first (Spring 2013), authors Cockrell, Devries, McCabe and Owoc implemented a
+    working version as
+    a senior design project at North Carolina
     State University, Department of Computer Science.
-    The first author conceived and guided the project while the others
-    provided the implementation details.
-    We thank Dr. Robert Fornaro and Margaret Heil, the instructors, for
+    This version, after some enhancements by Stallmann,
+    was used by students in a data structures and algorithms course to develop
+    their own animations as class projects.
+    In Summer 2015, authors Li, Ni and Pressler-Marshall
+    added significant enhancements: better syntax and compilation, keyboard shortcuts to add/remove nodes and edges and a mechanism to run animations in real time.
+    We thank Dr. Robert Fornaro and Margaret Heil, the instructors of the senior design course, for
     coordinating the project(s) and providing instruction in communication
     skills, respectively. Ignacio Dominguez provided valuable technical
     support.
-    An alpha testing version of the software is available on request.
+    A beta test version of the software is available at \cmt{github}.
     %% provided the recipient (i)~gives a report on how it was used;
     %% and (ii) gives us feedback on features that were desirable, additional
     %% features that would make Galant more useful, bugs, and annoyances.
   }
 }
-\author{Matthias Stallmann\thanks{Matthias Stallmann, Department of Computer
-    Science, North Carolina State University, Raleigh NC, 29695-8206.
-    email: \texttt{mfms@ncsu.edu}}
+\author{Matthias Stallmann\thanks{Matthias Stallmann, Dept. of Computer
+    Science, NC State University, Raleigh NC, 29695-8206,
+    \texttt{mfms@ncsu.edu}.
+  }
   \and Jason Cockrell
-  \and Tynan Devries\thanks{SAS Institute, Cary NC.}
-  \and Alexander McCabe\thanks{Elsinore Technologies, Raleigh NC.}
-  \and Michael Owoc\thanks{IBM, Durham NC.}
+  \and Tynan Devries
+  \and Weijia Li
+  \and Alexander McCabe
+  \and Yuang Ni
+  \and Michael Owoc
+  \and Kai Pressler-Marshall
 }
 
 \maketitle
@@ -62,19 +80,27 @@
 
 \bibliography{Z_GD}
 
+\clearpage
+
 \appendix
 
 \section{Animation examples}
 \label{sec:animations}
 \input{animation_examples}
 
+\clearpage
+
 \section{User documentation}
 \label{sec:user_documentation}
 \input{user_documentation}
 
+\clearpage
+
 \section{Programmer guide}
 \label{sec:programmer_guide}
 \input{programmer_guide}
+
+\clearpage
 
 \section{Known Bugs and Annoyances}
 \label{sec:bugs}

@@ -14,3 +14,7 @@ Sandbox
 Graph-Gallery
 # graphs used for research, mostly crossing minimization
 Research-Graphs
+# other graphs used in crossing minimization research
+Crossing_Graphs
+
+*.blg

@@ -1,9 +1,3 @@
-\input{Y_dijkstras_algorithm}
-
-\input{Y_dijkstra_directed}
-
-\input{Y_dijkstra_undirected}
-
 One of the simplest algorithms we have implemented is Dijkstra's algorithm
 for the single source shortest paths problem.
 Fig.~\ref{fig:dijkstra}
@@ -32,6 +26,12 @@ the exploration of the algorithm stops its forward or backward motion.
 In their absence, any state change (mark, select, change in weight, etc.)
 constitutes a step, which, in some cases, can force the user
 to do excessive ``stepping'' to move past uninteresting state changes.
+
+\input{Y_dijkstras_algorithm}
+
+\input{Y_dijkstra_directed}
+
+\input{Y_dijkstra_undirected}
 
 The macro \emph{for\_outgoing($v,e,w$)}
 creates a loop whose body is executed once

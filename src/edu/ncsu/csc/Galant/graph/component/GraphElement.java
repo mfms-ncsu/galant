@@ -13,7 +13,7 @@ import edu.ncsu.csc.Galant.algorithm.Terminate;
  * @author Jason Cockrell, Ty Devries, Alex McCabe, Michael Owoc,
  *         completely rewritten by Matthias Stallmann
  */
-public class GraphElement {
+public class GraphElement implements Comparable<GraphElement> {
 
     public static final String ID = "id";
     public static final String WEIGHT = "weight";
@@ -572,6 +572,11 @@ public class GraphElement {
         return elementState.attributesWithoutId();
     }
 
+	public int compareTo(GraphElement other) {
+        Double thisDouble = new Double( this.getWeight() );
+        Double otherDouble = new Double( other.getWeight() );
+		return thisDouble.compareTo( otherDouble );
+	}
 }
 
-//  [Last modified: 2015 12 24 at 19:10:00 GMT]
+//  [Last modified: 2016 02 18 at 21:05:38 GMT]

@@ -17,7 +17,7 @@ import edu.ncsu.csc.Galant.logging.LogHelper;
  *
  * 
  */
-public class Edge extends GraphElement implements Comparable<Edge> {
+public class Edge extends GraphElement {
     Integer id;
     Node source;
     Node target;
@@ -177,13 +177,6 @@ public class Edge extends GraphElement implements Comparable<Edge> {
         s += " />";
 		return s;
 	}
-
-	@Override
-	public int compareTo(Edge e) {
-        Double thisDouble = new Double( this.getWeight() );
-        Double otherDouble = new Double( e.getWeight() );
-		return thisDouble.compareTo( otherDouble );
-	}
 }
 
-//  [Last modified: 2015 12 08 at 16:25:48 GMT]
+//  [Last modified: 2016 02 18 at 20:27:54 GMT]

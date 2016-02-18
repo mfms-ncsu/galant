@@ -23,7 +23,7 @@ import edu.ncsu.csc.Galant.logging.LogHelper;
  * a major refactoring by Matthias Stallmann, based on a more extended
  * version of the GraphElement class.
  */
-public class Node extends GraphElement implements Comparable<Node> {
+public class Node extends GraphElement {
     private static final String MARKED = "marked";
 
     private int id;
@@ -619,13 +619,6 @@ public class Node extends GraphElement implements Comparable<Node> {
         s += "]";
 		return s;
 	}
-
-	@Override
-	public int compareTo(Node other) {
-        Double thisDouble = new Double( this.getWeight() );
-        Double otherDouble = new Double( other.getWeight() );
-		return thisDouble.compareTo( otherDouble );
-	}
 }
 
-//  [Last modified: 2016 01 06 at 20:58:19 GMT]
+//  [Last modified: 2016 02 18 at 20:28:47 GMT]

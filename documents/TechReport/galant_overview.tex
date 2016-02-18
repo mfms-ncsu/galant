@@ -5,14 +5,28 @@ A graphical user interface (GUI) allows the user to edit both graphs and
 algorithm animations, either loaded as already existing files or newly
 created. At any point, the user can apply a selected animation to a selected
 graph for viewing.
-The animation program runs to completion and compiles a sequence of states (steps),
-each essentially a snapshot at a developer-defined break point.
-The user can then navigate the animation forward or backward one step at a time.
+The animation program 
+steps forward until
+displays the next animation event or, if a \texttt{beginStep()}
+call has marked the start of a sequence of events, until
+it reaches the next \texttt{endStep()} call.
+It then pauses execution and waits for the user to decide whether to
+step forward, step backward, or exit.
+A step forward resumes execution while a step backward returns the display to a previous
+state.
+The algorithm resumes execution only when the \emph{display state}
+indicated by the user's sequence of forward and backward steps
+($f-b$, where $f$ is the number of forward and $b$ the number of backward steps)
+exceeds the \emph{algorithm state}, the number of animation steps the algorithm
+has executed.
 
-When editing a graph the user can create vertices and edges by clicking and/or
+When editing a graph the user can create/delete nodes and edges (when in the appropriate mode)
+by clicking and/or
 moving the mouse, and can move vertices by dragging the mouse.
 There is also an interface for specifying labels, weights and colors for both
-edges and vertices.
+nodes and edges.
+Keyboard shortcuts are available for these operations.
+ 
 A preferences panel allows the user to select font size for labels and a
 variety of other options.
 Any changes to a graph are also reflected in a text (GraphML) representation
@@ -23,17 +37,23 @@ editing the GraphML or by invoking a separate graph editor.
 Galant has a built-in force-directed drawing program 
 (the one reported by Hu~\cite{2006-Mathematica-Hu}) to position nodes
 automatically if so desired.
+Automatic drawing is useful when the input Graphml file does not provide position
+information for the nodes (and their positions are selected randomly).
 Other drawing programs, such as those provided by GraphViz~\cite{GraphViz}
 and the huge body of research carried on by the graph drawing community~\cite{graph_drawing},
-Another potential option for accessing graphs externally is to do the kind of
-detailed analysis performed by Gephi~\cite{gephi} and similar software.
+can be used externally as well.
+Graphs used in Galant animations
+can be analyzed externally using tools such as Gephi~\cite{gephi}.
 
 Editing/compiling an algorithm animation is just like performing the same
 operations on a Java program.
 The compiler is essentially a Java
-compiler that compiles the algorithm code along with imported modules and
-a macro translator; the latter converts traversals of incidence lists and other
+compiler that preprocesses the algorithm code
+and compiles it, importing the relevant modules.
+The preprocessor converts traversals of incidence lists and other
 lists of nodes or edges into the corresponding, more obscure, Java code.
+It also shields the Galant programmer from such syntactic circumlocutions
+as declaring \texttt{static} methods.
 Because the functionality of the Galant editor is limited, it is usually more
 convenient to use an external program editor, reserving the Galant editor to
 make minor changes in response to compile-time or runtime errors.
@@ -62,12 +82,9 @@ challenge~\cite{2006-DIMACS-Implementation}
 except that layer and position are used instead of x- and y-coordinates
 and
 there are no weights on the edges.
-For historical reasons dot files are supplemented with \emph{ord} files
+When layered graphs are represented using
+dot files these are supplemented with \emph{ord} files
 that give layer and position information for nodes
 -- see Stallmann et al.~\cite{2001-JEA-Stallmann}.
-The relevant scripts (some are in Python, others are shell scripts that invoke
-awk) are sgf2graphml.py, dot+ord2graphml (invokes a dot\_and\_ord\_to\_sgf
-C~program as an intermediate step), graphml2dot, graphml2sgf, and
-sgf2dot+ord.
 
 % [Last modified: 2013 06 25 at 18:06:12 GMT]

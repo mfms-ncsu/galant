@@ -37,7 +37,7 @@ algorithm {
     }
 
     List<Edge> edgeList = getEdges();
-    Collections.sort(edgeList);
+    sort(edgeList);
 
     // MST is only relevant for undirected graphs
     setDirected(false);
@@ -76,4 +76,4 @@ algorithm {
     display( "MST has total weight " + totalWeight );
 }
 
-/*  [Last modified: 2015 12 08 at 20:45:55 GMT] */
+/*  [Last modified: 2016 02 18 at 21:07:44 GMT] */

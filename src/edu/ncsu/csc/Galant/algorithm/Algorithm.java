@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Stack;
+import java.util.Collections;
 import java.awt.Color;
 
 import edu.ncsu.csc.Galant.GalantException;
@@ -87,6 +88,25 @@ public abstract class Algorithm implements Runnable {
         this.graph = graph;
     }
     public Graph getGraph() { return this.graph; }
+
+    // sorting of edges and nodes
+    /**
+     * @todo these do not work; error is
+     * error: name clash: sort(List<Node>) and sort(List<Edge>) have the same
+     * erasure
+     *
+     * I also tried GraphElement, but that results in
+     * incompatible types:
+     * java.util.List<edu.ncsu.csc.Galant.graph.component.Edge> cannot be
+     * converted to
+     * java.util.List<edu.ncsu.csc.Galant.graph.component.GraphElement>
+     */
+    public void sort(List<Edge> L) {
+        Collections.sort(L);
+    }
+//     public void sort(List<Node> L) {
+//         Collections.sort(L);
+//     }
 
     // Specialized Node/Edge types for Queues/Stacks/Priority Queues
     public class NodeQueue extends AbstractQueue<Node>
@@ -492,4 +512,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2015 12 31 at 01:25:40 GMT]
+//  [Last modified: 2016 02 18 at 21:14:01 GMT]

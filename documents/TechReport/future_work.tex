@@ -8,26 +8,18 @@ Second, as Galant is augmented with the infrastructure for specific research
 domains (i.e., additional Java classes), some of the resulting functionality
 will no doubt be migrated into its core. Or the core will be enhanced to
 accommodate new capabilities.
+Research on crossing minimization heuristics (e.g.,~\cite{2016-SEA-Stallmann}) has
+already benefitted greatly from use of Galant to study detailed behvior of these heuristics.
 
 One drawback of the current implementation is
-that an animation runs to
-completion before the user can interact with it.
-This precludes certain types of interactions.
+that, unlike GDR, it provides no facility for user interaction other than stepping forward
+and back.
 For example, one might want the user to be able to select the next node to
 visit during a depth-first search or a node to insert or remove during an animation of
 a binary search tree.
-
-An algorithm implementation, despite the preprocessing we provide, still
-requires some undesirable Java-specific syntax and generates highly
-unfriendly error messages at both compile and runtime --- the compiler, after
-preprocessing deals with raw Java code. Automatic insertion of semicolons at
-the ends of lines would prevent some of the strangest error messages. There
-are also serious issues with the use of global variables, e.g., a time stamp
-that is used to assign discovery and finish times for nodes in a depth-first
-search. The necessary (arcane) syntax for global variables could easily be
-provided.
-However, the ideal of completely programmer-friendly pseudocode would require
-the writing of a new compiler.
+A query window like that of GDR would be a useful enhancement, although the semantics of
+repeating a display state during which a query occurs would need to be worked out
+(GDR has no such problem because it does not allow backward steps).
 
 A key challenge confronting any developer of algorithm animation
 software is that of accessibility to blind users.

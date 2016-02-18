@@ -72,15 +72,14 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
         APIdictionary.put("getDoubleAttribute", "Gets the Double value associated with the specified key. Returns null if the key doesn't exist or it exists but its value is not a Double.");
         APIdictionary.put("getSourceNode", "Returns the source Node of the current Edge.");
 		APIdictionary.put("setSourceNode", "Sets the source Node of the current Edge.");
-		APIdictionary.put("getDestNode", "Returns the destination Node of the current Edge.");
-		APIdictionary.put("setDestNode", "Sets the destination Node of the current Edge.");
+		APIdictionary.put("getTargetNode", "Returns the destination Node of the current Edge.");
+		APIdictionary.put("setTargetNode", "Sets the destination Node of the current Edge.");
 		APIdictionary.put("getOtherEndpoint", "Returns the other endpoint of an edge, or NULL if the provided node is not either endpoint in the specified edge.");
 		APIdictionary.put("getId", "Returns the unique ID of the edge. This will not change during Algorithm execution unless explicitly set in the user code.");
         APIdictionary.put("equals", "Returns true if the given Edge points to the same Node as the current Edge and false otherwise.");
         APIdictionary.put("for_nodes", "Iterates over the adjacent Nodes and Edges of a given Node.");
         APIdictionary.put("for_edges", "Iterates over all Edges in the graph.");
         APIdictionary.put("function", "Creates a function that can be called later.");
-        APIdictionary.put("initializationComplete", "Marks the end of the initialization code that occurs before steps are run");
 
 		StyledDocument doc = textpane.getStyledDocument();
 		updateDocStyles(doc);
@@ -110,7 +109,7 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
 			"isVisited", "setVisited", "isMarked", "mark", "getWeight", "setWeight", "getUnvisitedPaths", "getVisitedPaths",
 			"getUnvisitedAdjacentNodes", "travel", "getId", "getColor", "setColor", "getLabel", "setLabel", "getPosition",
 			"setPosition", "equals", "setStringAttribute", "getStringAttribute", "setIntegerAttribute", "getIntegerAttribute",
-			"setDoubleAttribute", "getDoubleAttribute", "getSourceNode", "setSourceNode", "getDestNode", "setDestNode",
+			"setDoubleAttribute", "getDoubleAttribute", "getSourceNode", "setSourceNode", "getTargetNode", "setTargetNode",
 			"getOtherEndpoint", "Graph", "Node", "Edge", "for_adjacent", "for_nodes", "for_edges", "function", "graph",
 			"setRootNode", "getRootNode", "getTargetNode", "setTargetNode", "getPaths", "NodeQueue", "EdgeQueue", "NodeStack",
 			"EdgeStack", "NodePriorityQueue", "EdgePriorityQueue", "nodeQ", "edgeQ", "nodeStack", "edgeStack", "nodePQ",
@@ -171,4 +170,4 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
 	
 }
 
-//  [Last modified: 2013 06 07 at 00:11:45 GMT]
+//  [Last modified: 2016 02 18 at 23:00:28 GMT]

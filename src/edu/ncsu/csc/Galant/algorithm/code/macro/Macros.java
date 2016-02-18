@@ -51,21 +51,31 @@ public class Macros
 					}
 				});
 
-				Macro.MACROS.add(new FetchingMacro("nodesList", "Node[]"){
+				Macro.MACROS.add(new FetchingMacro("NodeList", "List<Node>"){
 					@Override
 					protected String includeInAlgorithm() {
-						return " = new Node[ graph.getNodes().size() ];";
+						return "";
 					}
 				});
 
-				Macro.MACROS.add(new FetchingMacro("edgesList", "Edge[]"){
+				Macro.MACROS.add(new FetchingMacro("EdgeList", "List<Edge>"){
 					@Override
 					protected String includeInAlgorithm() {
-						return " = new Edge[ graph.getEdges().size() ];";
+						return "";
 					}
 				});
 				
-				/*
+                Macro.MACROS.add(new ParameterizedMacro("sort", 1, false) {
+                        @Override
+                            protected String modifyMatch(String code, MatchResult nameMatch, String[] args, String whitespace,
+                                                         String block) {
+                            String toBeSorted = args[0];
+                            return Matcher.quoteReplacement("Collections.sort(" + toBeSorted +")");
+                        }
+                    }
+                    );
+
+				/**
 				 * for_outgoing: iterates over the outgoing nodes and edges
 				 * of a given node, based solely on source/target information
 				 * and not on whether the graph is directed.
@@ -96,7 +106,7 @@ public class Macros
 						}
 				});
 
-				/*
+				/**
 				 * for_incoming: iterates over the incoming nodes and edges
 				 * of a given node (all edges in case of an undirected
 				 * graph), based solely on source/target information and not
@@ -128,7 +138,7 @@ public class Macros
 						}
 				});
 
-				/*
+				/**
 				 * for_adjacent: iterates over all incident edges and
 				 * adjacent nodes of a given node, but only the outgoing
 				 * edges for a directed graph
@@ -159,7 +169,7 @@ public class Macros
 						}
 				});
 
-				/*
+				/**
 				 * for_nodes: iterates over all nodes in the graph.
 				 * 
 				 * Usage: for_nodes(<node>) <code_block>
@@ -179,7 +189,7 @@ public class Macros
 							return Matcher.quoteReplacement("for(Node " + args[0] + " : getNodes())");
 						}
 				});
-				/*
+				/**
 				 * for_edges: iterates over all edges in the graph.
 				 * 
 				 * Usage: for_edges(<edge>) <code_block>
@@ -199,18 +209,6 @@ public class Macros
 							return Matcher.quoteReplacement("for(Edge " + args[0] + " : getEdges())");
 						}
 				});
-				
-				/*
-				 * initializationComplete(); : marks the end of the initialization portion of the algorithm
-				 * Usage:
-				 * <initialization code>
-				 * initializationComplete(); 
-				 * <code block>
-				 * 
-				 * Parameters: none
-				 */
-                //				Macro.MACROS.add(new SimpleReplacementMacro("initializationComplete\\(\\);","gs.setInitializationComplete();"));
-				
 
 				Macro.MACROS.add(new ParameterizedMacro(MacroUtil.replaceWhitespace("function (\\S+)?  (\\S+)"), true){
 							
@@ -322,4 +320,4 @@ public class Macros
 			}
 	}
 
-//  [Last modified: 2015 12 04 at 22:26:55 GMT]
+//  [Last modified: 2016 02 18 at 22:50:35 GMT]

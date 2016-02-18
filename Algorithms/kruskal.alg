@@ -31,12 +31,14 @@ function UNION(Node x, Node y) {
 }
 
 algorithm {
+    hideNodeWeights();
+
     parent= new Node[nodeIds()];
     for_nodes(u) {
         INIT_SET(u);
     }
 
-    List<Edge> edgeList = getEdges();
+    EdgeList edgeList = getEdges();
     sort(edgeList);
 
     // MST is only relevant for undirected graphs
@@ -76,4 +78,4 @@ algorithm {
     display( "MST has total weight " + totalWeight );
 }
 
-/*  [Last modified: 2016 02 18 at 21:07:44 GMT] */
+/*  [Last modified: 2016 02 18 at 22:55:06 GMT] */

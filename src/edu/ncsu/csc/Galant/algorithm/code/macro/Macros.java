@@ -18,8 +18,8 @@ public class Macros
 		 * <p> SimpleReplacementMacro "bool" </p>
 		 * <p> FetchingMacro "numOfNodes" <br>
 		 * FetchingMacro "numOfEdges" <br>
-		 * FetchingMacro "nodesList" <br>
-		 * FetchingMacro "edgesList" </p>
+		 * FetchingMacro "NodeList" <br>
+		 * FetchingMacro "EdgeList" </p>
 		 * <p>  ParamterizedMacro "for_outgoing"<br>
 		 * ParamterizedMacro "for_incoming"<br>
 		 * ParamterizedMacro "for_adjacent"<br>
@@ -28,7 +28,14 @@ public class Macros
 		 */
 		public static void macros()
 			{	
-				
+
+                /** This is only for the purpose of syntax highlighting */
+                Macro.MACROS.add(new SimpleReplacementMacro("algorithm", "algorithm") {
+					public String getName() {
+						return "algorithm";
+					}
+                    });
+
 				Macro.MACROS.add(new SimpleReplacementMacro("\\bbool\\b", "boolean"){
 					@Override
 					public String getName() {
@@ -37,6 +44,20 @@ public class Macros
 				}); 
 
 
+				Macro.MACROS.add(new SimpleReplacementMacro("NodeList", "List<Node>"){
+					@Override
+					public String getName() {
+						return "NodeList";
+					}
+				});
+
+				Macro.MACROS.add(new SimpleReplacementMacro("EdgeList", "List<Edge>"){
+					@Override
+					public String getName() {
+						return "EdgeList";
+					}
+				});
+				
 				Macro.MACROS.add(new FetchingMacro("numOfNodes", "int"){
 					@Override
 					protected String includeInAlgorithm() {
@@ -51,20 +72,6 @@ public class Macros
 					}
 				});
 
-				Macro.MACROS.add(new FetchingMacro("NodeList", "List<Node>"){
-					@Override
-					protected String includeInAlgorithm() {
-						return "";
-					}
-				});
-
-				Macro.MACROS.add(new FetchingMacro("EdgeList", "List<Edge>"){
-					@Override
-					protected String includeInAlgorithm() {
-						return "";
-					}
-				});
-				
                 Macro.MACROS.add(new ParameterizedMacro("sort", 1, false) {
                         @Override
                             protected String modifyMatch(String code, MatchResult nameMatch, String[] args, String whitespace,
@@ -320,4 +327,4 @@ public class Macros
 			}
 	}
 
-//  [Last modified: 2016 02 18 at 22:50:35 GMT]
+//  [Last modified: 2016 02 19 at 01:37:32 GMT]

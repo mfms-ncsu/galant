@@ -335,8 +335,10 @@ public abstract class Algorithm implements Runnable {
     public void show(GraphElement ge) throws Terminate { ge.show(); }
     public void hideLabel(GraphElement ge) throws Terminate { ge.hideLabel(); }
     public void showLabel(GraphElement ge) throws Terminate { ge.showLabel(); }
+    public void setLabel(GraphElement ge, String label) throws Terminate { ge.setLabel(label); }
     public void hideWeight(GraphElement ge) throws Terminate { ge.hideWeight(); }
     public void showWeight(GraphElement ge) throws Terminate { ge.showWeight(); }
+    public void setWeight(GraphElement ge, Double weight) throws Terminate { ge.setWeight(weight); }
 
     /**
      * Displays a message during algorithm execution
@@ -512,4 +514,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2016 02 18 at 21:14:01 GMT]
+//  [Last modified: 2016 02 20 at 01:50:45 GMT]

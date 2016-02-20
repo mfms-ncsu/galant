@@ -153,6 +153,23 @@ Applies Hu's force directed algorithm~\cite{2006-Mathematica-Hu} to the graph.
 
 \end{enumerate}
 
+Keyboard shortcuts for graph editing operations are as follows:
+
+\begin{tabular}{l @{ -- } p{0.9\textwidth}}
+\textsf{ctrl-n} & create a new node in a random position \\
+\textsf{ctrl-e} & create a new edge; user is prompted for id's of the nodes to
+be connected \\
+\textsf{ctrl-i} & do a smart repositioning of nodes of the graph;
+useful when positions were chosen randomly \\
+\textsf{del-n} & (hold delete key when typing \texttt{n})
+delete a node; user is prompted for id \\
+\textsf{del-e} & delete an edge; user is prompted for id's of the endpoints \\
+\textsf{ctrl-$\ell$} & toggle display of node labels \\
+\textsf{ctrl-L} & toggle display of edge labels \\
+\textsf{ctrl-w} & toggle display of node weights \\
+\textsf{ctrl-W} & toggle display of edge weights \\
+\end{tabular}
+
 \subsection{Algorithm editing}
 \label{sec:algorithm_editing}
 
@@ -176,22 +193,37 @@ and~\ref{fig:algorithm_running}.
 The algorithm runs on the \emph{active graph}, the one currently displayed
 on the graph window.
 If there are errors in compilation these will show up on the console (terminal
-from which Galant was run) -- this will be fixed in later revisions.
-Runtime errors open a dialog box that allows the user to ask for more details
+from which Galant was run) and in a dialog box that allows the user to ask for more details
 and decide whether to exit Galant or not.
+The console also displays the what the code looks like after macro replacement
+in case obscure errors were the result of unexpected macro expansion.
+Line numbers in the macro-expanded code match those of the original so that
+all errors reported by the Java compiler will refer to the correct line number
+in the original Galant code.
+Runtime errors also open the above mentioned
+dialog box.
 
-Algorithms are executed to completion. After that the step forward and step
-back buttons (arrow buttons at the bottom of the graph window shown in Fig.~\ref{fig:dijkstra_running}) can be used to move forward or backwards through the execution.
-The left and right arrow keys on the keyboard have the same effect
-\emph{but the graph window must be in focus} (by default the panel
-containing the buttons at the
-bottom is in focus).
-Mixing button presses with keyboard shortcuts is not advisable --
-there are currently some bugs that may cause strange behavior if an animation
-involves position changes.
-
+When the user initiates execution of an animation by pushing the \textsf{Run}
+button
+the animation program 
+steps forward until
+displays the next animation event or, if a \texttt{beginStep()}
+call has marked the start of a sequence of events, until
+it reaches the next \texttt{endStep()} call.
+It then pauses execution and waits for the user to decide whether to
+step forward, step backward, or exit.
+A step forward resumes execution while a step backward returns the display to a previous
+state.
+The algorithm resumes execution only when the \emph{display state}
+indicated by the user's sequence of forward and backward steps
+($f-b$, where $f$ is the number of forward and $b$ the number of backward steps)
+exceeds the \emph{algorithm state}, the number of animation steps the algorithm
+has executed.
+The user controls forward and backward steps using either the buttons at the
+bottom of the graph window (shown in Fig.~\ref{fig:dijkstra_running})
+or the right/left arrow keys.
 During the execution of the animation, all graph editing functions are disabled.
-These are re-enabled when the user exits the animation by pressing the red \textbf{X} button.
+These are re-enabled when the user exits the animation by pressing the red \textbf{X} button or the \textsf{esc} (escape) key on the terminal.
 
 \subsection{Preferences}
 \label{sec:preferences}
@@ -211,8 +243,10 @@ Colors for keyword and Galant API highlighting (\texttt{Algorithm~Editor}).
 \item
 Color for GraphML highlighting (\texttt{Textual~Graph~Editor}).
 \item
-Edge width (\texttt{Visual~Graph~Editor}).
+Node radius (\texttt{Graph~Display});
+when the radius is below a threshold (9 pixels), node id's are not displayed;
+this is useful when running animations on large graphs.
+\item
+Edge width (\texttt{Graph~Display}).
 \end{itemize}
 
-
-% [Last modified: 2013 06 04 at 19:29:25 GMT]

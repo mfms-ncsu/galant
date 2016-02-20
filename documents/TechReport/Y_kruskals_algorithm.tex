@@ -2,55 +2,63 @@
 
 {\small
 \begin{verbatim}
-// parent in the disjoint set forest
-final Node [] parent = new Node[ graph.numberOfNodes() ];
-
-// standard disjoint set utilities; not doing union by rank or path
+// standard disjoint set untilities; not doing union by rank or path
 // compression; efficiency is not an issue
-function INIT_SET( Node x ) {
-    parent[x.getId()] = x;
-}
-function LINK( Node x, Node y ) {
-    parent[x.getId()] = y;
-}
-function Node FIND_SET( Node x ) {
-    if (x != parent[x.getId()])
-        parent[x.getId()] = FIND_SET(parent[x.getId()]);
-    return parent[x.getId()];
-}
-function UNION( Node x, Node y ) {
-	LINK( FIND_SET(x), FIND_SET(y) );
+
+Node [] parent;
+
+function INIT_SET(Node x) { parent[id(x)] = x; }
+
+function LINK(Node x, Node y) { parent[id(x)] = y; }
+
+function Node FIND_SET(Node x) {
+    if (x != parent[id(x)])
+        parent[id(x)] = FIND_SET(parent[id(x)]);
+    return parent[id(x)];
 }
 
-for_nodes(u) {
-    INIT_SET(u);
-}
+function UNION(Node x, Node y) { LINK(FIND_SET(x), FIND_SET(y)); }
 
-List<Edge> edgeList = getEdges();
-Collections.sort( edgeList );
-
-int totalWeight = 0;
-for ( Edge e: edgeList ) {
-    beginStep();
-    Node h = e.getSourceNode(); Node t = e.getDestNode();
-    h.mark(); t.mark(); // for display purposes only
-    endStep();
-
-    // if the vertices aren't part of the same set
-    if ( FIND_SET(h) != FIND_SET(t) ) {
-        // add the edge to the MST and highlight it
-        e.setSelected( true );
-        UNION(h, t);
-        totalWeight += e.getWeight();
-        graph.writeMessage( "Weight so far is " + totalWeight );
-    }
-    else {
-        graph.writeMessage( "Vertices are already in the same component." );
+algorithm {
+    parent= new Node[nodeIds()];
+    for_nodes(u) {
+        INIT_SET(u);
     }
 
-    beginStep(); h.unMark(); t.unMark(); endStep();
+    EdgeList edgeList = getEdges();
+    sort(edgeList);
+
+    // MST is only relevant for undirected graphs
+    setDirected(false);
+
+    int totalWeight = 0;
+    for ( Edge e: edgeList ) {
+        beginStep();
+        Node h = source(e);
+        Node t = target(e);
+        // show e's endpoints as it's being considered
+        // marking is used for display purposes only
+        mark(h); mark(t);
+        endStep();
+
+        beginStep();
+        // if the vertices aren't part of the same set
+        if ( FIND_SET(h) != FIND_SET(t) ) {
+            // add the edge to the MST and highlight it
+            highlight(e);
+            UNION(h, t);
+            totalWeight += e.getWeight();
+            display( "Weight so far is " + totalWeight );
+        }
+        else {
+            display( "Vertices are already in the same component." );
+        }
+        endStep();
+
+        beginStep(); unMark(h); unMark(t); endStep();
+    }
+    display( "MST has total weight " + totalWeight );
 }
-graph.writeMessage( "MST has total weight " + totalWeight );
 \end{verbatim}
 } % small
 

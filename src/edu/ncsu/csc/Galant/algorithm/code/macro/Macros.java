@@ -44,17 +44,17 @@ public class Macros
 				}); 
 
 
-				Macro.MACROS.add(new SimpleReplacementMacro("NodeList", "List<Node>"){
+				Macro.MACROS.add(new FetchingMacro("NodeList", "List<Node>"){
 					@Override
-					public String getName() {
-						return "NodeList";
+					protected String includeInAlgorithm() {
+						return "= getNodes();";
 					}
 				});
 
-				Macro.MACROS.add(new SimpleReplacementMacro("EdgeList", "List<Edge>"){
+				Macro.MACROS.add(new FetchingMacro("EdgeList", "List<Edge>"){
 					@Override
-					public String getName() {
-						return "EdgeList";
+					protected String includeInAlgorithm() {
+						return "= getEdges();";
 					}
 				});
 				
@@ -327,4 +327,4 @@ public class Macros
 			}
 	}
 
-//  [Last modified: 2016 02 19 at 01:37:32 GMT]
+//  [Last modified: 2016 02 19 at 17:07:23 GMT]

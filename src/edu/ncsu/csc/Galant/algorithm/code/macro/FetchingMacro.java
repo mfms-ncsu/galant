@@ -61,7 +61,7 @@ public abstract class FetchingMacro extends Macro
 						matcher.find();
 						return matcher.group(0).replace(";", "");
 					} catch(Exception e) {
-						throw new MalformedMacroException("Wrong macro sytax. Seperate variable with white space");
+						throw new MalformedMacroException("Wrong macro sytax. Separate variable with white space");
 					}
 			}
 			return null;
@@ -74,4 +74,4 @@ public abstract class FetchingMacro extends Macro
 		}
 	}
 
-//  [Last modified: 2015 07 29 at 12:36:30 GMT]
+//  [Last modified: 2016 02 19 at 16:10:36 GMT]

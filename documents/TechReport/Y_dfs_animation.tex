@@ -4,57 +4,54 @@
 \begin{minipage}{0.5\textwidth}
 \small
 \begin{verbatim}
+int time;
+int [] discovery;
+int [] finish;
+
 function visit( Node v ) {
-  globals.time++;
-  discovery[ v.getId() ] = globals.time;
-  beginStep();
-  v.setLabel( "" + discovery[ v.getId() ] );
-  v.selected( true );
-  endStep();
-  for_outgoing( v, e, w ) {
+    time = time + 1;
+    discovery[id(v)] = time;
     beginStep();
-    if ( ! w.isSelected() ) {
-      e.setSelected(true);
-       visit( w );
-    }
-    else if ( finish[ w.getId() ] == 0 ) {
-      e.setLabel( "B" );  /* ancestor */
-    }
-    else if ( finish[ w.getId() ]
-              > discovery[ v.getId() ] ) {
-      e.setLabel( "F" );  /* descendant */
-    }
-    else {
-      e.setLabel( "C" );
-    }
+    v.setLabel( "" + discovery[id(v)] );
+    v.setSelected( true );
     endStep();
-  }
-  beginStep();
-  globals.time++;
-  finish[ v.getId() ] = globals.time;
-  v.mark();
-  v.setLabel( "" + discovery[ v.getId() ]
-              + "/" + finish[ v.getId() ] );
-  endStep();
+    for_outgoing( v, e, w ) {
+        beginStep();
+        if ( ! w.isSelected() ) {
+            e.setSelected( true );
+            visit(w);
+        }
+        else if ( finish[id(w)] == 0 ) {
+            e.setLabel( "B" );
+        }
+        else if ( finish[id(w)] 
+                  > discovery[id(v)] ) {
+            e.setLabel( "F" );
+        }
+        else {
+            e.setLabel( "C" );
+        }
+        endStep();
+    }
+    time = time + 1;
+    finish[id(v)] = time;
+    beginStep();
+    v.mark();
+    v.setLabel( "" + discovery[id(v)]
+                + "/" + finish[id(v)] );
+    endStep();
 }
 
-setDirected( true );
-
-beginStep();
-for_nodes( u ) {
-    u.setLabel("");
-}
-for_edges( e ) {
-    e.setLabel("");
-}
-endStep();
-
-for_nodes( u ) {
-    if ( ! u.isSelected() ) {
-        visit( u, null );
+algorithm {
+    time = 0;
+    discovery = new int[nodeIds()];
+    finish = new int[nodeIds()];
+    for_nodes( u ) {
+        if ( ! u.isSelected() ) {
+            visit( u );
+        }
     }
 }
-
 \end{verbatim}
 \end{minipage}
 \begin{minipage}{0.49\textwidth}

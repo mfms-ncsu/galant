@@ -16,9 +16,13 @@ a graph window that displays the current graph (independent of whether
 the text window shows an algorithm or the GraphML representation of the graph)
 \end{enumerate}
 
-It should be noted that it is usually more convenient to edit algorithms
-offline using a program editor and to use the visual editor only to edit graphs
--- one exception is when a precise lining up of node positions is desired.
+It is usually more convenient to edit algorithms
+offline using a program editor.
+The primary use of the text editor is to correct minor errors and
+to see the syntax highlighting related to macros and Galant API functions.
+The graph window is the primary mechanism for editing graphs.
+One exception is when precise adjustments node positions are desired.
+Weights and labels are sometimes also easier to edit in the text window.
 
 \begin{figure}[p!]
 \includegraphics[scale=0.5]{X_graph_window_annotated}
@@ -79,9 +83,13 @@ representation (and will overwrite what was originally there);
 a change in the GraphML representation will take effect in the visual representation
 when the file is saved.
 
-An improperly formatted GraphML file loaded form an external source will
-show as blank in the text window -- unfortunately there is no error
-reporting in the current Galant implementation.
+An improperly formatted GraphML file loaded from an external source will
+result in an error.
+Galant reports errors of all kinds (during reading of files, compilation of
+animation programs or execution of animations)
+by displaying a pop up window that allows the user to choose whether to
+continue (and usually return to a stable state) or quit the program.
+
 The graph window, as illustrated in Fig.~\ref{fig:graph_window_annotated}
 has a toolbar with four sections:
 \begin{enumerate}
@@ -102,7 +110,7 @@ A node is created at the location of a mouse click if there is not already a nod
 If another node is present it is simply selected.
 \item \emph{Create edge.}
 Two clicks are required to create an edge. The first falls on the desired
-source node and the second on the destination node.
+source node and the second on the target node.
 The line representing the edge is shown after the first click.
 If the first click does not land on a node, no edge is created.
 If the second click does not land on a node, creation of the edge is canceled.
@@ -123,7 +131,7 @@ Undirected edges are displayed as simple lines.
 Pressing the directed (line with arrow) button causes the macros
 \texttt{for\_incoming}, \texttt{for\_outgoing}, and \texttt{for\_adjacent}
 to have three distinct meanings (they are all the same for undirected graphs):
-Incoming edges have the given node as destination, outgoing as source, and adjacent applies to all incident edges.
+Incoming edges have the given node as target, outgoing as source, and adjacent applies to all incident edges.
 
 \item
 \textbf{Display toggles --}
@@ -131,11 +139,17 @@ The four display toggles turn on/off the display of node/edge labels and node/ed
 A shaded toggle indicates that the corresponding display is \emph{on}.
 When Galant is executed for the first time, all of these are \emph{on},
 but their setting persists from session to session.
+Labels and weights are also all displayed at the beginning of execution of
+an animation.
+The animation program can choose to hide labels and/or weights with simple
+directives.
+Hiding is usually unnecessary -- the graphs that are subjects of the animations
+typically have only the desired attributes set.
 
 \item
 \textbf{Force directed drawing button -- }
 Applies Hu's force directed algorithm~\cite{2006-Mathematica-Hu} to the graph.
-\emph{Caution: this operation cannot be undone.}
+\emph{Caution: this operation cannot (currently) be undone.}
 
 \end{enumerate}
 

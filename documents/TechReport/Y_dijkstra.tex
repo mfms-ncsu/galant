@@ -54,3 +54,12 @@ These snapshots come from the executions of the \emph{same algorithm} on the
 The only difference is that the explorer toggled from the directed to
 the undirected
 interpretation of the graph.
+
+The array \verb+chosenEdge+ is required in order to control the highlighting.
+Galant provides for seamless indexing of arrays with node id's: the
+function \verb+nodeIds+ simply returns the largest node id plus one
+(so that an array can be allocated correctly) and \verb+id(v)+ returns the
+id of v, to be used as an index.
+Node ids, therefore, need not be contiguous starting at 0, as,
+in general, they won't be because of deletions or when graphs
+come from external sources.

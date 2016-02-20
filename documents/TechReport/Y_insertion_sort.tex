@@ -4,7 +4,7 @@ Fig.~\ref{fig:insertion_sort_animation}
 illustrates an animation of insertion sort
 that uses node movement and suggests that, with some creativity,
 other sorting algorithms might be animated as well
--- this has already been done for bubble sort.
+-- this has already been done for bubble sort and merge sort.
 At the beginning (not shown) the code:
 (i)~puts nodes, evenly spaced, on a horizontal line;
 (ii)~creates arrays \verb$nodes$, \verb$xCoord$ and \verb$A$, holding the
@@ -13,4 +13,16 @@ element to be inserted at each outer-loop iteration.
 The rest of the code is a classic insertion sort implementation: nodes behave
 as if they were array positions; those in the already sorted part of the array
 are marked; a node that is being compared with \verb$x$ is highlighted (selected).
+
+The insertion sort animation begins with the declaration
+\verb+movesNodes()+.
+This prevents the user from moving nodes during algorithm execution.
+Ordinarily, users \emph{are} allowed to change node positions during execution
+to, for example, make labels and weights more visible.
+The new positions persist after algorithm execution.
+However, when an algorithm moves nodes, the nodes will revert to their original
+positions when the algorithm is done.
+Snapshots of positions (and other aspects of graph state)
+during execution can be created using the
+\textsf{Export} option on the file menu of the graph window.
 

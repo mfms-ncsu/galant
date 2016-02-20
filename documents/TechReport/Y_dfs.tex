@@ -12,36 +12,9 @@ and black nodes, visit is completed, are both highlighted and
 marked.
 Labels on nodes indicate the discovery and finish times, separated by a slash.
 
-The \verb+setDirected(true)+ statement
-ensures that the graph is displayed and treated as a directed graph.
-For depth-first search, unlike Dijkstra's algorithm, we need to write a different algorithm/animation to deal with the special case that arises because tree
-edges are also back edges when regarded as bidirectional.
-
-As with Kruskal's algorithm, the handling of global variables is awkward.
-But here, the global variable \verb+time+ cannot be declared \verb+final+
-since that would prevent any changes to its value. The workaround, not shown
-in the figure due to space constraints, is:
-
-\begin{verbatim}
-class GlobalVariables {
-    public int time;
-}
-final GlobalVariables globals = new GlobalVariables();
-\end{verbatim}
-
-This is yet another case where some macro preprocessing could make global
-variables mare transparent. A useful construct might be along the lines of
-\begin{verbatim}
-globals {
-    int time;
-    // and, using the syntax suggested in the discussion of Kruskal's algorithm
-    int discovery[ Node ];
-    int finish[ Node ];
-}
-\end{verbatim}
-And then the preprocessor could do the necessary conversion, making, among
-other things, the use of simply \verb+time+ instead of \verb+globals.time+
-possible.
-
-
-
+This particular algorithm, unlike our implementation of Dijkstra's,
+is intended for a directed graph.
+We would
+need to write a different algorithm/animation
+to deal with tree
+edges that get relabeled as back edges when treated as bidirectional.

@@ -20,6 +20,29 @@ import java.util.regex.Pattern;
  * {@link Matcher#appendReplacement(StringBuffer, String)} and {@link Matcher#appendTail(StringBuffer)} are used to construct a
  * modified version of the code with a <code>StringBuffer</code>.
  * </p>
+ * <p>
+ * There are three subclasses:
+ * <ol>
+ * <li>
+ * SimpleReplacementMacro - used for simple text replacement.
+ * </li>
+ * <li>
+ * FetchingMacro - used for definitions of types; in addition to text
+ * replacement (a) there is a check to make sure the item that follows is a
+ * variable; and (b) an initialization must be specified by overriding the
+ * includeInAlgorithm() method.
+ *
+ * @todo Item (b) does not appear to work as expected. Probably was not tested.
+ *
+ * </li>
+ * <li>
+ * ParameterizedMacro - used for anything that looks like a function with
+ * parameters; any number of parameters, including an unspecified number, can
+ * be specified; the "name(param_1, ..., param_k)" construct may or may not
+ * be followed by a code block enclosed in {}'s; a special case is "function name(args)"
+ * </li>
+ * </ol>
+ * </p>
  */
 public abstract class Macro
 	{
@@ -113,7 +136,11 @@ public abstract class Macro
 						String newCode = code;
 						String newExpression = modify(code, matcher) + ";";
 							
-						// Find the variable name	
+						// Find the variable name
+                        /**
+                         * @todo not clear why getVariableName() is not
+                         * appropriate here; this whole process seems convoluted.
+                         */
 						matcher = Pattern.compile("(\\s)(.*)$").matcher(modify(code, matcher));
 						matcher.find();
 						String variableName = matcher.group(0); 
@@ -145,4 +172,4 @@ public abstract class Macro
 			}
 	}
 
-//  [Last modified: 2015 06 30 at 15:47:54 GMT]
+//  [Last modified: 2016 02 19 at 17:11:10 GMT]

@@ -1,7 +1,8 @@
 # .gitignore for galant
 *.class
-# emacs backups
+# emacs backups and TAGS
 *.~*~
+TAGS
 # stuff in the build directory is the result of compilation
 build
 # stuff in the doc directory: created when building javadoc

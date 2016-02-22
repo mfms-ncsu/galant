@@ -688,29 +688,30 @@ public class Graph {
         return e;
 	}
 
-	/**
-	 * Highlights the node with the specified id and starts an algorithm step if
-	 * appropriate
-	 */
-	public void select(int id) throws Terminate {
-		dispatch.startStepIfRunning();
-		dispatch.lockIfRunning();
-		for (Node n : nodes) {
-			if (n.getId() == id) {
-				n.setSelected(true);
-			} else if (n.isSelected()) {
-				n.setSelected(false);
-			}
-		}
-		dispatch.unlockIfRunning();
-	}
+    // not really useful in algorithms (can always select and deselect).
+// 	/**
+// 	 * Highlights the node with the specified id and starts an algorithm step if
+// 	 * appropriate
+// 	 */
+// 	public void select(int id) throws Terminate {
+// 		dispatch.startStepIfRunning();
+// 		dispatch.lockIfRunning();
+// 		for (Node n : nodes) {
+// 			if (n.getId() == id) {
+// 				n.setSelected(true);
+// 			} else if (n.isSelected()) {
+// 				n.setSelected(false);
+// 			}
+// 		}
+// 		dispatch.unlockIfRunning();
+// 	}
 	
-	/**
-	 * Highlights the given node and starts an algorithm step if appropriate
-	 */
-	public void select(Node toHighlight) throws Terminate {
-        this.select(toHighlight.getId());
-	}
+// 	/**
+// 	 * Highlights the given node and starts an algorithm step if appropriate
+// 	 */
+// 	public void select(Node toHighlight) throws Terminate {
+//         this.select(toHighlight.getId());
+// 	}
 	
 	/**
 	 * Adds a new <code>Node</code> to the <code>Graph</code>
@@ -995,4 +996,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2015 12 30 at 20:47:57 GMT]
+//  [Last modified: 2016 02 21 at 22:52:45 GMT]

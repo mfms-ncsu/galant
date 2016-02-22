@@ -15,24 +15,23 @@ algorithm {
         pq.add(node);
     }
     Node v = getStartNode();
-    v.setSelected(true);
-    v.setWeight(0);
+    setWeight(v, 0);
     endStep();
 
     while ( ! pq.isEmpty() ) {
         v = pq.removeMin();
-        v.setVisited(true);
-        v.setSelected(false);
+        mark(v);        // nodes are marked when visited
+        unHighlight(v); // and highlighted when on the frontier
         for_outgoing ( v, e, w ) {
-            if ( ! w.isVisited() )  {
-                if ( ! w.isSelected() ) w.setSelected(true);
-                double distance = v.getWeight() + e.getWeight();
-                if ( distance < w.getWeight() ) {
+            if ( ! marked(w) )  {
+                if ( ! highlighted(w) ) highlight(w);
+                double distance = weight(v) + weight(e);
+                if ( distance < weight(w) ) {
                     beginStep();
-                    e.setSelected(true);
+                    highlight(e);
                     Edge previous_chosen = chosenEdge[id(w)];
                     if (previous_chosen != null )
-                        previous_chosen.setSelected(false);
+                        unHighlight(previous_chosen);
                     pq.decreaseKey(w, distance);
                     chosenEdge[id(w)] = e;
                     endStep();
@@ -43,4 +42,4 @@ algorithm {
     } // stop when priority queue is empty
 } // end, algorithm
 
-//  [Last modified: 2016 02 09 at 22:03:59 GMT]
+//  [Last modified: 2016 02 21 at 21:53:00 GMT]

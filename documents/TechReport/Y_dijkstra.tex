@@ -1,18 +1,11 @@
 One of the simplest algorithms we have implemented is Dijkstra's algorithm
 for the single source shortest paths problem.
 Fig.~\ref{fig:dijkstra}
-shows most of the implementation of the animation of Dijkstra's algorithm.
-At every step the nodes already in the shortest path tree are \emph{visited}
+the implementation of the animation of Dijkstra's algorithm.
+At every step the nodes already in the shortest path tree are \emph{marked}
 (gray shading) and the nodes that have been encountered (but are not in the tree)
-are \emph{selected }(thick red boundary).\footnote{
-  Because these node and edge states both guide the logic of the algorithm
-  and how the nodes/edges are displayed, the nomenclature has become awkward.
-  A better way to handle the situation is to add initial declarations
-  that specify color, thickness, and, in case of nodes, fill color, for each logical state.
-  A logical state would have a name, e.g., \emph{InTree},
-  and be automatically provided with a setter (Boolean argument),
-  e.g., \emph{setInTree}, and a logical test, e.g., \emph{isInTree}.
-}
+are \emph{highlighted}(thick red boundary); these are often referred to as
+\emph{frontier} nodes.
 Selected \emph{edges} (thick red) represent the current shortest paths to all
 encountered nodes;
 they are the edges of a shortest path tree when the algorithm is done.

@@ -14,32 +14,32 @@ function visit( Node v ) {
     time = time + 1;
     discovery[id(v)] = time;
     beginStep();
-    v.setLabel( "" + discovery[id(v)] );
-    v.setSelected( true );
+    setLabel(v, "" + discovery[id(v)] );
+    select(v);
     endStep();
     for_outgoing( v, e, w ) {
         beginStep();
-        if ( ! w.isSelected() ) {
-            e.setSelected( true ); // make edge thicker if easy to do
+        if ( ! selected(w) ) {
+            select(e);
             visit(w);
         }
         else if ( finish[id(w)] == 0 ) { /* ancestor */
-            e.setLabel( "B" );
+            setLabel(e, "B");
         }
         else if ( finish[id(w)] 
                   > discovery[id(v)] ) { /* descendant */
-            e.setLabel( "F" );
+            setLabel(e, "F");
         }
         else {
-            e.setLabel( "C" );
+            setLabel(e, "C");
         }
         endStep();
     }
     time = time + 1;
     finish[id(v)] = time;
     beginStep();
-    v.mark();
-    v.setLabel( "" + discovery[id(v)] + "/" + finish[id(v)] );
+    mark(v);
+    setLabel(v, "" + discovery[id(v)] + "/" + finish[id(v)]);
     endStep();
 }
 
@@ -62,10 +62,10 @@ algorithm {
     endStep();
 
     for_nodes( u ) {
-        if ( ! u.isSelected() ) {
+        if ( ! selected(u) ) {
             visit( u );
         }
     }
 }
 
-//  [Last modified: 2015 12 07 at 01:27:10 GMT]
+//  [Last modified: 2016 02 21 at 22:56:45 GMT]

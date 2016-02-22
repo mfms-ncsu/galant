@@ -307,11 +307,18 @@ public abstract class Algorithm implements Runnable {
      * Methods to make syntax friendlier for procedural programmers
      */
     public void highlight(GraphElement ge) throws Terminate { ge.highlight(); }
-    public void unHighlight(GraphElement ge) throws Terminate {
-        ge.unHighlight();
-    }
+    public void unHighlight(GraphElement ge) throws Terminate { ge.unHighlight(); }
+    public Boolean highlighted(GraphElement ge) { return ge.isHighlighted(); }
+    public Boolean isHighlighted(GraphElement ge) { return ge.isHighlighted(); }
+    /** selected is a synonym for highlighted */
+    public void select(GraphElement ge) throws Terminate { ge.setSelected(true); }
+    public void deselect(GraphElement ge) throws Terminate { ge.setSelected(false); }
+    public Boolean selected(GraphElement ge) { return ge.isSelected(); }
+    public Boolean isSelected(GraphElement ge) { return ge.isSelected(); }
+
     public void mark(Node n) throws Terminate { n.mark(); }
     public void unMark(Node n) throws Terminate { n.unMark(); }
+    public Boolean marked(Node n) { return n.isMarked(); }
     public Boolean isMarked(Node n) { return n.isMarked(); }
 
     public Double weight(GraphElement ge) { return ge.getWeight(); }
@@ -338,7 +345,7 @@ public abstract class Algorithm implements Runnable {
     public void setLabel(GraphElement ge, String label) throws Terminate { ge.setLabel(label); }
     public void hideWeight(GraphElement ge) throws Terminate { ge.hideWeight(); }
     public void showWeight(GraphElement ge) throws Terminate { ge.showWeight(); }
-    public void setWeight(GraphElement ge, Double weight) throws Terminate { ge.setWeight(weight); }
+    public void setWeight(GraphElement ge, double weight) throws Terminate { ge.setWeight(weight); }
 
     /**
      * Displays a message during algorithm execution
@@ -440,16 +447,6 @@ public abstract class Algorithm implements Runnable {
         return graph.getEdgeById(id);
     }
 
-    /** @see edu.ncsu.csc.Galant.graph.component.Graph#select(int) */
-    public void select(int id) throws Terminate {
-        graph.select(id);
-    }
-
-    /** @see edu.ncsu.csc.Galant.graph.component.Graph#select(edu.ncsu.csc.Galant.graph.component.Node) */
-    public void select(Node n) throws Terminate {
-        graph.select(n);
-    }
-
     /**
      * adds an edge based on the integer id's of the two endpoints
      * @see edu.ncsu.csc.Galant.graph.component.Graph#addEdge(int, int)
@@ -514,4 +511,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2016 02 20 at 01:50:45 GMT]
+//  [Last modified: 2016 02 21 at 22:53:48 GMT]

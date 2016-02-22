@@ -1,0 +1,54 @@
+\begin{table}
+  \centering
+  \begin{tabular}{| l | p{0.6\textwidth} |}
+    \hline
+    \textsf{display(String s)}
+    &
+    writes the string \textsf{s} at the top of the window
+    (not really a graph method, but currently associated with the graph)
+    \\ \hline
+    \textsf{String getMessage()}
+    &
+    returns the current message
+    \\ \hline
+    \textsf{NodeList getNodes()}
+    &
+    returns a list of the nodes of the graph; the return type is built into Galant
+    and equivalent to the Java \textsf{List<Node>}
+    \\ \hline
+    \textsf{EdgeList getEdges()}
+    &
+    returns a list of edges of the graph; return type is analogous to \textsf{NodeList}
+    \\ \hline
+    \textsf{for\_nodes(node)}
+    &
+    equivalent to \textsf{for ( node : getNodes() )} and must be followed by a block
+    of code enclosed in \textsf{\{ \}}'s
+    \\ \hline
+    \textsf{for\_edges(edge)}
+    &
+    analogous to \textsf{for\_nodes}
+    \\ \hline
+    \textsf{getStartNode()}
+    &
+    returns the first node in the list of nodes, typically the one with smallest id;
+    used by algorithms that require a start node
+    \\ \hline
+    \textsf{Node addNode()}
+    &
+    returns a new node and adds it to the list of nodes;
+    the id is one greater than the largest id so far;
+    attributes such as weight, label and position are absent and must be set explicitly
+    by appropriate method calls
+    \\ \hline
+    \textsf{addEdge(Node source, Node target)}
+    &
+    adds an edge from the source to
+    the target (source and target are interchangeable when graph is undirected).
+    There is also a variation with integer arguments that represent the id's of the nodes. As in the case of nodes, the edge is added to the list of edges and
+    its weight and label are absent
+    \\ \hline
+  \end{tabular}
+  \caption{Functions/methods and macros that apply to the whole graph.}
+  \label{tab:graph_functions}
+\end{table}

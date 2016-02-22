@@ -7,7 +7,7 @@ algorithm {
     Edge [] chosenEdge = new Edge[nodeIds()]; 
     beginStep();
     for_nodes(node) {
-        node.setWeight(INFINITY);
+        setWeight(node, INFINITY);
         pq.add(node);
     }
     Node v = getStartNode();

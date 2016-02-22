@@ -1,10 +1,9 @@
-
 Animation programmers can write algorithms in notation that resembles
 textbook pseudocode.
-Java-like syntax can be used, e.g., node methods are called using
-\texttt{v.m()}, where \texttt{v} is an object of type \texttt{Node} and \texttt{m} is a method.
-But many functions can also be invoked in procedural fashion,
-i.e., \texttt{m(v)}.
+The animation examples have used procedural syntax for function calls, as in, for example,
+\texttt{setWeight(v,0)}.
+Java-like syntax can also be used: \texttt{v.setWeight(0)}.
+
 Central to the Galant API is the \texttt{graph} object: currently all other
 parts of the API refer to it.
 The components of a graph are declared to be of type \texttt{Node} or
@@ -22,8 +21,8 @@ Dijkstra's algorithm looks like
 \begin{verbatim}
 beginStep();
 for_nodes(node) {
-    node.setWeight( INFINITY );
-    nodePQ.add( node);
+    setWeight(node, INFINITY);
+    nodePQ.add(node);
 }
 endStep();
 \end{verbatim}
@@ -31,67 +30,25 @@ Without the override this initialization would require the observer to click
 through multiple steps (one for each node) before getting to the interesting
 part of the animation.
 
-Functions and macros of the API are listed below.
+\input{Y_graph_functions}
 
-\subsection{Graph methods}
+Functions and macros for the graph as a whole are shown in Table~\ref{tab:graph_functions}.
+The nodes and edges, of type \textsf{Node} and \textsf{Edge}, respectively,
+are subtypes of \textsf{GraphElement}.
+Arbitrary attributes can be assigned to each graph element. In the GraphML file
+these show up as, for example,\\
+\hspace*{3em}
+\textsf{
+$<$node \emph{attribute\_1}="\emph{value\_1}" ... \emph{attribute\_k}="\emph{value\_k}" /$>$
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Each node and edge has a unique integer id.
 The id's are assigned consecutively as nodes/edges are created
 and may not be altered.
 The id of a node or edge can be accessed via the \texttt{getId()} method.
-
-\begin{itemize}
-
-\item
-  \texttt{writeMessage(String s)}
-  writes the string \texttt{s} at the top of the window (not really a graph method, but currently associated with the graph); if there is already a message present this method simply adds to it.
-\item
-  \texttt{getMessage()}
-  returns the current message
-\item
-  \texttt{setDirected(boolean b)}
-  causes the graph to be displayed and treated as directed (\texttt{b =
-    true}) or undirected (\texttt{b=false}); this function can only be
-  applied once at the beginning of the animation. It is useful, e.g., for
-  minimum spanning tree algorithms (\texttt{b = false}) or for depth-first
-  search to find strongly connected components (\texttt{b = true}).
-\item
-  \texttt{getNodes()}
-  returns a list of nodes of the graph; the return type is the Java
-templated \texttt{List<Node>}.\footnote{This will be replaced by a Galant-native
-equivalent in a future version.}
-\item
-  \texttt{getEdges()}
-  returns a list of edges of the graph; return type is \texttt{List<Edge>}
-\item
-  \verb+for_nodes( node )+ and \verb+for_edges( edge )+ circumvent the need to deal with Java templated list objects.
-  Their syntax is:
-
-    \verb+for_nodes( node ) {+ \emph{block of code that uses} \texttt{node} \verb+}+ (Note: \texttt{node} need not be declared.)
-
-    and the corresponding for \verb+for_edges+.
-\item
-  \texttt{getNodeById(id)}
-  returns the node with the given integer id or null if none exists; the only
-  use in current animations is \texttt{getNodeById(0)} to specify node 0 (the first node
-  created) as the start node for an algorithm that require one.
-\item
-  \texttt{getEdgeById(id)}
-  returns the edge with the given integer id or null if none exists; not currently used.
-\item
-  \texttt{select(Node n)}
-  makes node \texttt{n} the sole highlighted/selected node
-\item
-  \texttt{Node addNode()}
-  returns a new node and adds it to the list of nodes; the id is one greater than the largest id so far;
-attributes take on default values; weight, label, and position are absent and must be set explicitly
-by appropriate method calls.
-\item
-  \texttt{addEdge(Node source, Node target)} adds an edge from the source to
-  the target (source and target are immaterial when graph is undirected).
-  There is also a variation with integer arguments that represent the id's of the nodes. As in the case of nodes, the edge is added to the list of edges and
-its weight and label are absent.
-\end{itemize}
 
 \subsection{Node and edge methods}
 

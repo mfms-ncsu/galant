@@ -93,7 +93,8 @@ public abstract class Algorithm implements Runnable {
     /**
      * @todo these do not work; error is
      * error: name clash: sort(List<Node>) and sort(List<Edge>) have the same
-     * erasure
+     * erasure; for now, I'm settling for sorting edges only; sorting nodes
+     * makes sense for crossing minimization but there it's in a specialized context.
      *
      * I also tried GraphElement, but that results in
      * incompatible types:
@@ -511,4 +512,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2016 02 21 at 22:53:48 GMT]
+//  [Last modified: 2016 02 22 at 21:08:09 GMT]

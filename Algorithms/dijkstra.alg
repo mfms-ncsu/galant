@@ -11,7 +11,7 @@ algorithm {
     Edge [] chosenEdge = new Edge[nodeIds()]; 
     beginStep();
     for_nodes(node) {
-        node.setWeight(INFINITY);
+        setWeight(node, INFINITY);
         pq.add(node);
     }
     Node v = getStartNode();
@@ -42,4 +42,4 @@ algorithm {
     } // stop when priority queue is empty
 } // end, algorithm
 
-//  [Last modified: 2016 02 21 at 21:53:00 GMT]
+//  [Last modified: 2016 02 22 at 00:59:33 GMT]

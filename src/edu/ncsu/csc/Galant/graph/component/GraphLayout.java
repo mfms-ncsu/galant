@@ -1,7 +1,7 @@
 /**
- * Provides algorithms that change the fixed positions of nodes based on
- * various layout algorithms. Currently the only one provided is a force
- * directed one; see implementation below.
+ * Specifies a set of positions for all nodes of a graph. Currently, this is
+ * used only for creating a force directed layout (or saving positions of
+ * nodes before such a layout), but there are many other potential applications.
  */
 
 package edu.ncsu.csc.Galant.graph.component;
@@ -12,24 +12,48 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
+import java.util.LinkedList;
 import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.GraphDispatch;
 import edu.ncsu.csc.Galant.logging.LogHelper;
 
 public class GraphLayout {
 
-    private Graph graph;
-    private List<Node> nodes;
-    private List<Edge> edges;
+    /** used to scale the repulsive force of edges */
+    private static final double REPULSIVE_SCALE_FACTOR = -1.0;
+    /** spring length for edges (attractive force) and nodes (repulsive) */
+    private static final double SPRING_LENGTH = 120.0;
+    /** force directed method stops when node movement is less than this */
+    private static final double FORCE_DIRECTED_TOLERANCE = 0.1;
+
+    // see updateStepLength() for how the next two are used
+    /** the "temperature" reduction factor: used to control how fast the nodes move */
+    private static final double TEMPERATURE_REDUCTION_FACTOR = 0.9;
+    /** number of progress increments before step length is decreased
+     * (temperature reduced) */
+    private static final int MAX_INCREASING_STEPS = 5;
     private int progress;       // need this to be an instance variable, for
                                 // now because it gets modified as a side
                                 // effect of a method
 
+    /** maximum number of repositioning iterations in force-directed layout */
+    private static final int MAX_REPOSITION_ITERATIONS = 100000;
+
+    private Graph graph;
+    private List<Node> nodes;
+    private List<Edge> edges;
 		
     /**
+     * Maps nodes to their positions.
+     */
+    private Map<Node,Point> nodePositions;
+
+    /**
      * Maps nodes to indexes in an array that keeps track of their
-     * (temporary) positions during a layout algorithm; necessary because
-     * node id's may not be contiguous.
+     * (temporary) positions during the force-directed layout algorithm;
+     * necessary because node id's may not be contiguous and a map may not be
+     * efficient enough with hundreds of thousands of updates.
      */
     private Map<Node,Integer> nodeToIndex;
 
@@ -39,10 +63,9 @@ public class GraphLayout {
     private Node[] indexToNode;
         
     /**
-     * maximum number of repositioning iterations in force-directed layout =
-     * 100,000
+     * keeps track of connected components via an array indexed by nodeToIndex
      */
-    final private static int MAX_REPOSITION_ITERATIONS = 100000;
+    private int[] component;
 
     /**
      * how often to print progress (never)
@@ -73,12 +96,37 @@ public class GraphLayout {
      */
     final static int MIN_WINDOW_DIMENSION = 100;
 
+    /**
+     * Initializes the layout based on current positions of nodes in the graph
+     */
     GraphLayout( Graph graph ) {
         this.graph = graph;
         this.nodes = graph.getNodes();
         this.edges = graph.getEdges();
         nodeToIndex = new HashMap<Node,Integer>();
         indexToNode = new Node[nodes.size()];
+        nodePositions = new HashMap<Node,Point>();
+        int index = 0;
+		for ( Node node: nodes ) {
+            nodeToIndex.put( node, index );
+            indexToNode[index] = node;
+			Point p = node.getFixedPosition();
+            nodePositions.put(node, p);
+            index++;
+		}
+    }
+
+    /**
+     * Sets positions of nodes in the graph to correspond to those given in
+     * this layout.
+     */
+    void usePositions() {
+        for ( Node node : nodes ) {
+            Point position = nodePositions.get(node);
+            if ( position != null ) {
+                node.setFixedPosition(position);
+            }
+        }
     }
 
     /**
@@ -161,7 +209,35 @@ public class GraphLayout {
 		
         scale( (double) xScaleBase / x_max, (double) yScaleBase / y_max );
 	}
-	
+
+    /**
+     * POST: each node is labeled with an integer indentifying its connected
+     * component; the information is stored in the components array
+     */
+    private void computeConnectedComponents() {
+        component = new int[nodes.size()];
+        int componentNumber = 0;
+        for ( Node node : nodes ) {
+            if ( component[nodeToIndex.get(node)] == 0 ) {
+                // not yet encountered; start a new component and do BFS on it
+                componentNumber++;
+                Queue<Node> nodeQueue = new LinkedList<Node>();
+                component[nodeToIndex.get(node)] = componentNumber;
+                nodeQueue.offer(node);
+                while ( nodeQueue.size() > 0 ) {
+                    Node currentNode = nodeQueue.poll();
+                    for ( Edge incident: currentNode.getEdges() ) {
+                        Node neighbor = currentNode.travel(incident);
+                        if ( component[nodeToIndex.get(neighbor)] == 0 ) {
+                            component[nodeToIndex.get(neighbor)] = componentNumber;
+                            nodeQueue.offer(neighbor);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 	/**
 	 * Repositions the graph so that the nodes are arranged in an
 	 * aesthetically pleasing way.
@@ -183,18 +259,15 @@ public class GraphLayout {
 		Point2D.Double[] previousPoints = new Point2D.Double[points.length];
 
         /**
-         * used in step update for force-directed layout
+         * used in step update for force-directed layout; global -- side
+         * effect in updateStepLength() 
          */
         progress = 0;
 	
 		// initialize the starting points
         int index = 0;
 		for ( Node node: nodes ) {
-            nodeToIndex.put( node, index );
-            indexToNode[index] = node;
-//             System.out.printf( "initializing: index = %d, node = %s\n", index, node );
-//             System.out.printf( "checking:     index = %d, node = %s\n", nodeToIndex.get(node), indexToNode[index] );
-			Point p = node.getFixedPosition();
+			Point p = nodePositions.get(node);
 			points[index] = new Point2D.Double(p.x, p.y);
             index++;
 		}
@@ -203,114 +276,96 @@ public class GraphLayout {
 			return;
 		}
 		
-		boolean cvg = false;
+		boolean converged = false;
 		double step = 1.0;
-		double energy = Double.MAX_VALUE; // very large number pretending to be infinity
-		double c = 1.0; // scalar. won't make much difference since we rescale at the end anyway
-		double k = 120.0; // natural spring (Edge) length
-		double tol = .1; // the tolerance in change before the algorithm concludes itself
-		
-		int iter = 0;
-        while (!cvg && iter < MAX_REPOSITION_ITERATIONS ) {
-			iter++;
+		double energy = Double.MAX_VALUE;
+
+        computeConnectedComponents();
+
+		int iterations = 0;
+        while ( ! converged && iterations < MAX_REPOSITION_ITERATIONS ) {
+			iterations++;
 			
-            if ( iter % PRINT_FREQUENCY == 0 )
-                System.out.println( "force directed layout, iteration " + iter );
+            if ( iterations % PRINT_FREQUENCY == 0 )
+                System.out.println("force directed layout, iteration " + iterations);
 			// copy your new points to your old points
-			for (int i=0; i < points.length; i++) {
+			for ( int i=0; i < points.length; i++ ) {
 				previousPoints[i] = (Point2D.Double) points[i].clone();
 			}
 			
 			// store the last energy of the graph. minimize this.
-			double energy_0 = energy;
+			double last_energy = energy;
 			
 			// reset energy
 			energy = 0.0;
 			
 			// loop through the Graph nodes and calculate new forces
-			for (int i=0; i < points.length; i++) {
-				double[] f = {0.0,0.0};
+			for ( int i = 0; i < points.length; i++ ) {
+				double[] force = {0.0, 0.0};
 				
 				// calculate attractive force of edges
 				for (Edge e : edges) {
 					int j = -1;
-//                     System.out.printf( "source: index = %d, node = %s\n",
-//                                        nodeToIndex.get( e.getSourceNode() ).intValue(), e.getSourceNode() );
-//                     System.out.printf( "dest:   index = %d, node = %s\n",
-//                                        nodeToIndex.get( e.getTargetNode() ).intValue(), e.getTargetNode() );
-//                     if (e.getSourceNode().getId() == i) {
-//                         j = e.getTargetNode().getId();
-//                     } else if (e.getTargetNode().getId() == i) {
-//                         j = e.getSourceNode().getId();
-//                     }
-					if ( nodeToIndex.get( e.getSourceNode() ).intValue() == i ) {
-						j = nodeToIndex.get( e.getTargetNode() );
+					if ( nodeToIndex.get(e.getSourceNode()).intValue() == i ) {
+						j = nodeToIndex.get(e.getTargetNode());
                     }
-                    else if ( nodeToIndex.get( e.getTargetNode() ).intValue() == i ) {
-						j = nodeToIndex.get( e.getSourceNode() );
+                    else if ( nodeToIndex.get(e.getTargetNode()).intValue() == i ) {
+						j = nodeToIndex.get(e.getSourceNode());
 					}
-					if (j != -1 && j != i) {
-						double attractive = forceAttractive(points[i], points[j], k);
+					if ( j != -1 && j != i ) {
+                        // ij is really an edge and not a self-loop
+						double attractive = forceAttractive(points[i], points[j]);
 						double[] unitVector = unitVector(points[i], points[j]);
-						f[0] += unitVector[0] * attractive;
-						f[1] += unitVector[1] * attractive;
+						force[0] += unitVector[0] * attractive;
+						force[1] += unitVector[1] * attractive;
 					}
 				}
 				
 				// calculate repulsive force from other nodes
-				for (int j=0; j < points.length; j++) {
-					if (j != i
-//                         && pathExists(i,j)
-                        ) {
-						double repulsive = forceRepulsive(points[i], points[j], c, k);
+				for ( int j = 0; j < points.length; j++ ) {
+					if ( j != i && component[i] == component[j] ) {
+						double repulsive = forceRepulsive(points[i], points[j]);
 						double[] unitVector = unitVector(points[i], points[j]);
-						f[0] += unitVector[0] * repulsive;
-						f[1] += unitVector[1] * repulsive;
+						force[0] += unitVector[0] * repulsive;
+						force[1] += unitVector[1] * repulsive;
 					}
 				}
 				
 				// calculate new x position, scaling the force by a step size
 				double x = points[i].getX();
-				if (Math.abs(f[0]) > 0) {
-					x += (step * f[0] / magnitude(f));
+				if ( Math.abs(force[0]) > 0 ) {
+					x += (step * force[0] / magnitude(force));
 				}
 				
 				// calculate new y position, scaling the force by a step size
 				double y = points[i].getY();
-				if (Math.abs(f[1]) > 0) {
-					y += (step * f[1] / magnitude(f));
+				if (Math.abs(force[1]) > 0) {
+					y += (step * force[1] / magnitude(force));
 				}
 				points[i] = new Point2D.Double(x, y);
 				
 				// update the energy of this iteration
-				energy += magnitude(f) * magnitude(f);
+				energy += magnitude(force) * magnitude(force);
 			}
 			
 			// update step length with adaptive cooling scheme
-			step = updateStepLength(step, energy, energy_0);
+			step = updateStepLength(step, energy, last_energy);
 			
 			// check to see if we've converged
-			if (totalChange(points, previousPoints) < tol) {
-				cvg = true;
+			if ( totalChange(points, previousPoints) < FORCE_DIRECTED_TOLERANCE ) {
+				converged = true;
 			}
 		}
 		
 		// we've converged, now scale it and center it in the window
 		points = centerInWindow(points);
 		
-        try {
-            // update the nodes with their new positions and push to the display
-            for (int i=0; i < this.nodes.size(); i++) {
-                int x = (int) points[i].getX();
-                int y = (int) points[i].getY();
-
-                indexToNode[i].setFixedPosition( new Point(x,y) );
-			
-                GraphDispatch.getInstance().pushToGraphEditor();
-            }
-		}
-        catch ( Exception e ) {
-            e.printStackTrace();
+        // update the nodes with their new positions and push to the display
+        for ( int i = 0; i < this.nodes.size(); i++ ) {
+            int x = (int) points[i].getX();
+            int y = (int) points[i].getY();
+            Node node = indexToNode[i];
+            nodePositions.put(node, new Point(x, y));
         }
 	}
 	
@@ -432,11 +487,10 @@ public class GraphLayout {
 	 * there is an edge between p1 and p2.
 	 * @param p1 The position of an edge endpoint
 	 * @param p2 The position of the other edge endpoint
-	 * @param k The natural spring length
 	 * @return The attractive force between the two nodes
 	 */
-	private static double forceAttractive(Point2D p1, Point2D p2, double k) {
-		return (p1.distance(p2)*p1.distance(p2)) / k;
+	private static double forceAttractive(Point2D p1, Point2D p2) {
+		return ( p1.distance(p2) * p1.distance(p2) ) / SPRING_LENGTH;
 	}
 	
 	/**
@@ -444,11 +498,11 @@ public class GraphLayout {
 	 * @param p1 The position of a node
 	 * @param p2 The position of a second node
 	 * @param c A scalar
-	 * @param k The natural length
 	 * @return The force between the two components
 	 */
-	private static double forceRepulsive(Point2D p1, Point2D p2, double c, double k) {
-		return ( (-1*c) * k * k) / (p1.distance(p2)) ;
+	private static double forceRepulsive(Point2D p1, Point2D p2) {
+		return ( REPULSIVE_SCALE_FACTOR * SPRING_LENGTH * SPRING_LENGTH)
+            / p1.distance(p2) ;
 	}
 	
 	/**
@@ -501,22 +555,20 @@ public class GraphLayout {
 	/**
 	 * Adaptively update the step length to avoid settling into a local minimum
 	 * @param step the current step size
-	 * @param energy the previous energy
-	 * @param energy_0 the new energy
-	 * @return the new step length
+	 * @param energy the current energy
+	 * @param previous_energy the previous energy
+	 * @return the new step size
 	 */
-	private double updateStepLength(double step, double energy, double energy_0) {
-		double t = .9;
-		
-		if (energy < energy_0) {
+	private double updateStepLength(double step, double energy, double previous_energy) {
+		if ( energy < previous_energy ) {
 			progress++;
-			if (progress >= 5) {
+			if ( progress >= MAX_INCREASING_STEPS ) {
 				progress = 0;
-				step /= t;
+				step /= TEMPERATURE_REDUCTION_FACTOR;
 			}
 		} else {
 			progress = 0;
-			step = t*step;
+			step = TEMPERATURE_REDUCTION_FACTOR * step;
 		}
 		
 		return step;
@@ -568,4 +620,4 @@ public class GraphLayout {
 
 }	
 
-//  [Last modified: 2015 12 04 at 21:46:58 GMT]
+//  [Last modified: 2016 06 15 at 21:02:11 GMT]

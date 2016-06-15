@@ -657,10 +657,9 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
     repositionBtn.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				// TODO Auto-generated method stub
 				if (repositionBtn.isSelected()) {
-					dispatch.getWorkingGraph().smartReposition();
-					dispatch.pushToTextEditor(); 
+                    dispatch.getWorkingGraph().smartReposition();
+                    dispatch.pushToTextEditor();
 				}
 			}
 		});
@@ -1089,4 +1088,4 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	}
 }
 
-//  [Last modified: 2015 12 09 at 21:58:38 GMT]
+//  [Last modified: 2016 06 15 at 18:26:23 GMT]

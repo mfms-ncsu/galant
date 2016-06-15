@@ -916,9 +916,19 @@ public class Graph {
 	 * @see edu.ncsu.csc.Galant.graph.component.GraphLayout#forceDirected()
 	 */
 	public void smartReposition() {
-        GraphLayout graphLayout = new GraphLayout( this );
+        GraphLayout graphLayout = new GraphLayout(this);
 		graphLayout.forceDirected();
+        graphLayout.usePositions();
 	}
+
+    /**
+     * Restores node positions as they were before the last smartReposition()
+     * @todo maintain an another instance of GraphLayout to do this
+     */
+    public void undoReposition() {
+        GraphLayout graphLayout = new GraphLayout(this);
+        //        graphLayout.undoReposition();
+    }
 	
 	/**
 	 * Returns a valid graphml representation of the graph; for use when no
@@ -996,4 +1006,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2016 02 21 at 22:52:45 GMT]
+//  [Last modified: 2016 06 15 at 20:26:44 GMT]

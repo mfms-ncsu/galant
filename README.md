@@ -8,7 +8,7 @@ ant run
 or by executing
 build/jar/Galant.jar
 
-*** Testing ***
+*** Testing *** (see also testingGalant.docx)
 
 First set the home directory for opening and saving files
       File -> Preferences -> Open/Save

@@ -66,10 +66,9 @@ Such exceptions have been known to occur when comments appear inside functions
 or contain constructions that are subject to macro expansion.
 For example, sometimes the word \texttt{for} in a comment causes problems.
 
-\item
-  Every once in a while an exception occurs when an error-free algorithm
-  is executed, but it is possible to step through the animation normally
-  after hitting the \textsf{Continue} button.
+\item Every once in a while an exception occurs when an error-free algorithm
+  is executed or when Galant intitally fires up, but it is possible to step
+  through the animation normally after hitting the \textsf{Continue} button.
 
 \item 
   The \texttt{function} construct appears not to work if the arguments or
@@ -89,32 +88,12 @@ There is no way for the animation program to specify that labels and/o weights
 should be displayed or hidden.
 
 \item
-The animation program completes execution before the actual animation begins.
-Thus runtime error messages appear on the console only and it is difficult to
-tell at which point in the algorithm execution they occurred (unless print statements are inserted).
-Infinite loops are even more problematic -- the animation is never initiated
-when these arise.\footnote{
-A team of undergraduate research assistants is planning to address this issue.
-A possible solution is to step through the algorithm going forward and display
-earlier animation states when the user
-steps backward (as opposed to backward execution).
-} 
-
-\item
 There is no way to execute the animation in a continuous fashion with a
 controllable speed. The current workaround is the use of arrow keys as keyboard
 shortcuts for stepping forward or backward -- these can be held down to
 generate multiple steps in rapid succession, but the user must click on the
 graph panel before starting the animation; for some reason, there is no
 reaction to the shortcuts if the first mouse click is on one of the arrows at the bottom of the graph window.
-
-\item
-The animation tool provides only a single instance of each of the common data structures: queue, stack, priority queue. If a programmer wants multiple instances
-or arbitrary lists of nodes or edges, they have to use the appropriate Java constructs.\footnote{
-  While this is not a major disadvantage for experienced Java programmers, it is
-  an issue for animators who want to deal with algorithms at a level as
-  close to pseudocode as possible.
-}
 
 \end{itemize}
 

@@ -264,7 +264,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                 @Override
                     public void mouseDragged(MouseEvent arg0) {
                     // If you start dragging, set dragging mode so you don't
-                    // perform any other operations on the Node after
+                    // perform any other operations on the Node until after
                     // releasing it
                     Node sel = graphPanel.getSelectedNode();
                     if ( sel != null ) {
@@ -388,9 +388,12 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 							
                                 componentEditPanel.setWorkingComponent(e);
 							
-                                if (repositionBtn.isSelected())
-                                   g.smartReposition();
-                                 
+                                if ( repositionBtn.isSelected() ) {
+                                    g.smartReposition();
+                                }
+                                else {
+                                    g.undoReposition();
+                                }
                                 dispatch.pushToTextEditor(); 
 							
                             } // create edge
@@ -611,61 +614,64 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		toolBar.setAlignmentY(0);
 		
 		select = createButton(GraphMode.SELECT);
-    select.setFocusable(false);
-    select.setToolTipText("Select");
+        select.setFocusable(false);
+        select.setToolTipText("Select");
 		addNode = createButton(GraphMode.CREATE_NODE);
-    addNode.setFocusable(false);
+        addNode.setFocusable(false);
 		addNode.setToolTipText("Create Node");
-    addEdge = createButton(GraphMode.CREATE_EDGE);
-    addEdge.setFocusable(false);
+        addEdge = createButton(GraphMode.CREATE_EDGE);
+        addEdge.setFocusable(false);
 		addEdge.setToolTipText("Create Edge");
-    deleteBtn = createButton(GraphMode.DELETE);
-    deleteBtn.setFocusable(false);
+        deleteBtn = createButton(GraphMode.DELETE);
+        deleteBtn.setFocusable(false);
 		deleteBtn.setToolTipText("Delete");
-    changeMode(GraphMode.SELECT);		
+        changeMode(GraphMode.SELECT);		
     
 		toolBar.addSeparator();
 		
 		undirectedBtn = createButton(Directedness.UNDIRECTED);
 		undirectedBtn.setToolTipText("Undirected");
-    undirectedBtn.setFocusable(false);
-    directedBtn = createButton(Directedness.DIRECTED);
+        undirectedBtn.setFocusable(false);
+        directedBtn = createButton(Directedness.DIRECTED);
 		directedBtn.setToolTipText("Directed");
-    directedBtn.setFocusable(false);
-    changeDirectedness(Directedness.UNDIRECTED);
+        directedBtn.setFocusable(false);
+        changeDirectedness(Directedness.UNDIRECTED);
 		
 		toolBar.addSeparator();
 		
 		nodeLabels = createButton(GraphDisplays.NODE_LABELS);
-    nodeLabels.setFocusable(false);
+        nodeLabels.setFocusable(false);
 		nodeLabels.setToolTipText("Display Node Labels");
-    edgeLabels = createButton(GraphDisplays.EDGE_LABELS);
-    edgeLabels.setFocusable(false);
+        edgeLabels = createButton(GraphDisplays.EDGE_LABELS);
+        edgeLabels.setFocusable(false);
 		edgeLabels.setToolTipText("Display Edge Labels");
-    nodeWeights = createButton(GraphDisplays.NODE_WEIGHTS);
-    nodeWeights.setFocusable(false);
+        nodeWeights = createButton(GraphDisplays.NODE_WEIGHTS);
+        nodeWeights.setFocusable(false);
 		nodeWeights.setToolTipText("Display Node Weights");
-    edgeWeights = createButton(GraphDisplays.EDGE_WEIGHTS);
-    edgeWeights.setFocusable(false);
+        edgeWeights = createButton(GraphDisplays.EDGE_WEIGHTS);
+        edgeWeights.setFocusable(false);
 		edgeWeights.setToolTipText("Display Edge Weights");
+
 		toolBar.addSeparator();
 		
 		java.net.URL imageURL = GraphWindow.class.getResource("images/autoposition_24.png");
 		repositionBtn = new JToggleButton(new ImageIcon(imageURL));
-    repositionBtn.setFocusable(false);
+        repositionBtn.setFocusable(false);
 		repositionBtn.setToolTipText("Intelligent Rearrange");
-    repositionBtn.addActionListener(new ActionListener(){
+        repositionBtn.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if (repositionBtn.isSelected()) {
                     dispatch.getWorkingGraph().smartReposition();
-                    dispatch.pushToTextEditor();
-				}
+                }
+                else {
+                    dispatch.getWorkingGraph().undoReposition();
+                }
+                dispatch.pushToTextEditor();
 			}
-		});
+            });
 		toolBar.add(repositionBtn);
 		
-
 		LogHelper.guiExitMethod(this.getClass(), "initToolbar");
 		return toolBar;
 	}
@@ -855,174 +861,181 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
      */
     public boolean dispatchKeyEvent(KeyEvent e) {
         LogHelper.guiEnterMethod(getClass(), "dispatchKeyEvent, e = " + e);
-      //"left" step backward when in animation mode
-      if ( dispatch.isAnimationMode()
-           && e.getID() == KeyEvent.KEY_PRESSED
-           && e.getKeyCode()==KeyEvent.VK_LEFT ) {
-          performStepBack();
-          // may need to delay to allow display to catch up if user holds
-          // down key
-          try {
-              Thread.sleep(DELAY_TIME);
-          } catch (InterruptedException f) {}
-          frame.repaint();
-          LogHelper.guiExitMethod(getClass(), "step backward");
+        //"left" step backward when in animation mode
+        if ( dispatch.isAnimationMode()
+             && e.getID() == KeyEvent.KEY_PRESSED
+             && e.getKeyCode()==KeyEvent.VK_LEFT ) {
+            performStepBack();
+            // may need to delay to allow display to catch up if user holds
+            // down key
+            try {
+                Thread.sleep(DELAY_TIME);
+            } catch (InterruptedException f) {}
+            frame.repaint();
+            LogHelper.guiExitMethod(getClass(), "step backward");
+            return true;
+        }
+        //"right" step forward when in animation mode
+        if ( dispatch.isAnimationMode()
+             && e.getID() == KeyEvent.KEY_PRESSED
+             && e.getKeyCode() == KeyEvent.VK_RIGHT ) {
+            performStepForward();
+            try {
+                Thread.sleep(DELAY_TIME);
+            } catch (InterruptedException f) {}
+            frame.repaint();
+            LogHelper.guiExitMethod(getClass(), "step forward");
+            return true;
+        }
+        // "Esc" leave animation mode when in animation mode
+        if ( dispatch.isAnimationMode()
+             && e.getID() == KeyEvent.KEY_PRESSED
+             && e.getKeyCode() == KeyEvent.VK_ESCAPE ) {
+            performDone();
+            LogHelper.guiExitMethod(getClass(), "exit animation");
+            return true;
+        }
+        // "Ctrl" pressed
+        if( e.getID() == KeyEvent.KEY_PRESSED
+            && e.getKeyCode() == KeyEvent.VK_CONTROL ) {
+            ctrlPressed = true;
+            LogHelper.guiExitMethod(getClass(), "Ctrl pressed");
+            return true;
+        }
+        // "Ctrl" released
+        if ( e.getID()==KeyEvent.KEY_RELEASED
+           && e.getKeyCode()==KeyEvent.VK_CONTROL ){
+            ctrlPressed = false;
+            LogHelper.guiExitMethod(getClass(), "Ctrl released");
+            return true;
+        }
+        // "Shift" pressed
+        if ( e.getID()==KeyEvent.KEY_PRESSED
+             && e.getKeyCode()==KeyEvent.VK_SHIFT ) {
+            shiftPressed = true;
+            LogHelper.guiExitMethod(getClass(), "shift pressed");
+            return true;
+        }
+        // "Shift" released
+      if ( e.getID()==KeyEvent.KEY_RELEASED
+           && e.getKeyCode()==KeyEvent.VK_SHIFT ) {
+          shiftPressed = false;
+          LogHelper.guiExitMethod(getClass(), "shift released");
           return true;
-      }
-      //"right" step forward when in animation mode
-      if ( dispatch.isAnimationMode()
-           && e.getID() == KeyEvent.KEY_PRESSED
-           && e.getKeyCode() == KeyEvent.VK_RIGHT ) {
-          performStepForward();
-          try {
-              Thread.sleep(DELAY_TIME);
-          } catch (InterruptedException f) {}
-          frame.repaint();
-          LogHelper.guiExitMethod(getClass(), "step forward");
-          return true;
-      }
-      // "Esc" leave animation mode when in animation mode
-      if ( dispatch.isAnimationMode()
-           && e.getID() == KeyEvent.KEY_PRESSED
-           && e.getKeyCode() == KeyEvent.VK_ESCAPE ) {
-          performDone();
-          LogHelper.guiExitMethod(getClass(), "exit animation");
-          return true;
-      }
-      // "Ctrl" pressed
-      if( e.getID() == KeyEvent.KEY_PRESSED
-          && e.getKeyCode() == KeyEvent.VK_CONTROL) {
-          ctrlPressed = true;
-          LogHelper.guiExitMethod(getClass(), "Ctrl pressed");
-          return true;
-      }
-      // "Ctrl" released
-      if(e.getID()==KeyEvent.KEY_RELEASED && e.getKeyCode()==KeyEvent.VK_CONTROL){
-        ctrlPressed = false;
-        LogHelper.guiExitMethod(getClass(), "Ctrl released");
-        return true;
-      }
-      // "Shift" pressed
-      if(e.getID()==KeyEvent.KEY_PRESSED && e.getKeyCode()==KeyEvent.VK_SHIFT){
-          shiftPressed = true;
-        LogHelper.guiExitMethod(getClass(), "shift pressed");
-        return true;
-      }
-      // "Shift" released
-      if(e.getID()==KeyEvent.KEY_RELEASED && e.getKeyCode()==KeyEvent.VK_SHIFT){
-        shiftPressed = false;
-        LogHelper.guiExitMethod(getClass(), "shift released");
-        return true;
       }
       // "Delete" pressed
-      if(!dispatch.isAnimationMode() && e.getID()==KeyEvent.KEY_PRESSED
-                                     && e.getKeyCode()==KeyEvent.VK_DELETE){
-        deletePressed = true;
-        LogHelper.guiExitMethod(getClass(), "delete pressed");
-        return true;
+      if ( ! dispatch.isAnimationMode() && e.getID()==KeyEvent.KEY_PRESSED
+                                      && e.getKeyCode()==KeyEvent.VK_DELETE ) {
+          deletePressed = true;
+          LogHelper.guiExitMethod(getClass(), "delete pressed");
+          return true;
       }
       // "Delete" released
-      if(e.getID()==KeyEvent.KEY_RELEASED && e.getKeyCode()==KeyEvent.VK_DELETE){
+      if ( e.getID()==KeyEvent.KEY_RELEASED
+          && e.getKeyCode()==KeyEvent.VK_DELETE ) {
         deletePressed = false;
         LogHelper.guiExitMethod(getClass(), "delete released");
         return true;
       }
       // "E" pressed
-      if(!dispatch.isAnimationMode() && e.getID()==KeyEvent.KEY_PRESSED
-                                     && e.getKeyCode()==KeyEvent.VK_E){
-        synchronized(this){
-          // "ctrl" already pressed, create new edge
-          if(ctrlPressed){
-            LogHelper.guiLogDebug("CREATE EDGE");
-						//prompt user for the id of two nodes	
-            edgeEditDialog = new EdgeEditDialog(frame, dispatch, GraphMode.CREATE_EDGE);
-            edgeEditDialog.pack();
-            edgeEditDialog.setLocationRelativeTo(frame);
-            edgeEditDialog.setVisible(true);
-            dispatch.pushToTextEditor();
-          } //Create new edge
-          //delete edge
-          if(deletePressed){
-            LogHelper.guiLogDebug("DELETE EDGE");
-						//prompt user for the id of two nodes	
-            edgeEditDialog = new EdgeEditDialog(frame, dispatch, GraphMode.DELETE);
-            edgeEditDialog.pack();
-            edgeEditDialog.setLocationRelativeTo(frame);
-            edgeEditDialog.setVisible(true);
-            dispatch.pushToTextEditor();
-          }//delete edge
-        }
-        LogHelper.guiExitMethod(getClass(), "step backward");
-        LogHelper.guiExitMethod(getClass(), "'e' pressed");
-        return true;
+      if ( ! dispatch.isAnimationMode() && e.getID()==KeyEvent.KEY_PRESSED
+           && e.getKeyCode()==KeyEvent.VK_E ) {
+          synchronized(this) {
+              // "ctrl" already pressed, create new edge
+              if ( ctrlPressed ) {
+                  LogHelper.guiLogDebug("CREATE EDGE");
+                  //prompt user for the id of two nodes	
+                  edgeEditDialog
+                      = new EdgeEditDialog(frame, dispatch, GraphMode.CREATE_EDGE);
+                  edgeEditDialog.pack();
+                  edgeEditDialog.setLocationRelativeTo(frame);
+                  edgeEditDialog.setVisible(true);
+                  dispatch.pushToTextEditor();
+              } //Create new edge
+              //delete edge
+              if ( deletePressed ) {
+                  LogHelper.guiLogDebug("DELETE EDGE");
+                  //prompt user for the id of two nodes	
+                  edgeEditDialog = new EdgeEditDialog(frame, dispatch, GraphMode.DELETE);
+                  edgeEditDialog.pack();
+                  edgeEditDialog.setLocationRelativeTo(frame);
+                  edgeEditDialog.setVisible(true);
+                  dispatch.pushToTextEditor();
+              }//delete edge
+          }
+          LogHelper.guiExitMethod(getClass(), "step backward");
+          LogHelper.guiExitMethod(getClass(), "'e' pressed");
+          return true;
       }
       // "N" pressed
-      if(!dispatch.isAnimationMode() && e.getID()==KeyEvent.KEY_PRESSED
-                                     && e.getKeyCode()==KeyEvent.VK_N){
-        synchronized(this){
-          // "ctrl" already pressed, create new node
-          if(ctrlPressed){
-            LogHelper.guiLogDebug("CREATE NODE");
+      if ( ! dispatch.isAnimationMode() && e.getID()==KeyEvent.KEY_PRESSED
+           && e.getKeyCode()==KeyEvent.VK_N ) {
+          synchronized(this) {
+              // "ctrl" already pressed, create new node
+              if ( ctrlPressed ) {
+                  LogHelper.guiLogDebug("CREATE NODE");
 							
-            // add a new default node to the working
-            Graph g = dispatch.getWorkingGraph();
-            // choose a random position to place new node
-            Point p = Node.genRandomPosition();
-            Node n = g.addInitialNode(p.x, p.y);
+                  // add a new default node to the working
+                  Graph g = dispatch.getWorkingGraph();
+                  // choose a random position to place new node
+                  Point p = Node.genRandomPosition();
+                  Node n = g.addInitialNode(p.x, p.y);
 							
-            // select the new node
-            Node nNew = graphPanel.selectTopClickedNode(p);
-            componentEditPanel.setWorkingComponent(nNew);
-            LogHelper.guiLogDebug( " select: node = " + n );
-
-            componentEditPanel.setWorkingComponent(nNew);
-            LogHelper.guiLogDebug( " setWorking: node = " + n );
+                  // select the new node
+                  Node nNew = graphPanel.selectTopClickedNode(p);
+                  componentEditPanel.setWorkingComponent(nNew);
+                  LogHelper.guiLogDebug( " select: node = " + n );
+                  
+                  componentEditPanel.setWorkingComponent(nNew);
+                  LogHelper.guiLogDebug( " setWorking: node = " + n );
             
-            dispatch.pushToTextEditor();
-          } //Create new node
-          //delete already pressed, delete node
-          if (deletePressed) {
-            LogHelper.guiLogDebug("DELETE NODE");	
-            //hide edit panel
-            componentEditPanel.setWorkingComponent(null);
-            deleteNodeDialog = new DeleteNodeDialog(frame, dispatch);
-            deleteNodeDialog.pack();
-            deleteNodeDialog.setLocationRelativeTo(frame);
-            deleteNodeDialog.setVisible(true);
-            dispatch.pushToTextEditor();
-          }//delete node
-        }
-        LogHelper.guiExitMethod(getClass(), "'n' pressed");
-        return true;
-      }
-      //"ctrl + i" intelligent rearrange
-      if(!dispatch.isAnimationMode() && e.getID()==KeyEvent.KEY_PRESSED
-        && e.getKeyCode()==KeyEvent.VK_I && ctrlPressed ){
-        synchronized(this){
-          if (!repositionBtn.isSelected()) {
-            repositionBtn.setSelected(true);
-            dispatch.getWorkingGraph().smartReposition();
-					  dispatch.pushToTextEditor();
-          } else {
-            repositionBtn.setSelected(false);
-            //todo - undo smartReposition
+                  dispatch.pushToTextEditor();
+              } //Create new node
+              //delete already pressed, delete node
+              if ( deletePressed ) {
+                  LogHelper.guiLogDebug("DELETE NODE");	
+                  //hide edit panel
+                  componentEditPanel.setWorkingComponent(null);
+                  deleteNodeDialog = new DeleteNodeDialog(frame, dispatch);
+                  deleteNodeDialog.pack();
+                  deleteNodeDialog.setLocationRelativeTo(frame);
+                  deleteNodeDialog.setVisible(true);
+                  dispatch.pushToTextEditor();
+              } //delete node
           }
-        }
-        LogHelper.guiExitMethod(getClass(), "'i' pressed");
-        return true;
+          LogHelper.guiExitMethod(getClass(), "'n' pressed");
+          return true;
+      }
+      //"ctrl + i" toggle intelligent rearrange
+      if ( ! dispatch.isAnimationMode() && e.getID()==KeyEvent.KEY_PRESSED
+           && e.getKeyCode()==KeyEvent.VK_I && ctrlPressed ) {
+          synchronized(this) {
+              if ( ! repositionBtn.isSelected() ) {
+                  repositionBtn.setSelected(true);
+                  dispatch.getWorkingGraph().smartReposition();
+              }
+              else {
+                  repositionBtn.setSelected(false);
+                  dispatch.getWorkingGraph().undoReposition();
+              }
+              dispatch.pushToTextEditor();
+          }
+          LogHelper.guiExitMethod(getClass(), "'i' pressed");
+          return true;
       }
       // "ctrl+d" switch between directed and undirected
-      if(!dispatch.isAnimationMode() && e.getID()==KeyEvent.KEY_PRESSED
-        && e.getKeyCode()==KeyEvent.VK_D && ctrlPressed){
-        synchronized(this){
-          if (!dispatch.getWorkingGraph().isDirected()) {
-				    changeDirectedness(Directedness.DIRECTED);
-			    } else {
-				    changeDirectedness(Directedness.UNDIRECTED);
-			    }
-        }
-        LogHelper.guiExitMethod(getClass(), "'d' pressed");
-        return true;
+      if( ! dispatch.isAnimationMode() && e.getID()==KeyEvent.KEY_PRESSED
+          && e.getKeyCode()==KeyEvent.VK_D && ctrlPressed ) {
+          synchronized(this){
+              if ( ! dispatch.getWorkingGraph().isDirected() ) {
+                  changeDirectedness(Directedness.DIRECTED);
+              } 
+              else {
+                  changeDirectedness(Directedness.UNDIRECTED);
+              }
+          }
+          LogHelper.guiExitMethod(getClass(), "'d' pressed");
+          return true;
       }
       // "ctrl+l" display node labels "ctrl+L" display edge labels
       if(e.getID()==KeyEvent.KEY_PRESSED && e.getKeyCode()==KeyEvent.VK_L && ctrlPressed){
@@ -1088,4 +1101,4 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	}
 }
 
-//  [Last modified: 2016 06 15 at 18:26:23 GMT]
+//  [Last modified: 2016 06 16 at 13:28:38 GMT]

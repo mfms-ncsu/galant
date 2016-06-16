@@ -909,6 +909,8 @@ public class Graph {
         return layerInformation.layerSize.get( i );
     }
 
+    private GraphLayout savedLayout;
+
 	/**
 	 * Call the repositioning algorithm
 	 * Currently the only supported algorithm is Force directed repositioning
@@ -916,9 +918,10 @@ public class Graph {
 	 * @see edu.ncsu.csc.Galant.graph.component.GraphLayout#forceDirected()
 	 */
 	public void smartReposition() {
-        GraphLayout graphLayout = new GraphLayout(this);
-		graphLayout.forceDirected();
-        graphLayout.usePositions();
+        savedLayout = new GraphLayout(this);
+        GraphLayout layoutToBeRepositioned = new GraphLayout(this);
+		layoutToBeRepositioned.forceDirected();
+        layoutToBeRepositioned.usePositions();
 	}
 
     /**
@@ -926,8 +929,9 @@ public class Graph {
      * @todo maintain an another instance of GraphLayout to do this
      */
     public void undoReposition() {
-        GraphLayout graphLayout = new GraphLayout(this);
-        //        graphLayout.undoReposition();
+        if ( savedLayout != null ) {
+            savedLayout.usePositions();
+        }
     }
 	
 	/**
@@ -1006,4 +1010,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2016 06 15 at 20:26:44 GMT]
+//  [Last modified: 2016 06 16 at 13:35:22 GMT]

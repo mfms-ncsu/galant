@@ -688,31 +688,6 @@ public class Graph {
         return e;
 	}
 
-    // not really useful in algorithms (can always select and deselect).
-// 	/**
-// 	 * Highlights the node with the specified id and starts an algorithm step if
-// 	 * appropriate
-// 	 */
-// 	public void select(int id) throws Terminate {
-// 		dispatch.startStepIfRunning();
-// 		dispatch.lockIfRunning();
-// 		for (Node n : nodes) {
-// 			if (n.getId() == id) {
-// 				n.setSelected(true);
-// 			} else if (n.isSelected()) {
-// 				n.setSelected(false);
-// 			}
-// 		}
-// 		dispatch.unlockIfRunning();
-// 	}
-	
-// 	/**
-// 	 * Highlights the given node and starts an algorithm step if appropriate
-// 	 */
-// 	public void select(Node toHighlight) throws Terminate {
-//         this.select(toHighlight.getId());
-// 	}
-	
 	/**
 	 * Adds a new <code>Node</code> to the <code>Graph</code>
 	 * @param x the x coordinate of the new node 
@@ -1010,4 +985,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2016 06 16 at 13:35:22 GMT]
+//  [Last modified: 2016 06 16 at 13:53:43 GMT]

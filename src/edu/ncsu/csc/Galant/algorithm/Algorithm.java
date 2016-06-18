@@ -321,21 +321,31 @@ public abstract class Algorithm implements Runnable {
     public void hide(GraphElement ge) throws Terminate { ge.hide(); }
     public void show(GraphElement ge) throws Terminate { ge.show(); }
     public Boolean isHidden(GraphElement ge) { return ge.isHidden(getState()); }
+    public Boolean isVisible(GraphElement ge) { return ! ge.isHidden(getState()); }
     public void hideLabel(GraphElement ge) throws Terminate { ge.hideLabel(); }
     public void showLabel(GraphElement ge) throws Terminate { ge.showLabel(); }
-    public void setLabel(GraphElement ge, String label) throws Terminate { ge.setLabel(label); }
+    public Boolean labelIsHidden(GraphElement ge) {
+        return ge.labelIsHidden(getState());
+    }
+    public Boolean labelIsVisible(GraphElement ge) { return ! labelIsHidden(ge); }
+    public void setLabel(GraphElement ge, String label) throws Terminate {
+        ge.setLabel(label);
+    }
     public void hideWeight(GraphElement ge) throws Terminate { ge.hideWeight(); }
     public void showWeight(GraphElement ge) throws Terminate { ge.showWeight(); }
-    public void setWeight(GraphElement ge, double weight) throws Terminate { ge.setWeight(weight); }
+    public Boolean weightIsHidden(GraphElement ge) {
+        return ge.weightIsHidden(getState());
+    }
+    public Boolean weightIsVisible(GraphElement ge) { return ! weightIsHidden(ge); }
+    public void setWeight(GraphElement ge, double weight) throws Terminate {
+        ge.setWeight(weight);
+    }
     public int degree(Node v) { return v.getDegree(); }
     public int indegree(Node v) { return v.getIndegree(); }
     public int outdegree(Node v) { return v.getOutdegree(); }
     public List<Node> neighbors(Node v) { return v.getAdjacentNodes(); }
     public Node firstNode(List<Node> L) { return L.get(0); }
     public List rest(List L)  { return L.subList(1, L.size()); }
-//     public List<Node> rest(List<Node> L) {
-//         return L.subList(1, L.size());
-//     }
 
     /**
      error: name clash: first(List<Edge>) and first(List<Node>) have the same erasure
@@ -505,4 +515,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2016 06 18 at 18:05:47 GMT]
+//  [Last modified: 2016 06 18 at 23:09:09 GMT]

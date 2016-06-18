@@ -118,13 +118,13 @@ public abstract class Algorithm implements Runnable {
      * converted to
      * java.util.List<edu.ncsu.csc.Galant.graph.component.GraphElement>
      */
-    public void sort(EdgeList L) {
+    public void sort(List<Edge> L) {
         Collections.sort(L);
     }
 
-    public void sort(NodeList L) {
-        Collections.sort(L);
-    }
+    //     public void sort(NodeList L) {
+//         Collections.sort(L);
+//     }
 
     // Specialized Node/Edge types for Queues/Stacks/Priority Queues
     public class NodeQueue extends AbstractQueue<Node> {
@@ -320,6 +320,7 @@ public abstract class Algorithm implements Runnable {
 
     public void hide(GraphElement ge) throws Terminate { ge.hide(); }
     public void show(GraphElement ge) throws Terminate { ge.show(); }
+    public Boolean isHidden(GraphElement ge) { return ge.isHidden(getState()); }
     public void hideLabel(GraphElement ge) throws Terminate { ge.hideLabel(); }
     public void showLabel(GraphElement ge) throws Terminate { ge.showLabel(); }
     public void setLabel(GraphElement ge, String label) throws Terminate { ge.setLabel(label); }
@@ -330,16 +331,17 @@ public abstract class Algorithm implements Runnable {
     public int indegree(Node v) { return v.getIndegree(); }
     public int outdegree(Node v) { return v.getOutdegree(); }
     public List<Node> neighbors(Node v) { return v.getAdjacentNodes(); }
-    public Node first(List<Node> L) { return L.get(0); }
-    public List<Node> rest(List<Node> L) {
-        return L.subList(1, L.size());
-    }
+    public Node firstNode(List<Node> L) { return L.get(0); }
+    public List rest(List L)  { return L.subList(1, L.size()); }
+//     public List<Node> rest(List<Node> L) {
+//         return L.subList(1, L.size());
+//     }
 
     /**
      error: name clash: first(List<Edge>) and first(List<Node>) have the same erasure
     [javac]     public Edge first(List<Edge> L) { return L.get(0); }
      */
-//     public Edge first(List<Edge> L) { return L.get(0); }
+     public Edge firstEdge(List<Edge> L) { return L.get(0); }
 //     public List<Edge> rest(List<Edge> L) {
 //         return L.subList(1, L.size());
 //     }
@@ -503,4 +505,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2016 06 18 at 00:41:11 GMT]
+//  [Last modified: 2016 06 18 at 18:05:47 GMT]

@@ -355,10 +355,7 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
         /**
          * If the mouse is clicked on (the close icon of?) this tab, closes
          * the panel (unless file has been modified and user answers "no")
-         * and do housekeeping.
-         *
-         * @todo this appears to be where at least one algorithm and one
-         * graph panel is kept open. The relevant code is a mess.
+         * and does housekeeping.
          */
 		@Override
 		public void mouseClicked(MouseEvent arg0) {
@@ -366,26 +363,23 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
 			boolean foundGraph = false;
 			boolean foundAlg = false;
 			boolean foundSelected = false;
-			if(panel != null){
+			if ( panel != null ) {
 				GEditorPanel thisEditorPanel = (GEditorPanel) panel;
 				if ( thisEditorPanel instanceof GGraphEditorPanel )
                     typeSelected = AlgorithmOrGraph.Graph;
 				if ( thisEditorPanel instanceof GAlgorithmEditorPanel )
                     typeSelected = AlgorithmOrGraph.Algorithm;
-// 				if ( thisEditorPanel instanceof GCompiledAlgorithmEditorPanel )
-//                     typeSelected = AlgorithmOrGraph.CompiledAlgorithm;
-
-				if ( thisEditorPanel.getDirty() && thisEditorPanel.getText().length() > 0 )
-					if ( JOptionPane.showOptionDialog( getParent().getParent(), confirmClose, CONFIRM, 
+				if ( thisEditorPanel.getDirty()
+                     && thisEditorPanel.getText().length() > 0 )
+					if ( JOptionPane.showOptionDialog( getParent().getParent(),
+                                                       confirmClose, CONFIRM, 
                                                        JOptionPane.YES_NO_OPTION,
                                                        JOptionPane.QUESTION_MESSAGE,
-                                                       null, new Object[] {YES, NO}, NO ) != 0 )
+                                                       null,
+                                                       new Object[] {YES, NO}, NO ) != 0 )
                         return;
 			}
 	    	GTabbedPane.this.removeEditorTab(panel);
-
-            // need at least one non-empty panel (deprecated)
-            // addTabIfNeeded();
 		}
 		@Override
 		public void mouseEntered(MouseEvent arg0) {}
@@ -464,9 +458,11 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
 	}
 	
 	public boolean isDirty() {
-		for(GEditorPanel geditorPanel : editorPanels) if(geditorPanel.isDirty) return true;
+		for ( GEditorPanel geditorPanel : editorPanels ) {
+            if(geditorPanel.isDirty) return true;
+        }
 		return false;
 	}
 }
 
-//  [Last modified: 2015 12 06 at 17:15:36 GMT]
+//  [Last modified: 2016 06 17 at 13:00:34 GMT]

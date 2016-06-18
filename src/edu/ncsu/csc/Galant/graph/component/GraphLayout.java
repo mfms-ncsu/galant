@@ -226,8 +226,7 @@ public class GraphLayout {
                 nodeQueue.offer(node);
                 while ( nodeQueue.size() > 0 ) {
                     Node currentNode = nodeQueue.poll();
-                    for ( Edge incident: currentNode.getEdges() ) {
-                        Node neighbor = currentNode.travel(incident);
+                    for ( Node neighbor: currentNode.getAdjacentNodes() ) {
                         if ( component[nodeToIndex.get(neighbor)] == 0 ) {
                             component[nodeToIndex.get(neighbor)] = componentNumber;
                             nodeQueue.offer(neighbor);
@@ -620,4 +619,4 @@ public class GraphLayout {
 
 }	
 
-//  [Last modified: 2016 06 15 at 21:02:11 GMT]
+//  [Last modified: 2016 06 17 at 16:13:41 GMT]

@@ -4,12 +4,18 @@
 \begin{itemize}
 
 \item
-Weights, if not specified in the input are automatically initialized to 0 instead of, for example, not being displayed at all.
+When you save the current state of an animation using \texttt{File->Export}
+on the graph panel some of the information might not be saved.
+In particular, weights and labels are saved, but highlighting is not (since it is not equivalent to an actual color change of a node or edge).
 
-\item
-It is impossible to close a tab if it is the only graph or
-algorithm -- you must have at least one graph and at least one algorithm open
-at any given time.
+\end{itemize}
+
+\subsubsection*{Text editing (of programs or graphs)\footnote{
+Galant's editor  is primitive, but
+programs can easily be edited externally.
+Text representations of graphs can either be edited or generated externally.}}
+
+\begin{itemize}
 
 \item
 Tabs for graphs and algorithms are often hard to deal with: (a) if you reread
@@ -17,26 +23,15 @@ a graph or algorithm, it appears twice; (b) you can only run an algorithm on a g
 -- although the tabs bar can be ``scrolled'',
 this may be impossible if there are other intervening graphs and algorithms.
 
-\item
-If you close a tab or window you are asked if you want to save changes.
-This does not occur, however, if you quit Galant entirely.
-
-\item
-When you save the current state of an animation using \texttt{File->Export}
-on the graph panel some of the information might not be saved.
-In particular, weights and labels are saved, but highlighting is not (since it is not equivalent to an actual color change of a node or edge).
+\item If you attempt to do anything with the File menu in the text window
+  while an algorithm is running, Galant hangs; it appears that you can quit it from
+the file menu of the graph window, however.
 
 \end{itemize}
 
-\subsubsection*{Graph editing\footnote{
-Galant's program editor  is primitive, but
-programs can easily be edited externally.}}
+\subsubsection*{Graph editing (in graph panel)}
 
 \begin{itemize}
-
-\item
-When a node is deleted, the id numbers are resequenced so that they run from
-0 to $n-1$, where $n$ is the number of nodes.
 
 \item
 It is not possible to change the thickness of an edge or node boundary directly

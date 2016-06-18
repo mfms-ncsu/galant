@@ -397,6 +397,15 @@ public class Node extends GraphElement {
 		return getIncidentEdges(state);
 	}
 
+    public List<Node> getAdjacentNodes() {
+        List<Edge> edges = getIncidentEdges();
+        List<Node> nodes = new ArrayList<Node>();
+        for ( Edge e: edges ) {
+            nodes.add(travel(e));
+        }
+        return nodes;
+    }
+
     /**
      * The following methods use the edge list getters to return degrees
      */
@@ -406,6 +415,17 @@ public class Node extends GraphElement {
     public int getIndegree(int state) { return getIndegree(); }
     public int getDegree() { return getIncidentEdges().size(); }
     public int getDegree(int state) { return getDegree(); }
+
+
+    /**
+     * when hiding a node, you also have to hide its incident edges
+     */
+    public void hide() throws Terminate {
+        super.hide();
+        for ( Edge edge: getEdges() ) {
+            edge.hide();
+        }
+    }
 
 	/**
 	 * Gets a list of Edges incident to this node whose visited flag
@@ -621,4 +641,4 @@ public class Node extends GraphElement {
 	}
 }
 
-//  [Last modified: 2016 02 18 at 20:28:47 GMT]
+//  [Last modified: 2016 06 17 at 18:32:09 GMT]

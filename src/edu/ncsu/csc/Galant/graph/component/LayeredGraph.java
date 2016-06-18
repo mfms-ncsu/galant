@@ -7,7 +7,7 @@ package edu.ncsu.csc.Galant.graph.component;
 import java.util.ArrayList;
 import edu.ncsu.csc.Galant.logging.LogHelper;
 
-class LayeredGraph extends Graph {
+public class LayeredGraph extends Graph {
     int numberOfLayers;
     /**
      * Stores the number of nodes on each layer
@@ -47,4 +47,4 @@ class LayeredGraph extends Graph {
 
 }
 
-//  [Last modified: 2016 06 16 at 15:15:15 GMT]
+//  [Last modified: 2016 06 16 at 16:11:09 GMT]

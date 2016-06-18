@@ -322,6 +322,24 @@ public class Graph {
     }
 
     /**
+     * In case we want to reveal all nodes that have been hidden
+     */
+    public void showNodes() throws Terminate {
+        for ( Node node: nodes ) {
+            node.show();
+        }
+    }
+
+    /**
+     * In case we want to reveal all edges that have been hidden
+     */
+    public void showEdges() throws Terminate {
+        for ( Edge edge: edges ) {
+            edge.show();
+        }
+    }
+
+    /**
      * The following are used to query label and weight visibility during
      * algorithm execution and are called from GraphPanel; note that only the
      * versions with the state argument are needed -- these are never called
@@ -985,4 +1003,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2016 06 16 at 13:53:43 GMT]
+//  [Last modified: 2016 06 17 at 23:27:14 GMT]

@@ -32,6 +32,7 @@ import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.gui.util.ExceptionDialog;
 import edu.ncsu.csc.Galant.GraphDispatch;
 import edu.ncsu.csc.Galant.graph.component.Graph;
+import edu.ncsu.csc.Galant.graph.component.LayeredGraph;
 import edu.ncsu.csc.Galant.graph.component.GraphElement;
 import edu.ncsu.csc.Galant.graph.component.Node;
 import edu.ncsu.csc.Galant.graph.component.Edge;
@@ -47,6 +48,12 @@ public abstract class Algorithm implements Runnable {
 
     /** The graph on which the algorithm is being run. */
     public Graph graph;
+
+    /**
+     * If the graph is layered, it can be referenced as such using the
+     * variable below
+     */
+    public LayeredGraph layeredGraph;
 
     /** The dispatch instance used to communicate among the algorithm, the
      * graph and the display */
@@ -82,19 +89,28 @@ public abstract class Algorithm implements Runnable {
 
     /**
      * @param graph the Graph object on which this algorithm will run; used
-     * when akgorithm is started up in GAlgorithmEditorPanel
+     * when algorithm is started up in GAlgorithmEditorPanel
      */
-    public void setGraph(Graph graph){
+    public void setGraph(Graph graph) {
         this.graph = graph;
+        if ( graph instanceof LayeredGraph )
+            this.layeredGraph = (LayeredGraph) graph;
     }
+
     public Graph getGraph() { return this.graph; }
+
+    public class NodeList extends ArrayList<Node> {
+    }
+
+    public class EdgeList extends ArrayList<Edge> {
+    }
 
     // sorting of edges and nodes
     /**
-     * @todo these do not work; error is
-     * error: name clash: sort(List<Node>) and sort(List<Edge>) have the same
-     * erasure; for now, I'm settling for sorting edges only; sorting nodes
-     * makes sense for crossing minimization but there it's in a specialized context.
+     * @todo these do not work; error is error: name clash: sort(List<Node>)
+     * and sort(List<Edge>) have the same erasure; for now, I'm settling for
+     * sorting edges only; sorting nodes makes sense for crossing
+     * minimization but there it's in a specialized context.
      *
      * I also tried GraphElement, but that results in
      * incompatible types:
@@ -102,86 +118,45 @@ public abstract class Algorithm implements Runnable {
      * converted to
      * java.util.List<edu.ncsu.csc.Galant.graph.component.GraphElement>
      */
-    public void sort(List<Edge> L) {
+    public void sort(EdgeList L) {
         Collections.sort(L);
     }
-//     public void sort(List<Node> L) {
-//         Collections.sort(L);
-//     }
+
+    public void sort(NodeList L) {
+        Collections.sort(L);
+    }
 
     // Specialized Node/Edge types for Queues/Stacks/Priority Queues
-    public class NodeQueue extends AbstractQueue<Node>
-    {
+    public class NodeQueue extends AbstractQueue<Node> {
         private Queue<Node> Q = new ArrayDeque<Node>();
- 
-        public void enqueue(Node v) {
-            Q.offer(v);
-        }
-        public Node dequeue() {
-            return Q.poll();
-        }
-
+        public void enqueue(Node v) { Q.offer(v); }
+        public Node dequeue() { return Q.poll(); }
         @Override
-            public boolean offer(Node e)
-            {
-                return Q.offer(e);
-            }
+            public boolean offer(Node e) { return Q.offer(e); }
         @Override
-            public Node poll()
-            {
-                return Q.poll();
-            }
+            public Node poll() { return Q.poll(); }
         @Override
-            public Node peek()
-            {
-                return Q.peek();
-            }
+            public Node peek() { return Q.peek(); }
         @Override
-            public Iterator<Node> iterator()
-            {
-                return Q.iterator();
-            }
+            public Iterator<Node> iterator() { return Q.iterator(); }
         @Override
-            public int size()
-            {
-                return Q.size();
-            }
+            public int size() { return Q.size(); }
     }
     public class EdgeQueue extends AbstractQueue<Edge> {
         private Queue<Edge> Q = new ArrayDeque<Edge>();
 
-        public void enqueue(Edge e) {
-            Q.offer(e);
-        }
-        public Edge dequeue() {
-            return Q.poll();
-        }
-
+        public void enqueue(Edge e) { Q.offer(e); }
+        public Edge dequeue() { return Q.poll(); }
         @Override
-            public boolean offer(Edge e)
-            {
-                return Q.offer(e);
-            }
+            public boolean offer(Edge e) { return Q.offer(e); }
         @Override
-            public Edge poll()
-            {
-                return Q.poll();
-            }
+            public Edge poll() { return Q.poll(); }
         @Override
-            public Edge peek()
-            {
-                return Q.peek();
-            }
+            public Edge peek() { return Q.peek(); }
         @Override
-            public Iterator<Edge> iterator()
-            {
-                return Q.iterator();
-            }
+            public Iterator<Edge> iterator() { return Q.iterator(); }
         @Override
-            public int size()
-            {
-                return Q.size();
-            }
+            public int size() { return Q.size(); }
     }
     public class NodeStack extends Stack<Node>
     {}
@@ -210,16 +185,6 @@ public abstract class Algorithm implements Runnable {
             e.setWeight(newKey);
             this.add(e);
         }
-    }
-
-    /**
-     * @todo These NodeList and EdgeList "typedefs" don't appear to work as
-     * expected.
-     */
-    public interface NodeList extends List<Node> {
-    }
-
-    public interface EdgeList extends List<Edge> {
     }
 
     // Pre-existing queue/stack/priority queue objects
@@ -260,6 +225,14 @@ public abstract class Algorithm implements Runnable {
     }
 
     /**
+     * Throws an exception; this is a simpler interface for the algorithm
+     * programmer.
+     */
+    public void error(String message) throws GalantException {
+        throw new GalantException(message);
+    }
+
+    /**
      * The following methods control the display of labels and weights during
      * algorithm execution; usually used at the beginning to hide unnecessary
      * information.
@@ -272,6 +245,12 @@ public abstract class Algorithm implements Runnable {
     public void hideEdgeWeights() throws Terminate { graph.hideEdgeWeights(); }
     public void unhideNodeWeights() throws Terminate { graph.unhideNodeWeights(); }
     public void unhideEdgeWeights() throws Terminate { graph.unhideEdgeWeights(); }
+
+    /**
+     * It's sometimes useful to reveal all nodes and/or edges that have been hidden
+     */
+    public void showNodes() throws Terminate { graph.showNodes(); }
+    public void showEdges() throws Terminate { graph.showEdges(); }
 
     /**
      * The following methods are designed to make convenient graph methods
@@ -347,6 +326,23 @@ public abstract class Algorithm implements Runnable {
     public void hideWeight(GraphElement ge) throws Terminate { ge.hideWeight(); }
     public void showWeight(GraphElement ge) throws Terminate { ge.showWeight(); }
     public void setWeight(GraphElement ge, double weight) throws Terminate { ge.setWeight(weight); }
+    public int degree(Node v) { return v.getDegree(); }
+    public int indegree(Node v) { return v.getIndegree(); }
+    public int outdegree(Node v) { return v.getOutdegree(); }
+    public List<Node> neighbors(Node v) { return v.getAdjacentNodes(); }
+    public Node first(List<Node> L) { return L.get(0); }
+    public List<Node> rest(List<Node> L) {
+        return L.subList(1, L.size());
+    }
+
+    /**
+     error: name clash: first(List<Edge>) and first(List<Node>) have the same erasure
+    [javac]     public Edge first(List<Edge> L) { return L.get(0); }
+     */
+//     public Edge first(List<Edge> L) { return L.get(0); }
+//     public List<Edge> rest(List<Edge> L) {
+//         return L.subList(1, L.size());
+//     }
 
     /**
      * Displays a message during algorithm execution
@@ -395,44 +391,39 @@ public abstract class Algorithm implements Runnable {
         graph.setDirected(directed);
     }
 
-    /** @see edu.ncsu.csc.Galant.graph.component.Graph#getNodes() */
-    public List<Node> getNodes()
-    {
+    public List<Node> getNodes() {
         return graph.getNodes();
     }
+
+    /** this and the corresponding incantation for edges don't work; the
+     * type/class NodeList has to be created inside the Graph class */
+    public NodeList nodes() { return (NodeList) getNodes(); }
 
     public Integer numberOfNodes() {
         return graph.getNodes().size();
     }
 
-    /** @see edu.ncsu.csc.Galant.graph.component.Graph#setNodes(java.util.List) */
-    public void setNodes(List<Node> nodes){
-        graph.setNodes(nodes);
-    }
-
-    /** @see edu.ncsu.csc.Galant.graph.component.Graph#getEdges() */
-    public List<Edge> getEdges()
-    {
+    public List<Edge> getEdges() {
         return graph.getEdges();
     }
+
+    public EdgeList edges() { return (EdgeList) getEdges(); }
 
     public Integer numberOfEdges() {
         return graph.getEdges().size();
     }
 
-    /** @see edu.ncsu.csc.Galant.graph.component.Graph#setEdges(java.util.List) */
-    public void setEdges(List<Edge> edges){
-        graph.setEdges(edges);
-    }
-
     /** @see edu.ncsu.csc.Galant.graph.component.Graph#getStartNode() */
-    public Node getStartNode() throws GalantException
-    {
+    public Node getStartNode() throws GalantException {
         return graph.getStartNode();
     }
 
+    public Node startNode() throws GalantException {
+        return getStartNode();
+    }
+
     /** @see edu.ncsu.csc.Galant.graph.component.Graph#setRootNode(edu.ncsu.csc.Galant.graph.component.Node) */
-    public void setRootNode(Node rootNode){
+    public void setRootNode(Node rootNode) {
         graph.setRootNode(rootNode);
     }
 
@@ -512,4 +503,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2016 02 22 at 21:08:09 GMT]
+//  [Last modified: 2016 06 18 at 00:41:11 GMT]

@@ -303,8 +303,8 @@ public abstract class Algorithm implements Runnable {
 
     public Double weight(GraphElement ge) { return ge.getWeight(); }
     public String label(GraphElement ge) { return ge.getLabel(); }
-    public void label(GraphElement ge, String s) throws Terminate {
-        ge.setLabel(s);
+    public void setLabel(GraphElement ge, Object s) throws Terminate {
+        ge.setLabel("" + s);
     }
 
     public Node source(Edge e) { return e.getSourceNode(); }
@@ -357,18 +357,30 @@ public abstract class Algorithm implements Runnable {
 //     }
 
     /**
-     * Displays a message during algorithm execution
-     * @see edu.ncsu.csc.Galant.graph.component.Graph#writeMessage(String)
+     * Displays a message during algorithm execution; the message could be
+     * any object that has a toString() method
      */
-    public void display(String message) throws Terminate {
-        graph.writeMessage(message);
+    public void display(Object message) throws Terminate {
+        graph.writeMessage("" + message);
     }
 
     /**
-     * Prints a string on the console (e.g., for debugging)
+     * Prints a string on the console (e.g., for debugging); as with display,
+     * the message can be any object with a toString() method
      */
-    public void print(String string) {
-        System.out.println(string);
+    public void print(Object o) {
+        System.out.println("" + o);
+    }
+
+    /**
+     * @todo Make sure these exceptions are caught by functions and algorithm
+     * conversions from strings to numbers
+     */
+    public Integer integer(String s) throws NumberFormatException {
+        return Integer.parseInt(s);
+    }
+    public Double real(String s) throws NumberFormatException {
+        return Double.parseDouble(s);
     }
 
     /**
@@ -515,4 +527,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2016 06 18 at 23:09:09 GMT]
+//  [Last modified: 2016 06 20 at 01:39:46 GMT]

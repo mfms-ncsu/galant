@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import edu.ncsu.csc.Galant.GraphDispatch;
+import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow.GraphMode;
 import edu.ncsu.csc.Galant.graph.component.Edge;
@@ -144,8 +145,15 @@ public class EdgeEditDialog extends JDialog
                     }
                     Graph g = dispatch.getWorkingGraph();
                     int numNodes = g.nodeIds();
-                    Node n1 = g.getNodeById(point1);
-                    Node n2 = g.getNodeById(point2);
+                    Node n1 = null;
+                    Node n2 = null;
+                    try {
+                        n1 = g.getNodeById(point1);
+                        n2 = g.getNodeById(point2);
+                    }
+                    catch (GalantException galantException) {
+                        galantException.display();
+                    }
                     if ( isInt && n1 != null && n2 != null ) {
                     if (mode == GraphMode.CREATE_EDGE) {
                         //create a new edge from point1 to point2
@@ -213,4 +221,4 @@ public class EdgeEditDialog extends JDialog
     }
 }
 
-//  [Last modified: 2015 08 11 at 20:40:46 GMT]
+//  [Last modified: 2016 06 21 at 17:04:28 GMT]

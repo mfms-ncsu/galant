@@ -358,6 +358,25 @@ public class Graph {
         return ! is(state, HIDDEN_NODE_WEIGHTS);
     }
 
+    /**
+     * The following are used to do blanket clearing of attributes
+     */
+    public void clearNodeMarks() throws Terminate {
+        for ( Node node: nodes ) node.unmark();
+    }
+    public void clearNodeHighlighting() throws Terminate {
+        for ( Node node: nodes ) node.unHighlight();
+    }
+    public void clearEdgeHighlighting() throws Terminate {
+        for ( Edge edge: edges ) edge.unHighlight();
+    }
+    public void clearAllNode(String attribute) throws Terminate {
+        for ( Node node: nodes ) node.clear(attribute);
+    }
+    public void clearAllEdge(String attribute) throws Terminate {
+        for ( Edge edge: edges ) edge.clear(attribute);
+    }
+
     /** Graph methods that are independent of state */
 
     public void setName( String name ) {
@@ -593,10 +612,10 @@ public class Graph {
 	public Node getRootNode()
         throws GalantException
     {
-//         if ( rootNode == null ) {
-//             throw new GalantException( "no root node has been set"
-//                                        + "\n - in getRootNode" );
-//         }
+        if ( rootNode == null ) {
+            throw new GalantException( "no root node has been set"
+                                       + "\n - in getRootNode" );
+        }
 		return rootNode;
 	}
 
@@ -621,27 +640,27 @@ public class Graph {
 	 * @return the specified Node if it exists, null otherwise
 	 */
 	public Node getNodeById( int id )
-//         throws GalantException
+        throws GalantException
     {
-//         if ( this.nodes.size() == 0 ) {
-//             throw new GalantException( "empty graph"
-//                                        + "\n - in getNodeById" );
-//         }
+        if ( this.nodes.size() == 0 ) {
+            throw new GalantException( "empty graph"
+                                       + "\n - in getNodeById" );
+        }
 
-// 		if ( ! nodeById.containsKey( id ) ) {
-//             throw new GalantException( "no node with id = "
-//                                        + id
-//                                        + " exists"
-//                                        + "\n - in getNodeById" );
-//         }
+		if ( ! nodeById.containsKey( id ) ) {
+            throw new GalantException( "no node with id = "
+                                       + id
+                                       + " exists"
+                                       + "\n - in getNodeById" );
+        }
 
         Node n = nodeById.get( id );
 
-//         if ( n.isDeleted() ) {
-//             throw new GalantException( "node has been deleted, id = "
-//                                        + id
-//                                        + "\n - in getNodeById" );
-// 		}
+        if ( n.isDeleted() ) {
+            throw new GalantException( "node has been deleted, id = "
+                                       + id
+                                       + "\n - in getNodeById" );
+		}
 		
 		return n;
 	}
@@ -682,26 +701,26 @@ public class Graph {
 	 * @return the specified Edge if it exists, null otherwise
 	 */
 	public Edge getEdgeById(int id)
-//         throws GalantException
+        throws GalantException
     {
-//         if ( this.edges.size() == 0 ) {
-//             throw new GalantException( "graph has no edges"
-//                                        + "\n - in getEdgeById" );
-//         }
+        if ( this.edges.size() == 0 ) {
+            throw new GalantException( "graph has no edges"
+                                       + "\n - in getEdgeById" );
+        }
 
-// 		if ( id < 0 || id >= this.nodes.size() ) {
-//             throw new GalantException( "edge out of range, id = "
-//                                        + id 
-//                                        + "\n - in getEdgeById" );
-//         }
+		if ( id < 0 || id >= this.nodes.size() ) {
+            throw new GalantException( "edge out of range, id = "
+                                       + id 
+                                       + "\n - in getEdgeById" );
+        }
 
         Edge e = this.edges.get(id);
 
-//         if ( e.isDeleted() ) {
-//             throw new GalantException( "edge has been deleted, id = "
-//                                        + id
-//                                        + "\n - in getEdgeById" );
-// 		}
+        if ( e.isDeleted() ) {
+            throw new GalantException( "edge has been deleted, id = "
+                                       + id
+                                       + "\n - in getEdgeById" );
+		}
 
         return e;
 	}
@@ -819,7 +838,8 @@ public class Graph {
      *
      * This variant is used during algorithm execution when only the id's are known.
 	 */
-	public Edge addEdge(int sourceId, int targetId) throws Terminate {	
+	public Edge addEdge(int sourceId, int targetId)
+        throws Terminate, GalantException {	
         return addEdge(getNodeById(sourceId), getNodeById(targetId));
 	}
 	
@@ -1003,4 +1023,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2016 06 17 at 23:27:14 GMT]
+//  [Last modified: 2016 06 21 at 16:54:36 GMT]

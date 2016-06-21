@@ -7,6 +7,7 @@ import java.beans.*; //property change stuff
 import java.awt.*;
 import java.awt.event.*;
 import edu.ncsu.csc.Galant.GraphDispatch;
+import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow;
 import edu.ncsu.csc.Galant.graph.component.Edge;
 import edu.ncsu.csc.Galant.graph.component.Graph;
@@ -117,16 +118,22 @@ public class DeleteNodeDialog extends JDialog
                     JOptionPane.UNINITIALIZED_VALUE);
 
             if (btnString1.equals(value)) {
-                    nodeText = nodeTextField.getText();
-                    boolean isInt = true;
-                    int nodeId = 0;
-                    try {
-                        nodeId = Integer.parseInt(nodeText);
-                    } catch (NumberFormatException ex) {
-                        isInt = false;
-                    }
-                    Graph g = dispatch.getWorkingGraph();
-                    Node n = g.getNodeById(nodeId);
+                nodeText = nodeTextField.getText();
+                boolean isInt = true;
+                int nodeId = 0;
+                try {
+                    nodeId = Integer.parseInt(nodeText);
+                } catch (NumberFormatException ex) {
+                    isInt = false;
+                }
+                Graph g = dispatch.getWorkingGraph();
+                Node n = null;
+                try {
+                    n = g.getNodeById(nodeId);
+                }
+                catch (GalantException ge) {
+                    ge.display();
+                }
                 if (isInt && n != null && !n.isDeleted()) {
                     //delete specified node
                     g.removeNode(n);                    
@@ -157,3 +164,5 @@ public class DeleteNodeDialog extends JDialog
         setVisible(false);
     }
 }
+
+//  [Last modified: 2016 06 21 at 17:07:58 GMT]

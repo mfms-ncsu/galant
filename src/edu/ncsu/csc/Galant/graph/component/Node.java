@@ -305,13 +305,13 @@ public class Node extends GraphElement {
         setVisited(true);
     }
     public void unmark() throws Terminate {
-        setVisited(false);
+        clear(MARKED);
     }
     /**
      * Some algorithms use this alternate "spelling"
      */
     public void unMark() throws Terminate {
-        setVisited(false);
+        clear(MARKED);
     }
 
 
@@ -641,4 +641,4 @@ public class Node extends GraphElement {
 	}
 }
 
-//  [Last modified: 2016 06 17 at 18:32:09 GMT]
+//  [Last modified: 2016 06 21 at 16:48:31 GMT]

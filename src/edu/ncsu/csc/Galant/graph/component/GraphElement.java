@@ -446,6 +446,10 @@ public class GraphElement implements Comparable<GraphElement> {
 	public void unHighlight() throws Terminate {
         remove(HIGHLIGHTED);
     }
+    // alternate spelling
+	public void unhighlight() throws Terminate {
+        remove(HIGHLIGHTED);
+    }
 
     /**
      * Parses specific attributes that are not to be stored internally as
@@ -579,4 +583,4 @@ public class GraphElement implements Comparable<GraphElement> {
 	}
 }
 
-//  [Last modified: 2016 02 18 at 21:05:38 GMT]
+//  [Last modified: 2016 06 21 at 16:49:17 GMT]

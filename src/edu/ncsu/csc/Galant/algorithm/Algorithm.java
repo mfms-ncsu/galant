@@ -452,13 +452,13 @@ public abstract class Algorithm implements Runnable {
     }
 
     /** @see edu.ncsu.csc.Galant.graph.component.Graph#getNodeById(int) */
-    public Node getNodeById (int id)
+    public Node getNodeById(int id) throws GalantException
     {
         return graph.getNodeById(id);
     }
 
     /** @see edu.ncsu.csc.Galant.graph.component.Graph#getEdgeById(int) */
-    public Edge getEdgeById(int id)
+    public Edge getEdgeById(int id) throws GalantException
     {
         return graph.getEdgeById(id);
     }
@@ -467,7 +467,7 @@ public abstract class Algorithm implements Runnable {
      * adds an edge based on the integer id's of the two endpoints
      * @see edu.ncsu.csc.Galant.graph.component.Graph#addEdge(int, int)
      */
-    public Edge addEdge(int sourceId, int targetId) throws Terminate {
+    public Edge addEdge(int sourceId, int targetId) throws Terminate, GalantException {
         return graph.addEdge(sourceId, targetId);
     }
 
@@ -527,4 +527,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2016 06 20 at 01:39:46 GMT]
+//  [Last modified: 2016 06 21 at 16:57:45 GMT]

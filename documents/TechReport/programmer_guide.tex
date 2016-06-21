@@ -26,13 +26,15 @@ for_nodes(node) {
 }
 endStep();
 \end{verbatim}
-Without the override this initialization would require the observer to click
+Without the \texttt{beginStep}/\texttt{endStep}
+override, this initialization would require the observer to click
 through multiple steps (one for each node) before getting to the interesting
 part of the animation.
 
 \input{Y_graph_functions}
 
 Functions and macros for the graph as a whole are shown in Table~\ref{tab:graph_functions}.
+
 The nodes and edges, of type \textsf{Node} and \textsf{Edge}, respectively,
 are subtypes of \textsf{GraphElement}.
 Arbitrary attributes can be assigned to each graph element. In the GraphML file
@@ -42,13 +44,25 @@ these show up as, for example,\\
 $<$node \emph{attribute\_1}="\emph{value\_1}" ... \emph{attribute\_k}="\emph{value\_k}" /$>$
 }
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 Each node and edge has a unique integer id.
 The id's are assigned consecutively as nodes/edges are created
 and may not be altered.
-The id of a node or edge can be accessed via the \texttt{getId()} method.
+The id of a node or edge can be accessed via the \texttt{id()} function.
+Often, as is the case with the depth-first search algorithm, it makes sense to use
+arrays indexed by node or edge id's.
+Since graphs may be generated externally and/or have undergone deletions of nodes or
+edges, the id's are not always contiguous.
+The functions \texttt{nodeIds()} and \texttt{edgeIds()} return the size of an array
+large enough to accomodate the appropriate id's as indexes. So code such as
+\begin{verbatim}
+Integer myArray[] = new Integer[nodeIds()];
+for_nodes(v) {
+    myArray[id(v)] = ...
+}
+\end{verbatim}
+is immune to array out of bounds errors.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Node and edge methods}
 

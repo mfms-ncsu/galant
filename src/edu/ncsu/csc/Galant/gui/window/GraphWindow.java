@@ -49,6 +49,7 @@ import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 import javax.swing.JOptionPane;
 
+import edu.ncsu.csc.Galant.Galant;
 import edu.ncsu.csc.Galant.GraphDispatch;
 import edu.ncsu.csc.Galant.graph.component.Edge;
 import edu.ncsu.csc.Galant.graph.component.Graph;
@@ -330,7 +331,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                             dispatch.pushToTextEditor(); 
 							
                         } // only allow "dragging" in animation mode
-                        else if ( ! dispatch.isAnimationMode() ){
+                        else if ( ! dispatch.isAnimationMode() ) {
                             // release after click
                             // not in animation mode
                             Node clickNode = graphPanel.getSelectedNode();
@@ -426,13 +427,13 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                                 dispatch.pushToTextEditor(); 
 							
                             } // delete mode
-                        } // not dragging
+                        } // not in animation mode
                     frame.repaint();
                 }
             }
             ); // addMouseListener
 		
-		frame = new JFrame("Galant: Graph Editor");
+		frame = new JFrame("Galant " + Galant.VERSION + ": Graph Editor");
 		
 		// The Main Galant class adds a listener that handles close operations to check if any dirty edit sessions exist
 		frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -1101,4 +1102,4 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	}
 }
 
-//  [Last modified: 2016 06 16 at 13:28:38 GMT]
+//  [Last modified: 2016 06 23 at 19:40:23 GMT]

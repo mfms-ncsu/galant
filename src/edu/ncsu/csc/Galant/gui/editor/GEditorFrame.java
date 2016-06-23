@@ -13,6 +13,8 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
+
+import edu.ncsu.csc.Galant.Galant;
 import edu.ncsu.csc.Galant.GalantPreferences;
 import edu.ncsu.csc.Galant.GraphDispatch;
 import edu.ncsu.csc.Galant.graph.component.Graph;
@@ -30,7 +32,7 @@ import edu.ncsu.csc.Galant.logging.LogHelper;
 public class GEditorFrame extends JFrame implements WindowListener {
 	
 	public static final String FILENAME_EXTENSION_MESSAGE;
-	public static final String GALANT = "Galant";
+	public static final String GALANT = "Galant " + Galant.VERSION + ": Text Editor";
 	public static final String CONFIRM = "One or more files have unsaved changes. Really close Galant?";
 	
 	public static final int defaultWidth = 800;
@@ -213,3 +215,5 @@ public class GEditorFrame extends JFrame implements WindowListener {
 	@Override
 	public void windowOpened(WindowEvent e) {}
 }
+
+//  [Last modified: 2016 06 23 at 19:43:03 GMT]

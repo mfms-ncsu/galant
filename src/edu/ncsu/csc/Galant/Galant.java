@@ -13,6 +13,7 @@ import edu.ncsu.csc.Galant.gui.window.GraphWindow;
  */
 public class Galant {
 
+    public static final String VERSION = "v5.2.1";
 	public static void main(String[] args) {
 		ExceptionDialog.setDialogExceptionHandlerAsDefault();
 		SwingUtilities.invokeLater(new Runnable(){
@@ -33,4 +34,4 @@ public class Galant {
 	
 }
 
-//  [Last modified: 2015 12 03 at 18:28:16 GMT]
+//  [Last modified: 2016 06 23 at 19:47:35 GMT]

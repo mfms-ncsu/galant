@@ -10,16 +10,15 @@
  * code has separate MouseMotionListener and MouseListener -- these can be
  * combined. Communication with the "outside world" takes two basic forms:
  * requests to repaint the panel and requests to update the text version of
- * the graph. For now, all of the following are disabled during animations;
- * it's more important to allow animations to move nodes than it is to allow
- * the user to move nodes during animations; having both capabilities is too
- * complex.
+ * the graph. For now, all of the following are disabled during animations
+ * except for movement of nodes when the algorithm does not specify that it
+ * will do node movement.
  *
  * The mouse events are intercepted in GraphWindow.java but information about
  * the objects (nodes/edges) present at the mouse location are retrieved
  * using methods of panels/GraphPanel.java
 
-   mouse pressed -- only used when occurs at the beginning of a node moving or
+   mouse pressed -- only used when it occurs at the beginning of a node moving or
    edge creation operation:
       remember prevNode = the last node that was selected by the press
       inform the panel of the node currently pressed
@@ -54,7 +53,7 @@
      repainting
  */
 
-//  [Last modified: 2015 03 02 at 21:06:02 GMT]
+//  [Last modified: 2016 06 23 at 19:28:53 GMT]
 
 /**
  * @TODO allow user to repaint the panel during animation

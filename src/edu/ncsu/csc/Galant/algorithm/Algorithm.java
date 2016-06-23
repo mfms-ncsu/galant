@@ -69,6 +69,7 @@ public abstract class Algorithm implements Runnable {
      * Numerical constants
      */
     public static final Double INFINITY = Double.POSITIVE_INFINITY;
+    public static final Double Infinity = Double.POSITIVE_INFINITY;
     public static final Double NEGATIVE_INFINITY = Double.NEGATIVE_INFINITY;
 
     /**
@@ -253,6 +254,40 @@ public abstract class Algorithm implements Runnable {
     public void showEdges() throws Terminate { graph.showEdges(); }
 
     /**
+     * Also useful to do blanket clearing of attributes
+     */
+    public void clearNodeMarks() throws Terminate {
+        graph.clearNodeMarks();
+    }
+    public void clearMarks() throws Terminate {
+        clearNodeMarks();
+    }
+    public void clearNodeHighlighting() throws Terminate {
+        graph.clearNodeHighlighting();
+    }
+    public void clearEdgeHighlighting() throws Terminate {
+        graph.clearEdgeHighlighting();
+    }
+    public void clearNodeLabels() throws Terminate {
+        graph.clearNodeLabels();
+    }
+    public void clearEdgeLabels() throws Terminate {
+        graph.clearEdgeLabels();
+    }
+    public void clearNodeWeights() throws Terminate {
+        graph.clearNodeWeights();
+    }
+    public void clearEdgeWeights() throws Terminate {
+        graph.clearEdgeWeights();
+    }
+    public void clearAllNode(String attribute) throws Terminate {
+        graph.clearAllNode(attribute);
+    }
+    public void clearAllEdge(String attribute) throws Terminate {
+        graph.clearAllEdge(attribute);
+    }
+
+    /**
      * The following methods are designed to make convenient graph methods
      * accessible to the algorithm program. For more details, see the
      * corresponding methods in class Graph.
@@ -288,6 +323,7 @@ public abstract class Algorithm implements Runnable {
      */
     public void highlight(GraphElement ge) throws Terminate { ge.highlight(); }
     public void unHighlight(GraphElement ge) throws Terminate { ge.unHighlight(); }
+    public void unhighlight(GraphElement ge) throws Terminate { ge.unHighlight(); }
     public Boolean highlighted(GraphElement ge) { return ge.isHighlighted(); }
     public Boolean isHighlighted(GraphElement ge) { return ge.isHighlighted(); }
     /** selected is a synonym for highlighted */
@@ -343,6 +379,8 @@ public abstract class Algorithm implements Runnable {
     public int degree(Node v) { return v.getDegree(); }
     public int indegree(Node v) { return v.getIndegree(); }
     public int outdegree(Node v) { return v.getOutdegree(); }
+    public Node otherEnd(Node v, Edge e) { return v.travel(e); }
+    public Node otherEnd(Edge e, Node v) { return v.travel(e); }
     public List<Node> neighbors(Node v) { return v.getAdjacentNodes(); }
     public Node firstNode(List<Node> L) { return L.get(0); }
     public List rest(List L)  { return L.subList(1, L.size()); }
@@ -369,7 +407,7 @@ public abstract class Algorithm implements Runnable {
      * the message can be any object with a toString() method
      */
     public void print(Object o) {
-        System.out.println("" + o);
+        System.err.println("" + o);
     }
 
     /**
@@ -527,4 +565,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2016 06 21 at 16:57:45 GMT]
+//  [Last modified: 2016 06 23 at 17:56:10 GMT]

@@ -370,6 +370,18 @@ public class Graph {
     public void clearEdgeHighlighting() throws Terminate {
         for ( Edge edge: edges ) edge.unHighlight();
     }
+    public void clearNodeLabels() throws Terminate {
+        for ( Node node: nodes ) node.clearLabel();
+    }
+    public void clearEdgeLabels() throws Terminate {
+        for ( Edge edge: edges ) edge.clearLabel();
+    }
+    public void clearNodeWeights() throws Terminate {
+        for ( Node node: nodes ) node.clearWeight();
+    }
+    public void clearEdgeWeights() throws Terminate {
+        for ( Edge edge: edges ) edge.clearWeight();
+    }
     public void clearAllNode(String attribute) throws Terminate {
         for ( Node node: nodes ) node.clear(attribute);
     }
@@ -1023,4 +1035,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2016 06 21 at 16:54:36 GMT]
+//  [Last modified: 2016 06 23 at 17:42:22 GMT]

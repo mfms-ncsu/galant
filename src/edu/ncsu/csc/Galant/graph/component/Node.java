@@ -323,7 +323,7 @@ public class Node extends GraphElement {
 
 	/**
 	 * @return the node's outgoing edges, based on source and target
-	 * specs. ignoring whether the graph is directed or not
+	 * specs; if the graph is undirected, all incident edges are returned
 	 */
 	public List<Edge> getOutgoingEdges() {
 		List<Edge> currentEdges = new ArrayList<Edge>();
@@ -641,4 +641,4 @@ public class Node extends GraphElement {
 	}
 }
 
-//  [Last modified: 2016 06 21 at 16:48:31 GMT]
+//  [Last modified: 2016 06 24 at 17:18:44 GMT]

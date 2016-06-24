@@ -1,7 +1,7 @@
 /**
  * The purpose of this class is to synchronize the state of the algorithm
  * with the display. Methods that change the state of the graph during
- * algorithm execution interact with AlgorithmStateManager to ensure that
+ * algorithm execution interact with AlgorithmExecutor to ensure that
  * those changes are reflected in the display when appropriate. The
  * synchronization needs to happen only when the display catches up with
  * the algorithm, i.e., not when the display shows a state that has already
@@ -10,7 +10,7 @@
  * The sequence of events surrounding a synchronization is ...
  *
  * - user steps forward leading to an incrementDisplayState() in the thread
- *   manager
+ *   manager (AlgorithmExecutor)
  *
  * - if the current display state is the same as the algorithm state, the
  *   algorithm wakes up and executes, doing a startStep(), i.e., setting
@@ -120,4 +120,4 @@ public class AlgorithmSynchronizer {
     }
 }
 
-//  [Last modified: 2015 12 11 at 17:01:41 GMT]
+//  [Last modified: 2016 06 23 at 20:57:56 GMT]

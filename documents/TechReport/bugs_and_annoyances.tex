@@ -29,7 +29,7 @@ the file menu of the graph window, however.
 
 \end{itemize}
 
-\subsubsection*{Graph editing (in graph panel)}
+\subsubsection*{Graph editing (in graph panel or via keyboard shortcuts)}
 
 \begin{itemize}
 
@@ -44,10 +44,12 @@ A change in color of an edge does not appear to take place while the edge
 is selected for editing -- its color stays blue during that time.
 Only when focus is no longer on the edge does it change color.
 
-\item
-If the user changes the weight of a node or an edge by typing in the text box instead of using the spinner, the weight does not change unless the spinner is
-also used (for example, one can enter the desired weight, increment it using the spinner, and then decrement it again).
-Sometimes an exception is thrown if the text box is used instead of the spinner. 
+\item If user attempts to change weight/label of a node/edge and clicks on
+  the graph panel in the middle of the operation, the change is lost. There
+  is no ``ok'' prompt as with color.
+
+\item When user creates a new edge via keyboard shortcut, there is no obvious
+  way to enter the weight and label.
 
 \end{itemize}
 

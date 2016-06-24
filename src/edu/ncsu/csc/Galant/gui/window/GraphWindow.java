@@ -330,7 +330,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 					
                             dispatch.pushToTextEditor(); 
 							
-                        } // only allow "dragging" in animation mode
+                        } // only allow dragging to move nodes in animation mode
                         else if ( ! dispatch.isAnimationMode() ) {
                             // release after click
                             // not in animation mode
@@ -1102,4 +1102,4 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	}
 }
 
-//  [Last modified: 2016 06 23 at 19:40:23 GMT]
+//  [Last modified: 2016 06 23 at 20:48:27 GMT]

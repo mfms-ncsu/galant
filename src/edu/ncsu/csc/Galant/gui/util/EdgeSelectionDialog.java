@@ -28,9 +28,9 @@ public class EdgeSelectionDialog extends JDialog
     private static final int TEXT_FIELD_LENGTH = 10;
 
     /** the selected edge */
-    Edge selectedEdged;
+    private Edge selectedEdge;
     /** true if an edge between source and sink should be created */
-    boolean createIfMissing;
+    private boolean createIfMissing;
     /** text entered by user for the source */
     private String sourceText = null;
     /** text entered by user for the target */
@@ -49,11 +49,6 @@ public class EdgeSelectionDialog extends JDialog
 
     public Edge getSelectedEdge() {
         return selectedEdge;
-    }
-
-    /** Constructor for (most) situations where edge creation is not desired */
-    public EdgeSelectionDialog(Frame frame) {
-        EdgeSelectionDialog(frame, false);
     }
 
     /** Creates the reusable dialog. */
@@ -108,17 +103,23 @@ public class EdgeSelectionDialog extends JDialog
         optionPane.addPropertyChangeListener(this);
     }
 
+    // compiler does not like the following - cannot find symbol
+//     /** Constructor for (most) situations where edge creation is not desired */
+//     public EdgeSelectionDialog(Frame frame) {
+//         EdgeSelectionDialog(frame, false);
+//     }
+
     /** handles events for the text field. */
     public void actionPerformed(ActionEvent e) {
         optionPane.setValue(enter);
     }
 
     /** This method reacts to state changes in the option pane. */
-    public void propertyChange(PropertyChangeEvent e) {
-        String prop = e.getPropertyName();
+    public void propertyChange(PropertyChangeEvent event) {
+        String prop = event.getPropertyName();
 
         if ( isVisible()
-             && (e.getSource() == optionPane)
+             && (event.getSource() == optionPane)
              && (JOptionPane.VALUE_PROPERTY.equals(prop) ||
                  JOptionPane.INPUT_VALUE_PROPERTY.equals(prop)) ) {
             Object value = optionPane.getValue();
@@ -140,16 +141,17 @@ public class EdgeSelectionDialog extends JDialog
                     Graph graph = GraphDispatch.getInstance().getWorkingGraph();
                     int sourceId = Integer.parseInt(sourceText);
                     int targetId = Integer.parseInt(targetText);
-                    Node source = graph.getNodeById(source);
-                    Node target = graph.getNodeById(target);
+                    Node source = graph.getNodeById(sourceId);
+                    Node target = graph.getNodeById(targetId);
 
                     if ( createIfMissing ) {
-                        selectedEdge = addInitialEdge(source, target);
+                        selectedEdge = graph.addInitialEdge(source, target);
                     }
                     else {
                         // Note: this will work as expected for both directed
                         // and undirected graphs (see Node.java)
-                        List<Edge> incidenceList = source.getOutGoingEdges();
+                        java.util.List<Edge> incidenceList
+                            = source.getOutgoingEdges();
                         for ( Edge e : incidenceList ) {
                             if ( e.getTargetNode() == target ) {
                                 selectedEdge = e;
@@ -157,14 +159,14 @@ public class EdgeSelectionDialog extends JDialog
                             }
                         }
                         throw new GalantException("no edge with source " + sourceId
-                                                  + " and sink " + sinkId + "exists");
+                                                  + " and target " + targetId + "exists");
                     }
 
                     //we're done; clear and dismiss the dialog
                     clearAndHide();
                 }
                 catch (Exception e) {
-                    JOptionPane.showMessageDialog(EdgeEditDialog.this,
+                    JOptionPane.showMessageDialog(EdgeSelectionDialog.this,
                                                   e.getMessage(),
                                                   "Try again",
                                                   JOptionPane.ERROR_MESSAGE);
@@ -185,10 +187,10 @@ public class EdgeSelectionDialog extends JDialog
 
     /** This method clears the dialog and hides it. */
     public void clearAndHide() {
-        sourcexsTextField.setText(null);
+        sourceTextField.setText(null);
         targetTextField.setText(null);
         setVisible(false);
     }
 }
 
-//  [Last modified: 2016 06 24 at 17:32:54 GMT]
+//  [Last modified: 2016 06 24 at 18:40:44 GMT]

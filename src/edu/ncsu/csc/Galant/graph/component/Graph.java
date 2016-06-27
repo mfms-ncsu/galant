@@ -591,6 +591,10 @@ public class Graph {
 		this.edges = edges;
 	}
 	
+    /**
+     * 
+     */
+
 	/**
 	 * Removes the specified <code>Edge</code> from the <code>Graph</code>.
 	 * @param e the edge to remove
@@ -598,7 +602,35 @@ public class Graph {
 	public void deleteEdge(Edge e) throws Terminate {
 		e.setDeleted(true);
 	}
-	
+
+    /**
+     * @return an edge with the given source and target if one exists; throws
+     * an exception otherwise; if the graph is directed, source and target
+     * must match.
+     */
+    public Edge getEdge(Node source, Node target) throws GalantException {
+        List<Edge> incidenceList
+            = source.getOutgoingEdges();
+        for ( Edge e : incidenceList ) {
+            if ( e.getTargetNode() == target ) {
+                return e;
+            }
+        }
+        throw new GalantException("no edge with source " + source.getId()
+                                  + " and target " + target.getId() + " exists");
+    }
+
+    /**
+     * Deletes an edge with the given source and target if one exists; throws
+     * an exception otherwise; if the graph is directed, source and target
+     * must match. This is called only during algorithm execution. Not clear
+     * how it would be used since we can hide edges.
+     */
+    public void deleteEdge(Node source, Node target) throws Terminate, GalantException {
+        Edge edge = getEdge(source, target);
+        deleteEdge(edge);
+    }
+
 	/**
 	 * Removes the specified <code>Node</code> from the <code>Graph</code>.
 	 * Starts a new algorithm step if appropriate
@@ -883,10 +915,20 @@ public class Graph {
 		
 		Node source = e.getSourceNode();
 		source.getIncidentEdges().remove(e);		
-		Node dest = e.getTargetNode();
-		dest.getIncidentEdges().remove(e);
+		Node target = e.getTargetNode();
+		target.getIncidentEdges().remove(e);
         LogHelper.exitMethod(getClass(), "removeEdge");
 	}
+
+    /**
+     * Removes the edge with the specified source and target; throws an
+     * exception if none exists; source and target must match if the graph is
+     * directed
+     */
+    public void removeEdge(Node source, Node target) throws GalantException {
+        Edge edge = getEdge(source, target);
+        removeEdge(edge);
+    }
 	
 	/**
 	 * Removes the specified <code>Node</code> from the <code>Graph</code>
@@ -1035,4 +1077,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2016 06 23 at 17:42:22 GMT]
+//  [Last modified: 2016 06 27 at 20:25:31 GMT]

@@ -7,30 +7,29 @@ import java.beans.*; //property change stuff
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
+
 import edu.ncsu.csc.Galant.GraphDispatch;
 import edu.ncsu.csc.Galant.GalantException;
+import edu.ncsu.csc.Galant.algorithm.Terminate;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow;
 import edu.ncsu.csc.Galant.graph.component.Edge;
 import edu.ncsu.csc.Galant.graph.component.Graph;
 import edu.ncsu.csc.Galant.graph.component.Node;
 import edu.ncsu.csc.Galant.gui.window.panels.GraphPanel;
 import edu.ncsu.csc.Galant.gui.window.panels.ComponentEditPanel;
+import edu.ncsu.csc.Galant.logging.LogHelper;
 
 /**
  * This dialog is displayed whenever a needs to create or select an edge;
  * examples include creation of a new edge with Ctrl-e or deletion of an edge
  * with Del-e
  */
-public class EdgeSelectionDialog extends JDialog
+public abstract class EdgeSelectionDialog extends JDialog
     implements ActionListener,
                PropertyChangeListener {
 
     private static final int TEXT_FIELD_LENGTH = 10;
 
-    /** the selected edge */
-    private Edge selectedEdge;
-    /** true if an edge between source and sink should be created */
-    private boolean createIfMissing;
     /** text entered by user for the source */
     private String sourceText = null;
     /** text entered by user for the target */
@@ -47,14 +46,10 @@ public class EdgeSelectionDialog extends JDialog
     
     private Frame frame;
 
-    public Edge getSelectedEdge() {
-        return selectedEdge;
-    }
-
     /** Creates the reusable dialog. */
-    public EdgeSelectionDialog(Frame frame, boolean createIfMissing) {
+    public EdgeSelectionDialog(Frame frame) {
         super(frame);
-        this.createIfMissing = createIfMissing;
+        LogHelper.enterConstructor(getClass());
         sourceTextField = new JTextField(TEXT_FIELD_LENGTH);
         targetTextField = new JTextField(TEXT_FIELD_LENGTH);
 
@@ -78,7 +73,7 @@ public class EdgeSelectionDialog extends JDialog
 
         // keep the dialog inteact so that other code can refer to its outcome
         // even after it is closed
-        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
                 public void windowClosing(WindowEvent we) {
                     // Instead of directly closing the window,
@@ -101,6 +96,7 @@ public class EdgeSelectionDialog extends JDialog
 
         //Register an event handler that reacts to option pane state changes.
         optionPane.addPropertyChangeListener(this);
+        LogHelper.exitConstructor(getClass());
     }
 
     // compiler does not like the following - cannot find symbol
@@ -109,6 +105,11 @@ public class EdgeSelectionDialog extends JDialog
 //         EdgeSelectionDialog(frame, false);
 //     }
 
+    /** action to be performed when source and target are identified;
+     * specified by subclass */
+    protected abstract void performAction(Node source, Node target)
+        throws Terminate, GalantException;
+
     /** handles events for the text field. */
     public void actionPerformed(ActionEvent e) {
         optionPane.setValue(enter);
@@ -116,6 +117,7 @@ public class EdgeSelectionDialog extends JDialog
 
     /** This method reacts to state changes in the option pane. */
     public void propertyChange(PropertyChangeEvent event) {
+        LogHelper.enterMethod(getClass(), "propertyChange");
         String prop = event.getPropertyName();
 
         if ( isVisible()
@@ -144,23 +146,7 @@ public class EdgeSelectionDialog extends JDialog
                     Node source = graph.getNodeById(sourceId);
                     Node target = graph.getNodeById(targetId);
 
-                    if ( createIfMissing ) {
-                        selectedEdge = graph.addInitialEdge(source, target);
-                    }
-                    else {
-                        // Note: this will work as expected for both directed
-                        // and undirected graphs (see Node.java)
-                        java.util.List<Edge> incidenceList
-                            = source.getOutgoingEdges();
-                        for ( Edge e : incidenceList ) {
-                            if ( e.getTargetNode() == target ) {
-                                selectedEdge = e;
-                                break;
-                            }
-                        }
-                        throw new GalantException("no edge with source " + sourceId
-                                                  + " and target " + targetId + "exists");
-                    }
+                    performAction(source, target);
 
                     //we're done; clear and dismiss the dialog
                     clearAndHide();
@@ -183,6 +169,7 @@ public class EdgeSelectionDialog extends JDialog
                 clearAndHide();
             }
         }
+        LogHelper.exitMethod(getClass(), "propertyChange");
     }
 
     /** This method clears the dialog and hides it. */
@@ -193,4 +180,4 @@ public class EdgeSelectionDialog extends JDialog
     }
 }
 
-//  [Last modified: 2016 06 24 at 18:40:44 GMT]
+//  [Last modified: 2016 06 27 at 20:13:55 GMT]

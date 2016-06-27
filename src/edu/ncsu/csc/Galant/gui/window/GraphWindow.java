@@ -154,6 +154,10 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
   
     private EdgeSelectionDialog edgeSelectionDialog;
     private DeleteNodeDialog deleteNodeDialog;  
+
+    public ComponentEditPanel getComponentEditPanel() {
+        return componentEditPanel;
+    }
 	
 	/**
 	 * The Edit modes GraphWindow can assume. Used in the listener for the
@@ -933,29 +937,27 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
       // "E" pressed
       if ( ! dispatch.isAnimationMode() && e.getID()==KeyEvent.KEY_PRESSED
            && e.getKeyCode()==KeyEvent.VK_E ) {
-          synchronized(this) {
+          //          synchronized(this) {
               // "ctrl" already pressed, create new edge
               if ( ctrlPressed ) {
                   LogHelper.guiLogDebug("CREATE EDGE");
-                  //prompt user for the id of two nodes	
-                  edgeEditDialog = new EdgeSelectionDialog(frame, true);
-                  edgeEditDialog.pack();
-                  edgeEditDialog.setLocationRelativeTo(frame);
-                  edgeEditDialog.setVisible(true);
+                  EdgeCreationDialog dialog = new EdgeCreationDialog(frame);
+                  dialog.pack();
+                  dialog.setLocationRelativeTo(frame);
+                  dialog.setVisible(true);
                   dispatch.pushToTextEditor();
-              } //Create new edge
-              //delete edge
+              } // create new edge
               if ( deletePressed ) {
                   LogHelper.guiLogDebug("DELETE EDGE");
-                  //prompt user for the id of two nodes	
-                  edgeEditDialog = new EdgeEditDialog(frame, dispatch, GraphMode.DELETE);
-                  edgeEditDialog.pack();
-                  edgeEditDialog.setLocationRelativeTo(frame);
-                  edgeEditDialog.setVisible(true);
+                  // the dialog is selfcontained; only needs to be
+                  // instantiated
+                  EdgeDeletionDialog dialog = new EdgeDeletionDialog(frame);
+                  dialog.pack();
+                  dialog.setLocationRelativeTo(frame);
+                  dialog.setVisible(true);
                   dispatch.pushToTextEditor();
-              }//delete edge
-          }
-          LogHelper.guiExitMethod(getClass(), "step backward");
+              } // delete edge
+              //}
           LogHelper.guiExitMethod(getClass(), "'e' pressed");
           return true;
       }
@@ -1093,4 +1095,4 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	}
 }
 
-//  [Last modified: 2016 06 24 at 18:46:42 GMT]
+//  [Last modified: 2016 06 27 at 20:43:06 GMT]

@@ -945,7 +945,6 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                   dialog.pack();
                   dialog.setLocationRelativeTo(frame);
                   dialog.setVisible(true);
-                  dispatch.pushToTextEditor();
               } // create new edge
               if ( deletePressed ) {
                   LogHelper.guiLogDebug("DELETE EDGE");
@@ -955,7 +954,6 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                   dialog.pack();
                   dialog.setLocationRelativeTo(frame);
                   dialog.setVisible(true);
-                  dispatch.pushToTextEditor();
               } // delete edge
               //}
           LogHelper.guiExitMethod(getClass(), "'e' pressed");
@@ -1095,4 +1093,4 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	}
 }
 
-//  [Last modified: 2016 06 27 at 20:43:06 GMT]
+//  [Last modified: 2016 06 27 at 22:11:59 GMT]

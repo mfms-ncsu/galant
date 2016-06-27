@@ -30,19 +30,16 @@ public class EdgeCreationDialog extends EdgeSelectionDialog {
         Graph graph = dispatch.getWorkingGraph();
         GraphWindow window = dispatch.getGraphWindow();
         Edge edge = null;
-        if ( dispatch.isAnimationMode() ) {
-            edge = graph.addEdge(source, target);
-        }
-        else {
-            edge = graph.addInitialEdge(source, target);
-        }
-        GraphPanel panel = window.getGraphPanel();
+        edge = graph.addInitialEdge(source, target);
+        GraphPanel panel = GraphWindow.getGraphPanel();
         panel.setSelectedNode(null);
         panel.setSelectedEdge(edge);
         window.getComponentEditPanel().setWorkingComponent(edge);
         panel.setEdgeTracker(null);
+        panel.repaint();
+        dispatch.pushToTextEditor();
         LogHelper.exitMethod(getClass(), "performAction");
     }
 }
 
-//  [Last modified: 2016 06 27 at 18:02:27 GMT]
+//  [Last modified: 2016 06 27 at 22:11:36 GMT]

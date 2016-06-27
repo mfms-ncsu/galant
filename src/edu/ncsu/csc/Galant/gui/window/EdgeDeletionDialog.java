@@ -10,6 +10,7 @@ import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.algorithm.Terminate;
 import edu.ncsu.csc.Galant.gui.util.EdgeSelectionDialog;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow;
+import edu.ncsu.csc.Galant.gui.window.panels.GraphPanel;
 import edu.ncsu.csc.Galant.graph.component.Edge;
 import edu.ncsu.csc.Galant.graph.component.Graph;
 import edu.ncsu.csc.Galant.graph.component.Node;
@@ -24,13 +25,12 @@ public class EdgeDeletionDialog extends EdgeSelectionDialog {
         throws Terminate, GalantException {
         GraphDispatch dispatch = GraphDispatch.getInstance();
         Graph graph = dispatch.getWorkingGraph();
-        if ( dispatch.isAnimationMode() ) {
-            graph.deleteEdge(source, target);
-        }
-        else {
-            graph.removeEdge(source, target);
-        }
+        GraphPanel panel = GraphWindow.getGraphPanel();
+        graph.removeEdge(source, target);
+        GraphWindow.componentEditPanel.setWorkingComponent(null);
+        panel.repaint();
+        dispatch.pushToTextEditor();
     }
 }
 
-//  [Last modified: 2016 06 27 at 16:48:08 GMT]
+//  [Last modified: 2016 06 27 at 22:10:11 GMT]

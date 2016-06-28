@@ -8,13 +8,13 @@ public class LogHelper {
 
     private static final String INDENT_STRING = "..";
 	private static LogHelper logHelper = null;
-	private static boolean loggingEnabled = true;
+	private static boolean loggingEnabled = false;
     /**
      * Logging related to the graph panel, i.e., mouse actions and drawing,
      * clutter the loggin unnecessarily unless they are specifically
      * desired. - mfms
      */
-    private static boolean guiLoggingEnabled = true;
+    private static boolean guiLoggingEnabled = false;
     private static boolean savedState = loggingEnabled;
 	
 	private static int spaces = 0;
@@ -150,4 +150,4 @@ public class LogHelper {
 	}
 }
 
-//  [Last modified: 2016 06 27 at 17:01:46 GMT]
+//  [Last modified: 2016 06 28 at 14:02:00 GMT]

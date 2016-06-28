@@ -14,6 +14,7 @@ import java.util.TreeMap;
 import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.GraphDispatch;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow;
+import edu.ncsu.csc.Galant.gui.util.EdgeSelectionDialog;
 import edu.ncsu.csc.Galant.algorithm.Terminate;
 import edu.ncsu.csc.Galant.logging.LogHelper;
 
@@ -40,6 +41,11 @@ public class Graph {
 	private List<Edge> edges;
 
     private MessageBanner banner;
+
+    /**
+     * Keeps track of an edge selected during algorithm execution.
+     */
+    private Edge selectedEdge;
 
     /**
      * The list of states that this graph has been in up to this point --
@@ -193,6 +199,28 @@ public class Graph {
         }
         LogHelper.exitMethod(getClass(), "addState, found = " + found);
 	}
+
+    /**
+     * sets the selected edge; called from EdgeSelectionDialog
+     */
+    public void setSelectedEdge(Node source, Node target)
+        throws GalantException
+    {
+        selectedEdge = getEdge(source, target);
+    }
+
+    /**
+     * @param prompt a message displayed in the edge selection dialog popup
+     * @return an edge selected via a dialog during algorithm execution
+     */
+    public Edge getEdge(String prompt) throws Terminate {
+        dispatch.startStepIfRunning();
+        EdgeSelectionDialog dialog = new EdgeSelectionDialog(prompt);
+        dispatch.pauseExecutionIfRunning();
+        dialog = null;          // to keep window from lingering when
+                                // execution is terminated
+        return selectedEdge;
+    }
 
 
     /* Only Boolean and String attributes are needed for now */
@@ -591,6 +619,10 @@ public class Graph {
 		this.edges = edges;
 	}
 	
+    /**
+     * 
+     */
+
 	/**
 	 * Removes the specified <code>Edge</code> from the <code>Graph</code>.
 	 * @param e the edge to remove
@@ -598,7 +630,35 @@ public class Graph {
 	public void deleteEdge(Edge e) throws Terminate {
 		e.setDeleted(true);
 	}
-	
+
+    /**
+     * @return an edge with the given source and target if one exists; throws
+     * an exception otherwise; if the graph is directed, source and target
+     * must match.
+     */
+    public Edge getEdge(Node source, Node target) throws GalantException {
+        List<Edge> incidenceList
+            = source.getOutgoingEdges();
+        for ( Edge e : incidenceList ) {
+            if ( e.getTargetNode() == target ) {
+                return e;
+            }
+        }
+        throw new GalantException("no edge with source " + source.getId()
+                                  + " and target " + target.getId() + " exists");
+    }
+
+    /**
+     * Deletes an edge with the given source and target if one exists; throws
+     * an exception otherwise; if the graph is directed, source and target
+     * must match. This is called only during algorithm execution. Not clear
+     * how it would be used since we can hide edges.
+     */
+    public void deleteEdge(Node source, Node target) throws Terminate, GalantException {
+        Edge edge = getEdge(source, target);
+        deleteEdge(edge);
+    }
+
 	/**
 	 * Removes the specified <code>Node</code> from the <code>Graph</code>.
 	 * Starts a new algorithm step if appropriate
@@ -883,10 +943,20 @@ public class Graph {
 		
 		Node source = e.getSourceNode();
 		source.getIncidentEdges().remove(e);		
-		Node dest = e.getTargetNode();
-		dest.getIncidentEdges().remove(e);
+		Node target = e.getTargetNode();
+		target.getIncidentEdges().remove(e);
         LogHelper.exitMethod(getClass(), "removeEdge");
 	}
+
+    /**
+     * Removes the edge with the specified source and target; throws an
+     * exception if none exists; source and target must match if the graph is
+     * directed
+     */
+    public void removeEdge(Node source, Node target) throws GalantException {
+        Edge edge = getEdge(source, target);
+        removeEdge(edge);
+    }
 	
 	/**
 	 * Removes the specified <code>Node</code> from the <code>Graph</code>
@@ -1035,4 +1105,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2016 06 23 at 17:42:22 GMT]
+//  [Last modified: 2016 06 28 at 12:46:21 GMT]

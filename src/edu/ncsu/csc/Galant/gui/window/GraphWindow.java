@@ -944,18 +944,12 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                   // the dialog is self contained; only needs to be
                   // instantiated
                   EdgeCreationDialog dialog = new EdgeCreationDialog(frame);
-                  dialog.pack();
-                  dialog.setLocationRelativeTo(frame);
-                  dialog.setVisible(true);
               } // create new edge
               if ( deletePressed ) {
                   LogHelper.guiLogDebug("DELETE EDGE");
                   // the dialog is self contained; only needs to be
                   // instantiated
                   EdgeDeletionDialog dialog = new EdgeDeletionDialog(frame);
-                  dialog.pack();
-                  dialog.setLocationRelativeTo(frame);
-                  dialog.setVisible(true);
               } // delete edge
               //}
           LogHelper.guiExitMethod(getClass(), "'e' pressed");
@@ -1095,4 +1089,4 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	}
 }
 
-//  [Last modified: 2016 06 28 at 00:35:21 GMT]
+//  [Last modified: 2016 06 28 at 12:51:26 GMT]

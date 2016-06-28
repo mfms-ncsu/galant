@@ -402,6 +402,14 @@ public abstract class Algorithm implements Runnable {
         graph.writeMessage("" + message);
     }
 
+
+    /**
+     * @return an edge specified by the user in response to the prompt
+     */
+    public Edge getEdge(String prompt) throws Terminate {
+        return graph.getEdge(prompt);
+    }
+
     /**
      * Prints a string on the console (e.g., for debugging); as with display,
      * the message can be any object with a toString() method
@@ -565,4 +573,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2016 06 23 at 17:56:10 GMT]
+//  [Last modified: 2016 06 28 at 12:46:41 GMT]

@@ -14,6 +14,7 @@ import java.util.TreeMap;
 import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.GraphDispatch;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow;
+import edu.ncsu.csc.Galant.gui.util.EdgeSelectionDialog;
 import edu.ncsu.csc.Galant.algorithm.Terminate;
 import edu.ncsu.csc.Galant.logging.LogHelper;
 
@@ -40,6 +41,11 @@ public class Graph {
 	private List<Edge> edges;
 
     private MessageBanner banner;
+
+    /**
+     * Keeps track of an edge selected during algorithm execution.
+     */
+    private Edge selectedEdge;
 
     /**
      * The list of states that this graph has been in up to this point --
@@ -193,6 +199,28 @@ public class Graph {
         }
         LogHelper.exitMethod(getClass(), "addState, found = " + found);
 	}
+
+    /**
+     * sets the selected edge; called from EdgeSelectionDialog
+     */
+    public void setSelectedEdge(Node source, Node target)
+        throws GalantException
+    {
+        selectedEdge = getEdge(source, target);
+    }
+
+    /**
+     * @param prompt a message displayed in the edge selection dialog popup
+     * @return an edge selected via a dialog during algorithm execution
+     */
+    public Edge getEdge(String prompt) throws Terminate {
+        dispatch.startStepIfRunning();
+        EdgeSelectionDialog dialog = new EdgeSelectionDialog(prompt);
+        dispatch.pauseExecutionIfRunning();
+        dialog = null;          // to keep window from lingering when
+                                // execution is terminated
+        return selectedEdge;
+    }
 
 
     /* Only Boolean and String attributes are needed for now */
@@ -1077,4 +1105,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2016 06 27 at 20:25:31 GMT]
+//  [Last modified: 2016 06 28 at 12:46:21 GMT]

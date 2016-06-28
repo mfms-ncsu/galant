@@ -61,7 +61,7 @@ import edu.ncsu.csc.Galant.gui.window.panels.GraphPanel;
 import edu.ncsu.csc.Galant.logging.LogHelper;
 import edu.ncsu.csc.Galant.prefs.Preference;
 import edu.ncsu.csc.Galant.GalantException;
-import edu.ncsu.csc.Galant.gui.util.EdgeEditDialog;
+import edu.ncsu.csc.Galant.gui.util.EdgeSelectionDialog;
 import edu.ncsu.csc.Galant.gui.util.DeleteNodeDialog;
 import edu.ncsu.csc.Galant.gui.editor.GTabbedPane; // for confirmation dialog
 import edu.ncsu.csc.Galant.gui.editor.GEditorFrame; // for confirmation dialog
@@ -152,8 +152,8 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	
 	private GraphMode mode = null;
   
-  private EdgeEditDialog edgeEditDialog;
-  private DeleteNodeDialog deleteNodeDialog;  
+    private EdgeSelectionDialog edgeSelectionDialog;
+    private DeleteNodeDialog deleteNodeDialog;  
 	
 	/**
 	 * The Edit modes GraphWindow can assume. Used in the listener for the
@@ -167,16 +167,15 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		
 		private ImageIcon icon;
 		
-		private GraphMode(String iconName)
-			{
-				java.net.URL imageURL = GraphWindow.class.getResource("images/" + iconName + "_24.png");
-				icon = new ImageIcon(imageURL);
-			}
+		private GraphMode(String iconName) {
+            java.net.URL imageURL
+                = GraphWindow.class.getResource("images/" + iconName + "_24.png");
+            icon = new ImageIcon(imageURL);
+        }
 		
-		public ImageIcon getIcon()
-			{
-				return icon;
-			}
+		public ImageIcon getIcon() {
+            return icon;
+        }
 	}
 	
 	/**
@@ -192,26 +191,22 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		private ImageIcon icon;
 		private boolean isShown;
 		
-		private GraphDisplays(String iconName)
-			{
-				java.net.URL imageURL = GraphWindow.class.getResource("images/" + iconName + "_24.png");
-				icon = new ImageIcon(imageURL);
-			}
+		private GraphDisplays(String iconName) {
+            java.net.URL imageURL 
+                = GraphWindow.class.getResource("images/" + iconName + "_24.png");
+			   icon = new ImageIcon(imageURL);
+        }
 		
-		public ImageIcon getIcon()
-			{
-				return icon;
-			}
-		
-		public boolean isShown()
-			{
-				return isShown;
-			}
-		public void setShown(boolean shown)
-			{
-				isShown = shown;
-				Preference.PREFERENCES_NODE.putBoolean(name(), isShown);
-			}
+		public ImageIcon getIcon() {
+            return icon;
+        }
+		public boolean isShown() {
+            return isShown;
+        }
+		public void setShown(boolean shown) {
+            isShown = shown;
+            Preference.PREFERENCES_NODE.putBoolean(name(), isShown);
+        }
 	}
 	
 	/**
@@ -223,25 +218,22 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		
 		private ImageIcon icon;
 		
-		private Directedness(String iconName)
-			{
-				java.net.URL imageURL = GraphWindow.class.getResource("images/" + iconName + "_24.png");
-				icon = new ImageIcon(imageURL);
-			}
+		private Directedness(String iconName) {
+            java.net.URL imageURL
+                = GraphWindow.class.getResource("images/" + iconName + "_24.png");
+            icon = new ImageIcon(imageURL);
+        }
 		
-		public ImageIcon getIcon()
-			{
-				return icon;
-			}
+		public ImageIcon getIcon() {
+            return icon;
+        }
 	}
 	
-	public static JFrame getGraphFrame()
-		{
-			return frame;
-		}
+	public static JFrame getGraphFrame() {
+        return frame;
+    }
 	
-	public static GraphPanel getGraphPanel()
-	{
+	public static GraphPanel getGraphPanel() {
 		return graphPanel;
 	}
 	
@@ -946,8 +938,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
               if ( ctrlPressed ) {
                   LogHelper.guiLogDebug("CREATE EDGE");
                   //prompt user for the id of two nodes	
-                  edgeEditDialog
-                      = new EdgeEditDialog(frame, dispatch, GraphMode.CREATE_EDGE);
+                  edgeEditDialog = new EdgeSelectionDialog(frame, true);
                   edgeEditDialog.pack();
                   edgeEditDialog.setLocationRelativeTo(frame);
                   edgeEditDialog.setVisible(true);
@@ -1102,4 +1093,4 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	}
 }
 
-//  [Last modified: 2016 06 23 at 20:48:27 GMT]
+//  [Last modified: 2016 06 24 at 18:46:42 GMT]

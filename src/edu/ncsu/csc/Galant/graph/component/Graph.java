@@ -640,7 +640,7 @@ public class Graph {
         List<Edge> incidenceList
             = source.getOutgoingEdges();
         for ( Edge e : incidenceList ) {
-            if ( e.getTargetNode() == target ) {
+            if ( source.travel(e) == target ) {
                 return e;
             }
         }
@@ -1105,4 +1105,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2016 06 28 at 12:46:21 GMT]
+//  [Last modified: 2016 06 28 at 14:04:58 GMT]

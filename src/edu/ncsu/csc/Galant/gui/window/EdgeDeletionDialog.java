@@ -8,17 +8,17 @@ import java.awt.Frame;
 import edu.ncsu.csc.Galant.GraphDispatch;
 import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.algorithm.Terminate;
-import edu.ncsu.csc.Galant.gui.util.EdgeSelectionDialog;
+import edu.ncsu.csc.Galant.gui.util.EdgeSpecificationDialog;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow;
 import edu.ncsu.csc.Galant.gui.window.panels.GraphPanel;
 import edu.ncsu.csc.Galant.graph.component.Edge;
 import edu.ncsu.csc.Galant.graph.component.Graph;
 import edu.ncsu.csc.Galant.graph.component.Node;
 
-public class EdgeDeletionDialog extends EdgeSelectionDialog {
+public class EdgeDeletionDialog extends EdgeSpecificationDialog {
 
     public EdgeDeletionDialog(Frame frame) {
-        super(frame);
+        super(frame, "Give node id's for edge to delete");
     }
 
     protected void performAction(Node source, Node target) 
@@ -33,4 +33,4 @@ public class EdgeDeletionDialog extends EdgeSelectionDialog {
     }
 }
 
-//  [Last modified: 2016 06 27 at 22:10:11 GMT]
+//  [Last modified: 2016 06 28 at 00:33:33 GMT]

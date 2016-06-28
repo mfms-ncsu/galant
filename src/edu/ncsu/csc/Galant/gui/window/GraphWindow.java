@@ -61,7 +61,7 @@ import edu.ncsu.csc.Galant.gui.window.panels.GraphPanel;
 import edu.ncsu.csc.Galant.logging.LogHelper;
 import edu.ncsu.csc.Galant.prefs.Preference;
 import edu.ncsu.csc.Galant.GalantException;
-import edu.ncsu.csc.Galant.gui.util.EdgeSelectionDialog;
+import edu.ncsu.csc.Galant.gui.util.EdgeSpecificationDialog;
 import edu.ncsu.csc.Galant.gui.util.DeleteNodeDialog;
 import edu.ncsu.csc.Galant.gui.editor.GTabbedPane; // for confirmation dialog
 import edu.ncsu.csc.Galant.gui.editor.GEditorFrame; // for confirmation dialog
@@ -152,7 +152,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	
 	private GraphMode mode = null;
   
-    private EdgeSelectionDialog edgeSelectionDialog;
+    private EdgeSpecificationDialog edgeSelectionDialog;
     private DeleteNodeDialog deleteNodeDialog;  
 
     public ComponentEditPanel getComponentEditPanel() {
@@ -941,6 +941,8 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
               // "ctrl" already pressed, create new edge
               if ( ctrlPressed ) {
                   LogHelper.guiLogDebug("CREATE EDGE");
+                  // the dialog is self contained; only needs to be
+                  // instantiated
                   EdgeCreationDialog dialog = new EdgeCreationDialog(frame);
                   dialog.pack();
                   dialog.setLocationRelativeTo(frame);
@@ -948,7 +950,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
               } // create new edge
               if ( deletePressed ) {
                   LogHelper.guiLogDebug("DELETE EDGE");
-                  // the dialog is selfcontained; only needs to be
+                  // the dialog is self contained; only needs to be
                   // instantiated
                   EdgeDeletionDialog dialog = new EdgeDeletionDialog(frame);
                   dialog.pack();
@@ -1093,4 +1095,4 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	}
 }
 
-//  [Last modified: 2016 06 27 at 22:11:59 GMT]
+//  [Last modified: 2016 06 28 at 00:35:21 GMT]

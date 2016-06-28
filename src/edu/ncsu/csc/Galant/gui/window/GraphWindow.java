@@ -61,7 +61,7 @@ import edu.ncsu.csc.Galant.gui.window.panels.GraphPanel;
 import edu.ncsu.csc.Galant.logging.LogHelper;
 import edu.ncsu.csc.Galant.prefs.Preference;
 import edu.ncsu.csc.Galant.GalantException;
-import edu.ncsu.csc.Galant.gui.util.EdgeSelectionDialog;
+import edu.ncsu.csc.Galant.gui.util.EdgeSpecificationDialog;
 import edu.ncsu.csc.Galant.gui.util.DeleteNodeDialog;
 import edu.ncsu.csc.Galant.gui.editor.GTabbedPane; // for confirmation dialog
 import edu.ncsu.csc.Galant.gui.editor.GEditorFrame; // for confirmation dialog
@@ -152,8 +152,12 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	
 	private GraphMode mode = null;
   
-    private EdgeSelectionDialog edgeSelectionDialog;
+    private EdgeSpecificationDialog edgeSelectionDialog;
     private DeleteNodeDialog deleteNodeDialog;  
+
+    public ComponentEditPanel getComponentEditPanel() {
+        return componentEditPanel;
+    }
 	
 	/**
 	 * The Edit modes GraphWindow can assume. Used in the listener for the
@@ -933,29 +937,21 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
       // "E" pressed
       if ( ! dispatch.isAnimationMode() && e.getID()==KeyEvent.KEY_PRESSED
            && e.getKeyCode()==KeyEvent.VK_E ) {
-          synchronized(this) {
+          //          synchronized(this) {
               // "ctrl" already pressed, create new edge
               if ( ctrlPressed ) {
                   LogHelper.guiLogDebug("CREATE EDGE");
-                  //prompt user for the id of two nodes	
-                  edgeEditDialog = new EdgeSelectionDialog(frame, true);
-                  edgeEditDialog.pack();
-                  edgeEditDialog.setLocationRelativeTo(frame);
-                  edgeEditDialog.setVisible(true);
-                  dispatch.pushToTextEditor();
-              } //Create new edge
-              //delete edge
+                  // the dialog is self contained; only needs to be
+                  // instantiated
+                  EdgeCreationDialog dialog = new EdgeCreationDialog(frame);
+              } // create new edge
               if ( deletePressed ) {
                   LogHelper.guiLogDebug("DELETE EDGE");
-                  //prompt user for the id of two nodes	
-                  edgeEditDialog = new EdgeEditDialog(frame, dispatch, GraphMode.DELETE);
-                  edgeEditDialog.pack();
-                  edgeEditDialog.setLocationRelativeTo(frame);
-                  edgeEditDialog.setVisible(true);
-                  dispatch.pushToTextEditor();
-              }//delete edge
-          }
-          LogHelper.guiExitMethod(getClass(), "step backward");
+                  // the dialog is self contained; only needs to be
+                  // instantiated
+                  EdgeDeletionDialog dialog = new EdgeDeletionDialog(frame);
+              } // delete edge
+              //}
           LogHelper.guiExitMethod(getClass(), "'e' pressed");
           return true;
       }
@@ -1093,4 +1089,4 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	}
 }
 
-//  [Last modified: 2016 06 24 at 18:46:42 GMT]
+//  [Last modified: 2016 06 28 at 12:51:26 GMT]

@@ -12,7 +12,12 @@
  * - String query(String message)
  * These should prompt the display to pop up a window with the message and
  * pause execution, to be resumed when the user has produced the appropriate
- * response.
+ * response. Done for edge using getEdge(String). Work in progress in the
+ * component-selection branch
+ *
+ * @todo Add method(s) to change the direction of an edge; this would involve
+ * both swapping source and target and changing the lists of incoming and
+ * outgoing edges of each endpoint.
  */
 
 package edu.ncsu.csc.Galant.algorithm;
@@ -81,8 +86,9 @@ public abstract class Algorithm implements Runnable {
     public static final String BLUE      = "#0000ff";
     public static final String YELLOW    = "#ffff00"; 
     public static final String MAGENTA   = "#ff00ff"; 
-    public static final String CYAN      = "#00ffff"; 
-    public static final String VIOLET    = "#8000ff";
+    public static final String CYAN      = "#00ffff";
+    public static final String TEAL      = "#009999";
+    public static final String VIOLET    = "#9900cc";
     public static final String ORANGE    = "#ff8000"; 
     public static final String GRAY      = "#808080"; 
     public static final String BLACK     = "#000000"; 
@@ -339,6 +345,13 @@ public abstract class Algorithm implements Runnable {
 
     public Double weight(GraphElement ge) { return ge.getWeight(); }
     public String label(GraphElement ge) { return ge.getLabel(); }
+    /**
+     * @todo It would be useful to have a class AttributeParser with a method
+     * parse(String) that returns an Integer, Double, Boolean or String,
+     * depending on whether the string can be successfully parse as one of
+     * these (attempted in the given order). The mechanism already exists in
+     * GraphMLParser. The new class should probably live in graph/component.
+     */
     public void setLabel(GraphElement ge, Object s) throws Terminate {
         ge.setLabel("" + s);
     }
@@ -352,6 +365,7 @@ public abstract class Algorithm implements Runnable {
 
     public void color(GraphElement ge, String color) throws Terminate { ge.setColor(color); }
     public void unColor(GraphElement ge) throws Terminate { ge.clearColor(); }
+    public void uncolor(GraphElement ge) throws Terminate { ge.clearColor(); }
     public String color(GraphElement ge) { return ge.getColor(); }
 
     public void hide(GraphElement ge) throws Terminate { ge.hide(); }
@@ -510,6 +524,22 @@ public abstract class Algorithm implements Runnable {
     }
 
     /**
+     * @return an Edge with the given source and target; if the graph is
+     * undirected it doesn't matter which is which; returns null if no such
+     * edge exists
+     */
+    public Edge getEdge(Node source, Node target) {
+        Edge edge = null;
+        try {
+            edge = graph.getEdge(source, target);
+        }
+        catch (GalantException e) {
+            e.report("Warning:");
+        }
+        return edge;
+    }
+
+    /**
      * adds an edge based on the integer id's of the two endpoints
      * @see edu.ncsu.csc.Galant.graph.component.Graph#addEdge(int, int)
      */
@@ -573,4 +603,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2016 06 28 at 12:46:41 GMT]
+//  [Last modified: 2016 07 01 at 13:50:58 GMT]

@@ -1,4 +1,5 @@
 # .gitignore for galant
+# java class files
 *.class
 # emacs backups and TAGS
 *.~*~
@@ -6,7 +7,7 @@ TAGS
 # stuff in the build directory is the result of compilation
 build
 # stuff in the doc directory: created when building javadoc
-doc
+doc/*
 # graphs created on the fly
 *.graphml
 # anything in the Sandbox -- used for trying things out
@@ -17,5 +18,6 @@ Graph-Gallery
 Research-Graphs
 # other graphs used in crossing minimization research
 Crossing_Graphs
-
+# latex stuff
 *.blg
+*.aux

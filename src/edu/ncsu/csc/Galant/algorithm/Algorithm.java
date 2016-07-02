@@ -133,7 +133,14 @@ public abstract class Algorithm implements Runnable {
 //         Collections.sort(L);
 //     }
 
-    // Specialized Node/Edge types for Queues/Stacks/Priority Queues
+    /**
+     * A queue of nodes
+     *
+     * @todo Node and Edge Queue, Stack, PriorityQueue and List should be
+     * turned into independent classes that can be used elsewhere, such as
+     * when a Node object returns a list of incident edges. This should
+     * prevent the Collections.sort() issue with List<Edge>
+     */
     public class NodeQueue extends AbstractQueue<Node> {
         private Queue<Node> Q = new ArrayDeque<Node>();
         public void enqueue(Node v) { Q.offer(v); }
@@ -232,7 +239,7 @@ public abstract class Algorithm implements Runnable {
     }
 
     /**
-     * Throws an exception; this is a simpler interface for the algorithm
+     * Throws an exception; this provides a simple interface for the algorithm
      * programmer.
      */
     public void error(String message) throws GalantException {
@@ -242,16 +249,49 @@ public abstract class Algorithm implements Runnable {
     /**
      * The following methods control the display of labels and weights during
      * algorithm execution; usually used at the beginning to hide unnecessary
-     * information.
+     * information. Individual showing and hiding of Node/Edge labels or
+     * weights takes effect only if these have been made visible.
      */
+
+    /** makes node labels invisible */
     public void hideNodeLabels() throws Terminate { graph.hideNodeLabels(); }
+    /** makes edge labels invisible */
     public void hideEdgeLabels() throws Terminate { graph.hideEdgeLabels(); }
+    /** makes node labels visible */
     public void unhideNodeLabels() throws Terminate { graph.unhideNodeLabels(); }
+    /** makes node labels visible */
+    public void showNodeLabels() throws Terminate { graph.unhideNodeLabels(); }
+    /** makes edge labels visible */
     public void unhideEdgeLabels() throws Terminate { graph.unhideEdgeLabels(); }
+    /** makes edge labels visible */
+    public void showEdgeLabels() throws Terminate { graph.unhideEdgeLabels(); }
+    /** makes node weights invisible */
     public void hideNodeWeights() throws Terminate { graph.hideNodeWeights(); }
+    /** makes edge weights invisible */
     public void hideEdgeWeights() throws Terminate { graph.hideEdgeWeights(); }
+    /** makes node weights visible */
     public void unhideNodeWeights() throws Terminate { graph.unhideNodeWeights(); }
+    /** makes node weights visible */
+    public void showNodeWeights() throws Terminate { graph.unhideNodeWeights(); }
+    /** makes edge weights visible */
     public void unhideEdgeWeights() throws Terminate { graph.unhideEdgeWeights(); }
+    /** makes edge weights visible */
+    public void showEdgeWeights() throws Terminate { graph.unhideEdgeWeights(); }
+
+    /**
+     * The following show or hide all Node/Edge labels or weights during
+     * execution. They take effect only if the corresponding items are
+     * visible overall. What they do is to iteratively show or hide weight or
+     * label of each individual Node/Edge
+     */
+    public void hideAllNodeLabels() throws Terminate { graph.hideAllNodeLabels(); }
+    public void hideAllEdgeLabels() throws Terminate { graph.hideAllEdgeLabels(); }
+    public void hideAllNodeWeights() throws Terminate { graph.hideAllNodeWeights(); }
+    public void hideAllEdgeWeights() throws Terminate { graph.hideAllEdgeWeights(); }
+    public void showAllNodeLabels() throws Terminate { graph.showAllNodeLabels(); }
+    public void showAllEdgeLabels() throws Terminate { graph.showAllEdgeLabels(); }
+    public void showAllNodeWeights() throws Terminate { graph.showAllNodeWeights(); }
+    public void showAllEdgeWeights() throws Terminate { graph.showAllEdgeWeights(); }
 
     /**
      * It's sometimes useful to reveal all nodes and/or edges that have been hidden
@@ -603,4 +643,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2016 07 01 at 13:50:58 GMT]
+//  [Last modified: 2016 07 02 at 18:36:44 GMT]

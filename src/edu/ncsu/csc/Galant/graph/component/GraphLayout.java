@@ -241,14 +241,8 @@ public class GraphLayout {
 	 * Repositions the graph so that the nodes are arranged in an
 	 * aesthetically pleasing way.
 	 * 
-	 * @todo Currently, only works if graph is connected, otherwise
-	 * disconnected pieces repel each other nonstop; the fix is add back in
-	 * the test for connectivity, which is currently an O(n^4) algorithm in
-	 * the worst case.
-	 * 
 	 * @see <a href="http://www.mathematica-journal.com/issue/v10i1/contents/graph_draw/graph_draw_3.html">Force-Directed Algorithms (2006); Hu, Yifan</a>
 
-     * @todo would be good to have a way to undo this
 	 */
 	public void forceDirected() {
         /**
@@ -572,51 +566,7 @@ public class GraphLayout {
 		
 		return step;
 	}
+
+}
 	
-	/**
-	 * See if a path exists between two components. 
-	 * @param i the index of the start node
-	 * @param j the index of the end node
-	 * @return true if a path exists
-     *
-     * @todo This is, to say the least, stupid. An O(n) BFS is performed for
-     * every *pair* of nodes during each iteration. It would be simple to do
-     * a single BF at the beginning to identify the connected components.
-	 */
-	private boolean pathExists(int i, int j) {
-		List<Node> visited = new ArrayList<Node>();
-		List<Node> frontier = new ArrayList<Node>();
-		
-		Node destination = indexToNode[j];
-		
-		Node n = indexToNode[i];
-		visited.add(n);
-		frontier.add(n);
-		
-		while (frontier.size() > 0) {
-			Node front = frontier.remove(0);
-			for (Edge e : front.getEdges()) {
-				Node current = e.getSourceNode();
-				if (current.equals(destination)) {
-					return true;
-				} else if (!visited.contains(current)) {
-					visited.add(current);
-					frontier.add(current);
-				}
-				
-				current = e.getTargetNode();
-				if (current.equals(destination)) {
-					return true;
-				} else if (!visited.contains(current)) {
-					visited.add(current);
-					frontier.add(current);
-				}
-			}
-		}
-		
-		return false;
-	}
-
-}	
-
-//  [Last modified: 2016 06 17 at 16:13:41 GMT]
+//  [Last modified: 2016 07 01 at 19:01:22 GMT]

@@ -350,7 +350,57 @@ public class Graph {
     }
 
     /**
-     * In case we want to reveal all nodes that have been hidden
+     * Individually hide Node/Edge labels or weights; has no effect if they
+     * are already hidden via, e.g., hideNodeLabels()
+     */
+    public void hideAllNodeLabels() throws Terminate {
+        for ( Node node: nodes ) {
+            node.hideLabel();
+        }
+    }
+    public void hideAllEdgeLabels() throws Terminate {
+        for ( Edge edge: edges ) {
+            edge.hideLabel();
+        }
+    }
+    public void hideAllNodeWeights() throws Terminate {
+        for ( Node node: nodes ) {
+            node.hideWeight();
+        }
+    }
+    public void hideAllEdgeWeights() throws Terminate {
+        for ( Edge edge: edges ) {
+            edge.hideWeight();
+        }
+    }
+
+    /**
+     * Undo hiding of individual Node/Edge labels or weights; has no effect
+     * if they are already hidden via, e.g., hideNodeLabels()
+     */
+    public void showAllNodeLabels() throws Terminate {
+        for ( Node node: nodes ) {
+            node.showLabel();
+        }
+    }
+    public void showAllEdgeLabels() throws Terminate {
+        for ( Edge edge: edges ) {
+            edge.showLabel();
+        }
+    }
+    public void showAllNodeWeights() throws Terminate {
+        for ( Node node: nodes ) {
+            node.showWeight();
+        }
+    }
+    public void showAllEdgeWeights() throws Terminate {
+        for ( Edge edge: edges ) {
+            edge.showWeight();
+        }
+    }
+
+    /**
+     * Shows all Nodes that have been hidden individually
      */
     public void showNodes() throws Terminate {
         for ( Node node: nodes ) {
@@ -359,7 +409,7 @@ public class Graph {
     }
 
     /**
-     * In case we want to reveal all edges that have been hidden
+     * Shows all edges that have been hidden individually
      */
     public void showEdges() throws Terminate {
         for ( Edge edge: edges ) {
@@ -1105,4 +1155,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2016 06 28 at 13:57:18 GMT]
+//  [Last modified: 2016 07 02 at 18:23:32 GMT]

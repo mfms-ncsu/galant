@@ -60,6 +60,7 @@
 		<mkdir dir="${doc.dir}" />
 		<javadoc sourcepath="${src.dir}" destdir="${doc.dir}">
         <tag name="todo" scope="all" description="To do:"/>
+        <arg value="-author"/>
         </javadoc>
 	</target>
 </project>

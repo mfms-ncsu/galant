@@ -15,6 +15,7 @@ import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.GraphDispatch;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow;
 import edu.ncsu.csc.Galant.gui.util.EdgeSelectionDialog;
+import edu.ncsu.csc.Galant.gui.util.NodeSelectionDialog;
 import edu.ncsu.csc.Galant.algorithm.Terminate;
 import edu.ncsu.csc.Galant.logging.LogHelper;
 
@@ -46,6 +47,11 @@ public class Graph {
      * Keeps track of an edge selected during algorithm execution.
      */
     private Edge selectedEdge;
+
+    /**
+     * Keeps track of an node selected during algorithm execution.
+     */
+    private Node selectedNode;
 
     /**
      * The list of states that this graph has been in up to this point --
@@ -220,6 +226,26 @@ public class Graph {
         dialog = null;          // to keep window from lingering when
                                 // execution is terminated
         return selectedEdge;
+    }
+
+    /**
+     * sets the selected node; called from NodeSelectionDialog
+     */
+    public void setSelectedNode(Node node) {
+        selectedNode = node;
+    }
+
+    /**
+     * @param prompt a message displayed in the node selection dialog popup
+     * @return a node selected via a dialog during algorithm execution
+     */
+    public Node getNode(String prompt) throws Terminate {
+        dispatch.startStepIfRunning();
+        NodeSelectionDialog dialog = new NodeSelectionDialog(prompt);
+        dispatch.pauseExecutionIfRunning();
+        dialog = null;          // to keep window from lingering when
+                                // execution is terminated
+        return selectedNode;
     }
 
 
@@ -1018,7 +1044,6 @@ public class Graph {
 		
 		dispatch.lockIfRunning();
 		for ( Edge e : n_edges ) {
-            //			n_edges.remove(e);
 			removeEdge(e);
 		}
 
@@ -1155,4 +1180,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2016 07 02 at 18:23:32 GMT]
+//  [Last modified: 2016 07 03 at 16:18:59 GMT]

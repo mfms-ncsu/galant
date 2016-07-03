@@ -465,6 +465,13 @@ public abstract class Algorithm implements Runnable {
     }
 
     /**
+     * @return a node specified by the user in response to the prompt
+     */
+    public Node getNode(String prompt) throws Terminate {
+        return graph.getNode(prompt);
+    }
+
+    /**
      * Prints a string on the console (e.g., for debugging); as with display,
      * the message can be any object with a toString() method
      */
@@ -643,4 +650,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2016 07 02 at 18:36:44 GMT]
+//  [Last modified: 2016 07 03 at 16:19:50 GMT]

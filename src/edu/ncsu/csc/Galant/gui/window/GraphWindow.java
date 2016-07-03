@@ -62,7 +62,9 @@ import edu.ncsu.csc.Galant.logging.LogHelper;
 import edu.ncsu.csc.Galant.prefs.Preference;
 import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.gui.util.EdgeSpecificationDialog;
-import edu.ncsu.csc.Galant.gui.util.DeleteNodeDialog;
+import edu.ncsu.csc.Galant.gui.util.NodeSpecificationDialog;
+import edu.ncsu.csc.Galant.gui.window.EdgeDeletionDialog;
+import edu.ncsu.csc.Galant.gui.window.NodeDeletionDialog;
 import edu.ncsu.csc.Galant.gui.editor.GTabbedPane; // for confirmation dialog
 import edu.ncsu.csc.Galant.gui.editor.GEditorFrame; // for confirmation dialog
 import edu.ncsu.csc.Galant.algorithm.AlgorithmExecutor;
@@ -153,7 +155,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	private GraphMode mode = null;
   
     private EdgeSpecificationDialog edgeSelectionDialog;
-    private DeleteNodeDialog deleteNodeDialog;  
+    private NodeSpecificationDialog nodeDeletionDialog;  
 
     public ComponentEditPanel getComponentEditPanel() {
         return componentEditPanel;
@@ -982,13 +984,9 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
               //delete already pressed, delete node
               if ( deletePressed ) {
                   LogHelper.guiLogDebug("DELETE NODE");	
-                  //hide edit panel
-                  componentEditPanel.setWorkingComponent(null);
-                  deleteNodeDialog = new DeleteNodeDialog(frame, dispatch);
-                  deleteNodeDialog.pack();
-                  deleteNodeDialog.setLocationRelativeTo(frame);
-                  deleteNodeDialog.setVisible(true);
-                  dispatch.pushToTextEditor();
+                  // the dialog is self contained; only needs to be
+                  // instantiated
+                  NodeDeletionDialog dialog = new NodeDeletionDialog(frame);
               } //delete node
           }
           LogHelper.guiExitMethod(getClass(), "'n' pressed");
@@ -1089,4 +1087,4 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	}
 }
 
-//  [Last modified: 2016 06 28 at 12:51:26 GMT]
+//  [Last modified: 2016 07 03 at 15:41:20 GMT]

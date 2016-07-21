@@ -37,8 +37,8 @@ function lineUpNodes() {
     for_nodes ( n ) { 
         nodes[i] = n;
         xCoord[i] = xPosition;
-        A[i] = nodes[i].getWeight();
-        nodes[i].setPosition( xPosition, yPosition );
+        A[i] = weight(n);
+        setPosition(n, xPosition, yPosition);
         xPosition += HORIZONTAL_GAP;
         i++;
     }
@@ -57,34 +57,34 @@ algorithm {
 
     beginStep();
     Node toInsert = addNode(xCoord[1], VERTICAL_GAP);
-    toInsert.highlight();
-    nodes[0].mark();
+    highlight(toInsert);
+    mark(nodes[0]);
     endStep();
 
     for ( int i = 1; i < numNodes; i++ ) {
         beginStep();
-        double x = A[i]; toInsert.setWeight(A[i]);
-        toInsert.setX(xCoord[i]);
+        double x = A[i]; setWeight(toInsert, A[i]);
+        setX(toInsert, xCoord[i]);
         endStep();
         int j = i - 1;
         while ( j >= 0 && A[j] > x ) {  
             beginStep();
-            toInsert.setX(xCoord[j]);
-            nodes[j].highlight();
+            setX(toInsert, xCoord[j]);
+            highlight(nodes[j]);
             endStep(); beginStep();
-            A[j+1] = A[j]; nodes[j+1].setWeight(A[j]);
-            nodes[j].unMark();
-            nodes[j].unHighlight();
-            nodes[j+1].mark();
+            A[j+1] = A[j]; setWeight(nodes[j+1], A[j]);
+            unMark(nodes[j]);
+            unHighlight(nodes[j]);
+            mark(nodes[j+1]);
             endStep();
             j = j - 1;
         }
         beginStep();
-        A[j+1] = x; nodes[j+1].setWeight(x);
-        nodes[j+1].mark();
+        A[j+1] = x; setWeight(nodes[j+1], x);
+        mark(nodes[j+1]);
         endStep();
     }
     deleteNode(toInsert);
 }
 
-//  [Last modified: 2015 12 09 at 20:17:07 GMT]
+//  [Last modified: 2016 07 21 at 13:21:53 GMT]

@@ -1,10 +1,8 @@
-\cmt{This section is incomplete.}
-
 Animation programmers can write algorithms in notation that resembles
 textbook pseudocode.
 The animation examples have used procedural syntax for function calls, as in, for example,
 \texttt{setWeight(v,0)}.
-Java-like syntax can also be used: \texttt{v.setWeight(0)}.
+Java (object oriented) syntax can also be used: \texttt{v.setWeight(0)}.
 
 Central to the Galant API is the \texttt{graph} object: currently all other
 parts of the API refer to it.
@@ -36,6 +34,8 @@ part of the animation.
 \input{Y_graph_functions}
 
 Functions and macros for the graph as a whole are shown in Table~\ref{tab:graph_functions}.
+Also included are a few functions that are global to an algorithm without
+any direct connection to a graph.
 
 The nodes and edges, of type \textsf{Node} and \textsf{Edge}, respectively,
 are subtypes of \textsf{GraphElement}.
@@ -64,18 +64,30 @@ for_nodes(v) {
 \end{verbatim}
 is immune to array out of bounds errors.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 \subsection{Node and edge methods}
 
 Nodes and edges have `getters' and `setters' for
 a variety of attributes, i.e.,
-\texttt{set}$a$\texttt{([$a's$ type] x)} and [$a's$ type]
-\texttt{get}$a$\texttt{)}.
-In addition there are the usual methods one would expect from a graph API.
+\\
+\texttt{set}$a$\texttt{($\langle a's$ type$\rangle$ x)}
+\\
+and
+\\
+$\langle a's$ type$\rangle$ \texttt{get}$a$\texttt{()},
+where $a$ is the name of an attribute such as
+\texttt{Color},
+\texttt{Label} or \texttt{Weight}.
+A more convenient way to access these standard attributes omits the prefix \texttt{get}
+and uses procedural syntax:
+\texttt{color(}$x$\texttt{)} is a synomym for $x$\texttt{.getColor()}, for example.
+Procedural syntax for the setters is also available:
+\texttt{setColor(}$x$,$c$\texttt{)} is a synonym for $x$.\texttt{setColor(}$c$\texttt{)}.
+In the special cases of color and label it is possible to omit the \texttt{set}
+(since it reads naturally): \texttt{color(}$x$,$c$\texttt{)} instead of \texttt{setColor(}$x$,$c$\texttt{)}.
 
 \subsubsection*{Logical attributes: functions and macros}
 
+\textbf{Nodes.}
 From a node's point of view we would like information about the adjacent nodes and incident edges.
 The relevant \emph{methods} require the use of Java generics, but macros are provided
 to simplify graph API access. The macros, which have equivalents in GDR, are:
@@ -83,10 +95,12 @@ to simplify graph API access. The macros, which have equivalents in GDR, are:
 \begin{itemize}
 
 \item
-\texttt{for\_adjacent(Node x, Edge e, Node y)\{ \emph{statements} \}}
+\texttt{for\_adjacent(x, e, y)\{ \emph{statements} \}}
 executes the list of statements for each edge incident on \verb$x$.
 The statements can refer to \verb$x$, or \verb$e$, the current incident edge,
 or \verb$y$, the other endpoint of \verb$e$.
+The macro assumes that \texttt{x} has already been declared as \texttt{Node}
+but \texttt{e} and \texttt{y} are declared automatically.
 
 \item
 \texttt{for\_outgoing(Node x, Edge e, Node y)\{ \emph{statements} \}}\\
@@ -116,7 +130,22 @@ this node (all incident edges if the graph is undirected).
 \texttt{Node~travel(Edge~e)} returns the other endpoint of \texttt{e}.
 \end{itemize}
 
-The logical edge methods are:
+The above all use Java syntax, as in \texttt{v.travel(e)}.
+The following are node-related functions with procedural syntax.
+
+\begin{itemize}
+\item \texttt{degree(v)}, \texttt{indegree(v)} and \texttt{outdegree(v)} return the appropriate
+integers.
+\item \texttt{otherEnd(v, e)}, where \texttt{v} is a node and \texttt{e} is an edge
+returns node \texttt{w} such that \texttt{e} connects \texttt{v} and \texttt{w};
+the programmer can also say \texttt{otherEnd(e, v)} in case she forgets the order
+of the arguments.
+\item \texttt{neighbors(v)} returns a list of the nodes adjacent to node \texttt{v}.
+\end{itemize}
+
+\bigskip
+\textbf{Edges.}
+The logical attributes of an edge are its source and target (destination).
 
 \begin{itemize}
 \item
@@ -128,16 +157,20 @@ The logical edge methods are:
 either \texttt{uv} or \texttt{vu}.
 \end{itemize}
 
-Nodes and edges also have a mechanism for setting (and getting)
+\bigskip
+\textbf{Graph Elements.}
+Nodes and edges both have a mechanism for setting (and getting)
 arbitrary attributes of type Integer, String, and Double.
-the relevant methods are
-\texttt{setIntegerAttribute(String~key,Integer~value)} 
-to associate an integer value with a node and
-\texttt{Integer~getIntegerAttribute(String~key)} to retrieve it.
+the relevant methods are\\
+\texttt{setIntegerAttribute(String~key,Integer~value)}\\ 
+to associate an integer value with a node and\\
+\texttt{Integer~getIntegerAttribute(String~key)}\\
+to retrieve it.
 String and Double attributes work the same way as integer attributes.
 These are useful when an algorithm requires arbitrary information to be
 associated with nodes and/or edges.
-Note that each individual node may have different attributes.
+The user-defined attributes may differ from one node or edge to the next.
+For example, some nodes may have a \texttt{depth} attribute while others do not.
 
 \subsubsection*{Geometric attributes}
 

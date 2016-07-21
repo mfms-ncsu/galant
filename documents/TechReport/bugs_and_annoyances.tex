@@ -44,6 +44,11 @@ A change in color of an edge does not appear to take place while the edge
 is selected for editing -- its color stays blue during that time.
 Only when focus is no longer on the edge does it change color.
 
+\item If a node is selected for editing (other than immediately on creation)
+  its weight is set to 0 when the spinner shows up.  Initially a node has no
+  weight at all; this should continue to be the case unless the user
+  specifies a weight.
+
 \item If user attempts to change weight/label of a node/edge and clicks on
   the graph panel in the middle of the operation, the change is lost. There
   is no ``ok'' prompt as with color.

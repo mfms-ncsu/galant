@@ -1,0 +1,31 @@
+Some features under development for the next major release are listed here.
+
+\begin{itemize}
+\item
+  A programmer will be able to ask the user to select a node or edge via a text query. The appropriate incantations will take the form
+  \begin{itemize}
+    \item \texttt{getNode(\emph{message})}, where \emph{message} is a prompt
+      (string); a popup window asks the user for the id of a node; the
+      function will return the actual node; there is an error dialog if
+      no node with that id exists.
+    \item \texttt{getEdge(\emph{message})} -- same as \texttt{getNode}
+      except that the user is prompted for two node id's; an error dialog
+      arises if either id is non-existent or the edge is non-existent.
+  \end{itemize}
+
+\item
+  New types/classes \texttt{NodeSet} and \texttt{EdgeSet} will be added. Both
+  will be concrete classes and will have conversion constructors from
+  \texttt{NodeList} and \texttt{EdgeList}, respectively. Eventually
+  lists, queues, stacks and priority queues of nodes and edges will all be
+  concrete and all graph, node and edge methods that return containers will
+  return one of these. For example, \texttt{getNodes()} will return a
+  \texttt{NodeList} instead of a \texttt{List<Node>}.
+
+  When combined with the previous enhancement we can add functions such as\\
+  \hspace*{2em}\mbox{\texttt{getEdge(\emph{prompt}, \emph{set}, \emph{message})}},\\
+  where \emph{prompt} is as before, \emph{set} is
+  a set from which the edge must be selected (e.g., the set of edges incident
+  on a node) and \emph{message} is an error message to be given if the
+  edge exists but is not a member of the given set.
+\end{itemize}

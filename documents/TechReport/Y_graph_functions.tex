@@ -1,54 +1,118 @@
 \begin{table}
+  \small
   \centering
-  \begin{tabular}{| l | p{0.6\textwidth} |}
+  \begin{tabular}{| m{0.35\textwidth} | m{0.6\textwidth} |}
     \hline
+    \textsf{print(String s)}
+    &
+    prints \texttt{s} on the console; useful for debugging
+    \\ \hline
     \textsf{display(String s)}
     &
     writes the string \textsf{s} at the top of the window
-    (not really a graph method, but currently associated with the graph)
     \\ \hline
     \textsf{String getMessage()}
     &
-    returns the current message
+    returns the message currently displayed on the message banner
     \\ \hline
-    \textsf{NodeList getNodes()}
+    \textsf{error(String s)}
     &
-    returns a list of the nodes of the graph; the return type is built into Galant
-    and equivalent to the Java \textsf{List<Node>}
+    prints \textsf{s} on the console with a stack trace; also displays
+    \textsf{s} in popup window with an option to view the stack trace;
+    the algorithm terminates and the user can choose whether to terminate
+    Galant entirely or continue interacting
     \\ \hline
-    \textsf{EdgeList getEdges()}
+    \raisebox{-3ex}{
+      \shortstack[l]{
+        \textsf{List$\langle$Node$\rangle$ getNodes()}\\
+        \textsf{NodeList nodes()}
+      }
+    }
     &
-    returns a list of edges of the graph; return type is analogous to \textsf{NodeList}
+    returns a list of the nodes of the graph; type \textsf{NodeList}
+    is built into Galant
+    and equivalent to the Java \textsf{List$\langle$Node$\rangle$}
     \\ \hline
-    \textsf{for\_nodes(node)}
+    \raisebox{-3ex}{
+      \shortstack[l]{
+        \textsf{List$\langle$Edge$\rangle$ getEdges()}\\
+        \textsf{EdgeList edges()}
+      }
+    }
     &
-    equivalent to \textsf{for ( node : getNodes() )} and must be followed by a block
-    of code enclosed in \textsf{\{ \}}'s
+    returns a list of edges of the graph; return type
+    \textsf{EdgeList} is analogous to \textsf{NodeList}
     \\ \hline
-    \textsf{for\_edges(edge)}
+    \textsf{for\_nodes(v) \{
+      \emph{statement; \ldots}
+      \}}
+    &
+    \shortstack[l]{
+      equivalent to
+      \textsf{for ( Node v : getNodes() ) \{ \emph{statement; \ldots} \}};\\
+      the statements are executed for each node \textsf{v}
+    }
+    \\ \hline
+    \textsf{for\_edges(e)  \{ \emph{statement; \ldots} \}}
     &
     analogous to \textsf{for\_nodes}
+    \\ \hline
+    \textsf{Integer numberOfNodes()}
+    &
+    returns the number of nodes
+    \\ \hline
+    \textsf{Integer numberOfEdges()}
+    &
+    returns the number of edges
     \\ \hline
     \textsf{getStartNode()}
     &
     returns the first node in the list of nodes, typically the one with smallest id;
     used by algorithms that require a start node
     \\ \hline
-    \textsf{Node addNode()}
+    \textsf{isDirected()}
+    &
+    returns true if the graph is directed
+    \\ \hline
+    \textsf{setDirected(boolean directed)}
+    &
+    makes the graph directed or undirected depending on whether \texttt{directed}
+    is true or false, respectively
+    \\ \hline
+    \shortstack[l]{
+      \textsf{Node addNode()}\\
+      \textsf{Node addNode(Integer x, Integer y)}
+    }
     &
     returns a new node and adds it to the list of nodes;
-    the id is one greater than the largest id so far;
+    the id is the smallest integer not currently in use as an id;
     attributes such as weight, label and position are absent and must be set explicitly
-    by appropriate method calls
+    by appropriate method calls;
+    the second version sets the position of the node at \textsf{(x,y)}
     \\ \hline
-    \textsf{addEdge(Node source, Node target)}
+    \raisebox{-5ex}{
+      \shortstack[l]{
+        \textsf{addEdge(Node source, Node target)}\\
+        \textsf{addEdge(int sourceId, int targetId)}
+      }
+    }
     &
     adds an edge from the source to
-    the target (source and target are interchangeable when graph is undirected).
-    There is also a variation with integer arguments that represent the id's of the nodes. As in the case of nodes, the edge is added to the list of edges and
+    the target (source and target are interchangeable when graph is undirected);
+    the second variation specifies id's of the nodes to be connected;
+    as in the case of adding a node, the edge is added to the list of edges and
     its weight and label are absent
     \\ \hline
+    \textsf{deleteNode(Node v)}
+    &
+    removes node \textsf{v} and its incident edges from the graph
+    \\ \hline
+    \textsf{deleteEdge(Edge e)}
+    &
+    removes edge \textsf{e} from the graph
+    \\ \hline
   \end{tabular}
-  \caption{Functions/methods and macros that apply to the whole graph.}
+  \caption{Functions and macros that apply to the whole graph or to
+    an algorithm more generally.}
   \label{tab:graph_functions}
 \end{table}

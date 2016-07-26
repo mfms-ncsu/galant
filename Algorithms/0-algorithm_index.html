@@ -1,0 +1,388 @@
+<html> <head>
+<title>Algorithm Examples</title>
+</head>
+
+<body text=black bgcolor=white>
+<h2>Algorithm Examples</h2>
+
+
+<ul>
+<br><hr>
+<li><b><a href=bfs.alg>bfs.alg</a></b> 
+-
+Implementation of breadth-first search. Undirected edges are regarded as<br>
+being directed both ways.<br>
+<br>
+<br><hr>
+<li><b><a href=binary_tree.alg>binary_tree.alg</a></b> 
+<br>
+Draws a binary tree based on current graph window width and height.<br>
+<br>
+<br>
+creates a complete binary tree of height tree_height with root at position<br>
+(root_x,root_y) and returns the root; local_width is the horizontal<br>
+distance to the nearest sibling and local_height is the vertical distance<br>
+to the parent<br>
+<br>
+<br><hr>
+<li><b><a href=boruvka.alg>boruvka.alg</a></b> 
+<br>
+@file boruvka.alg<br>
+@brief implementation of Boruvka's MST algorithm, using Galant; designed<br>
+to showcase some of the newer Galant facilities.<br>
+<br>
+Among these are:<br>
+- hideLabel() and showLabel() for graph elements -- a new "visible"<br>
+attribute that's used during algorithm execution<br>
+- hide() and show() for graph elements -- a new "hidden" attribute<br>
+- color() for graph elements with two arguments: the element and a color<br>
+string (which may have declared constants in Algorithm.java); also<br>
+uncolor()<br>
+<br>
+<br>
+Labels each node in the same component as v (using spanning tree edges<br>
+only) with the given label. Also colors the tree edges green.<br>
+<br>
+<br>
+Recursively visits every node in the tree containing v using only the tree<br>
+edges<br>
+@return the lowest cost edge reachable from v that goes to another tree<br>
+<br>
+<br>
+Turns the edges of the tree in v's component back to green; they were<br>
+turned blue to highlight them when looking for the lowest cost edge<br>
+<br>
+<br>
+Hides all edges that connect nodes already in the same tree<br>
+<br>
+<br>
+Remove all marking and highlighting<br>
+<br>
+<br><hr>
+<li><b><a href=bubble_sort.alg>bubble_sort.alg</a></b> 
+
+An animation of bubble sort.<br>
+<br>
+Caution: assumes that the graph is a collection of nodes with no edges<br>
+weight of node = sorting key<br>
+this is the simplest version of bubble sort; makes a pass over the whole<br>
+list each iteration<br>
+<br>
+<br>
+Distances used when lining up nodes<br>
+<br>
+<br>
+Lines up the nodes in a single horizontal row<br>
+<br>
+<br>
+swaps the positions of the nodes x and y, assuming they both exist<br>
+<br>
+<br><hr>
+<li><b><a href=dfs.alg>dfs.alg</a></b> 
+
+Implements depth-first search of a graph, directed or undirected; in the<br>
+undirected case, it behaves as if edges were directed in both directions.<br>
+$Id: dfs.alg 47 2014-03-10 16:11:00Z mfms $<br>
+<br>
+Required: node and edge labels visible */<br>
+<br>
+<br>
+An unfortunate consequence of the way algorithms are encapsulated in Java<br>
+is the inability of functions to modify global variables. The exceptions<br>
+are arrays and instances of classes -- in those cases the functions can<br>
+change *contents* at will, as long as the references to the arrays/objects<br>
+remain unchanged.<br>
+<br>
+<br><hr>
+<li><b><a href=dfs_d.alg>dfs_d.alg</a></b> 
+dfs.alg<br>
+Implements depth-first search of a directed graph only; directedness is<br>
+forced at the beginning of the algorithm.<br>
+<br>
+Required: node and edge labels visible */<br>
+<br>
+int time;<br>
+<br>
+int [] discovery;<br>
+int [] finish;<br>
+<br>
+function visit( Node v ) {<br>
+time = time + 1;<br>
+discovery[id(v)] = time;<br>
+beginStep(); setLabel(v, "" + discovery[id(v)] );<br>
+select(v); endStep(); for_outgoing( v, e, w ) {<br>
+beginStep(); if ( ! selected(w) ) {<br>
+select(e); visit(w); <br>
+else if ( finish[id(w)] == 0 ) { /* ancestor */<br>
+<br><hr>
+<li><b><a href=dijkstra.alg>dijkstra.alg</a></b> 
+
+Implementation of Dijkstra's shortest path algorithm. Interprets<br>
+undirected edges as going in both directions.<br>
+$Id: dijkstra.alg 74 2014-05-14 01:45:29Z mfms $<br>
+<br>
+Required: edge weights defined, node and edge weights visible */<br>
+<br>
+algorithm {<br>
+NodePriorityQueue pq = new NodePriorityQueue();<br>
+Edge [] chosenEdge = new Edge[nodeIds()];<br>
+beginStep(); for_nodes(node) {<br>
+setWeight(node, INFINITY);<br>
+pq.add(node); <br>
+Node v = getStartNode();<br>
+setWeight(v, 0);<br>
+endStep(); <br>
+while ( ! pq.isEmpty() ) {<br>
+v = pq.removeMin();<br>
+mark(v); // nodes are marked when visited<br>
+unHighlight(v); // and highlighted when on the frontier<br>
+for_outgoing ( v, e, w ) {<br>
+if ( ! marked(w) ) {<br>
+if ( ! highlighted(w) ) highlight(w);<br>
+double distance = weight(v) + weight(e);<br>
+if ( distance < weight(w) ) {<br>
+beginStep(); highlight(e); Edge previous_chosen = chosenEdge[id(w)];<br>
+if (previous_chosen != null )<br>
+unHighlight(previous_chosen); pq.decreaseKey(w, distance);<br>
+chosenEdge[id(w)] = e;<br>
+endStep(); <br>
+// end, neighbor not visited (not in tree); do nothing if node<br>
+is already in tree<br>
+// end, adjacency list traversal<br>
+// stop when priority queue is empty<br>
+// end, algorithm<br>
+<br>
+[Last modified: 2016 02 22 at 00:59:33 GMT]<br>
+<br><hr>
+<li><b><a href=euclidian.alg>euclidian.alg</a></b> 
+<br>
+
+Implementation of Dijkstra's shortest path algorithm. Interprets<br>
+undirected edges as going in both directions if run in undirected<br>
+mode. Unlike dijkstra.alg, the edge weights are set initially by the<br>
+algorithm, based on Euclidian distances between nodes.<br>
+$Id: euclidian.alg 106 2015-04-15 13:01:30Z mfms $<br>
+<br>
+Required: node and edge weights visible */<br>
+<br>
+import java.util.PriorityQueue;<br>
+<br>
+double INFINITY = Double.POSITIVE_INFINITY;<br>
+<br>
+function double euclidian(Node v, Node w) {<br>
+return v.getPosition().distance(w.getPosition());<br>
+<br>
+<br>
+function init_edge_costs() {<br>
+for_edges(edge) {<br>
+Node source = edge.getSourceNode();<br>
+Node destination = edge.getDestNode();<br>
+double distance = euclidian( source, destination );<br>
+edge.setWeight( distance );<br>
+<br>
+<br>
+<br>
+algorithm {<br>
+NodePriorityQueue pq = new NodePriorityQueue();<br>
+Edge [] chosenEdge = new Edge[nodeIds()];<br>
+<br>
+init_edge_costs(); <br>
+beginStep(); for_nodes(node) {<br>
+node.setWeight(INFINITY); pq.add(node); <br>
+Node v = getStartNode();<br>
+v.setSelected( true );<br>
+v.setWeight(0); endStep(); <br>
+while ( ! pq.isEmpty() ) {<br>
+v = pq.removeMin();<br>
+v.setVisited( true );<br>
+v.setSelected( false );<br>
+<br>
+<br>
+for_outgoing ( v, e, w ) {<br>
+if ( ! w.isVisited() ) {<br>
+if ( ! w.isSelected() ) w.setSelected( true );<br>
+double distance = v.getWeight() + e.getWeight();<br>
+if ( distance < w.getWeight() ) {<br>
+beginStep(); e.setSelected( true );<br>
+Edge previous_chosen = chosenEdge[id(w)];<br>
+if (previous_chosen != null )<br>
+previous_chosen.setSelected( false );<br>
+pq.decreaseKey( w, distance );<br>
+chosenEdge[id(w)] = e;<br>
+endStep(); <br>
+// end, neighbor not visited (not in tree); do nothing if node is<br>
+already in tree<br>
+// end, adjacency list traversal<br>
+// stop when priority queue is empty<br>
+<br>
+<br>
+[Last modified: 2015 12 07 at 01:28:39 GMT]<br>
+<br><hr>
+<li><b><a href=insertion_sort.alg>insertion_sort.alg</a></b> 
+
+An animation of insertion sort.<br>
+<br>
+Caution: assumes that the graph is a collection of nodes with no edges<br>
+weight of node = sorting key; this can also be set up with an external<br>
+filter that transforms a list of numbers into the appropriate graph (with<br>
+nodes already lined up<br>
+<br>
+The already sorted part of the array is 'visited'. The element to be<br>
+inserted moves about the array -- the element to which it is compared at<br>
+each step is selected.<br>
+<br>
+$Id: insertion_sort.alg 74 2014-05-14 01:45:29Z mfms $<br>
+<br>
+<br>
+Distances used when lining up nodes<br>
+<br>
+<br>
+For convenience - to make the algorithm look more transparent.<br>
+<br>
+<br>
+Lines up the nodes in a single horizontal row<br>
+<br>
+<br><hr>
+<li><b><a href=kruskal.alg>kruskal.alg</a></b> 
+<br>
+@file kruskal.alg<br>
+@brief implementation of Kruskal's MST algorithm, using Galant<br>
+$Id: kruskal.alg 74 2014-05-14 01:45:29Z mfms $<br>
+<br>
+Required: edge weights defined and visible */<br>
+<br>
+parent in the disjoint set forest<br>
+Node [] parent;<br>
+<br>
+standard disjoint set untilities; not doing union by rank or path<br>
+compression; efficiency is not an issue<br>
+<br>
+function INIT_SET(Node x) {<br>
+parent[id(x)] = x;<br>
+<br>
+<br>
+function LINK(Node x, Node y) {<br>
+parent[id(x)] = y;<br>
+<br>
+<br>
+function Node FIND_SET(Node x) {<br>
+if (x != parent[id(x)])<br>
+parent[id(x)] = FIND_SET(parent[id(x)]);<br>
+return parent[id(x)];<br>
+<br>
+<br>
+function UNION(Node x, Node y) {<br>
+LINK(FIND_SET(x), FIND_SET(y));<br>
+<br>
+<br>
+algorithm {<br>
+hideNodeWeights(); <br>
+parent= new Node[nodeIds()];<br>
+for_nodes(u) {<br>
+INIT_SET(u); <br>
+<br>
+EdgeList edgeList = getEdges();<br>
+sort(edgeList); <br>
+MST is only relevant for undirected graphs<br>
+setDirected(false); <br>
+int totalWeight = 0;<br>
+for ( Edge e: edgeList ) {<br>
+beginStep(); Node h = source(e);<br>
+Node t = target(e);<br>
+show e's endpoints as it's being considered<br>
+marking is used for display purposes only<br>
+mark(h); mark(t); endStep(); <br>
+beginStep(); if the vertices aren't part of the same set<br>
+if ( FIND_SET(h) != FIND_SET(t) ) {<br>
+add the edge to the MST and highlight it<br>
+highlight(e); UNION(h, t);<br>
+totalWeight += e.getWeight();<br>
+display( "Weight so far is " + totalWeight );<br>
+<br>
+else {<br>
+display( "Vertices are already in the same component." );<br>
+<br>
+endStep(); <br>
+beginStep(); unMark(h); unMark(t); endStep(); <br>
+<br>
+display( "MST has total weight " + totalWeight );<br>
+<br>
+<br>
+[Last modified: 2016 02 18 at 22:55:06 GMT] */<br>
+<br><hr>
+<li><b><a href=line_up_nodes.alg>line_up_nodes.alg</a></b> 
+<br><hr>
+<li><b><a href=test.alg>test.alg</a></b> 
+Scaffoling for a variety of tests */<br>
+<br>
+to test weights */<br>
+<br><hr>
+<li><b><a href=test_comment.alg>test_comment.alg</a></b> 
+<br>
+<br>
+*/<br>
+*/<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+Comment line Tester<br>
+This is a algorithm that tests comment style */<br>
+Comment line Tester<br>
+This is a algorithm that tests comment style */ int variable_three;<br>
+Expected output:<br>
+int variable_one; int variable_two;<br>
+int variable three; float variable_four;<br>
+float variable_five; float variable_six;<br>
+double variable_seven; double variable_eight;<br>
+double variable_nine<br>
+<br>
+More tests on double asterisk<br>
+Sub-line without asterisk heading<br>
+test test <br>
+<br><hr>
+<li><b><a href=test_edge_sorting.alg>test_edge_sorting.alg</a></b> 
+<br><hr>
+<li><b><a href=test_hello.alg>test_hello.alg</a></b> 
+<br>
+- simple test to see if Galant will compile a trivial Java
+program<br>
+<br>
+$Id: test_hello.alg 106 2015-04-15 13:01:30Z mfms $<br>
+<br>
+<br><hr>
+<li><b><a href=test_highlight_single_node.alg>test_highlight_single_node.alg</a></b> 
+<br>
+- simple test to see if Galant highlighting
+and coloring works.<br>
+<br>
+$Id: test_highlight_single_node.alg 106 2015-04-15 13:01:30Z mfms $<br>
+<br>
+<br><hr>
+<li><b><a href=test_infinite_loop.alg>test_infinite_loop.alg</a></b> 
+<br><hr>
+<li><b><a href=test_macro.alg>test_macro.alg</a></b> 
+<br>
+- simple test of the for_nodes macro with no animations
+<br>
+$Id: test_macro.alg 106 2015-04-15 13:01:30Z mfms $<br>
+<br>
+<br><hr>
+<li><b><a href=test_move.alg>test_move.alg</a></b> 
+Tests how algorithm affects position and how, if at all, this is<br>
+influenced by actions of the user */<br>
+<br><hr>
+<li><b><a href=test_scaling.alg>test_scaling.alg</a></b> 
+</ul>
+
+<hr>
+<address>
+<a href="http://people.engr.ncsu.edu/mfms/">
+Matthias F. (Matt) Stallmann
+</a>
+
+Created: 
+Tue Jul 26 15:00:20 EDT 2016
+</address>

@@ -1,5 +1,6 @@
 /**
- * Draws a binary tree based on current graph window width and height.
+ * Draws a binary tree that fits into current graph window. To get a tree
+ * with height other than four, modify TREE_HEIGHT
  */
 int TREE_HEIGHT = 4;
 
@@ -15,7 +16,7 @@ function Node createTree( int tree_height,
 
     beginStep();
     Node root = addNode(root_x, root_y);
-    root.highlight();
+    highlight(root);
     endStep();
 
     if ( tree_height == 1 ) return root;
@@ -28,13 +29,13 @@ function Node createTree( int tree_height,
                              local_width / 2, local_height );
     beginStep();
     Edge left_edge = addEdge( root, left );
-    left_edge.setSelected( true );
+    highlight(left_edge);
     endStep();
     beginStep();
     Edge right_edge = addEdge( root, right );
-    right_edge.setSelected( true );
+    highlight(right_edge);
     endStep();
-    root.mark();
+    mark(root);
     return root;
 }
 
@@ -45,4 +46,4 @@ algorithm {
 	Node root = createTree( TREE_HEIGHT, width / 2, padding, width / 2, padding );
 }	
 
-//  [Last modified: 2015 12 11 at 15:53:20 GMT]
+//  [Last modified: 2016 07 26 at 19:15:26 GMT]

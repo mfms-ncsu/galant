@@ -1,42 +1,35 @@
-/**
- * bfs.alg
+/** bfs.alg -
  * Implementation of breadth-first search. Undirected edges are regarded as
  * being directed both ways.
- * $Id: bfs.alg 47 2014-03-10 16:11:00Z mfms $
  */
 
-/** Required: node weights visible */
-
-final double INFINITY = Double.POSITIVE_INFINITY;
 NodeQueue queue;
 
 algorithm {
     queue = new NodeQueue();
     beginStep();
-    for_nodes( n ) {
-        n.setWeight(INFINITY);
+    for_nodes( v ) {
+        setWeight(v, INFINITY);
     }
 
     Node start = getStartNode();
-    start.setWeight(0);
-    start.setSelected(true);
+    setWeight(start, 0);
+    highlight(start);
     queue.enqueue(start);
     endStep();
 
     while ( ! queue.isEmpty() ) {
         Node n = queue.dequeue();
-        System.out.println("node = " + n);
-        n.setVisited( true );
+        print("current node = " + n);
+        highlight(n);
 
         for_outgoing( n, e, head ) {
-            System.out.println( "head = " + head + ", n = " + n );
-            if ( ! head.isSelected() ) {
-                System.out.println("not selected");
+            if ( ! highlighted(head) ) {
                 beginStep();
-                e.setSelected(true);
-                head.setSelected(true);
-                double distance = n.getWeight() + 1;
-                head.setWeight(distance);
+                highlight(e);
+                highlight(head);
+                Double distance = weight(n) + 1;
+                setWeight(head, distance);
                 queue.enqueue(head);
                 endStep();
             }
@@ -44,4 +37,4 @@ algorithm {
     }
 }
 
-//  [Last modified: 2015 12 07 at 00:47:13 GMT]
+//  [Last modified: 2016 07 26 at 19:08:17 GMT]

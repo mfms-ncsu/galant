@@ -380,6 +380,7 @@ public abstract class Algorithm implements Runnable {
 
     public void mark(Node n) throws Terminate { n.mark(); }
     public void unMark(Node n) throws Terminate { n.unMark(); }
+    public void unmark(Node n) throws Terminate { n.unMark(); }
     public Boolean marked(Node n) { return n.isMarked(); }
     public Boolean isMarked(Node n) { return n.isMarked(); }
 
@@ -664,4 +665,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2016 07 21 at 13:30:07 GMT]
+//  [Last modified: 2016 07 26 at 19:33:58 GMT]

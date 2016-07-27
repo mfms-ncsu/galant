@@ -32,6 +32,8 @@ Algorithms/insertion_sort.alg                   sorting_test.graphml
 
 Algorithms/binary_tree.alg                      empty graph
 
+For more information and links to important resources, see 0-index.html.
+
 
 
 

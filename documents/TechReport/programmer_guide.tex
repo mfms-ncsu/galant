@@ -4,6 +4,36 @@ The animation examples have used procedural syntax for function calls, as in, fo
 \texttt{setWeight(v,0)}.
 Java (object oriented) syntax can also be used: \texttt{v.setWeight(0)}.
 
+The source code for an algorithm begins with any number (including none)
+of global variable declarations and function definitions.
+This is followed by the code for the algorithm itself, starting with the keyword
+\textsf{algorithm}.
+A \emph{code block}
+is a sequence of statements, each terminated by a semicolon, just as in
+Java.
+The main algorithm has the form
+\begin{quote}
+\texttt{algorithm \{}\\
+\hspace*{2em}\emph{code block}\\
+\texttt{\}}
+\end{quote}
+
+Declarations of global variables are also like those of Java:\\
+\hspace*{1em}\emph{type} \emph{variable\_name}\texttt{;}\\
+or\\
+\hspace*{1em}\emph{type} \texttt{[]} \emph{variable\_name}\texttt{;}\\
+to declare an array of the given type.
+All variables must be initialized either within a function definition or
+in the algorithm.
+The Java incantation\\
+\hspace*{1em}\emph{type} \emph{variable\_name}
+\texttt{= new} \emph{type}\texttt{[} \emph{size} \texttt{]}\\
+is used to initialize an array with \emph{size} elements intialized to \textsf{null}
+or 0.
+Arrays use 0-based indexing: the largest index is $\mathit{size} - 1$.
+Function declarations are described in more detail in Section~\ref{sec:functions}
+below.
+
 Central to the Galant API is the \texttt{graph} object: currently all other
 parts of the API refer to it.
 The components of a graph are declared to be of type \texttt{Node} or
@@ -85,7 +115,7 @@ Procedural syntax for the setters is also available:
 In the special cases of color and label it is possible to omit the \texttt{set}
 (since it reads naturally): \texttt{color(}$x$,$c$\texttt{)} instead of \texttt{setColor(}$x$,$c$\texttt{)}.
 
-\subsubsection*{Logical attributes: functions and macros}
+\subsubsection{Logical attributes: functions and macros}
 
 \textbf{Nodes.}
 From a node's point of view we would like information about the adjacent nodes and incident edges.
@@ -172,7 +202,7 @@ associated with nodes and/or edges.
 The user-defined attributes may differ from one node or edge to the next.
 For example, some nodes may have a \texttt{depth} attribute while others do not.
 
-\subsubsection*{Geometric attributes}
+\subsubsection{Geometric attributes}
 
 Currently, the only geometric attributes are the positions of the
 nodes. 
@@ -198,7 +228,7 @@ It is desirable then to keep the user from moving nodes.
 The declaration \texttt{movesNodes()} at the beginning of an algorithm
 accomplishes this.
 
-\subsubsection*{Display attributes}
+\subsubsection{Display attributes} \label{sec:display_attributes}
 
 Each node and edge has
 both a (double) weight and a label.
@@ -274,19 +304,38 @@ accessed and modified by the user as well as the program.
 In all cases, modifications by execution of the animation are ephemeral
 -- the graph returns to its original state after execution.
 
+\input{Y_graph_element_functions}
+
+A summary of functions relevant to node and edge attributes (their procedural versions)
+is given in Table~\ref{tab:graph_element_functions}.
+
+\subsubsection{Global access for individual node/edge attributes and graph attributes}
+
+\input{Y_graph_attribute_functions}
+
+It is sometimes useful to access or manipulate attributes of nodes and edges
+globally.
+For example, an algorithm might want to hide node weights entirely
+because they are not relevant
+or hide them initially and reveal them for individual nodes as
+the algorithm progresses.
+These functionalities can be accomplished by
+\textsf{hideNodeWeights} or \textsf{hideAllNodeWeights}, respectively.
+A summary of these capabilities is given in Table~\ref{tab:graph_attribute_functions}.
+
 \subsection{Additional programmer information}
 
 A Galant algorithm/program is executed as a method within a Java class.
 In order to shield the Galant programmer from Java ideosyncrasies,
 some features have been added.
 
-\subsubsection*{Definition of Functions/Methods}
+\subsubsection{Definition of Functions/Methods}\label{sec:functions}
 
 A programmer can define arbitrary functions (methods) using the construct
 
 \texttt{function} \textsl{[return\_type]} \textsl{name} \texttt{(}
  \textsl{parameters} \texttt{) \{} \\
- \hspace*{3em} \textsl{code\_block} \\
+ \hspace*{3em} \emph{code block} \\
  \texttt{\}}
 
 The behavior is like that of a Java method. So, for example,
@@ -310,88 +359,10 @@ a \textsf{void} method in Java. An example is the recursive
 The conversion of functions into Java methods when Galant code is compiled
 is complex and may result in indecipherable error messages.
 
-\subsubsection*{Data Structures}
+\input{Y_data_structures}
+
+\subsubsection{Data Structures}
 
 Galant provides some standard data strutures for nodes and edges automatically.
-Each of these is supplied as a single instance.
-\begin{itemize}
+These are described in detail in Table~\ref{tab:data_structures}.
 
-\item
-  \texttt{nodeQ} -- a queue of elements of type \texttt{Node}; provides the
-  the methods of a Java Queue:
-  \begin{itemize}
-    \item
-      \texttt{offer(n)} -- puts node \verb+n+ on the queue
-    \item
-      \texttt{poll()} -- returns and removes the node at the front of the queue
-    \item
-      \texttt{peek()} -- returns the node at the front of the queue but does not remove it
-    \item
-      \texttt{isEmpty()} -- returns \textsf{true} if the queue is empty
-  \end{itemize}
-
-\item
-  \texttt{edgeQ} -- a queue of elements of type \texttt{Edge}; methods are
-  the same as those for \texttt{nodeQ}
-
-\item
-  \texttt{nodeStack} -- a stack of elements of type \texttt{Node}; provides
-  methods of a Java Stack:\\
-  \texttt{push(Node n)}, \texttt{pop()}, \texttt{peek()}, and \texttt{empty()}
-
-\item
-  \texttt{edgeStack} -- a stack of elements of type \texttt{Edge}; same as
-  \texttt{nodeStack}
-
-\item
-  \texttt{nodePQ} -- a priority queue of elements of type \texttt{Node};
-  provides standard priority queue methods:
-  \begin{itemize}
-    \item
-      \texttt{offer(n)} -- puts node \verb+n+ on the priority queue; the priority is defined to be the weight of \verb+n+
-    \item
-      \texttt{poll()} -- returns and removes the node with the lowest priority
-    \item
-      \texttt{peek()} -- returns the node with the lowest priority but does not remove it
-    \item
-      \texttt{isEmpty()} -- returns \textsf{true} if the priority queue is empty
-  \end{itemize}
-  Unfortunately, the only way to implement the \textsf{decreaseKey} operation
-  is to remove and reinsert the node.
-
-  \item
-    \texttt{edgePQ} -- analogous to \texttt{nodePQ}
-
-\end{itemize}
-
-Galant also provides classes corresponding to the above instances; these are
-\begin{itemize}
-  \item \texttt{NodeQueue}
-  \item \texttt{EdgeQueue}
-  \item \texttt{NodeStack}
-  \item \texttt{EdgeStack}
-  \item \texttt{NodePriorityQueue}
-  \item \texttt{EdgePriorityQueue}
-\end{itemize}
-
-\subsubsection*{Global Variables}
-
-One awkward feature of Galant's implementation is that global variables
-must be declared \texttt{final}. For arrays and other structures this is not
-a problem, except for the annoyance of the syntax. So, for example,
-\begin{verbatim}
-final int [] theArray = new int[ graph.getNodes.size() ];
-\end{verbatim}
-will work as expected: the entries of \verb+theArray+ can be modified as the animation progresses.
-Not so with scalars. The workaround is along the lines of
-\begin{verbatim}
-class GlobalVariables {
-    public int myInt;
-    public double myDouble;
-}
-final GlobalVariables globals = new GlobalVariables();
-\end{verbatim}
-and then the globals need to be referred to as \verb+globals.myInt+
-and \verb+globals.myDouble+, respectively.
-
-% [Last modified: 2013 07 12 at 20:59:56 GMT]

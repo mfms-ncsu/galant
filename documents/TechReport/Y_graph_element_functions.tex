@@ -1,0 +1,37 @@
+\begin{table}
+  \small
+  \centering
+  \begin{tabular}{| m{0.4\textwidth} | m{0.55\textwidth} |}
+    \hline
+    \textsf{boolean set(\emph{element}, String key, $\langle$\emph{type}$\rangle$ value)}
+    &
+    sets an arbitrary attribute, \textsf{key}, of the element to have a value of a given type, where
+    the type is one of \textsf{Integer}, \textsf{Double}, \textsf{Boolean}
+    or \textsf{String};
+    in the special case of \textsf{Boolean} the third argument may be omitted
+    and defaults to \textsf{true};
+    so \textsf{set(v,"attr")} is equivalent to \textsf{set(v,"attr",true)};
+    returns \textsf{true} if the element already has a value for the given attribute,
+    \textsf{false} otherwise
+    \\ \hline
+    \shortstack[l]{
+    \textsf{$\langle$\emph{type}$\rangle$ get$\langle$\emph{type}$\rangle$(\emph{element}, String key)}\\
+    \textsf{Boolean is(\emph{element}, String key)}
+    }
+    &
+    returns the value associated with \textsf{key} or \textsf{null}
+    if the graph has no value of the given type for \textsf{key}, i.e.,
+    if no
+    \textsf{set(String~key,~$\langle$\emph{type}$\rangle$~value)} has occurred;
+    in the special case of a \textsf{Boolean} attribute, the second formulation
+    may be used
+    \\ \hline
+  \end{tabular}
+
+  \caption{Functions that query and manipulate attributes of individual
+    nodes and edges.
+    Here, \emph{element} refers to either a \textsf{Node} or an \textsf{Edge},
+    both the type and the formal parameter.
+  }
+  \label{tab:graph_element_functions}
+\end{table}

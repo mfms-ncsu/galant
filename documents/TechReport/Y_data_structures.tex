@@ -1,0 +1,131 @@
+\begin{table}
+  \small
+  \centering
+  
+  \textbf{NodeQueue and EdgeQueue:} queues of nodes or edges, respectively.
+
+  \medskip
+  \begin{tabular}{| m{0.35\textwidth} | m{0.6\textwidth} |}
+    \hline
+    \shortstack[l]{
+      \textsf{void~enqueue(Node~v)},\\
+      \textsf{void~enqueue(Edge~e)}
+    }
+    &
+    adds \textsf{v} or \textsf{e} to the rear of the queue
+    \\ \hline
+    \textsf{Node~dequeue()}, \textsf{Edge~dequeue()}
+    &
+    returns and removes the \textsf{Node} or \textsf{Edge} at the front of the queue;
+    returns \textsf{null} if the queue is empty
+    \\ \hline
+    \textsf{Node~remove()}, \textsf{Edge~remove()}
+    &
+    returns and removes the \textsf{Node} or \textsf{Edge} at the front of the queue;
+    throws an exception if the queue is empty
+    \\ \hline
+    \textsf{Node~element()}, \textsf{Edge~element()}
+    &
+    returns the \textsf{Node} or \textsf{Edge} at the front of the queue
+    without removing it;
+    throws an exception if the queue is empty
+    \\ \hline
+    \textsf{Node~peek()}, \textsf{Edge~peek()}
+    &
+    returns the \textsf{Node} or \textsf{Edge} at the front of the queue
+    without removing it;
+    returns \textsf{null} if the queue is empty
+    \\ \hline
+    \textsf{size()}
+    &
+    returns the number of elements in the queue
+    \\ \hline
+    \textsf{isEmpty()}
+    &
+    returns \textsf{true} if the queue is empty 
+    \\ \hline
+  \end{tabular}
+
+  \bigskip
+  \textbf{NodeStack and EdgeStack:} stacks of nodes or edges, respectively.
+
+  \medskip
+  \begin{tabular}{| m{0.35\textwidth} | m{0.6\textwidth} |}
+    \hline
+    \shortstack[l]{
+      \textsf{void~push(Node~v)},\\
+      \textsf{void~push(Edge~e)}
+    }
+    &
+    adds \textsf{v} or \textsf{e} to the top of the stack
+    \\ \hline
+    \textsf{Node~pop()}, \textsf{Edge~pop()}
+    &
+    returns and removes the \textsf{Node} or \textsf{Edge} at the top of the stack;
+    throws an exception if the stack is empty
+    \\ \hline
+    \textsf{Node~peek()}, \textsf{Edge~peek()}
+    &
+    returns the \textsf{Node} or \textsf{Edge} at the top of the stack
+    without removing it;
+    returns null if the stack is empty
+    \\ \hline
+    \textsf{size()}, \textsf{isEmpty()}
+    &
+    analogous to the corresponding queue methods
+    \\ \hline
+  \end{tabular}
+
+  \bigskip
+  \textbf{NodePriorityQueue and EdgePriorityQueue:} priority queues of nodes or edges, respectively.
+
+  \medskip
+  \begin{tabular}{| m{0.35\textwidth} | m{0.6\textwidth} |}
+    \hline
+    \shortstack[l]{
+      \textsf{void~add(Node~v)},\\
+      \textsf{void~add(Edge~e)}
+    }
+    &
+    adds \textsf{v} or \textsf{e} to the priority queue;
+    the priority is defined to be its weight -- see Section~\ref{sec:display_attributes}
+    \\ \hline
+    \textsf{Node~removeMin()}, \textsf{Edge~removeMin()}
+    &
+    returns and removes the \textsf{Node} or \textsf{Edge} with minimum weight;
+    returns \textsf{null} if the queue is empty
+    \\ \hline
+    \hline
+    \shortstack[l]{
+      \textsf{boolean~remove(Node~v)},\\
+      \textsf{boolean~remove(Edge~e)}
+    }
+    &
+    removes \textsf{v} or \textsf{e};
+    returns \textsf{true} if the \textsf{v} or \textsf{e} is present,
+    \textsf{false} otherwise
+    \\ \hline
+     \shortstack[l]{
+      \textsf{void~decreaseKey(Node~v,~double~key)},\\
+      \textsf{void~decreaseKay(Edge~e,~double~key)}
+    }
+    &
+    changes the weight of \textsf{v} or \textsf{e} to the new key
+    and reorganizes the priority queue appropriately;
+    since this is accomplished by removing and reinserting the object, i.e.,
+    inefficiently, this method can also be used to increase the key
+    \\ \hline
+    \textsf{size()}, \textsf{isEmpty()}
+    &
+    analogous to the corresponding queue methods
+    \\ \hline
+  \end{tabular}
+
+  \caption{Built-in data structures and their methods.
+     These methods use object-oriented syntax:
+$\langle$\emph{structure}$\rangle$.$\langle$\emph{method}$\rangle$($\langle$\emph{arguments}$\rangle$)
+    and are created using, e.g.,
+    \textsf{NodeQueue~Q~=~new~NodeQueue();} the \textsf{new} operator in Java.
+  }
+  \label{tab:data_structures}
+\end{table}

@@ -1,0 +1,118 @@
+\begin{table}
+  \small
+  \centering
+  \begin{tabular}{| m{0.37\textwidth} | m{0.58\textwidth} |}
+    \hline
+    \shortstack[l]{
+      \textsf{Boolean nodeLabelsAreVisible()}\\
+      \textsf{Boolean edgeLabelsAreVisible()}\\
+      \textsf{Boolean nodeWeightsAreVisible()}\\
+      \textsf{Boolean edgeWeightsAreVisible()}
+    }
+    &
+    returns \textsf{true} if node/edge labels/weights are \emph{globally} visible,
+    the default state, which can be altered by \textsf{hideNodeLabels()}, etc.,
+    defined below
+    \\ \hline
+    \shortstack[l]{
+      \textsf{hideNodeLabels(), hideEdgeLabels()}\\
+      \textsf{hideNodeWeights(), hideEdgeWeights()}
+    }
+    &
+    hides all node/edge labels/weights; typically used at the beginning of an algorithm
+    to hide unnecessary information; labels and weights are shown by default
+    \\ \hline
+    \shortstack[l]{
+      \textsf{showNodeLabels(), showEdgeLabels()}\\
+      \textsf{showNodeWeights(), showEdgeWeights()}
+    }
+    &
+    undoes the hiding of labels/weights
+    \\ \hline
+    \shortstack[l]{
+      \textsf{hideAllNodeLabels()}\\
+      \textsf{hideAllEdgeLabels()}\\
+      \textsf{hideAllNodeWeights()}\\
+      \textsf{hideAllEdgeWeights()}
+    }
+    &
+    hides all node/edge labels/weights even if they are visible globally
+    by default or by
+    \textsf{showNodeLabels()}, etc., or for individual nodes and edges;
+    in order for the label or weight of a node/edge to be displayed,
+    labels/weights must be visible globally and its label/weight must be visible;
+    initially, all labels/weights are visible, both globally and for individual
+    nodes/edges;
+    these functions are used to hide information so that it can be revealed subsequently,
+    one node or edge at a time
+    \\ \hline
+    \shortstack[l]{
+      \textsf{showAllNodeLabels()}\\
+      \textsf{showAllEdgeLabels()}\\
+      \textsf{showAllNodeWeights()}\\
+      \textsf{showAllEdgeWeights()}
+    }
+    &
+    makes all individual
+    node/edge weights/labels visible if they are globally visible by default
+    or via \textsf{showNodeLabels()}, etc.;
+    this undoes the effect of \textsf{hideAllNodeLabels()}, etc., and of
+    any individual hiding of labels/weights
+    \\ \hline
+    \shortstack[l]{
+      \textsf{clearNodeLabels(), clearEdgeLabels()}\\
+      \textsf{clearNodeWeights(), clearEdgeWeights()}
+    }
+    &
+    gets rid of all node/edge labels/weights; this not only makes them invisible,
+    but also erases whatever values they have
+    \\ \hline
+    \textsf{showNodes(), showEdges()}
+    &
+    undo any hiding of nodes/edges that has taken place during the algorithm
+    \\ \hline
+    \shortstack[l]{
+      \textsf{clearNodeMarks()}\\
+      \textsf{clearNodeHighlighting()}\\
+      \textsf{clearEdgeHighlighting()}
+    }
+    &
+    unmarks all nodes, unhighlights all nodes/edges, respectively
+    \\ \hline
+    \textsf{boolean set(String attribute, $\langle$\emph{type}$\rangle$ value)}
+    &
+    sets an arbitrary attribute of the graph to have a value of a given type, where
+    the type is one of \textsf{Integer}, \textsf{Double}, \textsf{Boolean}
+    or \textsf{String};
+    in the special case of \textsf{Boolean} the second argument may be omitted
+    and defaults to \textsf{true};
+    so \textsf{set("attr")} is equivalent to \textsf{set("attr",true)};
+    returns \textsf{true} if the graph already has a value for the given attribute,
+    \textsf{false} otherwise
+    \\ \hline
+    \shortstack[l]{
+    \textsf{$\langle$\emph{type}$\rangle$ get$\langle$\emph{type}$\rangle$(String attribute)}\\
+    \textsf{Boolean is(String attribute)}
+    }
+    &
+    returns the value associated with \textsf{attribute} or \textsf{null}
+    if the graph has no value of the given type for \textsf{attribute}, i.e.,
+    if no
+    \textsf{set(String~attribute,~$\langle$\emph{type}$\rangle$~value)} has occurred;
+    in the special case of a \textsf{Boolean} attribute, the second formulation
+    may be used
+    \\ \hline
+    \shortstack[l]{
+      \textsf{clearAllNode(String attribute)}\\
+      \textsf{clearAllEdge(String attribute)}
+    }
+    &
+    erases the value of the given attribute for all nodes/edges
+    \\ \hline
+  \end{tabular}
+
+  \caption{Functions that query and manipulate graph
+    node and edge attributes globally, i.e., for all nodes or edges
+    at once. Also included are functions that deal with graph attributes.}
+  \label{tab:graph_attribute_functions}
+\end{table}

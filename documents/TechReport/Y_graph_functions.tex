@@ -65,6 +65,16 @@
     &
     returns the number of edges
     \\ \hline
+    \textsf{int~id(Node~v)}, \textsf{int~id(Edge e)}
+    &
+    returns the unique identifier of \textsf{v} or \textsf{e}
+    \\ \hline
+    \textsf{int~nodeIds()}, \textsf{int~edgeIds()}
+    &
+    returns the largest node/edge identifier plus one;
+    useful when an array is to be indexed using node/edge identifiers,
+    since these are not necessarily contiguous
+    \\ \hline
     \textsf{getStartNode()}
     &
     returns the first node in the list of nodes, typically the one with smallest id;
@@ -112,7 +122,7 @@
     removes edge \textsf{e} from the graph
     \\ \hline
   \end{tabular}
-  \caption{Functions and macros that apply to the whole graph or to
+  \caption{Functions and macros that apply to the structure of a graph or to
     an algorithm more generally.}
   \label{tab:graph_functions}
 \end{table}

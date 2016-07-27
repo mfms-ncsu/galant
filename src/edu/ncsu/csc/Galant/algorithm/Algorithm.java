@@ -145,6 +145,8 @@ public abstract class Algorithm implements Runnable {
         private Queue<Node> Q = new ArrayDeque<Node>();
         public void enqueue(Node v) { Q.offer(v); }
         public Node dequeue() { return Q.poll(); }
+        public Node remove() { return Q.remove(); }
+        public Node element() { return Q.element(); }
         @Override
             public boolean offer(Node e) { return Q.offer(e); }
         @Override
@@ -161,6 +163,8 @@ public abstract class Algorithm implements Runnable {
 
         public void enqueue(Edge e) { Q.offer(e); }
         public Edge dequeue() { return Q.poll(); }
+        public Edge remove() { return Q.remove(); }
+        public Edge element() { return Q.element(); }
         @Override
             public boolean offer(Edge e) { return Q.offer(e); }
         @Override
@@ -250,7 +254,8 @@ public abstract class Algorithm implements Runnable {
      * The following methods control the display of labels and weights during
      * algorithm execution; usually used at the beginning to hide unnecessary
      * information. Individual showing and hiding of Node/Edge labels or
-     * weights takes effect only if these have been made visible.
+     * weights takes effect only if these are visible globally in the
+     * graph. Initially, all labels and weights are visible.
      */
 
     /** makes node labels invisible */
@@ -666,4 +671,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2016 07 26 at 22:05:38 GMT]
+//  [Last modified: 2016 07 27 at 18:29:55 GMT]

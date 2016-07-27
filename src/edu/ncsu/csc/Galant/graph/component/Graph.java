@@ -447,7 +447,10 @@ public class Graph {
      * The following are used to query label and weight visibility during
      * algorithm execution and are called from GraphPanel; note that only the
      * versions with the state argument are needed -- these are never called
-     * outside of algorithm execution.
+     * outside of algorithm execution. The implementation also implies that
+     * labels and weights are visible by default during algorithm
+     * execution. The algorithm must explicitly hide them, either globally or
+     * for individual nodes and edges.
      */
     public Boolean edgeLabelsAreVisible(int state) {
         return ! is(state, HIDDEN_EDGE_LABELS);
@@ -1180,4 +1183,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2016 07 03 at 16:18:59 GMT]
+//  [Last modified: 2016 07 27 at 18:29:17 GMT]

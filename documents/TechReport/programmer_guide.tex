@@ -175,13 +175,28 @@ For example, some nodes may have a \texttt{depth} attribute while others do not.
 \subsubsection*{Geometric attributes}
 
 Currently, the only geometric attributes are the positions of the
-nodes. The edges are all straight lines and positions of labels are fixed.
-The relevant methods for nodes are
-\texttt{int~getX()}, \texttt{int~getY()}, and \texttt{Point~getPosition()}
+nodes. 
+Unlike GDR, the edges in Galant
+are all straight lines and the positions of their labels are fixed.
+The relevant methods for nodes -- using procedural syntax -- are
+\texttt{int~getX(Node)}, \texttt{int~getY(Node)}
+and \texttt{Point~getPosition(Node)}
 for the 'getters'. To set a position,
-one should use either \texttt{setPosition(Point)} or \texttt{setPosition(int,int)}.
-However, once a node has an established position, it is possible to change
-only one coordinate using \texttt{setX(int)} or \texttt{setY(int)}.
+one should use either
+\texttt{setPosition(Node,Point)}\\
+or \texttt{setPosition(Node,int,int)}.
+Once a node has an established position, it is possible to change
+only one coordinate using \texttt{setX(Node,int)} or \texttt{setY(Node,int)}.
+Object-oriented variants of all of these, e.g.,
+\texttt{v.setX(100)}, are also available.
+
+Ordinarily nodes can be moved by the user during algorithm execution
+and the resulting positions persist after execution terminates.
+For some algorithms, such as sorting, the algorithm itself needs to move
+nodes.
+It is desirable then to keep the user from moving nodes.
+The declaration \texttt{movesNodes()} at the beginning of an algorithm
+accomplishes this.
 
 \subsubsection*{Display attributes}
 
@@ -195,16 +210,21 @@ key for
 sorting and priority queues.
 The label is simply text and may be interpreted however the programmer
 chooses.
-Both weight and label have values to indicate their absence:
-\texttt{Double.NaN} (not a number) in the case of weights, \texttt{null}
-in the case of labels.
-In either case the weights/labels are not displayed.
 Aside from the setters and getters: \texttt{setWeight(double)},
-\mbox{\texttt{double getWeight()}}, \texttt{setLabel(String)},
+\mbox{\texttt{Double getWeight()}}, \texttt{setLabel(String)}
 and \mbox{\texttt{String getLabel()}}, the programmer can also
 manipulate and test for the absence of weights/labels using
 \texttt{clearWeight()} and \texttt{boolean~hasWeight()},
 and the corresponding methods for labels.
+The procedural variants in this case are
+\texttt{setWeight(Node,double)},
+\mbox{\texttt{Double weight(Node)}},\footnote{
+  The \emph{get} is omitted here for more natural syntax.}
+\texttt{label(Node,String)},\footnote{
+  A natural syntax that resembles English. However,
+  \texttt{setLabel(Node,String)} is also allowed.
+}
+and \mbox{\texttt{String label(Node)}}
 
 Nodes can either be plain, highlighted (selected), marked (visited) or both highlighted and
 marked.
@@ -214,28 +234,45 @@ implementation), while being marked affects the fill color.
 Edges can be plain or selected, with thickness and color modified in the
 latter case.
 
-The relevant methods are:
+The relevant methods are
+(here \texttt{Element} refers to either a \texttt{Node} or an \texttt{Edge}):
 \begin{itemize}
-\item \texttt{highlight()}, \texttt{unHighlight()}, and \texttt{boolean~isHighlighted()}
+\item \texttt{highlight(Element)}, \texttt{unHighlight(Element)}
+  and \texttt{Boolean~isHighlighted(Element)}
 \item correspondingly, \texttt{setSelected(true)}, \texttt{setSelected(false)},
 and \texttt{boolean~isSelected()}
-\item \texttt{mark()}, \texttt{unMark()}, and \texttt{boolean~isMarked()}
-\item correspondingly, \texttt{setVisited(true)}, \texttt{setVisited(false)},
-and \texttt{boolean~isVisited()}
+\item \texttt{mark(Node)}, \texttt{unMark(Node)}
+  and \texttt{Boolean~isMarked(Node)},
+  equivalently \texttt{Boolean~marked(Node)}.
 \end{itemize}
 
 Although the specific colors for displaying selected nodes or edges are
 predetermined, the animation implementation can modify the color of a node boundary
-or an edge, thus allowing for many different kinds of highlighting.\footnote{
-It would also be desirable to be able to alter the thickness of edges or node boundaries to make color changes more visible.
-}
+or an edge, thus allowing for many different kinds of highlighting.
 The \texttt{setColor} and \texttt{getColor} methods use String arguments
 using the RGB format \textsf{\#RRGGBB}; for example,
 the string \texttt{\#0000ff} is blue.
+There are several predefined color constants:
+
+\begin{tabular}{l @{~} l}
+\texttt{RED} & \texttt{"\#ff0000"} \\
+\texttt{BLUE} & \texttt{"\#00ff00"} \\
+\texttt{GREEN} & \texttt{"\#0000ff"} \\
+\texttt{YELLOW} & \texttt{"\#ffff00"} \\
+\texttt{MAGENTA} & \texttt{"\#ff00ff" } \\
+\texttt{CYAN} & \texttt{"\#00ffff"} \\
+\texttt{TEAL} & \texttt{"\#009999"} \\
+\texttt{VIOLET} & \texttt{"\#9900cc"} \\
+\texttt{ORANGE} & \texttt{"\#ff8000"} \\
+\texttt{GRAY} & \texttt{"\#808080"} \\
+\texttt{BLACK} & \texttt{"\#000000"} \\
+\texttt{WHITE} & \texttt{"\#ffffff"}
+\end{tabular}
 
 Of the attributes listed above, weight, label, color and position can be
 accessed and modified by the user as well as the program.
-In all cases, modifications by execution of the animation are ephemeral --- the graph returns to its original state after execution.
+In all cases, modifications by execution of the animation are ephemeral
+-- the graph returns to its original state after execution.
 
 \subsection{Additional programmer information}
 

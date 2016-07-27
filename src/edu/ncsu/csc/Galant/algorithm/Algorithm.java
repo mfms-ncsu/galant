@@ -447,6 +447,7 @@ public abstract class Algorithm implements Runnable {
      */
     public Integer getX(Node v) { return v.getX(); }
     public Integer getY(Node v) { return v.getY(); }
+    public Point getPosition(Node v) { return v.getPosition(); }
     public void setX(Node v, int x) throws Terminate { v.setX(x); }
     public void setY(Node v, int y) throws Terminate { v.setY(y); }
     public void setPosition(Node v, int x, int y)
@@ -665,4 +666,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2016 07 26 at 19:33:58 GMT]
+//  [Last modified: 2016 07 26 at 22:05:38 GMT]

@@ -7,6 +7,11 @@
     &
     returns the unique identifier of the node or edge
     \\ \hline
+    \textsf{source(Edge e)}, \textsf{target(Edge e)}
+    &
+    returns the source/target of edge \textsf{e}, sometimes called the (arrow)
+    tail/head or source/destination
+    \\ \hline
     \textsf{mark(Node v), unmark(Node v)}
     &
     shades the interior of a node or undoes that
@@ -31,7 +36,57 @@
     &
     synonyms for \textsf{highlight}, \textsf{unhighlight} and \textsf{highlighted}
     \\ \hline
+    \shortstack[l]{
+      \textsf{Double weight(\emph{element})}\\
+      \textsf{setWeight(\emph{element}, double weight)}
+    }
     &
+    get/set the weight of the element
+    \\ \hline
+    \shortstack[l]{
+      \textsf{showWeight(\emph{element})},
+      \textsf{hideWeight(\emph{element})}\\
+      \textsf{weightIsVisible(\emph{element})}\\
+      \textsf{weightIsHidden(\emph{element})}
+    }
+    &
+    make the weight of the element visible/invisible,
+    query their visibility; weights of the element type
+    have to be
+    globally visible -- see Table~\ref{tab:graph_attribute_functions}
+    -- for \textsf{showWeight} to have an effect
+    \\ \hline
+    \shortstack[l]{
+      \textsf{String label(\emph{element})}\\
+      \textsf{label(\emph{element}, Object obj)}
+    }
+    &
+    get/set the label of the element, the \textsf{Object} argument allows an object
+    of any other type to be converted to a (\textsf{String}) label,
+    as long as there is a \textsf{toString} method, which is true of all major classes
+    (you have to be careful, for example, to use \textsf{Integer} instead of \textsf{int})
+    \\ \hline
+    \shortstack[l]{
+      \textsf{showLabel(\emph{element})},
+      \textsf{hideLabel(\emph{element})}\\
+      \textsf{labelIsVisible(\emph{element})}\\
+      \textsf{labelIsHidden(\emph{element})}
+    }
+    &
+    analogous to the corresponding weight functions
+    \\ \hline
+     \shortstack[l]{
+      \textsf{String color(\emph{element})}\\
+      \textsf{color(\emph{element}, String c)}\\
+      \textsf{uncolor(\emph{element})}
+    }
+    &
+    get/set/remove the color of the border of a node or line representing an edge;
+    colors are encoded as strings of the form
+    \textsf{"\#RRBBGG"}, the RR, BB and GG being hexadecimal numbers representing the
+    red, blue and green components of the color, respectively; see Table~\ref{tab:colors}
+    for a list of predefined colors;
+    when an element has no color, the line is thinner and black
     \\ \hline
     \textsf{boolean set(\emph{element}, String key, $\langle$\emph{type}$\rangle$ value)}
     &
@@ -43,6 +98,11 @@
     so \textsf{set(v,"attr")} is equivalent to \textsf{set(v,"attr",true)};
     returns \textsf{true} if the element already has a value for the given attribute,
     \textsf{false} otherwise
+    \\ \hline
+    \textsf{boolean clear(\emph{element}, String key)}
+    &
+    removes the attribute \textsf{key} from the element; if the \texttt{key} refers to
+    a Boolean attribute, this is logically equivalent to making it false
     \\ \hline
     \shortstack[l]{
     \textsf{$\langle$\emph{type}$\rangle$ get$\langle$\emph{type}$\rangle$(\emph{element}, String key)}\\

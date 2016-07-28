@@ -276,28 +276,34 @@ and \texttt{boolean~isSelected()}
   equivalently \texttt{Boolean~marked(Node)}.
 \end{itemize}
 
+\begin{table}
+  \centering
+  \begin{tabular}{{| l @{~=~} l |}}
+    \hline
+    \texttt{RED} & \texttt{"\#ff0000"} \\ \hline
+    \texttt{BLUE} & \texttt{"\#00ff00"} \\ \hline
+    \texttt{GREEN} & \texttt{"\#0000ff"} \\ \hline
+    \texttt{YELLOW} & \texttt{"\#ffff00"} \\ \hline
+    \texttt{MAGENTA} & \texttt{"\#ff00ff" } \\ \hline
+    \texttt{CYAN} & \texttt{"\#00ffff"} \\ \hline
+    \texttt{TEAL} & \texttt{"\#009999"} \\ \hline
+    \texttt{VIOLET} & \texttt{"\#9900cc"} \\ \hline
+    \texttt{ORANGE} & \texttt{"\#ff8000"} \\ \hline
+    \texttt{GRAY} & \texttt{"\#808080"} \\ \hline
+    \texttt{BLACK} & \texttt{"\#000000"} \\ \hline
+    \texttt{WHITE} & \texttt{"\#ffffff"} \\ \hline
+  \end{tabular}
+  \caption{Predefined color constants.}
+  \label{tab:colors}
+\end{table}
+
 Although the specific colors for displaying selected nodes or edges are
 predetermined, the animation implementation can modify the color of a node boundary
 or an edge, thus allowing for many different kinds of highlighting.
 The \texttt{setColor} and \texttt{getColor} methods use String arguments
 using the RGB format \textsf{\#RRGGBB}; for example,
 the string \texttt{\#0000ff} is blue.
-There are several predefined color constants:
-
-\begin{tabular}{l @{~} l}
-\texttt{RED} & \texttt{"\#ff0000"} \\
-\texttt{BLUE} & \texttt{"\#00ff00"} \\
-\texttt{GREEN} & \texttt{"\#0000ff"} \\
-\texttt{YELLOW} & \texttt{"\#ffff00"} \\
-\texttt{MAGENTA} & \texttt{"\#ff00ff" } \\
-\texttt{CYAN} & \texttt{"\#00ffff"} \\
-\texttt{TEAL} & \texttt{"\#009999"} \\
-\texttt{VIOLET} & \texttt{"\#9900cc"} \\
-\texttt{ORANGE} & \texttt{"\#ff8000"} \\
-\texttt{GRAY} & \texttt{"\#808080"} \\
-\texttt{BLACK} & \texttt{"\#000000"} \\
-\texttt{WHITE} & \texttt{"\#ffffff"}
-\end{tabular}
+The predefined color constants are listed in Table~\ref{tab:colors}.
 
 Of the attributes listed above, weight, label, color and position can be
 accessed and modified by the user as well as the program.

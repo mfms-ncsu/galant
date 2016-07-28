@@ -398,6 +398,9 @@ public abstract class Algorithm implements Runnable {
     public Boolean isMarked(Node n) { return n.isMarked(); }
 
     public Double weight(GraphElement ge) { return ge.getWeight(); }
+    public void setWeight(GraphElement ge, double weight) throws Terminate {
+        ge.setWeight(weight);
+    }
     public String label(GraphElement ge) { return ge.getLabel(); }
     /**
      * @todo It would be useful to have a class AttributeParser with a method
@@ -444,9 +447,6 @@ public abstract class Algorithm implements Runnable {
         return ge.weightIsHidden(getState());
     }
     public Boolean weightIsVisible(GraphElement ge) { return ! weightIsHidden(ge); }
-    public void setWeight(GraphElement ge, double weight) throws Terminate {
-        ge.setWeight(weight);
-    }
     public Integer degree(Node v) { return v.getDegree(); }
     public Integer indegree(Node v) { return v.getIndegree(); }
     public Integer outdegree(Node v) { return v.getOutdegree(); }
@@ -669,4 +669,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2016 07 28 at 19:40:54 GMT]
+//  [Last modified: 2016 07 28 at 20:21:37 GMT]

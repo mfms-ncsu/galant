@@ -1,0 +1,10 @@
+Things to do before release:
+
+- proofread all 0-* documents
+- proofread the whole tech report
+- spellcheck everything
+- make sure all algorithms and user operations work as advertised
+- update the release number in Galant.java
+- get most recent GPL (the one in 0-gpl.txt is 1991)
+- check with csc_help about best way to make everything public
+- add github information to the tech report (first page)

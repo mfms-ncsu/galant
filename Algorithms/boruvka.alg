@@ -21,7 +21,7 @@ function labelComponent(Node v, String label) {
     label(v, label);
     showLabel(v);
     for_adjacent( v, e, w ) {
-        if ( ! isMarked(w) && e.is("inTree") ) {
+        if ( ! marked(w) && e.is("inTree") ) {
             color(e, GREEN);
             hideWeight(e);
             labelComponent(w, label);
@@ -40,7 +40,7 @@ function Edge lowestWeight(Node v) {
     double bestWeight = INFINITY;
     for_adjacent( v, e, w ) {
         if ( label(v).equals(label(w)) ) {
-            if ( ! isMarked(w) && e.is("inTree") ) {
+            if ( ! marked(w) && e.is("inTree") ) {
                 color(e, BLUE);
                 Edge bestBelow = lowestWeight(w);
                 if ( bestBelow != null && weight(bestBelow) < bestWeight ) {
@@ -120,7 +120,7 @@ algorithm {
         // need to label components first
         beginStep();
         for_nodes( v ) {
-            if ( ! isMarked(v) ) {
+            if ( ! marked(v) ) {
                 labelComponent(v, "" + id(v));
             }
         }
@@ -133,7 +133,7 @@ algorithm {
         for_nodes( componentRepresentative ) {
             // search component in forest containing the component
             // representative to find the lowest cost outgoing edge
-            if ( ! isMarked(componentRepresentative) ) {
+            if ( ! marked(componentRepresentative) ) {
                 beginStep();
                 if ( previousRepresentative != null ) {
                     recolorComponent(previousRepresentative);
@@ -173,4 +173,4 @@ algorithm {
     endStep();
 }
 
-/*  [Last modified: 2016 02 09 at 21:29:27 GMT] */
+/*  [Last modified: 2016 07 28 at 01:01:45 GMT] */

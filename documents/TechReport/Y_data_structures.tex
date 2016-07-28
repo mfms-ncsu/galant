@@ -1,7 +1,41 @@
 \begin{table}
   \small
   \centering
+
+  \textbf{NodeList and EdgeList:} lists of nodes or edges, respectively.
   
+  \medskip
+  \begin{tabular}{| m{0.35\textwidth} | m{0.6\textwidth} |}
+    \hline
+    \shortstack[l]{
+      \textsf{Node first(NodeList L)}\\
+      \textsf{Edge first(EdgeList L)}
+    }
+    &
+    returns the first element of this list
+    \\ \hline
+    \shortstack[l]{
+      \textsf{add(Node v, NodeList L)}\\
+      \textsf{add(Edge e, EdgeList L)}
+    }
+    &
+    adds the node/edge to the end of the list \textsf{L}; along with \textsf{first}
+    we get the effect of a queue
+    \\ \hline
+    \shortstack[l]{
+      \textsf{remove(Node v, NodeList L)}\\
+      \textsf{remove(Edge e, EdgeList L)}
+    }
+    &
+    removes the first occurrence of node \textsf{v} or edge \textsf{e} from \textsf{L}
+    \\ \hline
+    \textsf{sort(NodeList L)}, \textsf{sort(EdgeList L)}
+    &
+    use the weights of the nodes/edges to sort the list \textsf{L}
+    \\ \hline
+  \end{tabular}  
+  
+\bigskip
   \textbf{NodeQueue and EdgeQueue:} queues of nodes or edges, respectively.
 
   \medskip

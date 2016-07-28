@@ -8,7 +8,7 @@
  *
  * @todo Once the thread situation is straightened out, it is high time to
  * consider two methods used in GDR:
- * - Node getNodeByQuery(String message)
+ * - Node getNode(String message)
  * - String query(String message)
  * These should prompt the display to pop up a window with the message and
  * pause execution, to be resumed when the user has produced the appropriate
@@ -32,6 +32,7 @@ import java.util.Queue;
 import java.util.Stack;
 import java.util.Collections;
 import java.awt.Color;
+import java.awt.Point;
 
 import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.gui.util.ExceptionDialog;
@@ -112,6 +113,13 @@ public abstract class Algorithm implements Runnable {
     public class EdgeList extends ArrayList<Edge> {
     }
 
+    public void add(Node v, NodeList L) { L.add(v); }
+    public void remove(Node v, NodeList L) { L.remove(v); }
+    public Node first(NodeList L) { return L.get(0); }
+    public void add(Edge e, EdgeList L) { L.add(e); }
+    public void remove(Edge e, EdgeList L) { L.remove(e); }
+    public Edge first(EdgeList L) { return L.get(0); }
+
     // sorting of edges and nodes
     /**
      * @todo these do not work; error is error: name clash: sort(List<Node>)
@@ -125,13 +133,13 @@ public abstract class Algorithm implements Runnable {
      * converted to
      * java.util.List<edu.ncsu.csc.Galant.graph.component.GraphElement>
      */
-    public void sort(List<Edge> L) {
+    public void sort(EdgeList L) {
         Collections.sort(L);
     }
 
-    //     public void sort(NodeList L) {
-//         Collections.sort(L);
-//     }
+    public void sort(NodeList L) {
+        Collections.sort(L);
+    }
 
     /**
      * A queue of nodes
@@ -458,17 +466,6 @@ public abstract class Algorithm implements Runnable {
     public void setPosition(Node v, int x, int y)
         throws Terminate { v.setPosition(x, y); }
 
-    public List rest(List L)  { return L.subList(1, L.size()); }
-    /**
-     error: name clash: first(List<Edge>) and first(List<Node>) have the same erasure
-    [javac]     public Edge first(List<Edge> L) { return L.get(0); }
-     */
-
-     public Edge firstEdge(List<Edge> L) { return L.get(0); }
-//     public List<Edge> rest(List<Edge> L) {
-//         return L.subList(1, L.size());
-//     }
-
     /**
      * Displays a message during algorithm execution; the message could be
      * any object that has a toString() method
@@ -548,8 +545,9 @@ public abstract class Algorithm implements Runnable {
     }
 
     /** this and the corresponding incantation for edges don't work; the
-     * type/class NodeList has to be created inside the Graph class */
-    public NodeList nodes() { return (NodeList) getNodes(); }
+     * type/class NodeList has to be created inside the Graph class or we
+     * need an additional copy constructor for NodeList */
+//     public NodeList nodes() { return (NodeList) getNodes(); }
 
     public Integer numberOfNodes() {
         return graph.getNodes().size();
@@ -559,7 +557,7 @@ public abstract class Algorithm implements Runnable {
         return graph.getEdges();
     }
 
-    public EdgeList edges() { return (EdgeList) getEdges(); }
+//     public EdgeList edges() { return (EdgeList) getEdges(); }
 
     public Integer numberOfEdges() {
         return graph.getEdges().size();
@@ -671,4 +669,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2016 07 27 at 18:29:55 GMT]
+//  [Last modified: 2016 07 28 at 19:40:54 GMT]

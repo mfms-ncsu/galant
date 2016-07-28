@@ -62,40 +62,20 @@ Only when focus is no longer on the edge does it change color.
 
 \begin{itemize}
 
-\item
-The macro preprocessor is oblivious to comments. Thus, the placement or contents of a comment may cause it to throw an exception.
-Such exceptions have been known to occur when comments appear inside functions
-or contain constructions that are subject to macro expansion.
-For example, sometimes the word \texttt{for} in a comment causes problems.
-
 \item Every once in a while an exception occurs when an error-free algorithm
   is executed or when Galant intitally fires up, but it is possible to step
   through the animation normally after hitting the \textsf{Continue} button.
 
-\item 
-  The \texttt{function} construct appears not to work if the arguments or
-  return value are arrays (or lists?).
-  Macro expansion for this construct is complex.
-
 \item
-Compiler error messages can be cryptic (but at least they refer to the correct
-line numbers). Because of the macro preprocessing, it may be necessary to look at the console to get an idea of what is causing a particular error.
-
+  Compiler error messages can be cryptic (but at least they refer to the correct
+  line numbers). Because of the macro preprocessing, it may be necessary to look at the console to get an idea of what is causing a particular error.
+  
 \item
-There is no way for the user to change anything about the display while stepping through the animation, such as, for example, changing visibility of labels and weights,
-or positions of nodes to make important features more visible.
-
-\item
-There is no way for the animation program to specify that labels and/o weights
-should be displayed or hidden.
-
-\item
-There is no way to execute the animation in a continuous fashion with a
-controllable speed. The current workaround is the use of arrow keys as keyboard
-shortcuts for stepping forward or backward -- these can be held down to
-generate multiple steps in rapid succession, but the user must click on the
-graph panel before starting the animation; for some reason, there is no
-reaction to the shortcuts if the first mouse click is on one of the arrows at the bottom of the graph window.
+  There is no way to execute the animation in a continuous fashion with a
+  controllable speed. The current workaround is the use of arrow keys as keyboard
+  shortcuts for stepping forward or backward -- these can be held down to
+  generate multiple steps in rapid succession, but finer grained control is
+  difficult.
 
 \end{itemize}
 

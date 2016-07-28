@@ -3,6 +3,36 @@
   \centering
   \begin{tabular}{| m{0.4\textwidth} | m{0.55\textwidth} |}
     \hline
+    \textsf{id(\emph{element})}
+    &
+    returns the unique identifier of the node or edge
+    \\ \hline
+    \textsf{mark(Node v), unmark(Node v)}
+    &
+    shades the interior of a node or undoes that
+    \\ \hline
+    \textsf{Boolean marked(Node v)}
+    &
+    returns \textsf{true} if the node is marked
+    \\ \hline
+    \textsf{highlight(\emph{element}), unhighlight(\emph{element})}
+    &
+    makes the node or edge highlighted, i.e.,
+    thickens the border or line and makes it red / undoes the highlighting
+    \\ \hline
+    \textsf{Boolean highlighted(\emph{element})}
+    &
+    returns \textsf{true} if the node or edge is highlighted
+    \\ \hline
+    \shortstack[l]{
+      \textsf{select(\emph{element})}, \textsf{deselect(\emph{element})}\\
+      \textsf{selected(\emph{element})}
+    }
+    &
+    synonyms for \textsf{highlight}, \textsf{unhighlight} and \textsf{highlighted}
+    \\ \hline
+    &
+    \\ \hline
     \textsf{boolean set(\emph{element}, String key, $\langle$\emph{type}$\rangle$ value)}
     &
     sets an arbitrary attribute, \textsf{key}, of the element to have a value of a given type, where
@@ -24,7 +54,9 @@
     if no
     \textsf{set(String~key,~$\langle$\emph{type}$\rangle$~value)} has occurred;
     in the special case of a \textsf{Boolean} attribute, the second formulation
-    may be used
+    may be used;
+    the object-oriented syntax, such as \textsf{e.is("inTree")}, sometimes
+    reads more naturally
     \\ \hline
   \end{tabular}
 

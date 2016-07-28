@@ -661,9 +661,9 @@ public class Graph {
 	 * @return all edges as a list
      * @todo get rid of the template
 	 */
-	public List<Edge> getEdges()
+	public ArrayList<Edge> getEdges()
     {
-		List<Edge> retEdges = new ArrayList<Edge>();
+		ArrayList<Edge> retEdges = new ArrayList<Edge>();
 		
 		for (Edge e : this.edges) {
 			if (e.inScope()) {
@@ -1183,4 +1183,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2016 07 27 at 18:29:17 GMT]
+//  [Last modified: 2016 07 28 at 19:06:34 GMT]

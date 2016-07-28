@@ -1,8 +1,9 @@
 Some features under development for the next major release are listed here.
 
-\begin{itemize}
+\begin{enumerate}
 \item
-  A programmer will be able to ask the user to select a node or edge via a text query. The appropriate incantations will take the form
+  \emph{Node and edge selection prompts in algorithms.}
+  An algorithm will be able to ask the user to select a node or edge via a text query. The appropriate incantations will take the form
   \begin{itemize}
     \item \texttt{getNode(\emph{message})}, where \emph{message} is a prompt
       (string); a popup window asks the user for the id of a node; the
@@ -14,6 +15,7 @@ Some features under development for the next major release are listed here.
   \end{itemize}
 
 \item
+  \emph{Sets of nodes and edges.}
   New types/classes \texttt{NodeSet} and \texttt{EdgeSet} will be added. Both
   will be concrete classes and will have conversion constructors from
   \texttt{NodeList} and \texttt{EdgeList}, respectively. Eventually
@@ -28,4 +30,25 @@ Some features under development for the next major release are listed here.
   a set from which the edge must be selected (e.g., the set of edges incident
   on a node) and \emph{message} is an error message to be given if the
   edge exists but is not a member of the given set.
-\end{itemize}
+
+\item
+  \emph{Modeless graph editing.}
+  In place of the GDR-like mechanism, where panel buttons are used to determine
+  how the graph editor responds to mouse actions -- a click might create a node,
+  initiate an edge or select an object --
+  the \textsf{Ctrl} and \textsf{Shift} keys can determine the ``mode''.
+  So, for example, \textsf{Ctrl-Click} would create a node and
+  \textsf{Shift-Click} would initiate an edge.
+
+\item
+  \emph{Mapping attributes to actions.}
+  In order to make animations more accessible to visually impaired users,
+  there should be a mechanism that, under user control, specifies how Boolean
+  attributes such as marking or highlighting are ``displayed''.
+  Currently, the thickness of highlighted node borders and edges can be
+  controlled in the \textsf{Preferences} panel.
+  A more sophisticated mapping mechanism that incorporates sound as well as visuals is needed.
+  The ultimate approach would allow mappings for arbitrary attributes
+  defined by user or programmer.
+  
+\end{enumerate}

@@ -46,8 +46,8 @@
     \shortstack[l]{
       \textsf{showWeight(\emph{element})},
       \textsf{hideWeight(\emph{element})}\\
-      \textsf{weightIsVisible(\emph{element})}\\
-      \textsf{weightIsHidden(\emph{element})}
+      \textsf{Boolean weightIsVisible(\emph{element})}\\
+      \textsf{Boolean weightIsHidden(\emph{element})}
     }
     &
     make the weight of the element visible/invisible,
@@ -69,11 +69,20 @@
     \shortstack[l]{
       \textsf{showLabel(\emph{element})},
       \textsf{hideLabel(\emph{element})}\\
-      \textsf{labelIsVisible(\emph{element})}\\
-      \textsf{labelIsHidden(\emph{element})}
+      \texttt{Boolean labelIsVisible(\emph{element})}\\
+      \texttt{Boolean labelIsHidden(\emph{element})}
     }
     &
     analogous to the corresponding weight functions
+    \\ \hline
+    \shortstack[l]{
+      \textsf{hide(\emph{element})},
+      \textsf{show(\emph{element})}\\
+      \texttt{Boolean hidden(\emph{element})}\\
+      \texttt{Boolean visible(\emph{element})}
+    }
+    &
+    makes nodes/edges disappear/reappear and tests whether they are visible or hidden; useful when an algorithm (logically) deletes objects, but they need to be revealed again upon completion
     \\ \hline
      \shortstack[l]{
       \textsf{String color(\emph{element})}\\

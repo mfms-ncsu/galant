@@ -1,0 +1,64 @@
+\begin{table}
+  \small
+  \centering
+  \begin{tabular}{| m{0.35\textwidth} | m{0.6\textwidth} |}
+    \hline
+    \textsf{print(String s)}
+    &
+    prints \texttt{s} on the console; useful for debugging
+    \\ \hline
+    \textsf{display(String s)}
+    &
+    writes the string \textsf{s} at the top of the window
+    \\ \hline
+    \textsf{String getMessage()}
+    &
+    returns the message currently displayed on the message banner
+    \\ \hline
+    \textsf{error(String s)}
+    &
+    prints \textsf{s} on the console with a stack trace; also displays
+    \textsf{s} in popup window with an option to view the stack trace;
+    the algorithm terminates and the user can choose whether to terminate
+    Galant entirely or continue interacting
+    \\ \hline
+    \textsf{beginStep()},
+    \textsf{endStep()}
+    &
+    any actions between a \textsf{beginStep()} and an \textsf{endStep()}
+    take place atomically, i.e.,
+    all in a single ``step forward'' action by the user
+    \\ \hline
+    \textsf{Node getNode(String message)}
+    &
+    pops up a window with the given message and prompts the user to enter the
+    identifier of a node, which is returned;
+    if no node with that id exists,
+    an error popup is displayed and the user is prompted again
+    \\ \hline
+    \textsf{Node getEdge(String message)}
+    &
+    pops up a window with the given message and prompts the user to enter the
+    identifiers of two nodes, the endpoints of an edge, which is returned;
+    if either id has no corresponding node or the the two nodes are not connect
+    by an edge (in the right direction if the graph is directed),
+    an error popup is displayed and the user is prompted again
+    \\ \hline
+    \shortstack[l] {
+      \textsf{Integer integer(String s)}\\
+      \textsf{Double real(String s)}
+    }
+    &
+    performs conversion from a string to an integer/double; useful when parsing
+    labels that represent numbers
+    \\ \hline
+    \textsf{windowWidth()}, \textsf{windowHeight()}
+    &
+    current width and height of the window, in case the algorithm wants to rescale
+    the graph
+    \\ \hline
+  \end{tabular}
+  \caption{Utility functions.}
+  \label{tab:utility_functions}
+\end{table}
+

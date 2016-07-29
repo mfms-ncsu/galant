@@ -31,7 +31,10 @@
     \\ \hline
     \textsf{sort(NodeList L)}, \textsf{sort(EdgeList L)}
     &
-    use the weights of the nodes/edges to sort the list \textsf{L}
+    use the weights of the nodes/edges to sort the list \textsf{L};
+    sort is actually a macro that invokes Java \textsf{Collections.sort(L)};
+    this means that \textsf{L} can be any collection (list, stack, queue, set)
+    of comparable elements
     \\ \hline
   \end{tabular}  
   

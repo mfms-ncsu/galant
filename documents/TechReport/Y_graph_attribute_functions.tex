@@ -79,6 +79,24 @@
     &
     unmarks all nodes, unhighlights all nodes/edges, respectively
     \\ \hline
+    \shortstack[l]{
+      \textsf{clearNodeLabels()}\\
+      \textsf{clearNodeWeights()}\\
+      \textsf{clearEdgeLabels()}\\
+      \textsf{clearEdgeWeights()}
+    }
+    &
+    erases labels/weights of all nodes/edges; useful if an algorithm needs to
+    start with a clean slate with respect to any of these attributes
+    \\ \hline
+    \shortstack[l]{
+      \textsf{clearAllNode(String attribute)}\\
+      \textsf{clearAllEdge(String attribute)}
+    }
+    &
+    erases values of the given attribute from all nodes/edges, a generalization of
+    \textsf{clearNodeLabels}, etc.
+    \\ \hline
     \textsf{boolean set(String attribute, $\langle$\emph{type}$\rangle$ value)}
     &
     sets an arbitrary attribute of the graph to have a value of a given type, where

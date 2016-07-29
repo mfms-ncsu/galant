@@ -3,30 +3,9 @@
   \centering
   \begin{tabular}{| m{0.35\textwidth} | m{0.6\textwidth} |}
     \hline
-    \textsf{print(String s)}
-    &
-    prints \texttt{s} on the console; useful for debugging
-    \\ \hline
-    \textsf{display(String s)}
-    &
-    writes the string \textsf{s} at the top of the window
-    \\ \hline
-    \textsf{String getMessage()}
-    &
-    returns the message currently displayed on the message banner
-    \\ \hline
-    \textsf{error(String s)}
-    &
-    prints \textsf{s} on the console with a stack trace; also displays
-    \textsf{s} in popup window with an option to view the stack trace;
-    the algorithm terminates and the user can choose whether to terminate
-    Galant entirely or continue interacting
-    \\ \hline
-    \raisebox{-3ex}{
-      \shortstack[l]{
-        \textsf{List$\langle$Node$\rangle$ getNodes()}\\
-        \textsf{NodeList getNodes()}
-      }
+    \shortstack[l]{
+      \textsf{List$\langle$Node$\rangle$ getNodes()}\\
+      \textsf{NodeList getNodes()}
     }
     &
     returns a list of the nodes of the graph; type \textsf{NodeList}
@@ -34,11 +13,9 @@
     and essentially equivalent to the Java \textsf{List$\langle$Node$\rangle$};
     see Table~\ref{tab:data_structures}
     \\ \hline
-    \raisebox{-3ex}{
-      \shortstack[l]{
-        \textsf{List$\langle$Edge$\rangle$ getEdges()}\\
-        \textsf{EdgeList getEdges()}
-      }
+    \shortstack[l]{
+      \textsf{List$\langle$Edge$\rangle$ edges()}\\
+      \textsf{EdgeList edges()}
     }
     &
     returns a list of edges of the graph; return type
@@ -50,7 +27,7 @@
     &
     \shortstack[l]{
       equivalent to
-      \textsf{for ( Node v : getNodes() ) \{ \emph{statement; \ldots} \}};\\
+      \textsf{for ( Node v : nodes() ) \{ \emph{statement; \ldots} \}};\\
       the statements are executed for each node \textsf{v}
     }
     \\ \hline
@@ -75,6 +52,55 @@
     returns the largest node/edge identifier plus one;
     useful when an array is to be indexed using node/edge identifiers,
     since these are not necessarily contiguous
+    \\ \hline
+    \textsf{source(Edge e)}, \textsf{target(Edge e)}
+    &
+    returns the source/target of edge \textsf{e}, sometimes called the (arrow)
+    tail/head or source/destination
+    \\ \hline
+    \shortstack[l]{
+      \textsf{Integer degree(Node v)}\\
+      \textsf{Integer indegree(Node v)}\\
+      \textsf{Integer outdegree(Node v)}
+    }
+    &
+    the number of edges incident on \textsf{v}, total, incoming and outgoing;
+    if the graph is undirected, the outdegree is the same as the degree
+    \\ \hline
+    \shortstack[l]{
+      \textsf{EdgeList edges(Node v)}\\
+      \textsf{EdgeList inEdges(Node v)}\\
+      \textsf{EdgeList outEdges(Node v)}
+    }
+    &
+    returns a list of \textsf{v}'s
+    indicent, incoming or outgoing edges, respectively;
+    outgoing edges are the same as incident edges if the graph is undirected 
+    \\ \hline
+    \shortstack[l]{
+      \textsf{Node otherEnd(Edge e, Node v)}\\
+      \textsf{Node otherEnd(Node v, Edge e)}
+    }
+    &
+    returns the node opposite \textsf{v} on edge \textsf{e};
+    if \textsf{v} is the source \textsf{otherEnd} returns the target and
+    vice-versa
+    \\ \hline
+    \textsf{NodeList neighbors(Node v)}
+    &
+    returns a list of nodes adjacent to \textsf{v}
+    \\ \hline
+    \shortstack[l]{
+      \textsf{for\_adjacent(v, e, w) \{ \emph{code block} \}} \\
+      \textsf{for\_incoming(v, e, w) \{ \emph{code block} \}} \\ 
+      \textsf{for\_outgoing(v, e, w) \{ \emph{code block} \}}
+    }
+    &
+    \textsf{for\_adjacent} executes the code block for each edge \textsf{e}
+    incident on \textsf{v}, where \textsf{w} is \textsf{otherEnd(e,v)};
+    \textsf{v} must already be declared but \textsf{e} and \textsf{w} are
+    declared by the macro;
+    the other two are analogous for incoming and outgoing edges 
     \\ \hline
     \textsf{getStartNode()}
     &
@@ -101,11 +127,9 @@
     by appropriate method calls;
     the second version sets the position of the node at \textsf{(x,y)}
     \\ \hline
-    \raisebox{-5ex}{
-      \shortstack[l]{
-        \textsf{addEdge(Node source, Node target)}\\
-        \textsf{addEdge(int sourceId, int targetId)}
-      }
+    \shortstack[l]{
+      \textsf{addEdge(Node source, Node target)}\\
+      \textsf{addEdge(int sourceId, int targetId)}
     }
     &
     adds an edge from the source to
@@ -123,7 +147,6 @@
     removes edge \textsf{e} from the graph
     \\ \hline
   \end{tabular}
-  \caption{Functions and macros that apply to the structure of a graph or to
-    an algorithm more generally.}
+  \caption{Functions and macros that apply to the structure of a graph.}
   \label{tab:graph_functions}
 \end{table}

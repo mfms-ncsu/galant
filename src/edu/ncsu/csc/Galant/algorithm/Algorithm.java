@@ -120,27 +120,6 @@ public abstract class Algorithm implements Runnable {
     public void remove(Edge e, EdgeList L) { L.remove(e); }
     public Edge first(EdgeList L) { return L.get(0); }
 
-    // sorting of edges and nodes
-    /**
-     * @todo these do not work; error is error: name clash: sort(List<Node>)
-     * and sort(List<Edge>) have the same erasure; for now, I'm settling for
-     * sorting edges only; sorting nodes makes sense for crossing
-     * minimization but there it's in a specialized context.
-     *
-     * I also tried GraphElement, but that results in
-     * incompatible types:
-     * java.util.List<edu.ncsu.csc.Galant.graph.component.Edge> cannot be
-     * converted to
-     * java.util.List<edu.ncsu.csc.Galant.graph.component.GraphElement>
-     */
-    public void sort(EdgeList L) {
-        Collections.sort(L);
-    }
-
-    public void sort(NodeList L) {
-        Collections.sort(L);
-    }
-
     /**
      * A queue of nodes
      *
@@ -221,7 +200,7 @@ public abstract class Algorithm implements Runnable {
     public NodePriorityQueue nodePQ = new NodePriorityQueue();
     public EdgePriorityQueue edgePQ = new EdgePriorityQueue();
 
-    public Algorithm(){
+    public Algorithm() {
         algorithms.add(this);
     }
 
@@ -432,6 +411,8 @@ public abstract class Algorithm implements Runnable {
     public void show(GraphElement ge) throws Terminate { ge.show(); }
     public Boolean isHidden(GraphElement ge) { return ge.isHidden(getState()); }
     public Boolean isVisible(GraphElement ge) { return ! ge.isHidden(getState()); }
+    public Boolean hidden(GraphElement ge) { return ge.isHidden(getState()); }
+    public Boolean visible(GraphElement ge) { return ! ge.isHidden(getState()); }
     public void hideLabel(GraphElement ge) throws Terminate { ge.hideLabel(); }
     public void showLabel(GraphElement ge) throws Terminate { ge.showLabel(); }
     public Boolean labelIsHidden(GraphElement ge) {
@@ -453,7 +434,20 @@ public abstract class Algorithm implements Runnable {
     public Node otherEnd(Node v, Edge e) { return v.travel(e); }
     public Node otherEnd(Edge e, Node v) { return v.travel(e); }
     public List<Node> neighbors(Node v) { return v.getAdjacentNodes(); }
+    public List<Edge> edges(Node v) { return v.getIncidentEdges(); }
+    public List<Edge> inEdges(Node v) { return v.getIncomingEdges(); }
+    public List<Edge> outEdges(Node v) { return v.getOutgoingEdges(); }
+
+    /**
+     * The following are provided because, while it's okay to say
+     *     NodeList L = nodes();
+     * even though nodes() returns List<Node>, it's not okay then to say
+     *     Node v = first(L);
+     * since first would require a NodeList rather than a List<Node>; the
+     * error is not reported until runtime
+     */
     public Node firstNode(List<Node> L) { return L.get(0); }
+    public Node firstEdge(List<Edge> L) { return L.get(0); }
 
     /**
      * Procedural versions of getters and setters for node positions
@@ -669,4 +663,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2016 07 28 at 20:21:37 GMT]
+//  [Last modified: 2016 07 29 at 20:17:34 GMT]

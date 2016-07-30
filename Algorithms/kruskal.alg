@@ -61,7 +61,7 @@ algorithm {
             // add the edge to the MST and highlight it
             highlight(e);
             UNION(h, t);
-            totalWeight += e.getWeight();
+            totalWeight += weight(e);
             display( "Weight so far is " + totalWeight );
         }
         else {
@@ -70,8 +70,8 @@ algorithm {
         endStep();
 
         beginStep();
-        unMark(h);
-        unMark(t);
+        unmark(h);
+        unmark(t);
         endStep();
     }
 

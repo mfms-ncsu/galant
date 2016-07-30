@@ -447,7 +447,7 @@ public abstract class Algorithm implements Runnable {
      * error is not reported until runtime
      */
     public Node firstNode(List<Node> L) { return L.get(0); }
-    public Node firstEdge(List<Edge> L) { return L.get(0); }
+    public Edge firstEdge(List<Edge> L) { return L.get(0); }
 
     /**
      * Procedural versions of getters and setters for node positions
@@ -663,4 +663,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2016 07 29 at 20:17:34 GMT]
+//  [Last modified: 2016 07 30 at 00:38:49 GMT]

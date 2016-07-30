@@ -77,7 +77,7 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
 		APIdictionary.put("getOtherEndpoint", "Returns the other endpoint of an edge, or NULL if the provided node is not either endpoint in the specified edge.");
 		APIdictionary.put("getId", "Returns the unique ID of the edge. This will not change during Algorithm execution unless explicitly set in the user code.");
         APIdictionary.put("equals", "Returns true if the given Edge points to the same Node as the current Edge and false otherwise.");
-        APIdictionary.put("for_nodes", "Iterates over the adjacent Nodes and Edges of a given Node.");
+        APIdictionary.put("for_nodes", "Iterates over all Nodes in the graph.");
         APIdictionary.put("for_edges", "Iterates over all Edges in the graph.");
         APIdictionary.put("function", "Creates a function that can be called later.");
 
@@ -117,7 +117,7 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
 
 	/**
 	 * An immutable list of all Macroes predefined for the user's benefit.
-	 * It get initilizaed when this GAlgorithmSyntaxHighlighting was created. See constructor. 
+	 * It get initialized when this GAlgorithmSyntaxHighlighting was created. See constructor. 
 	 */
 		public static String[] allMacrokeywords = new String[Macro.MACROS.size()];
 
@@ -170,4 +170,4 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
 	
 }
 
-//  [Last modified: 2016 02 18 at 23:00:28 GMT]
+//  [Last modified: 2016 07 30 at 00:43:29 GMT]

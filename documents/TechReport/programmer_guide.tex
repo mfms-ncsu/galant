@@ -1,8 +1,22 @@
 Animation programmers can write algorithms in notation that resembles
-textbook pseudocode.
+textbook pseudocode
+in files that have a \texttt{.alg} extension.
 The animation examples have used procedural syntax for function calls, as in, for example,
 \texttt{setWeight(v,0)}.
 Java (object oriented) syntax can also be used: \texttt{v.setWeight(0)}.
+A key advantage of Galant is that a seasoned Java programmer can
+not only use the Java syntax but can also augment Galant algorithms with
+arbitrary Java classes defined externally, using \texttt{import} statements.
+All Galant code is effectively Java, either natively, or via macro preprocessing.
+
+The text panel provides a crude editor for algorithms (as well as graphml
+descriptions of graphs);
+its limited capabilities make it useful primarily for fine tuning and error correction.
+The first author uses emacs in Java mode to edit algorithms offline, for example,
+not a major inconvenience -- it is easy to reload algorithms when they are modified
+without exiting Galant.
+The Galant editor is also useful in that it provides syntax highlighting of Galant
+functions and macros.
 
 The source code for an algorithm begins with any number (including none)
 of global variable declarations and function definitions.
@@ -31,7 +45,8 @@ The Java incantation\\
 is used to initialize an array with \emph{size} elements intialized to \textsf{null}
 or 0.
 Arrays use 0-based indexing: the largest index is $\mathit{size} - 1$.
-Function declarations are described in more detail in Section~\ref{sec:functions}
+Detailed
+information about function declarations is in Section~\ref{sec:functions}
 below.
 
 Central to the Galant API is the \texttt{graph} object: currently all other
@@ -68,7 +83,7 @@ part of the animation.
 Functions and macros for the graph as a whole are shown in Table~\ref{tab:graph_functions}, while Table~\ref{tab:utility_functions} lists some algorithm functions not related to any aspect of a graph.
 
 The nodes and edges, of type \textsf{Node} and \textsf{Edge}, respectively,
-are subtypes of \textsf{GraphElement}.
+are subtypes/extensions of \textsf{GraphElement}.
 Arbitrary attributes can be assigned to each graph element. In the GraphML file
 these show up as, for example,\\
 \hspace*{3em}
@@ -77,8 +92,8 @@ $<$node \emph{attribute\_1}="\emph{value\_1}" ... \emph{attribute\_k}="\emph{val
 }
 
 Each node and edge has a unique integer id.
-The id's are assigned consecutively as nodes/edges are created
-and may not be altered.
+The id's are assigned consecutively as nodes/edges are created;
+they may not be altered.
 The id of a node or edge can be accessed via the \texttt{id()} function.
 Often, as is the case with the depth-first search algorithm, it makes sense to use
 arrays indexed by node or edge id's.
@@ -86,12 +101,15 @@ Since graphs may be generated externally and/or have undergone deletions of node
 edges, the id's are not always contiguous.
 The functions \texttt{nodeIds()} and \texttt{edgeIds()} return the size of an array
 large enough to accomodate the appropriate id's as indexes. So code such as
+
+\begin{minipage}{0.8\textwidth}
 \begin{verbatim}
-Integer myArray[] = new Integer[nodeIds()];
-for_nodes(v) {
-    myArray[id(v)] = ...
+        Integer myArray[] = new Integer[nodeIds()];
+        for_nodes(v) { myArray[id(v)] = 1; }
 }
 \end{verbatim}
+\end{minipage}
+
 is immune to array out of bounds errors.
 
 \subsection{Node and edge methods}
@@ -125,20 +143,20 @@ to simplify graph API access. The macros, which have equivalents in GDR, are:
 \begin{itemize}
 
 \item
-\texttt{for\_adjacent(x, e, y)\{ \emph{statements} \}}
-executes the list of statements for each edge incident on \verb$x$.
+\texttt{for\_adjacent(x, e, y)\{ \emph{code block} \}}
+executes the statements in the code block for each edge incident on \verb$x$.
 The statements can refer to \verb$x$, or \verb$e$, the current incident edge,
 or \verb$y$, the other endpoint of \verb$e$.
 The macro assumes that \texttt{x} has already been declared as \texttt{Node}
 but \texttt{e} and \texttt{y} are declared automatically.
 
 \item
-\texttt{for\_outgoing(Node x, Edge e, Node y)\{ \emph{statements} \}}\\
+\texttt{for\_outgoing(Node x, Edge e, Node y)\{ \emph{code block} \}}\\
 behaves like \texttt{for\_adjacent} except that, when the graph is directed,
 it iterates only over the edges whose source is \verb$x$ (it still iterates over all the edges when the graph is undirected). 
 
 \item
-\texttt{for\_incoming(Node x, Edge e, Node y)\{ \emph{statements} \}}\\
+\texttt{for\_incoming(Node x, Edge e, Node y)\{ \emph{code block} \}}\\
 behaves like \texttt{for\_adjacent} except that, when the graph is directed,
 it iterates only over the edges whose sink is \verb$x$ (it still iterates over all the edges when the graph is undirected). 
 
@@ -212,15 +230,16 @@ The relevant methods for nodes -- using procedural syntax -- are
 \texttt{int~getX(Node)}, \texttt{int~getY(Node)}
 and \texttt{Point~getPosition(Node)}
 for the 'getters'. To set a position,
-one should use either
-\texttt{setPosition(Node,Point)}\\
-or \texttt{setPosition(Node,int,int)}.
+one should use\\
+\hspace*{2em}\texttt{setPosition(Node,Point)}\\
+or\\
+\hspace*{2em}\texttt{setPosition(Node,int,int)}.\\
 Once a node has an established position, it is possible to change
 only one coordinate using \texttt{setX(Node,int)} or \texttt{setY(Node,int)}.
 Object-oriented variants of all of these, e.g.,
 \texttt{v.setX(100)}, are also available.
 
-Ordinarily nodes can be moved by the user during algorithm execution
+Ordinarily the user can move nodes during algorithm execution
 and the resulting positions persist after execution terminates.
 For some algorithms, such as sorting, the algorithm itself needs to move
 nodes.

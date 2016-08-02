@@ -22,16 +22,16 @@
     \textsf{EdgeList} is analogous to \textsf{NodeList}
     \\ \hline
     \textsf{for\_nodes(v) \{
-      \emph{statement; \ldots}
+      \emph{code block}
       \}}
     &
     \shortstack[l]{
       equivalent to
-      \textsf{for ( Node v : nodes() ) \{ \emph{statement; \ldots} \}};\\
+      \textsf{for ( Node v : nodes() ) \{ \emph{code block} \}};\\
       the statements are executed for each node \textsf{v}
     }
     \\ \hline
-    \textsf{for\_edges(e)  \{ \emph{statement; \ldots} \}}
+    \textsf{for\_edges(e)  \{ \emph{code block} \}}
     &
     analogous to \textsf{for\_nodes}
     \\ \hline
@@ -125,7 +125,8 @@
     the id is the smallest integer not currently in use as an id;
     attributes such as weight, label and position are absent and must be set explicitly
     by appropriate method calls;
-    the second version sets the position of the node at \textsf{(x,y)}
+    the second version puts the node at position \textsf{(x,y)},
+    where \textsf{x} and \textsf{y} are pixel coordinates.
     \\ \hline
     \shortstack[l]{
       \textsf{addEdge(Node source, Node target)}\\

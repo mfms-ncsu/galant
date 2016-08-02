@@ -9,22 +9,22 @@
 import sys
 
 def usage( program_name ):
-    print "Usage:", program_name, " width height separation > OUTPUT_FILE"
-    print " creates a width x height mesh with nodes separated by the specified"
-    print " separation in pixels"
+    print("Usage:", program_name, " width height separation > OUTPUT_FILE")
+    print(" creates a width x height mesh with nodes separated by the specified")
+    print(" separation in pixels")
 
 def print_opening():
-    print '<?xml version="1.0" encoding="UTF-8"?>'
-    print '<graphml xmlns="http://graphml.graphdrawing.org/xmlns"'
-    print 'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"'
-    print 'xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns'
-    print 'http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">'
+    print('<?xml version="1.0" encoding="UTF-8"?>')
+    print('<graphml xmlns="http://graphml.graphdrawing.org/xmlns"')
+    print('xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"')
+    print('xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns')
+    print('http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">')
 
 def print_graph_body( width, height, separation ):
-    print '<graph edgedefault="undirected">'
+    print('<graph edgedefault="undirected">')
     print_nodes( width, height, separation )
     print_edges( width, height, separation )
-    print '</graph>'
+    print('</graph>')
     
 def print_node( id, x, y ):
     # need to put everything on the same line (not clear why), so can't use
@@ -51,7 +51,7 @@ def print_edges( width, height, separation ):
             edge_id = edge_id + 1
 
 def print_closing():
-    print '</graphml>'
+    print('</graphml>')
 
 def print_graphml( width, height, separation ):
     print_opening()

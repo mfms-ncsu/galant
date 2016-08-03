@@ -196,7 +196,29 @@ public abstract class Algorithm implements Runnable {
         }
     }
 
-    public class NodeSet extends HashSet<Node> {
+    public class NodeSet extends AbstractSet<Node> {
+        private HashSet<Node> set;
+        public NodeSet() { set = new HashSet<Node>(); }
+        public NodeSet(Collection<Node> C) {
+            set = new HashSet<Node>(C);
+        }
+        /** adds the node
+         * @return true if the node is not present, false if it is already in
+         * the set
+         */
+        @Override
+            public boolean add(Node e) { return set.add(e); }
+        /** removes the node
+         * @return true if it is present, false otherwise
+         */
+        public boolean remove(Node e) { return set.remove(e); }
+        public boolean contains(Node e) { return set.contains(e); }
+        @Override
+            public boolean isEmpty() { return set.isEmpty(); }
+        @Override
+            public int size() { return set.size(); }
+        @Override
+            public Iterator<Node> iterator() { return set.iterator(); }
     }
     public class EdgeSet extends AbstractSet<Edge> {
         private HashSet<Edge> set;
@@ -208,8 +230,12 @@ public abstract class Algorithm implements Runnable {
          * @return true if the edge is not present, false if it is already in
          * the set
          */
-        public boolean add(Edge e) { return set.add(e); }
-        public void remove(Edge e) { set.remove(e); }
+        @Override
+            public boolean add(Edge e) { return set.add(e); }
+        /** removes the edge
+         * @return true if it is present, false otherwise
+         */
+        public boolean remove(Edge e) { return set.remove(e); }
         public boolean contains(Edge e) { return set.contains(e); }
         public boolean isEmpty() { return set.isEmpty(); }
         @Override
@@ -712,4 +738,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2016 08 03 at 21:00:30 GMT]
+//  [Last modified: 2016 08 03 at 21:16:11 GMT]

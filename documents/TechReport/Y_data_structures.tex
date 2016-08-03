@@ -1,35 +1,28 @@
 \begin{table}
   \small
-  \centering
-
   \textbf{NodeList and EdgeList:} lists of nodes or edges, respectively.
+  We use \emph{list} as shorthand for either \textsf{NodeList~L} or
+  \textsf{EdgeList L}, \emph{type} for either \textsf{Node} or \textsf{Edge}
+  and \emph{element} for \textsf{Node v} or \textsf{Edge e}.
   
   \medskip
   \begin{tabular}{| m{0.35\textwidth} | m{0.6\textwidth} |}
     \hline
-    \shortstack[l]{
-      \textsf{Node first(NodeList L)}\\
-      \textsf{Edge first(EdgeList L)}
-    }
+    \textsf{\emph{type} first(\emph{list})}
     &
     returns the first element of this list
     \\ \hline
-    \shortstack[l]{
-      \textsf{add(Node v, NodeList L)}\\
-      \textsf{add(Edge e, EdgeList L)}
-    }
+    \textsf{add(\emph{element}, \emph{list})}
     &
-    adds the node/edge to the end of the list \textsf{L}; along with \textsf{first}
+    adds the element
+    to the end of the list; along with \textsf{first}
     we get the effect of a queue
     \\ \hline
-    \shortstack[l]{
-      \textsf{remove(Node v, NodeList L)}\\
-      \textsf{remove(Edge e, EdgeList L)}
-    }
+    \textsf{remove(\emph{element}, \emph{list})}
     &
-    removes the first occurrence of node \textsf{v} or edge \textsf{e} from \textsf{L}
+    removes the first occurrence of the element from the list
     \\ \hline
-    \textsf{sort(NodeList L)}, \textsf{sort(EdgeList L)}
+    \textsf{sort(\emph{list})}
     &
     use the weights of the nodes/edges to sort the list \textsf{L};
     sort is actually a macro that invokes Java \textsf{Collections.sort(L)};
@@ -38,38 +31,36 @@
     \\ \hline
   \end{tabular}  
   
-\bigskip
+  \bigskip
   \textbf{NodeQueue and EdgeQueue:} queues of nodes or edges, respectively.
+  Same coventions as for lists.
 
   \medskip
   \begin{tabular}{| m{0.35\textwidth} | m{0.6\textwidth} |}
     \hline
-    \shortstack[l]{
-      \textsf{void~enqueue(Node~v)},\\
-      \textsf{void~enqueue(Edge~e)}
-    }
+      \textsf{void~enqueue(\emph{element})}
     &
-    adds \textsf{v} or \textsf{e} to the rear of the queue
+    adds the element to the rear of the queue
     \\ \hline
-    \textsf{Node~dequeue()}, \textsf{Edge~dequeue()}
+    \textsf{\emph{type} dequeue()}
     &
-    returns and removes the \textsf{Node} or \textsf{Edge} at the front of the queue;
+    returns and removes the element at the front of the queue;
     returns \textsf{null} if the queue is empty
     \\ \hline
-    \textsf{Node~remove()}, \textsf{Edge~remove()}
+    \textsf{\emph{type} remove()}
     &
-    returns and removes the \textsf{Node} or \textsf{Edge} at the front of the queue;
+    returns and removes the element at the front of the queue;
     throws an exception if the queue is empty
     \\ \hline
-    \textsf{Node~element()}, \textsf{Edge~element()}
+    \textsf{\emph{type}~element()}
     &
-    returns the \textsf{Node} or \textsf{Edge} at the front of the queue
+    returns the element at the front of the queue
     without removing it;
     throws an exception if the queue is empty
     \\ \hline
-    \textsf{Node~peek()}, \textsf{Edge~peek()}
+    \textsf{\emph{type} peek()}
     &
-    returns the \textsf{Node} or \textsf{Edge} at the front of the queue
+    returns the element at the front of the queue
     without removing it;
     returns \textsf{null} if the queue is empty
     \\ \hline
@@ -89,21 +80,18 @@
   \medskip
   \begin{tabular}{| m{0.35\textwidth} | m{0.6\textwidth} |}
     \hline
-    \shortstack[l]{
-      \textsf{void~push(Node~v)},\\
-      \textsf{void~push(Edge~e)}
-    }
+      \textsf{void~push(\emph{element})}
     &
-    adds \textsf{v} or \textsf{e} to the top of the stack
+    adds the element to the top of the stack
     \\ \hline
-    \textsf{Node~pop()}, \textsf{Edge~pop()}
+    \textsf{\emph{type}~pop()}
     &
-    returns and removes the \textsf{Node} or \textsf{Edge} at the top of the stack;
+    returns and removes the element at the top of the stack;
     throws an exception if the stack is empty
     \\ \hline
-    \textsf{Node~peek()}, \textsf{Edge~peek()}
+    \textsf{\emph{type} peek()}
     &
-    returns the \textsf{Node} or \textsf{Edge} at the top of the stack
+    returns the element at the top of the stack
     without removing it;
     returns null if the stack is empty
     \\ \hline
@@ -119,35 +107,26 @@
   \medskip
   \begin{tabular}{| m{0.35\textwidth} | m{0.6\textwidth} |}
     \hline
-    \shortstack[l]{
-      \textsf{void~add(Node~v)},\\
-      \textsf{void~add(Edge~e)}
-    }
+      \textsf{void~add(\emph{element})}
     &
-    adds \textsf{v} or \textsf{e} to the priority queue;
+    adds the element to the priority queue;
     the priority is defined to be its weight -- see Section~\ref{sec:display_attributes}
     \\ \hline
-    \textsf{Node~removeMin()}, \textsf{Edge~removeMin()}
+    \textsf{\emph{type}~removeMin()}
     &
-    returns and removes the \textsf{Node} or \textsf{Edge} with minimum weight;
+    returns and removes the element with minimum weight;
     returns \textsf{null} if the queue is empty
     \\ \hline
     \hline
-    \shortstack[l]{
-      \textsf{boolean~remove(Node~v)},\\
-      \textsf{boolean~remove(Edge~e)}
-    }
+    \textsf{boolean~remove(\emph{element})}
     &
-    removes \textsf{v} or \textsf{e};
-    returns \textsf{true} if the \textsf{v} or \textsf{e} is present,
+    removes the element;
+    returns \textsf{true} if it is present,
     \textsf{false} otherwise
     \\ \hline
-     \shortstack[l]{
-      \textsf{void~decreaseKey(Node~v,~double~key)},\\
-      \textsf{void~decreaseKay(Edge~e,~double~key)}
-    }
+    \textsf{void~decreaseKey(\emph{element},~double~key)}
     &
-    changes the weight of \textsf{v} or \textsf{e} to the new key
+    changes the weight of the element to the new key
     and reorganizes the priority queue appropriately;
     since this is accomplished by removing and reinserting the object, i.e.,
     inefficiently, this method can also be used to increase the key
@@ -155,6 +134,33 @@
     \textsf{size()}, \textsf{isEmpty()}
     &
     analogous to the corresponding queue methods
+    \\ \hline
+  \end{tabular}
+
+  \bigskip
+  \textbf{NodeSet and EdgeSet:} sets of nodes or edges, respectively.
+
+  \medskip
+  \begin{tabular}{| m{0.35\textwidth} | m{0.6\textwidth} |}
+    \hline
+    \textsf{boolean~add(\emph{element})}
+    &
+    adds the element to the set;
+    returns true if the element was a new addition, false otherwise
+    \\ \hline
+    \textsf{boolean~remove(\emph{element})}
+    &
+    removes the element
+    returns \textsf{true} if the element was present,
+    \textsf{false} otherwise
+    \\ \hline
+    \textsf{boolean~contains(\emph{element})}
+    &
+    returns true if the element is in the set
+    \\ \hline
+    \textsf{size()}, \textsf{isEmpty()}
+    &
+    analogous to the corresponding methods for other data structures
     \\ \hline
   \end{tabular}
 

@@ -22,6 +22,7 @@
 
 package edu.ncsu.csc.Galant.algorithm;
 
+import java.util.Collection;
 import java.util.AbstractQueue;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -30,6 +31,9 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Stack;
+import java.util.Set;
+import java.util.AbstractSet;
+import java.util.HashSet;
 import java.util.Collections;
 import java.awt.Color;
 import java.awt.Point;
@@ -190,6 +194,28 @@ public abstract class Algorithm implements Runnable {
             e.setWeight(newKey);
             this.add(e);
         }
+    }
+
+    public class NodeSet extends HashSet<Node> {
+    }
+    public class EdgeSet extends AbstractSet<Edge> {
+        private HashSet<Edge> set;
+        public EdgeSet() { set = new HashSet<Edge>(); }
+        public EdgeSet(Collection<Edge> C) {
+            set = new HashSet<Edge>(C);
+        }
+        /** adds the edge
+         * @return true if the edge is not present, false if it is already in
+         * the set
+         */
+        public boolean add(Edge e) { return set.add(e); }
+        public void remove(Edge e) { set.remove(e); }
+        public boolean contains(Edge e) { return set.contains(e); }
+        public boolean isEmpty() { return set.isEmpty(); }
+        @Override
+            public int size() { return set.size(); }
+        @Override
+            public Iterator<Edge> iterator() { return set.iterator(); }
     }
 
     // Pre-existing queue/stack/priority queue objects
@@ -439,6 +465,29 @@ public abstract class Algorithm implements Runnable {
     public List<Edge> outEdges(Node v) { return v.getOutgoingEdges(); }
 
     /**
+     * @return true if (v,w) is an edge; direction important if the graph is
+     * directed
+     */
+    public Boolean isEdge(Node v, Node w) {
+        List<Edge> incidenceList
+            = v.getOutgoingEdges();
+        for ( Edge e : incidenceList ) {
+            if ( v.travel(e) == w ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @return true if edge e is incident on v
+     */
+    public Boolean isIncident(Edge e, Node v) {
+        EdgeSet incidentEdges = new EdgeSet(v.getIncidentEdges());
+        return incidentEdges.contains(e);
+    }
+
+    /**
      * The following are provided because, while it's okay to say
      *     NodeList L = nodes();
      * even though nodes() returns List<Node>, it's not okay then to say
@@ -663,4 +712,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2016 07 30 at 00:38:49 GMT]
+//  [Last modified: 2016 08 03 at 21:00:30 GMT]

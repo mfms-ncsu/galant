@@ -18,6 +18,7 @@ import edu.ncsu.csc.Galant.gui.util.EdgeSelectionDialog;
 import edu.ncsu.csc.Galant.gui.util.NodeSelectionDialog;
 import edu.ncsu.csc.Galant.algorithm.Terminate;
 import edu.ncsu.csc.Galant.logging.LogHelper;
+import edu.ncsu.csc.Galant.algorithm.Algorithm.EdgeSet;
 
 /**
  * Stores all nodes, edges and related information for use in graph algorithms.
@@ -698,10 +699,6 @@ public class Graph {
 		this.edges = edges;
 	}
 	
-    /**
-     * 
-     */
-
 	/**
 	 * Removes the specified <code>Edge</code> from the <code>Graph</code>.
 	 * @param e the edge to remove
@@ -1183,4 +1180,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2016 07 28 at 19:06:34 GMT]
+//  [Last modified: 2016 08 03 at 20:41:17 GMT]

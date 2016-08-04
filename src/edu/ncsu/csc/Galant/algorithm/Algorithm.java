@@ -31,12 +31,10 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Stack;
-import java.util.Set;
-import java.util.AbstractSet;
-import java.util.HashSet;
-import java.util.Collections;
 import java.awt.Color;
 import java.awt.Point;
+
+//import java.util.Collections;
 
 import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.gui.util.ExceptionDialog;
@@ -46,6 +44,8 @@ import edu.ncsu.csc.Galant.graph.component.LayeredGraph;
 import edu.ncsu.csc.Galant.graph.component.GraphElement;
 import edu.ncsu.csc.Galant.graph.component.Node;
 import edu.ncsu.csc.Galant.graph.component.Edge;
+import edu.ncsu.csc.Galant.graph.container.NodeSet;
+import edu.ncsu.csc.Galant.graph.container.EdgeSet;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow.GraphDisplays;
 import edu.ncsu.csc.Galant.algorithm.AlgorithmSynchronizer;
@@ -194,54 +194,6 @@ public abstract class Algorithm implements Runnable {
             e.setWeight(newKey);
             this.add(e);
         }
-    }
-
-    public class NodeSet extends AbstractSet<Node> {
-        private HashSet<Node> set;
-        public NodeSet() { set = new HashSet<Node>(); }
-        public NodeSet(Collection<Node> C) {
-            set = new HashSet<Node>(C);
-        }
-        /** adds the node
-         * @return true if the node is not present, false if it is already in
-         * the set
-         */
-        @Override
-            public boolean add(Node e) { return set.add(e); }
-        /** removes the node
-         * @return true if it is present, false otherwise
-         */
-        public boolean remove(Node e) { return set.remove(e); }
-        public boolean contains(Node e) { return set.contains(e); }
-        @Override
-            public boolean isEmpty() { return set.isEmpty(); }
-        @Override
-            public int size() { return set.size(); }
-        @Override
-            public Iterator<Node> iterator() { return set.iterator(); }
-    }
-    public class EdgeSet extends AbstractSet<Edge> {
-        private HashSet<Edge> set;
-        public EdgeSet() { set = new HashSet<Edge>(); }
-        public EdgeSet(Collection<Edge> C) {
-            set = new HashSet<Edge>(C);
-        }
-        /** adds the edge
-         * @return true if the edge is not present, false if it is already in
-         * the set
-         */
-        @Override
-            public boolean add(Edge e) { return set.add(e); }
-        /** removes the edge
-         * @return true if it is present, false otherwise
-         */
-        public boolean remove(Edge e) { return set.remove(e); }
-        public boolean contains(Edge e) { return set.contains(e); }
-        public boolean isEmpty() { return set.isEmpty(); }
-        @Override
-            public int size() { return set.size(); }
-        @Override
-            public Iterator<Edge> iterator() { return set.iterator(); }
     }
 
     // Pre-existing queue/stack/priority queue objects
@@ -738,4 +690,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2016 08 03 at 21:16:11 GMT]
+//  [Last modified: 2016 08 04 at 15:06:41 GMT]

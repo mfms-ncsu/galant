@@ -18,7 +18,12 @@ import edu.ncsu.csc.Galant.gui.util.EdgeSelectionDialog;
 import edu.ncsu.csc.Galant.gui.util.NodeSelectionDialog;
 import edu.ncsu.csc.Galant.algorithm.Terminate;
 import edu.ncsu.csc.Galant.logging.LogHelper;
-import edu.ncsu.csc.Galant.algorithm.Algorithm.EdgeSet;
+
+/**
+ * @todo in future this can be used as a return value for nodes and edges
+ * that are currently returned as lists.
+ */
+import edu.ncsu.csc.Galant.graph.container.EdgeSet;
 
 /**
  * Stores all nodes, edges and related information for use in graph algorithms.
@@ -1180,4 +1185,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2016 08 03 at 20:41:17 GMT]
+//  [Last modified: 2016 08 04 at 15:03:04 GMT]

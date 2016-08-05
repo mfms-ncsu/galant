@@ -14,7 +14,7 @@ function visit( Node v ) {
     time = time + 1;
     discovery[id(v)] = time;
     beginStep();
-    setLabel(v, "" + discovery[id(v)] );
+    label(v, discovery[id(v)] );
     select(v);
     endStep();
     for_outgoing( v, e, w ) {
@@ -24,14 +24,14 @@ function visit( Node v ) {
             visit(w);
         }
         else if ( finish[id(w)] == 0 ) {
-            setLabel(e, "B");
+            label(e, "B");
         }
         else if ( finish[id(w)] 
                   > discovery[id(v)] ) {
-            setLabel(e, "F");
+            label(e, "F");
         }
         else {
-            setLabel(e, "C");
+            label(e, "C");
         }
         endStep();
     }
@@ -39,8 +39,8 @@ function visit( Node v ) {
     finish[id(v)] = time;
     beginStep();
     mark(v);
-    setLabel(v, "" + discovery[id(v)]
-                + "/" + finish[id(v)]);
+    label(v, discovery[id(v)]
+             + "/" + finish[id(v)]);
     endStep();
 }
 
@@ -55,56 +55,6 @@ algorithm {
     }
 }
 \end{verbatim}
-% \begin{verbatim}
-% int time;
-% int [] discovery;
-% int [] finish;
-
-% function visit( Node v ) {
-%     time = time + 1;
-%     discovery[id(v)] = time;
-%     beginStep();
-%     v.setLabel( "" + discovery[id(v)] );
-%     v.setSelected( true );
-%     endStep();
-%     for_outgoing( v, e, w ) {
-%         beginStep();
-%         if ( ! w.isSelected() ) {
-%             e.setSelected( true );
-%             visit(w);
-%         }
-%         else if ( finish[id(w)] == 0 ) {
-%             e.setLabel( "B" );
-%         }
-%         else if ( finish[id(w)] 
-%                   > discovery[id(v)] ) {
-%             e.setLabel( "F" );
-%         }
-%         else {
-%             e.setLabel( "C" );
-%         }
-%         endStep();
-%     }
-%     time = time + 1;
-%     finish[id(v)] = time;
-%     beginStep();
-%     v.mark();
-%     v.setLabel( "" + discovery[id(v)]
-%                 + "/" + finish[id(v)] );
-%     endStep();
-% }
-
-% algorithm {
-%     time = 0;
-%     discovery = new int[nodeIds()];
-%     finish = new int[nodeIds()];
-%     for_nodes( u ) {
-%         if ( ! u.isSelected() ) {
-%             visit( u );
-%         }
-%     }
-% }
-% \end{verbatim}
 \end{minipage}
 \begin{minipage}{0.49\textwidth}
 \centering

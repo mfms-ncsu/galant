@@ -103,7 +103,7 @@ have precedence over edges (are above edges).
 \begin{itemize}
 \item \emph{Select.} A mouse click selects the graph component with highest precedence.
 If the component is a node, it is shaded; if it's an edge, it turns blue.
-The inline editor at the bottom of the graph window allows editing of the
+The in-line editor at the bottom of the graph window allows editing of the
 component's label, weight, and color.
 \item \emph{Create node.}
 A node is created at the location of a mouse click if there is not already a node there.
@@ -156,18 +156,18 @@ Applies Hu's force directed algorithm~\cite{2006-Mathematica-Hu} to the graph.
 Keyboard shortcuts for graph editing operations are as follows:
 
 \begin{tabular}{l @{ -- } p{0.9\textwidth}}
-\textsf{ctrl-n} & create a new node in a random position \\
-\textsf{ctrl-e} & create a new edge; user is prompted for id's of the nodes to
+\textsf{Ctrl-n} & create a new node in a random position \\
+\textsf{Ctrl-e} & create a new edge; user is prompted for id's of the nodes to
 be connected \\
-\textsf{ctrl-i} & do a smart repositioning of nodes of the graph;
+\textsf{Ctrl-i} & do a smart repositioning of nodes of the graph;
 useful when positions were chosen randomly \\
-\textsf{del-n} & (hold delete key when typing \texttt{n})
+\textsf{Del-n} & (hold delete key when typing \texttt{n})
 delete a node; user is prompted for id \\
-\textsf{del-e} & delete an edge; user is prompted for id's of the endpoints \\
-\textsf{ctrl-$\ell$} & toggle display of node labels \\
-\textsf{ctrl-L} & toggle display of edge labels \\
-\textsf{ctrl-w} & toggle display of node weights \\
-\textsf{ctrl-W} & toggle display of edge weights \\
+\textsf{Del-e} & delete an edge; user is prompted for id's of the endpoints \\
+\textsf{Ctrl-$\ell$} & toggle display of node labels \\
+\textsf{Ctrl-L} & toggle display of edge labels \\
+\textsf{Ctrl-w} & toggle display of node weights \\
+\textsf{Ctrl-W} & toggle display of edge weights \\
 \end{tabular}
 
 \subsection{Algorithm editing}
@@ -223,14 +223,14 @@ The user controls forward and backward steps using either the buttons at the
 bottom of the graph window (shown in Fig.~\ref{fig:dijkstra_running})
 or the right/left arrow keys.
 During the execution of the animation, all graph editing functions are disabled.
-These are re-enabled when the user exits the animation by pressing the red \textbf{X} button or the \textsf{esc} (escape) key on the terminal.
+These are re-enabled when the user exits the animation by pressing the red \textbf{X} button or the \textsf{Esc} (escape) key on the terminal.
 
 \subsection{Preferences}
 \label{sec:preferences}
 
 Galant preferences can be accessed via the \texttt{File->Preferences}
-menu item or by using the keyboard shortcut \textsf{ctrl-P}
-(\textsf{cmd-P} for Mac).
+menu item or by using the keyboard shortcut \textsf{Ctrl-P}
+(\textsf{Cmd-P} for Mac).
 Preferences that can be edited are:
 \begin{itemize}
 \item

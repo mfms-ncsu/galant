@@ -14,7 +14,7 @@ function visit( Node v ) {
     time = time + 1;
     discovery[id(v)] = time;
     beginStep();
-    setLabel(v, "" + discovery[id(v)] );
+    label(v, discovery[id(v)] );
     select(v);
     endStep();
     for_outgoing( v, e, w ) {
@@ -24,14 +24,14 @@ function visit( Node v ) {
             visit(w);
         }
         else if ( finish[id(w)] == 0 ) { /* ancestor */
-            setLabel(e, "B");
+            label(e, "B");
         }
         else if ( finish[id(w)] 
                   > discovery[id(v)] ) { /* descendant */
-            setLabel(e, "F");
+            label(e, "F");
         }
         else {
-            setLabel(e, "C");
+            label(e, "C");
         }
         endStep();
     }
@@ -39,7 +39,7 @@ function visit( Node v ) {
     finish[id(v)] = time;
     beginStep();
     mark(v);
-    setLabel(v, "" + discovery[id(v)] + "/" + finish[id(v)]);
+    label(v, discovery[id(v)] + "/" + finish[id(v)]);
     endStep();
 }
 
@@ -54,10 +54,10 @@ algorithm {
     hideEdgeWeights();
     hideNodeWeights();
     for_nodes( u ) {
-        u.setLabel("");
+        u.label("");
     }
     for_edges( e ) {
-        e.setLabel("");
+        e.label("");
     }
     endStep();
 
@@ -68,4 +68,4 @@ algorithm {
     }
 }
 
-//  [Last modified: 2016 02 21 at 22:56:45 GMT]
+//  [Last modified: 2016 08 05 at 20:19:04 GMT]

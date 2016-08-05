@@ -21,7 +21,7 @@ algorithm {
     while ( ! pq.isEmpty() ) {
         v = pq.removeMin();
         mark(v);        // nodes are marked when visited
-        unHighlight(v); // and highlighted when on the frontier
+        unhighlight(v); // and highlighted when on the frontier
         for_outgoing ( v, e, w ) {
             if ( ! marked(w) )  {
                 if ( ! highlighted(w) ) highlight(w);
@@ -31,7 +31,7 @@ algorithm {
                     highlight(e);
                     Edge previous_chosen = chosenEdge[id(w)];
                     if (previous_chosen != null )
-                        unHighlight(previous_chosen);
+                        unhighlight(previous_chosen);
                     pq.decreaseKey(w, distance);
                     chosenEdge[id(w)] = e;
                     endStep();
@@ -42,4 +42,4 @@ algorithm {
     } // stop when priority queue is empty
 } // end, algorithm
 
-//  [Last modified: 2016 02 22 at 00:59:33 GMT]
+//  [Last modified: 2016 08 05 at 19:58:57 GMT]

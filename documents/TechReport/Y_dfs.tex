@@ -16,5 +16,11 @@ This particular algorithm, unlike our implementation of Dijkstra's,
 is intended for a directed graph.
 We would
 need to write a different algorithm/animation
-to deal with tree
-edges that get relabeled as back edges when treated as bidirectional.
+for undirected graphs.
+When a graph is undirected an
+edge is effectively directed both ways;
+hence
+tree
+edges would get relabeled as back edges when they are encountered the second time.
+The usual trick is to either mark edges if they have already been visited
+or to keep track of the parent of a node when it is visited.

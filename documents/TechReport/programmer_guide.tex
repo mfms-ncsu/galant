@@ -42,7 +42,7 @@ in the algorithm.
 The Java incantation\\
 \hspace*{1em}\emph{type} \emph{variable\_name}
 \texttt{= new} \emph{type}\texttt{[} \emph{size} \texttt{]}\\
-is used to initialize an array with \emph{size} elements intialized to \textsf{null}
+is used to initialize an array with \emph{size} elements initialized to \textsf{null}
 or 0.
 Arrays use 0-based indexing: the largest index is $\mathit{size} - 1$.
 Detailed
@@ -100,7 +100,7 @@ arrays indexed by node or edge id's.
 Since graphs may be generated externally and/or have undergone deletions of nodes or
 edges, the id's are not always contiguous.
 The functions \texttt{nodeIds()} and \texttt{edgeIds()} return the size of an array
-large enough to accomodate the appropriate id's as indexes. So code such as
+large enough to accommodate the appropriate id's as indexes. So code such as
 
 \begin{minipage}{0.8\textwidth}
 \begin{verbatim}
@@ -127,7 +127,7 @@ where $a$ is the name of an attribute such as
 \texttt{Label} or \texttt{Weight}.
 A more convenient way to access these standard attributes omits the prefix \texttt{get}
 and uses procedural syntax:
-\texttt{color(}$x$\texttt{)} is a synomym for $x$\texttt{.getColor()}, for example.
+\texttt{color(}$x$\texttt{)} is a synonym for $x$\texttt{.getColor()}, for example.
 Procedural syntax for the setters is also available:
 \texttt{setColor(}$x$,$c$\texttt{)} is a synonym for $x$.\texttt{setColor(}$c$\texttt{)}.
 In the special cases of color and label it is possible to omit the \texttt{set}
@@ -259,8 +259,25 @@ key for
 sorting and priority queues.
 The label is simply text and may be interpreted however the programmer
 chooses.
+The conversion functions \texttt{integer(String)}
+and \texttt{real(String)}
+-- see Table~\ref{tab:utility_functions}
+-- provide a convenient mechanism for treating labels as objects of class
+\texttt{Integer} or \texttt{Double}, respectively.
+The argument of \texttt{setLabel} and its relatives -- see below
+-- is not the expected \texttt{String}
+but \texttt{Object};
+any type of object that has a Java \texttt{toString} method will work
+-- numbers have to be of type \texttt{Integer} or \texttt{Double}
+rather than \texttt{int} or \texttt{double} since the latter are not objects
+in Java.\footnote{
+  Galant functions return objects, \texttt{Integer} or \texttt{Double}, when
+  return values are numbers for this reason.
+}
+So conversion between string labels and numbers works both ways.
+
 Aside from the setters and getters: \texttt{setWeight(double)},
-\mbox{\texttt{Double getWeight()}}, \texttt{setLabel(String)}
+\mbox{\texttt{Double getWeight()}}, \texttt{setLabel(Object)}
 and \mbox{\texttt{String getLabel()}}, the programmer can also
 manipulate and test for the absence of weights/labels using
 \texttt{clearWeight()} and \texttt{boolean~hasWeight()},
@@ -269,9 +286,9 @@ The procedural variants in this case are
 \texttt{setWeight(Node,double)},
 \mbox{\texttt{Double weight(Node)}},\footnote{
   The \emph{get} is omitted here for more natural syntax.}
-\texttt{label(Node,String)},\footnote{
+\texttt{label(Node,Object)},\footnote{
   A natural syntax that resembles English. However,
-  \texttt{setLabel(Node,String)} is also allowed.
+  \texttt{setLabel(Node,Object)} is also allowed.
 }
 and \mbox{\texttt{String label(Node)}}
 
@@ -286,11 +303,11 @@ latter case.
 The relevant methods are
 (here \texttt{Element} refers to either a \texttt{Node} or an \texttt{Edge}):
 \begin{itemize}
-\item \texttt{highlight(Element)}, \texttt{unHighlight(Element)}
+\item \texttt{highlight(Element)}, \texttt{unhighlight(Element)}
   and \texttt{Boolean~isHighlighted(Element)}
 \item correspondingly, \texttt{setSelected(true)}, \texttt{setSelected(false)},
 and \texttt{boolean~isSelected()}
-\item \texttt{mark(Node)}, \texttt{unMark(Node)}
+\item \texttt{mark(Node)}, \texttt{unmark(Node)}
   and \texttt{Boolean~isMarked(Node)},
   equivalently \texttt{Boolean~marked(Node)}.
 \end{itemize}
@@ -316,11 +333,15 @@ and \texttt{boolean~isSelected()}
   \label{tab:colors}
 \end{table}
 
-Although the specific colors for displaying selected nodes or edges are
-predetermined, the animation implementation can modify the color of a node boundary
-or an edge, thus allowing for many different kinds of highlighting.
-The \texttt{setColor} and \texttt{getColor} methods use String arguments
-using the RGB format \textsf{\#RRGGBB}; for example,
+Although the specific colors for displaying the outlines of nodes
+or the lines representing edges are
+predetermined for plain
+and highlighted nodes/edges,
+the animation implementation can modify these colors,
+thus allowing for many different kinds of highlighting.
+The \texttt{getColor} and \texttt{setColor} methods
+and their procedural variants have \texttt{String} arguments
+in the RGB format \textsf{\#RRGGBB}; for example,
 the string \texttt{\#0000ff} is blue.
 The predefined color constants are listed in Table~\ref{tab:colors}.
 
@@ -328,6 +349,9 @@ Of the attributes listed above, weight, label, color and position can be
 accessed and modified by the user as well as the program.
 In all cases, modifications by execution of the animation are ephemeral
 -- the graph returns to its original state after execution.
+The user can save the mid-execution state of the graph:
+select the \texttt{Export} option on the file menu of the
+\emph{graph} window.
 
 \input{Y_graph_element_functions}
 
@@ -351,7 +375,7 @@ A summary of these capabilities is given in Table~\ref{tab:graph_attribute_funct
 \subsection{Additional programmer information}
 
 A Galant algorithm/program is executed as a method within a Java class.
-In order to shield the Galant programmer from Java ideosyncrasies,
+In order to shield the Galant programmer from Java idiosyncrasies,
 some features have been added.
 
 \subsubsection{Definition of Functions/Methods}\label{sec:functions}
@@ -388,6 +412,32 @@ is complex and may result in indecipherable error messages.
 
 \subsubsection{Data Structures}
 
-Galant provides some standard data strutures for nodes and edges automatically.
+Galant provides some standard data structures for nodes and edges automatically.
 These are described in detail in Table~\ref{tab:data_structures}.
-
+Data structures use object-oriented syntax.
+For example, to add a node \texttt{v} to a \texttt{NodeList} \texttt{L},
+the appropriate syntax is \texttt{L.add(v)}.
+Most data structure operations are as efficient as one might expect.
+A notable exception is \texttt{decreaseKey}
+for priority queues.
+The operation \texttt{pq.decreaseKey(v,k)}
+does \texttt{pq.remove(v)} followed by \texttt{pq.add(v)}.
+The new key is implicit -- it is the weight of the element.
+In practice, assuming \texttt{pq} is a \texttt{NodePriorityQueue},
+\texttt{v} is a \texttt{Node}
+and \texttt{k} is a \texttt{Double}, the sequence would be
+\begin{verbatim}
+     setWeight(v, k);
+     pq.decreaseKey(v,k);
+\end{verbatim}
+which would translate to
+\begin{verbatim}
+     setWeight(v, k);
+     pq.remove(v);
+     pq.add(v)
+\end{verbatim}
+As pointed out above, the weight of a node or edge is used for priority in a priority
+queue or for sorting.
+The programmer can change this default
+by redefining the Java \texttt{compareTo()} method,
+but this requires finesse and Java expertise.

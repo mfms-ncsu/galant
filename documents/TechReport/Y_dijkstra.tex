@@ -2,13 +2,13 @@ One of the simplest algorithms we have implemented is Dijkstra's algorithm
 for the single source shortest paths problem.
 Fig.~\ref{fig:dijkstra}
 the implementation of the animation of Dijkstra's algorithm.
-At every step the nodes already in the shortest path tree are \emph{marked}
+At every step the nodes already in the shortest paths tree are \emph{marked}
 (gray shading) and the nodes that have been encountered (but are not in the tree)
 are \emph{highlighted} (thick red boundary); these are often referred to as
 \emph{frontier} nodes.
 Selected \emph{edges} (thick red) represent the current shortest paths to all
 encountered nodes;
-they are the edges of a shortest path tree when the algorithm is done.
+they are the edges of a shortest paths tree when the algorithm is done.
 The same algorithm animation
 works for both directed and undirected graphs, as illustrated
 in Figs.~\ref{fig:dijkstra_directed} and~\ref{fig:dijkstra_undirected}.
@@ -16,9 +16,9 @@ The user can toggle between the directed and undirected versions of a graph
 via push of the appropriate button.
 The functions \emph{beginStep} and \emph{endStep} define the points at which
 the exploration of the algorithm stops its forward or backward motion.
-In their absence, any state change (mark, select, change in weight, etc.)
+In their absence, any state change (mark, highlight, change in weight, etc.)
 constitutes a step, which, in some cases, can force the user
-to do excessive ``stepping'' to move past uninteresting state changes.
+to do excessive stepping to move past uninteresting state changes.
 
 \input{Y_dijkstras_algorithm}
 
@@ -53,6 +53,6 @@ Galant provides for seamless indexing of arrays with node id's: the
 function \verb+nodeIds+ simply returns the largest node id plus one
 (so that an array can be allocated correctly) and \verb+id(v)+ returns the
 id of v, to be used as an index.
-Node ids, therefore, need not be contiguous starting at 0, as,
-in general, they won't be because of deletions or when graphs
+Node ids, therefore, need not be contiguous starting at 0;
+in general, they might not be because of deletions or when graphs
 come from external sources.

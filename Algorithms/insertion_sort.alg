@@ -6,7 +6,7 @@
  * filter that transforms a list of numbers into the appropriate graph (with
  * nodes already lined up
  *
- * The already sorted part of the array is 'visited'. The element to be
+ * The already sorted part of the array is visited'. The element to be
  * inserted moves about the array -- the element to which it is compared at
  * each step is selected.
  * 
@@ -23,14 +23,22 @@ final int VERTICAL_GAP = 50;
 /**
  * For convenience - to make the algorithm look more transparent.
  */
-int [] xCoord;  // x coordinates of nodes
-double [] A;    // array elements (as weights of nodes)
-Node [] nodes;  // actual nodes
+Integer numNodes;               // number of nodes
+int [] xCoord;                  // x coordinates of nodes
+double [] A;                    // array elements (as weights of nodes)
+Node [] nodes;                  // actual nodes
 
 /**
  * Lines up the nodes in a single horizontal row
  */
 function lineUpNodes() {
+    // note: we can allocate the arrays to have only as many entries as the
+    // number of nodes; their values are filled contiguously
+    numNodes = numberOfNodes();
+    A = new double[numNodes];
+    xCoord = new int[numNodes];
+    nodes = new Node[numNodes];
+
     int xPosition = HORIZONTAL_GAP;
     int yPosition = 2 * VERTICAL_GAP;
     int i = 0;
@@ -46,10 +54,6 @@ function lineUpNodes() {
 
 algorithm {
     movesNodes();
-    A = new double[nodeIds()];
-    xCoord = new int[nodeIds()];
-    nodes = new Node[nodeIds()];
-    int numNodes = numberOfNodes();
 
     beginStep();
     lineUpNodes();
@@ -63,18 +67,20 @@ algorithm {
 
     for ( int i = 1; i < numNodes; i++ ) {
         beginStep();
-        double x = A[i]; setWeight(toInsert, A[i]);
+        Double x = A[i]; setWeight(toInsert, A[i]);
         setX(toInsert, xCoord[i]);
         endStep();
-        int j = i - 1;
-        while ( j >= 0 && A[j] > x ) {  
+        Integer j = i - 1;
+        while ( j >= 0 ) {  
             beginStep();
             setX(toInsert, xCoord[j]);
             highlight(nodes[j]);
-            endStep(); beginStep();
+            endStep();
+            if ( A[j] <= x ) break;
+            beginStep();
             A[j+1] = A[j]; setWeight(nodes[j+1], A[j]);
-            unMark(nodes[j]);
-            unHighlight(nodes[j]);
+            unhighlight(nodes[j]);
+            unmark(nodes[j]);
             mark(nodes[j+1]);
             endStep();
             j = j - 1;
@@ -87,4 +93,4 @@ algorithm {
     deleteNode(toInsert);
 }
 
-//  [Last modified: 2016 07 21 at 13:21:53 GMT]
+//  [Last modified: 2016 08 05 at 21:17:49 GMT]

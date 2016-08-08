@@ -1,5 +1,3 @@
-\input{Y_overview_diagram}
-
 Fig.~\ref{fig:overview_diagram} gives an overview of Galant functionality.
 A graphical user interface (GUI) allows the user to edit both graphs and
 algorithm animations, either loaded as already existing files or newly
@@ -37,7 +35,7 @@ editing the GraphML or by invoking a separate graph editor.
 Galant has a built-in force-directed drawing program 
 (the one reported by Hu~\cite{2006-Mathematica-Hu}) to position nodes
 automatically if so desired.
-Automatic drawing is useful when the input Graphml file does not provide position
+Automatic drawing is useful when the input GraphML file does not provide position
 information for the nodes (and their positions are selected randomly).
 Other drawing programs, such as those provided by GraphViz~\cite{GraphViz}
 and the huge body of research carried on by the graph drawing community~\cite{graph_drawing},
@@ -72,7 +70,6 @@ the connectivity information.
 However, there is straightforward mapping between the GraphML attributes we
 use (positions of nodes and colors, etc., of nodes and edges) and the
 corresponding ones in GraphViz format.
-Translators to and from other formats are also available or can easily be constructed.
 We have written conversion scripts among the following formats:
 GraphML, gml~\cite{1999-TRPassau-Himsolt}, sgf, and dot (GraphViz~\cite{GraphViz}).
 The sgf (simple graph) format was devised by the first author as a

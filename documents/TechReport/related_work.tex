@@ -1,8 +1,9 @@
 There is a large variety of algorithm animations available. Here we focus solely on those that offer significant mechanisms for creating new animations.
-These differ primarily in (i)~whether the user acts primarily as an observer; and
+These differ primarily in (i)~the role of the user (primarily observer
+or explorer as well); and
 (ii)~the challenges imposed on the animator.
 Almost all of these are systems rather than tools.
-For a comprehensive survey of graph algorithm animation and graph drawing used
+For a comprehensive survey of graph algorithm animation and graph drawing
 as educational tools see Bridgeman~\cite{2013-GDBook-Bridgeman}. 
 
 \textbf{Observer-oriented (passive) systems.}
@@ -19,7 +20,7 @@ sophisticated creation options.
 Primarily designed to be passive, it could conceivably, with a parser
 for a graph input format and a mechanism that allows the user to view and
 manipulate the input graph, be made interactive.
-In that sense it would also be a tool.
+Then it would also be a tool.
 It suffers, however, from the fact that the
 animator must navigate a complex Java-based interface.
 
@@ -60,6 +61,18 @@ algebraic path problems (generalizations of all-pairs shortest paths and transit
 Its only drawback is that there is no readily available mechanism
 for outsiders to create new animations.
 New animations are developer-created and released periodically.
+
+\textbf{Animator-oriented systems.}
+Edgy~\cite{Edgy} is nn applet that combines exploration, simple programming techniques
+(using the Snap~\cite{Snap} language) and a simple graph API.
+Since it stores graphs in \texttt{dot} format -- see~\cite{GraphViz} --
+and programs in \texttt{xml},
+it could be expanded into a tool akin to Galant.
+However, the programming capabilities are primitive;
+it would be difficult, for example, to add sophisticated data structures such as
+priority queues or external Java API's.
+From the tutorial videos for Edgy it is clear that the software is designed
+for users who are just learning to program.
 
 \textbf{Libraries.}
 AlgoViz~\cite{AlgoViz}

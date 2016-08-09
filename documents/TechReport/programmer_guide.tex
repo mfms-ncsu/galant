@@ -9,7 +9,7 @@ not only use the Java syntax but can also augment Galant algorithms with
 arbitrary Java classes defined externally, using \texttt{import} statements.
 All Galant code is effectively Java, either natively, or via macro preprocessing.
 
-The text panel provides a crude editor for algorithms (as well as graphml
+The text panel provides a crude editor for algorithms (as well as GraphML
 descriptions of graphs);
 its limited capabilities make it useful primarily for fine tuning and error correction.
 The first author uses emacs in Java mode to edit algorithms offline, for example,
@@ -199,7 +199,7 @@ The logical attributes of an edge are its source and target (destination).
 \item
 \texttt{setSourceNode(Node)} and \texttt{Node~getSourceNode()}
 \item
-\texttt{setDestNode(Node)} and \texttt{Node~getDestNode()}
+\texttt{setTargetNode(Node)} and \texttt{Node~getTargetNode()}
 \item
 \texttt{getOtherEndPoint(Node~u)} returns \texttt{v} where this edge is
 either \texttt{uv} or \texttt{vu}.

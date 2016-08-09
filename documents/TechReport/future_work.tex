@@ -1,15 +1,13 @@
-Perhaps the most promising direction that our work on Galant can take is
-that of developing research applications.
-The benefits are twofold.
-First, Galant has the potential for providing a rich environment for
-the exploration of new graph algorithms or developing hypotheses about the
-behavior of existing ones.
-Second, as Galant is augmented with the infrastructure for specific research
-domains (i.e., additional Java classes), some of the resulting functionality
-will no doubt be migrated into its core. Or the core will be enhanced to
-accommodate new capabilities.
-Research on crossing minimization heuristics (e.g.,~\cite{2016-SEA-Stallmann}) has
-already benefited greatly from use of Galant to study detailed behavior of these heuristics.
+Perhaps the most promising direction that our work on Galant can take is that
+of developing research applications.  The benefits are twofold.  First,
+Galant has the potential for providing a rich environment for the exploration
+of new graph algorithms or developing hypotheses about the behavior of
+existing ones.  Second, as Galant is augmented with the infrastructure for
+specific research domains (in the form of additional Java classes), some of the
+resulting functionality can be migrated into its core. Or the core
+will be enhanced to accommodate new capabilities. The former
+has happened with research on crossing
+minimization heuristics (e.g.,~\cite{2012-JEA-Stallmann}).
 
 One drawback of the current implementation is
 that, unlike GDR, it provides no facility for user interaction other than stepping forward
@@ -30,7 +28,7 @@ repeating a display state during which a query occurs would need to be worked ou
   and how the nodes/edges are displayed, the nomenclature has become awkward.
   A better way to handle the situation is to add initial declarations
   that specify color, thickness, and, in case of nodes, fill color, for each logical state.
-  A logical state would have a name, e.g., \textsf{InTree},
+  A logical state would have a name, e.g., \textsf{inTree},
   and be automatically provided with a setter (Boolean argument),
   e.g., \textsf{setInTree}, and a logical test, e.g., \textsf{isInTree}.
 

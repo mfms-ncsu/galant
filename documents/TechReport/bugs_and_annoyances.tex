@@ -17,20 +17,23 @@ Text representations of graphs can either be edited or generated externally.}}
 
 \begin{itemize}
 
-\item
-Tabs for graphs and algorithms are often hard to deal with: (a) if you reread
-a graph or algorithm, it appears twice; (b) you can only run an algorithm on a graph if the tabs for the two appear at the top of the window at the same time
--- although the tabs bar can be ``scrolled'',
-this may be impossible if there are other intervening graphs and algorithms.
+\item Tabs for graphs and algorithms are often hard to deal with: (a) if you
+  reread a graph or algorithm, it appears twice; (b) you can only run an
+  algorithm on a graph if the tabs for the two appear at the top of the
+  window at the same time -- this
+  may be impossible if there are other intervening graphs and algorithms
+  and the window is not wide enough.
 
 \item If you attempt to do anything in the text window (File menu or tabs)
-  while an algorithm is running, Galant hangs; it appears that you can quit it from
-the file menu of the graph window, however.
+  while an algorithm is running, Galant hangs;
+  it appears that you can exit (quit) from
+  the file menu of the graph window, however.
 
 \item
-Syntax highlighting of functions and macros is oblivious of comments.
-Thus, if the name of a Galant function such as \texttt{edges} appears in a comment,
-it will be highlighted.
+  Syntax highlighting of functions and macros is oblivious of comments.
+  Thus, if the name of a Galant function
+  such as \texttt{edges} appears in a comment,
+  it will be highlighted.
 
 \end{itemize}
 
@@ -38,16 +41,15 @@ it will be highlighted.
 
 \begin{itemize}
 
-\item
-It is not possible to change the thickness of an edge or node boundary directly
-from the editor or an algorithm nor is it possible to change the fill color of a node.
-The only way to change these properties is via highlighting, selecting, and
-marking nodes/edges during the animation.
+\item It is not possible to change the thickness of an edge or node boundary
+  directly from the editor or an algorithm nor is it possible to change the
+  fill color of a node.  The only way to change these properties is via
+  highlighting, selecting, and marking nodes/edges during the animation.
 
 \item
-A change in color of an edge does not appear to take place while the edge
-is selected for editing -- its color stays blue during that time.
-Only when focus is no longer on the edge does it change color.
+  A change in color of an edge does not appear to take place while the edge
+  is selected for editing -- its color stays blue during that time.
+  Only when focus is no longer on the edge does it change color.
 
 \item If a node is selected for editing (other than immediately on creation)
   its weight is set to 0 when the spinner shows up.  Initially a node has no
@@ -55,8 +57,9 @@ Only when focus is no longer on the edge does it change color.
   specifies a weight.
 
 \item If user attempts to change weight/label of a node/edge and clicks on
-  the graph panel in the middle of the operation, the change is lost. There
-  is no ``ok'' prompt as with color.
+  the graph panel in the middle of the operation, the change is lost.
+  There
+  is no ``ok'' prompt as there is with color.
 
 \item When user creates a new edge via keyboard shortcut, there is no obvious
   way to enter the weight and label.
@@ -73,11 +76,14 @@ Only when focus is no longer on the edge does it change color.
 
 \item
   Compiler error messages can be cryptic (but at least they refer to the correct
-  line numbers). Because of the macro preprocessing, it may be necessary to look at the console to get an idea of what is causing a particular error.
+  line numbers). Because of the macro preprocessing,
+  it may be necessary to look at the console
+  to get an idea of what is causing a particular error.
   
 \item
   There is no way to execute the animation in a continuous fashion with a
-  controllable speed. The current workaround is the use of arrow keys as keyboard
+  controllable speed.
+  The current workaround is the use of arrow keys as keyboard
   shortcuts for stepping forward or backward -- these can be held down to
   generate multiple steps in rapid succession, but finer grained control is
   difficult.

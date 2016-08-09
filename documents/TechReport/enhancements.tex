@@ -1,7 +1,9 @@
 Some features under development for the next major release are listed here.
+Items~\ref{item:selection} and~\ref{item:sets} have already been partially
+implemented in Version~\VERSION.
 
 \begin{enumerate}
-\item
+\item \label{item:selection}
   \emph{Node and edge selection prompts in algorithms.}
   An algorithm will be able to ask the user to select a node or edge via a text query. The appropriate incantations will take the form
   \begin{itemize}
@@ -14,7 +16,7 @@ Some features under development for the next major release are listed here.
       arises if either id is non-existent or the edge is non-existent.
   \end{itemize}
 
-\item
+\item \label{item:sets}
   \emph{Sets of nodes and edges.}
   New types/classes \texttt{NodeSet} and \texttt{EdgeSet} will be added. Both
   will be concrete classes and will have conversion constructors from
@@ -32,7 +34,7 @@ Some features under development for the next major release are listed here.
   edge exists but is not a member of the given set.
 
 \item
-  \emph{Modeless graph editing.}
+  \emph{Mode-less graph editing.}
   In place of the GDR-like mechanism, where panel buttons are used to determine
   how the graph editor responds to mouse actions -- a click might create a node,
   initiate an edge or select an object --

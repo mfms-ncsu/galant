@@ -53,12 +53,8 @@ algorithm {
     beginStep();
     hideEdgeWeights();
     hideNodeWeights();
-    for_nodes( u ) {
-        u.label("");
-    }
-    for_edges( e ) {
-        e.label("");
-    }
+    clearNodeLabels();
+    clearEdgeLabels();
     endStep();
 
     for_nodes( u ) {
@@ -68,4 +64,4 @@ algorithm {
     }
 }
 
-//  [Last modified: 2016 08 05 at 20:19:04 GMT]
+//  [Last modified: 2016 08 09 at 20:52:54 GMT]

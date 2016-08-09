@@ -33,7 +33,7 @@ representation can also be created or edited externally: by a random or
 structured graph generator, by translation from another format, by directly
 editing the GraphML or by invoking a separate graph editor.
 Galant has a built-in force-directed drawing program 
-(the one reported by Hu~\cite{2006-Mathematica-Hu}) to position nodes
+(see Hu~\cite{2006-Mathematica-Hu}) to position nodes
 automatically if so desired.
 Automatic drawing is useful when the input GraphML file does not provide position
 information for the nodes (and their positions are selected randomly).
@@ -52,36 +52,26 @@ The preprocessor converts traversals of incidence lists and other
 lists of nodes or edges into the corresponding, more obscure, Java code.
 It also shields the Galant programmer from such syntactic circumlocutions
 as declaring \texttt{static} methods.
+Almost all Galant functions are available as both methods
+using object-oriented notation, e.g., \texttt{v.highlight()},
+and as procedures, e.g., \texttt{highlight(v)}.
+
 Because the functionality of the Galant editor is limited, it is usually more
 convenient to use an external program editor, reserving the Galant editor to
 make minor changes in response to compile-time or runtime errors.
 
-We use GraphML~\cite{GraphML} as our graph representation because it is flexible, it can
-easily be extended, and parsers, viewers and translation tools are becoming
-more common.
-Because GraphML is
-specialized XML, parsers for the latter, based on the Document Object Model
-(DOM) can be used. These are available for many programming languages.
-Translators to other formats are also available or can easily be constructed.
-For example, the GraphViz~\cite{GraphViz} download provides one;
-unfortunately it preserves
-only
-the connectivity information.
-However, there is straightforward mapping between the GraphML attributes we
-use (positions of nodes and colors, etc., of nodes and edges) and the
-corresponding ones in GraphViz format.
-We have written conversion scripts among the following formats:
-GraphML, gml~\cite{1999-TRPassau-Himsolt}, sgf, and dot (GraphViz~\cite{GraphViz}).
-The sgf (simple graph) format was devised by the first author as a
-lingua franca specific to layered graphs.
-It is similar to the \texttt{gr} format used in the 9th DIMACS implementation
-challenge~\cite{2006-DIMACS-Implementation}
-except that layer and position are used instead of x- and y-coordinates
-and
-there are no weights on the edges.
-When layered graphs are represented using
-dot files these are supplemented with \emph{ord} files
-that give layer and position information for nodes
--- see Stallmann et al.~\cite{2001-JEA-Stallmann}.
+We use GraphML~\cite{GraphML} as our graph representation because it is
+flexible, it can easily be extended, and parsers, viewers and translation
+tools are becoming more common.  Because GraphML is specialized XML, parsers
+for the latter, based on the Document Object Model (DOM) can be used. These
+are available for many programming languages.  Translators to other formats
+are also available or can easily be constructed.  For example, the
+GraphViz~\cite{GraphViz} download provides one; unfortunately it preserves
+only the connectivity information.  However, there is straightforward mapping
+between the GraphML attributes we use (positions of nodes and colors, etc.,
+of nodes and edges) and the corresponding ones in GraphViz format.  We have
+written conversion scripts among the following formats: GraphML,
+gml~\cite{1999-TRPassau-Himsolt}, sgf
+(used for layered graphs in crossing minimization), and dot (GraphViz~\cite{GraphViz}).
 
 % [Last modified: 2013 06 25 at 18:06:12 GMT]

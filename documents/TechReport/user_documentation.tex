@@ -33,13 +33,15 @@ Weights and labels are sometimes also easier to edit in the text window.
 \begin{figure}[p!]
 \includegraphics[scale=0.5]{X_graphml_window}
 \caption{The text window with the GraphML representation of the graph in
-Fig.~\ref{fig:graph_window_annotated}.}
+Fig.~\ref{fig:graph_window_annotated}. In the current version the text
+page and tree icons are on the left instead of the right.}
 \label{fig:graphml_window}
 \end{figure}
 
 \begin{figure}[p!]
 \includegraphics[scale=0.5]{X_algorithm_window}
-\caption{The text window showing Dijkstra's algorithm.}
+\caption{The text window showing Dijkstra's algorithm.
+This is an older version of Dijkstra's algorithm.}
 \label{fig:algorithm_text}
 \end{figure}
 
@@ -65,11 +67,13 @@ Sec.~\ref{sec:animating_algorithms}.
 
 Opened graph and algorithm files are displayed in the text window,
 which has tabs that allow the user to switch among different algorithms/graphs.
-New algorithms can be created using the ``page'' icon at the top right of the
-window and new graphs using the graph/tree icon to the left of that.
+New algorithms are created using the icon that looks like
+a page of text at the top left of the
+window; new graphs are created
+using the graph/tree icon to the left of that.
 More commonly, algorithm and graph files are loaded via the \texttt{File->Open}
 browser dialog. The \texttt{File} drop-down menu also allows saving of files
-and editing preferences. Algorithm files have the extension \texttt{.alg}
+and editing of preferences. Algorithm files have the extension \texttt{.alg}
 and graph files the extension \texttt{.graphml}.
 
 \subsection{Graph editing}
@@ -89,6 +93,7 @@ Galant reports errors of all kinds (during reading of files, compilation of
 animation programs or execution of animations)
 by displaying a pop up window that allows the user to choose whether to
 continue (and usually return to a stable state) or quit the program.
+Error information, including a stack trace, is also displayed on the console.
 
 The graph window, as illustrated in Fig.~\ref{fig:graph_window_annotated}
 has a toolbar with four sections:
@@ -123,7 +128,7 @@ If a node is deleted, all of its incident edges are deleted as well.
 \textbf{Directedness toggles --}
 These change both the interpretation and the
 display of the graph between directed and undirected.
-Pressing the undirected (line between two dots) button causes
+Pressing the undirected (line without arrows) button causes
 all edges to be interpreted as undirected: this means that, when the code
 calls for all incoming/outgoing edges, all incident edges are used.
 Undirected edges are displayed as simple lines.
@@ -149,7 +154,7 @@ typically have only the desired attributes set.
 \item
 \textbf{Force directed drawing button -- }
 Applies Hu's force directed algorithm~\cite{2006-Mathematica-Hu} to the graph.
-\emph{Caution: this operation cannot (currently) be undone.}
+Pushing the button a second time causes the drawing to revert to its previous state.
 
 \end{enumerate}
 
@@ -159,7 +164,8 @@ Keyboard shortcuts for graph editing operations are as follows:
 \textsf{Ctrl-n} & create a new node in a random position \\
 \textsf{Ctrl-e} & create a new edge; user is prompted for id's of the nodes to
 be connected \\
-\textsf{Ctrl-i} & do a smart repositioning of nodes of the graph;
+\textsf{Ctrl-i} & do a smart repositioning (force-directed)
+of nodes of the graph;
 useful when positions were chosen randomly \\
 \textsf{Del-n} & (hold delete key when typing \texttt{n})
 delete a node; user is prompted for id \\

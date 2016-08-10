@@ -1,0 +1,5 @@
+New in release 5.2.3:
+
+- sets of nodes and edges
+- algorithm is able to prompt user for a node or an edge
+- simplified procedural syntax for many more functions

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns 
+http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+ <graph  edgedefault="undirected">
+  <node id="1" x="304" y="769"  weight="3.0"  />
+  <node id="2" x="383" y="576"  weight="3.0"  />
+  <node id="3" x="507" y="392"  weight="7.0"  />
+  <node id="4" x="420" y="295"  weight="8.0"  />
+  <node id="5" x="341" y="938"  weight="5.0"  />
+  <node id="6" x="403" y="380"  weight="1.0"  />
+  <node id="7" x="567" y="304"  weight="1.0"  />
+  <node id="8" x="716" y="381"  weight="8.0"  />
+  <node id="9" x="762" y="456"  weight="4.0"  />
+  <node id="10" x="494" y="260"  weight="4.0"  />
+  <node id="11" x="880" y="425"  weight="4.0"  />
+  <node id="12" x="160" y="825"  weight="3.0"  />
+  <node id="13" x="184" y="898"  weight="7.0"  />
+  <node id="14" x="1001" y="490"  weight="1.0"  />
+  <node id="15" x="372" y="1084"  weight="8.0"  />
+  <node id="16" x="1028" y="624"  weight="4.0"  />
+  <node id="17" x="408" y="1194"  weight="8.0"  />
+  <node id="18" x="40" y="856"  weight="3.0"  />
+  <node id="19" x="788" y="280"  weight="1.0"  />
+  <node id="20" x="155" y="492"  weight="5.0"  />
+  <edge  source="1" target="2"  />
+  <edge  source="2" target="3"  />
+  <edge  source="3" target="4"  />
+  <edge  source="1" target="5"  />
+  <edge  source="3" target="6"  />
+  <edge  source="3" target="7"  />
+  <edge  source="3" target="8"  />
+  <edge  source="8" target="9"  />
+  <edge  source="3" target="10"  />
+  <edge  source="8" target="11"  />
+  <edge  source="1" target="12"  />
+  <edge  source="12" target="13"  />
+  <edge  source="11" target="14"  />
+  <edge  source="5" target="15"  />
+  <edge  source="14" target="16"  />
+  <edge  source="15" target="17"  />
+  <edge  source="12" target="18"  />
+  <edge  source="8" target="19"  />
+  <edge  source="2" target="20"  />
+ </graph></graphml>

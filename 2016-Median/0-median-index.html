@@ -1,0 +1,121 @@
+<html> <head>
+<title>Algorithms for the Two-Median Problem</title>
+</head>
+
+<body text=black bgcolor=white>
+<h2>Algorithms for the Two-Median Problem</h2>
+
+
+<ul>
+<br><hr>
+<li><b><a href=1-median.alg>1-median.alg</a></b> 
+
+Implementation of Goldman's algorithm for 1-median of trees<br>
+<br>
+<br><hr>
+<li><b><a href=brute_force-2-median.alg>brute_force-2-median.alg</a></b> 
+<br>
+@param parent the node from which this function was initiated; not a<br>
+candidate for a recursive call<br>
+@return the weight of the subtree rooted at root<br>
+<br>
+<code>function Double recursive_weight(Node root, Node parent)</code>
+<hr>
+<br>
+<br>
+sets the weight of each edge incident on the median to the total weight of<br>
+the corresponding subtree<br>
+<br>
+<code>function compute_subtree_weights(Node median)</code>
+<hr>
+<br>
+<br>
+visits nodes reachable from the root (one edge has been blocked at this<br>
+point) and sets the appropriate array values, queueing up leaves in the<br>
+process, as with the initialization for the one_median algorithm<br>
+<br>
+<code>function dfs(Node v)</code>
+<hr>
+<br>
+<br>
+Performs initialization for the one_median algorithm by visiting only the<br>
+nodes reachable from the root without traversing the edge.<br>
+<br>
+<code>function init_with_dfs(Node root, Edge edge)</code>
+<hr>
+<br>
+<br>
+@return the median of the subtree rooted at root assuming that the edge is<br>
+missing<br>
+<br>
+<code>function Node side_median(Node root, Edge edge)</code>
+<hr>
+<br>
+<br>
+Computes and displays (as label) the weight of each node times its<br>
+distance from the median. The breadth first search does not traverse<br>
+hidden edges.<br>
+<br>
+@return total cost of the tree with respect to the median<br>
+<br>
+<code>function Double compute_cost(Node median)</code>
+<br><hr>
+<li><b><a href=interactive-2-median.alg>interactive-2-median.alg</a></b> 
+- allows interactive exploration of options for the two median<br>
+<br><hr>
+<li><b><a href=my-2-median.alg>my-2-median.alg</a></b> 
+<br>
+Quadratic implementation of potentially linear two-median algorithm.<br>
+<br>
+@todo the algorithm does not work on t-20-13, among perhaps others,<br>
+probably because one of the initial two-medians is the one_median; it may<br>
+be possible to still operate in linear time if we try out all edges<br>
+indcident on the one_median as cut edges.<br>
+<br>
+@todo add ability to see the incremental costs of shifting cut edge<br>
+without changing the medians.<br>
+<hr>
+Side effects:<br>
+- the weight of parent_edge is set to total weight of the subtree<br>
+- the label of root (and cost[id(root)]) is set to the cost of the<br>
+subtree assuming that root is used as the median<br>
+- sets the parent of each adjacent node (except parent of root) to be the root<br>
+@return the weight of the subtree rooted at root<br>
+<br>
+<code>function Double recursive_weight(Node root)</code>
+<hr>
+<br>
+computes two medians using the given edge as a cut edge<br>
+@param root the root of the subtree in which the first median should be located<br>
+<br>
+<code>function Double compute_two_medians(Edge cut_edge, Node root)</code>
+<hr>
+<br>
+cleans up the display after compute_two_medians<br>
+<br>
+<code>function cleanup(Edge edge)</code>
+<hr>
+<br>
+tries out all cut edges between start and the one_median; this version is<br>
+inefficient - no smart updates along the lines explained below<br>
+<br>
+<code>function explore_path(Node start)</code>
+<hr>
+<br><hr>
+<li><b><a href=split-dfs.alg>split-dfs.alg</a></b> 
+<br>
+Systematically goes through all the edges (of a tree) and does two<br>
+depth-first searches, one from each endpoint. Each search assumes that the<br>
+relevant edge is missing.<br>
+<br>
+</ul>
+
+<hr>
+<address>
+<a href="http://people.engr.ncsu.edu/mfms/">
+Matthias F. (Matt) Stallmann
+</a>
+
+Created: 
+Fri Sep 9 16:03:47 EDT 2016
+</address>

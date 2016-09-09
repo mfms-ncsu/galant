@@ -10,6 +10,7 @@ build
 doc/*
 # graphs created on the fly
 *.graphml
+*.sgf
 # anything in the Sandbox -- used for trying things out
 Sandbox
 # Graph-Gallery is used for WTEiR experiments

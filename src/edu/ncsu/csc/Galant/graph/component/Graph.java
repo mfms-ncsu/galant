@@ -752,7 +752,9 @@ public class Graph {
 		n.setDeleted(true);
 		for (Edge e : n.getIncidentEdges()) {
 			e.setDeleted(true);
-            removeEdge(e);
+            // the following would cause permanent removal of the edge rather
+            // than deletion that can be undone by a step backward. 
+            // removeEdge(e);
 		}
 		
 		dispatch.unlockIfRunning();
@@ -1185,4 +1187,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2016 08 04 at 15:03:04 GMT]
+//  [Last modified: 2016 09 11 at 22:02:08 GMT]

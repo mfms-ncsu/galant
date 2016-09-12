@@ -421,10 +421,24 @@ public class Node extends GraphElement {
      * when hiding a node, you also have to hide its incident edges
      */
     public void hide() throws Terminate {
+        LogHelper.enterMethod(getClass(), "hide " + this);
         super.hide();
         for ( Edge edge: getEdges() ) {
             edge.hide();
         }
+        LogHelper.exitMethod(getClass(), "hide " + this);
+    }
+
+    /**
+     * when showing (unhiding) a node, you also have to show its incident edges
+     */
+    public void show() throws Terminate {
+        LogHelper.enterMethod(getClass(), "show " + this);
+        super.show();
+        for ( Edge edge: getEdges() ) {
+            edge.show();
+        }
+        LogHelper.exitMethod(getClass(), "show " + this);
     }
 
 	/**
@@ -641,4 +655,4 @@ public class Node extends GraphElement {
 	}
 }
 
-//  [Last modified: 2016 06 24 at 17:18:44 GMT]
+//  [Last modified: 2016 09 12 at 17:39:33 GMT]

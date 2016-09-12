@@ -1,5 +1,11 @@
 galant
 ======
+
+This software is licensed by a Gnu Public License. See
+https://www.gnu.org/licenses/gpl.html
+for details.
+Copyright Matthias F. Stalmann, 2016, all rights reserved.
+
 To compile everything and run the program for the first time, simply type
 ant
 while in the home directory.

@@ -7,6 +7,7 @@
  */
 
 NodePriorityQueue pq;
+NodeSet cover;
 
 function queueAllNodes() {
     /** @todo for some reason, the constructor that allows a priority queue
@@ -20,12 +21,22 @@ function queueAllNodes() {
     endStep();
 }
 
-/** @todo this should be easier when neighbors are sets rather than lists
- * and we return them as NodeSet objects */
-function boolean subset(List<Node> M, List<Node> N) {
+function checkCover() {
+    for_edges( e ) {
+        highlight(e);
+        if ( cover.contains(source(e)) || cover.contains(target(e)) ) {
+            unHighlight(e);
+        }
+    }
+}
+
+/**
+ * @todo Consider making standard set operations built-in
+ */
+function boolean subset(NodeSet M, NodeSet N) {
     for ( Node v : M ) {
-        print("checking" + v);
-        print("contained? " + N.contains(v));
+        print("...checking" + v);
+        print("...contained? " + N.contains(v));
         if ( ! N.contains(v) ) {
             return false;
         }
@@ -33,7 +44,25 @@ function boolean subset(List<Node> M, List<Node> N) {
     return true;
 }
 
+/**
+ * @todo Should be built-in
+ */
+function NodeSet visibleNeighbors(Node v) {
+    NodeSet neighbors = new NodeSet();
+    for_adjacent(v, e, w) {
+        if ( visible(w) ) neighbors.add(w);
+    }
+    return neighbors;
+}
+
 algorithm {
+    /**
+     * @todo Awkward to have to do the following step if user has weights
+     * invisible during edit mode; the semantics of visibility of labels and
+     * weights still need work.
+     */
+    hideEdgeWeights();
+    cover = new NodeSet();
     beginStep();
     for_nodes( v ) {
         setWeight(v, degree(v));
@@ -46,34 +75,60 @@ algorithm {
         queueAllNodes();
         while ( ! pq.isEmpty() ) {
             Node v = pq.removeMin();
-            mark(v);
+            if ( hidden(v) ) continue;
+            highlight(v);
+            /**
+             * @todo Need built-in way to traverse only visible neighbors
+             */
             for_adjacent(v, e, w) {
-                beginStep(); highlight(e); highlight(w); endStep();
-                List<Node> closedNeighborsV = neighbors(v);
-                closedNeighborsV.add(v);
-                List<Node> closedNeighborsW = neighbors(w);
-                closedNeighborsW.add(w);
-                if ( subset(closedNeighborsV, closedNeighborsW ) ) {
-                    print("subset");
-                    // getting rid of w; inform neighbors that their degree
-                    // and position in queue has changed
-                    for_adjacent(w, f, x) {
-                        highlight(x);
-                        setWeight(x, weight(x) - 1);
-                        if ( x.is("onQ") )
-                            pq.decreaseKey(x, weight(x));
-                        else { 
-                            pq.add(x);
-                            set(x, "onQ");
+                if ( visible(w) ) {
+                    highlight(e);
+                    NodeSet closedNeighborsV = visibleNeighbors(v);
+                    closedNeighborsV.add(v);
+                    NodeSet closedNeighborsW = visibleNeighbors(w);
+                    closedNeighborsW.add(w);
+                    print("checking subset " + v + ", " + w);
+                    if ( subset(closedNeighborsV, closedNeighborsW ) ) {
+                        print(w + " dominates " + v);
+                        mark(w);
+                        cover.add(w);
+                        // inform neighbors that their degree and position in
+                        // queue has changed
+                        NodeSet neighborsOfW = visibleNeighbors(w);
+                        beginStep();
+                        for ( Node x : neighborsOfW ) {
+                            print("reducing weight of " + x);
+                            color(x, GREEN);
+                            setWeight(x, weight(x) - 1);
+                            if ( x.is("onQ") && weight(x) > 0 )
+                                pq.decreaseKey(x, weight(x));
+                            else if ( weight(x) > 0 ) { 
+                                pq.add(x);
+                                set(x, "onQ");
+                            }
+                            else {
+                                pq.remove(x);
+                                clear(x, "onQ");
+                                hide(x);
+                            }
                         }
-                        unhighlight(x);
-                    }
-                    deleteNode(w);
-                    reduced = true;
-                }
-            }
-        }
+                        hide(w);
+                        endStep();
+                        beginStep();
+                        for ( Node x : neighborsOfW ) uncolor(x);
+                        endStep();
+                        reduced = true;
+                    } // dominance established
+                    unhighlight(e);
+                } // w is visible
+            } // for adjacent to v
+            unhighlight(v);
+       } // while pq not empty
     } while ( reduced );
+    beginStep();
+    showNodes();
+    checkCover();
+    endStep();
 }
 
-//  [Last modified: 2016 09 11 at 21:51:59 GMT]
+//  [Last modified: 2016 09 12 at 18:05:03 GMT]

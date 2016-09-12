@@ -411,8 +411,12 @@ public abstract class Algorithm implements Runnable {
     public void uncolor(GraphElement ge) throws Terminate { ge.clearColor(); }
     public String color(GraphElement ge) { return ge.getColor(); }
 
-    public void hide(GraphElement ge) throws Terminate { ge.hide(); }
-    public void show(GraphElement ge) throws Terminate { ge.show(); }
+    /** hiding of nodes differs - all incident edges must be hidden as well */
+    public void hide(Node v) throws Terminate { v.hide(); }
+    public void hide(Edge e) throws Terminate { e.hide(); }
+    public void show(Node v) throws Terminate { v.show(); }
+    public void show(Edge e) throws Terminate { e.show(); }
+
     public Boolean isHidden(GraphElement ge) { return ge.isHidden(getState()); }
     public Boolean isVisible(GraphElement ge) { return ! ge.isHidden(getState()); }
     public Boolean hidden(GraphElement ge) { return ge.isHidden(getState()); }
@@ -674,6 +678,14 @@ public abstract class Algorithm implements Runnable {
         dispatch.setAlgorithmMovesNodes(true);
     }
 
+    /**
+     * Defines the beginning of an animation step. Actions between a
+     * beginStep() - endStep() pair all take place with a single invocation
+     * of the step forward command
+     *
+     * @todo allow for nesting so that steps can be embedded in methods that
+     * take a bunch of actions all at once; not clear how best to do this
+     */
     public void beginStep() throws Terminate {
         synchronizer.startStep(); // needed to check for termination
         if ( synchronizer.isLocked() ) endStep();
@@ -681,6 +693,9 @@ public abstract class Algorithm implements Runnable {
         synchronizer.lock();
     }
 
+    /**
+     * Defines the end of an algorithm step.
+     */
     public void endStep() {
         synchronizer.unlock();
         synchronizer.pauseExecution();
@@ -690,4 +705,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2016 08 04 at 15:06:41 GMT]
+//  [Last modified: 2016 09 12 at 16:45:59 GMT]

@@ -41,6 +41,16 @@ Text representations of graphs can either be edited or generated externally.}}
 
 \begin{itemize}
 
+\item Nodes have to be moved individually. In a large graph there is no way
+  to select a collection of nodes and move them all at once.
+
+\item The force directed layout algorithm clusters nodes too close to each
+  other when there are cliques or near cliques.
+
+\item Semantics of force directed layout when combined with adding edges is
+  not intuitive (force directed layout takes over if the button is pressed,
+  so state dependent).
+
 \item It is not possible to change the thickness of an edge or node boundary
   directly from the editor or an algorithm nor is it possible to change the
   fill color of a node.  The only way to change these properties is via

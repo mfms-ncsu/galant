@@ -23,7 +23,7 @@ public class GraphLayout {
     /** used to scale the repulsive force of edges */
     private static final double REPULSIVE_SCALE_FACTOR = -1.0;
     /** spring length for edges (attractive force) and nodes (repulsive) */
-    private static final double SPRING_LENGTH = 120.0;
+    private static final double SPRING_LENGTH = 200.0;
     /** force directed method stops when node movement is less than this */
     private static final double FORCE_DIRECTED_TOLERANCE = 0.1;
 
@@ -79,7 +79,7 @@ public class GraphLayout {
      * @todo should be tied to size of a node and sizes of labels somehow and
      * probably incorporated into the GraphPanel class
      */ 
-    final static int WINDOW_PADDING = 50;
+    final static int WINDOW_PADDING = 75;
     
     /**
      * Offset to account for the fact that (0,0) is not a visible part of the
@@ -252,16 +252,24 @@ public class GraphLayout {
 		Point2D.Double[] previousPoints = new Point2D.Double[points.length];
 
         /**
+         * Stores the degrees of the nodes (in an attempt to mitigate the
+         * effects of cliques bunching together; so repulsive force will be
+         * made proportional to degree
+         */
+        int [] degree = new int[nodes.size()];
+
+        /**
          * used in step update for force-directed layout; global -- side
          * effect in updateStepLength() 
          */
         progress = 0;
 	
-		// initialize the starting points
+		// initialize the starting points and degrees
         int index = 0;
 		for ( Node node: nodes ) {
 			Point p = nodePositions.get(node);
 			points[index] = new Point2D.Double(p.x, p.y);
+            degree[index] = node.getDegree();
             index++;
 		}
 		
@@ -317,7 +325,7 @@ public class GraphLayout {
 				// calculate repulsive force from other nodes
 				for ( int j = 0; j < points.length; j++ ) {
 					if ( j != i && component[i] == component[j] ) {
-						double repulsive = forceRepulsive(points[i], points[j]);
+						double repulsive = degree[i] * degree[j] * forceRepulsive(points[i], points[j]);
 						double[] unitVector = unitVector(points[i], points[j]);
 						force[0] += unitVector[0] * repulsive;
 						force[1] += unitVector[1] * repulsive;
@@ -494,7 +502,7 @@ public class GraphLayout {
 	 * @return The force between the two components
 	 */
 	private static double forceRepulsive(Point2D p1, Point2D p2) {
-		return ( REPULSIVE_SCALE_FACTOR * SPRING_LENGTH * SPRING_LENGTH)
+		return (REPULSIVE_SCALE_FACTOR * SPRING_LENGTH * SPRING_LENGTH)
             / p1.distance(p2) ;
 	}
 	
@@ -569,4 +577,4 @@ public class GraphLayout {
 
 }
 	
-//  [Last modified: 2016 07 01 at 19:01:22 GMT]
+//  [Last modified: 2016 09 15 at 17:16:42 GMT]

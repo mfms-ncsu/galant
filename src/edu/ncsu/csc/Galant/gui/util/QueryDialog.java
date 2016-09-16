@@ -108,8 +108,12 @@ public abstract class QueryDialog extends JDialog
                  JOptionPane.INPUT_VALUE_PROPERTY.equals(prop)) ) {
             Object value = optionPane.getValue();
 
+            LogHelper.logDebug("property change is relevant");
             if ( value == JOptionPane.UNINITIALIZED_VALUE ) {
                 // ignore reset
+                LogHelper.logDebug("reset");
+                LogHelper.exitMethod(getClass(), "propertyChange");
+                LogHelper.restoreState();
                 return;
             }
 
@@ -121,7 +125,10 @@ public abstract class QueryDialog extends JDialog
             if ( enter.equals(value) ) {
                 answerText = answerTextField.getText();
                 try {
+                    LogHelper.logDebug("performing action, answer = " + answerText);
                     performAction(answerText);
+                    LogHelper.exitMethod(getClass(), "propertyChange");
+                    LogHelper.restoreState();
                     this.dispose();
                 }
                 catch (Exception e) {
@@ -135,11 +142,18 @@ public abstract class QueryDialog extends JDialog
                 }
             } // enter button pushed
             else { //user closed dialog or clicked cancel
+                LogHelper.logDebug("user closed dialog");
+                LogHelper.exitMethod(getClass(), "propertyChange");
+                LogHelper.restoreState();
                 this.dispose();
             }
         }
+        else {
+            LogHelper.logDebug("property change not relevant");
+        }
         LogHelper.exitMethod(getClass(), "propertyChange");
+        LogHelper.restoreState();
     }
 }
 
-//  [Last modified: 2016 09 16 at 00:02:45 GMT]
+//  [Last modified: 2016 09 16 at 15:46:10 GMT]

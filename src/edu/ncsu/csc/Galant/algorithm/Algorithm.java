@@ -47,6 +47,7 @@ import edu.ncsu.csc.Galant.graph.container.NodeSet;
 import edu.ncsu.csc.Galant.graph.container.EdgeSet;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow.GraphDisplays;
+import edu.ncsu.csc.Galant.gui.util.StringQuery;
 import edu.ncsu.csc.Galant.algorithm.AlgorithmSynchronizer;
 import edu.ncsu.csc.Galant.algorithm.AlgorithmExecutor;
 import edu.ncsu.csc.Galant.logging.LogHelper;
@@ -498,6 +499,17 @@ public abstract class Algorithm implements Runnable {
         graph.writeMessage("" + message);
     }
 
+    /**
+     * @return a string typed by the user in a dialog
+     */
+    public String getString(String prompt) throws Terminate {
+        synchronizer.startStep();
+        StringQuery query = new StringQuery(prompt);
+        synchronizer.pauseExecution();
+        query = null;           // to keep window from lingering when
+                                // execution is terminated
+        return dispatch.getStringAnswer();
+    }
 
     /**
      * @return an edge specified by the user in response to the prompt
@@ -704,4 +716,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2016 09 15 at 23:37:06 GMT]
+//  [Last modified: 2016 09 16 at 16:08:30 GMT]

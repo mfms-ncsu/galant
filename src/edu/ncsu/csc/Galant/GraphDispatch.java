@@ -23,12 +23,19 @@ import edu.ncsu.csc.Galant.algorithm.Terminate;
  *
  * @todo I'm puzzled by the need for getIntance() when there is only one
  * instance at any given time. Seems like all information should be static
- * and initialized appropriately when Galant execution begins.
+ * and initialized appropriately when Galant execution begins. A more
+ * appropriate name for this class, given its current usage, would be
+ * Globals. The original intent may have been to have multiple instances for
+ * multiple communication channels between graphs, algorithms and editors.
  */
 public class GraphDispatch {
 
 	private static GraphDispatch instance;
 	private Graph workingGraph;
+    /**
+     * A unique identifier for a graph.
+     * @todo not clear to me what the purpose is
+     */
 	private UUID graphSource;
 
 	private int windowWidth;
@@ -50,7 +57,35 @@ public class GraphDispatch {
      */
     private AlgorithmSynchronizer algorithmSynchronizer;
 
+    /**
+     * The current graph window, whether in edit or animation mode
+     */
 	private GraphWindow graphWindow;
+
+    /**
+     * text of response to latest interactive query with text input
+     */
+    private String stringAnswer;
+
+    /**
+     * integer value of answer to latest interactive query for an integer
+     */
+    private Integer integerAnswer;
+
+    /**
+     * double value of answer to latest interactive query for a double 
+     */
+    private Double doubleAnswer;
+
+    /**
+     * getters and setters for the query answers
+     */
+    public void setStringAnswer(String answer) { this.stringAnswer = answer; }
+    public String getStringAnswer() { return this.stringAnswer; }
+    public void setIntegerAnswer(Integer answer) { this.integerAnswer = answer; }
+    public Integer getIntegerAnswer() { return this.integerAnswer; }
+    public void setDoubleAnswer(Double answer) { this.doubleAnswer = answer; }
+    public Double getDoubleAnswer() { return this.doubleAnswer; }
 
     /**
      * true if the algorithm moves nodes; an algorithm should set this if it
@@ -259,4 +294,4 @@ public class GraphDispatch {
 
 }
 
-//  [Last modified: 2015 12 08 at 14:13:07 GMT]
+//  [Last modified: 2016 09 16 at 15:45:12 GMT]

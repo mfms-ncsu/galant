@@ -1,5 +1,5 @@
 /**
- * Captures text in response to a user's input during algorithm
+ * Captures a double in response to a user's input during algorithm
  * execution. Can also be used during editing.
  */
 package edu.ncsu.csc.Galant.gui.util;
@@ -12,18 +12,19 @@ import edu.ncsu.csc.Galant.logging.LogHelper;
 import edu.ncsu.csc.Galant.algorithm.Terminate;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow;
 
-public class StringQuery extends QueryDialog {
+public class DoubleQuery extends QueryDialog {
 
     String answerText = null;
 
-    public StringQuery(String prompt) {
+    public DoubleQuery(String prompt) {
         super(GraphWindow.getGraphFrame(), prompt);
     }
 
     protected void performAction(String answerText) 
         throws Terminate, GalantException {
-        GraphDispatch.getInstance().setStringAnswer(answerText);
+        Double doubleAnswer = Double.parseDouble(answerText);
+        GraphDispatch.getInstance().setDoubleAnswer(doubleAnswer);
     }
 }
 
-//  [Last modified: 2016 09 16 at 16:19:10 GMT]
+//  [Last modified: 2016 09 16 at 16:28:47 GMT]

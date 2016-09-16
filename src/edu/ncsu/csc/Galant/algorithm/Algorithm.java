@@ -48,6 +48,8 @@ import edu.ncsu.csc.Galant.graph.container.EdgeSet;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow.GraphDisplays;
 import edu.ncsu.csc.Galant.gui.util.StringQuery;
+import edu.ncsu.csc.Galant.gui.util.IntegerQuery;
+import edu.ncsu.csc.Galant.gui.util.DoubleQuery;
 import edu.ncsu.csc.Galant.algorithm.AlgorithmSynchronizer;
 import edu.ncsu.csc.Galant.algorithm.AlgorithmExecutor;
 import edu.ncsu.csc.Galant.logging.LogHelper;
@@ -512,6 +514,30 @@ public abstract class Algorithm implements Runnable {
     }
 
     /**
+     * @return an integer typed by the user in a dialog
+     */
+    public Integer getInteger(String prompt) throws Terminate {
+        synchronizer.startStep();
+        IntegerQuery query = new IntegerQuery(prompt);
+        synchronizer.pauseExecution();
+        query = null;           // to keep window from lingering when
+                                // execution is terminated
+        return dispatch.getIntegerAnswer();
+    }
+
+    /**
+     * @return a double typed by the user in a dialog
+     */
+    public Double getDouble(String prompt) throws Terminate {
+        synchronizer.startStep();
+        DoubleQuery query = new DoubleQuery(prompt);
+        synchronizer.pauseExecution();
+        query = null;           // to keep window from lingering when
+                                // execution is terminated
+        return dispatch.getDoubleAnswer();
+    }
+
+    /**
      * @return an edge specified by the user in response to the prompt
      */
     public Edge getEdge(String prompt) throws Terminate {
@@ -716,4 +742,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2016 09 16 at 16:08:30 GMT]
+//  [Last modified: 2016 09 16 at 16:32:33 GMT]

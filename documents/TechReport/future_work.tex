@@ -12,22 +12,7 @@ minimization heuristics (e.g.,~\cite{2012-JEA-Stallmann}).\footnote{
   see \mbox{\url{https://bitbucket.org/stallmann/galant-3.3}.}
 }
 
-One drawback of the current implementation is
-that, unlike GDR, it provides no facility for user interaction other than stepping forward
-and back.
-For example, one might want the user to be able to select the next node to
-visit during a depth-first search or a node to insert or remove during an animation of
-a binary search tree.
-A query window like that of GDR would be a useful enhancement, although the semantics of
-repeating a display state during which a query occurs would need to be worked out
-(GDR has no such problem because it does not allow backward steps).\footnote{
-  The latest release has a simple mechanism for selecting the next node or edge
-  via a query window that asks for a node id or the id's of endpoints of two edges.
-  The query does not reappear regardless of backward and forward stepping;
-  the initial response to it is used.
-}
-
-  Because these node and edge states both guide the logic of the algorithm
+  Because the node and edge states both guide the logic of the algorithm
   and how the nodes/edges are displayed, the nomenclature has become awkward.
   A better way to handle the situation is to add initial declarations
   that specify color, thickness, and, in case of nodes, fill color, for each logical state.

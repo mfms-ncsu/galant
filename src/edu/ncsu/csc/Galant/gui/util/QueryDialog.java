@@ -41,8 +41,12 @@ public abstract class QueryDialog extends JDialog
     private Frame frame;
 
     /** Creates the reusable dialog. */
-    public QueryDialog(Frame frame, String prompt) {
-        super(frame);
+    public QueryDialog(Frame frame, String prompt, boolean modal) {
+        // modal, when true, prevents actions taking place while the dialog
+        // is active; default is false, which does not work when editing;
+        // setting it to true causes algorithm execution to freeze, so we
+        // need to distinguish these cases somewhere.
+        super(frame, modal);
         setTitle("Query");
         LogHelper.enterConstructor(getClass());
         answerTextField = new JTextField(TEXT_FIELD_LENGTH);
@@ -85,6 +89,10 @@ public abstract class QueryDialog extends JDialog
         this.setVisible(true);
 
         LogHelper.exitConstructor(getClass());
+    }
+
+    public QueryDialog(Frame frame, String prompt) {
+        QueryDialog(frame, prompt, false);
     }
 
     /** action to be performed when source and target are identified;
@@ -156,4 +164,4 @@ public abstract class QueryDialog extends JDialog
     }
 }
 
-//  [Last modified: 2016 09 16 at 15:46:10 GMT]
+//  [Last modified: 2016 09 16 at 21:21:25 GMT]

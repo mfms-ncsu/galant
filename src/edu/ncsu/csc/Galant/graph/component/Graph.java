@@ -1091,15 +1091,26 @@ public class Graph {
 	/**
 	 * Call the repositioning algorithm
 	 * Currently the only supported algorithm is Force directed repositioning
+     * @param boost is the extent to which degree of a node will cause it to
+     * repel other nodes - repulsive force is multiplied by degree raised to
+     * the boost power.
 	 * 
 	 * @see edu.ncsu.csc.Galant.graph.component.GraphLayout#forceDirected()
 	 */
-	public void smartReposition() {
+	public void smartReposition(Double boost) {
         savedLayout = new GraphLayout(this);
         GraphLayout layoutToBeRepositioned = new GraphLayout(this);
-		layoutToBeRepositioned.forceDirected();
+		layoutToBeRepositioned.forceDirected(boost);
         layoutToBeRepositioned.usePositions();
 	}
+
+    /**
+     * same as smartReposition(boost) but uses the default boost, as built
+     * into the force-directed algorithm.
+     */
+    public void smartReposition() {
+        smartReposition(null);
+    }
 
     /**
      * Restores node positions as they were before the last smartReposition()
@@ -1187,4 +1198,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2016 09 11 at 22:02:08 GMT]
+//  [Last modified: 2016 09 16 at 20:42:33 GMT]

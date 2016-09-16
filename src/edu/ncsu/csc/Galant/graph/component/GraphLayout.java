@@ -246,9 +246,13 @@ public class GraphLayout {
 	 * aesthetically pleasing way.
 	 * 
 	 * @see <a href="http://www.mathematica-journal.com/issue/v10i1/contents/graph_draw/graph_draw_3.html">Force-Directed Algorithms (2006); Hu, Yifan</a>
-
+     *
+     * Here, the algorithm is modified so that a boost influences the extent
+     * to which the degree of a node amplifies the repulsive force of a node;
+     * a large value of boost can be used to spread out cliques or
+     * near-cliques.
 	 */
-	public void forceDirected() {
+	public void forceDirected(Double boost) {
         /**
          * These store the previous and current positions of the nodes
          */
@@ -266,6 +270,7 @@ public class GraphLayout {
          * power to which to raise degree when computin degree factor
          */
         double degree_boost = DEFAULT_DEGREE_BOOST;
+        if ( boost != null ) degree_boost = boost;
 
         /**
          * used in step update for force-directed layout; global -- side
@@ -588,4 +593,4 @@ public class GraphLayout {
 
 }
 	
-//  [Last modified: 2016 09 16 at 18:23:13 GMT]
+//  [Last modified: 2016 09 16 at 20:41:58 GMT]

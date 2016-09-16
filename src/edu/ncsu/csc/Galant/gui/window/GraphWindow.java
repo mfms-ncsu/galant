@@ -56,6 +56,7 @@ import edu.ncsu.csc.Galant.graph.component.Graph;
 import edu.ncsu.csc.Galant.graph.component.Node;
 import edu.ncsu.csc.Galant.gui.prefs.PreferencesPanel;
 import edu.ncsu.csc.Galant.gui.util.WindowUtil;
+import edu.ncsu.csc.Galant.gui.util.DoubleQuery;
 import edu.ncsu.csc.Galant.gui.window.panels.ComponentEditPanel;
 import edu.ncsu.csc.Galant.gui.window.panels.GraphPanel;
 import edu.ncsu.csc.Galant.logging.LogHelper;
@@ -998,7 +999,12 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
           synchronized(this) {
               if ( ! repositionBtn.isSelected() ) {
                   repositionBtn.setSelected(true);
-                  dispatch.getWorkingGraph().smartReposition();
+                  DoubleQuery query = new DoubleQuery("Degree repelling boost");
+                  Double boost = dispatch.getDoubleAnswer();
+                  if ( boost == null )
+                      dispatch.getWorkingGraph().smartReposition();
+                  else
+                      dispatch.getWorkingGraph().smartReposition(boost);
               }
               else {
                   repositionBtn.setSelected(false);
@@ -1087,4 +1093,4 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	}
 }
 
-//  [Last modified: 2016 07 03 at 15:41:20 GMT]
+//  [Last modified: 2016 09 16 at 20:48:52 GMT]

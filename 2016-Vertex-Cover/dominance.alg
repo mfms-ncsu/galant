@@ -35,8 +35,6 @@ function checkCover() {
  */
 function boolean subset(NodeSet M, NodeSet N) {
     for ( Node v : M ) {
-        print("...checking" + v);
-        print("...contained? " + N.contains(v));
         if ( ! N.contains(v) ) {
             return false;
         }
@@ -69,66 +67,59 @@ algorithm {
     }
     endStep();
 
-    boolean reduced = false;
-    do {
-        reduced = false;
-        queueAllNodes();
-        while ( ! pq.isEmpty() ) {
-            Node v = pq.removeMin();
-            if ( hidden(v) ) continue;
-            highlight(v);
-            /**
-             * @todo Need built-in way to traverse only visible neighbors
-             */
-            for_adjacent(v, e, w) {
-                if ( visible(w) ) {
-                    highlight(e);
-                    NodeSet closedNeighborsV = visibleNeighbors(v);
-                    closedNeighborsV.add(v);
-                    NodeSet closedNeighborsW = visibleNeighbors(w);
-                    closedNeighborsW.add(w);
-                    print("checking subset " + v + ", " + w);
-                    if ( subset(closedNeighborsV, closedNeighborsW ) ) {
-                        print(w + " dominates " + v);
-                        mark(w);
-                        cover.add(w);
-                        // inform neighbors that their degree and position in
-                        // queue has changed
-                        NodeSet neighborsOfW = visibleNeighbors(w);
-                        beginStep();
-                        for ( Node x : neighborsOfW ) {
-                            print("reducing weight of " + x);
-                            color(x, GREEN);
-                            setWeight(x, weight(x) - 1);
-                            if ( x.is("onQ") && weight(x) > 0 )
-                                pq.decreaseKey(x, weight(x));
-                            else if ( weight(x) > 0 ) { 
-                                pq.add(x);
-                                set(x, "onQ");
-                            }
-                            else {
-                                pq.remove(x);
-                                clear(x, "onQ");
-                                hide(x);
-                            }
+    queueAllNodes();
+    while ( ! pq.isEmpty() ) {
+        Node v = pq.removeMin();
+        if ( hidden(v) ) continue;
+        highlight(v);
+        /**
+         * @todo Need built-in way to traverse only visible neighbors
+         */
+        for_adjacent(v, e, w) {
+            if ( visible(w) ) {
+                highlight(e);
+                NodeSet closedNeighborsV = visibleNeighbors(v);
+                closedNeighborsV.add(v);
+                NodeSet closedNeighborsW = visibleNeighbors(w);
+                closedNeighborsW.add(w);
+                if ( subset(closedNeighborsV, closedNeighborsW ) ) {
+//                     print(w + " dominates " + v);
+                    mark(w);
+                    cover.add(w);
+                    // inform neighbors that their degree and position in
+                    // queue has changed
+                    NodeSet neighborsOfW = visibleNeighbors(w);
+                    beginStep();
+                    for ( Node x : neighborsOfW ) {
+                        color(x, GREEN);
+                        setWeight(x, weight(x) - 1);
+                        if ( x.is("onQ") && weight(x) > 0 )
+                            pq.decreaseKey(x, weight(x));
+                        else if ( weight(x) > 0 ) { 
+                            pq.add(x);
+                            set(x, "onQ");
                         }
-                        hide(w);
-                        endStep();
-                        beginStep();
-                        for ( Node x : neighborsOfW ) uncolor(x);
-                        endStep();
-                        reduced = true;
-                    } // dominance established
-                    unhighlight(e);
-                } // w is visible
-            } // for adjacent to v
-            unhighlight(v);
-       } // while pq not empty
-    } while ( reduced );
+                        else {
+                            pq.remove(x);
+                            clear(x, "onQ");
+                            hide(x);
+                        }
+                    }
+                    hide(w);
+                    endStep();
+                    beginStep();
+                    for ( Node x : neighborsOfW ) uncolor(x);
+                    endStep();
+                } // dominance established
+                unhighlight(e);
+            } // w is visible
+        } // for adjacent to v
+        unhighlight(v);
+    } // while pq not empty
     beginStep();
     showNodes();
     checkCover();
     endStep();
 }
 
-//  [Last modified: 2016 09 12 at 18:05:03 GMT]
+//  [Last modified: 2016 09 16 at 18:45:22 GMT]

@@ -26,6 +26,10 @@ public class GraphLayout {
     private static final double SPRING_LENGTH = 200.0;
     /** force directed method stops when node movement is less than this */
     private static final double FORCE_DIRECTED_TOLERANCE = 0.1;
+    /** determines the extent to which degree of a node affects repulsion;
+     * in particular, the degree is raised to this power and multiplied by
+     * the usual repulsive force. */
+    private static final double DEFAULT_DEGREE_BOOST = 3.0;
 
     // see updateStepLength() for how the next two are used
     /** the "temperature" reduction factor: used to control how fast the nodes move */
@@ -252,11 +256,16 @@ public class GraphLayout {
 		Point2D.Double[] previousPoints = new Point2D.Double[points.length];
 
         /**
-         * Stores the degrees of the nodes (in an attempt to mitigate the
-         * effects of cliques bunching together; so repulsive force will be
-         * made proportional to degree
+         * Stores a factor based on the degrees of the nodes (in an attempt
+         * to mitigate the effects of cliques bunching together; so repulsive
+         * force will be made proportional to degree
          */
-        int [] degree = new int[nodes.size()];
+        double [] degree_factor = new double[nodes.size()];
+
+        /**
+         * power to which to raise degree when computin degree factor
+         */
+        double degree_boost = DEFAULT_DEGREE_BOOST;
 
         /**
          * used in step update for force-directed layout; global -- side
@@ -269,7 +278,8 @@ public class GraphLayout {
 		for ( Node node: nodes ) {
 			Point p = nodePositions.get(node);
 			points[index] = new Point2D.Double(p.x, p.y);
-            degree[index] = node.getDegree();
+            int degree = node.getDegree();
+            degree_factor[index] = Math.pow(degree, degree_boost);
             index++;
 		}
 		
@@ -325,7 +335,8 @@ public class GraphLayout {
 				// calculate repulsive force from other nodes
 				for ( int j = 0; j < points.length; j++ ) {
 					if ( j != i && component[i] == component[j] ) {
-						double repulsive = degree[i] * degree[j] * forceRepulsive(points[i], points[j]);
+						double repulsive = degree_factor[i] * degree_factor[j]
+                            * forceRepulsive(points[i], points[j]);
 						double[] unitVector = unitVector(points[i], points[j]);
 						force[0] += unitVector[0] * repulsive;
 						force[1] += unitVector[1] * repulsive;
@@ -577,4 +588,4 @@ public class GraphLayout {
 
 }
 	
-//  [Last modified: 2016 09 15 at 17:16:42 GMT]
+//  [Last modified: 2016 09 16 at 18:23:13 GMT]

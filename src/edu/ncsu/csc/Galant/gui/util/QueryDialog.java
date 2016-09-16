@@ -19,20 +19,19 @@ import edu.ncsu.csc.Galant.gui.window.panels.ComponentEditPanel;
 import edu.ncsu.csc.Galant.logging.LogHelper;
 
 /**
- * This dialog is displayed whenever a user needs to create or select a node;
- * examples include creation of a new node with Ctrl-n or deletion of a node
- * with Del-n
+ * This dialog is displayed whenever a user needs to get some information via
+ * a query. The result could be an integer, a string or boolean (y/n).
  */
-public abstract class NodeSpecificationDialog extends JDialog
+public abstract class QueryDialog extends JDialog
     implements ActionListener,
                PropertyChangeListener {
 
     private static final int TEXT_FIELD_LENGTH = 10;
 
     /** text entered by user for the node */
-    private String nodeText = null;
+    private String answerText = null;
     /** text field into which node id is typed */
-    private JTextField nodeTextField;
+    private JTextField answerTextField;
 
     private JOptionPane optionPane;
 
@@ -42,21 +41,21 @@ public abstract class NodeSpecificationDialog extends JDialog
     private Frame frame;
 
     /** Creates the reusable dialog. */
-    public NodeSpecificationDialog(Frame frame, String prompt) {
+    public QueryDialog(Frame frame, String prompt) {
         super(frame);
-        setTitle("Node Specification");
+        setTitle("Query");
         LogHelper.enterConstructor(getClass());
-        nodeTextField = new JTextField(TEXT_FIELD_LENGTH);
+        answerTextField = new JTextField(TEXT_FIELD_LENGTH);
 
         // Create an array of the text and components to be displayed
         Object[] displayComponents
-            = {prompt, "Node Id", nodeTextField};
+            = {prompt, "", answerTextField};
 
         // Create an array specifying the number of dialog buttons
         // and their text.
         Object[] options = {enter, cancel};
 
-        // Question is essentially whether or not to enter a node, default
+        // Question is essentially whether or not to enter an edge, default
         // is yes.
         optionPane = new JOptionPane(displayComponents,
                                      JOptionPane.QUESTION_MESSAGE,
@@ -71,12 +70,12 @@ public abstract class NodeSpecificationDialog extends JDialog
         // Ensure the text field always gets the first focus.
         addComponentListener(new ComponentAdapter() {
                 public void componentShown(ComponentEvent ce) {
-                    nodeTextField.requestFocusInWindow();
+                    answerTextField.requestFocusInWindow();
                 }
             });
 
         //Register an event handler that puts the text into the option pane.
-        nodeTextField.addActionListener(this);
+        answerTextField.addActionListener(this);
 
         //Register an event handler that reacts to option pane state changes.
         optionPane.addPropertyChangeListener(this);
@@ -90,7 +89,7 @@ public abstract class NodeSpecificationDialog extends JDialog
 
     /** action to be performed when source and target are identified;
      * specified by subclass */
-    protected abstract void performAction(Node node)
+    protected abstract void performAction(String answer)
         throws Terminate, GalantException;
 
     /** handles events for the text field. */
@@ -120,23 +119,19 @@ public abstract class NodeSpecificationDialog extends JDialog
             optionPane.setValue(JOptionPane.UNINITIALIZED_VALUE);
 
             if ( enter.equals(value) ) {
-                nodeText = nodeTextField.getText();
+                answerText = answerTextField.getText();
                 try {
-                    Graph graph = GraphDispatch.getInstance().getWorkingGraph();
-                    int nodeId = Integer.parseInt(nodeText);
-                    Node node = graph.getNodeById(nodeId);
-
-                    performAction(node);
+                    performAction(answerText);
                     this.dispose();
                 }
                 catch (Exception e) {
-                    JOptionPane.showMessageDialog(NodeSpecificationDialog.this,
+                    JOptionPane.showMessageDialog(QueryDialog.this,
                                                   e.toString(),
                                                   "*** Error: Try Again ***",
                                                   JOptionPane.ERROR_MESSAGE);
-                    nodeTextField.selectAll();
-                    nodeText = null;
-                    nodeTextField.requestFocusInWindow();
+                    answerTextField.selectAll();
+                    answerText = null;
+                    answerTextField.requestFocusInWindow();
                 }
             } // enter button pushed
             else { //user closed dialog or clicked cancel
@@ -147,4 +142,4 @@ public abstract class NodeSpecificationDialog extends JDialog
     }
 }
 
-//  [Last modified: 2016 09 15 at 23:49:18 GMT]
+//  [Last modified: 2016 09 16 at 00:02:45 GMT]

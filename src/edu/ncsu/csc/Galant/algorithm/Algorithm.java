@@ -7,13 +7,12 @@
  * enhancements by Matthias Stallmann
  *
  * @todo Once the thread situation is straightened out, it is high time to
- * consider two methods used in GDR:
- * - Node getNode(String message)
- * - String query(String message)
- * These should prompt the display to pop up a window with the message and
- * pause execution, to be resumed when the user has produced the appropriate
- * response. Done for edge using getEdge(String). Work in progress in the
- * component-selection branch
+ * consider some methods used in GDR, for example,
+ *       - String query(String message)
+ * This should prompt the display to pop up a window
+ * with the message and pause execution, to be resumed when the user has
+ * produced the appropriate response. Done as a query for getting a node or
+ * edge specifically.
  *
  * @todo Add method(s) to change the direction of an edge; this would involve
  * both swapping source and target and changing the lists of incoming and
@@ -705,4 +704,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2016 09 12 at 16:45:59 GMT]
+//  [Last modified: 2016 09 15 at 23:37:06 GMT]

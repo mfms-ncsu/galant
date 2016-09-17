@@ -17,7 +17,12 @@ public class IntegerQuery extends QueryDialog {
     String answerText = null;
 
     public IntegerQuery(String prompt) {
-        super(GraphWindow.getGraphFrame(), prompt);
+        super(GraphWindow.getGraphFrame(), prompt, false);
+    }
+
+    /** @see QueryDialog.java */
+    public IntegerQuery(String prompt, boolean waitForResponse) {
+        super(GraphWindow.getGraphFrame(), prompt, waitForResponse);
     }
 
     protected void performAction(String answerText) 
@@ -27,4 +32,4 @@ public class IntegerQuery extends QueryDialog {
     }
 }
 
-//  [Last modified: 2016 09 16 at 16:26:16 GMT]
+//  [Last modified: 2016 09 17 at 12:54:01 GMT]

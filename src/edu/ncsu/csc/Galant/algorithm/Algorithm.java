@@ -538,6 +538,14 @@ public abstract class Algorithm implements Runnable {
     }
 
     /**
+     * @todo need a consistent convention for use of Real in place of Double,
+     * maybe even a new class
+     */
+    public Double getReal(String prompt) throws Terminate {
+        return getDouble(prompt);
+    }
+
+    /**
      * @return an edge specified by the user in response to the prompt
      */
     public Edge getEdge(String prompt) throws Terminate {
@@ -742,4 +750,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2016 09 16 at 16:32:33 GMT]
+//  [Last modified: 2016 09 17 at 12:50:54 GMT]

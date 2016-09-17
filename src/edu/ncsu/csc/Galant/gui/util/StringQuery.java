@@ -17,7 +17,12 @@ public class StringQuery extends QueryDialog {
     String answerText = null;
 
     public StringQuery(String prompt) {
-        super(GraphWindow.getGraphFrame(), prompt);
+        super(GraphWindow.getGraphFrame(), prompt, false);
+    }
+
+    /** @see QueryDialog.java */
+    public StringQuery(String prompt, boolean waitForResponse) {
+        super(GraphWindow.getGraphFrame(), prompt, waitForResponse);
     }
 
     protected void performAction(String answerText) 
@@ -26,4 +31,4 @@ public class StringQuery extends QueryDialog {
     }
 }
 
-//  [Last modified: 2016 09 16 at 16:19:10 GMT]
+//  [Last modified: 2016 09 17 at 12:46:43 GMT]

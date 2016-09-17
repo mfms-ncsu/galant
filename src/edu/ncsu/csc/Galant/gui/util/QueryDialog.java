@@ -40,12 +40,19 @@ public abstract class QueryDialog extends JDialog
     
     private Frame frame;
 
-    /** Creates the reusable dialog. */
-    public void initQueryDialog(Frame frame, String prompt) {
-        // modal, when true, prevents actions taking place while the dialog
-        // is active; default is false, which does not work when editing;
-        // setting it to true causes algorithm execution to freeze, so we
-        // need to distinguish these cases somewhere.
+    /** 
+     * Creates a reusable dialog.
+     *
+     * @param waitForResponse (called modal in Java documentation) when true,
+     * prevents actions in the invoking program from taking place while the
+     * dialog is active; default is false; the only current case where it
+     * needs to be true is in the dialog asking for a degree boost for
+     * force-directed layout; this is the only case where Galant launches
+     * another action immediately after launching the dialog 
+     */
+    public QueryDialog(Frame frame, String prompt, boolean waitForResponse) {
+        // modal, 
+        super(frame, waitForResponse);
         setTitle("Query");
         LogHelper.enterConstructor(getClass());
         answerTextField = new JTextField(TEXT_FIELD_LENGTH);
@@ -88,11 +95,6 @@ public abstract class QueryDialog extends JDialog
         this.setVisible(true);
 
         LogHelper.exitConstructor(getClass());
-    }
-
-    public QueryDialog(Frame frame, String prompt) {
-        super(frame, false);
-        initQueryDialog(frame, prompt);
     }
 
     /** action to be performed when source and target are identified;
@@ -164,4 +166,4 @@ public abstract class QueryDialog extends JDialog
     }
 }
 
-//  [Last modified: 2016 09 16 at 22:26:10 GMT]
+//  [Last modified: 2016 09 17 at 12:53:03 GMT]

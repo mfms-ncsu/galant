@@ -999,7 +999,8 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
           synchronized(this) {
               if ( ! repositionBtn.isSelected() ) {
                   repositionBtn.setSelected(true);
-                  DoubleQuery query = new DoubleQuery("Degree repelling boost");
+                  DoubleQuery query
+                      = new DoubleQuery("Degree repelling boost", true);
                   Double boost = dispatch.getDoubleAnswer();
                   if ( boost == null )
                       dispatch.getWorkingGraph().smartReposition();
@@ -1093,4 +1094,4 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	}
 }
 
-//  [Last modified: 2016 09 16 at 20:48:52 GMT]
+//  [Last modified: 2016 09 17 at 12:52:14 GMT]

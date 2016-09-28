@@ -4,7 +4,9 @@
  * @todo the algorithm does not work on t-20-13, among perhaps others,
  * probably because one of the initial two-medians is the one_median; it may
  * be possible to still operate in linear time if we try out all edges
- * indcident on the one_median as cut edges. 
+ * indcident on the one_median as cut edges. The algorithm relies on the
+ * assumption that the optimum cut edge is in the max-weight subtree, false
+ * in the case of t-20-13.
  *
  * @todo add ability to see the incremental costs of shifting cut edge
  * without changing the medians.
@@ -200,7 +202,10 @@ function Double compute_cost(Node median) {
 
 /**
  * computes two medians using the given edge as a cut edge
- * @param root the root of the subtree in which the first median should be located
+ * @param root the root of the subtree in which the first median should be
+ * located.
+ * Side effect: updates both first_median and second_median, which are
+ * computed based on the cut edge.
  */
 function Double compute_two_medians(Edge cut_edge, Node root) {
     highlight(cut_edge);
@@ -336,4 +341,4 @@ algorithm {
     // multiplied by d(x,y_i)
 }
 
-//  [Last modified: 2016 06 30 at 20:08:41 GMT]
+//  [Last modified: 2016 09 19 at 13:53:17 GMT]

@@ -70,7 +70,10 @@ Quadratic implementation of potentially linear two-median algorithm.<br>
 @todo the algorithm does not work on t-20-13, among perhaps others,<br>
 probably because one of the initial two-medians is the one_median; it may<br>
 be possible to still operate in linear time if we try out all edges<br>
-indcident on the one_median as cut edges.<br>
+indcident on the one_median as cut edges.
+The algorithm relies on the<br>
+assumption that the optimum cut edge is in the max-weight subtree, false<br>
+in the case of t-20-13.<br>
 <br>
 @todo add ability to see the incremental costs of shifting cut edge<br>
 without changing the medians.<br>
@@ -86,7 +89,10 @@ subtree assuming that root is used as the median<br>
 <hr>
 <br>
 computes two medians using the given edge as a cut edge<br>
-@param root the root of the subtree in which the first median should be located<br>
+@param root the root of the subtree in which the first median should be<br>
+located.<br>
+<br>Side effect: updates both first_median and second_median, which are
+<br>computed based on the cut edge.<br>
 <br>
 <code>function Double compute_two_medians(Edge cut_edge, Node root)</code>
 <hr>

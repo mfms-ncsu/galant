@@ -560,6 +560,18 @@ public abstract class Algorithm implements Runnable {
     }
 
     /**
+     * @param prompt a message displayed in the node selection dialog popup
+     * @param restrictedSet the set from which the node should be selected
+     * @param errorMessage the message to be displayed if node is not in
+     * restrictedSet
+     * @return a node selected via a dialog during algorithm execution
+     */
+    public Node getNode(String prompt, NodeSet restrictedSet, String errorMessage)
+        throws Terminate {
+        return graph.getNode(prompt, restrictedSet, errorMessage);
+    }
+
+    /**
      * Prints a string on the console (e.g., for debugging); as with display,
      * the message can be any object with a toString() method
      */
@@ -750,4 +762,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2016 09 17 at 18:28:26 GMT]
+//  [Last modified: 2016 09 29 at 15:54:14 GMT]

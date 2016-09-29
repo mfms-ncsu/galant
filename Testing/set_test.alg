@@ -14,6 +14,9 @@ algorithm {
         print(v);
         mark(v);
     }
+    // this part tests selection within a set
+    Node neighbor = getNode("neighbor of " + id(start) + "?", nodeSet, "not a neighbor");
+    highlight(neighbor);
 }
 
-//  [Last modified: 2016 08 04 at 14:39:22 GMT]
+//  [Last modified: 2016 09 29 at 16:16:41 GMT]

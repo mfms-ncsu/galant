@@ -13,6 +13,7 @@ import java.util.TreeMap;
 
 import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.GraphDispatch;
+import edu.ncsu.csc.Galant.graph.container.NodeSet;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow;
 import edu.ncsu.csc.Galant.gui.util.EdgeSelectionDialog;
 import edu.ncsu.csc.Galant.gui.util.NodeSelectionDialog;
@@ -248,6 +249,25 @@ public class Graph {
     public Node getNode(String prompt) throws Terminate {
         dispatch.startStepIfRunning();
         NodeSelectionDialog dialog = new NodeSelectionDialog(prompt);
+        dispatch.pauseExecutionIfRunning();
+        dialog = null;          // to keep window from lingering when
+                                // execution is terminated
+        return selectedNode;
+    }
+
+
+    /**
+     * @param prompt a message displayed in the node selection dialog popup
+     * @param restrictedSet the set from which the node should be selected
+     * @param errorMessage the message to be displayed if node is not in
+     * restrictedSet
+     * @return a node selected via a dialog during algorithm execution
+     */
+    public Node getNode(String prompt, NodeSet restrictedSet, String errorMessage)
+        throws Terminate {
+        dispatch.startStepIfRunning();
+        NodeSelectionDialog dialog 
+            = new NodeSelectionDialog(prompt, restrictedSet, errorMessage);
         dispatch.pauseExecutionIfRunning();
         dialog = null;          // to keep window from lingering when
                                 // execution is terminated
@@ -1198,4 +1218,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2016 09 16 at 20:42:33 GMT]
+//  [Last modified: 2016 09 29 at 16:12:38 GMT]

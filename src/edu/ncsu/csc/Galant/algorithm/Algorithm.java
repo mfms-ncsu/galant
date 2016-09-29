@@ -626,6 +626,10 @@ public abstract class Algorithm implements Runnable {
         return graph.getNodes();
     }
 
+    public NodeSet getNodeSet() {
+        return graph.getNodeSet();
+    }
+
     /** this and the corresponding incantation for edges don't work; the
      * type/class NodeList has to be created inside the Graph class or we
      * need an additional copy constructor for NodeList */
@@ -762,4 +766,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2016 09 29 at 15:54:14 GMT]
+//  [Last modified: 2016 09 29 at 18:04:11 GMT]

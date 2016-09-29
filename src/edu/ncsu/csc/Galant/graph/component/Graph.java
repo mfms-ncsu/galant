@@ -699,6 +699,58 @@ public class Graph {
 		
 		return retEdges;
 	}
+
+    /**
+     * @return the edges as a set
+     */
+	public EdgeSet getEdgeSet() {
+        EdgeSet retEdges = new EdgeSet();
+		for ( Edge e : this.edges ) {
+			if ( e.inScope() ) {
+				retEdges.add(e);
+			}
+		}
+		return retEdges;
+    }
+
+    /**
+     * @return the nodes as a set
+     */
+	public NodeSet getNodeSet() {
+        NodeSet retNodes = new NodeSet();
+		for ( Node v : this.nodes ) {
+			if ( v.inScope() ) {
+				retNodes.add(v);
+			}
+		}
+		return retNodes;
+    }
+
+    /**
+     * @return all edges at the current algorithm state as a set
+     */
+	public EdgeSet getEdgeSet(int state) {
+        EdgeSet retEdges = new EdgeSet();
+		for ( Edge e : this.edges ) {
+			if ( e.inScope(state) ) {
+				retEdges.add(e);
+			}
+		}
+		return retEdges;
+    }
+	
+    /**
+     * @return all nodes at the current algorithm state as a set
+     */
+	public NodeSet getNodeSet(int state) {
+        NodeSet retNodes = new NodeSet();
+		for ( Node v : this.nodes ) {
+			if ( v.inScope(state) ) {
+				retNodes.add(v);
+			}
+		}
+		return retNodes;
+    }
 	
 	/**
 	 * @return all edges at the current algorithm state
@@ -1218,4 +1270,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2016 09 29 at 16:12:38 GMT]
+//  [Last modified: 2016 09 29 at 17:07:55 GMT]

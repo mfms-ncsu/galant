@@ -5,53 +5,56 @@
  * without visiting all nodes
  */
 
-int time;
-
-int [] discovery;
-int [] finish;
+Integer time;
 NodeSet unvisited;
 
 function visit( Node v ) {
-    print("visiting " + id(v));
     unvisited.remove(v);
     time = time + 1;
-    discovery[id(v)] = time;
     beginStep();
-    label(v, discovery[id(v)] );
+    set(v, "discovery", time);
+    Integer discovered_v
+        = getInteger(v, "discovery");
+    label(v, time);
     select(v);
     endStep();
     for_outgoing( v, e, w ) {
-        print("neighbor = " + id(w));
+        Integer finished_w
+            = getInteger(w, "finish");
         beginStep();
+        color(e, BLUE);
         if ( ! selected(w) ) {
-            select(e);
+            highlight(e);
             visit(w);
         }
-        else if ( finish[id(w)] == 0 ) { /* ancestor */
+        else if ( finished_w == null ) {
+            /* ancestor */
             label(e, "B");
         }
-        else if ( finish[id(w)] 
-                  > discovery[id(v)] ) { /* descendant */
+        else if ( finished_w
+                  > discovered_v ) {
+            /* descendant */
             label(e, "F");
         }
         else {
             label(e, "C");
         }
         endStep();
-    }
+        beginStep();
+        uncolor(e);
+        endStep();
+    } // end, traversing adj list
     time = time + 1;
-    finish[id(v)] = time;
+    set(v, "finish", time);
     beginStep();
     mark(v);
-    label(v, discovery[id(v)] + "/" + finish[id(v)]);
+    label(v, discovered_v
+          + "/" + time);
     endStep();
 }
 
 algorithm {
     time = 0;
-    discovery = new int[nodeIds()];
-    finish = new int[nodeIds()];
-
     setDirected(true);
 
     beginStep();
@@ -63,13 +66,12 @@ algorithm {
 
     unvisited = getNodeSet();
     while ( ! unvisited.isEmpty() ) {
-        print("top of loop");
         Node u
-            = getNode("choose next node to visit",
+            = getNode("node to visit",
                       unvisited,
                       "node already vsited"); 
         visit(u);
     }
 }
 
-//  [Last modified: 2016 09 29 at 20:15:36 GMT]
+//  [Last modified: 2016 10 03 at 13:27:38 GMT]

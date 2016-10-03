@@ -408,6 +408,19 @@ public abstract class Algorithm implements Runnable {
     public void clear(GraphElement ge, String s) throws Terminate { ge.clear(s); }
     public Boolean is(GraphElement ge, String s) { return ge.is(s); }
 
+    public void set(GraphElement ge, String s, Integer i) throws Terminate {
+        ge.set(s, i);
+    }
+    public void set(GraphElement ge, String s, Double d) throws Terminate {
+        ge.set(s, d);
+    }
+    public void set(GraphElement ge, String key, String value) throws Terminate {
+        ge.set(key, value);
+    }
+    public Integer getInteger(GraphElement ge, String s) { return ge.getInteger(s); }
+    public Double getDouble(GraphElement ge, String s) { return ge.getDouble(s); }
+    public String getString(GraphElement ge, String s) { return ge.getString(s); }
+
     public void color(GraphElement ge, String color) throws Terminate { ge.setColor(color); }
     public void unColor(GraphElement ge) throws Terminate { ge.clearColor(); }
     public void uncolor(GraphElement ge) throws Terminate { ge.clearColor(); }
@@ -766,4 +779,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2016 09 29 at 18:04:11 GMT]
+//  [Last modified: 2016 10 03 at 13:14:25 GMT]

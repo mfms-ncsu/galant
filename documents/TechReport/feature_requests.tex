@@ -8,16 +8,6 @@ Some features under development for the next major release are listed here.
   return one of these. For example, \texttt{getNodes()} will return a
   \texttt{NodeList} instead of a \texttt{List<Node>}.
 
-
-\item \label{item:sets}
-  \emph{Using sets of nodes and edges to restrict selections.}
-  Addition of functions such as\\
-  \hspace*{2em}\mbox{\texttt{getEdge(\emph{prompt}, \emph{set}, \emph{message})}},\\
-  where \emph{prompt} is as before, \emph{set} is
-  a set from which the edge must be selected (e.g., the set of edges incident
-  on a node) and \emph{message} is an error message to be given if the
-  edge exists but is not a member of the given set.
-
 \item
   \emph{Mode-less graph editing.}
   In place of the GDR-like mechanism, where panel buttons are used to determine
@@ -37,5 +27,15 @@ Some features under development for the next major release are listed here.
   A more sophisticated mapping mechanism that incorporates sound as well as visuals is needed.
   The ultimate approach would allow mappings for arbitrary attributes
   defined by user or programmer.
-  
+
+\item \emph{Inflection points on edges.}  For animation of automata it's
+  important to have curved edges if there is a transition going from state
+  $q$ to state $r$ and another from $r$ to $q$; other applications may need
+  this as well. A single inflection point, carefully placed, and present only
+  if there are parallel edges, could accomplish this.
+
+\item \emph{Selection of multiple nodes and/or edges.}  It might prove useful
+  to move a collection of nodes instead of just a single node or give a
+  collection of nodes or edges the same color, label or weight. This is
+  mostly for edit mode.
 \end{enumerate}

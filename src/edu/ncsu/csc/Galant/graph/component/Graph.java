@@ -56,7 +56,7 @@ public class Graph {
     private Edge selectedEdge;
 
     /**
-     * Keeps track of an node selected during algorithm execution.
+     * Keeps track of a node selected during algorithm execution.
      */
     private Node selectedNode;
 
@@ -65,6 +65,10 @@ public class Graph {
      * essentially the list of all changes to the graph (independent of its
      * nodes and edges). At this point the only relevant attributes relate to
      * visibility of labels and weights.
+     *
+     * @todo should handle this in the same way that GraphElementState is
+     * handled; perhaps a graph can be another GraphElement with attributes
+     * such as a list of nodes, etc.
      */
 	protected List<GraphState> states;
 
@@ -813,8 +817,9 @@ public class Graph {
     }
 
 	/**
-	 * Removes the specified <code>Node</code> from the <code>Graph</code>.
-	 * Starts a new algorithm step if appropriate
+	 * Deletes (but does not permanently remove) the specified
+	 * <code>Node</code> from the <code>Graph</code>.  Starts a new algorithm
+	 * step if appropriate
 	 */
 	public void deleteNode(Node n) throws Terminate {
         LogHelper.enterMethod(getClass(), "deleteNode " + n);
@@ -1270,4 +1275,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2016 09 29 at 17:07:55 GMT]
+//  [Last modified: 2016 10 08 at 14:10:33 GMT]

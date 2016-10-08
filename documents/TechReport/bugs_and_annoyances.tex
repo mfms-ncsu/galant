@@ -90,9 +90,23 @@ Text representations of graphs can either be edited or generated externally.}}
   it may be necessary to look at the console
   to get an idea of what is causing a particular error.
 
+\item Line numbers do, however, get out of sync if the header of a function
+  declaration takes up more than one line. For example, in
+\begin{verbatim}
+     function foo(Node v,
+                  Node w,
+                  Edge e) {
+     }
+\end{verbatim}
+The first three lines are treated as one.
+
 \item
   If a macro is used incorrectly,
   the preprocessor does not report a line number.
+
+\item A query, if the user ignores it and advances the algorithm, will treat
+  the answer as if it were whatever the answer to the previous such query, if
+  any, was.
 
 \item
   There is no way to execute the animation in a continuous fashion with a

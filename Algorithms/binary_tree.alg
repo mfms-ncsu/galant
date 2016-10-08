@@ -1,8 +1,7 @@
 /**
- * Draws a binary tree that fits into current graph window. To get a tree
- * with height other than four, modify TREE_HEIGHT
+ * Draws a binary tree that fits into current graph window. First queries the
+ * user about the tree height.
  */
-int TREE_HEIGHT = 4;
 
 /**
  * creates a complete binary tree of height tree_height with root at position
@@ -39,11 +38,26 @@ function Node createTree( int tree_height,
     return root;
 }
 
+/**
+ * erases the graph so we start with a clean slate (does not work as expected
+ * and should not be needed).
+ */
+function clearGraph() {
+    for_nodes( v ) { 
+        print(v);
+        deleteNode(v);
+    }
+}
+
 algorithm {
+    int tree_height = getInteger("Tree height?");
     int width = windowWidth();
     int height = windowHeight();
-	int padding = height / (TREE_HEIGHT + 1);
-	Node root = createTree( TREE_HEIGHT, width / 2, padding, width / 2, padding );
+	int padding = height / (tree_height + 1);
+    beginStep();
+    //    clearGraph();
+    endStep();
+	Node root = createTree(tree_height, width / 2, padding, width / 2, padding);
 }	
 
-//  [Last modified: 2016 07 26 at 19:15:26 GMT]
+//  [Last modified: 2016 10 08 at 17:18:10 GMT]

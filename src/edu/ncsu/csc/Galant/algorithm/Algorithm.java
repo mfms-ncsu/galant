@@ -113,6 +113,14 @@ public abstract class Algorithm implements Runnable {
 
     public Graph getGraph() { return this.graph; }
 
+    /**
+     * throws an exception if the element is null or not in the current scope
+     */
+    public void checkGraphElement(GraphElement ge) throws GalantException {
+        if ( ge == null || ! ge.inScope() )
+            throw new GalantException("Nonexistent node or edge " + ge);
+    }
+
     public class NodeList extends ArrayList<Node> {
     }
 
@@ -621,7 +629,8 @@ public abstract class Algorithm implements Runnable {
     }
 
     /** @see edu.ncsu.csc.Galant.graph.component.Graph#deleteNode(Node) */
-    public void deleteNode(Node n) throws Terminate {
+    public void deleteNode(Node n) throws Terminate, GalantException {
+        checkGraphElement(n);
         graph.deleteNode(n);
     }
 
@@ -779,4 +788,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2016 10 03 at 13:14:25 GMT]
+//  [Last modified: 2016 10 08 at 15:40:43 GMT]

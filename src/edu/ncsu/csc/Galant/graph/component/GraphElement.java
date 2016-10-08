@@ -86,13 +86,17 @@ public class GraphElement implements Comparable<GraphElement> {
 
     /**
      * @return The last state on the list of states. This is the default for
-     * retrieving information about any attribute.
+     * retrieving information about any attribute. If no latest state exists
+     * a "blank" one with all attributes = null is returned.
      */
     public GraphElementState latestState() {
         LogHelper.enterMethod(getClass(), "latestState, states = " + states);
         GraphElementState state = null;
         if ( states.size() != 0 ) {
             state = states.get(states.size() - 1);
+        }
+        else {
+            state = new GraphElementState();
         }
         LogHelper.exitMethod(getClass(), "latestState, state = " + state);
         return state; 
@@ -170,7 +174,6 @@ public class GraphElement implements Comparable<GraphElement> {
 	}
 	public Integer getInteger(String key) {
         GraphElementState state = latestState();
-        if ( state == null ) return null;
 		return state.getAttributes().getInteger(key);
 	}
 	public Integer getInteger(int state, String key) {
@@ -188,7 +191,6 @@ public class GraphElement implements Comparable<GraphElement> {
 	}
 	public Double getDouble(String key) {
         GraphElementState state = latestState();
-        if ( state == null ) return null;
 		return state.getAttributes().getDouble(key);
 	}
 	public Double getDouble(int state, String key) {
@@ -225,7 +227,6 @@ public class GraphElement implements Comparable<GraphElement> {
      */
 	public Boolean getBoolean(String key) {
         GraphElementState state = latestState();
-        if ( state == null ) return false;
 		return state.getAttributes().getBoolean(key);
 	}
 	public Boolean getBoolean(int state, String key) {
@@ -252,7 +253,6 @@ public class GraphElement implements Comparable<GraphElement> {
 	}
 	public String getString(String key) {
         GraphElementState state = latestState();
-        if ( state == null ) return null;
 		return state.getAttributes().getString(key);
 	}
 	public String getString(int state, String key) {
@@ -518,7 +518,6 @@ public class GraphElement implements Comparable<GraphElement> {
      */
     public String xmlString() {
         GraphElementState elementState = latestState();
-        if ( elementState == null ) return "";
         return elementState.xmlString();
     }
 
@@ -529,7 +528,6 @@ public class GraphElement implements Comparable<GraphElement> {
      */
     public String attributesWithoutPosition() {
         GraphElementState elementState = latestState();
-        if ( elementState == null ) return "";
         return elementState.attributesWithoutPosition();
     }
 
@@ -539,7 +537,6 @@ public class GraphElement implements Comparable<GraphElement> {
      */
     public String attributesWithoutId() {
         GraphElementState elementState = latestState();
-        if ( elementState == null ) return "";
         return elementState.attributesWithoutId();
     }
 
@@ -583,4 +580,4 @@ public class GraphElement implements Comparable<GraphElement> {
 	}
 }
 
-//  [Last modified: 2016 06 21 at 16:49:17 GMT]
+//  [Last modified: 2016 10 08 at 17:07:33 GMT]

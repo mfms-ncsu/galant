@@ -5,10 +5,6 @@
 
 algorithm {
     Node start = getStartNode();
-    for_edges ( e ) {
-        print(e);
-        if ( isIncident(e, start) ) highlight(e);
-    }
     NodeSet nodeSet = new NodeSet(neighbors(start));
     for ( Node v : nodeSet ) {
         print(v);
@@ -17,6 +13,14 @@ algorithm {
     // this part tests selection within a set
     Node neighbor = getNode("neighbor of " + id(start) + "?", nodeSet, "not a neighbor");
     highlight(neighbor);
+    EdgeSet edgeSet = new EdgeSet(edges(start));
+    for ( Edge e: edgeSet ) {
+        print(e);
+        color(e, BLUE);
+    }
+    Edge incident = getEdge("edge incident on " + id(start) + "?", edgeSet,
+                            "not incident");
+    highlight(incident);
 }
 
-//  [Last modified: 2016 09 29 at 16:16:41 GMT]
+//  [Last modified: 2016 10 10 at 21:01:00 GMT]

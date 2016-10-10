@@ -220,10 +220,8 @@ public class Graph {
     /**
      * sets the selected edge; called from EdgeSelectionDialog
      */
-    public void setSelectedEdge(Node source, Node target)
-        throws GalantException
-    {
-        selectedEdge = getEdge(source, target);
+    public void setSelectedEdge(Edge edge) {
+        selectedEdge = edge;
     }
 
     /**
@@ -233,6 +231,24 @@ public class Graph {
     public Edge getEdge(String prompt) throws Terminate {
         dispatch.startStepIfRunning();
         EdgeSelectionDialog dialog = new EdgeSelectionDialog(prompt);
+        dispatch.pauseExecutionIfRunning();
+        dialog = null;          // to keep window from lingering when
+                                // execution is terminated
+        return selectedEdge;
+    }
+
+    /**
+     * @param prompt a message displayed in the edge selection dialog popup
+     * @param restrictedSet the set from which the edge should be selected
+     * @param errorMessage the message to be displayed if edge is not in
+     * restrictedSet
+     * @return a edge selected via a dialog during algorithm execution
+     */
+    public Edge getEdge(String prompt, EdgeSet restrictedSet, String errorMessage)
+        throws Terminate {
+        dispatch.startStepIfRunning();
+        EdgeSelectionDialog dialog 
+            = new EdgeSelectionDialog(prompt, restrictedSet, errorMessage);
         dispatch.pauseExecutionIfRunning();
         dialog = null;          // to keep window from lingering when
                                 // execution is terminated
@@ -1275,4 +1291,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2016 10 08 at 14:10:33 GMT]
+//  [Last modified: 2016 10 10 at 21:05:24 GMT]

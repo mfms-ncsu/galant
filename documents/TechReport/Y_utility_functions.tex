@@ -36,7 +36,7 @@
     if no node with that id exists,
     an error popup is displayed and the user is prompted again
     \\ \hline
-    \textsf{Node getEdge(String message)}
+    \textsf{Edge getEdge(String message)}
     &
     pops up a window with the given message and prompts the user to enter the
     identifiers of two nodes, the endpoints of an edge, which is returned;
@@ -45,17 +45,40 @@
     an error popup is displayed and the user is prompted again
     \\ \hline
     \shortstack[l] {
+      \mbox{}
+      \\[\smallskipamount]
+      \textsf{Node getNode(String p,} \\
+      \textsf{~~~~~~~~~~~~~~~~~~~NodeSet s,} \\
+      \textsf{~~~~~~~~~~~~~~~~~~~String e)} \\
+      \textsf{Edge getEdge(String p,} \\
+      \textsf{~~~~~~~~~~~~~~~~~~~EdgeSet s,} \\
+      \textsf{~~~~~~~~~~~~~~~~~~~String e)} \\
+      \mbox{}
+    }
+    &
+    variations of \textsf{getNode} and \textsf{getEdge}; here \textsf{p}
+    is the prompt, \textsf{s} is the set from which the node or edge must be
+    chosen and \textsf{e} an error message if the node/edge does not belong to the specified set;
+    useful when wanting to specify an adjacent node or an outgoing edge
+    \\ \hline
+    \shortstack[l] {
+      \mbox{}
+      \\[\smallskipamount]
       \textsf{String getString(String message)}\\
       \textsf{Integer getInteger(String message)}\\
-      \textsf{Double getReal(String message)}
+      \textsf{Double getReal(String message)} \\
+      \mbox{}
     }
     &
     analogous to \textsf{getNode} and \textsf{getEdge}; allow algorithm to engage
     in dialog with the user
     \\ \hline
     \shortstack[l] {
+      \mbox{}
+      \\[\smallskipamount]
       \textsf{Integer integer(String s)}\\
-      \textsf{Double real(String s)}
+      \textsf{Double real(String s)} \\
+      \mbox{}
     }
     &
     performs conversion from a string to an integer/double; useful when parsing

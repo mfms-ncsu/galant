@@ -13,19 +13,39 @@ import edu.ncsu.csc.Galant.gui.window.GraphWindow;
 import edu.ncsu.csc.Galant.graph.component.Edge;
 import edu.ncsu.csc.Galant.graph.component.Graph;
 import edu.ncsu.csc.Galant.graph.component.Node;
+import edu.ncsu.csc.Galant.graph.container.EdgeSet;
 
 public class EdgeSelectionDialog extends EdgeSpecificationDialog {
 
+    /** set from which the edge is to be selected, null if there is no
+     * restriction */
+    private EdgeSet restrictedSet = null;
+    /**
+     * error message if selected edge does not belong to restricted set
+     */
+    private String errorMessage = "";
+
     public EdgeSelectionDialog(String prompt) {
         super(GraphWindow.getGraphFrame(), prompt);
+    }
+
+    public EdgeSelectionDialog(String prompt, EdgeSet restrictedSet, String errorMessage) {
+        super(GraphWindow.getGraphFrame(), prompt);
+        this.restrictedSet = restrictedSet;
+        this.errorMessage = errorMessage;
     }
 
     protected void performAction(Node source, Node target) 
         throws Terminate, GalantException {
         GraphDispatch dispatch = GraphDispatch.getInstance();
         Graph graph = dispatch.getWorkingGraph();
-        graph.setSelectedEdge(source, target);
+        Edge selectedEdge = graph.getEdge(source, target);
+        if ( restrictedSet != null
+             && ! restrictedSet.contains(selectedEdge) ) {
+            throw new GalantException(errorMessage);
+        }
+        graph.setSelectedEdge(selectedEdge);
     }
 }
 
-//  [Last modified: 2016 07 03 at 15:58:10 GMT]
+//  [Last modified: 2016 10 10 at 20:55:15 GMT]

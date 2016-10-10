@@ -574,6 +574,18 @@ public abstract class Algorithm implements Runnable {
     }
 
     /**
+     * @param prompt a message displayed in the edge selection dialog popup
+     * @param restrictedSet the set from which the edge should be selected
+     * @param errorMessage the message to be displayed if edge is not in
+     * restrictedSet
+     * @return a edge selected via a dialog during algorithm execution
+     */
+    public Edge getEdge(String prompt, EdgeSet restrictedSet, String errorMessage)
+        throws Terminate {
+        return graph.getEdge(prompt, restrictedSet, errorMessage);
+    }
+
+    /**
      * @return a node specified by the user in response to the prompt
      */
     public Node getNode(String prompt) throws Terminate {
@@ -788,4 +800,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2016 10 08 at 15:40:43 GMT]
+//  [Last modified: 2016 10 10 at 21:03:53 GMT]

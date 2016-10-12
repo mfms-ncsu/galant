@@ -40,12 +40,14 @@ algorithm {
     int cover_size = 0;
     while ( ! pq.isEmpty() ) {
         Node v = pq.removeMin();
-        if ( weight(v) == 0 ) continue;
+        if ( weight(v) == 0 ) break;
         highlight(v);
         beginStep();
         for_adjacent(v, e, w) {
             color(e, GREEN);
-            setWeight(w, weight(w) + 1);
+            if ( pq.contains(w) ) {
+                pq.decreaseKey(w, weight(w) + 1);
+            }
         }
         endStep();
         beginStep();
@@ -62,4 +64,4 @@ algorithm {
     endStep();
 }
 
-//  [Last modified: 2016 10 08 at 22:49:58 GMT]
+//  [Last modified: 2016 10 11 at 19:21:21 GMT]

@@ -12,7 +12,7 @@ algorithm {
     beginStep();
     for_nodes(node) {
         setWeight(node, INFINITY);
-        pq.add(node);
+        pq.insert(node);
     }
     Node v = getStartNode();
     setWeight(v, 0);
@@ -42,4 +42,4 @@ algorithm {
     } // stop when priority queue is empty
 } // end, algorithm
 
-//  [Last modified: 2016 10 11 at 19:08:28 GMT]
+//  [Last modified: 2016 10 14 at 19:06:56 GMT]

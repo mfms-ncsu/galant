@@ -1,0 +1,20 @@
+Release notes for Galant, most recent first.
+
+v5.4
+
+Animator
+
+- functions getNode(String prompt, NodeSet set, String errorMessage) and the
+  corresponding one for edges, to prompt the user for a node/edge and require
+  that it be in a specified set; the errorMessage is reported if the
+  node/edge is not in the set
+
+- new NodePriorityQueue and EdgePriorityQueue methods as well as ability to
+  define a max heap using an optional boolean argument; these include
+  removeMax, removeBest and changeKey (as an alternative to decreaseKey)
+
+- more protection from Java null pointer and other low level exceptions
+
+Developer
+
+- put NodePriorityQueue and EdgePriorityQueue into the graph.container package

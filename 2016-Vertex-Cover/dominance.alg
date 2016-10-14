@@ -16,7 +16,7 @@ function queueAllNodes() {
     beginStep();
     for_nodes( v ) {
         set(v, "onQ");
-        pq.add(v);
+        pq.insert(v, degree(v));
     }
     endStep();
 }
@@ -61,12 +61,6 @@ algorithm {
      */
     hideEdgeWeights();
     cover = new NodeSet();
-    beginStep();
-    for_nodes( v ) {
-        setWeight(v, degree(v));
-    }
-    endStep();
-
     queueAllNodes();
     while ( ! pq.isEmpty() ) {
         Node v = pq.removeMin();
@@ -96,7 +90,7 @@ algorithm {
                         if ( x.is("onQ") && weight(x) > 0 )
                             pq.decreaseKey(x, weight(x));
                         else if ( weight(x) > 0 ) { 
-                            pq.add(x);
+                            pq.insert(x);
                             set(x, "onQ");
                         }
                         else {
@@ -122,4 +116,4 @@ algorithm {
     endStep();
 }
 
-//  [Last modified: 2016 09 16 at 18:45:22 GMT]
+//  [Last modified: 2016 10 14 at 19:13:33 GMT]

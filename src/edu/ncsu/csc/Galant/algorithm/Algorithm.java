@@ -46,6 +46,7 @@ import edu.ncsu.csc.Galant.graph.component.Edge;
 import edu.ncsu.csc.Galant.graph.container.NodeSet;
 import edu.ncsu.csc.Galant.graph.container.EdgeSet;
 import edu.ncsu.csc.Galant.graph.container.NodePriorityQueue;
+import edu.ncsu.csc.Galant.graph.container.EdgePriorityQueue;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow.GraphDisplays;
 import edu.ncsu.csc.Galant.gui.util.StringQuery;
@@ -182,30 +183,6 @@ public abstract class Algorithm implements Runnable {
     {}
     public class EdgeStack extends Stack<Edge>
     {}
-
-//     public class NodePriorityQueue extends PriorityQueue<Node> {
-//         public Node removeMin() {
-//             return this.poll();
-//         }
-//         // not efficient, but it shouldn't matter with small graphs
-//         public void decreaseKey(Node v, double newKey) throws Terminate {
-//             this.remove(v);
-//             v.setWeight(newKey);
-//             this.add(v);
-//         }
-//     }
-
-    public class EdgePriorityQueue extends PriorityQueue<Edge> {
-        public Edge removeMin() {
-            return this.poll();
-        }
-        // not efficient, but it shouldn't matter with small graphs
-        public void decreaseKey(Edge e, double newKey) throws Terminate {
-            this.remove(e);
-            e.setWeight(newKey);
-            this.add(e);
-        }
-    }
 
     // Pre-existing queue/stack/priority queue objects
     public NodeQueue nodeQ = new NodeQueue();
@@ -345,11 +322,13 @@ public abstract class Algorithm implements Runnable {
      * accessible to the algorithm program. For more details, see the
      * corresponding methods in class Graph.
      */
-    public int id(Node n) {
+    public int id(Node n) throws GalantException {
+        checkGraphElement(n);
         return n.getId();
     }
 
-    public int id(Edge e) {
+    public int id(Edge e) throws GalantException {
+        checkGraphElement(e);
         return e.getId();
     }
 
@@ -374,22 +353,64 @@ public abstract class Algorithm implements Runnable {
     /**
      * Methods to make syntax friendlier for procedural programmers
      */
-    public void highlight(GraphElement ge) throws Terminate { ge.highlight(); }
-    public void unHighlight(GraphElement ge) throws Terminate { ge.unHighlight(); }
-    public void unhighlight(GraphElement ge) throws Terminate { ge.unHighlight(); }
-    public Boolean highlighted(GraphElement ge) { return ge.isHighlighted(); }
-    public Boolean isHighlighted(GraphElement ge) { return ge.isHighlighted(); }
+    public void highlight(GraphElement ge) throws Terminate, GalantException { 
+        checkGraphElement(ge);
+        ge.highlight();
+    }
+    public void unHighlight(GraphElement ge) throws Terminate, GalantException { 
+        checkGraphElement(ge);
+        ge.unHighlight();
+    }
+    public void unhighlight(GraphElement ge) throws Terminate, GalantException {
+        checkGraphElement(ge);
+        ge.unHighlight();
+    }
+    public Boolean highlighted(GraphElement ge) throws GalantException {
+        checkGraphElement(ge);
+        return ge.isHighlighted();
+    }
+    public Boolean isHighlighted(GraphElement ge) throws GalantException {
+        checkGraphElement(ge);
+        return ge.isHighlighted();
+    }
     /** selected is a synonym for highlighted */
-    public void select(GraphElement ge) throws Terminate { ge.setSelected(true); }
-    public void deselect(GraphElement ge) throws Terminate { ge.setSelected(false); }
-    public Boolean selected(GraphElement ge) { return ge.isSelected(); }
-    public Boolean isSelected(GraphElement ge) { return ge.isSelected(); }
+    public void select(GraphElement ge) throws Terminate, GalantException {
+        checkGraphElement(ge);
+        ge.setSelected(true);
+    }
+    public void deselect(GraphElement ge) throws Terminate, GalantException { 
+        checkGraphElement(ge);
+        ge.setSelected(false);
+    }
+    public Boolean selected(GraphElement ge) throws GalantException {
+        checkGraphElement(ge);
+        return ge.isSelected();
+    }
+    public Boolean isSelected(GraphElement ge) throws GalantException {
+        checkGraphElement(ge);
+        return ge.isSelected();
+    }
 
-    public void mark(Node n) throws Terminate { n.mark(); }
-    public void unMark(Node n) throws Terminate { n.unMark(); }
-    public void unmark(Node n) throws Terminate { n.unMark(); }
-    public Boolean marked(Node n) { return n.isMarked(); }
-    public Boolean isMarked(Node n) { return n.isMarked(); }
+    public void mark(Node n) throws Terminate, GalantException { 
+        checkGraphElement(n);
+        n.mark();
+    }
+    public void unMark(Node n) throws Terminate, GalantException {
+        checkGraphElement(n);
+        n.unMark();
+    }
+    public void unmark(Node n) throws Terminate, GalantException {
+        checkGraphElement(n);
+        n.unMark();
+    }
+    public Boolean marked(Node n) throws GalantException {
+        checkGraphElement(n);
+        return n.isMarked();
+    }
+    public Boolean isMarked(Node n) throws GalantException {
+        checkGraphElement(n);
+        return n.isMarked();
+    }
 
     public Double weight(GraphElement ge) throws GalantException {
         checkGraphElement(ge);
@@ -398,10 +419,14 @@ public abstract class Algorithm implements Runnable {
             throw new GalantException("node or edge has no weight: " + ge);
         return ge.getWeight();
     }
-    public void setWeight(GraphElement ge, double weight) throws Terminate {
+    public void setWeight(GraphElement ge, double weight) throws Terminate, GalantException {
+        checkGraphElement(ge);
         ge.setWeight(weight);
     }
-    public String label(GraphElement ge) { return ge.getLabel(); }
+    public String label(GraphElement ge) throws GalantException {
+        checkGraphElement(ge);
+        return ge.getLabel();
+    }
     /**
      * @todo It would be useful to have a class AttributeParser with a method
      * parse(String) that returns an Integer, Double, Boolean or String,
@@ -409,78 +434,194 @@ public abstract class Algorithm implements Runnable {
      * these (attempted in the given order). The mechanism already exists in
      * GraphMLParser. The new class should probably live in graph/component.
      */
-    public void setLabel(GraphElement ge, Object s) throws Terminate {
+    public void setLabel(GraphElement ge, Object s) throws Terminate, GalantException {
+        checkGraphElement(ge);
         ge.setLabel("" + s);
     }
-    public void label(GraphElement ge, Object s) throws Terminate {
+    public void label(GraphElement ge, Object s) throws Terminate, GalantException {
+        checkGraphElement(ge);
         ge.setLabel("" + s);
     }
 
-    public Node source(Edge e) { return e.getSourceNode(); }
-    public Node target(Edge e) { return e.getTargetNode(); }
+    public Node source(Edge e) throws GalantException { 
+        checkGraphElement(e);
+        return e.getSourceNode();
+    }
+    public Node target(Edge e) throws GalantException { 
+        checkGraphElement(e);
+        return e.getTargetNode();
+    }
 
-    public void set(GraphElement ge, String s) throws Terminate { ge.set(s); }
-    public void clear(GraphElement ge, String s) throws Terminate { ge.clear(s); }
-    public Boolean is(GraphElement ge, String s) { return ge.is(s); }
+    public void set(GraphElement ge, String s) throws Terminate, GalantException {
+        checkGraphElement(ge);
+        ge.set(s);
+    }
+    public void clear(GraphElement ge, String s) throws Terminate, GalantException {
+        checkGraphElement(ge);
+        ge.clear(s);
+    }
+    public Boolean is(GraphElement ge, String s) throws GalantException {
+        checkGraphElement(ge);
+        return ge.is(s);
+    }
 
-    public void set(GraphElement ge, String s, Integer i) throws Terminate {
+    public void set(GraphElement ge, String s, Integer i) throws Terminate, GalantException {
+        checkGraphElement(ge);
         ge.set(s, i);
     }
-    public void set(GraphElement ge, String s, Double d) throws Terminate {
+    public void set(GraphElement ge, String s, Double d) throws Terminate, GalantException {
+        checkGraphElement(ge);
         ge.set(s, d);
     }
-    public void set(GraphElement ge, String key, String value) throws Terminate {
+    public void set(GraphElement ge, String key, String value) throws Terminate, GalantException {
+        checkGraphElement(ge);
         ge.set(key, value);
     }
-    public Integer getInteger(GraphElement ge, String s) { return ge.getInteger(s); }
-    public Double getDouble(GraphElement ge, String s) { return ge.getDouble(s); }
-    public String getString(GraphElement ge, String s) { return ge.getString(s); }
+    public Integer getInteger(GraphElement ge, String s) throws GalantException { 
+        checkGraphElement(ge);
+        return ge.getInteger(s);
+    }
+    public Double getDouble(GraphElement ge, String s) throws GalantException {
+        checkGraphElement(ge);
+        return ge.getDouble(s);
+    }
+    public String getString(GraphElement ge, String s) throws GalantException {
+        checkGraphElement(ge);
+        return ge.getString(s);
+    }
 
-    public void color(GraphElement ge, String color) throws Terminate { ge.setColor(color); }
-    public void unColor(GraphElement ge) throws Terminate { ge.clearColor(); }
-    public void uncolor(GraphElement ge) throws Terminate { ge.clearColor(); }
-    public String color(GraphElement ge) { return ge.getColor(); }
+    public void color(GraphElement ge, String color) throws Terminate, GalantException {
+        checkGraphElement(ge);
+        ge.setColor(color);
+    }
+    public void unColor(GraphElement ge) throws Terminate, GalantException {
+        checkGraphElement(ge);
+        ge.clearColor();
+    }
+    public void uncolor(GraphElement ge) throws Terminate, GalantException {
+        checkGraphElement(ge);
+        ge.clearColor();
+    }
+    public String color(GraphElement ge) throws GalantException {
+        checkGraphElement(ge);
+        return ge.getColor();
+    }
 
     /** hiding of nodes differs - all incident edges must be hidden as well */
-    public void hide(Node v) throws Terminate { v.hide(); }
-    public void hide(Edge e) throws Terminate { e.hide(); }
-    public void show(Node v) throws Terminate { v.show(); }
-    public void show(Edge e) throws Terminate { e.show(); }
+    public void hide(Node v) throws Terminate, GalantException { 
+        checkGraphElement(v);
+        v.hide();
+    }
+    public void hide(Edge e) throws Terminate, GalantException {
+        checkGraphElement(e);
+        e.hide();
+    }
+    public void show(Node v) throws Terminate, GalantException {
+        checkGraphElement(v);
+        v.show();
+    }
+    public void show(Edge e) throws Terminate, GalantException {
+        checkGraphElement(e);
+        e.show();
+    }
 
-    public Boolean isHidden(GraphElement ge) { return ge.isHidden(getState()); }
-    public Boolean isVisible(GraphElement ge) { return ! ge.isHidden(getState()); }
-    public Boolean hidden(GraphElement ge) { return ge.isHidden(getState()); }
-    public Boolean visible(GraphElement ge) { return ! ge.isHidden(getState()); }
-    public void hideLabel(GraphElement ge) throws Terminate { ge.hideLabel(); }
-    public void showLabel(GraphElement ge) throws Terminate { ge.showLabel(); }
-    public Boolean labelIsHidden(GraphElement ge) {
+    public Boolean isHidden(GraphElement ge) throws GalantException {
+        checkGraphElement(ge);
+        return ge.isHidden();
+    }
+    public Boolean isVisible(GraphElement ge) throws GalantException {
+        checkGraphElement(ge);
+        return ! ge.isHidden();
+    }
+    public Boolean hidden(GraphElement ge) throws GalantException {
+        checkGraphElement(ge);
+        return ge.isHidden();
+    }
+    public Boolean visible(GraphElement ge) throws GalantException { 
+        checkGraphElement(ge);
+        return ! ge.isHidden();
+    }
+    public void hideLabel(GraphElement ge) throws Terminate, GalantException {
+        checkGraphElement(ge);
+        ge.hideLabel();
+    }
+    public void showLabel(GraphElement ge) throws Terminate, GalantException {
+        checkGraphElement(ge);
+        ge.showLabel();
+    }
+    public Boolean labelIsHidden(GraphElement ge) throws GalantException {
+        checkGraphElement(ge);
         return ge.labelIsHidden(getState());
     }
-    public Boolean labelIsVisible(GraphElement ge) { return ! labelIsHidden(ge); }
-    public void setLabel(GraphElement ge, String label) throws Terminate {
+    public Boolean labelIsVisible(GraphElement ge) throws GalantException {
+        checkGraphElement(ge);
+        return ! labelIsHidden(ge);
+    }
+    public void setLabel(GraphElement ge, String label) throws Terminate, GalantException {
+        checkGraphElement(ge);
         ge.setLabel(label);
     }
-    public void hideWeight(GraphElement ge) throws Terminate { ge.hideWeight(); }
-    public void showWeight(GraphElement ge) throws Terminate { ge.showWeight(); }
-    public Boolean weightIsHidden(GraphElement ge) {
+    public void hideWeight(GraphElement ge) throws Terminate, GalantException {
+        checkGraphElement(ge);
+        ge.hideWeight();
+    }
+    public void showWeight(GraphElement ge) throws Terminate, GalantException {
+        checkGraphElement(ge);
+        ge.showWeight();
+    }
+    public Boolean weightIsHidden(GraphElement ge) throws GalantException {
+        checkGraphElement(ge);
         return ge.weightIsHidden(getState());
     }
-    public Boolean weightIsVisible(GraphElement ge) { return ! weightIsHidden(ge); }
-    public Integer degree(Node v) { return v.getDegree(); }
-    public Integer indegree(Node v) { return v.getIndegree(); }
-    public Integer outdegree(Node v) { return v.getOutdegree(); }
-    public Node otherEnd(Node v, Edge e) { return v.travel(e); }
-    public Node otherEnd(Edge e, Node v) { return v.travel(e); }
-    public List<Node> neighbors(Node v) { return v.getAdjacentNodes(); }
-    public List<Edge> edges(Node v) { return v.getIncidentEdges(); }
-    public List<Edge> inEdges(Node v) { return v.getIncomingEdges(); }
-    public List<Edge> outEdges(Node v) { return v.getOutgoingEdges(); }
+    public Boolean weightIsVisible(GraphElement ge) throws GalantException {
+        checkGraphElement(ge);
+        return ! weightIsHidden(ge);
+    }
+    public Integer degree(Node v) throws GalantException {
+        checkGraphElement(v);
+        return v.getDegree();
+    }
+    public Integer indegree(Node v) throws GalantException {
+        checkGraphElement(v);
+        return v.getIndegree();
+    }
+    public Integer outdegree(Node v) throws GalantException {
+        checkGraphElement(v);
+        return v.getOutdegree();
+    }
+    public Node otherEnd(Node v, Edge e) throws GalantException {
+        checkGraphElement(v);
+        checkGraphElement(e);
+        return v.travel(e); }
+    public Node otherEnd(Edge e, Node v) throws GalantException {
+        checkGraphElement(v);
+        checkGraphElement(e);
+        return v.travel(e);
+    }
+    public List<Node> neighbors(Node v) throws GalantException {
+        checkGraphElement(v);
+        return v.getAdjacentNodes();
+    }
+    public List<Edge> edges(Node v) throws GalantException {
+        checkGraphElement(v);
+        return v.getIncidentEdges();
+    }
+    public List<Edge> inEdges(Node v) throws GalantException {
+        checkGraphElement(v);
+        return v.getIncomingEdges();
+    }
+    public List<Edge> outEdges(Node v) throws GalantException {
+        checkGraphElement(v);
+        return v.getOutgoingEdges();
+    }
 
     /**
      * @return true if (v,w) is an edge; direction important if the graph is
      * directed
      */
-    public Boolean isEdge(Node v, Node w) {
+    public Boolean isEdge(Node v, Node w) throws GalantException {
+        checkGraphElement(v);
+        checkGraphElement(w);
         List<Edge> incidenceList
             = v.getOutgoingEdges();
         for ( Edge e : incidenceList ) {
@@ -494,7 +635,9 @@ public abstract class Algorithm implements Runnable {
     /**
      * @return true if edge e is incident on v
      */
-    public Boolean isIncident(Edge e, Node v) {
+    public Boolean isIncident(Edge e, Node v) throws GalantException {
+        checkGraphElement(v);
+        checkGraphElement(e);
         EdgeSet incidentEdges = new EdgeSet(v.getIncidentEdges());
         return incidentEdges.contains(e);
     }
@@ -513,13 +656,30 @@ public abstract class Algorithm implements Runnable {
     /**
      * Procedural versions of getters and setters for node positions
      */
-    public Integer getX(Node v) { return v.getX(); }
-    public Integer getY(Node v) { return v.getY(); }
-    public Point getPosition(Node v) { return v.getPosition(); }
-    public void setX(Node v, int x) throws Terminate { v.setX(x); }
-    public void setY(Node v, int y) throws Terminate { v.setY(y); }
-    public void setPosition(Node v, int x, int y)
-        throws Terminate { v.setPosition(x, y); }
+    public Integer getX(Node v) throws GalantException { 
+        checkGraphElement(v);
+        return v.getX();
+    }
+    public Integer getY(Node v) throws GalantException {
+        checkGraphElement(v);
+        return v.getY();
+    }
+    public Point getPosition(Node v) throws GalantException {
+        checkGraphElement(v);
+        return v.getPosition();
+    }
+    public void setX(Node v, int x) throws Terminate, GalantException {
+        checkGraphElement(v);
+        v.setX(x);
+    }
+    public void setY(Node v, int y) throws Terminate, GalantException {
+        checkGraphElement(v);
+        v.setY(y);
+    }
+    public void setPosition(Node v, int x, int y) throws Terminate, GalantException {
+        checkGraphElement(v);
+        v.setPosition(x, y);
+    }
 
     /**
      * Displays a message during algorithm execution; the message could be
@@ -807,4 +967,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2016 10 14 at 17:36:32 GMT]
+//  [Last modified: 2016 10 14 at 20:46:54 GMT]

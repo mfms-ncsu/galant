@@ -309,12 +309,18 @@ public class GraphElement implements Comparable<GraphElement> {
 	}
 	
     /**
+     * @return true if this element is (logically) hidden in the current
+     * algorithm state - useful for algorithm to "know" which nodes/edges are
+     * visible and which are not
+     */
+    public Boolean isHidden() {
+        return getBoolean(HIDDEN);
+    }
+    /**
      * @return true if this element is hidden, i.e., will not be drawn on the
      * graph panel.
      */
-    public Boolean isHidden(int state) {
-        return getBoolean(state, HIDDEN);
-    }
+    public Boolean isHidden(int state) { return getBoolean(state, HIDDEN); }
     public void hide() throws Terminate { set(HIDDEN); }
     public void show() throws Terminate { clear(HIDDEN); }
 
@@ -597,4 +603,4 @@ public class GraphElement implements Comparable<GraphElement> {
     }
 }
 
-//  [Last modified: 2016 10 14 at 11:48:20 GMT]
+//  [Last modified: 2016 10 14 at 20:45:13 GMT]

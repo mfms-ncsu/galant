@@ -2,6 +2,7 @@ package edu.ncsu.csc.Galant.graph.component;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.GraphDispatch;
@@ -578,6 +579,22 @@ public class GraphElement implements Comparable<GraphElement> {
         Double otherDouble = new Double( other.getWeight() );
 		return thisDouble.compareTo( otherDouble );
 	}
+
+    /**
+     * @return a comparator that compares two graph elements based on the
+     * designated attribute; the attribute must have a Double value
+     */
+    public static Comparator<GraphElement> getComparator(String attribute) {
+        return new Comparator<GraphElement>() {
+            public int compare(GraphElement ge_1, GraphElement ge_2) {
+                Double value_1 = ge_1.getDouble(attribute);
+                Double value_2 = ge_2.getDouble(attribute);
+                if ( value_1 > value_2 ) return 1;
+                else if ( value_2 > value_1 ) return -1;
+                else return 0;
+            }
+        };
+    }
 }
 
-//  [Last modified: 2016 10 08 at 17:07:33 GMT]
+//  [Last modified: 2016 10 14 at 11:48:20 GMT]

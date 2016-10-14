@@ -8,14 +8,18 @@
 NodePriorityQueue pq;
 NodeSet cover;
 
+/**
+ * Inserts all nodes into the queue using degree as weight; the queue is a
+ * max heap
+ */
 function queueAllNodes() {
     /** @todo for some reason, the constructor that allows a priority queue
      * to be initialized from a collection is not recognized. */
-    pq = new NodePriorityQueue();
+    pq = new NodePriorityQueue(true);
     beginStep();
     for_nodes( v ) {
-        set(v, "onQ");
-        pq.add(v);
+        setWeight(v, degree(v));
+        pq.insert(v);
     }
     endStep();
 }
@@ -31,22 +35,17 @@ function checkCover() {
 algorithm {
     hideEdgeWeights();
     cover = new NodeSet();
-    beginStep();
-    for_nodes( v ) {
-        setWeight(v, -degree(v));
-    }
-    endStep();
     queueAllNodes();
     int cover_size = 0;
     while ( ! pq.isEmpty() ) {
-        Node v = pq.removeMin();
+        Node v = pq.removeMax();
         if ( weight(v) == 0 ) break;
         highlight(v);
         beginStep();
         for_adjacent(v, e, w) {
             color(e, GREEN);
             if ( pq.contains(w) ) {
-                pq.decreaseKey(w, weight(w) + 1);
+                pq.changeKey(w, weight(w) - 1);
             }
         }
         endStep();
@@ -64,4 +63,4 @@ algorithm {
     endStep();
 }
 
-//  [Last modified: 2016 10 11 at 19:21:21 GMT]
+//  [Last modified: 2016 10 14 at 17:48:11 GMT]

@@ -45,6 +45,7 @@ import edu.ncsu.csc.Galant.graph.component.Node;
 import edu.ncsu.csc.Galant.graph.component.Edge;
 import edu.ncsu.csc.Galant.graph.container.NodeSet;
 import edu.ncsu.csc.Galant.graph.container.EdgeSet;
+import edu.ncsu.csc.Galant.graph.container.NodePriorityQueue;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow.GraphDisplays;
 import edu.ncsu.csc.Galant.gui.util.StringQuery;
@@ -182,17 +183,17 @@ public abstract class Algorithm implements Runnable {
     public class EdgeStack extends Stack<Edge>
     {}
 
-    public class NodePriorityQueue extends PriorityQueue<Node> {
-        public Node removeMin() {
-            return this.poll();
-        }
-        // not efficient, but it shouldn't matter with small graphs
-        public void decreaseKey(Node v, double newKey) throws Terminate {
-            this.remove(v);
-            v.setWeight(newKey);
-            this.add(v);
-        }
-    }
+//     public class NodePriorityQueue extends PriorityQueue<Node> {
+//         public Node removeMin() {
+//             return this.poll();
+//         }
+//         // not efficient, but it shouldn't matter with small graphs
+//         public void decreaseKey(Node v, double newKey) throws Terminate {
+//             this.remove(v);
+//             v.setWeight(newKey);
+//             this.add(v);
+//         }
+//     }
 
     public class EdgePriorityQueue extends PriorityQueue<Edge> {
         public Edge removeMin() {
@@ -390,7 +391,13 @@ public abstract class Algorithm implements Runnable {
     public Boolean marked(Node n) { return n.isMarked(); }
     public Boolean isMarked(Node n) { return n.isMarked(); }
 
-    public Double weight(GraphElement ge) { return ge.getWeight(); }
+    public Double weight(GraphElement ge) throws GalantException {
+        checkGraphElement(ge);
+        Double weight = ge.getWeight();
+        if ( weight == null )
+            throw new GalantException("node or edge has no weight: " + ge);
+        return ge.getWeight();
+    }
     public void setWeight(GraphElement ge, double weight) throws Terminate {
         ge.setWeight(weight);
     }
@@ -800,4 +807,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2016 10 10 at 21:03:53 GMT]
+//  [Last modified: 2016 10 14 at 17:36:32 GMT]

@@ -42,11 +42,11 @@ function displayCrossings() {
     int crossings = layeredGraph.numberOfCrossings();
     layeredGraph.displayPositions();
     layeredGraph.displayMarks();
-    graph.writeMessage( "pass = " + pass
-                        + ", iteration = " + iteration
-                        + ", crossings = " + crossings
-                        + ", edge_crossings = " + minEdgeCrossings
-                        );
+    display( "pass = " + pass
+             + ", iteration = " + iteration
+             + ", crossings = " + crossings
+             + ", edge_crossings = " + minEdgeCrossings
+             );
 }
 
 function edgeSift( Node x, Edge maxCrossingsEdge ) {
@@ -97,7 +97,7 @@ algorithm {
 
     while ( iteration < MAX_ITERATIONS ) {
         pass++;
-        if ( pass % 100 == 0 ) System.out.println( "pass = " + pass );
+        if ( pass % 100 == 0 ) print( "pass = " + pass );
         layeredGraph.clearMarks();
         maxCrossingsEdge = layeredGraph.getMaxCrossingsEdge( true );
         while ( maxCrossingsEdge != null && iteration < MAX_ITERATIONS ) {
@@ -142,14 +142,14 @@ algorithm {
     endStep();
 
     layeredGraph.displaySavedPositions();
-    graph.writeMessage( "min pass = " + minPass
-                        + ", min iteration = " + minIteration
-                        + ", min crossings = " + minCrossings 
-                        );
+    display( "min pass = " + minPass
+             + ", min iteration = " + minIteration
+             + ", min crossings = " + minCrossings 
+             );
 
-    System.out.println( "Minimum crossings = " + minCrossings
+    print( "Minimum crossings = " + minCrossings
                         + " at iteration " + minIteration );
 
-    System.out.println( "Minimum edge crossings = " + minEdgeCrossings );
+    print( "Minimum edge crossings = " + minEdgeCrossings );
 }
-//  [Last modified: 2015 10 07 at 17:52:06 GMT]
+//  [Last modified: 2016 10 16 at 15:32:29 GMT]

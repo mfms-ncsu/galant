@@ -29,10 +29,10 @@ int MAX_ITERATIONS = 100;
  */
 function displayMessage() {
     int crossings = layeredGraph.numberOfCrossings();
-    graph.writeMessage( "pass = " + pass
-                       + ", iteration = " + iteration
-                       + ", crossings = " + crossings 
-                        );
+    display( "pass = " + pass
+             + ", iteration = " + iteration
+             + ", crossings = " + crossings 
+             );
 }
 
 /**
@@ -170,7 +170,7 @@ algorithm {
     layeredGraph.sortByIncreasingDegree( nodes );
     while ( iteration <= MAX_ITERATIONS ) {
         if ( pass % 1000 == 0 )
-            System.out.println( "pass = " + pass );
+            print( "pass = " + pass );
         beginStep();
         displayMessage();
         layeredGraph.clearMarks();
@@ -189,13 +189,13 @@ algorithm {
     }
 
     layeredGraph.displaySavedPositions();
-    graph.writeMessage( "min iteration = " + minIteration
-                        + ", min crossings = " + minCrossings 
-                        );
+    display( "min iteration = " + minIteration
+             + ", min crossings = " + minCrossings 
+             );
 
-    System.out.println( "Minimum crossings = " + minCrossings
-                        + " at iteration " + minIteration );
+    print( "Minimum crossings = " + minCrossings
+           + " at iteration " + minIteration );
 
 }
 
-//  [Last modified: 2015 06 30 at 19:45:05 GMT]
+//  [Last modified: 2016 10 16 at 15:34:31 GMT]

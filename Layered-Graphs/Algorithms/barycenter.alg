@@ -26,7 +26,7 @@ LayeredGraph layeredGraph;
  */
 function displayMessage( int layer, String sweepDirection ) {
     int crossings = layeredGraph.numberOfCrossings();
-    graph.writeMessage( "layer = " + layer
+    display( "layer = " + layer
                         + ", pass = " + pass
                         + ", direction = " + sweepDirection
                         + ", iteration = " + iteration
@@ -132,7 +132,7 @@ algorithm {
 
     beginStep();
     layeredGraph.setWeightsToPositions();
-    graph.writeMessage( "Crossings = " + layeredGraph.numberOfCrossings() );
+    display( "Crossings = " + layeredGraph.numberOfCrossings() );
     endStep();
 
     int numLayers = layeredGraph.numberOfLayers();
@@ -144,20 +144,20 @@ algorithm {
         /** what follows is a single pass */
         pass++;
         if ( pass % 1000 == 0 )
-            System.out.println( "pass = " + pass );
+            print( "pass = " + pass );
         upSweep( numLayers );
         downSweep( numLayers );
     }
 
     layeredGraph.displaySavedPositions();
-    graph.writeMessage( "min pass = " + minPass
+    display( "min pass = " + minPass
                         + ", min iteration = " + minIteration
                         + ", min crossings = " + minCrossings 
                         );
-    System.out.println( "min pass = " + minPass
-                        + ", min iteration = " + minIteration
-                        + ", min crossings = " + minCrossings 
-                        );
+    print( "min pass = " + minPass
+           + ", min iteration = " + minIteration
+           + ", min crossings = " + minCrossings 
+           );
 }
 
-//  [Last modified: 2015 06 30 at 19:24:41 GMT]
+//  [Last modified: 2016 10 16 at 15:35:08 GMT]

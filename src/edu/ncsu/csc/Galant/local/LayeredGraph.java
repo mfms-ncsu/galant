@@ -232,10 +232,8 @@ class Layer {
      * sorts the nodes by their weight (as assigned by Galant code)
      */
     public void sort() {
-        System.out.println("-> sort: " + nodes);
         Collections.sort(nodes);
         updatePositions();
-        System.out.println("<- sort: " + nodes);
     }
 
     /**
@@ -488,7 +486,6 @@ public class LayeredGraph {
         for ( Node u: graph.getNodes() ) {
             int layer = u.getLayer();
             int position = u.getPositionInLayer();
-            System.out.println( "  adding node " + u );
             addNode( u, layer, position );
             layerOfNode[ u.getId() ] = layer;
             positionOfNode[ u.getId() ] = position;
@@ -1601,4 +1598,4 @@ public class LayeredGraph {
 
 } // end, class LayeredGraph
 
-//  [Last modified: 2016 02 10 at 19:56:57 GMT]
+//  [Last modified: 2016 10 16 at 15:30:57 GMT]

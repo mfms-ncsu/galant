@@ -232,7 +232,8 @@ public class GraphElement implements Comparable<GraphElement> {
 	}
 	public Boolean getBoolean(int state, String key) {
         GraphElementState validState = getLatestValidState(state);
-		return validState == null ? false : validState.getAttributes().getBoolean(key);
+		return validState == null ? false
+            : validState.getAttributes().getBoolean(key);
 	}
 
     /**
@@ -603,4 +604,4 @@ public class GraphElement implements Comparable<GraphElement> {
     }
 }
 
-//  [Last modified: 2016 10 14 at 20:45:13 GMT]
+//  [Last modified: 2016 10 16 at 15:44:06 GMT]

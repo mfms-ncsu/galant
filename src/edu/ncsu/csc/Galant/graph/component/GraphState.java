@@ -34,9 +34,7 @@ public class GraphState {
     public GraphState() {
         this.dispatch = GraphDispatch.getInstance();
         this.state = dispatch.getAlgorithmState();
-        LogHelper.logDebug("-> GraphState(), state = " + state);
         this.attributes = new AttributeList();
-        LogHelper.logDebug("<- GraphState, State = " + this);
     }
 
     /**
@@ -47,9 +45,7 @@ public class GraphState {
     public GraphState(GraphState State) {
         this.dispatch = GraphDispatch.getInstance();
         this.state = dispatch.getAlgorithmState();
-        LogHelper.logDebug("-> GraphState(copy), state = " + state);
         this.attributes = State.getAttributes().duplicate();
-        LogHelper.logDebug("<- GraphState(copy), " + this);
     }
 
     /************** Integer attributes ***************/
@@ -120,4 +116,4 @@ public class GraphState {
     }
 }
 
-//  [Last modified: 2015 12 23 at 17:17:41 GMT]
+//  [Last modified: 2016 10 17 at 12:52:59 GMT]

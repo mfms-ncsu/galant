@@ -472,7 +472,6 @@ public class LayeredGraph {
      */
     public LayeredGraph( Graph graph ) 
     {
-        LogHelper.enterConstructor( getClass() );
         this.graph = graph;
         layers = new ArrayList<Layer>();
         positionOfNode = new int[ graph.getNodes().size() ];
@@ -501,7 +500,6 @@ public class LayeredGraph {
         for ( int layer = 0; layer < layers.size() - 1; layer++ ) {
             updateCrossingsInChannel( layer );
         }
-        LogHelper.exitConstructor( getClass() );
     }
 
     /**
@@ -1252,7 +1250,6 @@ public class LayeredGraph {
      */
     public Edge getMaxCrossingsEdge( boolean roundRobin )
     {
-        LogHelper.enterMethod( getClass(), "getMaxCrossingsEdge( " + roundRobin + " )" );
         if ( ! roundRobin ) return getMaxCrossingsEdge();
         int maxEdgeIndex = -1;
         Edge maxEdge = null;
@@ -1262,10 +1259,6 @@ public class LayeredGraph {
         i = i % edgeList.size();
         while ( i != indexOfLastReturned ) {
             Edge e = edgeList.get( i );
-            LogHelper.logDebug( " maxEdge loop: i = " + i
-                                + ", lastIndex = " + indexOfLastReturned );
-            LogHelper.logDebug( "    e = " + e );
-            LogHelper.logDebug( "    maxEdge = " + maxEdge );
             if ( ( ! isMarked[ e.getSourceNode().getId() ]
                    || ! isMarked[ e.getTargetNode().getId() ] )
                  && crossingsOfEdge[ e.getId() ] > maxCrossings ) {
@@ -1278,7 +1271,6 @@ public class LayeredGraph {
         if ( maxEdgeIndex >= 0 ) {
             indexOfLastReturned = maxEdgeIndex; 
         }
-        LogHelper.exitMethod( getClass(), "getMaxCrossingsEdge: index = " + indexOfLastReturned + "\n     edge = " + maxEdge );
         return maxEdge;
     }
 
@@ -1598,4 +1590,4 @@ public class LayeredGraph {
 
 } // end, class LayeredGraph
 
-//  [Last modified: 2016 10 16 at 15:30:57 GMT]
+//  [Last modified: 2016 10 17 at 13:03:08 GMT]

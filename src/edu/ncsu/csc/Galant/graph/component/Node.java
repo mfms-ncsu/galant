@@ -57,7 +57,6 @@ public class Node extends GraphElement {
      */
     public Node(Graph graph, int id, Integer x, Integer y) {
         super(graph);
-        LogHelper.logDebug("-> Node, id = " + id + ", x =" + x + ", y =" + y);
         this.id = id;
 		incidentEdges = new ArrayList<Edge>();
         this.xCoordinate = x;
@@ -68,7 +67,6 @@ public class Node extends GraphElement {
             startingState.set("x", x);
             startingState.set("y", y);
         }
-        LogHelper.logDebug("<- Node, node = " + this);
    }
 
     /**
@@ -110,7 +108,6 @@ public class Node extends GraphElement {
      * done by getX() and getY()
      */
     public Point getPosition() {
-        LogHelper.enterMethod(getClass(), "getPosition, node = " + this);
         Integer x = getX();
         Integer y = getY();
         Point p = null;
@@ -118,12 +115,10 @@ public class Node extends GraphElement {
             p = getFixedPosition();
         else
             p = new Point(x, y);
-        LogHelper.exitMethod(getClass(), "getPosition, point = " + p);
         return p;
     }
 
     public Point getPosition(int state) {
-        LogHelper.enterMethod(getClass(), "getPosition, state = " + state + ", node = " + this);
         Integer x = getX(state);
         Integer y = getY(state);
         Point p = null;
@@ -131,27 +126,18 @@ public class Node extends GraphElement {
             p = getFixedPosition();
         else
             p = new Point(x, y);
-        LogHelper.exitMethod(getClass(), "getPosition, point = " + p);
         return p;
     }
 
     public void setX(Integer x) throws Terminate { super.set("x", x); }
     public void setY(Integer y) throws Terminate { super.set("y", y); }
     public void setPosition(Integer x, Integer y) throws Terminate {
-        LogHelper.enterMethod(getClass(), "setPosition, x = " + x + ", y = " + y);
         setX(x);
         setY(y);
-        LogHelper.exitMethod(getClass(),
-                             "setPosition, node = "
-                             + this.xmlString(dispatch.getAlgorithmState()));
     }
     public void setPosition(Point point) throws Terminate {
-        LogHelper.enterMethod(getClass(), "setPosition, point = " + point);
         setX(point.x);
         setY(point.y);
-        LogHelper.exitMethod(getClass(),
-                             "setPosition, node = "
-                             + this.xmlString(dispatch.getAlgorithmState()));
     }
 
     public Integer getLayer() {
@@ -186,7 +172,6 @@ public class Node extends GraphElement {
      */
     public void initializeAfterParsing()
         throws GalantException {
-        LogHelper.enterMethod( getClass(), "initializeAfterParsing: " + this );
         super.initializeAfterParsing();
         Integer idAttribute = super.getInteger("id");
         if ( idAttribute == null ) {
@@ -277,9 +262,6 @@ public class Node extends GraphElement {
             // should not happen
             t.printStackTrace();
         }
-        LogHelper.exitMethod(getClass(), "initializeAfterParsing: id = " + id
-                             + ", x = " + getX() + ", y = " + getY()
-                             + ", node = " + this);
     } // end, intializeAfterParsing
 
     /**************** marking *******************/
@@ -421,24 +403,20 @@ public class Node extends GraphElement {
      * when hiding a node, you also have to hide its incident edges
      */
     public void hide() throws Terminate {
-        LogHelper.enterMethod(getClass(), "hide " + this);
         super.hide();
         for ( Edge edge: getEdges() ) {
             edge.hide();
         }
-        LogHelper.exitMethod(getClass(), "hide " + this);
     }
 
     /**
      * when showing (unhiding) a node, you also have to show its incident edges
      */
     public void show() throws Terminate {
-        LogHelper.enterMethod(getClass(), "show " + this);
         super.show();
         for ( Edge edge: getEdges() ) {
             edge.show();
         }
-        LogHelper.exitMethod(getClass(), "show " + this);
     }
 
 	/**
@@ -577,29 +555,12 @@ public class Node extends GraphElement {
     }
 
 	public void setFixedPosition(Point position) {
-        LogHelper.enterMethod( getClass(), "setFixedPosition: " + position 
-                               + "\n node = " + this );
         setFixedPosition(position.x, position.y);
-        LogHelper.exitMethod( getClass(), "setFixedPosition"
-                              + "\n node = " + this );
 	}
 	
 	public void setFixedPosition(int x, int y) {
-        LogHelper.enterMethod( getClass(), "setFixedPosition: x = " + x
-                               + ", y = " + y
-                               + "\n node = " + this );
         xCoordinate = x;
         yCoordinate = y;
-//         try {
-//             if ( getX() == null ) super.set("x", x);
-//             if ( getY() == null ) super.set("y", y);
-//         }
-//         catch ( Terminate t ) {
-//             // should not happen
-//             t.printStackTrace();
-//         }
-        LogHelper.exitMethod( getClass(), "setFixedPosition"
-                              + "\n node = " + this );
 	}
 
     public static Point genRandomPosition() {
@@ -655,4 +616,4 @@ public class Node extends GraphElement {
 	}
 }
 
-//  [Last modified: 2016 09 12 at 17:39:33 GMT]
+//  [Last modified: 2016 10 17 at 12:56:10 GMT]

@@ -319,7 +319,6 @@ public class GraphPanel extends JPanel{
      * everything is visible during parsing and edit mode.
      */
     private boolean labelVisible(Node node) {
-        LogHelper.enterMethod(getClass(), "labelVisible, node = " + node);
         int state = dispatch.getDisplayState(); 
         boolean visible = node.hasLabel(state)
             && ! (node.getLabel(state).length() == 0);
@@ -333,7 +332,6 @@ public class GraphPanel extends JPanel{
             visible = visible
                 && GraphDisplays.NODE_LABELS.isShown();
         }
-        LogHelper.exitMethod(getClass(), "labelVisible, visible = " + visible);
         return visible;
     }
 
@@ -343,7 +341,6 @@ public class GraphPanel extends JPanel{
      * algorithm otherwise.
      */
     private boolean weightVisible(Node node) {
-        LogHelper.enterMethod(getClass(), "weightVisible, node = " + node);
         int state = dispatch.getDisplayState(); 
         boolean visible = node.hasWeight(state);
         if ( dispatch.isAnimationMode() ) {
@@ -356,7 +353,6 @@ public class GraphPanel extends JPanel{
             visible = visible
                 && GraphDisplays.NODE_WEIGHTS.isShown();
         }
-        LogHelper.exitMethod(getClass(), "weightVisible, visible = " + visible);
         return visible;
     }
 
@@ -366,7 +362,6 @@ public class GraphPanel extends JPanel{
      * algorithm otherwise.
      */
     private boolean labelVisible(Edge edge) {
-        LogHelper.enterMethod(getClass(), "labelVisible, edge = " + edge);
         int state = dispatch.getDisplayState(); 
         boolean visible = edge.hasLabel(state)
             && ! (edge.getLabel(state).length() == 0);
@@ -380,7 +375,6 @@ public class GraphPanel extends JPanel{
             visible = visible
                 && GraphDisplays.EDGE_LABELS.isShown();
         }
-        LogHelper.exitMethod(getClass(), "labelVisible, visible = " + visible);
         return visible;
     }
 
@@ -390,7 +384,6 @@ public class GraphPanel extends JPanel{
      * algorithm otherwise.
      */
     private boolean weightVisible(Edge edge) {
-        LogHelper.enterMethod(getClass(), "weightVisible, edge = " + edge);
         int state = dispatch.getDisplayState(); 
         boolean visible = edge.hasWeight(state);
         if ( dispatch.isAnimationMode() ) {
@@ -403,7 +396,6 @@ public class GraphPanel extends JPanel{
             visible = visible
                 && GraphDisplays.EDGE_WEIGHTS.isShown();
         }
-        LogHelper.exitMethod(getClass(), "weightVisible, visible = " + visible);
         return visible;
     }
 
@@ -420,8 +412,6 @@ public class GraphPanel extends JPanel{
      * dimensions.
      */
     private Point getNodeCenter( Node n ) throws GalantException{
-        LogHelper.guiEnterMethod( getClass(), "getNodeCenter, n = " + n );
-
         int state = dispatch.getDisplayState();
         Point nodeCenter = null;
 
@@ -473,9 +463,7 @@ public class GraphPanel extends JPanel{
                     + (numberOfLayers - n.getLayer() - 1) * layerGap;
             }
             nodeCenter = new Point( x, y );
-            LogHelper.guiLogDebug( " getNodeCenter: layered graph, center = " + nodeCenter );
         }
-        LogHelper.guiExitMethod( getClass(), "getNodeCenter, nodeCenter = " + nodeCenter );
         return nodeCenter;
     }
 	
@@ -502,9 +490,6 @@ public class GraphPanel extends JPanel{
         if ( currentState == null ) return;
         Point nodeCenter = getNodeCenter( n );
         if ( nodeCenter == null ) return;
-        LogHelper.guiLogDebug( "drawing node: node = " + n.getId()
-                            + ", position = " + nodeCenter );
-
         int stateNumber = currentState.getState();
         g2d.setColor(Color.BLACK);
 		
@@ -571,8 +556,6 @@ public class GraphPanel extends JPanel{
                                     2 * nodeRadius );
 
         /* draw node interior */
-        LogHelper.guiLogDebug("check if marked: node = " + n);
-        LogHelper.guiLogDebug(" isMarked: state = " + state + ", isMarked = " + n.isMarked(state));
         if ( n.isMarked(state) ) {
             g2d.setColor( Color.LIGHT_GRAY );
         }
@@ -598,8 +581,6 @@ public class GraphPanel extends JPanel{
             g2d.setColor(c);
             g2d.setStroke( new BasicStroke( highlightThickness ) );
         }
-
-        LogHelper.guiLogDebug("drawing node boundary: color = " + g2d.getColor());
 
         // draw node boundary
         g2d.draw( nodeCircle );
@@ -643,7 +624,6 @@ public class GraphPanel extends JPanel{
 	private void drawEdge(Graph g, Edge e, Graphics2D g2d) 
         throws GalantException
     {
-		LogHelper.guiEnterMethod(getClass(), "drawEdge, edge = " + e);
         int state = dispatch.getDisplayState();
 		GraphElementState currentState = e.getLatestValidState(state);
         if ( currentState == null ) return;
@@ -683,8 +663,6 @@ public class GraphPanel extends JPanel{
 
 				//only draw if edge exists at current state
 				if (p1 != null && p2 != null) {
-					LogHelper.guiLogDebug("drawing edge, p1 = "
-                                          + p1 + ", p2 = " + p2);
 					// Self loop
 					if (dest.equals(source)) {
 						Stroke oldStroke = g2d.getStroke();
@@ -716,7 +694,6 @@ public class GraphPanel extends JPanel{
 				g2d.setColor(Color.BLACK);
 			}
 		}
-		LogHelper.guiExitMethod(getClass(), "drawEdge, edge = " + e);
 	}
 	
 	/**
@@ -943,23 +920,16 @@ public class GraphPanel extends JPanel{
    */
 	public Node selectTopClickedNode(Point p) {
 		LogHelper.guiEnterMethod(getClass(), "selectTopClickedNode");
-		
 		Graph g = dispatch.getWorkingGraph();
-		
 		Node top = null;
-		
 		for (Node n : g.getNodes()) {
-            LogHelper.guiLogDebug( "next node = " + n.getId() + " position = " + n.getFixedPosition() );
 			if ( p.distance(n.getFixedPosition()) < NODE_SELECTION_RADIUS ) {
 				top = n;
 			}
 		}
-		
 		previousNode = selectedNode;
 		selectedNode = top;
-		
 		selectedEdge = null;
-		
 		LogHelper.guiExitMethod( getClass(), "selectTopClickedNode, node = "
                               + (selectedNode == null ? "null"
                                  : selectedNode.getId() ) );
@@ -1074,4 +1044,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2016 02 10 at 22:10:46 GMT]
+//  [Last modified: 2016 10 17 at 13:01:14 GMT]

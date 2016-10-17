@@ -71,17 +71,17 @@ public class LogHelper {
 	}
 	
 	public static void enterMethod(Class<?> cls, String methodName) {
-		spaces++;
-		
-		if (loggingEnabled)
+		if (loggingEnabled) {
+            spaces++;
 			System.out.println(spaceString() + "-> " + cls.getName() + "." + methodName);
+        }
 	}
 	
 	public static void exitMethod(Class<?> cls, String methodName) {
-		if (loggingEnabled)
+		if (loggingEnabled) {
 			System.out.println(spaceString() + "<- " + cls.getName() + "." + methodName);
-		
-		spaces--;
+            spaces--;
+        }
 	}
 	
 	public static void guiLogDebug(String msg) {
@@ -107,17 +107,17 @@ public class LogHelper {
 	}
 	
 	public static void guiEnterMethod(Class<?> cls, String methodName) {
-		spaces++;
-		
-		if ( guiLoggingEnabled )
+		if ( guiLoggingEnabled ) {
+            spaces++;
 			System.out.println(spaceString() + "-> " + cls.getName() + "." + methodName);
+        }
 	}
 	
 	public static void guiExitMethod(Class<?> cls, String methodName) {
-		if ( guiLoggingEnabled )
+		if ( guiLoggingEnabled ) {
 			System.out.println(spaceString() + "<- " + cls.getName() + "." + methodName);
-		
-		spaces--;
+            spaces--;
+        }
 	}
 	
     public static void beginIndent() {
@@ -150,4 +150,4 @@ public class LogHelper {
 	}
 }
 
-//  [Last modified: 2016 09 12 at 17:57:11 GMT]
+//  [Last modified: 2016 10 17 at 12:26:13 GMT]

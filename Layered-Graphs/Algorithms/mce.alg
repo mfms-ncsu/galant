@@ -14,7 +14,7 @@
 
 import edu.ncsu.csc.Galant.local.LayeredGraph;
 
-int MAX_ITERATIONS = 100;
+int MAX_ITERATIONS = 200;
 int minCrossings = Integer.MAX_VALUE;
 int minEdgeCrossings = Integer.MAX_VALUE;
 int iteration = 0;

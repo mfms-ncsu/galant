@@ -137,8 +137,6 @@ public class Graph {
 		GraphState latest = latestState();
 		GraphState state
             = new GraphState(latest);
-		
-        LogHelper.logDebug( "newState (graph) = " + state.getState() );
 		return state;
     }
 
@@ -147,12 +145,10 @@ public class Graph {
      * retrieving information about any attribute.
      */
     public GraphState latestState() {
-        LogHelper.enterMethod(getClass(), "latestState, states = " + states);
         GraphState state = null;
         if ( states.size() != 0 ) {
             state = states.get(states.size() - 1);
         }
-        LogHelper.exitMethod(getClass(), "latestState, state = " + state);
         return state; 
     }
 
@@ -168,8 +164,6 @@ public class Graph {
      * before the time stamp.
      */
 	public GraphState getLatestValidState(int stateNumber) {
-        LogHelper.enterMethod(getClass(), "getLatestValidState("
-                              + stateNumber + "), " + this);
         GraphState toReturn = null;
         int stateIndex = states.size() - 1;
 		while ( stateIndex >= 0 ) {
@@ -180,8 +174,6 @@ public class Graph {
 			}
             stateIndex--;
 		}
-        LogHelper.exitMethod(getClass(), "getLatestValidState("
-                              + stateNumber + "), " + toReturn);
         return toReturn;
 	}
 	
@@ -197,13 +189,10 @@ public class Graph {
      * @invariant states are always sorted by state number.
      */
 	private void addState(GraphState stateToAdd) {
-        LogHelper.enterMethod(getClass(), "addState, state number = "
-                              + stateToAdd.getState());
         int stateNumber = stateToAdd.getState();
         boolean found = false;
         for ( int i = states.size() - 1; i >= stateNumber; i-- ) {
             GraphState state = states.get(i);
-            LogHelper.logDebug("addState loop, i = " + i + ", state(i) = " + state.getState());
             if ( state.getState() == stateNumber ) {
                 states.set(i, stateToAdd);
                 found = true;
@@ -214,7 +203,6 @@ public class Graph {
             states.add(stateToAdd);
             dispatch.pauseExecutionIfRunning();
         }
-        LogHelper.exitMethod(getClass(), "addState, found = " + found);
 	}
 
     /**
@@ -316,13 +304,9 @@ public class Graph {
     /************** Boolean attributes ***************/
 
 	public boolean set(String key, Boolean value) throws Terminate {
-        LogHelper.enterMethod(getClass(),
-                              "set, key = " + key + ", value = " + value);
         GraphState newState = newState();
         boolean found = newState.set(key, value);
         addState(newState);
-        LogHelper.exitMethod(getClass(),
-                              "set, object = " + this);
         return found;
 	}
 
@@ -575,9 +559,7 @@ public class Graph {
      * Changes the contents of the current message banner
 	 */
 	public void writeMessage(String message) throws Terminate {
-        LogHelper.enterMethod(getClass(), "writeMessage: " + message);
         banner.set(message);
-        LogHelper.exitMethod(getClass(), "writeMessage: " + message);
 	}
 	
 	/**
@@ -838,7 +820,6 @@ public class Graph {
 	 * step if appropriate
 	 */
 	public void deleteNode(Node n) throws Terminate {
-        LogHelper.enterMethod(getClass(), "deleteNode " + n);
 		dispatch.startStepIfRunning();
 		dispatch.lockIfRunning();
 		
@@ -851,7 +832,6 @@ public class Graph {
 		}
 		
 		dispatch.unlockIfRunning();
-        LogHelper.exitMethod(getClass(), "deleteNode");
 	}
 
 	/**
@@ -1291,4 +1271,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2016 10 10 at 21:05:24 GMT]
+//  [Last modified: 2016 10 17 at 12:48:37 GMT]

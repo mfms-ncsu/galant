@@ -22,7 +22,7 @@ int minIteration = -1;
 
 LayeredGraph layeredGraph;
 
-int MAX_ITERATIONS = 100;
+int MAX_ITERATIONS = 200;
 
 /**
  * writes message about crossings

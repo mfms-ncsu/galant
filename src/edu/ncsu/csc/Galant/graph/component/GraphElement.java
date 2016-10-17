@@ -80,8 +80,6 @@ public class GraphElement implements Comparable<GraphElement> {
 		GraphElementState latest = latestState();
 		GraphElementState elementState
             = new GraphElementState(latest);
-		
-        LogHelper.logDebug( "newState (element) = " + elementState.getState() );
 		return elementState;
     }
 
@@ -91,7 +89,6 @@ public class GraphElement implements Comparable<GraphElement> {
      * a "blank" one with all attributes = null is returned.
      */
     public GraphElementState latestState() {
-        LogHelper.enterMethod(getClass(), "latestState, states = " + states);
         GraphElementState state = null;
         if ( states.size() != 0 ) {
             state = states.get(states.size() - 1);
@@ -99,7 +96,6 @@ public class GraphElement implements Comparable<GraphElement> {
         else {
             state = new GraphElementState();
         }
-        LogHelper.exitMethod(getClass(), "latestState, state = " + state);
         return state; 
     }
 
@@ -116,8 +112,6 @@ public class GraphElement implements Comparable<GraphElement> {
      * stamp.
      */
 	public GraphElementState getLatestValidState(int stateNumber) {
-        LogHelper.enterMethod(getClass(), "getLatestValidState("
-                              + stateNumber + "), " + this);
         GraphElementState toReturn = null;
         int stateIndex = states.size() - 1;
 		while ( stateIndex >= 0 ) {
@@ -128,8 +122,6 @@ public class GraphElement implements Comparable<GraphElement> {
 			}
             stateIndex--;
 		}
-        LogHelper.exitMethod(getClass(), "getLatestValidState("
-                              + stateNumber + "), " + toReturn);
         return toReturn;
 	}
 	
@@ -146,13 +138,10 @@ public class GraphElement implements Comparable<GraphElement> {
      * @invariant states are always sorted by state number.
      */
 	private void addState(GraphElementState stateToAdd) {
-        LogHelper.enterMethod(getClass(), "addState, state number = "
-                              + stateToAdd.getState());
         int stateNumber = stateToAdd.getState();
         boolean found = false;
         for ( int i = states.size() - 1; i >= stateNumber; i-- ) {
             GraphElementState state = states.get(i);
-            LogHelper.logDebug("addState loop, i = " + i + ", state(i) = " + state.getState());
             if ( state.getState() == stateNumber ) {
                 states.set(i, stateToAdd);
                 found = true;
@@ -163,7 +152,6 @@ public class GraphElement implements Comparable<GraphElement> {
             states.add(stateToAdd);
             dispatch.pauseExecutionIfRunning();
         }
-        LogHelper.exitMethod(getClass(), "addState, found = " + found);
 	}
 
     /************** Integer attributes ***************/
@@ -201,13 +189,9 @@ public class GraphElement implements Comparable<GraphElement> {
 
     /************** Boolean attributes ***************/
 	public boolean set(String key, Boolean value) throws Terminate {
-        LogHelper.enterMethod(getClass(),
-                              "set, key = " + key + ", value = " + value);
         GraphElementState newState = newState();
         boolean found = newState.set(key, value);
         addState(newState);
-        LogHelper.exitMethod(getClass(),
-                              "set, object = " + this);
         return found;
 	}
 
@@ -604,4 +588,4 @@ public class GraphElement implements Comparable<GraphElement> {
     }
 }
 
-//  [Last modified: 2016 10 16 at 15:44:06 GMT]
+//  [Last modified: 2016 10 17 at 12:51:40 GMT]

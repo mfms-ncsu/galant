@@ -13,7 +13,6 @@ package edu.ncsu.csc.Galant.algorithm;
 
 import java.lang.Thread;
 import edu.ncsu.csc.Galant.algorithm.Algorithm;
-import edu.ncsu.csc.Galant.logging.LogHelper;
 
 public class AlgorithmExecutor {
 
@@ -83,10 +82,6 @@ public class AlgorithmExecutor {
      * pauseExecution() in the AlgorithmSynchronizer.
      */
     public synchronized void incrementDisplayState() {
-        LogHelper.enterMethod(getClass(),
-                              "incrementDisplayState displayState = "
-                              + displayState
-                              + " algorithmState = " + algorithmState);
         if ( displayState == algorithmState
              && ! synchronizer.algorithmFinished() ) {
             displayState++;
@@ -106,35 +101,15 @@ public class AlgorithmExecutor {
             } while ( ! synchronizer.stepFinished() );
         }
         else if ( displayState < algorithmState ) {
-            LogHelper.logDebug(" algorithm is ahead, displayState = "
-                              + displayState + " algorithmState = "
-                              + algorithmState);
             displayState++;
         }
-        else {
-            LogHelper.logDebug(" display is ahead, displayState = "
-                              + displayState + " algorithmState = "
-                              + algorithmState);
-        }
-        LogHelper.exitMethod(getClass(),
-                             "incrementDisplayState displayState = "
-                              + displayState
-                             + " algorithmState = " + algorithmState);
     }
 
     /**
      * Called when user requests a step back
      */
     public void decrementDisplayState() {
-        LogHelper.enterMethod(getClass(),
-                              "decrementDisplayState displayState = "
-                              + displayState
-                              + " algorithmState = " + algorithmState);
         if ( displayState >= 0 ) displayState--;
-        LogHelper.exitMethod(getClass(),
-                              "decrementDisplayState displayState = "
-                              + displayState
-                              + " algorithmState = " + algorithmState);
     }
 
     /**
@@ -160,4 +135,4 @@ public class AlgorithmExecutor {
     }
 }
 
-//  [Last modified: 2015 12 29 at 23:19:28 GMT]
+//  [Last modified: 2016 10 17 at 12:43:50 GMT]

@@ -42,9 +42,10 @@ public class NodeSelectionDialog extends NodeSpecificationDialog {
         Graph graph = dispatch.getWorkingGraph();
         if ( restrictedSet != null
              && ! restrictedSet.contains(node) ) {
+            throw new GalantException(errorMessage);
         }
         graph.setSelectedNode(node);
     }
 }
 
-//  [Last modified: 2016 10 18 at 14:26:07 GMT]
+//  [Last modified: 2016 10 18 at 16:07:33 GMT]

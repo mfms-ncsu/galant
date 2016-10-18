@@ -2,6 +2,9 @@ package edu.ncsu.csc.Galant;
 
 import edu.ncsu.csc.Galant.gui.util.ExceptionDialog;
 import edu.ncsu.csc.Galant.logging.LogHelper;
+import edu.ncsu.csc.Galant.GraphDispatch;
+import edu.ncsu.csc.Galant.algorithm.Terminate;
+import edu.ncsu.csc.Galant.algorithm.AlgorithmSynchronizer;
 
 /**
  * A catch all for all exceptions occurring in Galant; this acts as the
@@ -53,12 +56,20 @@ public class GalantException extends Exception {
         }
     }
 
-    public void display() {
-        /**
-         * @todo not clear how this will work
-         */
+    public synchronized void display() throws Terminate {
+        GraphDispatch dispatch = GraphDispatch.getInstance();
+        System.out.println("animation mode: " + dispatch.isAnimationMode());
+        if ( ! dispatch.isAnimationMode() ) {
+            AlgorithmSynchronizer synchronizer = dispatch.getAlgorithmSynchronizer();
+            System.out.println("synchronizer: " + synchronizer);
+            System.out.println("algorithm finished: " + synchronizer.algorithmFinished() );
+            if ( ! (synchronizer == null) ||
+                 ! synchronizer.algorithmFinished() ) {
+                throw new Terminate();
+            }
+        }
         ExceptionDialog.displayExceptionInDialog( this );
     }
 }
 
-//  [Last modified: 2015 05 06 at 12:56:29 GMT]
+//  [Last modified: 2016 10 18 at 15:02:21 GMT]

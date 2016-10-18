@@ -83,12 +83,14 @@ public class CodeIntegrator	{
     public static final String ALGORITHM_STRUCTURE
         = "public void run(){ try {" +
         ALGORITHM_HEAD + ALGORITHM_BODY + ALGORITHM_TAIL
-        + "}" + "catch (Exception e)"
-        + " { if ( e instanceof Terminate ) { System.out.println(\"Terminate\"); } "
-        + " else if ( e instanceof GalantException )"
-        + " { GalantException ge = (GalantException) e;"
-        + " ge.report(\"\"); ge.display(); }"
-        + " else {e.printStackTrace(System.out);displayException(e);}}}" ;
+        + "}"
+        + " catch (Terminate t) { System.out.println(\"Terminate\"); }"
+        + " catch (GalantException ge)"
+        + " {ge.report(\"\"); "
+        + " try { ge.display(); }"
+        + " catch (Terminate t) { System.out.println(\"Terminate\"); } }"
+        + " catch (Exception e)"
+        + " {e.printStackTrace(System.out);displayException(e);}}" ;
 
     /**
      * Converts the unmodified user algorithm code into a proper Java class, as would be found
@@ -319,4 +321,4 @@ public class CodeIntegrator	{
     }
 }
 
-//  [Last modified: 2016 10 14 at 19:27:09 GMT]
+//  [Last modified: 2016 10 18 at 15:54:13 GMT]

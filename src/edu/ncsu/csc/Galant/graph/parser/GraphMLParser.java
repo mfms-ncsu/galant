@@ -226,16 +226,16 @@ public class GraphMLParser {
             setDocument(db, xml);
             newGraph = buildGraphFromInput(db);
         }
-//         catch ( GalantException exception ) {
-//             exception.report( exception.getMessage()
-//                               + "\n called from generateGraph(String xml)" );
-//             exception.display();
-//         }
         catch ( Exception exception ) {
             if ( exception instanceof GalantException ) {
                 GalantException ge = (GalantException) exception;
                 ge.report( "" );
-                ge.display();
+                try {
+                    ge.display();
+                }
+                catch ( Terminate t ) {
+                    // ignore - should not happen
+                }
             }
             else exception.printStackTrace( System.out );
         }
@@ -256,32 +256,22 @@ public class GraphMLParser {
             setDocument(db, file);
             newGraph = buildGraphFromInput(db);
         }
-//         catch ( GalantException exception ) {
-//             exception.report( exception.getMessage()
-//                               + "\n called from generateGraph(File)" );
-//             exception.display();
-//         }
         catch ( Exception exception ) {
             GalantException topLevelException
                 = new GalantException( exception.getMessage()
                                        + "\n - in generateGraph(File)" );
             topLevelException.report( "" );
-            topLevelException.display();
+            try {
+                topLevelException.display();
+            }
+            catch ( Terminate t ) {
+                // ignore - probably not relevant
+            }
         }
 
         LogHelper.exitMethod( getClass(), "generateGraph( File )" );
         return newGraph;
 	}
-	
-// 	public void addNode(Node n) {
-// 		//TODO add node to front of Nodes, return complete graph string
-// 		graph.addNode(n, 0);
-// 	}
-	
-// 	public void addEdge(Edge e) {
-// 		//TODO add edge to front of Edges, return complete graph string
-// 		graph.addEdge(e, 0);
-// 	}
 	
 	public NodeList getGraphNode() {
 		return this.document.getElementsByTagName("graph");
@@ -301,4 +291,4 @@ public class GraphMLParser {
 	
 }
 
-//  [Last modified: 2015 12 08 at 13:58:18 GMT]
+//  [Last modified: 2016 10 18 at 15:22:52 GMT]

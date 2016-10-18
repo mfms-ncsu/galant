@@ -39,6 +39,8 @@ import edu.ncsu.csc.Galant.graph.component.GraphElementState;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow.GraphDisplays;
 import edu.ncsu.csc.Galant.logging.LogHelper;
+import edu.ncsu.csc.Galant.algorithm.Terminate;
+import edu.ncsu.csc.Galant.algorithm.AlgorithmExecutor;
 
 public class GraphPanel extends JPanel{
 	
@@ -305,7 +307,6 @@ public class GraphPanel extends JPanel{
         }
         catch (GalantException e) {
             e.report( "error while redrawing" );
-            e.display();
         }
     }
 
@@ -1044,4 +1045,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2016 10 17 at 13:01:14 GMT]
+//  [Last modified: 2016 10 18 at 15:49:32 GMT]

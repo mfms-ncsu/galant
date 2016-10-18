@@ -6,7 +6,8 @@
 algorithm {
     Node start = getStartNode();
     NodeSet nodeSet = new NodeSet(neighbors(start));
-    for ( Node v : nodeSet ) {
+    Set<Node> S = nodeSet; // to test whether conversion to abstract works
+    for ( Node v : S ) {
         print(v);
         mark(v);
     }
@@ -23,4 +24,4 @@ algorithm {
     highlight(incident);
 }
 
-//  [Last modified: 2016 10 10 at 21:01:00 GMT]
+//  [Last modified: 2016 10 18 at 13:48:59 GMT]

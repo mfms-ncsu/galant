@@ -2,6 +2,13 @@ Release notes for Galant, most recent first.
 
 v5.4
 
+User
+
+- faster reaction to display state changes
+
+- elimination of a bug that caused Galant to hang if animation was terminated
+  during an active query
+
 Animator
 
 - functions getNode(String prompt, NodeSet set, String errorMessage) and the

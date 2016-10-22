@@ -1,0 +1,10 @@
+Heuristics for crossing minimization in layered graphs. The only actively
+maintained ones are:
+
+- barycenter.alg, see, e.g., DiBattista et al. (1991 text)
+
+- mce.alg, as described by Stallmann (JEA, 2012)
+
+- sifting.alg, as described by Matuszewski et al. (Graph Drawing 1999)
+
+All are based directly on software supplied with the 2012 JEA paper.

@@ -69,6 +69,7 @@ import edu.ncsu.csc.Galant.gui.window.NodeDeletionDialog;
 import edu.ncsu.csc.Galant.gui.editor.GTabbedPane; // for confirmation dialog
 import edu.ncsu.csc.Galant.gui.editor.GEditorFrame; // for confirmation dialog
 import edu.ncsu.csc.Galant.algorithm.AlgorithmExecutor;
+import edu.ncsu.csc.Galant.algorithm.Terminate;
 
 public class GraphWindow extends JPanel implements PropertyChangeListener, ComponentListener {
 	
@@ -1039,6 +1040,8 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
           } else {
             GraphDisplays.NODE_LABELS.setShown(!nodeLabels.isSelected());
             nodeLabels.setSelected(!nodeLabels.isSelected());
+            dispatch.getWorkingGraph().showNodeLabels(!nodeLabels.isSelected());
+            System.out.println("node labels toggled");
           }
           frame.repaint(); 
         }
@@ -1094,4 +1097,4 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	}
 }
 
-//  [Last modified: 2016 10 18 at 14:56:37 GMT]
+//  [Last modified: 2016 10 26 at 14:49:31 GMT]

@@ -320,19 +320,21 @@ public class GraphPanel extends JPanel{
      * everything is visible during parsing and edit mode.
      */
     private boolean labelVisible(Node node) {
+        System.out.println("labelVisible, node = " + node);
         int state = dispatch.getDisplayState(); 
         boolean visible = node.hasLabel(state)
             && ! (node.getLabel(state).length() == 0);
-        if ( dispatch.isAnimationMode() ) {
-            Graph graph = dispatch.getWorkingGraph();
-            visible = visible
-                && graph.nodeLabelsAreVisible(state)
-                && ! node.labelIsHidden(state);
-        }
-        else {
-            visible = visible
-                && GraphDisplays.NODE_LABELS.isShown();
-        }
+        //if ( dispatch.isAnimationMode() ) {
+        Graph graph = dispatch.getWorkingGraph();
+        visible = visible
+            && graph.nodeLabelsAreVisible()
+            && ! node.labelIsHidden(state);
+            //}
+//         else {
+//             visible = visible
+//                 && GraphDisplays.NODE_LABELS.isShown();
+//         }
+        System.out.println("labelVisible, visible = " + visible);
         return visible;
     }
 
@@ -1045,4 +1047,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2016 10 18 at 15:49:32 GMT]
+//  [Last modified: 2016 10 26 at 14:46:09 GMT]

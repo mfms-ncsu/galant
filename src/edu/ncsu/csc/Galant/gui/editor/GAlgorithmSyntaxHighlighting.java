@@ -91,7 +91,8 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
 	}
 	
 	/**
-	 * An immutable list of all keywords employed in the Java language.
+	 * An immutable list of all keywords employed in the Java language, plus
+	 * others that are relevant to Galant.
 	 */
 	public static final String[] allJavaKeywords = new String[] { "abstract", "assert", "boolean", 
 		"break", "byte", "case", "catch", "char", "class", "const", "continue", "default", "do",
@@ -99,21 +100,35 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
 		"implements", "import", "instanceof", "int", "interface", "long", "native", "new",
 		"package", "private", "protected", "public", "return", "short", "static", "strictfp",
 		"super", "switch", "synchronized", "this", "throw", "throws", "transient", "try", 
-		"void", "volatile", "while", "false", "null", "true", "bool" };
+                                                                  "void", "volatile", "while", "false", "null", "true", "boolean", "Integer", "Double" };
 	
 	/**
-	 * An immutable list of all API calls predefined for the user's benefit.
+	 * An immutable list of all API calls predefined for the user's
+	 * benefit.
+     *
+     * @todo Need to organize this
 	 */
-		public static final String[] allAPIkeywords = new String[]{"beginStep", "endStep", "isDirected", "setDirected",
-			"getNodes", "getEdges", "getNodeById", "getEdgeById", "select", "addNode", "addEdge", "isSelected", "setSelected",
-			"isVisited", "setVisited", "isMarked", "mark", "getWeight", "setWeight", "getUnvisitedPaths", "getVisitedPaths",
+		public static final String[] allAPIkeywords = new String[] {
+            "beginStep", "endStep", "isDirected", "setDirected",
+			"getNodes", "getEdges", "getNodeById", "getEdgeById", "select", "addNode", "addEdge",
+            "isSelected", "setSelected", "isVisited", "setVisited", "isMarked", "mark", "unmark", "marked",
+            "highlight", "unhighlight", "highlighted",
+            "getWeight", "setWeight", "weight",
+            "label", "color", "uncolor", "set", "clear",
+            "getUnvisitedPaths", "getVisitedPaths",
+                                                                   
 			"getUnvisitedAdjacentNodes", "travel", "getId", "getColor", "setColor", "getLabel", "setLabel", "getPosition",
 			"setPosition", "equals", "setStringAttribute", "getStringAttribute", "setIntegerAttribute", "getIntegerAttribute",
 			"setDoubleAttribute", "getDoubleAttribute", "getSourceNode", "setSourceNode", "getTargetNode", "setTargetNode",
 			"getOtherEndpoint", "Graph", "Node", "Edge", "for_adjacent", "for_nodes", "for_edges", "function", "graph",
 			"setRootNode", "getRootNode", "getTargetNode", "setTargetNode", "getPaths", "NodeQueue", "EdgeQueue", "NodeStack",
-			"EdgeStack", "NodePriorityQueue", "EdgePriorityQueue", "nodeQ", "edgeQ", "nodeStack", "edgeStack", "nodePQ",
-			"edgePQ", "getId", "equals", "Graph", "Node", "Edge", "for_adjacent", "for_nodes", "for_edges", "function", "graph", "initializationComplete"};
+                                                                   "EdgeStack", "NodePriorityQueue", "EdgePriorityQueue", "NodeSet", "EdgeSet", "nodeQ", "edgeQ", "nodeStack", "edgeStack", "nodePQ",
+			"edgePQ", "getId", "id", "equals", "Graph", "Node", "Edge", "for_adjacent", "for_nodes", "for_edges", "function", "graph", "getInteger", "getNode", "getEdge", "getNodeSet", "getEdgeSet",
+            "hide", "show", "hideLabel", "showLabel", "hideWeight", "showWeight",
+            "hideEdgeWeights", "showEdgeWeights", "hideEdgeLabels", "showEdgeLabels",
+            "hideNodeWeights", "showNodeWeights", "hideNodeLabels", "showNodeLabels",
+            "clearEdgeLabels", "clearEdgeWeights", "clearNodeLabels", "clearNodeWeights"
+        };
 
 	/**
 	 * An immutable list of all Macroes predefined for the user's benefit.
@@ -170,4 +185,4 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
 	
 }
 
-//  [Last modified: 2016 07 30 at 00:43:29 GMT]
+//  [Last modified: 2016 10 26 at 12:36:52 GMT]

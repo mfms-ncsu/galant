@@ -86,6 +86,9 @@ public class Graph {
      */
     private int nextEdgeId = 0;
 
+    /** @todo need the same for node labels and edge labels, weights */
+    private boolean nodeLabelsVisible = true;
+
 	/**
 	 * Default constructor.
 	 */
@@ -389,8 +392,10 @@ public class Graph {
     public void unhideNodeLabels() throws Terminate { 
         clear(HIDDEN_NODE_LABELS);
     }
-    public void showNodeLabels(Boolean show) throws Terminate { 
-        set(HIDDEN_NODE_LABELS, ! show);
+    public void showNodeLabels(boolean show) { 
+        System.out.println("showNodeLabels " + show);
+        nodeLabelsVisible = show;
+        //    set(HIDDEN_NODE_LABELS, ! show);
     }
     public void hideNodeLabels() throws Terminate { 
         set(HIDDEN_NODE_LABELS);
@@ -490,6 +495,10 @@ public class Graph {
     }
     public Boolean nodeLabelsAreVisible(int state) {
         return ! is(state, HIDDEN_NODE_LABELS);
+    }
+    /** @todo also needed for node weights, edge labels, weights */
+    public boolean nodeLabelsAreVisible() {
+        return nodeLabelsVisible;
     }
     public Boolean nodeWeightsAreVisible(int state) {
         return ! is(state, HIDDEN_NODE_WEIGHTS);
@@ -1271,4 +1280,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2016 10 17 at 12:48:37 GMT]
+//  [Last modified: 2016 10 26 at 14:50:52 GMT]

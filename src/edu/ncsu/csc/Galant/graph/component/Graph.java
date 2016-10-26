@@ -15,6 +15,7 @@ import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.GraphDispatch;
 import edu.ncsu.csc.Galant.graph.container.NodeSet;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow;
+//import edu.ncsu.csc.Galant.gui.window.panels.GraphPanel;
 import edu.ncsu.csc.Galant.gui.util.EdgeSelectionDialog;
 import edu.ncsu.csc.Galant.gui.util.NodeSelectionDialog;
 import edu.ncsu.csc.Galant.algorithm.Terminate;
@@ -86,14 +87,12 @@ public class Graph {
      */
     private int nextEdgeId = 0;
 
-    /** @todo need the same for node labels and edge labels, weights */
-    private boolean nodeLabelsVisible = true;
-
 	/**
 	 * Default constructor.
 	 */
 	public Graph() {
         dispatch = GraphDispatch.getInstance();
+        graphWindow = dispatch.getGraphWindow();
 		nodes = new ArrayList<Node>();
 		edges = new ArrayList<Edge>();
         states = new ArrayList<GraphState>();
@@ -124,6 +123,7 @@ public class Graph {
         }
         // then reinitialize the message banner
         banner = new MessageBanner(this);
+        //        nodeLabelsVisible = GraphWindow.GraphDisplays.NODE_LABELS.isShown();
     }
 
     /**
@@ -392,10 +392,10 @@ public class Graph {
     public void unhideNodeLabels() throws Terminate { 
         clear(HIDDEN_NODE_LABELS);
     }
+    /** @todo need the same for node labels and edge labels, weights */
     public void showNodeLabels(boolean show) { 
         System.out.println("showNodeLabels " + show);
-        nodeLabelsVisible = show;
-        //    set(HIDDEN_NODE_LABELS, ! show);
+        graphWindow.showNodeLabels(show);
     }
     public void hideNodeLabels() throws Terminate { 
         set(HIDDEN_NODE_LABELS);
@@ -486,6 +486,9 @@ public class Graph {
      * labels and weights are visible by default during algorithm
      * execution. The algorithm must explicitly hide them, either globally or
      * for individual nodes and edges.
+     *
+     * @todo These will not be needed once the runtime toggling works
+     * correctly, as it does for node labels.
      */
     public Boolean edgeLabelsAreVisible(int state) {
         return ! is(state, HIDDEN_EDGE_LABELS);
@@ -495,10 +498,6 @@ public class Graph {
     }
     public Boolean nodeLabelsAreVisible(int state) {
         return ! is(state, HIDDEN_NODE_LABELS);
-    }
-    /** @todo also needed for node weights, edge labels, weights */
-    public boolean nodeLabelsAreVisible() {
-        return nodeLabelsVisible;
     }
     public Boolean nodeWeightsAreVisible(int state) {
         return ! is(state, HIDDEN_NODE_WEIGHTS);
@@ -1280,4 +1279,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2016 10 26 at 14:50:52 GMT]
+//  [Last modified: 2016 10 26 at 17:33:53 GMT]

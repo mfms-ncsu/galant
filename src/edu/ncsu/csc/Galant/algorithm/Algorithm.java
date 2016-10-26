@@ -238,13 +238,13 @@ public abstract class Algorithm implements Runnable {
      */
 
     /** makes node labels invisible */
-    public void hideNodeLabels() throws Terminate { graph.hideNodeLabels(); }
+    public void hideNodeLabels() throws Terminate { graph.showNodeLabels(false); }
     /** makes edge labels invisible */
     public void hideEdgeLabels() throws Terminate { graph.hideEdgeLabels(); }
     /** makes node labels visible */
     public void unhideNodeLabels() throws Terminate { graph.unhideNodeLabels(); }
     /** makes node labels visible */
-    public void showNodeLabels() throws Terminate { graph.unhideNodeLabels(); }
+    public void showNodeLabels() throws Terminate { graph.showNodeLabels(true); }
     /** makes edge labels visible */
     public void unhideEdgeLabels() throws Terminate { graph.unhideEdgeLabels(); }
     /** makes edge labels visible */
@@ -967,4 +967,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2016 10 14 at 20:46:54 GMT]
+//  [Last modified: 2016 10 26 at 17:10:08 GMT]

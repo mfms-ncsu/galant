@@ -738,6 +738,17 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		return button;
 	}
 
+    /**
+     * To give Graph.java access to the button so that it will remain
+     * synchronized with the visibility state when an algorithm is running.
+     *
+     * @todo need for weights and edge labels, weights
+     */
+    public void showNodeLabels(boolean show) {
+        GraphDisplays.NODE_LABELS.setShown(show);
+        nodeLabels.setSelected(show);
+    }
+
     private synchronized void performStepBack() {
         AlgorithmExecutor executor = dispatch.getAlgorithmExecutor();
         if ( ! executor.hasPreviousState() ) return;
@@ -1040,7 +1051,6 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
           } else {
             GraphDisplays.NODE_LABELS.setShown(!nodeLabels.isSelected());
             nodeLabels.setSelected(!nodeLabels.isSelected());
-            dispatch.getWorkingGraph().showNodeLabels(!nodeLabels.isSelected());
             System.out.println("node labels toggled");
           }
           frame.repaint(); 
@@ -1097,4 +1107,4 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	}
 }
 
-//  [Last modified: 2016 10 26 at 14:49:31 GMT]
+//  [Last modified: 2016 10 26 at 17:29:20 GMT]

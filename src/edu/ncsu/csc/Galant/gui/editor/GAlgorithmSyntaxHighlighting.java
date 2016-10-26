@@ -109,7 +109,7 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
      * @todo Need to organize this
 	 */
 		public static final String[] allAPIkeywords = new String[] {
-            "beginStep", "endStep", "isDirected", "setDirected",
+            "beginStep", "endStep", "movesNodes", "isDirected", "setDirected",
 			"getNodes", "getEdges", "getNodeById", "getEdgeById", "select", "addNode", "addEdge",
             "isSelected", "setSelected", "isVisited", "setVisited", "isMarked", "mark", "unmark", "marked",
             "highlight", "unhighlight", "highlighted",
@@ -185,4 +185,4 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
 	
 }
 
-//  [Last modified: 2016 10 26 at 12:36:52 GMT]
+//  [Last modified: 2016 10 26 at 17:40:18 GMT]

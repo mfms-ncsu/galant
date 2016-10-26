@@ -325,9 +325,8 @@ public class GraphPanel extends JPanel{
         boolean visible = node.hasLabel(state)
             && ! (node.getLabel(state).length() == 0);
         //if ( dispatch.isAnimationMode() ) {
-        Graph graph = dispatch.getWorkingGraph();
         visible = visible
-            && graph.nodeLabelsAreVisible()
+            && GraphDisplays.NODE_LABELS.isShown()
             && ! node.labelIsHidden(state);
             //}
 //         else {
@@ -1047,4 +1046,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2016 10 26 at 14:46:09 GMT]
+//  [Last modified: 2016 10 26 at 15:57:58 GMT]

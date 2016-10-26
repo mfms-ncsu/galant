@@ -58,8 +58,8 @@ algorithm {
     setDirected(true);
 
     beginStep();
-    hideEdgeWeights();
-    hideNodeWeights();
+    showNodeLabels();
+    showEdgeLabels();
     clearNodeLabels();
     clearEdgeLabels();
     endStep();
@@ -74,4 +74,4 @@ algorithm {
     }
 }
 
-//  [Last modified: 2016 10 03 at 18:08:13 GMT]
+//  [Last modified: 2016 10 26 at 17:40:51 GMT]

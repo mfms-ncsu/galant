@@ -73,6 +73,16 @@ public class GraphPanel extends JPanel{
      */
     private final float [] SELECTED_EDGE_DASH_PATTERN = {5};
 
+    /** 
+     * interior color of marked node during algorithm execution
+     */
+    private final Color MARKED_NODE_COLOR = Color.LIGHT_GRAY;
+
+    /**
+     * interior color of selected node during editing
+     */
+    private final Color SELECTED_NODE_COLOR = Color.CYAN;
+
     /**
      * Default width of an edge or node boundary
      */
@@ -559,8 +569,13 @@ public class GraphPanel extends JPanel{
                                     2 * nodeRadius );
 
         /* draw node interior */
-        if ( n.isMarked(state) ) {
-            g2d.setColor( Color.LIGHT_GRAY );
+        if ( selectedNode != null
+             && selectedNode.equals(n)
+             && ! dispatch.isAnimationMode() ) {
+            g2d.setColor( SELECTED_NODE_COLOR );
+        }
+        else if ( n.isMarked(state) ) {
+            g2d.setColor( MARKED_NODE_COLOR );
         }
         else {
             g2d.setColor( Color.WHITE );
@@ -606,13 +621,13 @@ public class GraphPanel extends JPanel{
         }
 
         // draw translucency to darken node if it is selected in edit mode
-        if ( selectedNode != null
-             && selectedNode.equals(n)
-             && ! dispatch.isAnimationMode()) {
-            Color color = new Color(0, 0, 1, .2f);
-            g2d.setColor(color);
-            g2d.fill( nodeCircle );
-        }
+//         if ( selectedNode != null
+//              && selectedNode.equals(n)
+//              && ! dispatch.isAnimationMode()) {
+//             Color color = new Color(0, 0, 1, .2f);
+//             g2d.setColor(color);
+//             g2d.fill( nodeCircle );
+//         }
 			
     } // end, drawNode
 
@@ -623,6 +638,11 @@ public class GraphPanel extends JPanel{
 	 * @param g The current graph, used to determine directedness
 	 * @param e The edge to be drawn
 	 * @param g2d The graphics object used to draw the elements
+     *
+     * @todo there's a lot of vestigial logic here; this method should never
+     * be called if e is null (would crash earlier) or was deleted or either
+     * endpoint was missing (it's the graph's responsibility to maintein
+     * consistency)
 	 */
 	private void drawEdge(Graph g, Edge e, Graphics2D g2d) 
         throws GalantException
@@ -1055,4 +1075,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2016 10 27 at 19:49:39 GMT]
+//  [Last modified: 2016 10 27 at 22:18:57 GMT]

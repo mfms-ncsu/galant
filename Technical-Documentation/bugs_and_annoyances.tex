@@ -49,7 +49,10 @@ Text representations of graphs can either be edited or generated externally.}}
   to select a collection of nodes and move them all at once.
 
 \item The force directed layout algorithm clusters nodes too close to each
-  other when there are cliques or near cliques.
+  other when there are cliques or near cliques. This has been partially
+  mitigated. If you use the \textsf{Ctrl-i} keyboard shortcut, you are asked
+  for a ``degree repelling boost'' -- nodes with high degree will repel each
+  other more if this number is large.
 
 \item Semantics of force directed layout when combined with adding edges is
   not intuitive (force directed layout takes over if the button is pressed,
@@ -60,10 +63,9 @@ Text representations of graphs can either be edited or generated externally.}}
   fill color of a node.  The only way to change these properties is via
   highlighting, selecting, and marking nodes/edges during the animation.
 
-\item
-  A change in color of an edge does not appear to take place while the edge
-  is selected for editing -- its color stays blue during that time.
-  Only when focus is no longer on the edge does it change color.
+\item Once you choose a color for a node in the editor, you can't uncolor it in
+  the editor. The best you can do is set it to black, but then it appears
+  thicker.
 
 \item If a node is selected for editing (other than immediately on creation)
   its weight is set to 0 when the spinner shows up.  Initially a node has no

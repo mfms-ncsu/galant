@@ -1,8 +1,12 @@
 Release notes for Galant, most recent first.
 
-v5.4
+v5.4 (upcoming)
 
 User
+
+- selected edges are dashed during editing, nodes are shaded cyan
+
+- visibility of labels/weights on nodes/edges can be toggled during execution, either by the algorithm or by the user
 
 - faster reaction to display state changes
 

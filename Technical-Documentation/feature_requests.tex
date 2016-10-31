@@ -21,6 +21,14 @@ Some features under development for the next major release are listed here.
   large to fit in the current window, the only recourse is to do
   force-directed layout.
 
+\item \emph{Scaling of graph within window.} A possible alternative or option
+  to the previous item is making the node positions adjust so that they
+  always fit into the current window. How best to handle the semantics is not
+  clear: you don't necessarily want the editor to change x and y attributes
+  in the GraphML whenever user resizes the window. It may make sense to
+  establish a grid based on maximum horizontal and vertical dimensions when
+  the graph is first loaded.
+
 \item
   \emph{Mapping attributes to actions.}
   In order to make animations more accessible to visually impaired users,
@@ -37,6 +45,9 @@ Some features under development for the next major release are listed here.
   $q$ to state $r$ and another from $r$ to $q$; other applications may need
   this as well. A single inflection point, carefully placed, and present only
   if there are parallel edges, could accomplish this.
+
+\item \emph{More preferences.} Font sizes for labels and weights, thickness for colors
+  distinct from highlights, distinct highlight colors for Galant types versus functions. 
 
 \item \emph{Selection of multiple nodes and/or edges.}  It might prove useful
   to move a collection of nodes instead of just a single node or give a

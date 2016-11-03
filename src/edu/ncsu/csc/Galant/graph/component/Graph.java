@@ -123,7 +123,6 @@ public class Graph {
         }
         // then reinitialize the message banner
         banner = new MessageBanner(this);
-        //        nodeLabelsVisible = GraphWindow.GraphDisplays.NODE_LABELS.isShown();
     }
 
     /**
@@ -368,46 +367,36 @@ public class Graph {
     /**
      * Methods that cause labels and weights to be shown or hidden during
      * algorithm execution. Typically, an algorithm will declare its intent
-     * at the beginning. By default, labels and weights are shown unless the
-     * algorithm hides them.
+     * at the beginning.
      */
-    public void unhideEdgeLabels() throws Terminate { 
-        clear(HIDDEN_EDGE_LABELS);
-    }
-    public void showEdgeLabels(Boolean show) throws Terminate { 
-        set(HIDDEN_EDGE_LABELS, ! show);
-    }
-    public void hideEdgeLabels() throws Terminate { 
-        set(HIDDEN_EDGE_LABELS);
-    }
-    public void unhideEdgeWeights() throws Terminate { 
-        clear(HIDDEN_EDGE_WEIGHTS);
-    }
-    public void showEdgeWeights(Boolean show) throws Terminate { 
-        set(HIDDEN_EDGE_WEIGHTS, ! show);
-    }
-    public void hideEdgeWeights() throws Terminate { 
-        set(HIDDEN_EDGE_WEIGHTS);
-    }
-    public void unhideNodeLabels() throws Terminate { 
-        clear(HIDDEN_NODE_LABELS);
-    }
-    /** @todo need the same for node labels and edge labels, weights */
+
+    /**
+     * displays node labels if show is true, hides them if show is false
+     * also toggles the button in the graph window if appropriate 
+     */
     public void showNodeLabels(boolean show) { 
-        System.out.println("showNodeLabels " + show);
         graphWindow.showNodeLabels(show);
     }
-    public void hideNodeLabels() throws Terminate { 
-        set(HIDDEN_NODE_LABELS);
+    /**
+     * displays node weights if show is true, hides them if show is false
+     * also toggles the button in the graph window if appropriate 
+     */
+    public void showNodeWeights(Boolean show) { 
+       graphWindow.showNodeWeights(show);
     }
-    public void unhideNodeWeights() throws Terminate { 
-        clear(HIDDEN_NODE_WEIGHTS);
+    /**
+     * displays edge labels if show is true, hides them if show is false
+     * also toggles the button in the graph window if appropriate 
+     */
+    public void showEdgeLabels(boolean show) { 
+        graphWindow.showEdgeLabels(show);
     }
-    public void showNodeWeights(Boolean show) throws Terminate { 
-        set(HIDDEN_NODE_WEIGHTS, ! show);
-    }
-    public void hideNodeWeights() throws Terminate { 
-        set(HIDDEN_NODE_WEIGHTS);
+    /**
+     * displays edge weights if show is true, hides them if show is false
+     * also toggles the button in the graph window if appropriate 
+     */
+    public void showEdgeWeights(Boolean show) { 
+       graphWindow.showEdgeWeights(show);
     }
 
     /**
@@ -476,31 +465,6 @@ public class Graph {
         for ( Edge edge: edges ) {
             edge.show();
         }
-    }
-
-    /**
-     * The following are used to query label and weight visibility during
-     * algorithm execution and are called from GraphPanel; note that only the
-     * versions with the state argument are needed -- these are never called
-     * outside of algorithm execution. The implementation also implies that
-     * labels and weights are visible by default during algorithm
-     * execution. The algorithm must explicitly hide them, either globally or
-     * for individual nodes and edges.
-     *
-     * @todo These will not be needed once the runtime toggling works
-     * correctly, as it does for node labels.
-     */
-    public Boolean edgeLabelsAreVisible(int state) {
-        return ! is(state, HIDDEN_EDGE_LABELS);
-    }
-    public Boolean edgeWeightsAreVisible(int state) {
-        return ! is(state, HIDDEN_EDGE_WEIGHTS);
-    }
-    public Boolean nodeLabelsAreVisible(int state) {
-        return ! is(state, HIDDEN_NODE_LABELS);
-    }
-    public Boolean nodeWeightsAreVisible(int state) {
-        return ! is(state, HIDDEN_NODE_WEIGHTS);
     }
 
     /**
@@ -1279,4 +1243,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2016 10 26 at 17:33:53 GMT]
+//  [Last modified: 2016 11 03 at 20:28:04 GMT]

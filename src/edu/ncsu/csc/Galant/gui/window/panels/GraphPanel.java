@@ -205,14 +205,6 @@ public class GraphPanel extends JPanel{
      * otherwise
      */
     private String doubleToString( double number ) {
-        /* Not needed: the infinity symbol is printed automagically, and
-         * 0.0/0.0 is printed as a ? 
-         * Just in case:  
-         *   -1.0/0.0 = Double.POSITIVE_INFINITY
-         *  and 0.0/0.0 = NaN */
-       // if ( number == Double.POSITIVE_INFINITY ) {
-       //      return "inf";
-       // }
        if ( (int) number == number ) {
            // integer
            return String.format("%d", (int) number);
@@ -281,7 +273,9 @@ public class GraphPanel extends JPanel{
 
             // If you're drawing an edge, draw a line between the first node and
             // the cursor
-            if ( ! dispatch.isAnimationMode() && this.selectedNode != null && this.edgeTracker != null) {
+            if ( ! dispatch.isAnimationMode()
+                 && this.selectedNode != null
+                 && this.edgeTracker != null ) {
                 Point p1 = edgeTracker;
                 Point p2 = selectedNode.getFixedPosition();
                 g2d.drawLine(p1.x, p1.y, p2.x, p2.y);
@@ -331,20 +325,12 @@ public class GraphPanel extends JPanel{
      * everything is visible during parsing and edit mode.
      */
     private boolean labelVisible(Node node) {
-        System.out.println("labelVisible, node = " + node);
         int state = dispatch.getDisplayState(); 
         boolean visible = node.hasLabel(state)
             && ! (node.getLabel(state).length() == 0);
-        //if ( dispatch.isAnimationMode() ) {
         visible = visible
             && GraphDisplays.NODE_LABELS.isShown()
             && ! node.labelIsHidden(state);
-            //}
-//         else {
-//             visible = visible
-//                 && GraphDisplays.NODE_LABELS.isShown();
-//         }
-        System.out.println("labelVisible, visible = " + visible);
         return visible;
     }
 
@@ -356,16 +342,9 @@ public class GraphPanel extends JPanel{
     private boolean weightVisible(Node node) {
         int state = dispatch.getDisplayState(); 
         boolean visible = node.hasWeight(state);
-        if ( dispatch.isAnimationMode() ) {
-            Graph graph = dispatch.getWorkingGraph();
-            visible = visible
-                && graph.nodeWeightsAreVisible(state)
-                && ! node.weightIsHidden(state);
-        }
-        else {
-            visible = visible
-                && GraphDisplays.NODE_WEIGHTS.isShown();
-        }
+        visible = visible
+            && GraphDisplays.NODE_WEIGHTS.isShown()
+            && ! node.weightIsHidden(state);
         return visible;
     }
 
@@ -375,19 +354,12 @@ public class GraphPanel extends JPanel{
      * algorithm otherwise.
      */
     private boolean labelVisible(Edge edge) {
-        int state = dispatch.getDisplayState(); 
+        int state = dispatch.getDisplayState();
         boolean visible = edge.hasLabel(state)
             && ! (edge.getLabel(state).length() == 0);
-        if ( dispatch.isAnimationMode() ) {
-            Graph graph = dispatch.getWorkingGraph();
-            visible = visible
-                && graph.edgeLabelsAreVisible(state)
-                && ! edge.labelIsHidden(state);
-        }
-        else {
-            visible = visible
-                && GraphDisplays.EDGE_LABELS.isShown();
-        }
+        visible = visible
+            && GraphDisplays.EDGE_LABELS.isShown()
+            && ! edge.labelIsHidden(state);
         return visible;
     }
 
@@ -399,16 +371,9 @@ public class GraphPanel extends JPanel{
     private boolean weightVisible(Edge edge) {
         int state = dispatch.getDisplayState(); 
         boolean visible = edge.hasWeight(state);
-        if ( dispatch.isAnimationMode() ) {
-            Graph graph = dispatch.getWorkingGraph();
-            visible = visible
-                && graph.edgeWeightsAreVisible(state)
-                && ! edge.weightIsHidden(state);
-        }
-        else {
-            visible = visible
-                && GraphDisplays.EDGE_WEIGHTS.isShown();
-        }
+        visible = visible
+            && GraphDisplays.EDGE_WEIGHTS.isShown()
+            && ! edge.weightIsHidden(state);
         return visible;
     }
 
@@ -1075,4 +1040,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2016 10 27 at 22:18:57 GMT]
+//  [Last modified: 2016 11 03 at 20:55:30 GMT]

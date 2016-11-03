@@ -231,42 +231,42 @@ public abstract class Algorithm implements Runnable {
 
     /**
      * The following methods control the display of labels and weights during
-     * algorithm execution; usually used at the beginning to hide unnecessary
-     * information. Individual showing and hiding of Node/Edge labels or
-     * weights takes effect only if these are visible globally in the
-     * graph. Initially, all labels and weights are visible.
+     * algorithm execution; usually used at the beginning to have the
+     * algorithm declare what information needs to be shown in order for the
+     * algorithm animation to be effective. They have the same effect as the
+     * user does when using the toggle buttons or keyboard shortcuts.
+     * 
+     * Individual showing and hiding of Node/Edge labels or weights takes
+     * effect only if these are visible globally in the graph. Initially, all
+     * labels and weights are visible.
+     *
+     * @todo There's an unnecessary level of indirection here; we could call
+     * on a GraphWindow method directly instead of going through the graph first.
      */
 
     /** makes node labels invisible */
-    public void hideNodeLabels() throws Terminate { graph.showNodeLabels(false); }
+    public void hideNodeLabels() { graph.showNodeLabels(false); }
     /** makes edge labels invisible */
-    public void hideEdgeLabels() throws Terminate { graph.hideEdgeLabels(); }
+    public void hideEdgeLabels() { graph.showEdgeLabels(false); }
     /** makes node labels visible */
-    public void unhideNodeLabels() throws Terminate { graph.unhideNodeLabels(); }
-    /** makes node labels visible */
-    public void showNodeLabels() throws Terminate { graph.showNodeLabels(true); }
+    public void showNodeLabels() { graph.showNodeLabels(true); }
     /** makes edge labels visible */
-    public void unhideEdgeLabels() throws Terminate { graph.unhideEdgeLabels(); }
-    /** makes edge labels visible */
-    public void showEdgeLabels() throws Terminate { graph.unhideEdgeLabels(); }
+    public void showEdgeLabels() { graph.showEdgeLabels(true); }
     /** makes node weights invisible */
-    public void hideNodeWeights() throws Terminate { graph.hideNodeWeights(); }
+    public void hideNodeWeights() { graph.showNodeWeights(false); }
     /** makes edge weights invisible */
-    public void hideEdgeWeights() throws Terminate { graph.hideEdgeWeights(); }
+    public void hideEdgeWeights() { graph.showEdgeWeights(false); }
     /** makes node weights visible */
-    public void unhideNodeWeights() throws Terminate { graph.unhideNodeWeights(); }
-    /** makes node weights visible */
-    public void showNodeWeights() throws Terminate { graph.unhideNodeWeights(); }
+    public void showNodeWeights() { graph.showNodeWeights(true); }
     /** makes edge weights visible */
-    public void unhideEdgeWeights() throws Terminate { graph.unhideEdgeWeights(); }
-    /** makes edge weights visible */
-    public void showEdgeWeights() throws Terminate { graph.unhideEdgeWeights(); }
+    public void showEdgeWeights() { graph.showEdgeWeights(true); }
 
     /**
      * The following show or hide all Node/Edge labels or weights during
      * execution. They take effect only if the corresponding items are
-     * visible overall. What they do is to iteratively show or hide weight or
-     * label of each individual Node/Edge
+     * visible overall as controlled by the previous set of methods or the
+     * user. What they do is to iteratively show or hide weight or label of
+     * each individual Node/Edge
      */
     public void hideAllNodeLabels() throws Terminate { graph.hideAllNodeLabels(); }
     public void hideAllEdgeLabels() throws Terminate { graph.hideAllEdgeLabels(); }
@@ -967,4 +967,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2016 10 26 at 17:10:08 GMT]
+//  [Last modified: 2016 11 03 at 20:38:32 GMT]

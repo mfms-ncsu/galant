@@ -300,12 +300,12 @@ public class GraphPanel extends JPanel{
 			
                 // Draw edges first to put them behind nodes
                 for (Edge e : edges) {
-                    if ( ! e.isHidden(state) )
+                    if ( e.inScope(state) && ! e.isHidden(state) )
                         drawEdge(graph, e, g2d);
                 }
 			
                 for (Node n : nodes) {
-                    if ( ! n.isHidden(state) )
+                    if ( n.inScope(state) && ! n.isHidden(state) )
                         drawNode(n, g2d);
                 }
             }
@@ -442,6 +442,8 @@ public class GraphPanel extends JPanel{
             }
             nodeCenter = new Point( x, y );
         }
+        if ( nodeCenter == null )
+            throw new GalantException("Unable to compute center for node " + n);
         return nodeCenter;
     }
 	
@@ -463,12 +465,8 @@ public class GraphPanel extends JPanel{
 	private void drawNode(Node n, Graphics2D g2d)
         throws GalantException
     {
-        int state = dispatch.getDisplayState();
-		GraphElementState currentState = n.getLatestValidState(state);
-        if ( currentState == null ) return;
-        Point nodeCenter = getNodeCenter( n );
-        if ( nodeCenter == null ) return;
-        int stateNumber = currentState.getState();
+        int stateNumber = dispatch.getDisplayState();
+        Point nodeCenter = getNodeCenter(n);
         g2d.setColor(Color.BLACK);
 		
         if ( labelVisible(n) ) {
@@ -539,7 +537,7 @@ public class GraphPanel extends JPanel{
              && ! dispatch.isAnimationMode() ) {
             g2d.setColor( SELECTED_NODE_COLOR );
         }
-        else if ( n.isMarked(state) ) {
+        else if ( n.isMarked(stateNumber) ) {
             g2d.setColor( MARKED_NODE_COLOR );
         }
         else {
@@ -584,16 +582,6 @@ public class GraphPanel extends JPanel{
                                nodeCenter.x-5, nodeCenter.y+4 );
             }
         }
-
-        // draw translucency to darken node if it is selected in edit mode
-//         if ( selectedNode != null
-//              && selectedNode.equals(n)
-//              && ! dispatch.isAnimationMode()) {
-//             Color color = new Color(0, 0, 1, .2f);
-//             g2d.setColor(color);
-//             g2d.fill( nodeCircle );
-//         }
-			
     } // end, drawNode
 
 
@@ -603,94 +591,77 @@ public class GraphPanel extends JPanel{
 	 * @param g The current graph, used to determine directedness
 	 * @param e The edge to be drawn
 	 * @param g2d The graphics object used to draw the elements
-     *
-     * @todo there's a lot of vestigial logic here; this method should never
-     * be called if e is null (would crash earlier) or was deleted or either
-     * endpoint was missing (it's the graph's responsibility to maintein
-     * consistency)
 	 */
 	private void drawEdge(Graph g, Edge e, Graphics2D g2d) 
         throws GalantException
     {
-        int state = dispatch.getDisplayState();
-		GraphElementState currentState = e.getLatestValidState(state);
-        if ( currentState == null ) return;
-
-        int stateNumber = currentState.getState();
-
+        int stateNumber = dispatch.getDisplayState();
 		int thickness = defaultThickness;
 		
-		if (e != null) {
-			Node dest = e.getTargetNode();
-			Node source = e.getSourceNode();
-            if (dest != null && source != null) {
-                Point p1 = getNodeCenter( source );
-                Point p2 = getNodeCenter( dest );
+        Node target = e.getTargetNode();
+        Node source = e.getSourceNode();
+        Point p1 = getNodeCenter(source);
+        Point p2 = getNodeCenter(target);
                 
-				// determine color and thickness of the edge
-                if ( e.isSelected(stateNumber) ) {
-					g2d.setColor(HIGHLIGHT_COLOR);
-					thickness = highlightThickness; 
-				}
-                else {
-                    String edgeColor = e.getColor(stateNumber);
-                    if ( edgeColor != null ) {
-                        Color c = Color.decode(e.getColor(stateNumber));
-                        g2d.setColor(c);
-                        thickness = highlightThickness;
-                    }
-                    else {
-                        g2d.setColor(DEFAULT_COLOR);
-                    }
-                }
+        // determine color and thickness of the edge
+        if ( e.isSelected(stateNumber) ) {
+            g2d.setColor(HIGHLIGHT_COLOR);
+            thickness = highlightThickness; 
+        }
+        else {
+            String edgeColor = e.getColor(stateNumber);
+            if ( edgeColor != null ) {
+                Color c = Color.decode(e.getColor(stateNumber));
+                g2d.setColor(c);
+                thickness = highlightThickness;
+            }
+            else {
+                g2d.setColor(DEFAULT_COLOR);
+            }
+        }
 
-				//only draw if edge exists at current state
-				if (p1 != null && p2 != null) {
-                    // determine stroke
-                    Stroke oldStroke = g2d.getStroke();
-                    // special case: selected edge (dashed)
-                    if ( selectedEdge != null
-                         && selectedEdge.equals(e)
-                         && ! dispatch.isAnimationMode() ) {
-                        Stroke selectedStroke
-                            = new BasicStroke(highlightThickness,
-                                              BasicStroke.CAP_BUTT,
-                                              BasicStroke.JOIN_BEVEL, 0,
-                                              SELECTED_EDGE_DASH_PATTERN, 0);
-                        g2d.setStroke(selectedStroke);
-                    }
-                    else {
-						g2d.setStroke(new BasicStroke(thickness));
-                    }
+        // determine stroke
+        Stroke oldStroke = g2d.getStroke();
+        // special case: selected edge (dashed)
+        if ( selectedEdge != null
+             && selectedEdge.equals(e)
+             && ! dispatch.isAnimationMode() ) {
+            Stroke selectedStroke
+                = new BasicStroke(highlightThickness,
+                                  BasicStroke.CAP_BUTT,
+                                  BasicStroke.JOIN_BEVEL, 0,
+                                  SELECTED_EDGE_DASH_PATTERN, 0);
+            g2d.setStroke(selectedStroke);
+        }
+        else {
+            g2d.setStroke(new BasicStroke(thickness));
+        }
 
-					// Self loop
-					if (dest.equals(source)) {
-						g2d.drawOval(p1.x, p1.y, 24, 24);
-						g2d.setStroke(oldStroke);
-						if (g.isDirected()) {
-							drawSelfLoopArrow(p1, g2d);
-						}
+        // Self loop
+        if ( target.equals(source) ) {
+            g2d.drawOval(p1.x, p1.y, 24, 24);
+            g2d.setStroke(oldStroke);
+            if (g.isDirected()) {
+                drawSelfLoopArrow(p1, g2d);
+            }
 						
-					// Straight edge	
-					} else {
-						g2d.drawLine(p1.x, p1.y, p2.x, p2.y);
-						g2d.setStroke(oldStroke);
+            // Straight edge	
+        }
+        else {
+            g2d.drawLine(p1.x, p1.y, p2.x, p2.y);
+            g2d.setStroke(oldStroke);
 
-						if (g.isDirected()) {
-							drawDirectedArrow(p1, p2, g2d);
-						} 
+            if (g.isDirected()) {
+                drawDirectedArrow(p1, p2, g2d);
+            } 
 						
-                        if ( labelVisible(e) )
-                            drawEdgeLabel(e.getLabel(stateNumber), p1, p2, g2d);
-                        if ( weightVisible(e) )
-                            drawEdgeWeight(e.getWeight(stateNumber), p1, p2, g2d);
-					}
-				}
-				
-				g2d.setColor(Color.BLACK);
-			}
-		}
-	}
+            if ( labelVisible(e) )
+                drawEdgeLabel(e.getLabel(stateNumber), p1, p2, g2d);
+            if ( weightVisible(e) )
+                drawEdgeWeight(e.getWeight(stateNumber), p1, p2, g2d);
+        }
+        g2d.setColor(Color.BLACK);
+    }
 	
 	/**
 	 * Draws a directed arrow on the end of an edge between the specified nodes
@@ -1040,4 +1011,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2016 11 03 at 20:55:30 GMT]
+//  [Last modified: 2016 11 03 at 21:22:02 GMT]

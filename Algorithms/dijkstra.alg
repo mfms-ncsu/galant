@@ -1,7 +1,6 @@
 /** dijkstra.alg
  *  Implementation of Dijkstra's shortest path algorithm. Interprets
  *  undirected edges as going in both directions.
- * $Id: dijkstra.alg 74 2014-05-14 01:45:29Z mfms $
  */
 
 /** Required: edge weights defined, node and edge weights visible */
@@ -42,4 +41,4 @@ algorithm {
     } // stop when priority queue is empty
 } // end, algorithm
 
-//  [Last modified: 2016 10 14 at 19:06:56 GMT]
+//  [Last modified: 2016 11 04 at 17:00:03 GMT]

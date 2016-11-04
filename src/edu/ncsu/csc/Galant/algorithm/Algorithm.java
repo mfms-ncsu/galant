@@ -427,6 +427,15 @@ public abstract class Algorithm implements Runnable {
         checkGraphElement(ge);
         return ge.getLabel();
     }
+    public boolean hasLabel(GraphElement ge) throws GalantException {
+        checkGraphElement(ge);
+        return ge.hasLabel();
+    }
+    public boolean hasWeight(GraphElement ge) throws GalantException {
+        checkGraphElement(ge);
+        return ge.hasWeight();
+    }
+
     /**
      * @todo It would be useful to have a class AttributeParser with a method
      * parse(String) that returns an Integer, Double, Boolean or String,
@@ -970,4 +979,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2016 11 04 at 12:48:02 GMT]
+//  [Last modified: 2016 11 04 at 16:53:56 GMT]

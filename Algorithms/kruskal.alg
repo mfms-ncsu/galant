@@ -1,7 +1,6 @@
 /**
  * @file kruskal.alg
- * @brief implementation of Kruskal's MST algorithm, using Galant
- * $Id: kruskal.alg 74 2014-05-14 01:45:29Z mfms $
+ * animation of Kruskal's MST algorithm
  */
 
 /** Required: edge weights defined and visible */
@@ -78,4 +77,4 @@ algorithm {
     display( "MST has total weight " + totalWeight );
 }
 
-/*  [Last modified: 2016 02 18 at 22:55:06 GMT] */
+/*  [Last modified: 2016 11 04 at 17:08:47 GMT] */

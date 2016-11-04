@@ -1,6 +1,8 @@
 /**
  * strip_attributes.alg - strips out unneccessary attributes from graphs
- * created before the cleaner handling of attributes was put in place
+ * created before the cleaner handling of attributes was put in place; or
+ * from ones where weights, labels and colors were created inadvertently
+ * during editing.
  */
 
 algorithm {
@@ -9,8 +11,10 @@ algorithm {
         if ( label(node).equals("") ) clearLabel(node);
         if ( weight(node) != 0 ) no_weights = false;
         uncolor(node);
-        clear(node, "layer");
-        clear(node, "positionInLayer");
+        if ( ! graph.isLayered() ) {
+            clear(node, "layer");
+            clear(node, "positionInLayer");
+        }
     }
     if ( no_weights ) {
         for_nodes( node ) clearWeight(node);
@@ -29,4 +33,4 @@ algorithm {
 
 }
 
-//  [Last modified: 2016 11 04 at 12:57:06 GMT]
+//  [Last modified: 2016 11 04 at 13:21:00 GMT]

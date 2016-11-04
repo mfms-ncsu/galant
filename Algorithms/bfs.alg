@@ -1,4 +1,4 @@
-/** bfs.alg -
+/** 
  * Implementation of breadth-first search. Undirected edges are regarded as
  * being directed both ways.
  */
@@ -37,4 +37,4 @@ algorithm {
     }
 }
 
-//  [Last modified: 2016 07 26 at 19:08:17 GMT]
+//  [Last modified: 2016 11 04 at 13:28:27 GMT]

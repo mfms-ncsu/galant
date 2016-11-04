@@ -1,10 +1,9 @@
-/** 
+/**
  * euclidian.alg
  *  Implementation of Dijkstra's shortest path algorithm. Interprets
  *  undirected edges as going in both directions if run in undirected
  *  mode. Unlike dijkstra.alg, the edge weights are set initially by the
  *  algorithm, based on Euclidian distances between nodes.
- * $Id: euclidian.alg 106 2015-04-15 13:01:30Z mfms $
  */
 
 /** Required: node and edge weights visible */
@@ -68,4 +67,4 @@ algorithm {
     } // stop when priority queue is empty
 }
 
-//  [Last modified: 2015 12 07 at 01:28:39 GMT]
+//  [Last modified: 2016 11 04 at 17:07:39 GMT]

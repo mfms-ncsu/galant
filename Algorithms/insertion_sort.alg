@@ -9,8 +9,6 @@
  * The already sorted part of the array is visited'. The element to be
  * inserted moves about the array -- the element to which it is compared at
  * each step is selected.
- * 
- * $Id: insertion_sort.alg 74 2014-05-14 01:45:29Z mfms $
  */
 
 import edu.ncsu.csc.Galant.GraphDispatch;
@@ -93,4 +91,4 @@ algorithm {
     deleteNode(toInsert);
 }
 
-//  [Last modified: 2016 08 05 at 21:17:49 GMT]
+//  [Last modified: 2016 11 04 at 17:08:00 GMT]

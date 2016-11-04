@@ -1,9 +1,7 @@
-/** dfs.alg
+/**
  * Implements depth-first search of a directed graph only; directedness is
  * forced at the beginning of the algorithm.
  */
-
-/** Required: node and edge labels visible */
 
 int time;
 
@@ -64,4 +62,4 @@ algorithm {
     }
 }
 
-//  [Last modified: 2016 08 09 at 20:52:54 GMT]
+//  [Last modified: 2016 11 04 at 16:58:48 GMT]

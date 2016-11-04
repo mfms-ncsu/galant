@@ -1,6 +1,6 @@
 /**
  * @file boruvka.alg
- * @brief implementation of Boruvka's MST algorithm, using Galant; designed
+ * implementation of Boruvka's MST algorithm, using Galant; designed
  * to showcase some of the newer Galant facilities.
  *
  * Among these are:
@@ -173,4 +173,4 @@ algorithm {
     endStep();
 }
 
-/*  [Last modified: 2016 07 28 at 01:01:45 GMT] */
+/*  [Last modified: 2016 11 04 at 16:22:42 GMT] */

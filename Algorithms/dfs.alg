@@ -1,87 +1,67 @@
-/** dfs.alg
+/**
  * Implements depth-first search of a graph, directed or undirected; in the
  * undirected case, it behaves as if edges were directed in both directions.
- * $Id: dfs.alg 47 2014-03-10 16:11:00Z mfms $
  */
 
-/** Required: node and edge labels visible */
+int time;
+int [] discovery;
+int [] finish;
 
-/**
- * An unfortunate consequence of the way algorithms are encapsulated in Java
- * is the inability of functions to modify global variables. The exceptions
- * are arrays and instances of classes -- in those cases the functions can
- * change *contents* at will, as long as the references to the arrays/objects
- * remain unchanged.
- */
-class GlobalVariables {
-    public int time;
-}
-
-GlobalVariables globals = new GlobalVariables();
-
-int [] discovery; 
-// Append initialization in algorithm{} or in Fectching Macro way: nodesList discovery;
-int [] finish; 
-// Append initialization in algorithm{} or in Fectching Macro way: nodesList finish;
-Graph graph;
-
-function visit( Node v, Node parent ) {
-    globals.time++;
-    discovery[ v.getId() ] = globals.time;
+function visit(Node v, Node parent) {
+    print(v + " " + parent);
+    time = time + 1;
+    discovery[id(v)] = time;
     beginStep();
-    v.setLabel( "" + discovery[ v.getId() ] );
-    v.mark();
+    label(v, discovery[id(v)]);
+    mark(v);
     endStep();
     for_outgoing( v, e, w ) {
         // the following 'exemption' ensures that the classification of an
         // edge is based on its first encounter only
         if ( ! isDirected() &&
-             ( w == parent 
-               || ! e.getLabel().equals("") ) )
+             ( w == parent
+               || hasLabel(e) ) )
             continue;
         beginStep();
-        if ( ! w.isMarked() ) {
-            e.setSelected(true); // make edge thicker if easy to do
-            w.setSelected(true);
-            visit( w, v );
+        if ( ! marked(w) ) {
+            highlight(e);
+            highlight(w);
+            visit(w, v);
         }
-        else if ( finish[ w.getId() ] == 0 ) { /* ancestor */
-            e.setLabel( "B" );
+        else if ( finish[id(w)] == 0 ) { /* ancestor */
+            label(e, "B");
         }
-        else if ( finish[ w.getId() ] 
-                  > discovery[ v.getId() ] ) { /* descendant */
-            e.setLabel( "F" );
+        else if ( finish[id(w)]
+                  > discovery[id(v)] ) { /* descendant */
+            label(e, "F");
         }
         else {
-            e.setLabel( "C" );
+            label(e, "C");
         }
         endStep();
     }
-    globals.time++;
-    finish[ v.getId() ] = globals.time;
-    v.setLabel( "" + discovery[ v.getId() ] + "/" + finish[ v.getId() ] );
+    time = time + 1;
+    finish[id(v)] = time;
+    setLabel(v, discovery[id(v)] + "/" + finish[id(v)]);
 }
 
 algorithm {
- graph = getGraph();
- discovery	= new int[ graph.getNodes().size() ];
- finish = new int[ graph.getNodes().size() ];
+    discovery = new int[numberOfNodes()];
+    finish = new int[numberOfNodes()];
+    time = 0;
+    showNodeLabels();
+    showEdgeLabels();
 
- beginStep();
- for_nodes( u ) {
-     u.setLabel("");
- }
+    beginStep();
+    clearNodeLabels();
+    clearEdgeLabels();
+    endStep();
 
- for_edges( e ) {
-     e.setLabel("");
- }
- endStep();
-
- for_nodes( u ) {
-     if ( ! u.isMarked() ) {
-         visit( u, null );
-     }
- }
+    for_nodes( u ) {
+        if ( ! marked(u) ) {
+            visit( u, null );
+        }
+    }
 }
 
-//  [Last modified: 2013 07 15 at 14:07:48 GMT]
+//  [Last modified: 2016 11 04 at 16:58:58 GMT]

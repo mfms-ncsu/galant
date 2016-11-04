@@ -319,17 +319,12 @@ public class GraphPanel extends JPanel{
      * @return true if the label of the node should be visible; the answer
      * is controlled by toggle switches when not in animation mode and by the
      * algorithm otherwise.
-     *
-     * @todo This and the corresponding methods for weights will eventually
-     * be modified so that the toggle switches go away entirely and
-     * everything is visible during parsing and edit mode.
      */
     private boolean labelVisible(Node node) {
-        int state = dispatch.getDisplayState(); 
+        if ( ! GraphDisplays.NODE_LABELS.isShown() ) return false;
+        int state = dispatch.getDisplayState();
         boolean visible = node.hasLabel(state)
-            && ! (node.getLabel(state).length() == 0);
-        visible = visible
-            && GraphDisplays.NODE_LABELS.isShown()
+            && ! (node.getLabel(state).length() == 0)
             && ! node.labelIsHidden(state);
         return visible;
     }
@@ -1011,4 +1006,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2016 11 03 at 21:22:02 GMT]
+//  [Last modified: 2016 11 04 at 19:32:54 GMT]

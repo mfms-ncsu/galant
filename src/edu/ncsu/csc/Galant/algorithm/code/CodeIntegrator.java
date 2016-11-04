@@ -80,17 +80,38 @@ public class CodeIntegrator	{
         IMPORTS_FIELD +
         "public class " + NAME_FIELD + " extends Algorithm" + "{" + CODE_FIELD + "}";
 
+    /**
+     * at the end of the algorithm code, various exceptions must be caught;
+     * there is not a specific catch statement for each because it's not
+     * known whether a given algorithm will include any function calls that
+     * throw them; for example, an algorithm that does nothing to the display
+     * may not even call a method that throws Terminate
+     * that's why we need the "instanceof" tests
+     */
+    public static final String FINAL_EXCEPTION_HANDLING
+        = "catch (Exception e) {"
+        + " if (e instanceof Terminate) {"
+        + "  System.out.println(\"Algorithm finished\");"
+        + " }"
+        + " else if (e instanceof GalantException) {"
+        + "  GalantException ge = (GalantException) e;"
+        + "  ge.report(\"\");"
+        + "  try {ge.display();}"
+        + "  catch (Terminate t) {"
+        + "   System.out.println(\"finished during exception display\");"
+        + "  }"
+        + " }"
+        + " else {"
+        + "  e.printStackTrace(System.out);displayException(e);"
+        + " }"
+        + "}";
+
     public static final String ALGORITHM_STRUCTURE
         = "public void run(){ try {" +
         ALGORITHM_HEAD + ALGORITHM_BODY + ALGORITHM_TAIL
-        + "}"
-        + " catch (Terminate t) { System.out.println(\"Terminate\"); }"
-        + " catch (GalantException ge)"
-        + " {ge.report(\"\"); "
-        + " try { ge.display(); }"
-        + " catch (Terminate t) { System.out.println(\"Terminate\"); } }"
-        + " catch (Exception e)"
-        + " {e.printStackTrace(System.out);displayException(e);}}" ;
+        + "} "
+        + FINAL_EXCEPTION_HANDLING
+        + "}";
 
     /**
      * Converts the unmodified user algorithm code into a proper Java class, as would be found
@@ -321,4 +342,4 @@ public class CodeIntegrator	{
     }
 }
 
-//  [Last modified: 2016 10 18 at 15:54:13 GMT]
+//  [Last modified: 2016 11 04 at 12:09:52 GMT]

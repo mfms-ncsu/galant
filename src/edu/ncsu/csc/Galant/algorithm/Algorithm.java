@@ -797,11 +797,6 @@ public abstract class Algorithm implements Runnable {
         ExceptionDialog.displayExceptionInDialog(e);
     }
 
-    /** @see edu.ncsu.csc.Galant.graph.component.Graph#addNode(Node) */
-    public void addNode(Node n){
-        graph.addNode(n);
-    }
-
     /** @see edu.ncsu.csc.Galant.graph.component.Graph#addNode() */
     public Node addNode(Integer x, Integer y) throws Terminate {
         return graph.addNode(x, y);
@@ -967,4 +962,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2016 11 03 at 20:38:32 GMT]
+//  [Last modified: 2016 11 04 at 11:16:34 GMT]

@@ -948,11 +948,11 @@ public class Graph {
         LogHelper.exitMethod( getClass(), "addInitialNode() " + n );
 		return n;
 	}
-	
+
 	/**
 	 * Adds a new <code>Node</code> to the <code>Graph</code>
-	 * @param x the x coordinate of the new node 
-	 * @param y the y coordinate of the new node 
+	 * @param x the x coordinate of the new node
+	 * @param y the y coordinate of the new node
      * @return the added <code>Node</code>; called only during algorithm
 	 * execution; the assumption here is that the algorithm has to "know" the
 	 * position of the node it is adding. The only difference from the above
@@ -964,8 +964,7 @@ public class Graph {
         Integer newId = nextNodeId();
 		Node n = new Node(this, newId, x, y);
 		nodes.add(n);
-        nodeById.put( newId, n ); 
-		
+        nodeById.put( newId, n );
 		if (this.rootNode == null) {
 			this.rootNode = n;
 		}
@@ -1243,4 +1242,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2016 11 03 at 20:28:04 GMT]
+//  [Last modified: 2016 11 04 at 11:15:49 GMT]

@@ -4,23 +4,23 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns 
 http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
  <graph  edgedefault="undirected">
-  <node id="0" weight="0.0" label="" x="162" y="114" color="#000000" layer="0" positionInLayer="0" />
-  <node id="1" weight="0.0" label="" x="411" y="143" color="#000000" layer="0" positionInLayer="0" />
-  <node id="2" weight="0.0" label="" x="126" y="297" color="#000000" layer="0" positionInLayer="0" />
-  <node id="3" weight="0.0" label="" x="368" y="292" color="#000000" layer="0" positionInLayer="0" />
-  <node id="4" weight="0.0" label="" x="588" y="330" color="#000000" layer="0" positionInLayer="0" />
-  <node id="5" weight="0.0" label="" x="261" y="470" color="#000000" layer="0" positionInLayer="0" />
-  <node id="6" weight="0.0" label="" x="511" y="450" color="#000000" layer="0" positionInLayer="0" />
-  <node id="7" weight="0.0" label="" x="624" y="97" color="#000000" layer="0" positionInLayer="0" />
-  <node id="8" weight="0.0" label="" x="435" y="581" color="#000000" layer="0" positionInLayer="0" />
-  <node id="9" weight="0.0" label="" x="94" y="488" color="#000000" layer="0" positionInLayer="0" />
-  <edge id="0" label="" weight="0.0" source="2" target="3" color="#000000" />
-  <edge id="1" label="" weight="0.0" source="0" target="3" color="#000000" />
-  <edge id="2" label="" weight="0.0" source="1" target="3" color="#000000" />
-  <edge id="3" label="" weight="0.0" source="9" target="5" color="#000000" />
-  <edge id="4" label="" weight="0.0" source="5" target="6" color="#000000" />
-  <edge id="5" label="" weight="0.0" source="5" target="8" color="#000000" />
-  <edge id="6" label="" weight="0.0" source="7" target="4" color="#000000" />
-  <edge id="7" label="" weight="0.0" source="6" target="4" color="#000000" />
-  <edge id="8" label="" weight="0.0" source="3" target="4" color="#000000" />
+  <node id="0" x="162" y="114"  />
+  <node id="1" x="411" y="143"  />
+  <node id="2" x="126" y="297"  />
+  <node id="3" x="368" y="292"  />
+  <node id="4" x="588" y="330"  />
+  <node id="5" x="261" y="470"  />
+  <node id="6" x="511" y="450"  />
+  <node id="7" x="624" y="97"  />
+  <node id="8" x="435" y="581"  />
+  <node id="9" x="94" y="488"  />
+  <edge  source="2" target="3"  />
+  <edge  source="0" target="3"  />
+  <edge  source="1" target="3"  />
+  <edge  source="9" target="5"  />
+  <edge  source="5" target="6"  />
+  <edge  source="5" target="8"  />
+  <edge  source="7" target="4"  />
+  <edge  source="6" target="4"  />
+  <edge  source="3" target="4"  />
  </graph></graphml>

@@ -45,10 +45,10 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
 		APIdictionary.put("addNode", "Adds a Node with default settings to the graph and returns a pointer to the new Node.");
 		APIdictionary.put("addEdge", "Adds an edge to the graph between the two specified nodes or node indices, and also stores the edge in each Node.");
 		APIdictionary.put("isSelected", "Returns True if the Node or Edge is selected in the latest state and False otherwise.");
-		APIdictionary.put("setSelected", "Sets the Node or Edge as selected. In contrast with the Graph's select function, this does not deselect other selected nodes in a graph."); 
+		APIdictionary.put("setSelected", "Sets the Node or Edge as selected. In contrast with the Graph's select function, this does not deselect other selected nodes in a graph.");
 		APIdictionary.put("isVisited", "Returns the true if the Node has been marked as visited and False otherwise.");
 		APIdictionary.put("setVisited", "Sets the Node's visited/marked property to the input value.");
-		APIdictionary.put("isMarked", "Returns the true if the Node has been marked and False otherwise."); 
+		APIdictionary.put("isMarked", "Returns the true if the Node has been marked and False otherwise.");
 		APIdictionary.put("mark", "Sets the Node's visited/marked property to True");
 		APIdictionary.put("getWeight", "Returns the weight of the current Node or Edge. The default weight is 0.");
 		APIdictionary.put("setWeight", "Sets the weight of the current Node or Edge.");
@@ -63,7 +63,6 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
 		APIdictionary.put("setLabel", "Sets the label associated with the Node or Edge.");
 		APIdictionary.put("getPosition", "Gets the position of the node on the coordinate plane.");
         APIdictionary.put("setPosition", "Sets the position of the Node on the coordinate plane.");
-		APIdictionary.put("equals", "Returns true if the given Node points to the same Node as the current Node and false otherwise.");
 		APIdictionary.put("setStringAttribute", "Stores a String in the Node or Edge under the specified key. This will overwrite any String, Integer, or Double attribute already set with the same key.");
 		APIdictionary.put("getStringAttribute", "Gets the String value associated with the specified key. Returns null if the key doesn't exist or it exists but its value is not a String.");
 		APIdictionary.put("setIntegerAttribute", "Stores an Integer in the Node or Edge under the specified key. This will overwrite any String, Integer, or Double attribute already set with the same key.");
@@ -76,7 +75,6 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
 		APIdictionary.put("setTargetNode", "Sets the destination Node of the current Edge.");
 		APIdictionary.put("getOtherEndpoint", "Returns the other endpoint of an edge, or NULL if the provided node is not either endpoint in the specified edge.");
 		APIdictionary.put("getId", "Returns the unique ID of the edge. This will not change during Algorithm execution unless explicitly set in the user code.");
-        APIdictionary.put("equals", "Returns true if the given Edge points to the same Node as the current Edge and false otherwise.");
         APIdictionary.put("for_nodes", "Iterates over all Nodes in the graph.");
         APIdictionary.put("for_edges", "Iterates over all Edges in the graph.");
         APIdictionary.put("function", "Creates a function that can be called later.");
@@ -89,19 +87,19 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
 			allMacrokeywords[i] = Macro.MACROS.get(i).getName();
 		}
 	}
-	
+
 	/**
 	 * An immutable list of all keywords employed in the Java language, plus
-	 * others that are relevant to Galant.
+	 * others that come from Java and are relevant to Galant.
 	 */
-	public static final String[] allJavaKeywords = new String[] { "abstract", "assert", "boolean", 
+	public static final String[] allJavaKeywords = new String[] { "abstract", "assert", "boolean",
 		"break", "byte", "case", "catch", "char", "class", "const", "continue", "default", "do",
 		"double", "else", "enum", "extends", "final", "finally", "float", "for", "goto", "if",
 		"implements", "import", "instanceof", "int", "interface", "long", "native", "new",
 		"package", "private", "protected", "public", "return", "short", "static", "strictfp",
-		"super", "switch", "synchronized", "this", "throw", "throws", "transient", "try", 
-                                                                  "void", "volatile", "while", "false", "null", "true", "boolean", "Integer", "Double" };
-	
+		"super", "switch", "synchronized", "this", "throw", "throws", "transient", "try",
+                                                                  "void", "volatile", "while", "false", "null", "true", "boolean", "Integer", "Double", "equals" };
+
 	/**
 	 * An immutable list of all API calls predefined for the user's
 	 * benefit.
@@ -116,14 +114,14 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
             "getWeight", "setWeight", "weight",
             "label", "color", "uncolor", "set", "clear",
             "getUnvisitedPaths", "getVisitedPaths",
-                                                                   
+            "clearLabel", "clearWeight",
 			"getUnvisitedAdjacentNodes", "travel", "getId", "getColor", "setColor", "getLabel", "setLabel", "getPosition",
-			"setPosition", "equals", "setStringAttribute", "getStringAttribute", "setIntegerAttribute", "getIntegerAttribute",
+			"setPosition", "setStringAttribute", "getStringAttribute", "setIntegerAttribute", "getIntegerAttribute",
 			"setDoubleAttribute", "getDoubleAttribute", "getSourceNode", "setSourceNode", "getTargetNode", "setTargetNode",
 			"getOtherEndpoint", "Graph", "Node", "Edge", "for_adjacent", "for_nodes", "for_edges", "function", "graph",
 			"setRootNode", "getRootNode", "getTargetNode", "setTargetNode", "getPaths", "NodeQueue", "EdgeQueue", "NodeStack",
                                                                    "EdgeStack", "NodePriorityQueue", "EdgePriorityQueue", "NodeSet", "EdgeSet", "nodeQ", "edgeQ", "nodeStack", "edgeStack", "nodePQ",
-			"edgePQ", "getId", "id", "equals", "Graph", "Node", "Edge", "for_adjacent", "for_nodes", "for_edges", "function", "graph", "getInteger", "getNode", "getEdge", "getNodeSet", "getEdgeSet",
+			"edgePQ", "getId", "id", "Graph", "Node", "Edge", "for_adjacent", "for_nodes", "for_edges", "function", "graph", "getInteger", "getNode", "getEdge", "getNodeSet", "getEdgeSet",
             "hide", "show", "hideLabel", "showLabel", "hideWeight", "showWeight",
             "hideEdgeWeights", "showEdgeWeights", "hideEdgeLabels", "showEdgeLabels",
             "hideNodeWeights", "showNodeWeights", "hideNodeLabels", "showNodeLabels",
@@ -185,4 +183,4 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
 	
 }
 
-//  [Last modified: 2016 10 26 at 17:40:18 GMT]
+//  [Last modified: 2016 11 04 at 13:10:55 GMT]

@@ -3,22 +3,22 @@
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns 
 http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
- <graph edgedefault="directed">
-  <node id="0" weight="0.0" label="" x="152" y="120" color="#000000" />
-  <node id="1" weight="0.0" label="" x="323" y="143" color="#000000" />
-  <node id="2" weight="0.0" label="" x="506" y="113" color="#000000" />
-  <node id="3" weight="0.0" label="" x="146" y="275" color="#000000" />
-  <node id="4" weight="0.0" label="" x="325" y="236" color="#000000" />
-  <node id="5" weight="0.0" label="" x="522" y="280" color="#000000" />
-  <edge id="0" label="" weight="5.0" source="0" target="1" color="#000000" />
-  <edge id="1" label="" weight="5.0" source="1" target="2" color="#000000" />
-  <edge id="2" label="" weight="1.0" source="0" target="3" color="#000000" />
-  <edge id="3" label="" weight="2.0" source="3" target="4" color="#000000" />
-  <edge id="4" label="" weight="1.0" source="4" target="5" color="#000000" />
-  <edge id="5" label="" weight="1.0" source="5" target="2" color="#000000" />
-  <edge id="6" label="" weight="1.0" source="4" target="1" color="#000000" />
-  <edge id="7" label="" weight="3.0" source="1" target="3" color="#000000" />
-  <edge id="8" label="" weight="2.0" source="1" target="5" color="#000000" />
-  <edge id="9" label="" weight="6.0" source="0" target="4" color="#000000" />
-  <edge id="10" label="" weight="4.0" source="2" target="4" color="#000000" />
+ <graph  edgedefault="directed">
+  <node id="0" x="152" y="120"  />
+  <node id="1" x="323" y="143"  />
+  <node id="2" x="506" y="113"  />
+  <node id="3" x="146" y="275"  />
+  <node id="4" x="325" y="236"  />
+  <node id="5" x="522" y="280"  />
+  <edge  source="0" target="1" weight="5.0"  />
+  <edge  source="1" target="2" weight="5.0"  />
+  <edge  source="0" target="3" weight="1.0"  />
+  <edge  source="3" target="4" weight="2.0"  />
+  <edge  source="4" target="5" weight="1.0"  />
+  <edge  source="5" target="2" weight="1.0"  />
+  <edge  source="4" target="1" weight="1.0"  />
+  <edge  source="1" target="3" weight="3.0"  />
+  <edge  source="1" target="5" weight="2.0"  />
+  <edge  source="0" target="4" weight="6.0"  />
+  <edge  source="2" target="4" weight="4.0"  />
  </graph></graphml>

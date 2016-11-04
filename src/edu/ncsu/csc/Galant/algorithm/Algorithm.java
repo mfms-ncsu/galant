@@ -442,6 +442,14 @@ public abstract class Algorithm implements Runnable {
         checkGraphElement(ge);
         ge.setLabel("" + s);
     }
+    public void clearLabel(GraphElement ge) throws Terminate, GalantException {
+        checkGraphElement(ge);
+        ge.clearLabel();
+    }
+    public void clearWeight(GraphElement ge) throws Terminate, GalantException {
+        checkGraphElement(ge);
+        ge.clearWeight();
+    }
 
     public Node source(Edge e) throws GalantException { 
         checkGraphElement(e);
@@ -962,4 +970,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2016 11 04 at 11:16:34 GMT]
+//  [Last modified: 2016 11 04 at 12:48:02 GMT]

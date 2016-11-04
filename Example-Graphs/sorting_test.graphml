@@ -3,9 +3,9 @@
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns 
 http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
- <graph edgedefault="undirected">
-  <node id="0" weight="76.0" label="" x="161" y="226" color="#000000" />
-  <node id="1" weight="14.0" label="" x="300" y="209" color="#000000" />
-  <node id="2" weight="8.0" label="" x="426" y="229" color="#000000" />
-  <node id="3" weight="11.0" label="" x="403" y="372" color="#000000" />
+ <graph  edgedefault="undirected">
+  <node id="0" x="161" y="226"  weight="76.0" />
+  <node id="1" x="300" y="209"  weight="14.0" />
+  <node id="2" x="426" y="229"  weight="8.0" />
+  <node id="3" x="403" y="372"  weight="11.0" />
  </graph></graphml>

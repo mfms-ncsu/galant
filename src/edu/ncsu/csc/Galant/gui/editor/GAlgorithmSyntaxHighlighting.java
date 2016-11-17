@@ -19,20 +19,14 @@ import edu.ncsu.csc.Galant.algorithm.code.macro.Macro;
  *
  */
 public class GAlgorithmSyntaxHighlighting implements Runnable {
-	
 	public static final String javaKeywordStyleName = "javaKeyword";
-	
 	public static final Hashtable<String, String> APIdictionary = new Hashtable<String, String>();
-	
 	public static Color javaKeywordColor = GalantPreferences.JAVA_KEYWORD_COLOR.get();
 	public static Color apiKeywordColor = GalantPreferences.API_CALL_COLOR.get();
 	public static Color macroKeywordColor = GalantPreferences.MACRO_KEYWORD_COLOR.get();
-	
 	private JTextPane textpane;
-	
 	public GAlgorithmSyntaxHighlighting(JTextPane _textpane) {
 		textpane = _textpane;
-	
 		APIdictionary.put("beginStep", "Forces the animation to consider all graph changes one step until endStep() or another beginStep() is called.");
 		APIdictionary.put("endStep", "Ends a step in the graph state. If no beginStep() has been called previously, does nothing.");
 		APIdictionary.put("isDirected", "Returns True if the graph is directed, False otherwise.");
@@ -125,12 +119,14 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
             "hide", "show", "hideLabel", "showLabel", "hideWeight", "showWeight",
             "hideEdgeWeights", "showEdgeWeights", "hideEdgeLabels", "showEdgeLabels",
             "hideNodeWeights", "showNodeWeights", "hideNodeLabels", "showNodeLabels",
-            "clearEdgeLabels", "clearEdgeWeights", "clearNodeLabels", "clearNodeWeights"
+            "clearEdgeLabels", "clearEdgeWeights", "clearNodeLabels", "clearNodeWeights",
+            "neighbors", "edges", "inEdges", "outEdges",
+            "visibleNeighbors", "visibleEdges", "visibleInEdges", "visibleOutEdges" 
         };
 
 	/**
 	 * An immutable list of all Macroes predefined for the user's benefit.
-	 * It get initialized when this GAlgorithmSyntaxHighlighting was created. See constructor. 
+	 * It gets initialized when this GAlgorithmSyntaxHighlighting was created. See constructor.
 	 */
 		public static String[] allMacrokeywords = new String[Macro.MACROS.size()];
 
@@ -140,33 +136,31 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
 			String content = textpane.getText().replace("\r\n", "\n");
 			StyledDocument doc = textpane.getStyledDocument();
 			doc.setCharacterAttributes (0, doc.getLength (), doc.getStyle("regular"), true);
-	        
 	        applyStyleToKeywords(doc, content, allJavaKeywords, javaKeywordStyleName);
 	        applyStyleToKeywords(doc, content, allAPIkeywords, "apiKeyword");
 	        applyStyleToKeywords(doc, content, allMacrokeywords, "macroKeyword");
-	        
 	        textpane.setDocument(doc);
 		} catch (Exception e) {
 			ExceptionDialog.displayExceptionInDialog(e);
 		}
 	}
-	
+
 	private static void updateDocStyles(StyledDocument doc) {
 		Style def = StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE);
 		StyleConstants.setBold(def, true);
 		Style regular = doc.addStyle("regular",  def);
 		StyleConstants.setFontFamily(def, "SansSerif");
-				
+
 		Style s = doc.addStyle(javaKeywordStyleName, regular);
 		StyleConstants.setForeground(s, javaKeywordColor);
-		
+
 		Style q = doc.addStyle("apiKeyword", regular);
 		StyleConstants.setForeground(q, apiKeywordColor);
 
 		Style m = doc.addStyle("macroKeyword", regular);
 		StyleConstants.setForeground(m, macroKeywordColor);
 	}
-	
+
 	private static void applyStyleToKeywords(StyledDocument doc, String content, String[] keywords, String styleName)
 		{
 			for(String keyword : keywords) {
@@ -175,12 +169,11 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
 	        		char prev = (index > 0) ? content.charAt(index-1) : ' ';
 	        		char next = (index+keyword.length() < content.length()) ? content.charAt(index+keyword.length()) : ' ';
 	        		if(!Character.isJavaIdentifierPart(prev) && !Character.isJavaIdentifierPart(next)) {
-	        			doc.setCharacterAttributes(index, keyword.length(), doc.getStyle(styleName), true);	        		}	
+	        			doc.setCharacterAttributes(index, keyword.length(), doc.getStyle(styleName), true);	        		}
 	        		index += keyword.length();
 	        	}
 	        }
 		}
-	
 }
 
-//  [Last modified: 2016 11 04 at 13:10:55 GMT]
+//  [Last modified: 2016 11 17 at 21:29:10 GMT]

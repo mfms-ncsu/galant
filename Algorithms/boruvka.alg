@@ -9,7 +9,7 @@
  *  - hide() and show() for graph elements -- a new "hidden" attribute
  *  - color() for graph elements with two arguments: the element and a color
  *    string (which may have declared constants in Algorithm.java); also
- *    uncolor() 
+ *    uncolor()
  */
 
 /**
@@ -115,7 +115,7 @@ algorithm {
     // number of edges in current spanning forest
     int forestEdges = 0;
     double totalWeight = 0;
-    
+
     while ( forestEdges < numberOfNodes() - 1 ) {
         // need to label components first
         beginStep();
@@ -153,7 +153,7 @@ algorithm {
                     display("lowest weight outgoing edge already in tree");
                 }
                 endStep();
-                previousRepresentative = componentRepresentative; 
+                previousRepresentative = componentRepresentative;
             }
         }
         beginStep();
@@ -173,4 +173,4 @@ algorithm {
     endStep();
 }
 
-/*  [Last modified: 2016 11 04 at 16:22:42 GMT] */
+/*  [Last modified: 2016 11 17 at 21:30:08 GMT] */

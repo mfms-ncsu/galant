@@ -139,6 +139,15 @@ public class NodePriorityQueue extends PriorityQueue<Node> {
     public void decreaseKey(Node v, double key) throws GalantException, Terminate {
         changeKey(v, key);
     }
+
+    public String toString() {
+        String string = "[";
+        for ( Node v : this ) {
+            if ( v == null ) string += " null";
+            else string += " " + v.getId();
+        }
+        return string + " ]";
+    }
 }
 
-//  [Last modified: 2016 10 14 at 19:19:33 GMT]
+//  [Last modified: 2016 11 17 at 22:12:04 GMT]

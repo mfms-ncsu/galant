@@ -632,6 +632,24 @@ public abstract class Algorithm implements Runnable {
         return v.getOutgoingEdges();
     }
 
+    public NodeSet visibleNeighbors(Node v) throws GalantException {
+        checkGraphElement(v);
+        return v.visibleNeighbors();
+    }
+
+    public EdgeSet visibleEdges(Node v) throws GalantException {
+        checkGraphElement(v);
+        return v.visibleEdges();
+    }
+    public EdgeSet visibleInEdges(Node v) throws GalantException {
+        checkGraphElement(v);
+        return v.visibleIncomingEdges();
+    }
+    public EdgeSet visibleOutEdges(Node v) throws GalantException {
+        checkGraphElement(v);
+        return v.visibleOutgoingEdges();
+    }
+
     /**
      * @return true if (v,w) is an edge; direction important if the graph is
      * directed
@@ -979,4 +997,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2016 11 04 at 16:53:56 GMT]
+//  [Last modified: 2016 11 17 at 21:22:44 GMT]

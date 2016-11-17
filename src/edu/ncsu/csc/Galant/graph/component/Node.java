@@ -390,15 +390,48 @@ public class Node extends GraphElement {
     /**
      * @return the visible incident edges of this node
      */
+    public EdgeSet visibleEdges() {
+        EdgeSet visibleEdges = new EdgeSet();
+        for ( Edge e : incidentEdges ) {
+			if ( e.inScope() && ! e.isHidden() ) {
+                visibleEdges.add(e);
+            }
+        }
+		return visibleEdges;
+    }
+
 
     /**
      * @return the visible incoming edges of this node
      */
-
+    public EdgeSet visibleIncomingEdges() {
+		EdgeSet visibleEdges = new EdgeSet();
+		for ( Edge e : incidentEdges ) {
+			if ( e.inScope() && ! e.isDeleted() && ! e.isHidden() ) {
+				if ( this.equals( e.getTargetNode() )
+                     || ! graph.isDirected() ) {
+					visibleEdges.add( e );
+				}
+			}
+		}
+		return visibleEdges;
+	}
 
     /**
      * @return the visible outgoing edges of this node
      */
+    public EdgeSet visibleOutgoingEdges() {
+		EdgeSet visibleEdges = new EdgeSet();
+		for ( Edge e : incidentEdges ) {
+			if ( e.inScope() && ! e.isDeleted() && ! e.isHidden() ) {
+				if ( this.equals( e.getSourceNode() )
+                     || ! graph.isDirected() ) {
+					visibleEdges.add( e );
+				}
+			}
+		}
+		return visibleEdges;
+	}
 
     /**
      * The following methods use the edge list getters to return degrees
@@ -611,4 +644,4 @@ public class Node extends GraphElement {
 	}
 }
 
-//  [Last modified: 2016 11 17 at 21:06:56 GMT]
+//  [Last modified: 2016 11 17 at 21:16:41 GMT]

@@ -1063,7 +1063,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
             GraphDisplays.NODE_LABELS.setShown(!nodeLabels.isSelected());
             nodeLabels.setSelected(!nodeLabels.isSelected());
           }
-          frame.repaint(); 
+          frame.repaint();
         }
         LogHelper.guiExitMethod(getClass(), "'ell' pressed");
         return true;
@@ -1078,7 +1078,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
             GraphDisplays.NODE_WEIGHTS.setShown(!nodeWeights.isSelected());
             nodeWeights.setSelected(!nodeWeights.isSelected());
           }
-          frame.repaint(); 
+          frame.repaint();
         }
         LogHelper.guiExitMethod(getClass(), "'w' pressed");
         return true;
@@ -1117,4 +1117,4 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	}
 }
 
-//  [Last modified: 2016 11 03 at 20:59:15 GMT]
+//  [Last modified: 2016 11 17 at 20:38:44 GMT]

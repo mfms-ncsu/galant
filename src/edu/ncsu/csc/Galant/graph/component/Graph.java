@@ -29,7 +29,7 @@ import edu.ncsu.csc.Galant.graph.container.EdgeSet;
 
 /**
  * Stores all nodes, edges and related information for use in graph algorithms.
- * 
+ *
  * @author Michael Owoc, Ty Devries (major modifications by Matt Stallmann)
  */
 public class Graph {
@@ -42,7 +42,7 @@ public class Graph {
 
     private boolean layered = false;
     private LayerInformation layerInformation;
-	
+
 	private List<Node> nodes;
 
     private TreeMap<Integer,Node> nodeById = new TreeMap<Integer,Node>();
@@ -62,11 +62,6 @@ public class Graph {
     private Node selectedNode;
 
     /**
-     * The list of states that this graph has been in up to this point --
-     * essentially the list of all changes to the graph (independent of its
-     * nodes and edges). At this point the only relevant attributes relate to
-     * visibility of labels and weights.
-     *
      * @todo should handle this in the same way that GraphElementState is
      * handled; perhaps a graph can be another GraphElement with attributes
      * such as a list of nodes, etc.
@@ -80,7 +75,7 @@ public class Graph {
      * have a start node such as dfs, bfs, and Dijkstra's).
      */
 	private Node rootNode;
-	
+
     /**
      * An integer that can be used as the id of the next edge if id's are not
      * explicit in the input.
@@ -151,7 +146,7 @@ public class Graph {
         if ( states.size() != 0 ) {
             state = states.get(states.size() - 1);
         }
-        return state; 
+        return state;
     }
 
     /**
@@ -284,15 +279,6 @@ public class Graph {
         return selectedNode;
     }
 
-
-    /* Only Boolean and String attributes are needed for now */
-
-    private static final String HIDDEN_EDGE_LABELS = "edgeLabelsHidden";
-    private static final String HIDDEN_EDGE_WEIGHTS = "edgeWeightsHidden";
-    private static final String HIDDEN_NODE_LABELS = "nodeLabelsHidden";
-    private static final String HIDDEN_NODE_WEIGHTS = "nodeWeightsHidden";
-
-
     /**
      * Removes the attribute with the given key from the list and updates
      * state information appropriately.
@@ -302,7 +288,7 @@ public class Graph {
         newState.remove(key);
         addState(newState);
     }
-	
+
     /************** Boolean attributes ***************/
 
 	public boolean set(String key, Boolean value) throws Terminate {
@@ -318,7 +304,7 @@ public class Graph {
     public boolean set(String key) throws Terminate {
         return this.set(key, true);
     }
- 
+
     public void clear(String key) throws Terminate {
         this.remove(key);
     }
@@ -372,30 +358,30 @@ public class Graph {
 
     /**
      * displays node labels if show is true, hides them if show is false
-     * also toggles the button in the graph window if appropriate 
+     * also toggles the button in the graph window if appropriate
      */
-    public void showNodeLabels(boolean show) { 
+    public void showNodeLabels(boolean show) {
         graphWindow.showNodeLabels(show);
     }
     /**
      * displays node weights if show is true, hides them if show is false
-     * also toggles the button in the graph window if appropriate 
+     * also toggles the button in the graph window if appropriate
      */
-    public void showNodeWeights(Boolean show) { 
+    public void showNodeWeights(Boolean show) {
        graphWindow.showNodeWeights(show);
     }
     /**
      * displays edge labels if show is true, hides them if show is false
-     * also toggles the button in the graph window if appropriate 
+     * also toggles the button in the graph window if appropriate
      */
-    public void showEdgeLabels(boolean show) { 
+    public void showEdgeLabels(boolean show) {
         graphWindow.showEdgeLabels(show);
     }
     /**
      * displays edge weights if show is true, hides them if show is false
-     * also toggles the button in the graph window if appropriate 
+     * also toggles the button in the graph window if appropriate
      */
-    public void showEdgeWeights(Boolean show) { 
+    public void showEdgeWeights(Boolean show) {
        graphWindow.showEdgeWeights(show);
     }
 
@@ -1242,4 +1228,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2016 11 04 at 11:15:49 GMT]
+//  [Last modified: 2016 11 17 at 20:36:01 GMT]

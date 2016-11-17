@@ -11,11 +11,13 @@ import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.GraphDispatch;
 import edu.ncsu.csc.Galant.algorithm.Terminate;
 import edu.ncsu.csc.Galant.logging.LogHelper;
+import edu.ncsu.csc.Galant.graph.container.NodeSet;
+import edu.ncsu.csc.Galant.graph.container.EdgeSet;
 
 /**
  * Represents node entities as elements of a graph. Encapsulates attributes
  * that are unique to nodes.
- * 
+ *
  * @author Michael Owoc
  * @author Ty Devries
  * @author Matthias Stallmann, major modifications
@@ -271,7 +273,7 @@ public class Node extends GraphElement {
 	public Boolean isVisited(int state) {
 		return super.getBoolean(state, MARKED);
 	}
-	
+
 	public boolean isMarked() {
 		return isVisited();
 	}
@@ -309,30 +311,23 @@ public class Node extends GraphElement {
 	 */
 	public List<Edge> getOutgoingEdges() {
 		List<Edge> currentEdges = new ArrayList<Edge>();
-		
 		for ( Edge e : incidentEdges ) {
 			if ( e.inScope() && ! e.isDeleted() ) {
-				if ( this.equals( e.getSourceNode() ) 
+				if ( this.equals( e.getSourceNode() )
                     || ! graph.isDirected() ) {
 					currentEdges.add(e);
 				}
 			}
 		}
-		
 		return currentEdges;
 	}
-	
-	public List<Edge> getOutgoingEdges(int state) {
-		return getOutgoingEdges();
-	}
-	
+
 	/**
 	 * @return the node's incoming edges, based on source and target
 	 * specs; if the graph is undirected, all edges are incoming
 	 */
 	public List<Edge> getIncomingEdges() {
 		List<Edge> currentEdges = new ArrayList<Edge>();
-		
 		for ( Edge e : incidentEdges ) {
 			if ( e.inScope() && ! e.isDeleted() ) {
 				if ( this.equals( e.getTargetNode() )
@@ -341,21 +336,16 @@ public class Node extends GraphElement {
 				}
 			}
 		}
-		
 		return currentEdges;
 	}
-	
-	public List<Edge> getIncomingEdges(int state) {
-		return getIncomingEdges();
-	}
-	
+
     /**
      * @return a list of edges incident on this node regardless of whether
      * they are incoming or outgoing.
      */
     public List<Edge> getIncidentEdges() {
  		List<Edge> currentEdges = new ArrayList<Edge>();
-		
+
 		for ( Edge e : incidentEdges ) {
 			if ( e.inScope() && ! e.isDeleted() ) {
                 currentEdges.add(e);
@@ -364,21 +354,16 @@ public class Node extends GraphElement {
 		return currentEdges;
     }
 
-	public List<Edge> getIncidentEdges(int state) {
-		return getIncidentEdges();
-	}
-	
     /**
-     * The following are used at various other parts of the code.
+     * @return the edges incident on this node (as a templated list)
      */
     public List<Edge> getEdges() {
         return getIncidentEdges();
     }
 
-	public List<Edge> getEdges(int state) {
-		return getIncidentEdges(state);
-	}
-
+    /**
+     * @return the nodes adjacent to this node (as a templated list)
+     */
     public List<Node> getAdjacentNodes() {
         List<Edge> edges = getIncidentEdges();
         List<Node> nodes = new ArrayList<Node>();
@@ -389,15 +374,38 @@ public class Node extends GraphElement {
     }
 
     /**
+     * @return the visible neighbors of this node (as a NodeSet)
+     */
+    public NodeSet visibleNeighbors() {
+        NodeSet neighbors = new NodeSet();
+        for ( Edge e : incidentEdges ) {
+            Node neighbor = travel(e);
+			if ( neighbor.inScope() && ! neighbor.isHidden() ) {
+                neighbors.add(neighbor);
+            }
+        }
+		return neighbors;
+    }
+
+    /**
+     * @return the visible incident edges of this node
+     */
+
+    /**
+     * @return the visible incoming edges of this node
+     */
+
+
+    /**
+     * @return the visible outgoing edges of this node
+     */
+
+    /**
      * The following methods use the edge list getters to return degrees
      */
     public int getOutdegree() { return getOutgoingEdges().size(); }
-    public int getOutdegree(int state) { return getOutdegree(); }
     public int getIndegree() { return getIncomingEdges().size(); }
-    public int getIndegree(int state) { return getIndegree(); }
     public int getDegree() { return getIncidentEdges().size(); }
-    public int getDegree(int state) { return getDegree(); }
-
 
     /**
      * when hiding a node, you also have to hide its incident edges
@@ -429,7 +437,6 @@ public class Node extends GraphElement {
 			if (!e.inScope() || e.isDeleted()) {
 				continue;
 			}
-			
 			Node source = e.getSourceNode();
 			Node target = e.getTargetNode();
 			Node adjacent;
@@ -439,15 +446,13 @@ public class Node extends GraphElement {
 				if (graph.isDirected()) continue;
 				adjacent = source;
 			}
-			
 			if (!adjacent.isVisited()) {
 				unvisited.add(e);
 			}
 		}
-		
 		return unvisited;
 	}
-	
+
 	/**
 	 * Gets a list of Edges incident to this node whose visited flag
 	 * is set to true.
@@ -458,7 +463,6 @@ public class Node extends GraphElement {
 			if (!e.inScope() || e.isDeleted()) {
 				continue;
 			}
-			
 			Node source = e.getSourceNode();
 			Node target = e.getTargetNode();
 			Node adjacent;
@@ -468,22 +472,19 @@ public class Node extends GraphElement {
 				if (graph.isDirected()) continue;
 				adjacent = source;
 			}
-			
 			if (adjacent.isVisited()) {
 				visited.add(e);
 			}
 		}
-		
 		return visited;
 	}
-	
+
 	public List<Node> getUnvisitedAdjacentNodes() {
 		List<Node> nodes = new ArrayList<Node>();
 		for (Edge e : incidentEdges) {
 			if (!e.inScope() || e.isDeleted()) {
 				continue;
 			}
-			
 			Node source = e.getSourceNode();
 			Node target = e.getTargetNode();
 			Node adjacent;
@@ -493,27 +494,22 @@ public class Node extends GraphElement {
 				if (graph.isDirected()) continue;
 				adjacent = source;
 			}
-			
 			if (!adjacent.isVisited()) {
 				nodes.add(adjacent);
 			}
 		}
-		
 		return nodes;
 	}
-	
-	
+
 	/**
 	 * Returns the adjacent node along a given incident edge.
-	 * 
+	 *
 	 * If the edge is not incident to this node, then null is returned
-	 * 
+	 *
 	 * Compares the nodes of the edge to This and returns the other one.
-	 * 
-	 * No issue on a self loop: will find that the first Node is This 
+	 *
+	 * No issue on a self loop: will find that the first Node is this
 	 * and return the other
-	 * 
-	 * @param e
 	 */
 	public Node travel(Edge e) {
 		if (e.getSourceNode().equals(this)) {
@@ -521,7 +517,6 @@ public class Node extends GraphElement {
 		} else if (e.getTargetNode().equals(this)){
 			return e.getSourceNode();
 		}
-		
 		return null;
 	}
 
@@ -539,7 +534,7 @@ public class Node extends GraphElement {
      * or not it intends to move nodes -- the hook for that is already there
      * -- and use this information to allow arbitrary position changes by the
      * user during execution *unless* the algorithm wants to make them. In
-     * the latter case, the user is prevented from changing position. 
+     * the latter case, the user is prevented from changing position.
      */
 
     public Integer getFixedX() {
@@ -616,4 +611,4 @@ public class Node extends GraphElement {
 	}
 }
 
-//  [Last modified: 2016 10 17 at 12:56:10 GMT]
+//  [Last modified: 2016 11 17 at 21:06:56 GMT]

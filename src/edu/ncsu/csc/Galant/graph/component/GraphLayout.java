@@ -20,6 +20,23 @@ import edu.ncsu.csc.Galant.logging.LogHelper;
 
 public class GraphLayout {
 
+    /**
+     * minimum distance from the edge of a window when fitting a graph to
+     * the window
+     */
+    final static int WINDOW_PADDING = 50;
+
+    /**
+     * Offset to account for the fact that (0,0) is not a visible part of the
+     * window.
+     */
+    final static int WINDOW_OFFSET = 20;
+
+    /**
+     * minimum window width or height when scaling to fit window
+     */
+    final static int MIN_WINDOW_DIMENSION = 100;
+
     /** used to scale the repulsive force of edges */
     private static final double REPULSIVE_SCALE_FACTOR = -1.0;
     /** spring length for edges (attractive force) and nodes (repulsive) */
@@ -47,7 +64,7 @@ public class GraphLayout {
     private Graph graph;
     private List<Node> nodes;
     private List<Edge> edges;
-		
+
     /**
      * Maps nodes to their positions.
      */
@@ -65,7 +82,7 @@ public class GraphLayout {
      * Need to recover nodes at the end
      */
     private Node[] indexToNode;
-        
+
     /**
      * keeps track of connected components via an array indexed by nodeToIndex
      */
@@ -75,30 +92,6 @@ public class GraphLayout {
      * how often to print progress (never)
      */
     final private static int PRINT_FREQUENCY = 100000;
-
-    /** 
-     * minimum distance from the edge of a window when fitting a graph to
-     * the window
-     *
-     * @todo should be tied to size of a node and sizes of labels somehow and
-     * probably incorporated into the GraphPanel class
-     */ 
-    final static int WINDOW_PADDING = 75;
-    
-    /**
-     * Offset to account for the fact that (0,0) is not a visible part of the
-     * window.
-     *
-     * @todo This is actually more relevant for the top edge than the left
-     * one and it also needs to take into account the message at the top
-     * (which should eventually go into a separate window)
-     */
-    final static int WINDOW_OFFSET = 50;
-
-    /**
-     * minimum window width or height when scaling to fit window
-     */
-    final static int MIN_WINDOW_DIMENSION = 100;
 
     /**
      * Initializes the layout based on current positions of nodes in the graph
@@ -123,6 +116,7 @@ public class GraphLayout {
     /**
      * Sets positions of nodes in the graph to correspond to those given in
      * this layout.
+     * Called from Graph.java
      */
     void usePositions() {
         for ( Node node : nodes ) {
@@ -160,59 +154,52 @@ public class GraphLayout {
      * Scales the node positions so that the rightmost node is close to the
      * right boundary of the window and the bottom-most node is close to the
      * bottom of the window. "Close to" is defined by the WINDOW_PADDING
-     * constant.
+     * constant and, in the vertical direction, by WINDOW_OFFSET.
      */
-    public void fitWindow() {
-        nudgeToEdge();
-        scaleToWindow();
-    }
+    public void fitWindow(Point2D.Double[] points) {
+        List<Node> nodes = graph.getNodes();
 
-	/**
-	 * Moves all of the nodes to the top and left edges of the screen
-	 */
-	public void nudgeToEdge() {
-		int x_least = Integer.MAX_VALUE;
-		int y_least = Integer.MAX_VALUE;
-		
-		for ( Node node: graph.getNodes() ) {
-			x_least = (node.getX() < x_least) ? node.getX() : x_least;
-			y_least = (node.getY() < y_least) ? node.getY() : y_least;
+        // compute max and min x and y positions
+ 		double x_least = Double.MAX_VALUE;
+		double y_least = Double.MAX_VALUE;
+        double x_most = 0;
+        double y_most = 0;
+
+		for ( Point2D.Double point: points ) {
+			x_least = (point.x < x_least) ? point.x : x_least;
+			y_least = (point.y < y_least) ? point.y : y_least;
+			x_most = (point.x > x_most) ? point.x : x_most;
+			y_most = (point.y > y_most) ? point.y : y_most;
 		}
-        
-		try {
-            for ( Node node: graph.getNodes() ) {
-                // padding because 0,0 will be half off screen for a node
-                node.setFixedPosition( node.getX() - x_least + WINDOW_OFFSET,
-                                       node.getY() - y_least + WINDOW_OFFSET );
-            }
+
+        // shift points so that x_least and y_least are mapped to 0
+        for ( int i = 0; i < points.length; i++ ) {
+            points[i].x = points[i].x - x_least;
+            points[i].y = points[i].y - y_least;
         }
-        catch ( Exception e ) {
-            e.printStackTrace();
+
+        // compute source (virtual) window width and height
+        double sourceWidth = x_most - x_least;
+        double sourceHeight = y_most - y_least;
+
+        // compute target window width and height
+        GraphDispatch dispatch = GraphDispatch.getInstance();
+        double targetWidth = dispatch.getWindowWidth() - 2 * WINDOW_PADDING;
+        targetWidth = targetWidth < MIN_WINDOW_DIMENSION
+            ? MIN_WINDOW_DIMENSION : targetWidth;
+        double targetHeight = dispatch.getWindowHeight()
+            - 2 * (WINDOW_PADDING + WINDOW_OFFSET);
+        targetHeight = targetHeight < MIN_WINDOW_DIMENSION
+            ? MIN_WINDOW_DIMENSION : targetHeight;
+
+        // scale source to target, accounting for offets and padding
+        double xScale = targetWidth /sourceWidth;
+        double yScale = targetHeight /sourceHeight;
+        for ( int i = 0; i < points.length; i++ ) {
+            points[i].x = points[i].x * xScale + WINDOW_PADDING;
+            points[i].y = points[i].y * yScale + WINDOW_PADDING + WINDOW_OFFSET;
         }
-	}
-	
-	/**
-	 * Scales the graph to the current window size
-	 */
-	public void scaleToWindow() {
-		int x_max = 0;
-		int y_max = 0;
-		
-		int windowWidth = GraphDispatch.getInstance().getWindowWidth();
-		int windowHeight = GraphDispatch.getInstance().getWindowHeight();
-		int xScaleBase = windowWidth - WINDOW_PADDING;
-        int yScaleBase = windowHeight - WINDOW_PADDING;
-		
-		xScaleBase = (xScaleBase < 0.0) ? MIN_WINDOW_DIMENSION : xScaleBase;
-		yScaleBase = (yScaleBase < 0.0) ? MIN_WINDOW_DIMENSION : yScaleBase;
-		
-		for ( Node node: graph.getNodes() ) {
-			x_max = (node.getX() > x_max) ? node.getX() : x_max;
-			y_max = (node.getY() > y_max) ? node.getY() : y_max;
-		}
-		
-        scale( (double) xScaleBase / x_max, (double) yScaleBase / y_max );
-	}
+   }
 
     /**
      * POST: each node is labeled with an integer indentifying its connected
@@ -244,7 +231,7 @@ public class GraphLayout {
 	/**
 	 * Repositions the graph so that the nodes are arranged in an
 	 * aesthetically pleasing way.
-	 * 
+	 *
 	 * @see <a href="http://www.mathematica-journal.com/issue/v10i1/contents/graph_draw/graph_draw_3.html">Force-Directed Algorithms (2006); Hu, Yifan</a>
      *
      * Here, the algorithm is modified so that a boost influences the extent
@@ -274,10 +261,10 @@ public class GraphLayout {
 
         /**
          * used in step update for force-directed layout; global -- side
-         * effect in updateStepLength() 
+         * effect in updateStepLength()
          */
         progress = 0;
-	
+
 		// initialize the starting points and degrees
         int index = 0;
 		for ( Node node: nodes ) {
@@ -287,38 +274,40 @@ public class GraphLayout {
             degree_factor[index] = Math.pow(degree, degree_boost);
             index++;
 		}
-		
+
 		if (nodes == null || nodes.size() == 0) {
 			return;
 		}
-		
+
 		boolean converged = false;
 		double step = 1.0;
 		double energy = Double.MAX_VALUE;
 
         computeConnectedComponents();
+        fitWindow(points);
 
 		int iterations = 0;
         while ( ! converged && iterations < MAX_REPOSITION_ITERATIONS ) {
 			iterations++;
-			
+
             if ( iterations % PRINT_FREQUENCY == 0 )
-                System.out.println("force directed layout, iteration " + iterations);
+                System.out.println("force directed layout, iteration "
+                                   + iterations);
 			// copy your new points to your old points
 			for ( int i=0; i < points.length; i++ ) {
 				previousPoints[i] = (Point2D.Double) points[i].clone();
 			}
-			
+
 			// store the last energy of the graph. minimize this.
 			double last_energy = energy;
-			
+
 			// reset energy
 			energy = 0.0;
-			
+
 			// loop through the Graph nodes and calculate new forces
 			for ( int i = 0; i < points.length; i++ ) {
 				double[] force = {0.0, 0.0};
-				
+
 				// calculate attractive force of edges
 				for (Edge e : edges) {
 					int j = -1;
@@ -336,7 +325,7 @@ public class GraphLayout {
 						force[1] += unitVector[1] * attractive;
 					}
 				}
-				
+
 				// calculate repulsive force from other nodes
 				for ( int j = 0; j < points.length; j++ ) {
 					if ( j != i && component[i] == component[j] ) {
@@ -347,37 +336,37 @@ public class GraphLayout {
 						force[1] += unitVector[1] * repulsive;
 					}
 				}
-				
+
 				// calculate new x position, scaling the force by a step size
 				double x = points[i].getX();
 				if ( Math.abs(force[0]) > 0 ) {
 					x += (step * force[0] / magnitude(force));
 				}
-				
+
 				// calculate new y position, scaling the force by a step size
 				double y = points[i].getY();
 				if (Math.abs(force[1]) > 0) {
 					y += (step * force[1] / magnitude(force));
 				}
 				points[i] = new Point2D.Double(x, y);
-				
+
 				// update the energy of this iteration
 				energy += magnitude(force) * magnitude(force);
 			}
-			
+
 			// update step length with adaptive cooling scheme
 			step = updateStepLength(step, energy, last_energy);
-			
+
 			// check to see if we've converged
 			if ( totalChange(points, previousPoints) < FORCE_DIRECTED_TOLERANCE ) {
 				converged = true;
 			}
 		}
-		
-		// we've converged, now scale it and center it in the window
-		points = centerInWindow(points);
-		
-        // update the nodes with their new positions and push to the display
+
+		// we've converged, now scale the points in the window
+		fitWindow(points);
+
+        // update the node positions based on those just calculated
         for ( int i = 0; i < this.nodes.size(); i++ ) {
             int x = (int) points[i].getX();
             int y = (int) points[i].getY();
@@ -385,120 +374,7 @@ public class GraphLayout {
             nodePositions.put(node, new Point(x, y));
         }
 	}
-	
-	/**
-	 * Centers the <code>Graph</code> to the center of the window, taking into account the current window size.
-	 * 
-	 * @param points the array of <code>Node</code> positions in the <code>Graph</code>
-	 * @return the positions in the window of each <code>Node</code>
-	 */
-	private static Point2D.Double[] centerInWindow(Point2D.Double[] points) {
-		points = nudgeToEdge(points);
-		points = scaleToWindow(points);
-		points = nudgeToCenter(points);
 
-		return points;
-	}
-	
-	/**
-	 * Moves the <code>Node</code>s to the center of the window, taking into account the current window size.
-	 * 
-	 * @param points the array of <code>Node</code> positions in the <code>Graph</code>
-	 * @returnthe positions in the window of each <code>Node</code>
-	 */
-	private static Point2D.Double[] nudgeToCenter(Point2D.Double[] points) {
-		double x_least = points[0].x;
-		double y_least = points[0].y;
-		
-		double x_most = points[0].x;
-		double y_most = points[0].y;
-		
-		double windowWidth = GraphDispatch.getInstance().getWindowWidth();
-		double windowHeight = GraphDispatch.getInstance().getWindowHeight();
-		
-		for (Point2D.Double p : points) {
-			x_least = (p.x < x_least) ? p.x : x_least;
-			x_most = (p.x > x_most) ? p.x : x_most;
-			
-			y_least = (p.y < y_least) ? p.y : y_least;
-			y_most = (p.y > y_most) ? p.y : y_most;
-		}
-		
-		double xPadding = (x_least) + (windowWidth - x_most);
-		double yPadding = (y_least) + (windowHeight - y_most);
-		
-		xPadding = (xPadding / 2.0) - x_least;
-		yPadding = (yPadding / 2.0) - y_least;
-		
-		for (Point2D.Double p : points) {
-			p.setLocation(p.x + xPadding, p.y + yPadding);
-		}
-		
-		return points;
-	}
-	
-	/**
-	 * Scales the <code>Graph</code> to the current window size
-	 * @param points
-	 * @return the positions on the window of each <code>Node</code>
-	 */
-	private static Point2D.Double[] scaleToWindow(Point2D.Double[] points) {
-		double x_max = 0.0;
-		double y_max = 0.0;
-		
-		double windowWidth = GraphDispatch.getInstance().getWindowWidth();
-		double windowHeight = GraphDispatch.getInstance().getWindowHeight();
-		double scaleBase = (windowWidth < windowHeight) ?
-            windowWidth - WINDOW_PADDING :
-            windowHeight - WINDOW_PADDING;
-		
-		if (scaleBase < 0.0) {
-			scaleBase = 100.0;
-		}
-		
-		for (Point2D.Double p : points) {
-			x_max = (p.x > x_max) ? p.x : x_max;
-			y_max = (p.y > y_max) ? p.y : y_max;
-		}
-		
-		double scale = 1.0;
-		
-		if (y_max > x_max) {
-			scale = scaleBase/y_max;
-		} else {
-			scale = scaleBase/x_max;
-		}
-		
-		for (Point2D.Double p : points) {
-			p.setLocation(p.x*scale, p.y*scale);
-		}
-		
-		return points;
-	}
-	
-	/**
-	 * Moves all of the <code>Node</code>s to the edge of the screen
-	 * @param points
-	 * @return the position in the window of each <code>Node</code>
-	 */
-	private static Point2D.Double[] nudgeToEdge(Point2D.Double[] points) {
-		double x_least = points[0].x;
-		double y_least = points[0].y;
-		
-		for (Point2D.Double p : points) {
-			x_least = (p.x < x_least) ? p.x : x_least;
-			y_least = (p.y < y_least) ? p.y : y_least;
-		}
-		
-		for (Point2D.Double p : points) {
-			// padding because 0,0 will be half off screen for a node
-			p.setLocation(p.x - x_least + WINDOW_OFFSET,
-                          p.y - y_least + WINDOW_OFFSET );
-		}
-		
-		return points;
-	}
-	
 	/**
 	 * Calculate spring force between two points based on natural spring length. Assumes
 	 * there is an edge between p1 and p2.
@@ -509,7 +385,7 @@ public class GraphLayout {
 	private static double forceAttractive(Point2D p1, Point2D p2) {
 		return ( p1.distance(p2) * p1.distance(p2) ) / SPRING_LENGTH;
 	}
-	
+
 	/**
 	 * Calculate the repulsive force between two nodes
 	 * @param p1 The position of a node
@@ -521,7 +397,7 @@ public class GraphLayout {
 		return (REPULSIVE_SCALE_FACTOR * SPRING_LENGTH * SPRING_LENGTH)
             / p1.distance(p2) ;
 	}
-	
+
 	/**
 	 * Returns a unit vector indicating the direction from source i to destination j
 	 * @param i the source point
@@ -533,7 +409,7 @@ public class GraphLayout {
 		double[] unit = { (j.getX() - i.getX()) / twoNorm, (j.getY() - i.getY()) / twoNorm};
 		return unit;
 	}
-	
+
 	/**
 	 * Returns the magnitude of a vector
 	 * @param vector the vector to calculate
@@ -544,10 +420,10 @@ public class GraphLayout {
 		for (int i=0; i < vector.length; i++) {
 			sum += (vector[i]*vector[i]);
 		}
-		
+
 		return Math.sqrt(sum);
 	}
-	
+
 	/**
 	 * Calculate the total change in energy between two states of positions
 	 * @param x the old set of points
@@ -558,17 +434,16 @@ public class GraphLayout {
 		if (x.length != x0.length) {
 			return 0;
 		}
-		
+
 		double totalChange = 0.0;
 		for (int i=0; i < x.length; i++) {
-			double dist = x[i].distance(x0[i]); 
+			double dist = x[i].distance(x0[i]);
 			if (dist > 0)
 				totalChange += x[i].distance(x0[i]);
 		}
-		
 		return totalChange;
 	}
-	
+
 	/**
 	 * Adaptively update the step length to avoid settling into a local minimum
 	 * @param step the current step size
@@ -587,10 +462,10 @@ public class GraphLayout {
 			progress = 0;
 			step = TEMPERATURE_REDUCTION_FACTOR * step;
 		}
-		
+
 		return step;
 	}
 
 }
-	
-//  [Last modified: 2016 11 18 at 13:02:42 GMT]
+
+//  [Last modified: 2016 11 18 at 21:45:10 GMT]

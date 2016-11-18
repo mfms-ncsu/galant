@@ -11,7 +11,8 @@ User
 - faster reaction to display state changes
 
 - elimination of a bug that caused Galant to hang if animation was terminated
-  during an active query
+  during an active query or sometimes in the middle of an algorithm that did
+  lots of possibly unmatched beginStep()'s and endSteps()'s
 
 Animator
 
@@ -23,6 +24,15 @@ Animator
 - new NodePriorityQueue and EdgePriorityQueue methods as well as ability to
   define a max heap using an optional boolean argument; these include
   removeMax, removeBest and changeKey (as an alternative to decreaseKey)
+
+- functions that return sets of neighbors, incident edges, incoming edges and
+  outgoing edges for a node (instead of lists) [still in the works]
+
+- functions that sets of return *visible* neighbors, etc.
+
+- function step() that is essentially synonym for 'endStep(); beginStep()';
+  allows setting of generic breakpoints without worrying about matched pairs;
+  used in dominance.alg and interactive_dfs.alg
 
 - more protection from Java null pointer and other low level exceptions
 

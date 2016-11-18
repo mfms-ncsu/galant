@@ -203,6 +203,17 @@ public class GraphDispatch {
 		}
 	}
 
+    /**
+     * Differs from startStepIfRunning() in that it ignores a lock; this is
+     * needed when an algorithm happens to be in a locked state when a dialog
+     * is initiated.
+     */
+	public void initStepIfRunning() throws Terminate {
+		if ( animationMode ) {
+            algorithmSynchronizer.startStep();
+		}
+	}
+
 	public void pauseExecutionIfRunning() throws Terminate {
 		if ( animationMode )
             algorithmSynchronizer.pauseExecution();
@@ -294,4 +305,4 @@ public class GraphDispatch {
 
 }
 
-//  [Last modified: 2016 11 18 at 14:09:05 GMT]
+//  [Last modified: 2016 11 18 at 17:56:50 GMT]

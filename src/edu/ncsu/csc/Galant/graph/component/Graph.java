@@ -219,11 +219,17 @@ public class Graph {
     }
 
     /**
+     * @todo A dialog lingers if user terminates algorithm when the dialog
+     * window is up. Fixing this would involve some sort of coordination
+     * between the dialog (a child of the GraphWindow) and the algorithm.
+     */
+
+    /**
      * @param prompt a message displayed in the edge selection dialog popup
      * @return an edge selected via a dialog during algorithm execution
      */
     public Edge getEdge(String prompt) throws Terminate {
-        dispatch.startStepIfRunning();
+        dispatch.initStepIfRunning();
         EdgeSelectionDialog dialog = new EdgeSelectionDialog(prompt);
         dispatch.pauseExecutionIfRunning();
         dialog = null;          // to keep window from lingering when
@@ -240,7 +246,7 @@ public class Graph {
      */
     public Edge getEdge(String prompt, EdgeSet restrictedSet, String errorMessage)
         throws Terminate {
-        dispatch.startStepIfRunning();
+        dispatch.initStepIfRunning();
         EdgeSelectionDialog dialog 
             = new EdgeSelectionDialog(prompt, restrictedSet, errorMessage);
         dispatch.pauseExecutionIfRunning();
@@ -259,9 +265,10 @@ public class Graph {
     /**
      * @param prompt a message displayed in the node selection dialog popup
      * @return a node selected via a dialog during algorithm execution
+     *
      */
     public Node getNode(String prompt) throws Terminate {
-        dispatch.startStepIfRunning();
+        dispatch.initStepIfRunning();
         NodeSelectionDialog dialog = new NodeSelectionDialog(prompt);
         dispatch.pauseExecutionIfRunning();
         dialog = null;          // to keep window from lingering when
@@ -279,12 +286,12 @@ public class Graph {
      */
     public Node getNode(String prompt, NodeSet restrictedSet, String errorMessage)
         throws Terminate {
-        dispatch.startStepIfRunning();
-        NodeSelectionDialog dialog 
+        dispatch.initStepIfRunning();
+        NodeSelectionDialog dialog
             = new NodeSelectionDialog(prompt, restrictedSet, errorMessage);
-        dispatch.pauseExecutionIfRunning();
         dialog = null;          // to keep window from lingering when
                                 // execution is terminated
+        dispatch.pauseExecutionIfRunning();
         return selectedNode;
     }
 
@@ -1233,4 +1240,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2016 11 18 at 14:16:32 GMT]
+//  [Last modified: 2016 11 18 at 18:24:59 GMT]

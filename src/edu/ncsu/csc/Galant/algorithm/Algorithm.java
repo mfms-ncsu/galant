@@ -980,11 +980,8 @@ public abstract class Algorithm implements Runnable {
      * beginStep() - endStep() pair all take place with a single invocation
      * of the step forward command
      *
-     * @todo allow for nesting so that steps can be embedded in methods that
-     * take a bunch of actions all at once; not clear how best to do this;
-     * a better strategy may be to institute a method step() that's a synonym
-     * for beginStep(); note that beginStep() already effectively does an
-     * endStep() if the synchorinizer is locked
+     * If a step is in progress, initiated by an earlier beginStep() but not
+     * yet terminated, effectively does an endStep() - @see startStep()
      */
     public void beginStep() throws Terminate {
         synchronizer.startStep();
@@ -999,8 +996,16 @@ public abstract class Algorithm implements Runnable {
         synchronizer.pauseExecution();
     }
 
+    /**
+     * has the effect of an endStep(); beginStep() pair, without the need for
+     * a prior beginStep()
+     */
+    public void step() throws Terminate {
+        beginStep();
+    }
+
     /** Runs this algorithm on the given graph. */
     public abstract void run();
 }
 
-//  [Last modified: 2016 11 18 at 14:20:00 GMT]
+//  [Last modified: 2016 11 18 at 16:25:31 GMT]

@@ -16,10 +16,11 @@
  *   algorithm wakes up and executes, doing a startStep(), i.e., setting
  *   stepFinished false and checking for termination
  *
- * - when the current algorithm step is done, tha algorithm calls
- *   finishStep() and pauseExecution() to wake up the AlgorithmExecutor
+ * - when the current algorithm step is done, the algorithm calls
+ *   pauseExecution() to wake up the AlgorithmExecuter (main thread)
  *
- * - this synchronizer waits to be woken up again
+ * - this synchronizer waits to be woken up again, i.e., when the user steps
+ *    forward beyond the current algorithm state
  */
 
 package edu.ncsu.csc.Galant.algorithm;
@@ -48,7 +49,11 @@ public class AlgorithmSynchronizer {
     public synchronized void stop() {
         terminated = true;
      }
-    
+
+    public synchronized boolean stopped() {
+        return terminated;
+    }
+
     /**
      * The algorithm signals that it has reached the end of execution on its own.
      * @todo not clear that this has to be synchronized
@@ -81,14 +86,13 @@ public class AlgorithmSynchronizer {
     public synchronized void startStep() throws Terminate {
         if ( terminated )
             throw new Terminate();
+        if ( locked ) {
+            locked = false;
+            pauseExecution();
+        }
+        if ( terminated )
+            throw new Terminate();
         stepFinished = false;
-    }
-
-    /**
-     * Signals the end of a step, prompting the main thread to stop waiting.
-     */
-    public synchronized void finishStep() {
-        stepFinished = true;
     }
 
     public synchronized boolean stepFinished() {
@@ -99,10 +103,12 @@ public class AlgorithmSynchronizer {
      * Called at the end of each algorithm step; yields control back to the
      * main thread
      */
-    public synchronized void pauseExecution() {
+    public synchronized void pauseExecution() throws Terminate {
+        if ( terminated )
+            throw new Terminate();
         AlgorithmExecutor executor
             = GraphDispatch.getInstance().getAlgorithmExecutor();
-        finishStep();
+        stepFinished = true;
         synchronized( this ) {
             try {
                 if ( ! locked ) {
@@ -114,7 +120,9 @@ public class AlgorithmSynchronizer {
                 e.printStackTrace(System.out);
             }
         }
+        if ( terminated )
+            throw new Terminate();
     }
 }
 
-//  [Last modified: 2016 10 17 at 12:44:15 GMT]
+//  [Last modified: 2016 11 18 at 14:22:48 GMT]

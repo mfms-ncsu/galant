@@ -4,6 +4,7 @@
 package edu.ncsu.csc.Galant.algorithm;
 
 public class Terminate extends Exception {
+    public Terminate() { System.out.println("Terminate thrown"); }
 }
 
-//  [Last modified: 2015 12 02 at 13:20:43 GMT]
+//  [Last modified: 2016 11 18 at 12:50:19 GMT]

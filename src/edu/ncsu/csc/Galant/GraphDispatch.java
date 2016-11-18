@@ -202,8 +202,8 @@ public class GraphDispatch {
             algorithmSynchronizer.startStep();
 		}
 	}
-	
-	public void pauseExecutionIfRunning() {
+
+	public void pauseExecutionIfRunning() throws Terminate {
 		if ( animationMode )
             algorithmSynchronizer.pauseExecution();
 	}
@@ -213,7 +213,7 @@ public class GraphDispatch {
      */
     public void lockIfRunning() {
         if ( animationMode )
-            algorithmSynchronizer.lock();       
+            algorithmSynchronizer.lock();
     }
 
     /**
@@ -294,4 +294,4 @@ public class GraphDispatch {
 
 }
 
-//  [Last modified: 2016 09 16 at 15:45:12 GMT]
+//  [Last modified: 2016 11 18 at 14:09:05 GMT]

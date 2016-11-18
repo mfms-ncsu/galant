@@ -210,7 +210,12 @@ public abstract class Algorithm implements Runnable {
         dispatch = GraphDispatch.getInstance();
         dispatch.setAlgorithmMovesNodes(false);
         synchronizer = dispatch.getAlgorithmSynchronizer();
-        synchronizer.pauseExecution();
+        try {
+            synchronizer.pauseExecution();
+        }
+        catch ( Terminate t ) {
+            System.out.println("Algorithm.initialize() threw Terminate");
+        }
         LogHelper.exitMethod(getClass(), "initialize");
     }
 
@@ -976,11 +981,12 @@ public abstract class Algorithm implements Runnable {
      * of the step forward command
      *
      * @todo allow for nesting so that steps can be embedded in methods that
-     * take a bunch of actions all at once; not clear how best to do this
+     * take a bunch of actions all at once; not clear how best to do this;
+     * a better strategy may be to institute a method step() that's a synonym
+     * for beginStep(); note that beginStep() already effectively does an
+     * endStep() if the synchorinizer is locked
      */
     public void beginStep() throws Terminate {
-        synchronizer.startStep(); // needed to check for termination
-        if ( synchronizer.isLocked() ) endStep();
         synchronizer.startStep();
         synchronizer.lock();
     }
@@ -988,7 +994,7 @@ public abstract class Algorithm implements Runnable {
     /**
      * Defines the end of an algorithm step.
      */
-    public void endStep() {
+    public void endStep() throws Terminate {
         synchronizer.unlock();
         synchronizer.pauseExecution();
     }
@@ -997,4 +1003,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2016 11 17 at 21:22:44 GMT]
+//  [Last modified: 2016 11 18 at 14:20:00 GMT]

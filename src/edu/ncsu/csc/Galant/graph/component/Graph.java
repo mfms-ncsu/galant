@@ -84,6 +84,10 @@ public class Graph {
 
 	/**
 	 * Default constructor.
+     *
+     * @todo let the Terminate exception propagate all the way to the top,
+     * where it can be caught based on whether or not you're running an
+     * algorithm
 	 */
 	public Graph() {
         dispatch = GraphDispatch.getInstance();
@@ -91,7 +95,12 @@ public class Graph {
 		nodes = new ArrayList<Node>();
 		edges = new ArrayList<Edge>();
         states = new ArrayList<GraphState>();
-        this.addState(new GraphState());
+        try {
+            this.addState(new GraphState());
+        }
+        catch ( Terminate t ) {
+            System.out.println("Terminate in new Graph()");
+        }
         banner = new MessageBanner(this);
 	}
 
@@ -173,7 +182,7 @@ public class Graph {
 		}
         return toReturn;
 	}
-	
+
 	/**
      * Adds the given state to the list of states for this graph. If there is
      * already a state having the same algorithm state (time stamp), there is
@@ -185,7 +194,7 @@ public class Graph {
      *
      * @invariant states are always sorted by state number.
      */
-	private void addState(GraphState stateToAdd) {
+	private void addState(GraphState stateToAdd) throws Terminate {
         int stateNumber = stateToAdd.getState();
         boolean found = false;
         for ( int i = states.size() - 1; i >= stateNumber; i-- ) {
@@ -332,7 +341,7 @@ public class Graph {
     public Boolean is(int state, String key) {
         return getBoolean(state, key);
     }
-    
+
     /************** String attributes ***************/
 	public boolean set(String key, String value) throws Terminate {
         GraphState newState = newState();
@@ -519,7 +528,7 @@ public class Graph {
 	public void writeMessage(String message) throws Terminate {
         banner.set(message);
 	}
-	
+
 	/**
      * @param state the algorithm state for the desired message
 	 * @return the current message banner
@@ -527,21 +536,19 @@ public class Graph {
 	public String getMessage(int state) {
 		return banner.get(state);
 	}
-	
+
 	/**
 	 * @return the number of <code>Node</code>s in the current <code>Graph</code>
 	 */
 	public int numberOfNodes() {
 		int count = 0;
-		
 		for (Node n : nodes) {
 			if (n.inScope())
 				count++;
 		}
-		
 		return count;
 	}
-	
+
     /**
      * @return the largest id of any node + 1; this should be used when
      * allocating an array of nodes, as there is no longer a guarantee that
@@ -561,15 +568,13 @@ public class Graph {
 	 */
 	public int numberOfEdges() {
 		int count = 0;
-		
 		for (Edge n : edges) {
 			if (n.inScope())
 				count++;
 		}
-		
 		return count;
 	}
-	
+
     /**
      * @return the largest id of any edge + 1; this should be used when
      * allocating an array of edges; unlike the case of nodes, it should not
@@ -1228,4 +1233,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2016 11 17 at 20:36:01 GMT]
+//  [Last modified: 2016 11 18 at 14:16:32 GMT]

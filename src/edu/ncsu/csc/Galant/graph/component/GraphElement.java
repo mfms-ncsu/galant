@@ -25,7 +25,7 @@ public class GraphElement implements Comparable<GraphElement> {
     public static final String HIDDEN = "hidden";
     public static final String HIDDEN_LABEL = "hiddenLabel";
     public static final String HIDDEN_WEIGHT = "hiddenWeight";
-    
+
     /**
      * The graph with which this element is associated.
      */
@@ -43,12 +43,21 @@ public class GraphElement implements Comparable<GraphElement> {
      * Constructor to be used during parsing; all additional information is
      * filled in by initializeAfterParsing(). The algorithm state is
      * initialized elsewhere, currently in Graph.
+     *
+     * @todo let the Terminate exception propagate all the way to the top,
+     * where it can be caught based on whether or not you're running an
+     * algorithm
      */
     public GraphElement(Graph graph) {
         this.dispatch = GraphDispatch.getInstance();
         this.states = new ArrayList<GraphElementState>();
         this.graph = graph;
-        this.addState(new GraphElementState());
+        try {
+            this.addState(new GraphElementState());
+        }
+        catch ( Terminate t ) {
+            System.out.println("Terminate in new GraphElement()");
+        }
     }
 
     /**
@@ -124,7 +133,7 @@ public class GraphElement implements Comparable<GraphElement> {
 		}
         return toReturn;
 	}
-	
+
 	/**
      * Adds the given state to the list of states for this element. If there
      * is already a state having the same algorithm state (time stamp), there
@@ -137,7 +146,7 @@ public class GraphElement implements Comparable<GraphElement> {
      *
      * @invariant states are always sorted by state number.
      */
-	private void addState(GraphElementState stateToAdd) {
+	private void addState(GraphElementState stateToAdd) throws Terminate {
         int stateNumber = stateToAdd.getState();
         boolean found = false;
         for ( int i = states.size() - 1; i >= stateNumber; i-- ) {
@@ -588,4 +597,4 @@ public class GraphElement implements Comparable<GraphElement> {
     }
 }
 
-//  [Last modified: 2016 10 17 at 12:51:40 GMT]
+//  [Last modified: 2016 11 18 at 14:16:10 GMT]

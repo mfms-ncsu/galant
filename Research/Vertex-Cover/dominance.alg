@@ -48,7 +48,7 @@ algorithm {
      * invisible during edit mode; the semantics of visibility of labels and
      * weights still need work.
      */
-    hideEdgeWeights();
+    showNodeWeights();
     cover = new NodeSet();
     queueAllNodes();
     while ( ! pq.isEmpty() ) {
@@ -104,4 +104,4 @@ algorithm {
     endStep();
 }
 
-//  [Last modified: 2016 11 17 at 22:10:22 GMT]
+//  [Last modified: 2016 11 18 at 14:26:42 GMT]

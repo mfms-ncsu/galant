@@ -16,8 +16,9 @@ import edu.ncsu.csc.Galant.algorithm.Algorithm;
 
 public class AlgorithmExecutor {
 
-    /** the amount of time to wait between polling the algorithm */
-    final int WAIT_TIME = 15;
+    /** the amount of time to wait between polling the algorithm, in
+     * milliseconds */
+    final int WAIT_TIME = 5;
 
     private Algorithm algorithm;
     private AlgorithmSynchronizer synchronizer;
@@ -59,7 +60,9 @@ public class AlgorithmExecutor {
         try {
             algorithmThread.join();
         }
-        catch (InterruptedException e) {}
+        catch (InterruptedException e) {
+            System.out.println("Synchronization problem in stopAlgorithm()");
+        }
         algorithmState = displayState = 0;
     }
 
@@ -87,9 +90,9 @@ public class AlgorithmExecutor {
             displayState++;
             algorithmState++;
 
-            // wake up the algorithmThread, have it do something	
+            // wake up the algorithmThread, have it do something
             synchronized ( synchronizer ) {
-                synchronizer.notify();							
+                synchronizer.notify();
             }
             do {
                 try {
@@ -98,7 +101,7 @@ public class AlgorithmExecutor {
                     System.out.printf("Error occured while trying to wait");
                     e.printStackTrace(System.out);
                 }
-            } while ( ! synchronizer.stepFinished() );
+            } while ( ! synchronizer.stepFinished() && ! synchronizer.stopped() );
         }
         else if ( displayState < algorithmState ) {
             displayState++;
@@ -135,4 +138,4 @@ public class AlgorithmExecutor {
     }
 }
 
-//  [Last modified: 2016 10 17 at 12:43:50 GMT]
+//  [Last modified: 2016 11 18 at 14:25:39 GMT]

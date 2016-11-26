@@ -112,8 +112,7 @@ public class GraphMLParser {
         try {
             graphElement.set(attributeName, attributeValueString);
         }
-        catch ( Terminate t ) {
-            // should not happen
+        catch ( Terminate t ) { // should not happen
             t.printStackTrace();
         }
     }
@@ -226,6 +225,9 @@ public class GraphMLParser {
             setDocument(db, xml);
             newGraph = buildGraphFromInput(db);
         }
+        /**
+         * @todo these exceptions should really be caught by the editor
+         */
         catch ( Exception exception ) {
             if ( exception instanceof GalantException ) {
                 GalantException ge = (GalantException) exception;
@@ -233,8 +235,8 @@ public class GraphMLParser {
                 try {
                     ge.display();
                 }
-                catch ( Terminate t ) {
-                    // ignore - should not happen
+                catch ( Terminate t ) { // should not happen
+                    t.printStackTrace();
                 }
             }
             else exception.printStackTrace( System.out );
@@ -291,4 +293,4 @@ public class GraphMLParser {
 	
 }
 
-//  [Last modified: 2016 10 18 at 15:22:52 GMT]
+//  [Last modified: 2016 11 22 at 20:30:15 GMT]

@@ -98,8 +98,8 @@ public class Graph {
         try {
             this.addState(new GraphState());
         }
-        catch ( Terminate t ) {
-            System.out.println("Terminate in new Graph()");
+        catch ( Terminate t ) { // should not happen
+            t.printStackTrace();
         }
         banner = new MessageBanner(this);
 	}
@@ -1240,4 +1240,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2016 11 18 at 18:24:59 GMT]
+//  [Last modified: 2016 11 22 at 20:20:32 GMT]

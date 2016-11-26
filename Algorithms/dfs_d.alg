@@ -24,7 +24,7 @@ function visit( Node v ) {
         else if ( finish[id(w)] == 0 ) { /* ancestor */
             label(e, "B");
         }
-        else if ( finish[id(w)] 
+        else if ( finish[id(w)]
                   > discovery[id(v)] ) { /* descendant */
             label(e, "F");
         }
@@ -62,4 +62,4 @@ algorithm {
     }
 }
 
-//  [Last modified: 2016 11 04 at 16:58:48 GMT]
+//  [Last modified: 2016 11 23 at 03:06:16 GMT]

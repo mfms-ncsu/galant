@@ -112,7 +112,7 @@ public class GAlgorithmEditorPanel extends GEditorPanel {
             return false;
         }
 	}
-	
+
 	/**
 	 * Called when the user presses the Run button.
 	 * Not at all related to the run() method in Runnable.
@@ -134,7 +134,7 @@ public class GAlgorithmEditorPanel extends GEditorPanel {
         algorithmExecutor.startAlgorithm();
         dispatch.getGraphWindow().updateStatusLabel();
 	}
-	
+
 	/**
 	 * Invokes compile, and if an executable is produced, invokes run.
 	 */
@@ -195,4 +195,4 @@ public class GAlgorithmEditorPanel extends GEditorPanel {
 
 }
 
-//  [Last modified: 2015 12 08 at 13:59:16 GMT]
+//  [Last modified: 2016 11 22 at 17:31:17 GMT]

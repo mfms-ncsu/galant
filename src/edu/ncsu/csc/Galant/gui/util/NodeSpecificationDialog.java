@@ -38,7 +38,7 @@ public abstract class NodeSpecificationDialog extends JDialog
 
     private String enter = "Enter";
     private String cancel = "Cancel";
-    
+
     private Frame frame;
 
     /** Creates the reusable dialog. */
@@ -147,4 +147,4 @@ public abstract class NodeSpecificationDialog extends JDialog
     }
 }
 
-//  [Last modified: 2016 09 15 at 23:49:18 GMT]
+//  [Last modified: 2016 11 20 at 17:03:49 GMT]

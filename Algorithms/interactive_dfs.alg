@@ -11,7 +11,7 @@ NodeSet unvisited;
 function visit( Node v ) {
     unvisited.remove(v);
     time = time + 1;
-    step();
+    //beginStep();
     set(v, "discovery", time);
     Integer discovered_v
         = getInteger(v, "discovery");
@@ -58,6 +58,7 @@ algorithm {
     showEdgeLabels();
     clearNodeLabels();
     clearEdgeLabels();
+    endStep();
 
     unvisited = getNodeSet();
     while ( ! unvisited.isEmpty() ) {
@@ -65,9 +66,9 @@ algorithm {
             = getNode("node to visit",
                       unvisited,
                       "node already visited");
-        step();
+        //step();
         visit(u);
     }
 }
 
-//  [Last modified: 2016 11 18 at 17:18:20 GMT]
+//  [Last modified: 2016 11 23 at 03:10:02 GMT]

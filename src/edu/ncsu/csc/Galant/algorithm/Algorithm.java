@@ -90,18 +90,18 @@ public abstract class Algorithm implements Runnable {
      * Color constants: included for convenience since Galant represents
      * colors as hexidecimal strings.
      */
-    public static final String RED       = "#ff0000"; 
-    public static final String GREEN     = "#00ff00"; 
+    public static final String RED       = "#ff0000";
+    public static final String GREEN     = "#00ff00";
     public static final String BLUE      = "#0000ff";
-    public static final String YELLOW    = "#ffff00"; 
-    public static final String MAGENTA   = "#ff00ff"; 
+    public static final String YELLOW    = "#ffff00";
+    public static final String MAGENTA   = "#ff00ff";
     public static final String CYAN      = "#00ffff";
     public static final String TEAL      = "#009999";
     public static final String VIOLET    = "#9900cc";
-    public static final String ORANGE    = "#ff8000"; 
-    public static final String GRAY      = "#808080"; 
-    public static final String BLACK     = "#000000"; 
-    public static final String WHITE     = "#ffffff"; 
+    public static final String ORANGE    = "#ff8000";
+    public static final String GRAY      = "#808080";
+    public static final String BLACK     = "#000000";
+    public static final String WHITE     = "#ffffff";
 
     /**
      * @param graph the Graph object on which this algorithm will run; used
@@ -120,7 +120,7 @@ public abstract class Algorithm implements Runnable {
      */
     public void checkGraphElement(GraphElement ge) throws GalantException {
         if ( ge == null || ! ge.inScope() )
-            throw new GalantException("Nonexistent node or edge " + ge);
+            throw new GalantException("Nonexistent node or edge: " + ge);
     }
 
     public class NodeList extends ArrayList<Node> {
@@ -916,15 +916,8 @@ public abstract class Algorithm implements Runnable {
      * undirected it doesn't matter which is which; returns null if no such
      * edge exists
      */
-    public Edge getEdge(Node source, Node target) {
-        Edge edge = null;
-        try {
-            edge = graph.getEdge(source, target);
-        }
-        catch (GalantException e) {
-            e.report("Warning:");
-        }
-        return edge;
+    public Edge getEdge(Node source, Node target) throws GalantException {
+        return graph.getEdge(source, target);
     }
 
     /**
@@ -1008,4 +1001,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2016 11 18 at 16:25:31 GMT]
+//  [Last modified: 2016 11 22 at 20:13:32 GMT]

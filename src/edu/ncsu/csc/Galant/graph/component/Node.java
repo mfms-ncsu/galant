@@ -244,10 +244,10 @@ public class Node extends GraphElement {
                         throw new GalantException("Bad y-coordinate " + yString);
                     }
                 } // x and y coordinates specified
-                
+
                 remove("x");
                 remove("y");
-            
+
                 // establish fixed positions
                 xCoordinate = x;
                 yCoordinate = y;
@@ -257,11 +257,10 @@ public class Node extends GraphElement {
                 Boolean marked = Boolean.parseBoolean(markedString);
                 remove(MARKED);
                 if ( marked )
-                    set(MARKED, marked); 
+                    set(MARKED, marked);
             }
         }
-        catch ( Terminate t ) {
-            // should not happen
+        catch ( Terminate t ) { // should not happen
             t.printStackTrace();
         }
     } // end, intializeAfterParsing
@@ -644,4 +643,4 @@ public class Node extends GraphElement {
 	}
 }
 
-//  [Last modified: 2016 11 17 at 21:16:41 GMT]
+//  [Last modified: 2016 11 22 at 20:24:35 GMT]

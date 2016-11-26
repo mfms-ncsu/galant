@@ -110,8 +110,7 @@ public class Edge extends GraphElement {
             super.remove("source");
             super.remove("target");
         }
-        catch ( Terminate t ) {
-            // should not happen
+        catch ( Terminate t ) { // should not happen
             t.printStackTrace();
         }
         LogHelper.exitMethod(getClass(), "initializeAfterParsing, edge = "
@@ -179,4 +178,4 @@ public class Edge extends GraphElement {
 	}
 }
 
-//  [Last modified: 2016 02 18 at 20:27:54 GMT]
+//  [Last modified: 2016 11 22 at 20:20:56 GMT]

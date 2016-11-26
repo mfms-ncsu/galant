@@ -55,8 +55,8 @@ public class GraphElement implements Comparable<GraphElement> {
         try {
             this.addState(new GraphElementState());
         }
-        catch ( Terminate t ) {
-            System.out.println("Terminate in new GraphElement()");
+        catch ( Terminate t ) { // should not happen
+            t.printStackTrace();
         }
     }
 
@@ -485,7 +485,7 @@ public class GraphElement implements Comparable<GraphElement> {
                     throw new GalantException("Bad id " + idString);
                 }
                 remove(ID);
-                set(ID, id); 
+                set(ID, id);
             }
             String weightString = getString(WEIGHT);
             if ( weightString != null ) {
@@ -497,18 +497,17 @@ public class GraphElement implements Comparable<GraphElement> {
                     throw new GalantException("Bad weight " + weightString);
                 }
                 remove(WEIGHT);
-                set(WEIGHT, weight); 
+                set(WEIGHT, weight);
             }
             String highlightString = getString(HIGHLIGHTED);
             if ( highlightString != null ) {
                 Boolean highlighted = Boolean.parseBoolean(highlightString);
                 remove(HIGHLIGHTED);
                 if ( highlighted )
-                    set(HIGHLIGHTED, highlighted); 
+                    set(HIGHLIGHTED, highlighted);
             }
         }
-        catch ( Terminate t ) {
-            // should not happen
+        catch ( Terminate t ) { // should not happen
             t.printStackTrace();
         }
     }
@@ -597,4 +596,4 @@ public class GraphElement implements Comparable<GraphElement> {
     }
 }
 
-//  [Last modified: 2016 11 18 at 14:16:10 GMT]
+//  [Last modified: 2016 11 22 at 20:22:57 GMT]

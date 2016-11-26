@@ -11,7 +11,19 @@ while in the home directory.
 After that you can run Galant, either by saying
 ant run
 or by executing
-build/jar/Galant.jar
+java -jar build/jar/Galant.jar (this may not work on Windows)
+
+Make sure that
+- you have Apache Ant installed (not necessary if running jar file?)
+- you have a JDK installed (Java Development Kit)
+- the JAVA_HOME environment variable is set properly; typical locations
+   (Mac)      /Library/Java/JavaVirtualMachines/jdk1.x.x.jdk/Contents/Home/
+   (Windows)  C:\Program Files\Java\jdk1.x.x
+   (Linux)    ??
+
+Otherwise you may get a null pointer exception from
+     edu.ncsu.csc.Galant.algorithm.code.CompilerAndLoader.compile
+Galant needs to be able to fire up a Java compiler while it is running.
 
 *** Testing *** (see testingGalant.docx for more details)
 

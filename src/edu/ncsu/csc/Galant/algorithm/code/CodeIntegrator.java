@@ -214,7 +214,7 @@ public class CodeIntegrator	{
         }
 
         try {
-            return ALGORITHM_STRUCTURE.replace(ALGORITHM_HEAD, head).replace(ALGORITHM_TAIL, tail).replace(ALGORITHM_BODY, modifiedBody);				
+            return ALGORITHM_STRUCTURE.replace(ALGORITHM_HEAD, head).replace(ALGORITHM_TAIL, tail).replace(ALGORITHM_BODY, modifiedBody);
         } catch (NullPointerException e) {
             return ALGORITHM_STRUCTURE.replace(ALGORITHM_HEAD, "").replace(ALGORITHM_TAIL, "").replace(ALGORITHM_BODY, modifiedBody);
         }
@@ -342,4 +342,4 @@ public class CodeIntegrator	{
     }
 }
 
-//  [Last modified: 2016 11 04 at 12:09:52 GMT]
+//  [Last modified: 2016 11 22 at 20:15:43 GMT]

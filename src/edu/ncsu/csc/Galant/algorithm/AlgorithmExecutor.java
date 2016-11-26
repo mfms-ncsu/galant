@@ -83,6 +83,11 @@ public class AlgorithmExecutor {
      * algorithm is then responsible for calling incrementAlgorithmState() to
      * put the algorithm in sync with the display; this is done in
      * pauseExecution() in the AlgorithmSynchronizer.
+     *
+     * @todo needs to check if there's a query window open before releasing
+     * control to the algorithm via synchronizer.notify(); ideally should
+     * also display something on the status bar or throw an exception; the
+     * detection part is complicated, however
      */
     public synchronized void incrementDisplayState() {
         if ( displayState == algorithmState
@@ -138,4 +143,4 @@ public class AlgorithmExecutor {
     }
 }
 
-//  [Last modified: 2016 11 18 at 14:25:39 GMT]
+//  [Last modified: 2016 11 18 at 21:56:15 GMT]

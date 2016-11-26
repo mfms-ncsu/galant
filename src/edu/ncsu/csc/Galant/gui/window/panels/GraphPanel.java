@@ -395,7 +395,7 @@ public class GraphPanel extends JPanel{
         else {
             nodeCenter = n.getFixedPosition();
         }
-            
+
         // if graph is layered and node has layer and position in layer
         // information, base its location on that
         /**
@@ -1006,4 +1006,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2016 11 04 at 19:32:54 GMT]
+//  [Last modified: 2016 11 26 at 18:49:29 GMT]

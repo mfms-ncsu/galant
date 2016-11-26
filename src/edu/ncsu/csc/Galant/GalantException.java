@@ -5,6 +5,7 @@ import edu.ncsu.csc.Galant.logging.LogHelper;
 import edu.ncsu.csc.Galant.GraphDispatch;
 import edu.ncsu.csc.Galant.algorithm.Terminate;
 import edu.ncsu.csc.Galant.algorithm.AlgorithmSynchronizer;
+import edu.ncsu.csc.Galant.algorithm.AlgorithmExecutor;
 
 /**
  * A catch all for all exceptions occurring in Galant; this acts as the
@@ -23,6 +24,11 @@ public class GalantException extends Exception {
 
     public GalantException( String message, Exception exception ) {
         super( message, exception );
+        AlgorithmExecutor executor
+            = GraphDispatch.getInstance().getAlgorithmExecutor();
+        if ( executor != null ) {
+            executor.exceptionThrown = true;
+        }
     }
 
     public void report( String message ) {
@@ -59,17 +65,32 @@ public class GalantException extends Exception {
     public synchronized void display() throws Terminate {
         GraphDispatch dispatch = GraphDispatch.getInstance();
         System.out.println("animation mode: " + dispatch.isAnimationMode());
+        // not clear what the following code is for; possibly a situation
+        // where control cedes to the "main program" and leaves an orphaned
+        // algorithm thread, but it doesn't really make sense: how did
+        // animation mode get set to false in that case? and doesn't throwing
+        // terminate override the current exception, which then never gets
+        // reported?
+        AlgorithmSynchronizer synchronizer
+            = dispatch.getAlgorithmSynchronizer();
         if ( ! dispatch.isAnimationMode() ) {
-            AlgorithmSynchronizer synchronizer = dispatch.getAlgorithmSynchronizer();
             System.out.println("synchronizer: " + synchronizer);
-            System.out.println("algorithm finished: " + synchronizer.algorithmFinished() );
+            System.out.println("algorithm finished: "
+                               + synchronizer.algorithmFinished() );
             if ( ! (synchronizer == null) ||
                  ! synchronizer.algorithmFinished() ) {
                 throw new Terminate();
             }
         }
-        ExceptionDialog.displayExceptionInDialog( this );
+        // end of unclear code
+        /**
+         * signals the main thread to get out of its busy-wait loop
+         */
+        if ( synchronizer != null ) {
+            synchronizer.finishStep();
+        }
+        ExceptionDialog.displayExceptionInDialog(this, this.getMessage());
     }
 }
 
-//  [Last modified: 2016 10 18 at 15:02:21 GMT]
+//  [Last modified: 2016 11 26 at 21:34:10 GMT]

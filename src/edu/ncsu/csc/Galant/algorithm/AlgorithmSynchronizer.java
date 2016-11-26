@@ -47,6 +47,7 @@ public class AlgorithmSynchronizer {
      * heeded at the beginning of the next step.
      */
     public synchronized void stop() {
+        System.out.println("synchronizer.stop()");
         terminated = true;
      }
 
@@ -99,6 +100,10 @@ public class AlgorithmSynchronizer {
         return stepFinished;
     }
 
+    public synchronized void finishStep() {
+        stepFinished = true;
+    }
+
     /**
      * Called at the end of each algorithm step; yields control back to the
      * main thread
@@ -115,9 +120,8 @@ public class AlgorithmSynchronizer {
                     this.wait();
                 }
             }
-            catch(InterruptedException e){
-                System.out.printf("Error occured while trying to wait");
-                e.printStackTrace(System.out);
+            catch ( InterruptedException e ) {
+                System.out.println("interruption in pauseExecution");
             }
         }
         if ( terminated )
@@ -125,4 +129,4 @@ public class AlgorithmSynchronizer {
     }
 }
 
-//  [Last modified: 2016 11 18 at 17:58:16 GMT]
+//  [Last modified: 2016 11 26 at 21:24:12 GMT]

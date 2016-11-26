@@ -780,7 +780,10 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 
     private synchronized void performDone() {
         AlgorithmExecutor executor = dispatch.getAlgorithmExecutor();
-        updateStatusLabel("No algorithm running");
+        if ( executor.infiniteLoop )
+            updateStatusLabel("Terminated infinte loop");
+        else
+            updateStatusLabel("No algorithm running");
         dispatch.setAnimationMode(false);
         executor.stopAlgorithm();
         // in case user changed node positions during execution
@@ -797,7 +800,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	private JPanel initAnimationPanel() {
 		LogHelper.guiEnterMethod(getClass(), "initAnimationPanel");
 		animationButtons = new JPanel();
-		
+
 		stepBack.setEnabled(false);
 		stepBack.addActionListener(new ActionListener() {
 			@Override
@@ -839,14 +842,14 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 				}
 		});
 
-  // add keyboard shortcuts    
+  // add keyboard shortcuts
   KeyboardFocusManager keyManager
       = KeyboardFocusManager.getCurrentKeyboardFocusManager();
   keyManager.addKeyEventDispatcher(new KeyEventDispatcher() {
-    /** 
+    /**
      * Intent is to delay for about 1/60 second = roughly 17 milliseconds
      * to allow the display to catch up to repeated keystrokes when an
-     * arrow key is held down. 
+     * arrow key is held down.
      */
     static final long DELAY_TIME = 17;
     boolean ctrlPressed = false;
@@ -880,7 +883,8 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
      * current KeyboardFocusManager will not dispatch a consumed KeyEvent.
      *
      * @param e the KeyEvent to dispatch
-     * @return true if the KeyboardFocusManager should take no further action with regard to the KeyEvent; false otherwise
+     * @return true if the KeyboardFocusManager should take no further action
+     * with regard to the KeyEvent; false otherwise
      */
     public boolean dispatchKeyEvent(KeyEvent e) {
         LogHelper.guiEnterMethod(getClass(), "dispatchKeyEvent, e = " + e);
@@ -893,7 +897,9 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
             // down key
             try {
                 Thread.sleep(DELAY_TIME);
-            } catch (InterruptedException f) {}
+            } catch (InterruptedException f) {
+                System.out.println("Thread interrupted during step backward");
+            }
             frame.repaint();
             LogHelper.guiExitMethod(getClass(), "step backward");
             return true;
@@ -905,7 +911,9 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
             performStepForward();
             try {
                 Thread.sleep(DELAY_TIME);
-            } catch (InterruptedException f) {}
+            } catch (InterruptedException f) {
+                System.out.println("Thread interrupted during step forward");
+            }
             frame.repaint();
             LogHelper.guiExitMethod(getClass(), "step forward");
             return true;
@@ -1117,4 +1125,4 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	}
 }
 
-//  [Last modified: 2016 11 17 at 20:38:44 GMT]
+//  [Last modified: 2016 11 26 at 18:37:04 GMT]

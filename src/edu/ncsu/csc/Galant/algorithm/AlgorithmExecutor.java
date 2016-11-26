@@ -16,15 +16,37 @@ import edu.ncsu.csc.Galant.algorithm.Algorithm;
 
 public class AlgorithmExecutor {
 
-    /** the amount of time to wait between polling the algorithm, in
-     * milliseconds */
-    final int WAIT_TIME = 5;
+    /**
+     * the amount of time to wait between polling the algorithm, in
+     * milliseconds
+     */
+    final int WAIT_TIME = 10;
+
+    /**
+     * amount of time to wait before concluding that the algorithm is in an
+     * infinite loop
+     */
+    final int BUSY_WAIT_TIME_LIMIT = 5000;
 
     private Algorithm algorithm;
     private AlgorithmSynchronizer synchronizer;
-    private Thread algorithmThread;
+    /**
+     * Needs to be public so that it can be interrupted (not clear that it
+     * helps)
+     */
+    public Thread algorithmThread;
     private int algorithmState;
     private int displayState;
+
+    /**
+     * true if an error or infinite loop occurred during execution
+     */
+    public boolean infiniteLoop = false;
+
+    /**
+     * true if a GalantException is thrown during algorithm execution
+     */
+    public boolean exceptionThrown = false;
 
     /**
      * Makes a note of the algorithm and its synchronizer and creates a
@@ -36,6 +58,8 @@ public class AlgorithmExecutor {
         this.synchronizer = synchronizer;
         this.algorithmThread = new Thread(algorithm);
 		algorithmThread.setName("Execution thread");
+        this.infiniteLoop = false;
+        this.exceptionThrown = false;
     }
 
     /**
@@ -53,17 +77,21 @@ public class AlgorithmExecutor {
      * thread.
      */
     public synchronized void stopAlgorithm() {
+        System.out.println("-> stopAlgorithm");
         synchronized ( synchronizer ) {
             synchronizer.stop();
-            synchronizer.notify();
+            notifyAll();
         }
+        System.out.println("algorithm thread notified");
         try {
-            algorithmThread.join();
+            if ( ! infiniteLoop && ! exceptionThrown ) algorithmThread.join();
+            System.out.println("beyond joining algorithm thread");
         }
         catch (InterruptedException e) {
             System.out.println("Synchronization problem in stopAlgorithm()");
         }
         algorithmState = displayState = 0;
+        System.out.println("<- stopAlgorithm");
     }
 
 
@@ -99,14 +127,26 @@ public class AlgorithmExecutor {
             synchronized ( synchronizer ) {
                 synchronizer.notify();
             }
+            int timeInBusyWait = 0;
             do {
                 try {
                     Thread.sleep(WAIT_TIME);
+                    timeInBusyWait += WAIT_TIME;
+                    System.out.println("timeInBusyWait = " + timeInBusyWait);
                 } catch (InterruptedException e) {
                     System.out.printf("Error occured while trying to wait");
                     e.printStackTrace(System.out);
                 }
-            } while ( ! synchronizer.stepFinished() && ! synchronizer.stopped() );
+            } while ( ! synchronizer.stepFinished()
+                      && ! synchronizer.stopped()
+                      && ! algorithmThread.interrupted()
+                      && ! exceptionThrown
+                      && timeInBusyWait < BUSY_WAIT_TIME_LIMIT );
+            if ( timeInBusyWait >= BUSY_WAIT_TIME_LIMIT ) {
+                System.out.println("busy wait time limit exceeded");
+                infiniteLoop = true;
+                stopAlgorithm();
+            }
         }
         else if ( displayState < algorithmState ) {
             displayState++;
@@ -143,4 +183,4 @@ public class AlgorithmExecutor {
     }
 }
 
-//  [Last modified: 2016 11 18 at 21:56:15 GMT]
+//  [Last modified: 2016 11 26 at 19:54:22 GMT]

@@ -198,7 +198,8 @@ public class GraphDispatch {
 
 	public void startStepIfRunning() throws Terminate {
 		if ( animationMode
-             && ! algorithmSynchronizer.isLocked() ) {
+             && ! algorithmSynchronizer.isLocked()
+             ) {
             algorithmSynchronizer.startStep();
 		}
 	}
@@ -305,4 +306,4 @@ public class GraphDispatch {
 
 }
 
-//  [Last modified: 2016 11 18 at 17:56:50 GMT]
+//  [Last modified: 2016 11 26 at 21:21:25 GMT]

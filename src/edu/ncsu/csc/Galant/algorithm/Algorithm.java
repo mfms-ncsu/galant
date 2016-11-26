@@ -383,7 +383,7 @@ public abstract class Algorithm implements Runnable {
         checkGraphElement(ge);
         ge.setSelected(true);
     }
-    public void deselect(GraphElement ge) throws Terminate, GalantException { 
+    public void deselect(GraphElement ge) throws Terminate, GalantException {
         checkGraphElement(ge);
         ge.setSelected(false);
     }
@@ -396,7 +396,7 @@ public abstract class Algorithm implements Runnable {
         return ge.isSelected();
     }
 
-    public void mark(Node n) throws Terminate, GalantException { 
+    public void mark(Node n) throws Terminate, GalantException {
         checkGraphElement(n);
         n.mark();
     }
@@ -1001,4 +1001,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2016 11 22 at 20:13:32 GMT]
+//  [Last modified: 2016 11 26 at 13:54:39 GMT]

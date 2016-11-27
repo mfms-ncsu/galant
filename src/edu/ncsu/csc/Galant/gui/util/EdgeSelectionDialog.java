@@ -27,15 +27,17 @@ public class EdgeSelectionDialog extends EdgeSpecificationDialog {
 
     public EdgeSelectionDialog(String prompt) {
         super(GraphWindow.getGraphFrame(), prompt);
+        GraphDispatch.getInstance().getWorkingGraph().setSelectedEdge(null);
     }
 
     public EdgeSelectionDialog(String prompt, EdgeSet restrictedSet, String errorMessage) {
         super(GraphWindow.getGraphFrame(), prompt);
         this.restrictedSet = restrictedSet;
         this.errorMessage = errorMessage;
+        GraphDispatch.getInstance().getWorkingGraph().setSelectedEdge(null);
     }
 
-    protected void performAction(Node source, Node target) 
+    protected void performAction(Node source, Node target)
         throws Terminate, GalantException {
         GraphDispatch dispatch = GraphDispatch.getInstance();
         Graph graph = dispatch.getWorkingGraph();
@@ -48,4 +50,4 @@ public class EdgeSelectionDialog extends EdgeSpecificationDialog {
     }
 }
 
-//  [Last modified: 2016 10 10 at 20:55:15 GMT]
+//  [Last modified: 2016 11 27 at 19:00:50 GMT]

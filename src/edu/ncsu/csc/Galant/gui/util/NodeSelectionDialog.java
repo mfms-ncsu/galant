@@ -28,15 +28,17 @@ public class NodeSelectionDialog extends NodeSpecificationDialog {
 
     public NodeSelectionDialog(String prompt) {
         super(GraphWindow.getGraphFrame(), prompt);
+        GraphDispatch.getInstance().getWorkingGraph().setSelectedNode(null);
     }
 
     public NodeSelectionDialog(String prompt, NodeSet restrictedSet, String errorMessage) {
         super(GraphWindow.getGraphFrame(), prompt);
         this.restrictedSet = restrictedSet;
         this.errorMessage = errorMessage;
+        GraphDispatch.getInstance().getWorkingGraph().setSelectedNode(null);
     }
 
-    protected void performAction(Node node) 
+    protected void performAction(Node node)
         throws Terminate, GalantException {
         GraphDispatch dispatch = GraphDispatch.getInstance();
         Graph graph = dispatch.getWorkingGraph();
@@ -48,4 +50,4 @@ public class NodeSelectionDialog extends NodeSpecificationDialog {
     }
 }
 
-//  [Last modified: 2016 10 18 at 16:07:33 GMT]
+//  [Last modified: 2016 11 27 at 19:00:16 GMT]

@@ -13,6 +13,8 @@ package edu.ncsu.csc.Galant.algorithm;
 
 import java.lang.Thread;
 import edu.ncsu.csc.Galant.algorithm.Algorithm;
+import edu.ncsu.csc.Galant.GraphDispatch;
+import edu.ncsu.csc.Galant.gui.window.GraphWindow;
 
 public class AlgorithmExecutor {
 
@@ -78,13 +80,16 @@ public class AlgorithmExecutor {
      */
     public synchronized void stopAlgorithm() {
         System.out.println("-> stopAlgorithm");
+        GraphDispatch dispatch = GraphDispatch.getInstance();
+        dispatch.setAnimationMode(false);
         synchronized ( synchronizer ) {
             synchronizer.stop();
             notifyAll();
         }
         System.out.println("algorithm thread notified");
         try {
-            if ( ! infiniteLoop && ! exceptionThrown ) algorithmThread.join();
+            if ( ! infiniteLoop && ! synchronizer.exceptionThrown() )
+                algorithmThread.join();
             System.out.println("beyond joining algorithm thread");
         }
         catch (InterruptedException e) {
@@ -118,8 +123,14 @@ public class AlgorithmExecutor {
      * detection part is complicated, however
      */
     public synchronized void incrementDisplayState() {
+        System.out.println("-> incrementDisplayState, displayState = "
+                           + displayState
+                           + ", algorithmState = " + algorithmState);
+        GraphDispatch dispatch = GraphDispatch.getInstance();
         if ( displayState == algorithmState
-             && ! synchronizer.algorithmFinished() ) {
+             && ! synchronizer.algorithmFinished()
+             && ! synchronizer.stopped()
+             && ! synchronizer.exceptionThrown() ) {
             displayState++;
             algorithmState++;
 
@@ -139,18 +150,40 @@ public class AlgorithmExecutor {
                 }
             } while ( ! synchronizer.stepFinished()
                       && ! synchronizer.stopped()
-                      && ! algorithmThread.interrupted()
+                      //                      && ! algorithmThread.interrupted()
+                      && ! synchronizer.exceptionThrown()
                       && ! exceptionThrown
                       && timeInBusyWait < BUSY_WAIT_TIME_LIMIT );
+            System.out.println(" in incrementDisplayState"
+                               + ", stepFinished = "
+                               + synchronizer.stepFinished()
+                               + ", stopped = " + synchronizer.stopped()
+                               + ", infiniteLoop = " + infiniteLoop
+                               + ", exceptionThrown = " + exceptionThrown
+                               + ", synchronizer.exceptionThrown = "
+                               + synchronizer.exceptionThrown() );
             if ( timeInBusyWait >= BUSY_WAIT_TIME_LIMIT ) {
                 System.out.println("busy wait time limit exceeded");
                 infiniteLoop = true;
-                stopAlgorithm();
             }
         }
         else if ( displayState < algorithmState ) {
             displayState++;
         }
+        System.out.println(" in incrementDisplayState, infiniteLoop = "
+                           + infiniteLoop
+                           + ", exceptionThrown = " + exceptionThrown
+                           + ", synchronizer.exceptionThrown = "
+                           + synchronizer.exceptionThrown() );
+        if ( infiniteLoop || synchronizer.exceptionThrown() ) {
+            // need to let window know that algorithm was terminated due
+            // to unusual circumstances so that appropriate message will
+            // appear on the status bar
+            dispatch.getGraphWindow().performDone();
+        }
+        System.out.println("<- incrementDisplayState, displayState = "
+                           + displayState
+                           + ", algorithmState = " + algorithmState);
     }
 
     /**
@@ -183,4 +216,4 @@ public class AlgorithmExecutor {
     }
 }
 
-//  [Last modified: 2016 11 26 at 19:54:22 GMT]
+//  [Last modified: 2016 11 27 at 20:52:27 GMT]

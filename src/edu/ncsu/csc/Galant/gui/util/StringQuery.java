@@ -18,17 +18,19 @@ public class StringQuery extends QueryDialog {
 
     public StringQuery(String prompt) {
         super(GraphWindow.getGraphFrame(), prompt, false);
+        GraphDispatch.getInstance().setStringAnswer(null);
     }
 
     /** @see QueryDialog.java */
     public StringQuery(String prompt, boolean waitForResponse) {
         super(GraphWindow.getGraphFrame(), prompt, waitForResponse);
+        GraphDispatch.getInstance().setStringAnswer(null);
     }
 
-    protected void performAction(String answerText) 
+    protected void performAction(String answerText)
         throws Terminate, GalantException {
         GraphDispatch.getInstance().setStringAnswer(answerText);
     }
 }
 
-//  [Last modified: 2016 09 17 at 12:46:43 GMT]
+//  [Last modified: 2016 11 27 at 18:59:28 GMT]

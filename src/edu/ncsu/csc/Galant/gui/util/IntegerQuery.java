@@ -18,18 +18,20 @@ public class IntegerQuery extends QueryDialog {
 
     public IntegerQuery(String prompt) {
         super(GraphWindow.getGraphFrame(), prompt, false);
+        GraphDispatch.getInstance().setIntegerAnswer(null);
     }
 
     /** @see QueryDialog.java */
     public IntegerQuery(String prompt, boolean waitForResponse) {
         super(GraphWindow.getGraphFrame(), prompt, waitForResponse);
+        GraphDispatch.getInstance().setIntegerAnswer(null);
     }
 
-    protected void performAction(String answerText) 
+    protected void performAction(String answerText)
         throws Terminate, GalantException {
         Integer integerAnswer = Integer.parseInt(answerText);
         GraphDispatch.getInstance().setIntegerAnswer(integerAnswer);
     }
 }
 
-//  [Last modified: 2016 09 17 at 12:54:01 GMT]
+//  [Last modified: 2016 11 27 at 18:58:39 GMT]

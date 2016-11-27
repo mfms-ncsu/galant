@@ -41,6 +41,8 @@ public class AlgorithmSynchronizer {
      * take place until algorithm has an explicit endStep(); a lock is
      * initiated by a beginStep() */
     protected boolean locked = false;
+    /** true if there was an exception thrown during the current step */
+    protected boolean exceptionThrown = false;
 
     /**
      * Signals the algorithm that it needs to stop running. The signal is
@@ -73,6 +75,14 @@ public class AlgorithmSynchronizer {
     public void unlock() { locked = false; }
     public boolean isLocked() { return locked; }
 
+    public synchronized void reportExceptionThrown() {
+        exceptionThrown = true;
+    }
+
+    public synchronized boolean exceptionThrown() {
+        return exceptionThrown;
+    }
+
     /**
      * Signals the beginning of a step: the algorithm calls startStep() and
      * the main thread checks, in a busy wait loop, to see whether the
@@ -85,6 +95,7 @@ public class AlgorithmSynchronizer {
      * @see edu.ncsu.csc.Galant.algorithm.code.CodeIntegrator
      */
     public synchronized void startStep() throws Terminate {
+        System.out.println("-> startStep()");
         if ( terminated )
             throw new Terminate();
         if ( locked ) {
@@ -94,6 +105,7 @@ public class AlgorithmSynchronizer {
         if ( terminated )
             throw new Terminate();
         stepFinished = false;
+        System.out.println("<- startStep()");
     }
 
     public synchronized boolean stepFinished() {
@@ -109,6 +121,7 @@ public class AlgorithmSynchronizer {
      * main thread
      */
     public synchronized void pauseExecution() throws Terminate {
+        System.out.println("-> pauseExecution()");
         if ( terminated )
             throw new Terminate();
         AlgorithmExecutor executor
@@ -126,7 +139,8 @@ public class AlgorithmSynchronizer {
         }
         if ( terminated )
             throw new Terminate();
+        System.out.println("<- pauseExecution()");
     }
 }
 
-//  [Last modified: 2016 11 26 at 21:24:12 GMT]
+//  [Last modified: 2016 11 27 at 20:34:04 GMT]

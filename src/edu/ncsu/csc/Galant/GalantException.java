@@ -87,10 +87,11 @@ public class GalantException extends Exception {
          * signals the main thread to get out of its busy-wait loop
          */
         if ( synchronizer != null ) {
-            synchronizer.finishStep();
+            synchronizer.reportExceptionThrown();
+            //            synchronizer.finishStep();
         }
         ExceptionDialog.displayExceptionInDialog(this, this.getMessage());
     }
 }
 
-//  [Last modified: 2016 11 26 at 21:34:10 GMT]
+//  [Last modified: 2016 11 27 at 20:39:39 GMT]

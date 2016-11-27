@@ -69,6 +69,7 @@ import edu.ncsu.csc.Galant.gui.window.NodeDeletionDialog;
 import edu.ncsu.csc.Galant.gui.editor.GTabbedPane; // for confirmation dialog
 import edu.ncsu.csc.Galant.gui.editor.GEditorFrame; // for confirmation dialog
 import edu.ncsu.csc.Galant.algorithm.AlgorithmExecutor;
+import edu.ncsu.csc.Galant.algorithm.AlgorithmSynchronizer;
 import edu.ncsu.csc.Galant.algorithm.Terminate;
 
 public class GraphWindow extends JPanel implements PropertyChangeListener, ComponentListener {
@@ -114,12 +115,12 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	private ButtonGroup directedGroup = new ButtonGroup();
 	private JToggleButton directedBtn;
 	private JToggleButton undirectedBtn;
-	
+
 	private JToggleButton nodeLabels;
 	private JToggleButton edgeLabels;
 	private JToggleButton nodeWeights;
 	private JToggleButton edgeWeights;
-	
+
 	private JToggleButton repositionBtn;
 
     /**
@@ -127,18 +128,30 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
      * and display states
      */
 	private JLabel statusLabel;
-	
+
 	/**
      * Updates the status message to display the current states
 	 */
 	public void updateStatusLabel() {
         AlgorithmExecutor executor
             = dispatch.getAlgorithmExecutor();
-        int algorithmState = executor.getAlgorithmState();
-        int displayState = executor.getDisplayState();
-		String message = "algorithm state is "
-            + algorithmState + ", display state is " + displayState;
-		statusLabel.setText(message);
+        AlgorithmSynchronizer synchronizer
+            = dispatch.getAlgorithmSynchronizer();
+        if ( executor == null
+             || synchronizer == null ) {
+            updateStatusLabel("Algorithm no longer running");
+        }
+        else if ( synchronizer.exceptionThrown() )
+            updateStatusLabel("Terminated because of exception");
+        else if ( executor.infiniteLoop )
+            updateStatusLabel("Terminated because of possible infinite loop");
+        else {
+            int algorithmState = executor.getAlgorithmState();
+            int displayState = executor.getDisplayState();
+            String message = "algorithm state is "
+                + algorithmState + ", display state is " + displayState;
+            statusLabel.setText(message);
+        }
 	}
 
 	/**
@@ -147,22 +160,20 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	public void updateStatusLabel(String message) {
 		statusLabel.setText(message);
 	}
-	
 
 	public String getStatusLabelAsAString(){
 		return statusLabel.getText();
 	}
-	
-	
+
 	private GraphMode mode = null;
-  
+
     private EdgeSpecificationDialog edgeSelectionDialog;
-    private NodeSpecificationDialog nodeDeletionDialog;  
+    private NodeSpecificationDialog nodeDeletionDialog;
 
     public ComponentEditPanel getComponentEditPanel() {
         return componentEditPanel;
     }
-	
+
 	/**
 	 * The Edit modes GraphWindow can assume. Used in the listener for the
 	 * GraphPanel instance to update the Graph appropriately when edited visually
@@ -778,18 +789,22 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
         updateStatusLabel();
     }
 
-    private synchronized void performDone() {
+    public synchronized void performDone() {
+        System.out.println("-> performDone()");
         AlgorithmExecutor executor = dispatch.getAlgorithmExecutor();
-        if ( executor.infiniteLoop )
-            updateStatusLabel("Terminated infinte loop");
-        else
-            updateStatusLabel("No algorithm running");
-        dispatch.setAnimationMode(false);
+        // does not appear to help in case of infinite loop
+        //executor.algorithmThread.interrupt();
+        AlgorithmSynchronizer synchronizer
+            = dispatch.getAlgorithmSynchronizer();
+        // also does not appear to help in case of infinite loop
+        //synchronizer.finishStep();
         executor.stopAlgorithm();
         // in case user changed node positions during execution
         if ( ! dispatch.algorithmMovesNodes() ) {
             dispatch.pushToTextEditor();
         }
+        updateStatusLabel();
+        System.out.println("<- performDone()");
     }
 
 	/**
@@ -1125,4 +1140,4 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	}
 }
 
-//  [Last modified: 2016 11 26 at 18:37:04 GMT]
+//  [Last modified: 2016 11 27 at 21:19:31 GMT]

@@ -118,6 +118,7 @@ public class GAlgorithmEditorPanel extends GEditorPanel {
 	 * Not at all related to the run() method in Runnable.
 	 */
 	public void run() {
+        System.out.println("-> GAlgorithmEditorPanel.run()");
         GraphDispatch dispatch = GraphDispatch.getInstance();
 		dispatch.setAnimationMode(true);
 
@@ -133,12 +134,13 @@ public class GAlgorithmEditorPanel extends GEditorPanel {
         dispatch.getGraphWindow().updateStatusLabel();
         algorithmExecutor.startAlgorithm();
         dispatch.getGraphWindow().updateStatusLabel();
+        System.out.println("<- GAlgorithmEditorPanel.run()");
 	}
 
 	/**
 	 * Invokes compile, and if an executable is produced, invokes run.
 	 */
-	public void compileAndRun() 
+	public void compileAndRun()
     {
         try {
             if( compile() )
@@ -195,4 +197,4 @@ public class GAlgorithmEditorPanel extends GEditorPanel {
 
 }
 
-//  [Last modified: 2016 11 22 at 17:31:17 GMT]
+//  [Last modified: 2016 11 27 at 21:02:15 GMT]

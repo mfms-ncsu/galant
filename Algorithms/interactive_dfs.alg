@@ -66,9 +66,9 @@ algorithm {
             = getNode("node to visit",
                       unvisited,
                       "node already visited");
-        //step();
+        step();
         visit(u);
     }
 }
 
-//  [Last modified: 2016 11 23 at 03:10:02 GMT]
+//  [Last modified: 2016 11 27 at 21:45:39 GMT]

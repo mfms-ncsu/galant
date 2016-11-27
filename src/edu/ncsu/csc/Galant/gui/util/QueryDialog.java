@@ -37,7 +37,7 @@ public abstract class QueryDialog extends JDialog
 
     private String enter = "Enter";
     private String cancel = "Cancel";
-    
+
     private Frame frame;
 
     /** 
@@ -166,4 +166,4 @@ public abstract class QueryDialog extends JDialog
     }
 }
 
-//  [Last modified: 2016 09 17 at 12:53:03 GMT]
+//  [Last modified: 2016 11 27 at 21:48:30 GMT]

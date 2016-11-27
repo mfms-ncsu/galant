@@ -69,6 +69,8 @@ public class AlgorithmExecutor {
      * @todo not clear if we want the first step to execute
      */
     public void startAlgorithm() {
+        GraphDispatch dispatch = GraphDispatch.getInstance();
+        dispatch.setActiveQuery(null);
         algorithmState = displayState = 0;
         algorithmThread.start();
         incrementDisplayState();
@@ -88,13 +90,17 @@ public class AlgorithmExecutor {
         }
         System.out.println("algorithm thread notified");
         try {
-            if ( ! infiniteLoop && ! synchronizer.exceptionThrown() )
+            if ( ! infiniteLoop
+                 && ! synchronizer.exceptionThrown()
+                 && dispatch.getActiveQuery() == null )
                 algorithmThread.join();
             System.out.println("beyond joining algorithm thread");
         }
         catch (InterruptedException e) {
             System.out.println("Synchronization problem in stopAlgorithm()");
         }
+        if ( dispatch.getActiveQuery() != null )
+            dispatch.getActiveQuery().dispose();
         algorithmState = displayState = 0;
         System.out.println("<- stopAlgorithm");
     }
@@ -216,4 +222,4 @@ public class AlgorithmExecutor {
     }
 }
 
-//  [Last modified: 2016 11 27 at 20:52:27 GMT]
+//  [Last modified: 2016 11 27 at 22:22:37 GMT]

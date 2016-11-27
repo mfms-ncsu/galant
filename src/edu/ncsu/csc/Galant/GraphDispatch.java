@@ -5,6 +5,7 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import javax.swing.JDialog;
 
 import edu.ncsu.csc.Galant.graph.component.Graph;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow;
@@ -63,6 +64,12 @@ public class GraphDispatch {
 	private GraphWindow graphWindow;
 
     /**
+     * Reference to an active query window during algorithm execution (so
+     * that it can be properly closed and does not cause Galant to hang)
+     */
+    private JDialog activeQuery;
+
+    /**
      * text of response to latest interactive query with text input
      */
     private String stringAnswer;
@@ -73,13 +80,15 @@ public class GraphDispatch {
     private Integer integerAnswer;
 
     /**
-     * double value of answer to latest interactive query for a double 
+     * double value of answer to latest interactive query for a double
      */
     private Double doubleAnswer;
 
     /**
      * getters and setters for the query answers
      */
+    public void setActiveQuery(JDialog dialog) { this.activeQuery = dialog; }
+    public JDialog getActiveQuery() { return this.activeQuery; }
     public void setStringAnswer(String answer) { this.stringAnswer = answer; }
     public String getStringAnswer() { return this.stringAnswer; }
     public void setIntegerAnswer(Integer answer) { this.integerAnswer = answer; }
@@ -96,13 +105,13 @@ public class GraphDispatch {
 	public static final String ANIMATION_MODE = "animationMode";
 	public static final String GRAPH_UPDATE = "graphUpdate";
 	public static final String TEXT_UPDATE = "textUpdate";
-	
+
 	public static final String ADD_NODE = "addNode";
 	public static final String ADD_EDGE = "addEdge";
 	public static final String DELETE_COMPONENT = "deleteComponent";
 
 	private List<PropertyChangeListener> listener = new ArrayList<PropertyChangeListener>();
-	
+
 	private GraphDispatch() {
 		LogHelper.enterConstructor(getClass());
 		LogHelper.exitConstructor(getClass());
@@ -113,7 +122,7 @@ public class GraphDispatch {
      * various parts of the code to communicate with each other indirectly;
      * for example, an instance of the Graph class does not have to be
      * associated with a GraphDispatch instance upon creation in order for it
-     * to interact with the display, animation, etc. 
+     * to interact with the display, animation, etc.
      *
      * @todo this is a nonstandard use of getInstance(), which, in other
      * contexts, always returns a new instance; this should probably have
@@ -140,7 +149,7 @@ public class GraphDispatch {
 		this.graphSource = u;
 		notifyListeners(GRAPH_UPDATE, null, null);
 	}
-	
+
 	public UUID getGraphSource() {
 		return graphSource;
 	}
@@ -152,15 +161,19 @@ public class GraphDispatch {
 	public boolean isAnimationMode() {
 		return this.animationMode;
 	}
-	
+
 	public void setAnimationMode(boolean mode) {
+        System.out.println("-> setAnimationMode, mode = " + mode
+                           + ", current mode = " + this.animationMode);
 		Boolean old = this.animationMode;
 		this.animationMode = mode;
-        // if at the end of an animation, need to reset the graph 
+        // if at the end of an animation, need to reset the graph
         if ( ! mode && old ) {
             this.workingGraph.reset();
         }
 		notifyListeners(ANIMATION_MODE, old, this.animationMode);
+        System.out.println("<- setAnimationMode, new mode = "
+                           + this.animationMode);
 	}
 
     public AlgorithmExecutor getAlgorithmExecutor() {
@@ -233,7 +246,7 @@ public class GraphDispatch {
      */
     public void unlockIfRunning() {
         if ( animationMode )
-            algorithmSynchronizer.unlock();       
+            algorithmSynchronizer.unlock();
     }
 
     public boolean algorithmMovesNodes() {
@@ -247,11 +260,11 @@ public class GraphDispatch {
     public void setAlgorithmMovesNodes(boolean algorithmMovesNodes) {
         this.algorithmMovesNodes = algorithmMovesNodes;
     }
-  
+
 	public void pushToGraphEditor() {
 		notifyListeners(GRAPH_UPDATE, null, null);
 	}
-	
+
     /**
      * @todo this apparently causes the GraphMLParser to read the text in the
      * editor and create a new graph from it; probably should be prevented
@@ -262,7 +275,7 @@ public class GraphDispatch {
             notifyListeners(TEXT_UPDATE, null, null);
         }
 	}
-	
+
 	private void notifyListeners(String property, Object oldValue, Object newValue) {
 		for (PropertyChangeListener name : listener) {
 			name.propertyChange(new PropertyChangeEvent(this, property, oldValue, newValue));
@@ -288,7 +301,7 @@ public class GraphDispatch {
 	public void setWindowHeight(int windowHeight) {
 		this.windowHeight = windowHeight;
 	}
-	
+
 	public void setWindowSize(int height, int width) {
 		LogHelper.enterMethod(getClass(), "setWindowSize()");
 		this.windowHeight = height;
@@ -306,4 +319,4 @@ public class GraphDispatch {
 
 }
 
-//  [Last modified: 2016 11 26 at 21:21:25 GMT]
+//  [Last modified: 2016 11 27 at 22:06:12 GMT]

@@ -247,7 +247,7 @@ public class Graph {
     public Edge getEdge(String prompt, EdgeSet restrictedSet, String errorMessage)
         throws Terminate {
         dispatch.initStepIfRunning();
-        EdgeSelectionDialog dialog 
+        EdgeSelectionDialog dialog
             = new EdgeSelectionDialog(prompt, restrictedSet, errorMessage);
         dispatch.pauseExecutionIfRunning();
         dialog = null;          // to keep window from lingering when
@@ -1240,4 +1240,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2016 11 22 at 20:20:32 GMT]
+//  [Last modified: 2016 11 27 at 22:16:42 GMT]

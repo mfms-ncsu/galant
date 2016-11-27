@@ -1,8 +1,6 @@
 /**
  * Captures a double in response to a user's input during algorithm
  * execution. Can also be used during editing.
- * @todo Seems wrong to have the "doubleAnswer" to be a property of a graph;
- * same issue in IntegerQuery and StringQuery
  */
 package edu.ncsu.csc.Galant.gui.util;
 
@@ -36,4 +34,4 @@ public class DoubleQuery extends QueryDialog {
     }
 }
 
-//  [Last modified: 2016 11 27 at 18:58:07 GMT]
+//  [Last modified: 2016 11 27 at 21:56:17 GMT]

@@ -985,8 +985,10 @@ public abstract class Algorithm implements Runnable {
      * Defines the end of an algorithm step.
      */
     public void endStep() throws Terminate {
-        synchronizer.unlock();
-        synchronizer.pauseExecution();
+        if ( synchronizer.isLocked() ) {
+            synchronizer.unlock();
+            synchronizer.pauseExecution();
+        }
     }
 
     /**
@@ -1001,4 +1003,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2016 11 26 at 13:54:39 GMT]
+//  [Last modified: 2016 11 28 at 01:29:44 GMT]

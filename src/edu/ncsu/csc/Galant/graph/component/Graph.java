@@ -289,8 +289,6 @@ public class Graph {
         dispatch.initStepIfRunning();
         NodeSelectionDialog dialog
             = new NodeSelectionDialog(prompt, restrictedSet, errorMessage);
-        dialog = null;          // to keep window from lingering when
-                                // execution is terminated
         dispatch.pauseExecutionIfRunning();
         return selectedNode;
     }
@@ -1240,4 +1238,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2016 11 27 at 22:16:42 GMT]
+//  [Last modified: 2016 11 28 at 15:37:06 GMT]

@@ -8,7 +8,7 @@ public class LogHelper {
 
     private static final String INDENT_STRING = "..";
 	private static LogHelper logHelper = null;
-	private static boolean loggingEnabled = false;
+	private static boolean loggingEnabled = true;
     /**
      * Logging related to the graph panel, i.e., mouse actions and drawing,
      * clutter the loggin unnecessarily unless they are specifically
@@ -16,16 +16,16 @@ public class LogHelper {
      */
     private static boolean guiLoggingEnabled = false;
     private static boolean savedState = loggingEnabled;
-	
+
 	private static int spaces = 0;
 	public static LogHelper getInstance() {
 		if (logHelper == null) {
 			logHelper = new LogHelper();
 		}
-		
+
 		return logHelper;
 	}
-	
+
 	private LogHelper() {
 	}
 
@@ -47,15 +47,15 @@ public class LogHelper {
     public static void restoreState() {
         loggingEnabled = savedState;
     }
-	
+
 	public static void logDebug(String msg) {
 		if (loggingEnabled) {
 			for (String line: msg.split("\n")){
          		System.out.println(spaceString() + line);
       		}
-		}	
+		}
 	}
-	
+
 	public static void enterConstructor(Class<?> cls) {
 		spaces++;
 		
@@ -150,4 +150,4 @@ public class LogHelper {
 	}
 }
 
-//  [Last modified: 2016 10 17 at 12:26:13 GMT]
+//  [Last modified: 2016 11 28 at 15:43:13 GMT]

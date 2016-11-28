@@ -15,6 +15,7 @@ import java.lang.Thread;
 import edu.ncsu.csc.Galant.algorithm.Algorithm;
 import edu.ncsu.csc.Galant.GraphDispatch;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow;
+import edu.ncsu.csc.Galant.logging.LogHelper;
 
 public class AlgorithmExecutor {
 
@@ -81,20 +82,27 @@ public class AlgorithmExecutor {
      * thread.
      */
     public synchronized void stopAlgorithm() {
-        System.out.println("-> stopAlgorithm");
+        LogHelper.enterMethod(getClass(), "stopAlgorithm");
         GraphDispatch dispatch = GraphDispatch.getInstance();
         dispatch.setAnimationMode(false);
         synchronized ( synchronizer ) {
             synchronizer.stop();
-            notifyAll();
+            synchronizer.notify();
         }
-        System.out.println("algorithm thread notified");
+        LogHelper.logDebug("algorithm thread notified"
+                           + ", infiniteLoop = " + infiniteLoop
+                           + ", exceptionThrown = " + synchronizer.exceptionThrown()
+                           + ", activeQuery = "
+                           + dispatch.getActiveQuery());
         try {
             if ( ! infiniteLoop
                  && ! synchronizer.exceptionThrown()
-                 && dispatch.getActiveQuery() == null )
+                 && dispatch.getActiveQuery() == null ) {
+                LogHelper.logDebug("stopAlgorithm(): about to join algorithm thread");
                 algorithmThread.join();
-            System.out.println("beyond joining algorithm thread");
+                LogHelper.logDebug("stopAlgorithm(): joined algorithm thread");
+            }
+            LogHelper.logDebug("stopAlgorithm(): beyond (conditional) joining of algorithm thread");
         }
         catch (InterruptedException e) {
             System.out.println("Synchronization problem in stopAlgorithm()");
@@ -102,7 +110,7 @@ public class AlgorithmExecutor {
         if ( dispatch.getActiveQuery() != null )
             dispatch.getActiveQuery().dispose();
         algorithmState = displayState = 0;
-        System.out.println("<- stopAlgorithm");
+        LogHelper.exitMethod(getClass(), "stopAlgorithm");
     }
 
 
@@ -222,4 +230,4 @@ public class AlgorithmExecutor {
     }
 }
 
-//  [Last modified: 2016 11 27 at 22:22:37 GMT]
+//  [Last modified: 2016 11 28 at 16:00:28 GMT]

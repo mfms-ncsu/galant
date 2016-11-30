@@ -73,7 +73,7 @@ import edu.ncsu.csc.Galant.algorithm.AlgorithmSynchronizer;
 import edu.ncsu.csc.Galant.algorithm.Terminate;
 
 public class GraphWindow extends JPanel implements PropertyChangeListener, ComponentListener {
-	
+
 	public static final int DEFAULT_WIDTH = 600, DEFAULT_HEIGHT = 750;
     public static final int TOOLBAR_HEIGHT = 24;
     public static final int ANIMATION_BUTTON_SIZE = 40;
@@ -262,12 +262,12 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	 */
 	public GraphWindow(GraphDispatch _dispatch) {
 		LogHelper.enterConstructor(getClass());
-		
+
 		this.dispatch = _dispatch;
 		// Register this object as a change listener. Allows GraphDispatch notifications to be pushed to this object
 		_dispatch.getWorkingGraph().graphWindow = this;
 		_dispatch.addChangeListener(this);
-		
+
 		// Create the panel that renders the active Graph
 		graphPanel = new GraphPanel(dispatch, this);
 
@@ -1140,4 +1140,4 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	}
 }
 
-//  [Last modified: 2016 11 27 at 21:19:31 GMT]
+//  [Last modified: 2016 11 30 at 16:48:51 GMT]

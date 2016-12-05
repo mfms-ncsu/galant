@@ -40,7 +40,7 @@ public abstract class QueryDialog extends JDialog
 
     private Frame frame;
 
-    /** 
+    /**
      * Creates a reusable dialog.
      *
      * @param waitForResponse (called modal in Java documentation) when true,
@@ -48,10 +48,9 @@ public abstract class QueryDialog extends JDialog
      * dialog is active; default is false; the only current case where it
      * needs to be true is in the dialog asking for a degree boost for
      * force-directed layout; this is the only case where Galant launches
-     * another action immediately after launching the dialog 
+     * Another action immediately after launching the dialog
      */
     public QueryDialog(Frame frame, String prompt, boolean waitForResponse) {
-        // modal, 
         super(frame, waitForResponse);
         setTitle("Query");
         LogHelper.enterConstructor(getClass());
@@ -166,4 +165,4 @@ public abstract class QueryDialog extends JDialog
     }
 }
 
-//  [Last modified: 2016 11 27 at 21:48:30 GMT]
+//  [Last modified: 2016 12 05 at 16:52:37 GMT]

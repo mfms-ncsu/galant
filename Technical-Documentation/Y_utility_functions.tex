@@ -23,11 +23,12 @@
     Galant entirely or continue interacting
     \\ \hline
     \textsf{beginStep()},
-    \textsf{endStep()}
+    \textsf{endStep()}, \textsf{step()}
     &
     any actions between a \textsf{beginStep()} and an \textsf{endStep()}
     take place atomically, i.e.,
-    all in a single ``step forward'' action by the user
+    all in a single ``step forward'' action by the user; \textsf{step()} is a
+    synonym for \textsf{endStep();~beginStep()}
     \\ \hline
     \textsf{Node getNode(String message)}
     &
@@ -94,3 +95,5 @@
   \label{tab:utility_functions}
 \end{table}
 
+
+% [Last modified: 2016 12 05 at 16:35:45 GMT]

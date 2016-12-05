@@ -1,12 +1,12 @@
 Animation programmers can write algorithms in notation that resembles
 textbook pseudocode
-in files that have a \texttt{.alg} extension.
+in files that have a \Code{.alg} extension.
 The animation examples have used procedural syntax for function calls, as in, for example,
-\texttt{setWeight(v,0)}.
-Java (object oriented) syntax can also be used: \texttt{v.setWeight(0)}.
+\Code{setWeight(v,0)}.
+Java (object oriented) syntax can also be used: \Code{v.setWeight(0)}.
 A key advantage of Galant is that a seasoned Java programmer can
 not only use the Java syntax but can also augment Galant algorithms with
-arbitrary Java classes defined externally, using \texttt{import} statements.
+arbitrary Java classes defined externally, using \Code{import} statements.
 All Galant code is effectively Java, either natively, or via macro preprocessing.
 
 The text panel provides a crude editor for algorithms (as well as GraphML
@@ -27,9 +27,9 @@ is a sequence of statements, each terminated by a semicolon, just as in
 Java.
 The main algorithm has the form
 \begin{quote}
-\texttt{algorithm \{}\\
+\Code{algorithm \{}\\
 \hspace*{2em}\emph{code block}\\
-\texttt{\}}
+\Code{\}}
 \end{quote}
 
 Declarations of global variables are also like those of Java:\\
@@ -49,10 +49,10 @@ Detailed
 information about function declarations is in Section~\ref{sec:functions}
 below.
 
-Central to the Galant API is the \texttt{graph} object: currently all other
+Central to the Galant API is the \Code{Graph} object: currently all other
 parts of the API refer to it.
-The components of a graph are declared to be of type \texttt{Node} or
-\texttt{Edge} and can be accessed/modified via a variety of
+The components of a graph are declared to be of type \Code{Node} or
+\Code{Edge} and can be accessed/modified via a variety of
 functions/methods.
 When an observer or explorer interacts with the animation they move either
 forward or backward one step at a time.
@@ -60,8 +60,8 @@ All aspects of the graph API therefore refer to the current \emph{state of
   the graph}, the set of states behaving as a stack.
 API calls that change the state of a node or an edge automatically
 generate a next step,
-but the programmer can override this using a \texttt{beginStep()} and
-\texttt{endStep()} pair. For example, the beginning of our implementation of
+but the programmer can override this using a \Code{beginStep()} and
+\Code{endStep()} pair. For example, the beginning of our implementation of
 Dijkstra's algorithm looks like
 \begin{verbatim}
 beginStep();
@@ -71,10 +71,13 @@ for_nodes(node) {
 }
 endStep();
 \end{verbatim}
-Without the \texttt{beginStep}/\texttt{endStep}
+Without the \Code{beginStep}/\Code{endStep}
 override, this initialization would require the observer to click
 through multiple steps (one for each node) before getting to the interesting
 part of the animation.
+For convenience the function \Code{step()} is a synomym for \Code{endStep();~beginStep()}.
+If a step takes longer than \Timeout\ seconds, the program is terminated
+under the presumption that there may be an infinite loop.
 
 \input{Y_graph_functions}
 
@@ -94,12 +97,12 @@ $<$node \emph{attribute\_1}="\emph{value\_1}" ... \emph{attribute\_k}="\emph{val
 Each node and edge has a unique integer id.
 The id's are assigned consecutively as nodes/edges are created;
 they may not be altered.
-The id of a node or edge can be accessed via the \texttt{id()} function.
+The id of a node or edge can be accessed via the \Code{id()} function.
 Often, as is the case with the depth-first search algorithm, it makes sense to use
 arrays indexed by node or edge id's.
 Since graphs may be generated externally and/or have undergone deletions of nodes or
 edges, the id's are not always contiguous.
-The functions \texttt{nodeIds()} and \texttt{edgeIds()} return the size of an array
+The functions \Code{nodeIds()} and \Code{edgeIds()} return the size of an array
 large enough to accommodate the appropriate id's as indexes. So code such as
 
 \begin{minipage}{0.8\textwidth}
@@ -117,21 +120,21 @@ is immune to array out of bounds errors.
 Nodes and edges have `getters' and `setters' for
 a variety of attributes, i.e.,
 \\
-\texttt{set}$a$\texttt{($\langle a's$ type$\rangle$ x)}
+\Code{set}$a$\Code{($\langle a's$ type$\rangle$ x)}
 \\
 and
 \\
-$\langle a's$ type$\rangle$ \texttt{get}$a$\texttt{()},
+$\langle a's$ type$\rangle$ \Code{get}$a$\Code{()},
 where $a$ is the name of an attribute such as
-\texttt{Color},
-\texttt{Label} or \texttt{Weight}.
-A more convenient way to access these standard attributes omits the prefix \texttt{get}
+\Code{Color},
+\Code{Label} or \Code{Weight}.
+A more convenient way to access these standard attributes omits the prefix \Code{get}
 and uses procedural syntax:
-\texttt{color(}$x$\texttt{)} is a synonym for $x$\texttt{.getColor()}, for example.
+\Code{color(}$x$\Code{)} is a synonym for $x$\Code{.getColor()}, for example.
 Procedural syntax for the setters is also available:
-\texttt{setColor(}$x$,$c$\texttt{)} is a synonym for $x$.\texttt{setColor(}$c$\texttt{)}.
-In the special cases of color and label it is possible to omit the \texttt{set}
-(since it reads naturally): \texttt{color(}$x$,$c$\texttt{)} instead of \texttt{setColor(}$x$,$c$\texttt{)}.
+\Code{setColor(}$x$,$c$\Code{)} is a synonym for $x$.\Code{setColor(}$c$\Code{)}.
+In the special cases of color and label it is possible to omit the \Code{set}
+(since it reads naturally): \Code{color(}$x$,$c$\Code{)} instead of \Code{setColor(}$x$,$c$\Code{)}.
 
 \subsubsection{Logical attributes: functions and macros}
 
@@ -143,21 +146,21 @@ to simplify graph API access. The macros, which have equivalents in GDR, are:
 \begin{itemize}
 
 \item
-\texttt{for\_adjacent(x, e, y)\{ \emph{code block} \}}
+\Code{for\_adjacent(x, e, y)\{ \emph{code block} \}}
 executes the statements in the code block for each edge incident on \verb$x$.
 The statements can refer to \verb$x$, or \verb$e$, the current incident edge,
 or \verb$y$, the other endpoint of \verb$e$.
-The macro assumes that \texttt{x} has already been declared as \texttt{Node}
-but \texttt{e} and \texttt{y} are declared automatically.
+The macro assumes that \Code{x} has already been declared as \Code{Node}
+but \Code{e} and \Code{y} are declared automatically.
 
 \item
-\texttt{for\_outgoing(Node x, Edge e, Node y)\{ \emph{code block} \}}\\
-behaves like \texttt{for\_adjacent} except that, when the graph is directed,
+\Code{for\_outgoing(Node x, Edge e, Node y)\{ \emph{code block} \}}\\
+behaves like \Code{for\_adjacent} except that, when the graph is directed,
 it iterates only over the edges whose source is \verb$x$ (it still iterates over all the edges when the graph is undirected). 
 
 \item
-\texttt{for\_incoming(Node x, Edge e, Node y)\{ \emph{code block} \}}\\
-behaves like \texttt{for\_adjacent} except that, when the graph is directed,
+\Code{for\_incoming(Node x, Edge e, Node y)\{ \emph{code block} \}}\\
+behaves like \Code{for\_adjacent} except that, when the graph is directed,
 it iterates only over the edges whose sink is \verb$x$ (it still iterates over all the edges when the graph is undirected). 
 
 \end{itemize}
@@ -166,29 +169,29 @@ The actual API methods hiding behind these macros are (these are Node methods):
 
 \begin{itemize}
 \item
-\texttt{List<Edge>~getIncidentEdges()} returns a list of all edges incident to this node,
+\Code{List$\langle$Edge$\rangle$~getIncidentEdges()} returns a list of all edges incident to this node,
 both incoming and outgoing.
 \item
-\texttt{List<Edge>~getOutgoingEdges()} returns a list of edges directed away
+\Code{List$\langle$Edge$\rangle$~getOutgoingEdges()} returns a list of edges directed away
 from this node (all incident edges if the graph is undirected).
 \item
-\texttt{List<Edge>~getIncomingEdges()} returns a list of edges directed toward
+\Code{List$\langle$Edge$\rangle$~getIncomingEdges()} returns a list of edges directed toward
 this node (all incident edges if the graph is undirected).
 \item
-\texttt{Node~travel(Edge~e)} returns the other endpoint of \texttt{e}.
+\Code{Node~travel(Edge~e)} returns the other endpoint of \Code{e}.
 \end{itemize}
 
-The above all use Java syntax, as in \texttt{v.travel(e)}.
+The above all use Java syntax, as in \Code{v.travel(e)}.
 The following are node-related functions with procedural syntax.
 
 \begin{itemize}
-\item \texttt{degree(v)}, \texttt{indegree(v)} and \texttt{outdegree(v)} return the appropriate
+\item \Code{degree(v)}, \Code{indegree(v)} and \Code{outdegree(v)} return the appropriate
 integers.
-\item \texttt{otherEnd(v, e)}, where \texttt{v} is a node and \texttt{e} is an edge
-returns node \texttt{w} such that \texttt{e} connects \texttt{v} and \texttt{w};
-the programmer can also say \texttt{otherEnd(e, v)} in case she forgets the order
+\item \Code{otherEnd(v, e)}, where \Code{v} is a node and \Code{e} is an edge
+returns node \Code{w} such that \Code{e} connects \Code{v} and \Code{w};
+the programmer can also say \Code{otherEnd(e, v)} in case she forgets the order
 of the arguments.
-\item \texttt{neighbors(v)} returns a list of the nodes adjacent to node \texttt{v}.
+\item \Code{neighbors(v)} returns a list of the nodes adjacent to node \Code{v}.
 \end{itemize}
 
 \bigskip
@@ -197,12 +200,12 @@ The logical attributes of an edge are its source and target (destination).
 
 \begin{itemize}
 \item
-\texttt{setSourceNode(Node)} and \texttt{Node~getSourceNode()}
+\Code{setSourceNode(Node)} and \Code{Node~getSourceNode()}
 \item
-\texttt{setTargetNode(Node)} and \texttt{Node~getTargetNode()}
+\Code{setTargetNode(Node)} and \Code{Node~getTargetNode()}
 \item
-\texttt{getOtherEndPoint(Node~u)} returns \texttt{v} where this edge is
-either \texttt{uv} or \texttt{vu}.
+\Code{getOtherEndPoint(Node~u)} returns \Code{v} where this edge is
+either \Code{uv} or \Code{vu}.
 \end{itemize}
 
 \bigskip
@@ -210,15 +213,15 @@ either \texttt{uv} or \texttt{vu}.
 Nodes and edges both have a mechanism for setting (and getting)
 arbitrary attributes of type Integer, String, and Double.
 the relevant methods are\\
-\texttt{setIntegerAttribute(String~key,Integer~value)}\\ 
+\Code{setIntegerAttribute(String~key,Integer~value)}\\ 
 to associate an integer value with a node and\\
-\texttt{Integer~getIntegerAttribute(String~key)}\\
+\Code{Integer~getIntegerAttribute(String~key)}\\
 to retrieve it.
 String and Double attributes work the same way as integer attributes.
 These are useful when an algorithm requires arbitrary information to be
 associated with nodes and/or edges.
 The user-defined attributes may differ from one node or edge to the next.
-For example, some nodes may have a \texttt{depth} attribute while others do not.
+For example, some nodes may have a \Code{depth} attribute while others do not.
 
 \subsubsection{Geometric attributes}
 
@@ -227,24 +230,24 @@ nodes.
 Unlike GDR, the edges in Galant
 are all straight lines and the positions of their labels are fixed.
 The relevant methods for nodes -- using procedural syntax -- are
-\texttt{int~getX(Node)}, \texttt{int~getY(Node)}
-and \texttt{Point~getPosition(Node)}
+\Code{int~getX(Node)}, \Code{int~getY(Node)}
+and \Code{Point~getPosition(Node)}
 for the 'getters'. To set a position,
 one should use\\
-\hspace*{2em}\texttt{setPosition(Node,Point)}\\
+\hspace*{2em}\Code{setPosition(Node,Point)}\\
 or\\
-\hspace*{2em}\texttt{setPosition(Node,int,int)}.\\
+\hspace*{2em}\Code{setPosition(Node,int,int)}.\\
 Once a node has an established position, it is possible to change
-only one coordinate using \texttt{setX(Node,int)} or \texttt{setY(Node,int)}.
+only one coordinate using \Code{setX(Node,int)} or \Code{setY(Node,int)}.
 Object-oriented variants of all of these, e.g.,
-\texttt{v.setX(100)}, are also available.
+\Code{v.setX(100)}, are also available.
 
 Ordinarily the user can move nodes during algorithm execution
 and the resulting positions persist after execution terminates.
 For some algorithms, such as sorting, the algorithm itself needs to move
 nodes.
 It is desirable then to keep the user from moving nodes.
-The declaration \texttt{movesNodes()} at the beginning of an algorithm
+The declaration \Code{movesNodes()} at the beginning of an algorithm
 accomplishes this.
 
 \subsubsection{Display attributes} \label{sec:display_attributes}
@@ -259,38 +262,38 @@ key for
 sorting and priority queues.
 The label is simply text and may be interpreted however the programmer
 chooses.
-The conversion functions \texttt{integer(String)}
-and \texttt{real(String)}
+The conversion functions \Code{integer(String)}
+and \Code{real(String)}
 -- see Table~\ref{tab:utility_functions}
 -- provide a convenient mechanism for treating labels as objects of class
-\texttt{Integer} or \texttt{Double}, respectively.
-The argument of \texttt{setLabel} and its relatives -- see below
--- is not the expected \texttt{String}
-but \texttt{Object};
-any type of object that has a Java \texttt{toString} method will work
--- numbers have to be of type \texttt{Integer} or \texttt{Double}
-rather than \texttt{int} or \texttt{double} since the latter are not objects
+\Code{Integer} or \Code{Double}, respectively.
+The argument of \Code{setLabel} and its relatives -- see below
+-- is not the expected \Code{String}
+but \Code{Object};
+any type of object that has a Java \Code{toString} method will work
+-- numbers have to be of type \Code{Integer} or \Code{Double}
+rather than \Code{int} or \Code{double} since the latter are not objects
 in Java.\footnote{
-  Galant functions return objects, \texttt{Integer} or \texttt{Double}, when
+  Galant functions return objects, \Code{Integer} or \Code{Double}, when
   return values are numbers for this reason.
 }
 So conversion between string labels and numbers works both ways.
 
-Aside from the setters and getters: \texttt{setWeight(double)},
-\mbox{\texttt{Double getWeight()}}, \texttt{setLabel(Object)}
-and \mbox{\texttt{String getLabel()}}, the programmer can also
+Aside from the setters and getters: \Code{setWeight(double)},
+\mbox{\Code{Double getWeight()}}, \Code{setLabel(Object)}
+and \mbox{\Code{String getLabel()}}, the programmer can also
 manipulate and test for the absence of weights/labels using
-\texttt{clearWeight()} and \texttt{boolean~hasWeight()},
+\Code{clearWeight()} and \Code{boolean~hasWeight()},
 and the corresponding methods for labels.
 The procedural variants in this case are
-\texttt{setWeight(Node,double)},
-\mbox{\texttt{Double weight(Node)}},\footnote{
+\Code{setWeight(Node,double)},
+\mbox{\Code{Double weight(Node)}},\footnote{
   The \emph{get} is omitted here for more natural syntax.}
-\texttt{label(Node,Object)},\footnote{
+\Code{label(Node,Object)},\footnote{
   A natural syntax that resembles English. However,
-  \texttt{setLabel(Node,Object)} is also allowed.
+  \Code{setLabel(Node,Object)} is also allowed.
 }
-and \mbox{\texttt{String label(Node)}}
+and \mbox{\Code{String label(Node)}}
 
 Nodes can either be plain, highlighted (selected), marked (visited) or both highlighted and
 marked.
@@ -301,15 +304,15 @@ Edges can be plain or selected, with thickness and color modified in the
 latter case.
 
 The relevant methods are
-(here \texttt{Element} refers to either a \texttt{Node} or an \texttt{Edge}):
+(here \Code{Element} refers to either a \Code{Node} or an \Code{Edge}):
 \begin{itemize}
-\item \texttt{highlight(Element)}, \texttt{unhighlight(Element)}
-  and \texttt{Boolean~isHighlighted(Element)}
-\item correspondingly, \texttt{setSelected(true)}, \texttt{setSelected(false)},
-and \texttt{boolean~isSelected()}
-\item \texttt{mark(Node)}, \texttt{unmark(Node)}
-  and \texttt{Boolean~isMarked(Node)},
-  equivalently \texttt{Boolean~marked(Node)}.
+\item \Code{highlight(Element)}, \Code{unhighlight(Element)}
+  and \Code{Boolean~isHighlighted(Element)}
+\item correspondingly, \Code{setSelected(true)}, \Code{setSelected(false)},
+and \Code{boolean~isSelected()}
+\item \Code{mark(Node)}, \Code{unmark(Node)}
+  and \Code{Boolean~isMarked(Node)},
+  equivalently \Code{Boolean~marked(Node)}.
 \end{itemize}
 
 \begin{table}
@@ -339,9 +342,9 @@ predetermined for plain
 and highlighted nodes/edges,
 the animation implementation can modify these colors,
 thus allowing for many different kinds of highlighting.
-The \texttt{getColor} and \texttt{setColor} methods
-and their procedural variants have \texttt{String} arguments
-in the RGB format \textsf{\#RRGGBB}; for example,
+The \Code{getColor} and \Code{setColor} methods
+and their procedural variants have \Code{String} arguments
+in the RGB format \texttt{\#RRGGBB}; for example,
 the string \texttt{\#0000ff} is blue.
 The predefined color constants are listed in Table~\ref{tab:colors}.
 
@@ -350,7 +353,7 @@ accessed and modified by the user as well as the program.
 In all cases, modifications by execution of the animation are ephemeral
 -- the graph returns to its original state after execution.
 The user can save the mid-execution state of the graph:
-select the \texttt{Export} option on the file menu of the
+select the \Code{Export} option on the file menu of the
 \emph{graph} window.
 
 \input{Y_graph_element_functions}
@@ -382,10 +385,10 @@ some features have been added.
 
 A programmer can define arbitrary functions (methods) using the construct
 
-\texttt{function} \textsl{[return\_type]} \textsl{name} \texttt{(}
- \textsl{parameters} \texttt{) \{} \\
+\Code{function} \textsl{[return\_type]} \textsl{name} \Code{(}
+ \textsl{parameters} \Code{) \{} \\
  \hspace*{3em} \emph{code block} \\
- \texttt{\}}
+ \Code{\}}
 
 The behavior is like that of a Java method. So, for example,
 \begin{verbatim}
@@ -403,7 +406,7 @@ static int plus( int a, int b ) {
 The \textsl{return\_type} is optional. If it is missing, the function behaves like
 a \textsf{void} method in Java. An example is the recursive
 \\
-\texttt{function visit( Node v ) \{} \textsl{code} \texttt{\}}
+\Code{function visit( Node v ) \{} \textsl{code} \Code{\}}
 \\
 The conversion of functions into Java methods when Galant code is compiled
 is complex and may result in indecipherable error messages.
@@ -415,17 +418,17 @@ is complex and may result in indecipherable error messages.
 Galant provides some standard data structures for nodes and edges automatically.
 These are described in detail in Table~\ref{tab:data_structures}.
 Data structures use object-oriented syntax.
-For example, to add a node \texttt{v} to a \texttt{NodeList} \texttt{L},
-the appropriate syntax is \texttt{L.add(v)}.
+For example, to add a node \Code{v} to a \Code{NodeList} \Code{L},
+the appropriate syntax is \Code{L.add(v)}.
 Most data structure operations are as efficient as one might expect.
-A notable exception is \texttt{decreaseKey}
+A notable exception is \Code{decreaseKey}
 for priority queues.
-The operation \texttt{pq.decreaseKey(v,k)}
-does \texttt{pq.remove(v)} followed by \texttt{pq.add(v)}.
+The operation \Code{pq.decreaseKey(v,k)}
+does \Code{pq.remove(v)} followed by \Code{pq.add(v)}.
 The new key is implicit -- it is the weight of the element.
-In practice, assuming \texttt{pq} is a \texttt{NodePriorityQueue},
-\texttt{v} is a \texttt{Node}
-and \texttt{k} is a \texttt{Double}, the sequence would be
+In practice, assuming \Code{pq} is a \Code{NodePriorityQueue},
+\Code{v} is a \Code{Node}
+and \Code{k} is a \Code{Double}, the sequence would be
 \begin{verbatim}
      setWeight(v, k);
      pq.decreaseKey(v,k);
@@ -439,5 +442,7 @@ which would translate to
 As pointed out above, the weight of a node or edge is used for priority in a priority
 queue or for sorting.
 The programmer can change this default
-by redefining the Java \texttt{compareTo()} method,
+by redefining the Java \Code{compareTo()} method,
 but this requires finesse and Java expertise.
+
+% [Last modified: 2016 12 05 at 16:37:40 GMT]

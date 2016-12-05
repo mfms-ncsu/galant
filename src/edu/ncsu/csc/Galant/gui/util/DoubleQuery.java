@@ -18,20 +18,27 @@ public class DoubleQuery extends QueryDialog {
 
     public DoubleQuery(String prompt) {
         super(GraphWindow.getGraphFrame(), prompt, false);
-        GraphDispatch.getInstance().setDoubleAnswer(null);
+        initDialog();
     }
 
     /** @see QueryDialog.java */
     public DoubleQuery(String prompt, boolean waitForResponse) {
         super(GraphWindow.getGraphFrame(), prompt, waitForResponse);
-        GraphDispatch.getInstance().setDoubleAnswer(null);
+        initDialog();
+    }
+
+    private void initDialog() {
+        GraphDispatch dispatch = GraphDispatch.getInstance();
+        dispatch.setDoubleAnswer(null);
+        dispatch.setActiveQuery(this);
     }
 
     protected void performAction(String answerText)
         throws Terminate, GalantException {
         Double doubleAnswer = Double.parseDouble(answerText);
         GraphDispatch.getInstance().setDoubleAnswer(doubleAnswer);
+        GraphDispatch.getInstance().setActiveQuery(null);
     }
 }
 
-//  [Last modified: 2016 11 27 at 21:56:17 GMT]
+//  [Last modified: 2016 12 05 at 17:08:54 GMT]

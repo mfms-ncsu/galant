@@ -48,6 +48,7 @@ public class AlgorithmExecutor {
 
     /**
      * true if a GalantException is thrown during algorithm execution
+     * @todo this is now redundant with equivalent flag in AlgorithmSynchronizer
      */
     public boolean exceptionThrown = false;
 
@@ -230,4 +231,4 @@ public class AlgorithmExecutor {
     }
 }
 
-//  [Last modified: 2016 11 28 at 16:00:28 GMT]
+//  [Last modified: 2016 12 05 at 20:25:25 GMT]

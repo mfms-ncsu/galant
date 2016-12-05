@@ -11,7 +11,7 @@ In each case we consider sequences of events that take place as the result of
 specific user or software actions, pointing out Java classes and methods that
 handle the relevant functionality.
 
-\subsection{Algorithm Execution} \label{sec:execution}
+\section{Algorithm Execution} \label{sec:execution}
 
 Algorithm execution is initiated when the user presses the \Code{Run} or
 the \Code{Compile and Run} button when focused on an algorithm in the text
@@ -43,10 +43,21 @@ window. The sequence of method calls is
   \Code{Terminate} pseudo-exception.
 \end{itemize}
 
+\begin{figure}
+  \begin{center}
+    \includegraphics[width=\textwidth]{X-algorithm_execution}
+  \end{center}
+  \caption{Interactions between two threads during algorithm execution.}
+  \label{fig:algorithm_execution}
+\end{figure}
+
 The gui controls algorithm execution, the user's view thereof, using the
 buttons \Code{stepForward}, \Code{stepBackward} and \Code{done}, defined in
 \Code{gui.window.GraphWindow}, or their keyboard shortcuts right arrow, left
 arrow and escape, respectively.
+Fig.~\ref{fig:algorithm_execution} gives a rough idea of the interaction
+between the two threads (\Code{AlgorithmExecutor} and
+\Code{AlgorithmSynchronizer}) that are active during algorithm execution.
 
 \begin{itemize}
 \item A step forward button press or arrow key effects a call to
@@ -62,7 +73,8 @@ arrow and escape, respectively.
 
 \item If the display state is current with respect to algorithm
   execution, the algorithm needs to execute another step -- the gui cedes
-  control and enters its busy-wait loop.
+  control and enters its busy-wait loop. At this point the algorithm performs
+  a step, described in more detail below.
 
 \item A step back button press or array key effects a call to
   \Code{performStepBack()} in \Code{GraphWindow}, leading to a
@@ -85,18 +97,30 @@ arrow and escape, respectively.
   the algorithm is to be stopped via a \Code{stop()} method call and the
   \Code{AlgorithmExecutor} cedes control to it. The algorithm is expected to
   yield control back to the executor, at which point the latter does a
-  \Code{join()} to make the algorithm thread go away. Algorithm and display
-  states are reinitialized to 0.
+  \Code{join()} to wait for the algorithm thread to finish. Algorithm and display
+  states are then reinitialized to~0.
 
 \item Complications arise with stopping the algorithm because the user may
   terminate the algorithm at any time, not just when the algorithm has run to
   completion. If it has not run to completion, the algorithm, at any
-  attempt to execute the next step, checks whether it has been stopped. If so
+  attempt to execute the next step, checks whether it has been terminated. If so
   it throws \Code{Terminate}, an exception that is caught at the very end of
   the compiled algorithm. The effect is that of a ``long jump'' to the end of
   the algorithm.
 \end{itemize}
 
+Some complications that require extra care are:
+
+\begin{itemize}
+  \item The algorithm could throw an exception. If this is a
+    \Code{GalantException} the constructor informs the
+    \Code{AlgorithmSynchronizer} via a call to
+    \Code{reportExceptionThrown()}.
+    Other exceptions may cause Galant to hang. The ultimate goal is to avoid
+    these entirely. In the \Code{Algorithm} class, which defines all the
+    procedural-style method calls, potential null pointer exceptions are
+    caught before the underlying graph methods are called.
+\end{itemize}
 
 
-% [Last modified: 2016 11 22 at 22:06:15 GMT]
+% [Last modified: 2016 12 05 at 22:21:12 GMT]

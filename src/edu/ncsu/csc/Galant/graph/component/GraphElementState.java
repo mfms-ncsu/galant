@@ -1,6 +1,6 @@
 package edu.ncsu.csc.Galant.graph.component;
 import java.awt.Point;
-import edu.ncsu.csc.Galant.GraphDispatch; 
+import edu.ncsu.csc.Galant.GraphDispatch;
 import edu.ncsu.csc.Galant.logging.LogHelper;
 
 /**
@@ -21,7 +21,7 @@ public class GraphElementState {
 	private int state;
 
     public int getState() { return state; }
-	
+
     /**
      * Attribute list for the snapshot representing this element state
      */
@@ -148,4 +148,4 @@ public class GraphElementState {
     }
 }
 
-//  [Last modified: 2016 10 17 at 12:52:26 GMT]
+//  [Last modified: 2016 12 06 at 17:37:20 GMT]

@@ -1,4 +1,4 @@
-/** 
+/**
  * Has the all the basic infrastructure for running an algorithm in a
  * separate thread and various utility classes and methods for algorithm
  * implementations.
@@ -1003,4 +1003,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2016 11 28 at 01:29:44 GMT]
+//  [Last modified: 2016 12 06 at 18:42:39 GMT]

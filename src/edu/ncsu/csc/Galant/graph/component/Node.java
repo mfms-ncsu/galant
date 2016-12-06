@@ -160,7 +160,7 @@ public class Node extends GraphElement {
     public void setPositionInLayer(Integer positionInLayer) throws Terminate {
         super.set("positionInLayer", positionInLayer);
     }
-	
+
     /**
      * Makes sure that all the attributes specific to nodes are properly
      * initialized. The relevant one are ...
@@ -311,7 +311,7 @@ public class Node extends GraphElement {
 	public List<Edge> getOutgoingEdges() {
 		List<Edge> currentEdges = new ArrayList<Edge>();
 		for ( Edge e : incidentEdges ) {
-			if ( e.inScope() && ! e.isDeleted() ) {
+			if ( e.inScope() ) {
 				if ( this.equals( e.getSourceNode() )
                     || ! graph.isDirected() ) {
 					currentEdges.add(e);
@@ -328,7 +328,7 @@ public class Node extends GraphElement {
 	public List<Edge> getIncomingEdges() {
 		List<Edge> currentEdges = new ArrayList<Edge>();
 		for ( Edge e : incidentEdges ) {
-			if ( e.inScope() && ! e.isDeleted() ) {
+			if ( e.inScope() ) {
 				if ( this.equals( e.getTargetNode() )
                      || ! graph.isDirected() ) {
 					currentEdges.add( e );
@@ -346,7 +346,7 @@ public class Node extends GraphElement {
  		List<Edge> currentEdges = new ArrayList<Edge>();
 
 		for ( Edge e : incidentEdges ) {
-			if ( e.inScope() && ! e.isDeleted() ) {
+			if ( e.inScope() ) {
                 currentEdges.add(e);
             }
         }
@@ -643,4 +643,4 @@ public class Node extends GraphElement {
 	}
 }
 
-//  [Last modified: 2016 11 22 at 20:24:35 GMT]
+//  [Last modified: 2016 12 06 at 17:33:23 GMT]

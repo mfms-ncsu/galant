@@ -105,7 +105,7 @@ public class GraphElement implements Comparable<GraphElement> {
         else {
             state = new GraphElementState();
         }
-        return state; 
+        return state;
     }
 
     /**
@@ -210,7 +210,7 @@ public class GraphElement implements Comparable<GraphElement> {
     public boolean set(String key) throws Terminate {
         return this.set(key, true);
     }
- 
+
     public void clear(String key) throws Terminate {
         this.remove(key);
     }
@@ -238,7 +238,7 @@ public class GraphElement implements Comparable<GraphElement> {
     public Boolean is(int state, String key) {
         return getBoolean(state, key);
     }
-    
+
     /************** String attributes ***************/
 	public boolean set(String key, String value) throws Terminate {
         GraphElementState newState = newState();
@@ -264,7 +264,7 @@ public class GraphElement implements Comparable<GraphElement> {
         newState.remove(key);
         addState(newState);
     }
-	
+
     public boolean isDeleted() {
         return getBoolean(DELETED);
     }
@@ -596,4 +596,4 @@ public class GraphElement implements Comparable<GraphElement> {
     }
 }
 
-//  [Last modified: 2016 11 22 at 20:22:57 GMT]
+//  [Last modified: 2016 12 06 at 18:39:57 GMT]

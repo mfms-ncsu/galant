@@ -620,29 +620,25 @@ public class Graph {
 	 */
 	public List<Node> getNodes() {
 		List<Node> retNodes = new ArrayList<Node>();
-		
 		for (Node n : this.nodes) {
 			if (n.inScope()) {
 				retNodes.add(n);
 			}
 		}
-		
 		return retNodes;
 	}
-	
+
 	/**
 	 * @return all nodes in the graph that exist in the given state.
 	 */
 	public List<Node> getNodes(int state)
     {
 		List<Node> retNodes = new ArrayList<Node>();
-		
 		for (Node n : this.nodes) {
 			if (n.inScope(state)) {
 				retNodes.add(n);
 			}
 		}
-		
 		return retNodes;
 	}
 
@@ -652,7 +648,7 @@ public class Graph {
 	public void setNodes(List<Node> nodes) {
 		this.nodes = nodes;
 	}
-	
+
 	/**
 	 * @return all edges as a list
      * @todo get rid of the template
@@ -660,13 +656,11 @@ public class Graph {
 	public ArrayList<Edge> getEdges()
     {
 		ArrayList<Edge> retEdges = new ArrayList<Edge>();
-		
 		for (Edge e : this.edges) {
 			if (e.inScope()) {
 				retEdges.add(e);
 			}
 		}
-		
 		return retEdges;
 	}
 
@@ -708,7 +702,7 @@ public class Graph {
 		}
 		return retEdges;
     }
-	
+
     /**
      * @return all nodes at the current algorithm state as a set
      */
@@ -721,23 +715,21 @@ public class Graph {
 		}
 		return retNodes;
     }
-	
+
 	/**
 	 * @return all edges at the current algorithm state
 	 */
-	public List<Edge> getEdges(int state) 
+	public List<Edge> getEdges(int state)
     {
 		List<Edge> retEdges = new ArrayList<Edge>();
-		
 		for (Edge e : this.edges) {
 			if (e.inScope(state)) {
 				retEdges.add(e);
 			}
 		}
-		
 		return retEdges;
 	}
-	
+
 	/**
 	 * Replaces the current <code>Edge</code>s.
 	 * @param edges new set of edges to be added to the graph
@@ -745,7 +737,7 @@ public class Graph {
 	public void setEdges(List<Edge> edges) {
 		this.edges = edges;
 	}
-	
+
 	/**
 	 * Removes the specified <code>Edge</code> from the <code>Graph</code>.
 	 * @param e the edge to remove
@@ -790,15 +782,15 @@ public class Graph {
 	public void deleteNode(Node n) throws Terminate {
 		dispatch.startStepIfRunning();
 		dispatch.lockIfRunning();
-		
+
 		n.setDeleted(true);
 		for (Edge e : n.getIncidentEdges()) {
 			e.setDeleted(true);
             // the following would cause permanent removal of the edge rather
-            // than deletion that can be undone by a step backward. 
+            // than deletion that can be undone by a step backward.
             // removeEdge(e);
 		}
-		
+
 		dispatch.unlockIfRunning();
 	}
 
@@ -821,7 +813,7 @@ public class Graph {
 	public void setRootNode(Node rootNode) {
 		this.rootNode = rootNode;
 	}
-	
+
     /**
      * @returns true if a node with the given id exists
      */
@@ -831,7 +823,7 @@ public class Graph {
 
 	/**
 	 * Returns the Node in the graph represented by the given unique ID.
-	 * 
+	 *
 	 * @param id
 	 * @return the specified Node if it exists, null otherwise
 	 */
@@ -857,7 +849,7 @@ public class Graph {
                                        + id
                                        + "\n - in getNodeById" );
 		}
-		
+
 		return n;
 	}
 
@@ -869,7 +861,7 @@ public class Graph {
     int getNextEdgeId() {
         return nextEdgeId++;
     }
-	
+
     /**
      * @return true if the input had explicit edge id's as determined by the
      * fact that none had to be assigned internally -- the assumption being
@@ -889,10 +881,10 @@ public class Graph {
         }
         return this.nodes.get(0);
 	}
-	
+
 	/**
 	 * Returns the Edge in the graph represented by the given unique ID.
-	 * 
+	 *
 	 * @param id
 	 * @return the specified Edge if it exists, null otherwise
 	 */
@@ -906,7 +898,7 @@ public class Graph {
 
 		if ( id < 0 || id >= this.nodes.size() ) {
             throw new GalantException( "edge out of range, id = "
-                                       + id 
+                                       + id
                                        + "\n - in getEdgeById" );
         }
 
@@ -923,8 +915,8 @@ public class Graph {
 
 	/**
 	 * Adds a new <code>Node</code> to the <code>Graph</code>
-	 * @param x the x coordinate of the new node 
-	 * @param y the y coordinate of the new node 
+	 * @param x the x coordinate of the new node
+	 * @param y the y coordinate of the new node
      * @return the added <code>Node</code>; called only during editing
 	 */
 	public Node addInitialNode(Integer x, Integer y) {
@@ -933,7 +925,7 @@ public class Graph {
 		Node n = new Node(this, newId, x, y);
 		nodes.add(n);
         nodeById.put(newId, n);
-		
+
 		if (this.rootNode == null) {
 			this.rootNode = n;
 		}
@@ -961,17 +953,22 @@ public class Graph {
 		Node n = new Node(this, newId, x, y);
 		nodes.add(n);
         nodeById.put( newId, n );
-		if (this.rootNode == null) {
+
+        // probably not needed but couldn't hurt; maybe the algorithm
+        // constructs a tree and then traverses it
+        if (this.rootNode == null) {
 			this.rootNode = n;
 		}
 
-        // seems like we need an addState call as is the case with state
-        // changes in GraphElement.java
+        /**
+         * @todo do we need a pauseExecution here? possibly not because a new
+         * state is added to the created node
+         */
 
         LogHelper.exitMethod( getClass(), "addNode() " + n );
 		return n;
 	}
-	
+
 	/**
 	 * Adds a node to the graph during parsing. The node has already been created.
  	 */
@@ -988,9 +985,13 @@ public class Graph {
 		nodes.add(n);
         nodeById.put( n.getId(), n );
 
+		if (this.rootNode == null) {
+			this.rootNode = n;
+		}
+
         LogHelper.exitMethod( getClass(), "addNode( Node )" );
 	}
-	
+
 	/**
 	 * Adds a new <code>Edge</code> to the <code>Graph</code> with the specified source and target <code>Node</code> IDs.
 	 * Note: for undirected <code>Graph</code>s, "source" and "target" are
@@ -1007,7 +1008,7 @@ public class Graph {
 		edge.getTargetNode().addEdge(edge);
         edges.add(edge);
 	}
-	
+
 	/**
 	 * Adds a new edge to the graph with the specified source and
 	 * target. Starts an algorithm step if appropriate.
@@ -1017,14 +1018,14 @@ public class Graph {
      * This variant is used during algorithm execution if the actual nodes
      * are known.
 	 */
-	public Edge addEdge(Node source, Node target) throws Terminate {	
+	public Edge addEdge(Node source, Node target) throws Terminate {
 		dispatch.startStepIfRunning();
         int id = edges.size();
 		Edge e = new Edge(this, id, source, target);
         addEdge(e, id);
 		return e;
 	}
-	
+
 	/**
 	 * Adds a new edge to the graph with the specified source and
 	 * target. Starts an algorithm step if appropriate.
@@ -1034,10 +1035,10 @@ public class Graph {
      * This variant is used during algorithm execution when only the id's are known.
 	 */
 	public Edge addEdge(int sourceId, int targetId)
-        throws Terminate, GalantException {	
+        throws Terminate, GalantException {
         return addEdge(getNodeById(sourceId), getNodeById(targetId));
 	}
-	
+
 	/**
 	 * Adds a new edge to the graph with the specified source and
 	 * target.
@@ -1048,14 +1049,14 @@ public class Graph {
 	 */
 	public Edge addInitialEdge(Node source, Node target) {
 		Edge e = new Edge(this, edges.size(), source, target);
-		
+
 		edges.add(e);
 		source.addEdge(e);
 		target.addEdge(e);
-		
+
 		return e;
 	}
-	
+
 	/**
 	 * Removes the specified <code>Edge</code> from the <code>Graph</code>
 	 * @param e the <code>Edge</code> to remove
@@ -1063,9 +1064,9 @@ public class Graph {
 	public void removeEdge(Edge e) {
         LogHelper.enterMethod(getClass(), "removeEdge " + e);
 		edges.remove(e);
-		
+
 		Node source = e.getSourceNode();
-		source.getIncidentEdges().remove(e);		
+		source.getIncidentEdges().remove(e);
 		Node target = e.getTargetNode();
 		target.getIncidentEdges().remove(e);
         LogHelper.exitMethod(getClass(), "removeEdge");
@@ -1080,7 +1081,7 @@ public class Graph {
         Edge edge = getEdge(source, target);
         removeEdge(edge);
     }
-	
+
 	/**
 	 * Removes the specified <code>Node</code> from the <code>Graph</code>
 	 * @param n the <code>Node</code> to remove
@@ -1088,7 +1089,7 @@ public class Graph {
 	public void removeNode(Node n) {
 		List<Edge> n_edges = n.getIncidentEdges();
         LogHelper.enterMethod(getClass(), "removeNode " + n + ", deg = " + n_edges.size());
-		
+
 		dispatch.lockIfRunning();
 		for ( Edge e : n_edges ) {
 			removeEdge(e);
@@ -1098,7 +1099,7 @@ public class Graph {
 		dispatch.unlockIfRunning();
         LogHelper.exitMethod(getClass(), "removeNode");
 	}
-	
+
 	/**
 	 * @return an integer ID for the next <code>Node</code> to be
 	 * added. This will always be the largest id so far + 1 
@@ -1111,7 +1112,7 @@ public class Graph {
         LogHelper.exitMethod(getClass(), "nextNodeId, id = " + id);
         return id;
 	}
-	
+
     /**
      * @return the number of layers if this is a layered graph
      */
@@ -1134,7 +1135,7 @@ public class Graph {
      * @param boost is the extent to which degree of a node will cause it to
      * repel other nodes - repulsive force is multiplied by degree raised to
      * the boost power.
-	 * 
+	 *
 	 * @see edu.ncsu.csc.Galant.graph.component.GraphLayout#forceDirected()
 	 */
 	public void smartReposition(Double boost) {
@@ -1161,7 +1162,7 @@ public class Graph {
             savedLayout.usePositions();
         }
     }
-	
+
 	/**
 	 * Returns a valid graphml representation of the graph; for use when no
 	 * algorithm is running
@@ -1169,11 +1170,11 @@ public class Graph {
 	public String xmlString() {
         LogHelper.enterMethod(getClass(), "xmlString");
         String s = "";
-		s += "<?xml version=\"1.0\" encoding=\"UTF-8\"?> \n"; 
-		s += "<graphml xmlns=\"http://graphml.graphdrawing.org/xmlns\" \n";  
+		s += "<?xml version=\"1.0\" encoding=\"UTF-8\"?> \n";
+		s += "<graphml xmlns=\"http://graphml.graphdrawing.org/xmlns\" \n";
 		s += "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" \n" ;
-		s += "xsi:schemaLocation=\"http://graphml.graphdrawing.org/xmlns \n"; 
-		s += "http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd\">\n"; 
+		s += "xsi:schemaLocation=\"http://graphml.graphdrawing.org/xmlns \n";
+		s += "http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd\">\n";
 		s += " <graph ";
         if ( name != null )
             s += " name=\"" + name + "\"";
@@ -1195,7 +1196,7 @@ public class Graph {
         LogHelper.exitMethod(getClass(), "xmlString");
 		return s;
 	}
-	
+
 	/**
 	 * Returns a valid graphml representation of the graph; for use when you
 	 * want to export the current state of a running algorithm.
@@ -1203,11 +1204,11 @@ public class Graph {
 	public String xmlString(int state) {
         LogHelper.enterMethod(getClass(), "xmlString(" + state + ")");
         String s = "";
-		s += "<?xml version=\"1.0\" encoding=\"UTF-8\"?> \n"; 
-		s += "<graphml xmlns=\"http://graphml.graphdrawing.org/xmlns\" \n";  
+		s += "<?xml version=\"1.0\" encoding=\"UTF-8\"?> \n";
+		s += "<graphml xmlns=\"http://graphml.graphdrawing.org/xmlns\" \n";
 		s += "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" \n" ;
-		s += "xsi:schemaLocation=\"http://graphml.graphdrawing.org/xmlns \n"; 
-		s += "http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd\">\n"; 
+		s += "xsi:schemaLocation=\"http://graphml.graphdrawing.org/xmlns \n";
+		s += "http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd\">\n";
 		s += " <graph ";
         if ( name != null )
             s += " name=\"" + name + "\"";
@@ -1222,13 +1223,13 @@ public class Graph {
             LogHelper.logDebug("  writing xml string for node with id " + n.getId());
             LogHelper.logDebug("  writing xml string for node " + n);
 			String sN = n.xmlString(state);
-			if ( ! sN.trim().isEmpty() ) 
+			if ( ! sN.trim().isEmpty() )
 				s += "  " + sN + "\n";
 		}
 		for(Edge e : this.edges) {
             LogHelper.logDebug("writing xml string for edge " + e);
 			String sE = e.xmlString(state);
-			if ( ! sE.trim().isEmpty() ) 
+			if ( ! sE.trim().isEmpty() )
 				s += "  " + sE + "\n";
 		}
 		s += " </graph>";
@@ -1238,4 +1239,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2016 11 28 at 15:37:06 GMT]
+//  [Last modified: 2016 12 06 at 20:22:46 GMT]

@@ -188,6 +188,29 @@ with * can also be edited).
   \item[hiddenWeight] -- if true, the weight of the element does not appear
 \end{description}
 
+\subsubsection*{Layered graphs}
+
+The utilities in \Code{local.LayeredGraph} are used in the crossing
+minimization algorithms in \Code{Research/Layered-Graphs}.
+The GraphML representation of a layered graph specifies \Code{type="layered"}
+and, instead of the mandatory \Code{x} and \Code{y} attributes for each node,
+there are mandatory \Code{layer} and \Code{positionInLayer} attributes. In the
+current implementation, layered graphs are awkwardly shoehorned into various
+parts of the code. Among these are.
+
+\begin{itemize}
+\item \Code{layered} is an attribute of a graph; it might be more natural for
+  a layered graph to be a subclass
+\item when parsing node, a special case for layered graphs in method
+  \Code{initializeAfterParsing()}; a subclass \Code{LayeredGraphNode} could
+  override relevant parts of this processing
+\item in \Code{GraphPanel} the method \Code{getNodeCenter()} makes a special
+  case for layered graphs, calculating the position of a node so that the
+  layers are distributed equally in the vertical direction and the nodes on
+  each layer in the horizontal direction; a subclass could override a method
+  that specifies the display position of a node appropriately
+\end{itemize}
+
 \section{Algorithm Execution} \label{sec:execution}
 
 Algorithm execution is initiated when the user presses the \Code{Run} or
@@ -332,4 +355,4 @@ Some complications that require extra care are:
 
 \section{Graph Editing and the Graph Window} \label{sec:graph_window}
 
-% [Last modified: 2016 12 06 at 20:25:42 GMT]
+% [Last modified: 2016 12 07 at 02:40:30 GMT]

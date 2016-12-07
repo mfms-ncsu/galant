@@ -165,7 +165,7 @@ public class Node extends GraphElement {
      * Makes sure that all the attributes specific to nodes are properly
      * initialized. The relevant one are ...
      * - x, y: integer
-     * - layer, positionInLayer: integer (layered graphs -- these will go away) 
+     * - layer, positionInLayer: integer (layered graphs -- these will go away)
      * - marked: boolean
      *
      * @todo this is too long; consider breaking out a method that deals with
@@ -180,7 +180,7 @@ public class Node extends GraphElement {
             throw new GalantException("Missing id for node " + this);
         }
         else if ( super.graph.nodeIdExists(idAttribute) ) {
-            throw new GalantException("Duplicate id: " + idAttribute 
+            throw new GalantException("Duplicate id: " + idAttribute
                                       + " when processing node " + this);
         }
         try { // need to catch a Terminate exception - should not happen
@@ -213,8 +213,8 @@ public class Node extends GraphElement {
                 }
                 remove("layer");
                 remove("positionInLayer");
-                set("layer", layer); 
-                set("positionInLayer", positionInLayer); 
+                set("layer", layer);
+                set("positionInLayer", positionInLayer);
             } // layered graph
             else { // not a layered graph
                 String xString = super.getString("x");
@@ -584,7 +584,7 @@ public class Node extends GraphElement {
 	public void setFixedPosition(Point position) {
         setFixedPosition(position.x, position.y);
 	}
-	
+
 	public void setFixedPosition(int x, int y) {
         xCoordinate = x;
         yCoordinate = y;
@@ -643,4 +643,4 @@ public class Node extends GraphElement {
 	}
 }
 
-//  [Last modified: 2016 12 06 at 17:33:23 GMT]
+//  [Last modified: 2016 12 07 at 02:34:47 GMT]

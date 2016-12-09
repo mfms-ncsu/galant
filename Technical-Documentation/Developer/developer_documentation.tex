@@ -12,6 +12,26 @@ In each case we consider sequences of events that take place as the result of
 specific user or software actions, pointing out Java classes and methods that
 handle the relevant functionality.
 
+\section{Overview}
+
+\begin{figure}
+  \includegraphics[width=\textwidth]{Developer/X-overview}
+
+  \medskip
+  \caption{Organization and directory structure of Galant packages.}
+  \label{fig:overview}
+\end{figure}
+
+\begin{figure}
+  {\small
+    \input{Developer/ls-R-output}
+  }
+
+  \medskip
+  \caption{Directory listing of Galant source code.}
+  \label{fig:source_code_directories}
+\end{figure}
+
 \section{Graph Structure and Attributes} \label{sec:graph_structure}
 
 A \Code{Graph} is the container for all attributes of a graph, whether read
@@ -91,7 +111,7 @@ last state on the list whose time stamp precedes the given one, the
 
 \begin{figure}
   \begin{center}
-    \includegraphics[width=\textwidth]{X-graph_uml}
+    \includegraphics[width=\textwidth]{Developer/X-graph_uml}
   \end{center}
   \caption{A UML diagram showing the structure of a \Code{GraphElement}.}
   \label{fig:graph_uml}
@@ -188,6 +208,31 @@ with * can also be edited).
   \item[hiddenWeight] -- if true, the weight of the element does not appear
 \end{description}
 
+\subsubsection*{GraphML parsing}
+
+The \Code{GraphMLParser} (in \Code{graph.parser}) is invoked in one of three
+ways listed below. The corresponding graph is then the working graph
+returned by \Code{getWorkingGraph()} in \Code{GraphDispatch}.
+All of the three invocations are in package
+\Code{gui.editor}.
+\begin{enumerate}
+\item in \Code{GEditorFrame}, method \Code{updateWorkingGraph()}, called when
+  the user does a \Code{Save} or \Code{Save~As} on the current panel and it
+  happens to be a graph; the text in the panel has to be parsed in order for
+  the changes to be reflected in the graph window -- while any edit in the
+  graph window is immediately pushed to the text window, the reverse is true
+  only when the text is saved
+\item in the constructor for \Code{GGraphEditorPanel}, a subclass of
+  \Code{GEditorPanel}, when the user opens a GraphML file; the new panel is
+  created in method \Code{addEditorTab()} in \Code{GTabbedPane}
+\item in \Code{GTabbedPane}, method \Code{stateChanged}, invoked when the
+  user clicks on a panel containing GraphML content (either associated with a file or with an empty, unnamed graph to
+  be edited by the user)
+\end{enumerate}
+The code for handling the panels in the text window is convoluted -- see
+Section~\ref{sec:editing} -- to the extent that the three classes represented
+above are opaquely intertwined. But now we will look at parsing in isolation.
+
 \subsubsection*{Layered graphs}
 
 The utilities in \Code{local.LayeredGraph} are used in the crossing
@@ -245,7 +290,7 @@ window. The sequence of method calls is
 
 \begin{figure}
   \begin{center}
-    \includegraphics[width=\textwidth]{X-algorithm_execution}
+    \includegraphics[width=\textwidth]{Developer/X-algorithm_execution}
   \end{center}
   \caption{Interactions between two threads during algorithm execution.}
   \label{fig:algorithm_execution}
@@ -355,4 +400,4 @@ Some complications that require extra care are:
 
 \section{Graph Editing and the Graph Window} \label{sec:graph_window}
 
-% [Last modified: 2016 12 07 at 02:40:30 GMT]
+% [Last modified: 2016 12 09 at 22:17:25 GMT]

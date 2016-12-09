@@ -441,7 +441,7 @@ public class GraphPanel extends JPanel{
             throw new GalantException("Unable to compute center for node " + n);
         return nodeCenter;
     }
-	
+
 	/**
 	 * Draws the specified node and its properties to the screen
      * the positions of nodes to be drawn are determined by their state
@@ -1006,4 +1006,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2016 11 26 at 18:49:29 GMT]
+//  [Last modified: 2016 12 07 at 02:56:43 GMT]

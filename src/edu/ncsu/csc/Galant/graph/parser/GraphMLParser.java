@@ -117,13 +117,12 @@ public class GraphMLParser {
         }
     }
 
-	public Graph buildGraphFromInput( DocumentBuilder db ) 
+	public Graph buildGraphFromInput( DocumentBuilder db )
         throws GalantException
     {
         LogHelper.enterMethod( getClass(), "buildGraphFromInput" );
 		GraphDispatch dispatch = GraphDispatch.getInstance();
-		
-		//TODO populate Graph g
+
 		Graph graphUnderConstruction = new Graph();
 		NodeList nodes;
 		NodeList edges;
@@ -132,7 +131,8 @@ public class GraphMLParser {
 		edges = getEdges();
 		graph = getGraphNode();
 
-		NamedNodeMap attributes = graph.item(0).getAttributes(); //only one graph => hardcode 0th index
+        //only one graph => hardcode 0th index
+		NamedNodeMap attributes = graph.item(0).getAttributes();
 
         // the awkward ?: construction is needed because org.w3c.dom.Node
         // conflicts with Galant Node
@@ -293,4 +293,4 @@ public class GraphMLParser {
 	
 }
 
-//  [Last modified: 2016 11 22 at 20:30:15 GMT]
+//  [Last modified: 2016 12 07 at 02:54:37 GMT]

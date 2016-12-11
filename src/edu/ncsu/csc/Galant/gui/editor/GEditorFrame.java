@@ -15,6 +15,7 @@ import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import edu.ncsu.csc.Galant.Galant;
+import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.GalantPreferences;
 import edu.ncsu.csc.Galant.GraphDispatch;
 import edu.ncsu.csc.Galant.graph.component.Graph;
@@ -129,9 +130,11 @@ public class GEditorFrame extends JFrame implements WindowListener {
         } 
 	}
 
-	public void saveAs() {
+	public void saveAs() throws GalantException {
 		GEditorPanel gaep = tabbedPane.getSelectedPanel();
-		
+        if ( gaep == null )
+            throw new GalantException("invalid tab - use untitled graph or untitled algorithm");
+
 		if (GGraphEditorPanel.class.isInstance(gaep)) {
 			updateWorkingGraph((GGraphEditorPanel) gaep);
 		}
@@ -145,10 +148,12 @@ public class GEditorFrame extends JFrame implements WindowListener {
 		}
 	}
 	
-	public void save() {
+	public void save() throws GalantException {
 		LogHelper.enterMethod(getClass(), "save()");
 		GEditorPanel gaep = tabbedPane.getSelectedPanel();
-		
+        if ( gaep == null )
+            throw new GalantException("invalid tab - use untitled graph or untitled algorithm");
+
 		if (GGraphEditorPanel.class.isInstance(gaep)) {
 			updateWorkingGraph((GGraphEditorPanel) gaep);
 		}
@@ -216,4 +221,4 @@ public class GEditorFrame extends JFrame implements WindowListener {
 	public void windowOpened(WindowEvent e) {}
 }
 
-//  [Last modified: 2016 06 23 at 19:43:03 GMT]
+//  [Last modified: 2016 12 11 at 17:30:17 GMT]

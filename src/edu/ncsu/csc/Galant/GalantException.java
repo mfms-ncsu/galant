@@ -62,6 +62,21 @@ public class GalantException extends Exception {
         }
     }
 
+    /**
+     * displays error message in a dialog popup with option to view stack
+     * trace
+     * @todo eventually all exceptions, including those at compile time or
+     * graph parsing should be extensions of GalantException
+     */
+    public void displayStatic() {
+        ExceptionDialog.displayExceptionInDialog(this, this.getMessage());
+    }
+
+    /**
+     * displays error message in a popup window; like displayStatic() but
+     * should be used during algorithm execution because the exception
+     * results in algorithm termination
+     */
     public synchronized void display() throws Terminate {
         GraphDispatch dispatch = GraphDispatch.getInstance();
         System.out.println("animation mode: " + dispatch.isAnimationMode());
@@ -94,4 +109,4 @@ public class GalantException extends Exception {
     }
 }
 
-//  [Last modified: 2016 11 27 at 20:39:39 GMT]
+//  [Last modified: 2016 12 13 at 18:50:49 GMT]

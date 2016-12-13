@@ -64,6 +64,7 @@ public class CodeIntegrator	{
     private static final String CLASS_STRUCTURE =
         "package " + PACKAGE + ";" +
         "import java.util.*;" +
+        "import java.awt.Point;" +
         "import edu.ncsu.csc.Galant.algorithm.Algorithm;" +
         "import edu.ncsu.csc.Galant.graph.component.Graph;" +
         "import edu.ncsu.csc.Galant.graph.component.Node;" +
@@ -290,9 +291,9 @@ public class CodeIntegrator	{
 
         for ( int i = 0; i < code.length(); i++ ) {
             char current = code.charAt(i);
-            LogHelper.logDebug("  current = " + current);
+            //LogHelper.logDebug("  current = " + current);
             if ( state == State.DEFAULT ) {
-                LogHelper.logDebug("    state = DEFAULT");
+                //LogHelper.logDebug("    state = DEFAULT");
                 if ( current == '/' ) state = State.SLASH;
                 else {
                     if ( current == '"' ) state = State.IN_STRING; 
@@ -300,7 +301,7 @@ public class CodeIntegrator	{
                 }
             }
             else if ( state == State.SLASH ) {
-                LogHelper.logDebug("    state = SLASH");
+                //LogHelper.logDebug("    state = SLASH");
                 if ( current == '*' ) state = State.SLASH_STAR;
                 else if ( current == '/' ) state = State.SLASH_SLASH;
                 else {
@@ -310,13 +311,13 @@ public class CodeIntegrator	{
                 }
             }
             else if ( state == State.SLASH_STAR ) {
-                LogHelper.logDebug("    state = SLASH_STAR");
+                //LogHelper.logDebug("    state = SLASH_STAR");
                 if ( current == '*' ) state = State.STAR;
                 else if ( current == '\n' ) withoutComments += current;
                 // do nothing otherwise -- in a comment
             }
             else if ( state == State.STAR ) {
-                LogHelper.logDebug("    state = STAR");
+                //LogHelper.logDebug("    state = STAR");
                 if ( current == '/' ) state = State.DEFAULT;
                 else {
                     state = State.SLASH_STAR;
@@ -324,7 +325,7 @@ public class CodeIntegrator	{
                 }
             }
             else if ( state == State.SLASH_SLASH ) {
-                LogHelper.logDebug("    state = SLASH_SLASH");
+                //LogHelper.logDebug("    state = SLASH_SLASH");
                 if ( current == '\n' ) {
                     state = State.DEFAULT;
                     withoutComments += current;
@@ -342,4 +343,4 @@ public class CodeIntegrator	{
     }
 }
 
-//  [Last modified: 2016 11 22 at 20:15:43 GMT]
+//  [Last modified: 2016 12 13 at 19:41:51 GMT]

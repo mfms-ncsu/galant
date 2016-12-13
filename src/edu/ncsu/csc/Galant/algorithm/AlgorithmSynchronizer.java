@@ -95,7 +95,6 @@ public class AlgorithmSynchronizer {
      * @see edu.ncsu.csc.Galant.algorithm.code.CodeIntegrator
      */
     public synchronized void startStep() throws Terminate {
-        System.out.println("-> startStep()");
         if ( terminated )
             throw new Terminate();
         if ( locked ) {
@@ -105,7 +104,6 @@ public class AlgorithmSynchronizer {
         if ( terminated )
             throw new Terminate();
         stepFinished = false;
-        System.out.println("<- startStep()");
     }
 
     public synchronized boolean stepFinished() {
@@ -121,7 +119,6 @@ public class AlgorithmSynchronizer {
      * main thread
      */
     public synchronized void pauseExecution() throws Terminate {
-        System.out.println("-> pauseExecution()");
         if ( terminated )
             throw new Terminate();
         AlgorithmExecutor executor
@@ -139,8 +136,7 @@ public class AlgorithmSynchronizer {
         }
         if ( terminated )
             throw new Terminate();
-        System.out.println("<- pauseExecution()");
     }
 }
 
-//  [Last modified: 2016 11 27 at 20:34:04 GMT]
+//  [Last modified: 2016 12 13 at 20:04:17 GMT]

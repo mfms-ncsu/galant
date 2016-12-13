@@ -26,6 +26,11 @@ public class AlgorithmExecutor {
     final int WAIT_TIME = 10;
 
     /**
+     * interval between console printouts during busy wait
+     */
+    final int PRINT_INTERVAL = 500;
+    
+    /**
      * amount of time to wait before concluding that the algorithm is in an
      * infinite loop
      */
@@ -138,9 +143,6 @@ public class AlgorithmExecutor {
      * detection part is complicated, however
      */
     public synchronized void incrementDisplayState() {
-        System.out.println("-> incrementDisplayState, displayState = "
-                           + displayState
-                           + ", algorithmState = " + algorithmState);
         GraphDispatch dispatch = GraphDispatch.getInstance();
         if ( displayState == algorithmState
              && ! synchronizer.algorithmFinished()
@@ -158,7 +160,11 @@ public class AlgorithmExecutor {
                 try {
                     Thread.sleep(WAIT_TIME);
                     timeInBusyWait += WAIT_TIME;
-                    System.out.println("timeInBusyWait = " + timeInBusyWait);
+                    if ( timeInBusyWait % PRINT_INTERVAL == 0 ) {
+                        System.out.println("waiting "
+                                           + (timeInBusyWait / (double) 1000)
+                                           + " seconds");
+                    }
                 } catch (InterruptedException e) {
                     System.out.printf("Error occured while trying to wait");
                     e.printStackTrace(System.out);
@@ -169,14 +175,6 @@ public class AlgorithmExecutor {
                       && ! synchronizer.exceptionThrown()
                       && ! exceptionThrown
                       && timeInBusyWait < BUSY_WAIT_TIME_LIMIT );
-            System.out.println(" in incrementDisplayState"
-                               + ", stepFinished = "
-                               + synchronizer.stepFinished()
-                               + ", stopped = " + synchronizer.stopped()
-                               + ", infiniteLoop = " + infiniteLoop
-                               + ", exceptionThrown = " + exceptionThrown
-                               + ", synchronizer.exceptionThrown = "
-                               + synchronizer.exceptionThrown() );
             if ( timeInBusyWait >= BUSY_WAIT_TIME_LIMIT ) {
                 System.out.println("busy wait time limit exceeded");
                 infiniteLoop = true;
@@ -185,20 +183,12 @@ public class AlgorithmExecutor {
         else if ( displayState < algorithmState ) {
             displayState++;
         }
-        System.out.println(" in incrementDisplayState, infiniteLoop = "
-                           + infiniteLoop
-                           + ", exceptionThrown = " + exceptionThrown
-                           + ", synchronizer.exceptionThrown = "
-                           + synchronizer.exceptionThrown() );
         if ( infiniteLoop || synchronizer.exceptionThrown() ) {
             // need to let window know that algorithm was terminated due
             // to unusual circumstances so that appropriate message will
             // appear on the status bar
             dispatch.getGraphWindow().performDone();
         }
-        System.out.println("<- incrementDisplayState, displayState = "
-                           + displayState
-                           + ", algorithmState = " + algorithmState);
     }
 
     /**
@@ -231,4 +221,4 @@ public class AlgorithmExecutor {
     }
 }
 
-//  [Last modified: 2016 12 05 at 20:25:25 GMT]
+//  [Last modified: 2016 12 13 at 20:10:05 GMT]

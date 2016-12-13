@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns 
+http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+ <graph  edgedefault="undirected">
+  <node id="0" weight="35.0" label="" x="572" y="70" color="#000000" layer="0" positionInLayer="0" />
+  <node id="1" weight="4.0" label="" x="964" y="520" color="#000000" layer="0" positionInLayer="0" />
+  <node id="2" weight="22.0" label="" x="1274" y="743" color="#000000" layer="0" positionInLayer="0" />
+  <node id="3" weight="50.0" label="" x="1312" y="505" color="#000000" layer="0" positionInLayer="0" />
+  <node id="4" weight="61.0" label="" x="1257" y="376" color="#000000" layer="0" positionInLayer="0" />
+  <node id="5" weight="59.0" label="" x="1385" y="234" color="#000000" layer="0" positionInLayer="0" />
+  <node id="6" weight="44.0" label="" x="964" y="374" color="#000000" layer="0" positionInLayer="0" />
+  <node id="7" weight="16.0" label="" x="1106" y="633" color="#000000" layer="0" positionInLayer="0" />
+  <node id="8" weight="62.0" label="" x="537" y="549" color="#000000" layer="0" positionInLayer="0" />
+  <node id="9" weight="84.0" label="" x="534" y="809" color="#000000" layer="0" positionInLayer="0" />
+  <node id="10" weight="12.0" label="" x="1179" y="880" color="#000000" layer="0" positionInLayer="0" />
+  <node id="11" weight="5.0" label="" x="828" y="874" color="#000000" layer="0" positionInLayer="0" />
+  <node id="12" weight="22.0" label="" x="887" y="167" color="#000000" layer="0" positionInLayer="0" />
+ </graph></graphml>

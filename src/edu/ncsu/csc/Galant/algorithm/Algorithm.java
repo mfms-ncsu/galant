@@ -696,7 +696,7 @@ public abstract class Algorithm implements Runnable {
     /**
      * Procedural versions of getters and setters for node positions
      */
-    public Integer getX(Node v) throws GalantException { 
+    public Integer getX(Node v) throws GalantException {
         checkGraphElement(v);
         return v.getX();
     }
@@ -719,6 +719,10 @@ public abstract class Algorithm implements Runnable {
     public void setPosition(Node v, int x, int y) throws Terminate, GalantException {
         checkGraphElement(v);
         v.setPosition(x, y);
+    }
+    public void setPosition(Node v, Point pt) throws Terminate, GalantException {
+        checkGraphElement(v);
+        v.setPosition(pt);
     }
 
     /**
@@ -1003,4 +1007,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2016 12 06 at 18:42:39 GMT]
+//  [Last modified: 2016 12 13 at 19:43:43 GMT]

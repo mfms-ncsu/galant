@@ -166,6 +166,7 @@ public class GraphMLParser {
         LogHelper.logDebug( " number of nodes = " + nodes.getLength() );
         LogHelper.logDebug( " number of edges = " + edges.getLength() );
 
+        LogHelper.setEnabled(false);
         LogHelper.beginIndent();
 		for ( int nodeIndex = 0; nodeIndex < nodes.getLength(); nodeIndex++ ) {
             LogHelper.logDebug( " processing " + nodeIndex + "th node." );
@@ -205,6 +206,7 @@ public class GraphMLParser {
             graphUnderConstruction.addEdge(graphEdge, nodeIndex);
 		}
         LogHelper.endIndent();
+        LogHelper.restoreState();
 
         LogHelper.exitMethod( getClass(), "buildGraphFromInput:\n" + graphUnderConstruction );
         return graphUnderConstruction;
@@ -293,4 +295,4 @@ public class GraphMLParser {
 	
 }
 
-//  [Last modified: 2016 12 07 at 02:54:37 GMT]
+//  [Last modified: 2016 12 13 at 18:06:03 GMT]

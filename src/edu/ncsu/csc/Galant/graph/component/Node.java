@@ -64,7 +64,7 @@ public class Node extends GraphElement {
         this.xCoordinate = x;
         this.yCoordinate = y;
         // set starting position based on the initial one
-        if ( GraphDispatch.getInstance().algorithmMovesNodes() ) { 
+        if ( GraphDispatch.getInstance().algorithmMovesNodes() ) {
             GraphElementState startingState = latestState();
             startingState.set("x", x);
             startingState.set("y", y);
@@ -643,4 +643,4 @@ public class Node extends GraphElement {
 	}
 }
 
-//  [Last modified: 2016 12 07 at 02:34:47 GMT]
+//  [Last modified: 2016 12 13 at 18:03:02 GMT]

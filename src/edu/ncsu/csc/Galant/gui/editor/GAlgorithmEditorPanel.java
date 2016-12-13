@@ -1,5 +1,6 @@
 package edu.ncsu.csc.Galant.gui.editor;
 
+import java.util.Locale;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -16,6 +17,7 @@ import edu.ncsu.csc.Galant.algorithm.code.CompilationException;
 import edu.ncsu.csc.Galant.algorithm.code.macro.MalformedMacroException;
 import edu.ncsu.csc.Galant.logging.LogHelper;
 import edu.ncsu.csc.Galant.GalantException;
+import edu.ncsu.csc.Galant.gui.util.ExceptionDialog;
 import edu.ncsu.csc.Galant.graph.component.Graph;
 import edu.ncsu.csc.Galant.gui.window.panels.GraphPanel;
 import edu.ncsu.csc.Galant.algorithm.AlgorithmExecutor;
@@ -32,11 +34,19 @@ import edu.ncsu.csc.Galant.algorithm.AlgorithmSynchronizer;
  * @author Jason Cockrell
  */
 public class GAlgorithmEditorPanel extends GEditorPanel {
-	
+
+    /**
+     * maximum number of lines to display in popup in case of compiler
+     * errors
+     * @todo these seem to run together in a single line, so making this
+     * anything other than 1 doesn't make sense
+     */
+    private static final int MAX_LINES_IN_ERROR_DISPLAY = 1;
+
 	/** Should always be accessed through getter/setter */
 	private Algorithm compiledAlgorithm;
 	private RunButton runButton;
-	
+
 	/**
 	 * Create a new edit session of an algorithm.
 	 * @param gTabbedPane The parent tabbed pane, of which there is only ever one.
@@ -87,20 +97,32 @@ public class GAlgorithmEditorPanel extends GEditorPanel {
 		}
 		catch(CompilationException e){
 			setCompiledAlgorithm(null);
-			// TODO: display compiler errors
 			LogHelper.exitMethod(getClass(), "compile [CompilationException]");
             LogHelper.setEnabled( true );
+            /**
+             * @todo there's no graceful way to display error messages in a
+             * popup window, especially given the fact that the line breaks
+             * are ignored
+             */
+            // String forDisplay = "";
+            // int displayLineCount = 0;
 			for(Diagnostic<?> diagnostic : e.getDiagnostics().getDiagnostics()) {
 				long line =  diagnostic.getLineNumber();
-                String message = diagnostic.getMessage(getLocale());
-				LogHelper.logDebug("Error on line " + line + ": " + message);
+                String message = diagnostic.getMessage(null);
+				LogHelper.logDebug("Error, line " + line + ": " + message);
+                // if ( displayLineCount < MAX_LINES_IN_ERROR_DISPLAY ) {
+                //     forDisplay += "line " + line + ": " + message + "\n";
+                //     displayLineCount++;
+                // }
             }
+            // forDisplay += "check console\n";
+            ExceptionDialog.displayExceptionInDialog(e, "check console for error messages");
             LogHelper.restoreState();
 			return false;
 		}
 		catch(MalformedMacroException e){
 				setCompiledAlgorithm(null);
-				// TODO: display macro errors
+                ExceptionDialog.displayExceptionInDialog(e, e.getMessage());
                 LogHelper.setEnabled( true );
 				LogHelper.exitMethod(getClass(), "compile [MalformedMacroException]");
 				LogHelper.logDebug(e.getMessage());
@@ -109,6 +131,7 @@ public class GAlgorithmEditorPanel extends GEditorPanel {
 		}
         catch ( GalantException e ) {
             e.report( "Galant compiler error" );
+            e.displayStatic();
             return false;
         }
 	}
@@ -148,7 +171,8 @@ public class GAlgorithmEditorPanel extends GEditorPanel {
         }
         catch ( Exception e ) {
             e.printStackTrace( System.out );
-        }
+            ExceptionDialog.displayExceptionInDialog(e, e.getMessage());
+       }
 	}
 
 	/**
@@ -197,4 +221,4 @@ public class GAlgorithmEditorPanel extends GEditorPanel {
 
 }
 
-//  [Last modified: 2016 11 27 at 21:02:15 GMT]
+//  [Last modified: 2016 12 13 at 19:36:58 GMT]

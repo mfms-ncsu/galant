@@ -70,6 +70,7 @@ public class Edge extends GraphElement {
     public void initializeAfterParsing()
         throws GalantException {
         LogHelper.enterMethod(getClass(), "initializeAfterParsing");
+        LogHelper.setEnabled(false);
         super.initializeAfterParsing();
         this.id = getInteger("id");
         if ( id == null ) {
@@ -113,6 +114,7 @@ public class Edge extends GraphElement {
         catch ( Terminate t ) { // should not happen
             t.printStackTrace();
         }
+        LogHelper.restoreState();
         LogHelper.exitMethod(getClass(), "initializeAfterParsing, edge = "
                                + this);
     }
@@ -136,7 +138,7 @@ public class Edge extends GraphElement {
         s += " />";
 		return s;
 	}
-	
+
     /**
      * This version is called when the current state of the animation is
      * exported.
@@ -178,4 +180,4 @@ public class Edge extends GraphElement {
 	}
 }
 
-//  [Last modified: 2016 11 22 at 20:20:56 GMT]
+//  [Last modified: 2016 12 13 at 20:21:37 GMT]

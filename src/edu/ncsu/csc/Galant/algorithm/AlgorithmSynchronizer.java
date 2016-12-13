@@ -49,7 +49,6 @@ public class AlgorithmSynchronizer {
      * heeded at the beginning of the next step.
      */
     public synchronized void stop() {
-        System.out.println("synchronizer.stop()");
         terminated = true;
      }
 
@@ -139,4 +138,4 @@ public class AlgorithmSynchronizer {
     }
 }
 
-//  [Last modified: 2016 12 13 at 20:04:17 GMT]
+//  [Last modified: 2016 12 13 at 20:32:06 GMT]

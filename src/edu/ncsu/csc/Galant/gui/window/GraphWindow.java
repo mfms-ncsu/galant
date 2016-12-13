@@ -790,7 +790,6 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
     }
 
     public synchronized void performDone() {
-        System.out.println("-> performDone()");
         AlgorithmExecutor executor = dispatch.getAlgorithmExecutor();
         // does not appear to help in case of infinite loop
         //executor.algorithmThread.interrupt();
@@ -804,7 +803,6 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
             dispatch.pushToTextEditor();
         }
         updateStatusLabel();
-        System.out.println("<- performDone()");
     }
 
 	/**
@@ -1140,4 +1138,4 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	}
 }
 
-//  [Last modified: 2016 11 30 at 16:48:51 GMT]
+//  [Last modified: 2016 12 13 at 20:30:02 GMT]

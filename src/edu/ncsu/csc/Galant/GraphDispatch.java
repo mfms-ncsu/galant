@@ -163,8 +163,6 @@ public class GraphDispatch {
 	}
 
 	public void setAnimationMode(boolean mode) {
-        System.out.println("-> setAnimationMode, mode = " + mode
-                           + ", current mode = " + this.animationMode);
 		Boolean old = this.animationMode;
 		this.animationMode = mode;
         // if at the end of an animation, need to reset the graph
@@ -172,8 +170,6 @@ public class GraphDispatch {
             this.workingGraph.reset();
         }
 		notifyListeners(ANIMATION_MODE, old, this.animationMode);
-        System.out.println("<- setAnimationMode, new mode = "
-                           + this.animationMode);
 	}
 
     public AlgorithmExecutor getAlgorithmExecutor() {
@@ -319,4 +315,4 @@ public class GraphDispatch {
 
 }
 
-//  [Last modified: 2016 11 27 at 22:06:12 GMT]
+//  [Last modified: 2016 12 13 at 20:28:34 GMT]

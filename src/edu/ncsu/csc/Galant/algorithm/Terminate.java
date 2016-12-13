@@ -3,8 +3,12 @@
  */
 package edu.ncsu.csc.Galant.algorithm;
 
+import edu.ncsu.csc.Galant.logging.LogHelper;
+
 public class Terminate extends Exception {
-    public Terminate() { System.out.println("Terminate thrown"); }
+    public Terminate() {
+        LogHelper.logDebug("Terminate thrown");
+    }
 }
 
-//  [Last modified: 2016 11 18 at 12:50:19 GMT]
+//  [Last modified: 2016 12 13 at 20:33:54 GMT]

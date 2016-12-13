@@ -1,7 +1,11 @@
 algorithm {
+    Node start = getStartNode();
+    mark(start);
     beginStep();
-    for ( int i = 0; i  < Integer.MAX_VALUE; i++ ) ;
+    while ( true ) {
+        if ( selected(start) ) break;
+    }
     endStep();
 }
 
-//  [Last modified: 2015 07 11 at 14:39:04 GMT]
+//  [Last modified: 2016 11 26 at 14:10:31 GMT]

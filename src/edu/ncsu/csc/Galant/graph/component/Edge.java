@@ -15,36 +15,36 @@ import edu.ncsu.csc.Galant.logging.LogHelper;
  * @author Jason Cockrell, Ty Devries, Alex McCabe, Michael Owoc, with major
  * modifications by Matthias Stallmann.
  *
- * 
+ *
  */
 public class Edge extends GraphElement {
-    Integer id;
     Node source;
     Node target;
-	
+    /** used internally only or for array indexing, unless edge has an explicit
+     * id */
+    Integer id;
+
     /**
-     * When an edge is created during parsing and source, target and id are not known.
+     * true if the GraphML representation of this edge had an id
+     */
+    boolean hasExplicitId = false;
+
+    /**
+     * When an edge is created during parsing when source, target and id are
+     * not yet known.
      */
 	public Edge(Graph graph) {
         super(graph);
 	}
 
     /**
-     * To add an edge while editing or during algorithm execution: id, source
+     * To add an edge while editing or during algorithm execution: source
      * and target are known at the time.
      */
-    public Edge(Graph graph, int id, Node source, Node target) {
+    public Edge(Graph graph, Node source, Node target) {
         super(graph);
-        this.id = id;
         this.source = source;
         this.target = target;
-    }
-
-    /**
-     * Getters for source and target (destination).
-     */
-    public Integer getId() {
-        return id;
     }
 
     public Node getSourceNode() {
@@ -55,12 +55,11 @@ public class Edge extends GraphElement {
         return target;
     }
 
-    /** 
-     * Careful! To be used only when done parsing.
-     */
-    void setId(int id) {
-        this.id = id;
-    }
+    public void setId(int id) { this.id = id; }
+
+    public Integer getId() { return this.id; }
+
+    public boolean hasExplicitId() { return this.hasExplicitId; }
 
     /**
      * Makes sure that all the attributes specific to edges are properly
@@ -69,17 +68,19 @@ public class Edge extends GraphElement {
      */
     public void initializeAfterParsing()
         throws GalantException {
-        LogHelper.enterMethod(getClass(), "initializeAfterParsing");
-        LogHelper.setEnabled(false);
+        LogHelper.setEnabled(true);
+        LogHelper.logDebug("-> initializeAfterParsing " + this);
         super.initializeAfterParsing();
-        this.id = getInteger("id");
-        if ( id == null ) {
-            id = super.graph.getNextEdgeId();
-        }
+        // id has already been parsed by GraphElement.initializeAfterParsing()
+        Integer graphElementId = getInteger(super.ID);
         String sourceString = getString("source");
         String targetString = getString("target");
         Integer sourceId = Integer.MIN_VALUE;
         Integer targetId = Integer.MIN_VALUE;
+        if ( graphElementId != null ) {
+            this.id = graphElementId;
+            this.hasExplicitId = true;
+        }
         if ( sourceString == null )
             throw new GalantException("missing source for " + this);
         if ( targetString == null )
@@ -99,24 +100,25 @@ public class Edge extends GraphElement {
         this.source = super.graph.getNodeById(sourceId);
         if ( this.source == null ) {
             throw new GalantException("Source node missing when processing edge "
-                                      + this.id);
+                                      + this);
         }
         this.target = super.graph.getNodeById(targetId);
         if ( this.target == null ) {
             throw new GalantException("Target node missing when processing edge "
-                                      + this.id);
+                                      + this);
         }
-        try { // these attributes are fixed and stored as fields of the edge object
-            super.remove("id");
+        try { // these attributes are fixed and stored as fields of the edge
+              // object
             super.remove("source");
             super.remove("target");
         }
         catch ( Terminate t ) { // should not happen
             t.printStackTrace();
         }
-        LogHelper.restoreState();
-        LogHelper.exitMethod(getClass(), "initializeAfterParsing, edge = "
+        LogHelper.logDebug(" id = " + id + " explicit = " + hasExplicitId);
+        LogHelper.logDebug("<- initializeAfterParsing, edge = "
                                + this);
+        LogHelper.restoreState();
     }
 
 	public String xmlString() {
@@ -125,7 +127,7 @@ public class Edge extends GraphElement {
         // which case they should be rendered in the output as the first
         // attribute.
         String idComponent = "";
-        if ( super.graph.inputHasEdgeIds() )
+        if ( super.graph.hasExplicitEdgeIds() )
             idComponent = "id=\"" + this.id + "\"";
  		String s = "<edge " + idComponent;
         // need this to get past here when the edge is first created and this
@@ -160,24 +162,15 @@ public class Edge extends GraphElement {
      */
 	@Override
 	public String toString() {
-        // id may not exist for an edge; not really essential;
-        // inputHasEdgeIds() returns true if they appeared in the input, in
-        // which case they should be rendered in the output as the first
-        // attribute.
-        String idComponent = "";
-        if ( super.graph.inputHasEdgeIds() )
-            idComponent = "id=\"" + this.id + "\"";
- 		String s = "<edge " + idComponent;
-        // need this to get past here when the edge is first created and this
-        // function is used for debugging.
-        if ( this.source != null && this.target != null ) {
-            s += " source=\"" + this.source.getId() + "\"";
-            s += " target=\"" + this.target.getId() + "\"";
+        String s = "[Edge ";
+        s += "(" + this.id + ") ";
+        if ( source != null && target != null ) {
+            s += source.getId() + "," + target.getId() + " ";
         }
         s += super.attributesWithoutId();
-        s += " />";
+        s += "]";
 		return s;
 	}
 }
 
-//  [Last modified: 2016 12 13 at 20:21:37 GMT]
+//  [Last modified: 2016 12 14 at 22:48:02 GMT]

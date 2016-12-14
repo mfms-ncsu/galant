@@ -225,6 +225,34 @@ The code for handling the panels in the text window is convoluted -- see
 Section~\ref{sec:editing} -- to the extent that the three classes represented
 above are opaquely intertwined. But now we will look at parsing in isolation.
 
+Both \Code{Node} and \Code{Edge} objects have an
+\Code{initializeAfterParsing()} method to make sure that the required
+attributes are present. These are then stored directly with the object rather
+than being part of its list of attributes.
+
+There is also an \Code{initializeAfterParsing()} method for
+\Code{Graph}. Currently its only purpose is to assign ids to the edges.
+The \Code{id} of an \Code{Edge} is not required except
+that it might be used as an array index by an algorithm. There are two cases.
+\begin{enumerate}
+\item At least one edge has an explicit \Code{id} in its GraphML
+  representation. In this case all edges will be given ids using the
+  \Code{getNextEdgeId()} method of \Code{Graph} and duplicates will be
+  avoided as they are with node ids, except that here it is more convenient
+  to do this at the graph level.
+\item None of the edges have explicit ids. In this case ids are assigned
+  sequentially. The \Code{getNextEdgeId()}
+  method does the right thing.
+\end{enumerate}
+In the first case the graph keeps track of the fact that explicit edge ids
+were present in its representation so that these will be written to the
+GraphML file when it is saved. In the second, the assigned ids will not
+appear in the GraphML. The distinction is made in the \Code{xmlString()}
+method of \Code{Edge}.
+The relevant attribute is \Code{hasExplicitEdgeIds}
+and each edge has an attribute \Code{hasExplicitId}, set in
+\Code{initializeAfterParsing}.
+
 \subsubsection*{Layered graphs}
 
 The utilities in \Code{local.LayeredGraph} are used in the crossing
@@ -392,4 +420,4 @@ Some complications that require extra care are:
 
 \section{Graph Editing and the Graph Window} \label{sec:graph_window}
 
-% [Last modified: 2016 12 10 at 13:54:56 GMT]
+% [Last modified: 2016 12 14 at 19:23:51 GMT]

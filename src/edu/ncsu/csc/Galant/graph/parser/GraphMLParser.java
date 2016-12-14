@@ -37,28 +37,28 @@ import edu.ncsu.csc.Galant.logging.LogHelper;
  *
  */
 public class GraphMLParser {
-	
+
 	Graph graph;
 	File graphMLFile;
 	Document document;
     LogHelper logHelper = LogHelper.getInstance();
-	
-	public GraphMLParser(File graphMLFile) {
+
+	public GraphMLParser(File graphMLFile) throws GalantException {
 		this.graph = generateGraph(graphMLFile);
 	}
-	
+
 	public GraphMLParser(String xml) throws GalantException {
         if ( xml == null || xml.equals( "" ) ) {
             throw new GalantException( "empty graph when invoking GraphMLParser" );
         }
 		this.graph = generateGraph(xml);
 	}
-	
+
 	public DocumentBuilder getDocumentBuilder( DocumentBuilderFactory dbf )
         throws GalantException
     {
 		DocumentBuilder db = null;
-		
+
 		try {
 			db = dbf.newDocumentBuilder();
 		} catch (ParserConfigurationException e) {
@@ -66,10 +66,10 @@ public class GraphMLParser {
                                        + "\n - in getDocumentBuilder",
                                        e );
 		}
-		
+
 		return db;
 	}
-	
+
     /**
      * @todo Not clear the this is ever called
      */
@@ -107,6 +107,7 @@ public class GraphMLParser {
      * @see edu.ncsu.csc.Galant.graph.component.Node
      */
     private void processAttribute(GraphElement graphElement, org.w3c.dom.Node xmlNode) {
+        LogHelper.logDebug("-> processAttribute for " + graphElement);
         String attributeName = xmlNode.getNodeName();
         String attributeValueString = xmlNode.getTextContent();
         try {
@@ -115,6 +116,7 @@ public class GraphMLParser {
         catch ( Terminate t ) { // should not happen
             t.printStackTrace();
         }
+        LogHelper.logDebug("<- processAttribute for " + graphElement);
     }
 
 	public Graph buildGraphFromInput( DocumentBuilder db )
@@ -161,7 +163,7 @@ public class GraphMLParser {
         else {
             graphUnderConstruction.setLayered( false );
         }
-		
+
         LogHelper.logDebug( "Created new graph:\n" + graphUnderConstruction );
         LogHelper.logDebug( " number of nodes = " + nodes.getLength() );
         LogHelper.logDebug( " number of edges = " + edges.getLength() );
@@ -187,6 +189,7 @@ public class GraphMLParser {
 		}
         LogHelper.endIndent();
 
+        LogHelper.setEnabled(true);
         LogHelper.beginIndent();
 		for ( int nodeIndex = 0; nodeIndex < edges.getLength(); nodeIndex++ ) {
             LogHelper.logDebug( " processing " + nodeIndex + "th edge." );
@@ -203,88 +206,88 @@ public class GraphMLParser {
             }
             graphEdge.initializeAfterParsing();
             LogHelper.logDebug( "adding edge " + graphEdge );
-            graphUnderConstruction.addEdge(graphEdge, nodeIndex);
+            graphUnderConstruction.addEdge(graphEdge);
 		}
         LogHelper.endIndent();
         LogHelper.restoreState();
 
         LogHelper.exitMethod( getClass(), "buildGraphFromInput:\n" + graphUnderConstruction );
+
+        graphUnderConstruction.initializeAfterParsing();
         return graphUnderConstruction;
     } // buildGraphFromInput
-	
+
     /**
      * @todo the exception handling here needs to go at least one level up
      */
-	public Graph generateGraph(String xml) {
+	public Graph generateGraph(String xml) throws GalantException {
         LogHelper.enterMethod( getClass(), "generateGraph( String )" );
 		DocumentBuilderFactory dbf = null;
 		DocumentBuilder db = null;
         Graph newGraph = null;
 
-        try {
-            dbf = DocumentBuilderFactory.newInstance();
-            db = getDocumentBuilder(dbf);
-            setDocument(db, xml);
-            newGraph = buildGraphFromInput(db);
-        }
-        /**
-         * @todo these exceptions should really be caught by the editor
-         */
-        catch ( Exception exception ) {
-            if ( exception instanceof GalantException ) {
-                GalantException ge = (GalantException) exception;
-                ge.report( "" );
-                try {
-                    ge.display();
-                }
-                catch ( Terminate t ) { // should not happen
-                    t.printStackTrace();
-                }
-            }
-            else exception.printStackTrace( System.out );
-        }
+        dbf = DocumentBuilderFactory.newInstance();
+        db = getDocumentBuilder(dbf);
+        setDocument(db, xml);
+        newGraph = buildGraphFromInput(db);
+
+        // /**
+        //  * @todo these exceptions should really be caught by the editor
+        //  */
+        // catch ( Exception exception ) {
+        //     if ( exception instanceof GalantException ) {
+        //         GalantException ge = (GalantException) exception;
+        //         ge.report( "" );
+        //         try {
+        //             ge.display();
+        //         }
+        //         catch ( Terminate t ) { // should not happen
+        //             t.printStackTrace();
+        //         }
+        //     }
+        //     else exception.printStackTrace( System.out );
+        // }
 
         LogHelper.exitMethod( getClass(), "generateGraph( String )" );
 		return newGraph;
 	}
-	
-	public Graph generateGraph(File file) {
+
+	public Graph generateGraph(File file) throws GalantException {
         LogHelper.enterMethod( getClass(), "generateGraph( File )" );
 		DocumentBuilderFactory dbf = null;
 		DocumentBuilder db = null;
         Graph newGraph = null;
 
-        try {
-            dbf = DocumentBuilderFactory.newInstance();
-            db = getDocumentBuilder(dbf);
-            setDocument(db, file);
-            newGraph = buildGraphFromInput(db);
-        }
-        catch ( Exception exception ) {
-            GalantException topLevelException
-                = new GalantException( exception.getMessage()
-                                       + "\n - in generateGraph(File)" );
-            topLevelException.report( "" );
-            try {
-                topLevelException.display();
-            }
-            catch ( Terminate t ) {
-                // ignore - probably not relevant
-            }
-        }
+        dbf = DocumentBuilderFactory.newInstance();
+        db = getDocumentBuilder(dbf);
+        setDocument(db, file);
+        newGraph = buildGraphFromInput(db);
+
+        // catch ( Exception exception ) {
+        //     GalantException topLevelException
+        //         = new GalantException( exception.getMessage()
+        //                                + "\n - in generateGraph(File)" );
+        //     topLevelException.report( "" );
+        //     try {
+        //         topLevelException.display();
+        //     }
+        //     catch ( Terminate t ) {
+        //         // ignore - probably not relevant
+        //     }
+        // }
 
         LogHelper.exitMethod( getClass(), "generateGraph( File )" );
         return newGraph;
 	}
-	
+
 	public NodeList getGraphNode() {
 		return this.document.getElementsByTagName("graph");
 	}
-	
+
 	public NodeList getNodes() {
 		return this.document.getElementsByTagName("node");
 	}
-	
+
 	public NodeList getEdges() {
 		return this.document.getElementsByTagName("edge");
 	}
@@ -295,4 +298,4 @@ public class GraphMLParser {
 	
 }
 
-//  [Last modified: 2016 12 13 at 18:06:03 GMT]
+//  [Last modified: 2016 12 14 at 21:56:36 GMT]

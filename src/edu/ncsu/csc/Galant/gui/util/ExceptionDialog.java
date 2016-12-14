@@ -42,10 +42,8 @@ public class ExceptionDialog {
      * @param e the <code>Exception</code> to display.
      */
     public static void displayExceptionInDialog(Throwable e) {
-        System.out.println("-> displayExceptionInDialog(e)");
         e.printStackTrace();
         displayExceptionInDialog(e, (String) null);
-        System.out.println("<- displayExceptionInDialog(e)");
     }
 
     /**
@@ -60,9 +58,7 @@ public class ExceptionDialog {
      */
     public static void displayExceptionInDialog(Throwable e,
                                                 String interpretation) {
-        System.out.println("-> displayExceptionInDialog(e, interpretation)");
         displayExceptionInDialog(e, interpretation, null);
-        System.out.println("<- displayExceptionInDialog(e, interpretation)");
     }
 
     /**
@@ -75,9 +71,7 @@ public class ExceptionDialog {
      */
     public static void displayExceptionInDialog(Throwable e,
                                                 Runnable onClose) {
-        System.out.println("-> displayExceptionInDialog(e, onClose)");
         displayExceptionInDialog(e, null, onClose);
-        System.out.println("<- displayExceptionInDialog(e, onClose)");
     }
 
     /**
@@ -96,7 +90,7 @@ public class ExceptionDialog {
     public static void displayExceptionInDialog(Throwable e,
                                                 String interpretation,
                                                 final Runnable onClose) {
-        System.out.println("-> displayExceptionInDialog(e, interpretation, onClose)");
+        LogHelper.logDebug("-> displayExceptionInDialog(e, interpretation, onClose)");
         if ( e == null )
             return;
 
@@ -150,7 +144,7 @@ public class ExceptionDialog {
         if ( selected != null )
             if ( options[1].equals(selected) )
                 System.exit(1);
-        System.out.println("<- displayExceptionInDialog(e, interpretation, onClose)");
+        LogHelper.logDebug("<- displayExceptionInDialog(e, interpretation, onClose)");
     }
 
 	/**
@@ -215,4 +209,4 @@ public class ExceptionDialog {
     }
 }
 
-//  [Last modified: 2016 11 26 at 19:30:17 GMT]
+//  [Last modified: 2016 12 14 at 17:22:51 GMT]

@@ -4,6 +4,8 @@ import java.beans.PropertyChangeEvent;
 import java.util.UUID;
 
 import edu.ncsu.csc.Galant.GraphDispatch;
+import edu.ncsu.csc.Galant.GalantException;
+import edu.ncsu.csc.Galant.gui.util.ExceptionDialog;
 import edu.ncsu.csc.Galant.graph.component.Graph;
 import edu.ncsu.csc.Galant.graph.parser.GraphMLParser;
 import edu.ncsu.csc.Galant.logging.LogHelper;
@@ -41,18 +43,22 @@ public class GGraphEditorPanel extends GEditorPanel {
             else {
                 GraphDispatch.getInstance().setWorkingGraph(new Graph(), uuid);
             }
-		} catch (Exception e) {
-            System.out.println( "Error while parsing graph: " );
-            e.printStackTrace();
-			GraphDispatch.getInstance().setWorkingGraph(new Graph(), uuid);
 		}
-		
+        catch (GalantException e) {
+            e.report("");
+            e.displayStatic();
+        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            ExceptionDialog.displayExceptionInDialog(e);
+		}
+
 		syntaxHighlighter = new GGraphSyntaxHighlighting(textPane);
 		documentUpdated();
-		
+
 		LogHelper.exitConstructor(getClass());
 	}
-	
+
 	/**
 	 * Handle property changes to the graph, which occur when
 	 * the user modifies a graph through the visual editor (toolbar).
@@ -90,4 +96,4 @@ public class GGraphEditorPanel extends GEditorPanel {
 	
 }
 
-//  [Last modified: 2015 12 10 at 18:35:12 GMT]
+//  [Last modified: 2016 12 14 at 21:01:32 GMT]

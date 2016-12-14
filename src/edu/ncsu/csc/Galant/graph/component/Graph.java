@@ -47,6 +47,8 @@ public class Graph {
 
     private TreeMap<Integer,Node> nodeById = new TreeMap<Integer,Node>();
 
+    private TreeMap<Integer,Edge> edgeById = new TreeMap<Integer,Edge>();
+
 	private List<Edge> edges;
 
     private MessageBanner banner;
@@ -81,6 +83,11 @@ public class Graph {
      * explicit in the input.
      */
     private int nextEdgeId = 0;
+
+    /**
+     * true of the graph has edge id's
+     */
+    private boolean hasExplicitEdgeIds = false;
 
 	/**
 	 * Default constructor.
@@ -588,10 +595,10 @@ public class Graph {
      */
     public int edgeIds() {
 		int maxId = 0;
-		for ( Edge currentEdge : edges ) {
-			if ( currentEdge.inScope() && currentEdge.getId() > maxId )
-				maxId = currentEdge.getId();
-		}
+        for ( Edge currentEdge : edges ) {
+            if ( currentEdge.inScope() && currentEdge.getId() > maxId )
+                maxId = currentEdge.getId();
+        }
 		return maxId + 1;
     }
 
@@ -867,8 +874,8 @@ public class Graph {
      * fact that none had to be assigned internally -- the assumption being
      * that either all or none of the edges have explicit id's.
      */
-    boolean inputHasEdgeIds() {
-        return nextEdgeId == 0;
+    public boolean hasExplicitEdgeIds() {
+        return hasExplicitEdgeIds;
     }
 
 	/**
@@ -895,22 +902,19 @@ public class Graph {
             throw new GalantException( "graph has no edges"
                                        + "\n - in getEdgeById" );
         }
-
-		if ( id < 0 || id >= this.nodes.size() ) {
-            throw new GalantException( "edge out of range, id = "
+		if ( ! edgeById.containsKey( id ) ) {
+            throw new GalantException( "no edge with id = "
                                        + id
+                                       + " exists"
                                        + "\n - in getEdgeById" );
         }
-
-        Edge e = this.edges.get(id);
-
-        if ( e.isDeleted() ) {
+        Edge edge = edgeById.get( id );
+        if ( edge.isDeleted() ) {
             throw new GalantException( "edge has been deleted, id = "
                                        + id
                                        + "\n - in getEdgeById" );
 		}
-
-        return e;
+        return edge;
 	}
 
 	/**
@@ -970,7 +974,8 @@ public class Graph {
 	}
 
 	/**
-	 * Adds a node to the graph during parsing. The node has already been created.
+	 * Adds a node to the graph during parsing. The node has already been
+	 * created.
  	 */
 	public void addNode(Node n) {
         LogHelper.enterMethod( getClass(), "addNode: node = " + n );
@@ -993,20 +998,21 @@ public class Graph {
 	}
 
 	/**
-	 * Adds a new <code>Edge</code> to the <code>Graph</code> with the specified source and target <code>Node</code> IDs.
-	 * Note: for undirected <code>Graph</code>s, "source" and "target" are
-	 * interchangeable.
-	 * @param sourceId the ID of the source <code>Node</code>
-	 * @param targetId the ID of the target <code>Node</code>
-     *
-     * This variant is used during parsing; also does the work of adding the
-     * edge to the list of edges and those of its source and target.
+     * This variant is used any time new edge has been created. Its purpose
+     * is integrate the edge into the graph.
 	 */
-	public void addEdge(Edge edge, int id) {
-        edge.setId(id);
+	public void addEdge(Edge edge) {
+        LogHelper.setEnabled(true);
+        LogHelper.enterMethod(getClass(), "addEdge " + edge);
+        // during parsing we need to know if the edge had an explicit id in
+        // its GraphML representation
+        if ( edge.hasExplicitId() ) this.hasExplicitEdgeIds = true;
 		edge.getSourceNode().addEdge(edge);
 		edge.getTargetNode().addEdge(edge);
         edges.add(edge);
+        LogHelper.exitMethod(getClass(), "addEdge, hasExplicitEdgeIds = "
+                             + hasExplicitEdgeIds);
+        LogHelper.restoreState();
 	}
 
 	/**
@@ -1020,19 +1026,22 @@ public class Graph {
 	 */
 	public Edge addEdge(Node source, Node target) throws Terminate {
 		dispatch.startStepIfRunning();
-        int id = edges.size();
-		Edge e = new Edge(this, id, source, target);
-        addEdge(e, id);
+		Edge e = new Edge(this, source, target);
+        addEdge(e);
 		return e;
 	}
 
 	/**
 	 * Adds a new edge to the graph with the specified source and
 	 * target. Starts an algorithm step if appropriate.
+	 * @param sourceId the ID of the source <code>Node</code>
+	 * @param targetId the ID of the target <code>Node</code>
+     *
 	 * Note: for undirected graphs, "source" and "target" are meaningless.
 	 * @return the added edge
      *
-     * This variant is used during algorithm execution when only the id's are known.
+     * This variant is used during algorithm execution when only the node
+     * id's are known.
 	 */
 	public Edge addEdge(int sourceId, int targetId)
         throws Terminate, GalantException {
@@ -1048,12 +1057,8 @@ public class Graph {
      * This variant is used only during editing.
 	 */
 	public Edge addInitialEdge(Node source, Node target) {
-		Edge e = new Edge(this, edges.size(), source, target);
-
-		edges.add(e);
-		source.addEdge(e);
-		target.addEdge(e);
-
+		Edge e = new Edge(this, source, target);
+        addEdge(e);
 		return e;
 	}
 
@@ -1102,7 +1107,7 @@ public class Graph {
 
 	/**
 	 * @return an integer ID for the next <code>Node</code> to be
-	 * added. This will always be the largest id so far + 1 
+	 * added. This will always be the largest id so far + 1
 	 */
 	private int nextNodeId() {
         LogHelper.enterMethod(getClass(), "nextNodeId");
@@ -1110,6 +1115,19 @@ public class Graph {
         if ( ! nodeById.isEmpty() )
             id =nodeById.lastKey() + 1;
         LogHelper.exitMethod(getClass(), "nextNodeId, id = " + id);
+        return id;
+	}
+
+	/**
+	 * @return an integer ID for the next <code>Node</code> to be
+	 * added. This will always be the largest id so far + 1
+	 */
+	private int nextEdgeId() {
+        LogHelper.enterMethod(getClass(), "nextEdgeId");
+        int id = 0;
+        if ( ! edgeById.isEmpty() )
+            id =edgeById.lastKey() + 1;
+        LogHelper.exitMethod(getClass(), "nextEdgeId, id = " + id);
         return id;
 	}
 
@@ -1160,6 +1178,33 @@ public class Graph {
     public void undoReposition() {
         if ( savedLayout != null ) {
             savedLayout.usePositions();
+        }
+    }
+
+    /**
+     * Assigns edge ids if necessary; could be used for other housekeeping in
+     * the future
+     */
+    public void initializeAfterParsing() throws GalantException {
+        // first process the edges that have id's, so there's no conflict later
+        for ( Edge edge: this.edges ) {
+            if ( edge.hasExplicitId() ) {
+                if ( this.edgeById.containsKey(edge.getId()) ) {
+                    throw new GalantException("Duplicate id: "
+                                               + edge.getId()
+                                               + " when processing edge "
+                                               + edge);
+                }
+                this.hasExplicitEdgeIds = true;
+                this.edgeById.put(edge.getId(), edge);
+            }
+        }
+        // then those that don't
+        for ( Edge edge: this.edges ) {
+            if ( ! edge.hasExplicitId() ) {
+                edge.setId(nextEdgeId());
+                this.edgeById.put(edge.getId(), edge);
+            }
         }
     }
 
@@ -1239,4 +1284,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2016 12 06 at 20:22:46 GMT]
+//  [Last modified: 2016 12 14 at 23:02:02 GMT]

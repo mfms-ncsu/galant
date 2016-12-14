@@ -18,6 +18,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import edu.ncsu.csc.Galant.GraphDispatch;
+import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.logging.LogHelper;
 import edu.ncsu.csc.Galant.graph.component.Graph;
 import edu.ncsu.csc.Galant.graph.parser.GraphMLParser;
@@ -416,9 +417,15 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
                 else {
                     GraphDispatch.getInstance().setWorkingGraph(new Graph(), geditorPanel.getUUID());
                 }
-			} catch (Exception e) {
-				GraphDispatch.getInstance().setWorkingGraph(new Graph(), geditorPanel.getUUID());
 			}
+            catch (GalantException e) {
+                e.report("");
+                e.displayStatic();
+            }
+            catch (Exception e) {
+                System.out.println(e.getMessage());
+                ExceptionDialog.displayExceptionInDialog(e);
+            }
 		}
 	}
 
@@ -465,4 +472,4 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
 	}
 }
 
-//  [Last modified: 2016 06 17 at 13:00:34 GMT]
+//  [Last modified: 2016 12 14 at 21:00:35 GMT]

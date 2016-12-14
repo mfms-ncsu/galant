@@ -419,9 +419,6 @@ public abstract class Algorithm implements Runnable {
 
     public Double weight(GraphElement ge) throws GalantException {
         checkGraphElement(ge);
-        Double weight = ge.getWeight();
-        if ( weight == null )
-            throw new GalantException("node or edge has no weight: " + ge);
         return ge.getWeight();
     }
     public void setWeight(GraphElement ge, double weight) throws Terminate, GalantException {
@@ -1007,4 +1004,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2016 12 13 at 19:43:43 GMT]
+//  [Last modified: 2016 12 14 at 17:40:53 GMT]

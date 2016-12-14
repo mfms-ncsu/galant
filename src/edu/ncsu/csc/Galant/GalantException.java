@@ -79,7 +79,9 @@ public class GalantException extends Exception {
      */
     public synchronized void display() throws Terminate {
         GraphDispatch dispatch = GraphDispatch.getInstance();
-        System.out.println("animation mode: " + dispatch.isAnimationMode());
+        LogHelper.enterMethod(getClass(),
+                              "display, animationMode = "
+                              + dispatch.isAnimationMode());
         // not clear what the following code is for; possibly a situation
         // where control cedes to the "main program" and leaves an orphaned
         // algorithm thread, but it doesn't really make sense: how did
@@ -89,8 +91,7 @@ public class GalantException extends Exception {
         AlgorithmSynchronizer synchronizer
             = dispatch.getAlgorithmSynchronizer();
         if ( ! dispatch.isAnimationMode() ) {
-            System.out.println("synchronizer: " + synchronizer);
-            System.out.println("algorithm finished: "
+            LogHelper.logDebug(" display: algorithm finished = "
                                + synchronizer.algorithmFinished() );
             if ( ! (synchronizer == null) ||
                  ! synchronizer.algorithmFinished() ) {
@@ -109,4 +110,4 @@ public class GalantException extends Exception {
     }
 }
 
-//  [Last modified: 2016 12 13 at 18:50:49 GMT]
+//  [Last modified: 2016 12 14 at 17:18:19 GMT]

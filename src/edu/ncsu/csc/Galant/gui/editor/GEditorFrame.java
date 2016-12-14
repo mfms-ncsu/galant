@@ -191,8 +191,14 @@ public class GEditorFrame extends JFrame implements WindowListener {
 		try {
 			GraphMLParser parser = new GraphMLParser(gep.getText());
 			GraphDispatch.getInstance().setWorkingGraph(parser.getGraph(), gep.getUUID());
-		} catch (Exception e) {
-			GraphDispatch.getInstance().setWorkingGraph(new Graph(), gep.getUUID());
+		}
+        catch (GalantException e) {
+            e.report("error while parsing");
+            e.displayStatic();
+        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            ExceptionDialog.displayExceptionInDialog(e);
 		}
 	}
 	
@@ -221,4 +227,4 @@ public class GEditorFrame extends JFrame implements WindowListener {
 	public void windowOpened(WindowEvent e) {}
 }
 
-//  [Last modified: 2016 12 11 at 17:30:17 GMT]
+//  [Last modified: 2016 12 14 at 20:56:43 GMT]

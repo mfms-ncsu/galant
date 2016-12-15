@@ -68,25 +68,21 @@ public class WindowUtil
 				Graph g = gd.getWorkingGraph();
 				LogHelper.enterMethod(getClass(), "export()");
 				JFileChooser jfc = new JFileChooser();
-				
-				FileNameExtensionFilter filtergraphml = new FileNameExtensionFilter(  
-                        "GraphML file (.graphml)", "graphml");  
+				FileNameExtensionFilter filtergraphml
+                    = new FileNameExtensionFilter("GraphML file (.graphml)",
+                                                  "graphml");
 				jfc.addChoosableFileFilter(filtergraphml);
-				
 				jfc.setCurrentDirectory(GalantPreferences.DEFAULT_DIRECTORY.get());
 				File file = null;
 				int returnVal = jfc.showSaveDialog(GraphWindow.getGraphFrame());
 				if(returnVal == JFileChooser.APPROVE_OPTION) {
 					file = jfc.getSelectedFile();
-					
 					if(file != null) {
 						FileWriter outfile = null;
 						try {
-							
 							if (!file.getPath().endsWith(".graphml")) {
 								file = new File(file.getPath() + ".graphml");
 							}
-							
 							int state = gd.getAlgorithmExecutor().getDisplayState();
 							outfile = new FileWriter(file);
 							outfile.write(g.xmlString(state));
@@ -99,7 +95,7 @@ public class WindowUtil
 								}
 							}
 							catch (IOException ex) {
-								ExceptionDialog.displayExceptionInDialog(ex); 
+								ExceptionDialog.displayExceptionInDialog(ex);
 							}
 						}
 					}
@@ -224,4 +220,4 @@ public class WindowUtil
 			}
 	}
 
-//  [Last modified: 2015 12 08 at 16:05:10 GMT]
+//  [Last modified: 2016 12 15 at 01:47:00 GMT]

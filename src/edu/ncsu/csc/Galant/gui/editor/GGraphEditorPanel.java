@@ -65,6 +65,7 @@ public class GGraphEditorPanel extends GEditorPanel {
 	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
+        LogHelper.setEnabled(true);
         LogHelper.enterMethod(getClass(), "propertyChange");
 		if (evt.getPropertyName().equals(GraphDispatch.ANIMATION_MODE)) {
 			if ( (Boolean) evt.getNewValue() ) { //animation mode
@@ -76,24 +77,23 @@ public class GGraphEditorPanel extends GEditorPanel {
                 LogHelper.logDebug(" to edit mode ...");
 				if (GraphDispatch.getInstance().getGraphSource().equals(uuid)) {
                     LogHelper.logDebug("  the right graph, updating");
-                    textPane.setText(GraphDispatch.getInstance().getWorkingGraph().xmlString(0));
+                    textPane.setText(GraphDispatch.getInstance().getWorkingGraph().xmlString());
 				}
 			}
 		}
         else if (GraphDispatch.getInstance().getGraphSource().equals(uuid)) {
             LogHelper.logDebug(" nothing to do with animation ...");
-			if (evt.getPropertyName().equals(GraphDispatch.TEXT_UPDATE)) {
-                LogHelper.logDebug("  just doing a text update");
-				textPane.setText(GraphDispatch.getInstance().getWorkingGraph().xmlString());
-			} 
+            LogHelper.logDebug("  just doing a text update");
+            textPane.setText(GraphDispatch.getInstance().getWorkingGraph().xmlString());
 		}
         LogHelper.exitMethod(getClass(), "propertyChange");
+        LogHelper.restoreState();
 	}
-	
+
 	public UUID getUUID() {
 		return uuid;
 	}
-	
+
 }
 
-//  [Last modified: 2016 12 14 at 21:01:32 GMT]
+//  [Last modified: 2016 12 15 at 01:51:25 GMT]

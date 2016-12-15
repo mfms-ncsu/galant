@@ -1213,6 +1213,7 @@ public class Graph {
 	 * algorithm is running
 	 */
 	public String xmlString() {
+        LogHelper.setEnabled(true);
         LogHelper.enterMethod(getClass(), "xmlString");
         String s = "";
 		s += "<?xml version=\"1.0\" encoding=\"UTF-8\"?> \n";
@@ -1239,6 +1240,7 @@ public class Graph {
 		s += " </graph>";
 		s += "</graphml>";
         LogHelper.exitMethod(getClass(), "xmlString");
+        LogHelper.restoreState();
 		return s;
 	}
 
@@ -1247,6 +1249,7 @@ public class Graph {
 	 * want to export the current state of a running algorithm.
 	 */
 	public String xmlString(int state) {
+        LogHelper.setEnabled(true);
         LogHelper.enterMethod(getClass(), "xmlString(" + state + ")");
         String s = "";
 		s += "<?xml version=\"1.0\" encoding=\"UTF-8\"?> \n";
@@ -1280,8 +1283,9 @@ public class Graph {
 		s += " </graph>";
 		s += "</graphml>";
         LogHelper.exitMethod(getClass(), "xmlString(" + state + ")");
+        LogHelper.restoreState();
 		return s;
 	}
 }
 
-//  [Last modified: 2016 12 14 at 23:02:02 GMT]
+//  [Last modified: 2016 12 15 at 00:55:53 GMT]

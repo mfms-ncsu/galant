@@ -383,7 +383,7 @@ public class GraphElement implements Comparable<GraphElement> {
     public void clearLabel() throws Terminate {
         remove(LABEL);
     }
-	
+
     /**
      * @return true if the label of this element is hidden, i.e., will not be
      * drawn on the graph panel.
@@ -596,4 +596,4 @@ public class GraphElement implements Comparable<GraphElement> {
     }
 }
 
-//  [Last modified: 2016 12 06 at 18:39:57 GMT]
+//  [Last modified: 2016 12 15 at 02:16:09 GMT]

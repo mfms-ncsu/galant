@@ -16,6 +16,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import edu.ncsu.csc.Galant.GraphDispatch;
+import edu.ncsu.csc.Galant.GalantException;
+import edu.ncsu.csc.Galant.algorithm.Terminate;
+import edu.ncsu.csc.Galant.gui.util.ExceptionDialog;
 import edu.ncsu.csc.Galant.graph.component.Graph;
 import edu.ncsu.csc.Galant.graph.component.GraphElement;
 
@@ -52,7 +55,7 @@ public class ComponentEditPanel extends JPanel {
 	private GraphElement workingElement;
 
 	GraphDispatch dispatch = GraphDispatch.getInstance();
-	
+
 	public ComponentEditPanel() {
 		super();
 
@@ -88,7 +91,8 @@ public class ComponentEditPanel extends JPanel {
                                                    MINIMUM_WEIGHT,
                                                    MAXIMUM_WEIGHT,
                                                    WEIGHT_INCREMENT ));
-		Component editor = weight.getEditor();
+		JSpinner.NumberEditor editor
+            = (JSpinner.NumberEditor) weight.getEditor();
 		Dimension d = editor.getPreferredSize();
 		d.width = WEIGHT_FIELD_WIDTH;
 		editor.setPreferredSize(d);
@@ -96,7 +100,6 @@ public class ComponentEditPanel extends JPanel {
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
 				Double wgt = (Double) weight.getValue();
-				
 				Graph g = dispatch.getWorkingGraph();
                 try {
                     workingElement.setWeight(wgt);
@@ -107,6 +110,50 @@ public class ComponentEditPanel extends JPanel {
 				dispatch.pushToTextEditor();
 				dispatch.pushToGraphEditor();
 			}
+		});
+
+        // ensure that what the user types in the text field of the spinner
+        // is handled properly
+		editor.addKeyListener(new KeyListener() {
+			@Override
+			public void keyPressed(KeyEvent arg0) {}
+			@Override
+			public void keyReleased(KeyEvent arg0) {
+				Graph g = dispatch.getWorkingGraph();
+                String weightText = editor.getTextField().getText();
+                if ( ! weightText.equals("") ) {
+                    Double weightValue = null;
+                    try {
+                        weightValue = Double.parseDouble(weightText);
+                    }
+                    catch ( NumberFormatException e ) {
+                        ExceptionDialog.displayExceptionInDialog(e);
+                    }
+                    try {
+                        workingElement.setWeight(weightValue);
+                    }
+                    catch ( Terminate t ) {
+                        // should not happen
+                        t.printStackTrace();
+                    }
+                    catch ( Exception e ) {
+                        e.printStackTrace();
+                    }
+                }
+                else {
+                    try {
+                        workingElement.clearWeight();
+                    }
+                    catch ( Terminate t ) {
+                        // should not happen
+                        t.printStackTrace();
+                    }
+                }
+                dispatch.pushToTextEditor();
+				dispatch.pushToGraphEditor();
+			}
+			@Override
+			public void keyTyped(KeyEvent arg0) {}
 		});
 
 		cp = new ColorPanel(workingElement);
@@ -127,8 +174,9 @@ public class ComponentEditPanel extends JPanel {
 			return;
 		} else {
 			this.setVisible(true);
-            //make sure the weight change spinner always gets the first focus
-            //so user can use up/down key to change the weights of nodes or edges
+            // make sure the weight change spinner always gets the first
+            // focus so user can use up/down key to change the weights of
+            // nodes or edges
             weight.requestFocusInWindow();
 		}
 
@@ -136,7 +184,7 @@ public class ComponentEditPanel extends JPanel {
 		cp = new ColorPanel(ge);
 		this.add(cp);
 		this.validate();
-		
+
 		String text = ge.getLabel();
 		if (text == null) {
 			text = "";
@@ -155,4 +203,4 @@ public class ComponentEditPanel extends JPanel {
 
 
 
-//  [Last modified: 2015 12 04 at 21:38:45 GMT]
+//  [Last modified: 2016 12 16 at 14:02:32 GMT]

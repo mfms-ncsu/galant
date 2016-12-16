@@ -227,8 +227,25 @@ above are opaquely intertwined. But now we will look at parsing in isolation.
 
 Both \Code{Node} and \Code{Edge} objects have an
 \Code{initializeAfterParsing()} method to make sure that the required
-attributes are present. These are then stored directly with the object rather
-than being part of its list of attributes.
+attributes are present:
+\begin{itemize}
+  \item for a \Code{Node}: \Code{id} (already converted to an integer) and
+    coordinates \Code{x} and \Code{y} (need to be converted to integer)
+  \item for an \Code{Edge}: \Code{source} and \Code{target} -- these need to
+    be integers \emph{and} ids of existing nodes (the parser processes nodes
+    first); there may be an optional \Code{id}, which is handled by graph
+    initialization -- see below -- to ensure that either all edges have ids
+    or none of them do; in either case, edges are assigned ids internally so
+    that these can be used as array indexes.
+\end{itemize}
+These are then stored directly with the object rather
+than being part of its list of attributes.  First, however, the
+\Code{initializeAfterParsing()} method for the super class
+\Code{GraphElement} is invoked to handle attributes that have special meaning
+when the graph is displayed. These are converted from strings to the
+appropriate type (if present): \Code{id} (\Code{Integer}), \Code{weight}
+(\Code{Double}) and \Code{highlighted} (\Code{Boolean}). A \Code{Node} object
+also converts \Code{marked}, if present to \Code{Boolean}.
 
 There is also an \Code{initializeAfterParsing()} method for
 \Code{Graph}. Currently its only purpose is to assign ids to the edges.
@@ -420,4 +437,32 @@ Some complications that require extra care are:
 
 \section{Graph Editing and the Graph Window} \label{sec:graph_window}
 
-% [Last modified: 2016 12 14 at 19:23:51 GMT]
+\subsubsection*{Editing attributes of edges and nodes}
+
+From the graph window it is possible to edit the color, label and weight of a
+node or edge.
+The \Code{ComponentEditPanel} class manages this process. There are three
+different mechanisms here, one for each editable attribute.
+\begin{description}
+\item[label] This is a simple text field \Code{JTextField}; whatever the user
+  types becomes the label of the element.
+\item[weight] This is a spinner with a text field. The spinner, created with
+  a \Code{SpinnerNumberModel}, increments and decrements the current
+  weight. The text field of the \Code{editor} behaves like the text field of
+  the label, except that now the text must be converted to a Double.
+  An illegal number is supposed to throw an exception, but this feature is
+  not working. If the text field is blank or something other than a number,
+  there is a "bell", not what the code intends but also not undesirable.
+\item[color] Colors are handled in the \Code{ColorPanel} class, which invokes
+  a \Code{JColorChooser}, a fairly complex mechanism, not particularly
+  user-friendly at this point.
+\end{description}
+Currently there is no obvious way to allow a user to erase an attribute once
+it has been set by the editor. There is an algorithm \Code{strip\_attributes}
+to get rid of all attributes that were inadvertently set. The semantics for
+weights are, unfortunately, difficult to define in this context. Labels are
+erased if they are blank (equal to "") and colors are erased if they are black
+(equal to "\#000000"). The current implementation of \Code{strip\_attributes}
+erases all weights if and only if they are all 0.
+
+% [Last modified: 2016 12 16 at 14:29:30 GMT]

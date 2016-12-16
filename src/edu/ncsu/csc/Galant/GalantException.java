@@ -31,6 +31,10 @@ public class GalantException extends Exception {
         }
     }
 
+    public void report() {
+        report("");
+    }
+
     public void report( String message ) {
         System.out.printf( "%s\n", this.getMessage() );
 
@@ -110,4 +114,4 @@ public class GalantException extends Exception {
     }
 }
 
-//  [Last modified: 2016 12 14 at 17:18:19 GMT]
+//  [Last modified: 2016 12 16 at 13:11:26 GMT]

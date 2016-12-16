@@ -32,7 +32,6 @@ public class GGraphEditorPanel extends GEditorPanel {
 	public GGraphEditorPanel(GTabbedPane gTabbedPane, String filename, String content) {
 		super(gTabbedPane, filename, content);
 		LogHelper.enterConstructor(getClass());
-		
 		GraphDispatch.getInstance().addChangeListener(this);
 
 		try {
@@ -65,7 +64,7 @@ public class GGraphEditorPanel extends GEditorPanel {
 	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
-        LogHelper.setEnabled(true);
+        LogHelper.setEnabled(false);
         LogHelper.enterMethod(getClass(), "propertyChange");
 		if (evt.getPropertyName().equals(GraphDispatch.ANIMATION_MODE)) {
 			if ( (Boolean) evt.getNewValue() ) { //animation mode
@@ -96,4 +95,4 @@ public class GGraphEditorPanel extends GEditorPanel {
 
 }
 
-//  [Last modified: 2016 12 15 at 01:51:25 GMT]
+//  [Last modified: 2016 12 15 at 01:55:11 GMT]

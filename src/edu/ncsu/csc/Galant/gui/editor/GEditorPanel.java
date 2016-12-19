@@ -63,6 +63,10 @@ public abstract class GEditorPanel extends JPanel implements DocumentListener, P
 	
 	/**
 	 * Is the current edit session dirty?
+     *
+     * @todo currently this is set way too often (even when a file is
+     * initially loaded!); it needs to be set only when there is a real
+     * change in the algorithm or graph being edited
 	 */
 	protected boolean isDirty;
 	
@@ -84,31 +88,31 @@ public abstract class GEditorPanel extends JPanel implements DocumentListener, P
 		setLayout(new BorderLayout());
 		
 		textPane = new JTextPane() { 
-			@Override
-			public String getToolTipText(MouseEvent me) {
-				String content = (getText() + "  ").replace("\r\n", "\n");
-				viewToModel(me.getPoint());
-				try {
-					int loc = viewToModel(me.getPoint());
-					AttributeSet as = getStyledDocument().getCharacterElement(loc).getAttributes();
-					if(as.containsAttribute(StyleConstants.Foreground, GAlgorithmSyntaxHighlighting.apiKeywordColor)) {
-						while(loc >= 0 && Character.isJavaIdentifierPart(content.charAt(loc))) loc--;
-						loc++;
-						int begin = loc;
-						while(loc < content.length() && Character.isJavaIdentifierPart(content.charAt(loc))) loc++;
-						int end = loc;
-						return GAlgorithmSyntaxHighlighting.APIdictionary.get(content.substring(begin, end));
-					}
-				} finally {} return null;
-			}
-		};
+                @Override
+                public String getToolTipText(MouseEvent me) {
+                    String content = (getText() + "  ").replace("\r\n", "\n");
+                    viewToModel(me.getPoint());
+                    try {
+                        int loc = viewToModel(me.getPoint());
+                        AttributeSet as = getStyledDocument().getCharacterElement(loc).getAttributes();
+                        if(as.containsAttribute(StyleConstants.Foreground, GAlgorithmSyntaxHighlighting.apiKeywordColor)) {
+                            while(loc >= 0 && Character.isJavaIdentifierPart(content.charAt(loc))) loc--;
+                            loc++;
+                            int begin = loc;
+                            while(loc < content.length() && Character.isJavaIdentifierPart(content.charAt(loc))) loc++;
+                            int end = loc;
+                            return GAlgorithmSyntaxHighlighting.APIdictionary.get(content.substring(begin, end));
+                        }
+                    } finally {} return null;
+                }
+            };
 		
 		textPane.setText(content);
 		textPane.setEditable(true);
 		textPane.getDocument().addDocumentListener(this);
 		
 		JScrollPane scrollPane = new JScrollPane(textPane, 
-				ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,  ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+                                                 ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,  ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		add(scrollPane, BorderLayout.CENTER);
 		
 		final JTextArea lines = new JTextArea(" 001 ");
@@ -117,25 +121,25 @@ public abstract class GEditorPanel extends JPanel implements DocumentListener, P
 		lines.setEditable(false);
 		
 		textPane.getDocument().addDocumentListener(new DocumentListener(){
-			public String getText(){
-				int caretPosition = textPane.getDocument().getLength();
-				Element root = textPane.getDocument().getDefaultRootElement();
-				String text = " 001" + " " + System.getProperty("line.separator") + " ";
-				for(int i = 2; i < root.getElementIndex( caretPosition ) + 2; i++){
-					if(i < 100) text += "0";
-					if(i < 10) text += "0";
-					text += i + " " + System.getProperty("line.separator") + " ";
-				}
-				return text;
-			}
-			@Override
-			public void changedUpdate(DocumentEvent de) {lines.setText(getText());}
-			@Override
-			public void insertUpdate(DocumentEvent de) {lines.setText(getText());}
-			@Override
-			public void removeUpdate(DocumentEvent de) {lines.setText(getText());}
+                public String getText(){
+                    int caretPosition = textPane.getDocument().getLength();
+                    Element root = textPane.getDocument().getDefaultRootElement();
+                    String text = " 001" + " " + System.getProperty("line.separator") + " ";
+                    for(int i = 2; i < root.getElementIndex( caretPosition ) + 2; i++){
+                        if(i < 100) text += "0";
+                        if(i < 10) text += "0";
+                        text += i + " " + System.getProperty("line.separator") + " ";
+                    }
+                    return text;
+                }
+                @Override
+                public void changedUpdate(DocumentEvent de) {lines.setText(getText());}
+                @Override
+                public void insertUpdate(DocumentEvent de) {lines.setText(getText());}
+                @Override
+                public void removeUpdate(DocumentEvent de) {lines.setText(getText());}
  
-		});
+            });
 		
 		lineNumbers = lines;
 		scrollPane.setRowHeaderView(lineNumbers);
@@ -149,23 +153,25 @@ public abstract class GEditorPanel extends JPanel implements DocumentListener, P
 	
 	protected void documentUpdated() {
 		if(syntaxHighlighter != null) 
-		try {
-			SwingUtilities.invokeLater(syntaxHighlighter);
-		} catch(Exception e){ExceptionDialog.displayExceptionInDialog(e);}
+            try {
+                SwingUtilities.invokeLater(syntaxHighlighter);
+            } catch(Exception e){ExceptionDialog.displayExceptionInDialog(e);}
 	}
 	
 	@Override
 	public void changedUpdate(DocumentEvent arg0) {}
 	@Override
 	public void insertUpdate(DocumentEvent arg0) {
+        LogHelper.setEnabled(true);
+        LogHelper.enterMethod(getClass(), "insertUpdate");
 		setDirty(true);
 		if(arg0.getChange(textPane.getStyledDocument().getDefaultRootElement()) instanceof AbstractDocument.ElementEdit) {
 			AbstractDocument.ElementEdit ee = ((AbstractDocument.ElementEdit) arg0.getChange(textPane.getStyledDocument().getDefaultRootElement()));
 			if(ee.getChildrenAdded().length > 0 && ee.getChildrenAdded()[0] instanceof AbstractDocument.BranchElement) {
 				AbstractDocument.BranchElement branch = (BranchElement) ee.getChildrenAdded()[0];
-				
-				// preserve tabbed indentation across lines
-				// if the user is N indents deep, add N indents to the beginning of each line
+
+				// preserve tabbed indentation across lines if the user is N
+				// indents deep, add N indents to the beginning of each line
 				String content = textPane.getText();
 				int numConsecutiveTabs = 0;
 				final int branchPoint = branch.getStartOffset();
@@ -176,16 +182,18 @@ public abstract class GEditorPanel extends JPanel implements DocumentListener, P
 				final int fNumTabs = numConsecutiveTabs;
 
 				try{ SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() { try { for(int ii = 0; ii < fNumTabs; ii++)
-						textPane.getStyledDocument().insertString(branchPoint, "\t", null);
-					} catch (BadLocationException e) { ExceptionDialog.displayExceptionInDialog(e); } }
-				}); } finally {}
+                        @Override
+                        public void run() { try { for(int ii = 0; ii < fNumTabs; ii++)
+                                    textPane.getStyledDocument().insertString(branchPoint, "\t", null);
+                            } catch (BadLocationException e) { ExceptionDialog.displayExceptionInDialog(e); } }
+                    }); } finally {}
 			}
 		}
 		documentUpdated();
+        LogHelper.exitMethod(getClass(), "insertUpdate");
+        LogHelper.restoreState();
 	}
-	
+
 	@Override
 	public void removeUpdate(DocumentEvent arg0) {setDirty(true); documentUpdated();}
 	
@@ -225,4 +233,4 @@ public abstract class GEditorPanel extends JPanel implements DocumentListener, P
 	}
 }
 
-//  [Last modified: 2015 08 07 at 16:49:12 GMT]
+//  [Last modified: 2016 12 16 at 15:29:31 GMT]

@@ -52,6 +52,7 @@ import edu.ncsu.csc.Galant.gui.window.GraphWindow.GraphDisplays;
 import edu.ncsu.csc.Galant.gui.util.StringQuery;
 import edu.ncsu.csc.Galant.gui.util.IntegerQuery;
 import edu.ncsu.csc.Galant.gui.util.DoubleQuery;
+import edu.ncsu.csc.Galant.gui.util.Queries;
 import edu.ncsu.csc.Galant.algorithm.AlgorithmSynchronizer;
 import edu.ncsu.csc.Galant.algorithm.AlgorithmExecutor;
 import edu.ncsu.csc.Galant.logging.LogHelper;
@@ -775,6 +776,26 @@ public abstract class Algorithm implements Runnable {
     }
 
     /**
+     * @return a boolean value indicated by the user via a button press
+     * @param question the yes/no question to ask
+     * @param yesText the text to display on the button for a yes answer
+     * @param noText the text to display on the button for a no answer
+     */
+    public Boolean getBoolean(String question, String yesText, String noText)
+    //        throws Terminate
+    {
+        // synchronizer.startStep();
+        // synchronizer.pauseExecution();
+        return Queries.booleanQuery(question, yesText, noText);
+    }
+
+    public Boolean getBoolean(String question)
+    //        throws Terminate
+    {
+        return getBoolean(question, "yes", "no");
+    }
+
+    /**
      * @return an edge specified by the user in response to the prompt
      */
     public Edge getEdge(String prompt) throws Terminate {
@@ -1004,4 +1025,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2016 12 14 at 17:40:53 GMT]
+//  [Last modified: 2016 12 19 at 17:43:26 GMT]

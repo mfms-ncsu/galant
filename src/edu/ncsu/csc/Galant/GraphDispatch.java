@@ -85,6 +85,11 @@ public class GraphDispatch {
     private Double doubleAnswer;
 
     /**
+     * boolean answer to latest boolean query
+     */
+    private Boolean booleanAnswer;
+
+    /**
      * getters and setters for the query answers
      */
     public void setActiveQuery(JDialog dialog) { this.activeQuery = dialog; }
@@ -95,6 +100,8 @@ public class GraphDispatch {
     public Integer getIntegerAnswer() { return this.integerAnswer; }
     public void setDoubleAnswer(Double answer) { this.doubleAnswer = answer; }
     public Double getDoubleAnswer() { return this.doubleAnswer; }
+    public void setBooleanAnswer(Boolean answer) { this.booleanAnswer = answer; }
+    public Boolean getBooleanAnswer() { return this.booleanAnswer; }
 
     /**
      * true if the algorithm moves nodes; an algorithm should set this if it
@@ -315,4 +322,4 @@ public class GraphDispatch {
 
 }
 
-//  [Last modified: 2016 12 13 at 20:28:34 GMT]
+//  [Last modified: 2016 12 19 at 16:53:00 GMT]

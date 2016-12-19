@@ -68,7 +68,7 @@ during algorithm execution at which the state is effective. Currently, the
 time stamp is 0 unless an algorithm is running, but could be used in a future
 implementation to allow undo operations during editing.
 
-\subsubsection*{State changes}
+\subsection{State changes}
 
 A \Code{GraphElement} changes state whenever any attribute changes value,
 either during editing or algorithm execution. Methods of the form\\
@@ -109,7 +109,7 @@ last state on the list whose time stamp precedes the given one, the
   \label{fig:graph_uml}
 \end{figure}
 
-\subsubsection*{States of existence}
+\subsection{States of existence}
 
 A node or edge may be created or deleted while editing or during algorithm
 execution. To determine whether or not a \Code{GraphElement} exists at a
@@ -148,7 +148,7 @@ approach. All the relevant methods are in \Code{Graph}.
   a new algorithm step if appropriate
 \end{description}
 
-\subsubsection*{Types of attributes}
+\subsection{Types of attributes}
 
 As already noted, \Code{Node} objects have mandatory attributes \Code{id},
 \Code{x} and \Code{y} (position in the window in pixels); \Code{Edge}
@@ -200,7 +200,7 @@ with * can also be edited).
   \item[hiddenWeight] -- if true, the weight of the element does not appear
 \end{description}
 
-\subsubsection*{GraphML parsing}
+\subsection{GraphML parsing}
 
 The \Code{GraphMLParser} (in \Code{graph.parser}) is invoked in one of three
 ways listed below. The corresponding graph is then the working graph
@@ -270,7 +270,7 @@ The relevant attribute is \Code{hasExplicitEdgeIds}
 and each edge has an attribute \Code{hasExplicitId}, set in
 \Code{initializeAfterParsing}.
 
-\subsubsection*{Layered graphs}
+\subsection{Layered graphs}
 
 The utilities in \Code{local.LayeredGraph} are used in the crossing
 minimization algorithms in \Code{Research/Layered-Graphs}.
@@ -437,7 +437,7 @@ Some complications that require extra care are:
 
 \section{Graph Editing and the Graph Window} \label{sec:graph_window}
 
-\subsubsection*{Editing attributes of edges and nodes}
+\subsection{Editing attributes of edges and nodes}
 
 From the graph window it is possible to edit the color, label and weight of a
 node or edge.
@@ -465,4 +465,23 @@ erased if they are blank (equal to "") and colors are erased if they are black
 (equal to "\#000000"). The current implementation of \Code{strip\_attributes}
 erases all weights if and only if they are all 0.
 
-% [Last modified: 2016 12 16 at 14:29:30 GMT]
+\section{Queries} \label{sec:queries}
+
+Galant offers the animator functions that query the user to select a node or
+edge or to provide an integer, double or string. In addition, most exceptions
+that arise result in a popup window that gives the user the option of either
+continuing Galant execution or exiting from Galant.
+Implementations of query windows are all in the \Code{gui.util} package.
+
+The current implementation of these queries is somewhat opaque and does not
+follow standard procedure for use of Java's \Code{JOptionPane}, but it's a
+case of "if it ain't broke \ldots".
+However, the class \Code{Queries} (not shown in Figs.~\ref{fig:overview} or
+Figs.~\ref{fig:directory_listing_gui}) has an implementation of a simple
+Boolean query that appears to work; it is invoked in \Code{Algorithm} to make
+it accessible to the animator.
+Adapting the technique to the other query types will take more work because
+they need to throw exceptions and repeat the request for input if the user's
+response is not satisfactory (a malformed number, a non-existent node or edge).
+
+% [Last modified: 2016 12 19 at 19:28:59 GMT]

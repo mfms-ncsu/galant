@@ -32,7 +32,7 @@ import edu.ncsu.csc.Galant.prefs.Preference;
  * with an empty algorithm/graph icon is selected. A panel is removed by
  * clicking it's x icon -- mouseClicked() method. A panel is selected via the
  * stateChanged method. If there are no other panels, there will
- * always be one for an empty graph. 
+ * always be one for an empty graph.
  *
  * @todo The dialog for closing a dirty tab should also be invoked when
  * quitting Galant. It works with the menu but not with Command/Alt-Q.
@@ -40,7 +40,7 @@ import edu.ncsu.csc.Galant.prefs.Preference;
  * @author Michael Owoc, radically simplified by Matthias Stallmann
  */
 public class GTabbedPane extends JTabbedPane implements ChangeListener {
-	
+
 	public static final String EMPTY_ALGORITHM_FILE_NAME
         = "untitled." + AlgorithmOrGraph.Algorithm.getDefaultFileExtension();
 	public static final String EMPTY_ALGORITHM_CONTENT
@@ -472,4 +472,4 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
 	}
 }
 
-//  [Last modified: 2016 12 14 at 21:00:35 GMT]
+//  [Last modified: 2016 12 16 at 14:59:24 GMT]

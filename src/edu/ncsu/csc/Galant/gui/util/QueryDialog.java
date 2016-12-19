@@ -48,7 +48,7 @@ public abstract class QueryDialog extends JDialog
      * dialog is active; default is false; the only current case where it
      * needs to be true is in the dialog asking for a degree boost for
      * force-directed layout; this is the only case where Galant launches
-     * Another action immediately after launching the dialog
+     * another action immediately after launching the dialog
      */
     public QueryDialog(Frame frame, String prompt, boolean waitForResponse) {
         super(frame, waitForResponse);
@@ -64,8 +64,6 @@ public abstract class QueryDialog extends JDialog
         // and their text.
         Object[] options = {enter, cancel};
 
-        // Question is essentially whether or not to enter an edge, default
-        // is yes.
         optionPane = new JOptionPane(displayComponents,
                                      JOptionPane.QUESTION_MESSAGE,
                                      JOptionPane.YES_NO_OPTION,
@@ -165,4 +163,4 @@ public abstract class QueryDialog extends JDialog
     }
 }
 
-//  [Last modified: 2016 12 05 at 16:52:37 GMT]
+//  [Last modified: 2016 12 19 at 13:27:52 GMT]

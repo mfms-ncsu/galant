@@ -64,7 +64,7 @@ public class GGraphEditorPanel extends GEditorPanel {
 	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
-        LogHelper.setEnabled(false);
+        LogHelper.setEnabled(true);
         LogHelper.enterMethod(getClass(), "propertyChange");
 		if (evt.getPropertyName().equals(GraphDispatch.ANIMATION_MODE)) {
 			if ( (Boolean) evt.getNewValue() ) { //animation mode
@@ -95,4 +95,4 @@ public class GGraphEditorPanel extends GEditorPanel {
 
 }
 
-//  [Last modified: 2016 12 15 at 01:55:11 GMT]
+//  [Last modified: 2016 12 16 at 15:22:25 GMT]

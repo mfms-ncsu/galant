@@ -297,11 +297,11 @@ public class GraphElement implements Comparable<GraphElement> {
 	public boolean inScope() {
 		return ! isDeleted();
 	}
-	
+
 	public boolean inScope(int state) {
 		return isCreated(state) && ! isDeleted(state);
 	}
-	
+
     /**
      * @return true if this element is (logically) hidden in the current
      * algorithm state - useful for algorithm to "know" which nodes/edges are
@@ -596,4 +596,4 @@ public class GraphElement implements Comparable<GraphElement> {
     }
 }
 
-//  [Last modified: 2016 12 15 at 02:16:09 GMT]
+//  [Last modified: 2016 12 20 at 20:52:21 GMT]

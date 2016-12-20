@@ -378,9 +378,11 @@ public class Node extends GraphElement {
     public NodeSet visibleNeighbors() {
         NodeSet neighbors = new NodeSet();
         for ( Edge e : incidentEdges ) {
-            Node neighbor = travel(e);
-			if ( neighbor.inScope() && ! neighbor.isHidden() ) {
-                neighbors.add(neighbor);
+			if ( e.inScope() && ! e.isHidden() ) {
+                Node neighbor = travel(e);
+                if ( neighbor.inScope() && ! neighbor.isHidden() ) {
+                    neighbors.add(neighbor);
+                }
             }
         }
 		return neighbors;
@@ -443,10 +445,14 @@ public class Node extends GraphElement {
      * when hiding a node, you also have to hide its incident edges
      */
     public void hide() throws Terminate {
+        GraphDispatch dispatch = GraphDispatch.getInstance();
+        // don't start a new step for the hiding of each edge
+        dispatch.lockIfRunning();
         super.hide();
         for ( Edge edge: getEdges() ) {
             edge.hide();
         }
+        dispatch.unlockIfRunning();
     }
 
     /**
@@ -643,4 +649,4 @@ public class Node extends GraphElement {
 	}
 }
 
-//  [Last modified: 2016 12 13 at 18:03:02 GMT]
+//  [Last modified: 2016 12 20 at 22:08:27 GMT]

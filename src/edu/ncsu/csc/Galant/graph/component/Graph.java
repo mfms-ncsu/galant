@@ -457,52 +457,100 @@ public class Graph {
     }
 
     /**
+     * @return the set of visible nodes
+     */
+    public NodeSet visibleNodes() {
+        NodeSet nodeSet = new NodeSet();
+        for ( Node node: nodes ) {
+            if ( ! node.isHidden() ) {
+                nodeSet.add(node);
+            }
+        }
+        return nodeSet;
+    }
+
+    /**
+     * @return the set of visible edges
+     */
+    public EdgeSet visibleEdges() {
+        EdgeSet edgeSet = new EdgeSet();
+        for ( Edge edge: edges ) {
+            if ( ! edge.isHidden() ) {
+                edgeSet.add(edge);
+            }
+        }
+        return edgeSet;
+    }
+
+    /**
      * Shows all Nodes that have been hidden individually
      */
     public void showNodes() throws Terminate {
+        dispatch.lockIfRunning();
         for ( Node node: nodes ) {
             node.show();
         }
+        dispatch.unlockIfRunning();
     }
 
     /**
      * Shows all edges that have been hidden individually
      */
     public void showEdges() throws Terminate {
+        dispatch.lockIfRunning();
         for ( Edge edge: edges ) {
             edge.show();
         }
+        dispatch.unlockIfRunning();
     }
 
     /**
      * The following are used to do blanket clearing of attributes
      */
     public void clearNodeMarks() throws Terminate {
+        dispatch.lockIfRunning();
         for ( Node node: nodes ) node.unmark();
+        dispatch.unlockIfRunning();
     }
     public void clearNodeHighlighting() throws Terminate {
+        dispatch.lockIfRunning();
         for ( Node node: nodes ) node.unHighlight();
+        dispatch.unlockIfRunning();
     }
     public void clearEdgeHighlighting() throws Terminate {
+        dispatch.lockIfRunning();
         for ( Edge edge: edges ) edge.unHighlight();
+        dispatch.unlockIfRunning();
     }
     public void clearNodeLabels() throws Terminate {
+        dispatch.lockIfRunning();
         for ( Node node: nodes ) node.clearLabel();
+        dispatch.unlockIfRunning();
     }
     public void clearEdgeLabels() throws Terminate {
+        dispatch.lockIfRunning();
         for ( Edge edge: edges ) edge.clearLabel();
+        dispatch.unlockIfRunning();
     }
     public void clearNodeWeights() throws Terminate {
+        dispatch.lockIfRunning();
         for ( Node node: nodes ) node.clearWeight();
+        dispatch.unlockIfRunning();
     }
     public void clearEdgeWeights() throws Terminate {
+        dispatch.lockIfRunning();
         for ( Edge edge: edges ) edge.clearWeight();
+        dispatch.unlockIfRunning();
     }
     public void clearAllNode(String attribute) throws Terminate {
+        dispatch.lockIfRunning();
         for ( Node node: nodes ) node.clear(attribute);
+        dispatch.unlockIfRunning();
     }
     public void clearAllEdge(String attribute) throws Terminate {
+        dispatch.lockIfRunning();
         for ( Edge edge: edges ) edge.clear(attribute);
+        dispatch.unlockIfRunning();
     }
 
     /** Graph methods that are independent of state */
@@ -1288,4 +1336,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2016 12 15 at 00:55:53 GMT]
+//  [Last modified: 2016 12 20 at 22:10:28 GMT]

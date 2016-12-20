@@ -72,6 +72,13 @@
     undo any hiding of nodes/edges that has taken place during the algorithm
     \\ \hline
     \shortstack[l]{
+      \Code{NodeSet visibleNodes()} \\
+      \Code{EdgeSet visibleEdges()}
+      }
+    &
+    return the set of nodes/edges that are not hidden
+    \\ \hline
+    \shortstack[l]{
       \textsf{clearNodeMarks()}\\
       \textsf{clearNodeHighlighting()}\\
       \textsf{clearEdgeHighlighting()}
@@ -134,3 +141,5 @@
     at once. Also included are functions that deal with graph attributes.}
   \label{tab:graph_attribute_functions}
 \end{table}
+
+% [Last modified: 2016 12 20 at 22:26:17 GMT]

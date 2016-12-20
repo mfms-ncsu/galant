@@ -86,6 +86,8 @@ public class GraphDispatch {
 
     /**
      * boolean answer to latest boolean query
+     * @deprecated
+     * @see gui.util.Queries
      */
     private Boolean booleanAnswer;
 
@@ -322,4 +324,4 @@ public class GraphDispatch {
 
 }
 
-//  [Last modified: 2016 12 19 at 16:53:00 GMT]
+//  [Last modified: 2016 12 19 at 21:40:28 GMT]

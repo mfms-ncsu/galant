@@ -241,7 +241,7 @@ public abstract class Algorithm implements Runnable {
      * algorithm declare what information needs to be shown in order for the
      * algorithm animation to be effective. They have the same effect as the
      * user does when using the toggle buttons or keyboard shortcuts.
-     * 
+     *
      * Individual showing and hiding of Node/Edge labels or weights takes
      * effect only if these are visible globally in the graph. Initially, all
      * labels and weights are visible.
@@ -528,7 +528,7 @@ public abstract class Algorithm implements Runnable {
     }
 
     /** hiding of nodes differs - all incident edges must be hidden as well */
-    public void hide(Node v) throws Terminate, GalantException { 
+    public void hide(Node v) throws Terminate, GalantException {
         checkGraphElement(v);
         v.hide();
     }
@@ -633,6 +633,14 @@ public abstract class Algorithm implements Runnable {
     public List<Edge> outEdges(Node v) throws GalantException {
         checkGraphElement(v);
         return v.getOutgoingEdges();
+    }
+
+    public NodeSet visibleNodes() {
+        return graph.visibleNodes();
+    }
+
+    public EdgeSet visibleEdges() {
+        return graph.visibleEdges();
     }
 
     public NodeSet visibleNeighbors(Node v) throws GalantException {
@@ -1025,4 +1033,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2016 12 19 at 17:43:26 GMT]
+//  [Last modified: 2016 12 20 at 20:56:32 GMT]

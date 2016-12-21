@@ -463,13 +463,13 @@ public abstract class Algorithm implements Runnable {
         ge.clearWeight();
     }
 
-    public Node source(Edge e) throws GalantException { 
+    public Node source(Edge e) throws GalantException {
         checkGraphElement(e);
-        return e.getSourceNode();
+        return e.getSource();
     }
-    public Node target(Edge e) throws GalantException { 
+    public Node target(Edge e) throws GalantException {
         checkGraphElement(e);
-        return e.getTargetNode();
+        return e.getTarget();
     }
 
     public void set(GraphElement ge, String s) throws Terminate, GalantException {
@@ -1033,4 +1033,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2016 12 20 at 20:56:32 GMT]
+//  [Last modified: 2016 12 21 at 15:13:40 GMT]

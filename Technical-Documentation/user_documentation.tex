@@ -27,33 +27,6 @@ Weights and labels are sometimes also easier to edit in the text window.
 \input{Y-user_interface}
 
 \begin{figure}[p!]
-\includegraphics[scale=0.5]{X_graph_window_annotated}
-\caption{The Galant graph window with annotations.}
-\label{fig:graph_window_annotated}
-\end{figure}
-
-\begin{figure}[p!]
-\includegraphics[scale=0.5]{X_graphml_window}
-\caption{The text window with the GraphML representation of the graph in
-Fig.~\ref{fig:graph_window_annotated}. The current version has the text
-page and tree icons to the left of the tabs instead of the right.}
-\label{fig:graphml_window}
-\end{figure}
-
-\begin{figure}[p!]
-\includegraphics[scale=0.5]{X_algorithm_window}
-\caption{The text window showing Dijkstra's algorithm.
-(an older version).}
-\label{fig:algorithm_text}
-\end{figure}
-
-\begin{figure}[p!]
-\includegraphics[scale=0.5]{X_algorithm_running}
-\caption{The text window when Dijkstra's algorithm is running.}
-\label{fig:algorithm_running}
-\end{figure}
-
-\begin{figure}[p!]
 \includegraphics[scale=0.5]{X_dijkstra_running}
 \caption{The graph window when Dijkstra's algorithm is running.}
 \label{fig:dijkstra_running}
@@ -73,10 +46,14 @@ New algorithms are created using the icon that looks like
 a page of text at the top left of the
 window; new graphs are created
 using the graph/tree icon to the left of that.
-More commonly, algorithm and graph files are loaded via the \texttt{File->Open}
-browser dialog. The \texttt{File} drop-down menu also allows saving of files
-and editing of preferences. Algorithm files have the extension \texttt{.alg}
-and graph files the extension \texttt{.graphml}.
+More commonly, algorithm and graph files are loaded via the \Code{File->Open}
+browser dialog. The \Code{File} drop-down menu also allows saving of files
+and editing of preferences. Algorithm files have the extension \Code{.alg}
+and graph files the extension \Code{.graphml}.
+
+Fig.~\ref{fig:user_interface} shows both the graph window (top) and the text
+window (bottom). Annotations on the graph window describe the components of
+the window that can be used to edit a graph visually.
 
 \subsection{Graph editing}
 \label{sec:graph_editing}
@@ -97,7 +74,7 @@ by displaying a pop up window that allows the user to choose whether to
 continue (and usually return to a stable state) or quit the program.
 Error information, including a stack trace, is also displayed on the console.
 
-The graph window, as illustrated in Fig.~\ref{fig:graph_window_annotated}
+The graph window, as illustrated at the top of Fig.~\ref{fig:user_interface},
 has a toolbar with four sections:
 \begin{enumerate}
 \item
@@ -109,7 +86,8 @@ if there are conflicts in selection of objects, nodes with higher id numbers hav
 have precedence over edges (are above edges).
 \begin{itemize}
 \item \emph{Select.} A mouse click selects the graph component with highest precedence.
-If the component is a node, it is shaded; if it's an edge, it turns blue.
+If the component is a node, it is shaded light blue; if it's an edge, it
+becomes dashed.
 The in-line editor at the bottom of the graph window allows editing of the
 component's label, weight, and color.
 \item \emph{Create node.}
@@ -136,7 +114,7 @@ calls for all incoming/outgoing edges, all incident edges are used.
 Undirected edges are displayed as simple lines.
 
 Pressing the directed (line with arrow) button causes the macros
-\texttt{for\_incoming}, \texttt{for\_outgoing}, and \texttt{for\_adjacent}
+\Code{for\_incoming}, \Code{for\_outgoing}, and \Code{for\_adjacent}
 to have three distinct meanings (they are all the same for undirected graphs):
 Incoming edges have the given node as target, outgoing as source, and adjacent applies to all incident edges.
 
@@ -167,9 +145,14 @@ Keyboard shortcuts for graph editing operations are as follows:
 \textsf{Ctrl-e} & create a new edge; user is prompted for id's of the nodes to
 be connected \\
 \textsf{Ctrl-i} & do a smart repositioning (force-directed)
-of nodes of the graph;
-useful when positions were chosen randomly \\
-\textsf{Del-n} & (hold delete key when typing \texttt{n})
+of nodes of the graph, useful when positions were chosen randomly;
+when \Code{Ctrl-i} is used for smart repositioning (as
+opposed to the toggle button, the user is prompted for a "degree repelling
+boost", designed to prevent clustering of cliques or near-cliques in the
+graph -- the higher the number, the more nodes of high degree will repel each
+other (default is 3)
+\\
+\textsf{Del-n} & (hold delete key when typing \Code{n})
 delete a node; user is prompted for id \\
 \textsf{Del-e} & delete an edge; user is prompted for id's of the endpoints \\
 \textsf{Ctrl-$\ell$} & toggle display of node labels \\
@@ -186,7 +169,7 @@ editor uses Java keyword highlighting (default blue) and
 highlighting of Galant API fields and methods (default green).
 Since the current algorithm editor is fairly primitive (no search and replace, for example),
 it is more efficient to edit animation code offline using a program editor --
-for example \texttt{emacs} with Java mode turned on.
+for example \Code{emacs} with Java mode turned on.
 The Galant editor is, however, useful for locating and correcting minor errors.
 For more details on how to compose animation code, see the programmer guide
 (Section~\ref{sec:programmer_guide}).
@@ -213,11 +196,11 @@ dialog box.
 
 When the user initiates execution of an animation by pushing the \textsf{Run}
 button
-the animation program 
+the animation program
 steps forward until
-displays the next animation event or, if a \texttt{beginStep()}
+displays the next animation event or, if a \Code{beginStep()}
 call has marked the start of a sequence of events, until
-it reaches the next \texttt{endStep()} call.
+it reaches the next \Code{endStep()} call.
 It then pauses execution and waits for the user to decide whether to
 step forward, step backward, or exit.
 A step forward resumes execution while a step backward returns the display to a previous
@@ -236,28 +219,28 @@ These are re-enabled when the user exits the animation by pressing the red \text
 \subsection{Preferences}
 \label{sec:preferences}
 
-Galant preferences can be accessed via the \texttt{File->Preferences}
+Galant preferences can be accessed via the \Code{File->Preferences}
 menu item or by using the keyboard shortcut \textsf{Ctrl-P}
 (\textsf{Cmd-P} for Mac).
 Preferences that can be edited are:
 \begin{itemize}
 \item
-Default directories for opening and saving files (\texttt{Open/Save}).
+Default directories for opening and saving files (\Code{Open/Save}).
 \item
-Directory where compiled animation code is stored (\texttt{Compilation}).
+Directory where compiled animation code is stored (\Code{Compilation}).
 \item
-Font size and tab size for text window editing (\texttt{Editors}).
+Font size and tab size for text window editing (\Code{Editors}).
 \item
-Colors for keyword and Galant API highlighting (\texttt{Algorithm~Editor}).
+Colors for keyword and Galant API highlighting (\Code{Algorithm~Editor}).
 \item
-Color for GraphML highlighting (\texttt{Textual~Graph~Editor}).
+Color for GraphML highlighting (\Code{Textual~Graph~Editor}).
 \item
-Node radius (\texttt{Graph~Display});
+Node radius (\Code{Graph~Display});
 when the radius is below a threshold (9 pixels), node id's are not displayed;
 this is useful when running animations on large graphs.
 \item
-Edge width (\texttt{Graph~Display}).
+Edge width (\Code{Graph~Display}).
 \end{itemize}
 
 
-% [Last modified: 2016 12 13 at 21:01:43 GMT]
+% [Last modified: 2016 12 20 at 22:53:27 GMT]

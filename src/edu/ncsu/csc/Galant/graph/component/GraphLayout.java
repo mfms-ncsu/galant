@@ -37,15 +37,33 @@ public class GraphLayout {
      */
     final static int MIN_WINDOW_DIMENSION = 100;
 
+    /**
+     * @todo a lot of these factors appear to have little effect on the
+     * outcome in the case of graphs that have extreme degree distributions,
+     * e.g., paths connecting cliques or near cliques. The use of the degree
+     * boost was supposed to mitigate the stringy embeddings in those
+     * situations but I've tried lots of variations to no avail. An example
+     * of such a graph is geo_40_67_1.graphml
+     */
+
     /** used to scale the repulsive force of edges */
     private static final double REPULSIVE_SCALE_FACTOR = -1.0;
     /** spring length for edges (attractive force) and nodes (repulsive) */
-    private static final double SPRING_LENGTH = 200.0;
+    private static final double SPRING_LENGTH = 500.0;
     /** force directed method stops when node movement is less than this */
     private static final double FORCE_DIRECTED_TOLERANCE = 0.1;
-    /** determines the extent to which degree of a node affects repulsion;
-     * in particular, the degree is raised to this power and multiplied by
-     * the usual repulsive force. */
+    /**
+     * determines the extent to which degree of a node affects repulsion;
+     * the current strategy has degree_factor[v] = degree_boost ^ degree(v)
+     * and multiplies the usual repulsive force between nodes v and w by
+     *    min(degree_factor[v], degree_factor[w])
+     * other strategies that have been tried are
+     * - using degree_factor[v] = degree(v) ^ degree_boost
+     * - using sum instead of min
+     * - using product instead of min
+     * - using a matrix repulsionFactor to divide the repulsive force by the
+     * number of hops that separate two nodes (as is, squared or square root)
+     */
     private static final double DEFAULT_DEGREE_BOOST = 3.0;
 
     // see updateStepLength() for how the next two are used
@@ -89,6 +107,13 @@ public class GraphLayout {
     private int[] component;
 
     /**
+     * A matrix of node repulsion factors, proportional to the square of the
+     * distance (number of hops) between two nodes. The repelling force
+     * between two nodes is dvided by this
+     */
+    private double[][] repulsionFactor;
+
+    /**
      * how often to print progress (never)
      */
     final private static int PRINT_FREQUENCY = 100000;
@@ -111,6 +136,53 @@ public class GraphLayout {
             nodePositions.put(node, p);
             index++;
 		}
+        // initRepulsionFactors();
+    }
+
+    /**
+     * Uses a Floyd-Warshall type algorithm to initialize the repulsion
+     * factors
+     */
+    private void initRepulsionFactors() {
+        int n = nodes.size();
+        repulsionFactor = new double[n][n];
+        // first calculate the number of hops
+        //  initialize using the edges of the graph:
+        //    there are no hops from a node to itself
+        //    if there's no edge, make the number of hops
+        //     exceed the number of nodes
+        //    if there is an edge, the number of hops = 1
+        for ( int i = 0; i < n; i++ ) {
+            for ( int j = 0; j < n; j++ ) {
+                if ( i == j ) repulsionFactor[i][j] = 0;
+                else repulsionFactor[i][j] = n * n;
+            }
+        }
+        for ( Edge e : edges ) {
+            int sourceIndex = nodeToIndex.get(e.getSource());
+            int targetIndex = nodeToIndex.get(e.getTarget());
+            repulsionFactor[sourceIndex][targetIndex] = 1;
+        }
+        // now iterate, considering each node (index k) as a potential
+        // midpoint of a path
+        for ( int k = 0; k < n; k++ ) {
+            for ( int i = 0; i < n; i++ ) {
+                for ( int j = 0; j < n; j++ ) {
+                    double withMidpointK
+                        = repulsionFactor[i][k] + repulsionFactor[k][j];
+                    repulsionFactor[i][j]
+                        = (withMidpointK < repulsionFactor[i][j])
+                        ? withMidpointK : repulsionFactor[i][j];
+                }
+            }
+        }
+        // finally, take the square root of each entry
+        for ( int i = 0; i < n; i++ ) {
+            for ( int j = 0; j < n; j++ ) {
+                repulsionFactor[i][j]
+                    = Math.sqrt(repulsionFactor[i][j]);
+            }
+        }
     }
 
     /**
@@ -254,7 +326,7 @@ public class GraphLayout {
         double [] degree_factor = new double[nodes.size()];
 
         /**
-         * power to which to raise degree when computin degree factor
+         * power to which to raise degree when computing degree factor
          */
         double degree_boost = DEFAULT_DEGREE_BOOST;
         if ( boost != null ) degree_boost = boost;
@@ -271,7 +343,7 @@ public class GraphLayout {
 			Point p = nodePositions.get(node);
 			points[index] = new Point2D.Double(p.x, p.y);
             int degree = node.getDegree();
-            degree_factor[index] = Math.pow(degree, degree_boost);
+            degree_factor[index] = Math.pow(degree_boost, degree);
             index++;
 		}
 
@@ -327,15 +399,8 @@ public class GraphLayout {
 				}
 
 				// calculate repulsive force from other nodes
-				for ( int j = 0; j < points.length; j++ ) {
-					if ( j != i && component[i] == component[j] ) {
-						double repulsive = degree_factor[i] * degree_factor[j]
-                            * forceRepulsive(points[i], points[j]);
-						double[] unitVector = unitVector(points[i], points[j]);
-						force[0] += unitVector[0] * repulsive;
-						force[1] += unitVector[1] * repulsive;
-					}
-				}
+                addRepulsiveForce(i, force, points, degree_factor);
+                //addRepulsiveForce(i, force, points);
 
 				// calculate new x position, scaling the force by a step size
 				double x = points[i].getX();
@@ -397,6 +462,56 @@ public class GraphLayout {
 		return (REPULSIVE_SCALE_FACTOR * SPRING_LENGTH * SPRING_LENGTH)
             / p1.distance(p2) ;
 	}
+
+    /**
+     * calculates the repulsive force that results when the effect of all other
+     * nodes is taken into account: force[0] = x direction, force[1] = y
+     * direction
+     * @param i the index of the node to be impacted by the force
+     * @param force the current value of the force (to be added to)
+     * @param degree_factor a factor calculated so that nodes with higher
+     * degree have stronger repulsion
+     */
+    private void addRepulsiveForce(int i,
+                                   double [] force,
+                                   Point2D.Double [] points,
+                                   double [] degree_factor) {
+        for ( int j = 0; j < points.length; j++ ) {
+            if ( j != i && component[i] == component[j] ) {
+                double min_degree_factor
+                    = (degree_factor[i] > degree_factor[j]) ?
+                    degree_factor[j] : degree_factor[i];
+                double repulsive = min_degree_factor
+                    * forceRepulsive(points[i], points[j]);
+                double[] unitVector = unitVector(points[i], points[j]);
+                force[0] += unitVector[0] * repulsive;
+                force[1] += unitVector[1] * repulsive;
+            }
+        }
+    }
+
+    /**
+     * calculates the repulsive force that results when the effect of all other
+     * nodes is taken into account: force[0] = x direction, force[1] = y
+     * direction
+     * @param i the index of the node to be impacted by the force
+     * @param force the current value of the force (to be added to)
+     * This variation uses the repulsionFactor matrix instead of the degree
+     * factor
+     */
+    private void addRepulsiveForce(int i,
+                                   double [] force,
+                                   Point2D.Double [] points) {
+        for ( int j = 0; j < points.length; j++ ) {
+            if ( j != i && component[i] == component[j] ) {
+                double repulsive
+                    = forceRepulsive(points[i], points[j]) / repulsionFactor[i][j];
+                double[] unitVector = unitVector(points[i], points[j]);
+                force[0] += unitVector[0] * repulsive;
+                force[1] += unitVector[1] * repulsive;
+            }
+        }
+    }
 
 	/**
 	 * Returns a unit vector indicating the direction from source i to destination j
@@ -468,4 +583,4 @@ public class GraphLayout {
 
 }
 
-//  [Last modified: 2016 11 18 at 21:45:10 GMT]
+//  [Last modified: 2016 12 21 at 13:45:13 GMT]

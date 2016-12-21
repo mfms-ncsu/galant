@@ -347,7 +347,7 @@ public class GraphElement implements Comparable<GraphElement> {
     public void clearWeight() throws Terminate {
         remove(WEIGHT);
     }
-	
+
     /**
      * @return true if the weight of this element is hidden, i.e., will not be
      * drawn on the graph panel.
@@ -596,4 +596,4 @@ public class GraphElement implements Comparable<GraphElement> {
     }
 }
 
-//  [Last modified: 2016 12 20 at 20:52:21 GMT]
+//  [Last modified: 2016 12 21 at 15:25:00 GMT]

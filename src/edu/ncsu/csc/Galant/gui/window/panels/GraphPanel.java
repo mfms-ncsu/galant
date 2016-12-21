@@ -127,6 +127,11 @@ public class GraphPanel extends JPanel{
     private final int EDGE_SELECTION_WIDTH = 8;
 
     /**
+     * diameter of the circle representing a self-loop
+     */
+    private final int SELF_LOOP_DIAMETER = 24;
+
+    /**
      * Node weights are stacked on top of labels; their left edge is
      * tangent to the rightmost point of the node. The line separating them
      * is level with the center point of the node
@@ -145,7 +150,7 @@ public class GraphPanel extends JPanel{
      * the appropriate variable: it is the position of the top left corner of
      * the label or weight without padding. Since strings are drawn with
      * respect to the <emph>lower</emph> left corner, the font height must be
-     * added when the label/weight is drawn. 
+     * added when the label/weight is drawn.
      */
 
     /**
@@ -632,24 +637,22 @@ public class GraphPanel extends JPanel{
             g2d.setStroke(new BasicStroke(thickness));
         }
 
-        // Self loop
         if ( target.equals(source) ) {
-            g2d.drawOval(p1.x, p1.y, 24, 24);
+            // Self loop
+            g2d.drawOval(p1.x, p1.y, SELF_LOOP_DIAMETER, SELF_LOOP_DIAMETER);
             g2d.setStroke(oldStroke);
             if (g.isDirected()) {
                 drawSelfLoopArrow(p1, g2d);
             }
-						
-            // Straight edge	
         }
         else {
+            // Straight edge
             g2d.drawLine(p1.x, p1.y, p2.x, p2.y);
             g2d.setStroke(oldStroke);
 
             if (g.isDirected()) {
                 drawDirectedArrow(p1, p2, g2d);
-            } 
-						
+            }
             if ( labelVisible(e) )
                 drawEdgeLabel(e.getLabel(stateNumber), p1, p2, g2d);
             if ( weightVisible(e) )
@@ -1006,4 +1009,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2016 12 07 at 02:56:43 GMT]
+//  [Last modified: 2016 12 21 at 15:19:29 GMT]

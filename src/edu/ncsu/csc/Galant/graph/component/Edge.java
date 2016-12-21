@@ -55,6 +55,14 @@ public class Edge extends GraphElement {
         return target;
     }
 
+    public Node getSource() {
+        return source;
+    }
+
+    public Node getTarget() {
+        return target;
+    }
+
     public void setId(int id) { this.id = id; }
 
     public Integer getId() { return this.id; }
@@ -175,4 +183,4 @@ public class Edge extends GraphElement {
 	}
 }
 
-//  [Last modified: 2016 12 15 at 00:51:51 GMT]
+//  [Last modified: 2016 12 21 at 13:22:04 GMT]

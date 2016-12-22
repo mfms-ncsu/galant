@@ -1009,7 +1009,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
               // "ctrl" already pressed, create new node
               if ( ctrlPressed ) {
                   LogHelper.guiLogDebug("CREATE NODE");
-							
+
                   // add a new default node to the working
                   Graph g = dispatch.getWorkingGraph();
                   // choose a random position to place new node
@@ -1043,13 +1043,15 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
           synchronized(this) {
               if ( ! repositionBtn.isSelected() ) {
                   repositionBtn.setSelected(true);
-                  DoubleQuery query
-                      = new DoubleQuery("Degree repelling boost", true);
-                  Double boost = dispatch.getDoubleAnswer();
-                  if ( boost == null )
-                      dispatch.getWorkingGraph().smartReposition();
-                  else
-                      dispatch.getWorkingGraph().smartReposition(boost);
+                  // The following does not appear to make enough difference
+                  // to be worth it.
+                  // DoubleQuery query
+                  //     = new DoubleQuery("Degree repelling boost", true);
+                  // Double boost = dispatch.getDoubleAnswer();
+                  // if ( boost == null )
+                  dispatch.getWorkingGraph().smartReposition();
+                  // else
+                      // dispatch.getWorkingGraph().smartReposition(boost);
               }
               else {
                   repositionBtn.setSelected(false);
@@ -1138,4 +1140,4 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	}
 }
 
-//  [Last modified: 2016 12 13 at 20:30:02 GMT]
+//  [Last modified: 2016 12 22 at 21:47:57 GMT]

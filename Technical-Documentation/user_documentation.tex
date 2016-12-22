@@ -26,12 +26,6 @@ Weights and labels are sometimes also easier to edit in the text window.
 
 \input{Y-user_interface}
 
-\begin{figure}[p!]
-\includegraphics[scale=0.5]{X_dijkstra_running}
-\caption{The graph window when Dijkstra's algorithm is running.}
-\label{fig:dijkstra_running}
-\end{figure}
-
 These components operate in two modes: edit mode and animation mode.
 Edit mode allows the user to modify graphs -- see Sec.~\ref{sec:graph_editing},
 or algorithms -- see Sec.~\ref{sec:algorithm_editing}. Animation mode disables all forms of modification, allowing the user to progress through
@@ -145,12 +139,7 @@ Keyboard shortcuts for graph editing operations are as follows:
 \textsf{Ctrl-e} & create a new edge; user is prompted for id's of the nodes to
 be connected \\
 \textsf{Ctrl-i} & do a smart repositioning (force-directed)
-of nodes of the graph, useful when positions were chosen randomly;
-when \Code{Ctrl-i} is used for smart repositioning (as
-opposed to the toggle button, the user is prompted for a "degree repelling
-boost", designed to prevent clustering of cliques or near-cliques in the
-graph -- the higher the number, the more nodes of high degree will repel each
-other (default is 3)
+of nodes of the graph, useful when positions were chosen randomly
 \\
 \textsf{Del-n} & (hold delete key when typing \Code{n})
 delete a node; user is prompted for id \\
@@ -177,12 +166,17 @@ For more details on how to compose animation code, see the programmer guide
 \subsection{Animating algorithms}
 \label{sec:animating_algorithms}
 
+\input{Y-dijkstra_running}
+
 To animate an algorithm the code for it must be compiled and then run via the
 algorithm controls
- -- the bottom tabs on the text window shown in Figs.~\ref{fig:algorithm_text}
-and~\ref{fig:algorithm_running}.
+ -- the bottom tabs on the text window shown in Fig.~\ref{fig:dijkstra_running}.
 The algorithm runs on the \emph{active graph}, the one currently displayed
-on the graph window.
+on the graph window, also shown in Fig.~\ref{fig:dijkstra_running}.
+While the algorithm is running, its text is grayed out.\footnote{
+  This may not be desirable. The intent was to indicate to the user that
+  operations on the text window are not desired.
+  }
 If there are errors in compilation these will show up on the console (terminal
 from which Galant was run) and in a dialog box that allows the user to ask for more details
 and decide whether to exit Galant or not.
@@ -243,4 +237,4 @@ Edge width (\Code{Graph~Display}).
 \end{itemize}
 
 
-% [Last modified: 2016 12 20 at 22:53:27 GMT]
+% [Last modified: 2016 12 22 at 22:17:28 GMT]

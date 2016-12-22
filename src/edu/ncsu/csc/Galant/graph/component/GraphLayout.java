@@ -49,7 +49,7 @@ public class GraphLayout {
     /** used to scale the repulsive force of edges */
     private static final double REPULSIVE_SCALE_FACTOR = -1.0;
     /** spring length for edges (attractive force) and nodes (repulsive) */
-    private static final double SPRING_LENGTH = 500.0;
+    private static final double SPRING_LENGTH = 200.0;
     /** force directed method stops when node movement is less than this */
     private static final double FORCE_DIRECTED_TOLERANCE = 0.1;
     /**
@@ -64,7 +64,7 @@ public class GraphLayout {
      * - using a matrix repulsionFactor to divide the repulsive force by the
      * number of hops that separate two nodes (as is, squared or square root)
      */
-    private static final double DEFAULT_DEGREE_BOOST = 3.0;
+    private static final double DEFAULT_DEGREE_BOOST = 1.0;
 
     // see updateStepLength() for how the next two are used
     /** the "temperature" reduction factor: used to control how fast the nodes move */
@@ -583,4 +583,4 @@ public class GraphLayout {
 
 }
 
-//  [Last modified: 2016 12 21 at 13:45:13 GMT]
+//  [Last modified: 2016 12 22 at 21:48:43 GMT]

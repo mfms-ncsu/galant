@@ -76,7 +76,7 @@ public class Edge extends GraphElement {
      */
     public void initializeAfterParsing()
         throws GalantException {
-        LogHelper.setEnabled(true);
+        LogHelper.disable();
         LogHelper.logDebug("-> initializeAfterParsing " + this);
         super.initializeAfterParsing();
         // id has already been parsed by GraphElement.initializeAfterParsing()
@@ -130,7 +130,6 @@ public class Edge extends GraphElement {
     }
 
 	public String xmlString() {
-        System.out.println("-> xmlString " + this);
         // id may not exist for an edge; not really essential;
         // inputHasEdgeIds() returns true if they appeared in the input, in
         // which case they should be rendered in the output as the first
@@ -155,7 +154,6 @@ public class Edge extends GraphElement {
      * exported.
      */
 	public String xmlString(int state) {
-        System.out.println("-> xmlString(" + state + ") " + this);
         if ( ! inScope(state) ) {
             return "";
         }
@@ -183,4 +181,4 @@ public class Edge extends GraphElement {
 	}
 }
 
-//  [Last modified: 2016 12 21 at 13:22:04 GMT]
+//  [Last modified: 2016 12 22 at 17:23:18 GMT]

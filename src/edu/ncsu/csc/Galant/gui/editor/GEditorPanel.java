@@ -162,7 +162,7 @@ public abstract class GEditorPanel extends JPanel implements DocumentListener, P
 	public void changedUpdate(DocumentEvent arg0) {}
 	@Override
 	public void insertUpdate(DocumentEvent arg0) {
-        LogHelper.setEnabled(true);
+        LogHelper.disable();
         LogHelper.enterMethod(getClass(), "insertUpdate");
 		setDirty(true);
 		if(arg0.getChange(textPane.getStyledDocument().getDefaultRootElement()) instanceof AbstractDocument.ElementEdit) {
@@ -233,4 +233,4 @@ public abstract class GEditorPanel extends JPanel implements DocumentListener, P
 	}
 }
 
-//  [Last modified: 2016 12 16 at 15:29:31 GMT]
+//  [Last modified: 2016 12 22 at 17:20:00 GMT]

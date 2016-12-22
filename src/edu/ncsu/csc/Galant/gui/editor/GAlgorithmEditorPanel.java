@@ -87,8 +87,9 @@ public class GAlgorithmEditorPanel extends GEditorPanel {
 	 * Called when the user presses the Compile button.
 	 * @return Whether the algorithm compiled into an executable correctly.
 	 */
-	public boolean compile() 
+	public boolean compile()
     {
+        LogHelper.disable();
 		LogHelper.enterMethod(getClass(), "compile");
 		try{
 			setCompiledAlgorithm(CodeIntegrator.integrateCode(fileName, textPane.getText()));
@@ -97,8 +98,6 @@ public class GAlgorithmEditorPanel extends GEditorPanel {
 		}
 		catch(CompilationException e){
 			setCompiledAlgorithm(null);
-			LogHelper.exitMethod(getClass(), "compile [CompilationException]");
-            LogHelper.setEnabled( true );
             /**
              * @todo there's no graceful way to display error messages in a
              * popup window, especially given the fact that the line breaks
@@ -109,21 +108,18 @@ public class GAlgorithmEditorPanel extends GEditorPanel {
 			for(Diagnostic<?> diagnostic : e.getDiagnostics().getDiagnostics()) {
 				long line =  diagnostic.getLineNumber();
                 String message = diagnostic.getMessage(null);
-				LogHelper.logDebug("Error, line " + line + ": " + message);
-                // if ( displayLineCount < MAX_LINES_IN_ERROR_DISPLAY ) {
-                //     forDisplay += "line " + line + ": " + message + "\n";
-                //     displayLineCount++;
-                // }
+				System.out.println("Error, line " + line + ": " + message);
             }
             // forDisplay += "check console\n";
             ExceptionDialog.displayExceptionInDialog(e, "check console for error messages");
+			LogHelper.exitMethod(getClass(), "compile [CompilationException]");
             LogHelper.restoreState();
 			return false;
 		}
 		catch(MalformedMacroException e){
 				setCompiledAlgorithm(null);
                 ExceptionDialog.displayExceptionInDialog(e, e.getMessage());
-                LogHelper.setEnabled( true );
+                LogHelper.disable();
 				LogHelper.exitMethod(getClass(), "compile [MalformedMacroException]");
 				LogHelper.logDebug(e.getMessage());
                 LogHelper.restoreState();
@@ -219,4 +215,4 @@ public class GAlgorithmEditorPanel extends GEditorPanel {
 
 }
 
-//  [Last modified: 2016 12 13 at 20:27:59 GMT]
+//  [Last modified: 2016 12 22 at 18:08:57 GMT]

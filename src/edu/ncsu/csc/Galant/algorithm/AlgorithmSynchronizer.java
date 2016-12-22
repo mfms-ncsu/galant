@@ -27,6 +27,7 @@ package edu.ncsu.csc.Galant.algorithm;
 
 import edu.ncsu.csc.Galant.GraphDispatch;
 import edu.ncsu.csc.Galant.algorithm.AlgorithmExecutor;
+import edu.ncsu.csc.Galant.logging.LogHelper;
 
 public class AlgorithmSynchronizer {
 
@@ -118,6 +119,8 @@ public class AlgorithmSynchronizer {
      * main thread
      */
     public synchronized void pauseExecution() throws Terminate {
+        LogHelper.disable();
+        LogHelper.logDebug("-> pauseExecution, locked = " + locked);
         if ( terminated )
             throw new Terminate();
         AlgorithmExecutor executor
@@ -135,7 +138,9 @@ public class AlgorithmSynchronizer {
         }
         if ( terminated )
             throw new Terminate();
+        LogHelper.logDebug("<- pauseExecution, locked = " + locked);
+        LogHelper.restoreState();
     }
 }
 
-//  [Last modified: 2016 12 13 at 20:32:06 GMT]
+//  [Last modified: 2016 12 22 at 18:38:31 GMT]

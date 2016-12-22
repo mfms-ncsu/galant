@@ -486,71 +486,49 @@ public class Graph {
      * Shows all Nodes that have been hidden individually
      */
     public void showNodes() throws Terminate {
-        dispatch.lockIfRunning();
         for ( Node node: nodes ) {
             node.show();
         }
-        dispatch.unlockIfRunning();
     }
 
     /**
      * Shows all edges that have been hidden individually
      */
     public void showEdges() throws Terminate {
-        dispatch.lockIfRunning();
         for ( Edge edge: edges ) {
             edge.show();
         }
-        dispatch.unlockIfRunning();
     }
 
     /**
      * The following are used to do blanket clearing of attributes
      */
     public void clearNodeMarks() throws Terminate {
-        dispatch.lockIfRunning();
         for ( Node node: nodes ) node.unmark();
-        dispatch.unlockIfRunning();
     }
     public void clearNodeHighlighting() throws Terminate {
-        dispatch.lockIfRunning();
         for ( Node node: nodes ) node.unHighlight();
-        dispatch.unlockIfRunning();
     }
     public void clearEdgeHighlighting() throws Terminate {
-        dispatch.lockIfRunning();
         for ( Edge edge: edges ) edge.unHighlight();
-        dispatch.unlockIfRunning();
     }
     public void clearNodeLabels() throws Terminate {
-        dispatch.lockIfRunning();
         for ( Node node: nodes ) node.clearLabel();
-        dispatch.unlockIfRunning();
     }
     public void clearEdgeLabels() throws Terminate {
-        dispatch.lockIfRunning();
         for ( Edge edge: edges ) edge.clearLabel();
-        dispatch.unlockIfRunning();
     }
     public void clearNodeWeights() throws Terminate {
-        dispatch.lockIfRunning();
         for ( Node node: nodes ) node.clearWeight();
-        dispatch.unlockIfRunning();
     }
     public void clearEdgeWeights() throws Terminate {
-        dispatch.lockIfRunning();
         for ( Edge edge: edges ) edge.clearWeight();
-        dispatch.unlockIfRunning();
     }
     public void clearAllNode(String attribute) throws Terminate {
-        dispatch.lockIfRunning();
         for ( Node node: nodes ) node.clear(attribute);
-        dispatch.unlockIfRunning();
     }
     public void clearAllEdge(String attribute) throws Terminate {
-        dispatch.lockIfRunning();
         for ( Edge edge: edges ) edge.clear(attribute);
-        dispatch.unlockIfRunning();
     }
 
     /** Graph methods that are independent of state */
@@ -831,13 +809,9 @@ public class Graph {
 
 	/**
 	 * Deletes (but does not permanently remove) the specified
-	 * <code>Node</code> from the <code>Graph</code>.  Starts a new algorithm
-	 * step if appropriate
+	 * <code>Node</code> from the <code>Graph</code>.
 	 */
 	public void deleteNode(Node n) throws Terminate {
-		dispatch.startStepIfRunning();
-		dispatch.lockIfRunning();
-
 		n.setDeleted(true);
 		for (Edge e : n.getIncidentEdges()) {
 			e.setDeleted(true);
@@ -845,8 +819,6 @@ public class Graph {
             // than deletion that can be undone by a step backward.
             // removeEdge(e);
 		}
-
-		dispatch.unlockIfRunning();
 	}
 
 	/**
@@ -1050,7 +1022,7 @@ public class Graph {
      * is integrate the edge into the graph.
 	 */
 	public void addEdge(Edge edge) {
-        LogHelper.setEnabled(true);
+        LogHelper.disable();
         LogHelper.enterMethod(getClass(), "addEdge " + edge);
         // during parsing we need to know if the edge had an explicit id in
         // its GraphML representation
@@ -1143,13 +1115,11 @@ public class Graph {
 		List<Edge> n_edges = n.getIncidentEdges();
         LogHelper.enterMethod(getClass(), "removeNode " + n + ", deg = " + n_edges.size());
 
-		dispatch.lockIfRunning();
 		for ( Edge e : n_edges ) {
 			removeEdge(e);
 		}
 
 		nodes.remove(n);
-		dispatch.unlockIfRunning();
         LogHelper.exitMethod(getClass(), "removeNode");
 	}
 
@@ -1261,7 +1231,7 @@ public class Graph {
 	 * algorithm is running
 	 */
 	public String xmlString() {
-        LogHelper.setEnabled(true);
+        LogHelper.disable();
         LogHelper.enterMethod(getClass(), "xmlString");
         String s = "";
 		s += "<?xml version=\"1.0\" encoding=\"UTF-8\"?> \n";
@@ -1297,7 +1267,7 @@ public class Graph {
 	 * want to export the current state of a running algorithm.
 	 */
 	public String xmlString(int state) {
-        LogHelper.setEnabled(true);
+        LogHelper.disable();
         LogHelper.enterMethod(getClass(), "xmlString(" + state + ")");
         String s = "";
 		s += "<?xml version=\"1.0\" encoding=\"UTF-8\"?> \n";
@@ -1336,4 +1306,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2016 12 20 at 22:10:28 GMT]
+//  [Last modified: 2016 12 22 at 18:35:06 GMT]

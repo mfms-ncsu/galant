@@ -143,6 +143,10 @@ public class AlgorithmExecutor {
      * detection part is complicated, however
      */
     public synchronized void incrementDisplayState() {
+        LogHelper.disable();
+        LogHelper.logDebug("-> incrementDisplayState display = "
+                           + displayState
+                           + " algorithm = " + algorithmState);
         GraphDispatch dispatch = GraphDispatch.getInstance();
         if ( displayState == algorithmState
              && ! synchronizer.algorithmFinished()
@@ -189,6 +193,10 @@ public class AlgorithmExecutor {
             // appear on the status bar
             dispatch.getGraphWindow().performDone();
         }
+        LogHelper.logDebug("<- incrementDisplayState display = "
+                           + displayState
+                           + " algorithm = " + algorithmState);
+        LogHelper.restoreState();
     }
 
     /**
@@ -221,4 +229,4 @@ public class AlgorithmExecutor {
     }
 }
 
-//  [Last modified: 2016 12 13 at 20:10:05 GMT]
+//  [Last modified: 2016 12 22 at 18:39:26 GMT]

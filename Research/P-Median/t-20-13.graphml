@@ -15,10 +15,10 @@ http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
   <node id="9" x="214" y="529"  weight="5.0"  />
   <node id="10" x="607" y="550"  weight="3.0"  />
   <node id="11" x="743" y="616"  weight="7.0"  />
-  <node id="12" x="617" y="676"  weight="4.0"  />
+  <node id="12" x="612" y="655"  weight="4.0"  />
   <node id="13" x="312" y="706"  weight="7.0"  />
   <node id="14" x="71" y="530"  weight="9.0"  />
-  <node id="15" x="626" y="815"  weight="3.0"  />
+  <node id="15" x="632" y="781"  weight="3.0"  />
   <node id="16" x="382" y="573"  weight="7.0"  />
   <node id="17" x="894" y="607"  weight="6.0"  />
   <node id="18" x="122" y="699"  weight="6.0"  />

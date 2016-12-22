@@ -189,7 +189,7 @@ public class GraphMLParser {
 		}
         LogHelper.endIndent();
 
-        LogHelper.setEnabled(true);
+        LogHelper.disable();
         LogHelper.beginIndent();
 		for ( int nodeIndex = 0; nodeIndex < edges.getLength(); nodeIndex++ ) {
             LogHelper.logDebug( " processing " + nodeIndex + "th edge." );
@@ -298,4 +298,4 @@ public class GraphMLParser {
 	
 }
 
-//  [Last modified: 2016 12 14 at 21:56:36 GMT]
+//  [Last modified: 2016 12 22 at 17:17:23 GMT]

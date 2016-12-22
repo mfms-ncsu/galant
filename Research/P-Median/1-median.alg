@@ -15,7 +15,7 @@ function initialize_degrees_and_weights() {
     wt = new Double[nodeIds()];
     for_nodes(v) {
         deg[id(v)] = degree(v);
-        if ( deg[id(v)] == 1 ) leaves.enqueue(v); 
+        if ( deg[id(v)] == 1 ) leaves.enqueue(v);
         wt[id(v)] = weight(v);
         total_weight = total_weight + weight(v);
     }
@@ -80,4 +80,4 @@ algorithm {
     endStep();
 } // end, algorithm
 
-//  [Last modified: 2016 06 21 at 19:34:20 GMT]
+//  [Last modified: 2016 12 22 at 16:21:47 GMT]

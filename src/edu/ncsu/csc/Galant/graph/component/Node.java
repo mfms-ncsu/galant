@@ -446,13 +446,10 @@ public class Node extends GraphElement {
      */
     public void hide() throws Terminate {
         GraphDispatch dispatch = GraphDispatch.getInstance();
-        // don't start a new step for the hiding of each edge
-        dispatch.lockIfRunning();
         super.hide();
         for ( Edge edge: getEdges() ) {
             edge.hide();
         }
-        dispatch.unlockIfRunning();
     }
 
     /**
@@ -649,4 +646,4 @@ public class Node extends GraphElement {
 	}
 }
 
-//  [Last modified: 2016 12 20 at 22:08:27 GMT]
+//  [Last modified: 2016 12 22 at 18:36:20 GMT]

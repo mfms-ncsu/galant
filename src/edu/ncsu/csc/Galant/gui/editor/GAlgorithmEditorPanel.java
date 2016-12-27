@@ -9,6 +9,7 @@ import java.beans.PropertyChangeEvent;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.tools.Diagnostic;
 import edu.ncsu.csc.Galant.GraphDispatch;
 import edu.ncsu.csc.Galant.algorithm.Algorithm;
@@ -103,15 +104,17 @@ public class GAlgorithmEditorPanel extends GEditorPanel {
              * popup window, especially given the fact that the line breaks
              * are ignored
              */
-            // String forDisplay = "";
+            String forDisplay = "<html> Compilation errors:<br>";
             // int displayLineCount = 0;
 			for(Diagnostic<?> diagnostic : e.getDiagnostics().getDiagnostics()) {
 				long line =  diagnostic.getLineNumber();
                 String message = diagnostic.getMessage(null);
 				System.out.println("Error, line " + line + ": " + message);
+                forDisplay += line + " " + message + "<br>";
             }
             // forDisplay += "check console\n";
-            ExceptionDialog.displayExceptionInDialog(e, "check console for error messages");
+            //ExceptionDialog.displayExceptionInDialog(e, "check console for error messages");
+            ExceptionDialog.displayExceptionInDialog(e, forDisplay + "</html>");
 			LogHelper.exitMethod(getClass(), "compile [CompilationException]");
             LogHelper.restoreState();
 			return false;
@@ -215,4 +218,4 @@ public class GAlgorithmEditorPanel extends GEditorPanel {
 
 }
 
-//  [Last modified: 2016 12 22 at 18:08:57 GMT]
+//  [Last modified: 2016 12 27 at 21:17:54 GMT]

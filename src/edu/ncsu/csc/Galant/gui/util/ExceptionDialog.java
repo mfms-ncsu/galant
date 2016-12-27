@@ -13,6 +13,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JTextArea;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -167,6 +168,11 @@ public class ExceptionDialog {
         Box display = new Box(BoxLayout.Y_AXIS);
         for(String str : intro)
             {
+                // JTextArea textArea = new JTextArea();
+                // textArea.setEditable(false);
+                // textArea.setOpaque(false);
+                // textArea.setText(str);
+                // display.add(textArea, BorderLayout.CENTER);
                 JLabel label = new JLabel(str);
                 label.setToolTipText(label.getText());
                 display.add(label);
@@ -209,4 +215,4 @@ public class ExceptionDialog {
     }
 }
 
-//  [Last modified: 2016 12 14 at 17:22:51 GMT]
+//  [Last modified: 2016 12 27 at 22:01:04 GMT]

@@ -100,7 +100,7 @@ public class ExceptionDialog {
             getDisplayFor(e,
                           interpretation == null
                           ? new String[]{"at:"}
-                          : new String[]{e.toString(), "at:"});
+                          : new String[]{e.getMessage(), "at:"});
         JButton moreInfo
             = new JButton("<html><u>More Information&hellip;</u></html>");
         moreInfo.setContentAreaFilled(false);
@@ -166,17 +166,16 @@ public class ExceptionDialog {
         if(e == null)
             return null;
         Box display = new Box(BoxLayout.Y_AXIS);
-        for(String str : intro)
-            {
-                // JTextArea textArea = new JTextArea();
-                // textArea.setEditable(false);
-                // textArea.setOpaque(false);
-                // textArea.setText(str);
-                // display.add(textArea, BorderLayout.CENTER);
-                JLabel label = new JLabel(str);
-                label.setToolTipText(label.getText());
-                display.add(label);
-            }
+        for ( String str : intro ) {
+            JTextArea textArea = new JTextArea();
+            textArea.setEditable(false);
+            textArea.setOpaque(false);
+            textArea.setText(str);
+            display.add(textArea, BorderLayout.CENTER);
+            // JLabel label = new JLabel(str);
+            // label.setToolTipText(label.getText());
+            // display.add(label);
+        }
         JList<StackTraceElement> stack
             = new JList<StackTraceElement>(e.getStackTrace());
         stack.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
@@ -215,4 +214,4 @@ public class ExceptionDialog {
     }
 }
 
-//  [Last modified: 2016 12 27 at 22:01:04 GMT]
+//  [Last modified: 2016 12 28 at 16:35:34 GMT]

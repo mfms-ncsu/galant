@@ -81,6 +81,14 @@ public abstract class Algorithm implements Runnable {
     public AlgorithmSynchronizer synchronizer;
 
     /**
+     * true if in the middle of a step that involves multiple state changes,
+     * such as hiding a node and its incident edges; but used only if the
+     * animation is not in the middle of its own step; see beginMultiStep()
+     * and endMultiStep()
+     */
+    public boolean internalLock = false;
+    
+    /**
      * Numerical constants
      */
     public static final Double INFINITY = Double.POSITIVE_INFINITY;
@@ -274,53 +282,114 @@ public abstract class Algorithm implements Runnable {
      * user. What they do is to iteratively show or hide weight or label of
      * each individual Node/Edge
      */
-    public void hideAllNodeLabels() throws Terminate { graph.hideAllNodeLabels(); }
-    public void hideAllEdgeLabels() throws Terminate { graph.hideAllEdgeLabels(); }
-    public void hideAllNodeWeights() throws Terminate { graph.hideAllNodeWeights(); }
-    public void hideAllEdgeWeights() throws Terminate { graph.hideAllEdgeWeights(); }
-    public void showAllNodeLabels() throws Terminate { graph.showAllNodeLabels(); }
-    public void showAllEdgeLabels() throws Terminate { graph.showAllEdgeLabels(); }
-    public void showAllNodeWeights() throws Terminate { graph.showAllNodeWeights(); }
-    public void showAllEdgeWeights() throws Terminate { graph.showAllEdgeWeights(); }
+    public void hideAllNodeLabels() throws Terminate {
+        beginMultiStep();
+        graph.hideAllNodeLabels();
+        endMultiStep();
+    }
+    public void hideAllEdgeLabels() throws Terminate {
+        beginMultiStep();
+        graph.hideAllEdgeLabels();
+        endMultiStep();
+    }
+    public void hideAllNodeWeights() throws Terminate {
+        beginMultiStep();
+        graph.hideAllNodeWeights();
+        endMultiStep();
+    }
+    public void hideAllEdgeWeights() throws Terminate {
+        beginMultiStep();
+        graph.hideAllEdgeWeights();
+        endMultiStep();
+    }
+    public void showAllNodeLabels() throws Terminate {
+        beginMultiStep();
+        graph.showAllNodeLabels();
+        endMultiStep();
+    }
+    public void showAllEdgeLabels() throws Terminate {
+        beginMultiStep();
+        graph.showAllEdgeLabels();
+        endMultiStep();
+    }
+    public void showAllNodeWeights() throws Terminate {
+        beginMultiStep();
+        graph.showAllNodeWeights();
+        endMultiStep();
+    }
+    public void showAllEdgeWeights() throws Terminate {
+        beginMultiStep();
+        graph.showAllEdgeWeights();
+        endMultiStep();
+    }
 
     /**
-     * It's sometimes useful to reveal all nodes and/or edges that have been hidden
+     * It's sometimes useful to reveal all nodes and/or edges that have been
+     * hidden
      */
-    public void showNodes() throws Terminate { graph.showNodes(); }
-    public void showEdges() throws Terminate { graph.showEdges(); }
+    public void showNodes() throws Terminate {
+        beginMultiStep();
+        graph.showNodes();
+        endMultiStep();
+    }
+    public void showEdges() throws Terminate {
+        beginMultiStep();
+        graph.showEdges();
+        endMultiStep();
+    }
 
     /**
      * Also useful to do blanket clearing of attributes
      */
     public void clearNodeMarks() throws Terminate {
+        beginMultiStep();
         graph.clearNodeMarks();
+        endMultiStep();
     }
     public void clearMarks() throws Terminate {
+        beginMultiStep();
         clearNodeMarks();
+        endMultiStep();
     }
     public void clearNodeHighlighting() throws Terminate {
+        beginMultiStep();
         graph.clearNodeHighlighting();
+        endMultiStep();
     }
     public void clearEdgeHighlighting() throws Terminate {
+        beginMultiStep();
         graph.clearEdgeHighlighting();
+        endMultiStep();
     }
     public void clearNodeLabels() throws Terminate {
+        beginMultiStep();
         graph.clearNodeLabels();
+        endMultiStep();
     }
     public void clearEdgeLabels() throws Terminate {
+        beginMultiStep();
         graph.clearEdgeLabels();
+        endMultiStep();
     }
     public void clearNodeWeights() throws Terminate {
+        beginMultiStep();
         graph.clearNodeWeights();
+        endMultiStep();
     }
     public void clearEdgeWeights() throws Terminate {
+        beginMultiStep();
         graph.clearEdgeWeights();
+        endMultiStep();
     }
     public void clearAllNode(String attribute) throws Terminate {
+        beginMultiStep();
         graph.clearAllNode(attribute);
+        endMultiStep();
     }
     public void clearAllEdge(String attribute) throws Terminate {
+        beginMultiStep();
         graph.clearAllEdge(attribute);
+        endMultiStep();
     }
 
     /**
@@ -359,11 +428,11 @@ public abstract class Algorithm implements Runnable {
     /**
      * Methods to make syntax friendlier for procedural programmers
      */
-    public void highlight(GraphElement ge) throws Terminate, GalantException { 
+    public void highlight(GraphElement ge) throws Terminate, GalantException {
         checkGraphElement(ge);
         ge.highlight();
     }
-    public void unHighlight(GraphElement ge) throws Terminate, GalantException { 
+    public void unHighlight(GraphElement ge) throws Terminate, GalantException {
         checkGraphElement(ge);
         ge.unHighlight();
     }
@@ -497,7 +566,7 @@ public abstract class Algorithm implements Runnable {
         checkGraphElement(ge);
         ge.set(key, value);
     }
-    public Integer getInteger(GraphElement ge, String s) throws GalantException { 
+    public Integer getInteger(GraphElement ge, String s) throws GalantException {
         checkGraphElement(ge);
         return ge.getInteger(s);
     }
@@ -530,7 +599,9 @@ public abstract class Algorithm implements Runnable {
     /** hiding of nodes differs - all incident edges must be hidden as well */
     public void hide(Node v) throws Terminate, GalantException {
         checkGraphElement(v);
+        beginMultiStep();
         v.hide();
+        endMultiStep();
     }
     public void hide(Edge e) throws Terminate, GalantException {
         checkGraphElement(e);
@@ -538,7 +609,9 @@ public abstract class Algorithm implements Runnable {
     }
     public void show(Node v) throws Terminate, GalantException {
         checkGraphElement(v);
+        beginMultiStep();
         v.show();
+        endMultiStep();
     }
     public void show(Edge e) throws Terminate, GalantException {
         checkGraphElement(e);
@@ -557,7 +630,7 @@ public abstract class Algorithm implements Runnable {
         checkGraphElement(ge);
         return ge.isHidden();
     }
-    public Boolean visible(GraphElement ge) throws GalantException { 
+    public Boolean visible(GraphElement ge) throws GalantException {
         checkGraphElement(ge);
         return ! ge.isHidden();
     }
@@ -1022,6 +1095,30 @@ public abstract class Algorithm implements Runnable {
     }
 
     /**
+     * Defines the beginning of an algorithm step that involves multiple
+     * state changes. Takes action only if the animation is not already in
+     * the middle of a step.
+     */
+    public void beginMultiStep() throws Terminate {
+        if ( ! synchronizer.isLocked() ) {
+            internalLock = true;
+            beginStep();
+        }
+    }
+
+    /**
+     * Defines the end of an algorithm step that involves multiple
+     * state changes. Takes action only if the prior beginMultiStep() has
+     * created a new step.
+     */
+    public void endMultiStep() throws Terminate {
+        if ( internalLock ) {
+            internalLock = false;
+            endStep();
+        }
+    }
+
+    /**
      * has the effect of an endStep(); beginStep() pair, without the need for
      * a prior beginStep()
      */
@@ -1033,4 +1130,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2016 12 21 at 15:13:40 GMT]
+//  [Last modified: 2016 12 29 at 02:30:01 GMT]

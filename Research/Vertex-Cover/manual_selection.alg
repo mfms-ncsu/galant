@@ -38,10 +38,10 @@ algorithm {
         mark(v);
         display("cover size = " + cover.size());
         endStep();
-        beginStep();
+        //beginStep();
         unhighlight(v);
         hide(v);
-        endStep();
+        //endStep();
     } // while there are uncovered edges
     beginStep();
     showNodes();

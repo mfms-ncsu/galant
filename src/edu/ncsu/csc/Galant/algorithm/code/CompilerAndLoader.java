@@ -32,7 +32,7 @@ public class CompilerAndLoader
 		 * @return if there were compilation errors: a <code>DiagnosticCollector</code> containing <code>Diagnostic</code>s
 		 *         detailing the errors; otherwise, <code>null</code>.
 		 */
-		public static DiagnosticCollector<JavaFileObject> compile(String qualifiedName, String sourceCode)
+		public static DiagnosticCollector<JavaFileObject> compile(String qualifiedName, String sourceCode) throws GalantException
 			{
 				// Create output directory
 				File outputDir = GalantPreferences.OUTPUT_DIRECTORY.get();
@@ -46,13 +46,19 @@ public class CompilerAndLoader
 
 				/* Instantiating the java compiler */
 				JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-
+                if ( compiler == null ) {
+                    throw new GalantException("No compiler found, need a JDK, java.home = " + System.getProperty("java.home"));
+                }
 				/**
-				 * Retrieving the standard file manager from compiler object, which is used to provide basic building block for
-				 * customizing how a compiler reads and writes to files. The same file manager can be reopened for another
-				 * compiler task. Thus we reduce the overhead of scanning through file system and jar files each time
+				 * Retrieving the standard file manager from compiler object,
+				 * which is used to provide basic building block for
+				 * customizing how a compiler reads and writes to files. The
+				 * same file manager can be reopened for another compiler
+				 * task. Thus we reduce the overhead of scanning through file
+				 * system and jar files each time
 				 */
-				StandardJavaFileManager stdFileManager = compiler.getStandardFileManager(null, Locale.getDefault(), null);
+				StandardJavaFileManager stdFileManager
+                    = compiler.getStandardFileManager(null, Locale.getDefault(), null);
 
 				/*
 				 * Prepare a list of compilation units (java source code file objects) to input to
@@ -178,4 +184,4 @@ class DynamicJavaSourceCodeObject extends SimpleJavaFileObject
 			}
 	}
 
-//  [Last modified: 2015 12 11 at 15:49:35 GMT]
+//  [Last modified: 2016 12 28 at 00:02:09 GMT]

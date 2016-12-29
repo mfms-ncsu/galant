@@ -60,77 +60,69 @@ public class GAlgorithmEditorPanel extends GEditorPanel {
 		syntaxHighlighter = new GAlgorithmSyntaxHighlighting(textPane);
 		documentUpdated();
 		setCompiledAlgorithm(null);
-		
 		GraphDispatch.getInstance().addChangeListener(this);
-		
 	}
-	
+
 	/**
 	 * @return compiledAlgorithm.
 	 */
-	private Algorithm getCompiledAlgorithm()
-		{
-			return compiledAlgorithm;
-		}
+	private Algorithm getCompiledAlgorithm() {
+        return compiledAlgorithm;
+    }
 
 	/**
 	 * Sets compiledAlgorithm to the given Algorithm.
 	 * @param compiledAlgorithm the new compiledAlgorithm.
 	 */
-	private void setCompiledAlgorithm(Algorithm compiledAlgorithm)
-		{
-			this.compiledAlgorithm = compiledAlgorithm;
-			runButton.setEnabled(compiledAlgorithm != null);
-		}
-
+	private void setCompiledAlgorithm(Algorithm compiledAlgorithm) {
+        this.compiledAlgorithm = compiledAlgorithm;
+        runButton.setEnabled(compiledAlgorithm != null);
+    }
 
 	/**
 	 * Called when the user presses the Compile button.
 	 * @return Whether the algorithm compiled into an executable correctly.
 	 */
-	public boolean compile()
-    {
+	public boolean compile() {
         LogHelper.disable();
 		LogHelper.enterMethod(getClass(), "compile");
-		try{
+		try {
 			setCompiledAlgorithm(CodeIntegrator.integrateCode(fileName, textPane.getText()));
 			LogHelper.exitMethod(getClass(), "compile");
+            LogHelper.restoreState();
 			return true;
 		}
-		catch(CompilationException e){
+		catch ( CompilationException e ){
 			setCompiledAlgorithm(null);
-            /**
-             * @todo there's no graceful way to display error messages in a
-             * popup window, especially given the fact that the line breaks
-             * are ignored
-             */
             String forDisplay = "<html> Compilation errors:<br>";
             // int displayLineCount = 0;
-			for(Diagnostic<?> diagnostic : e.getDiagnostics().getDiagnostics()) {
+			for ( Diagnostic<?> diagnostic :
+                      e.getDiagnostics().getDiagnostics()) {
 				long line =  diagnostic.getLineNumber();
                 String message = diagnostic.getMessage(null);
 				System.out.println("Error, line " + line + ": " + message);
                 forDisplay += line + " " + message + "<br>";
             }
-            // forDisplay += "check console\n";
-            //ExceptionDialog.displayExceptionInDialog(e, "check console for error messages");
             ExceptionDialog.displayExceptionInDialog(e, forDisplay + "</html>");
 			LogHelper.exitMethod(getClass(), "compile [CompilationException]");
             LogHelper.restoreState();
 			return false;
 		}
-		catch(MalformedMacroException e){
-				setCompiledAlgorithm(null);
-                ExceptionDialog.displayExceptionInDialog(e, e.getMessage());
-                LogHelper.disable();
-				LogHelper.exitMethod(getClass(), "compile [MalformedMacroException]");
-				LogHelper.logDebug(e.getMessage());
-                LogHelper.restoreState();
-				return false;
+		catch ( MalformedMacroException e ) {
+            setCompiledAlgorithm(null);
+            ExceptionDialog.displayExceptionInDialog(e, e.getMessage());
+            LogHelper.disable();
+            LogHelper.exitMethod(getClass(), "compile [MalformedMacroException]");
+            LogHelper.logDebug(e.getMessage());
+            LogHelper.restoreState();
+            return false;
 		}
         catch ( GalantException e ) {
             e.report( "Galant compiler error" );
             e.displayStatic();
+            LogHelper.exitMethod(getClass(), "compile [GalantException]");
+            LogHelper.logDebug(e.getMessage());
+            LogHelper.restoreState();
             return false;
         }
 	}
@@ -218,4 +210,4 @@ public class GAlgorithmEditorPanel extends GEditorPanel {
 
 }
 
-//  [Last modified: 2016 12 27 at 21:17:54 GMT]
+//  [Last modified: 2016 12 29 at 14:48:50 GMT]

@@ -128,7 +128,7 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
 	 * An immutable list of all Macroes predefined for the user's benefit.
 	 * It gets initialized when this GAlgorithmSyntaxHighlighting was created. See constructor.
 	 */
-		public static String[] allMacrokeywords = new String[Macro.MACROS.size()];
+    public static String[] allMacrokeywords = new String[Macro.MACROS.size()];
 
 	@Override
 	public void run() {
@@ -176,4 +176,4 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
 		}
 }
 
-//  [Last modified: 2016 11 17 at 21:29:10 GMT]
+//  [Last modified: 2016 12 29 at 16:38:16 GMT]

@@ -433,6 +433,28 @@ Some complications that require extra care are:
 
 \section{Macro Expansion and Compilation} \label{sec:compilation}
 
+Compilation is initiated in the \Code{compile} method in
+\Code{GAlgorithmEditorPanel}, which in turn calls on \Code{integrateCode} in
+\Code{CodeIntegrator}.
+The method \Code{toJavaClass} does all the important work:
+\begin{description}
+\item[removes comments] using method \Code{removeAllComments}, being careful
+  to preserve line breaks,
+\item[converts the \Code{algorithm}] code to the run
+  method, adding initialization and cleanup code
+\item[does macro replacement] one macro at a time, using the \Code{applyTo}
+  method in class \Code{Macro},
+\item[assembles the code] with \Code{package}, \Code{import} and \Code{class}
+  declarations at the beginning and a closing brace at the end,
+\end{description}
+Finally, two methods in \Code{CompilerAndLoader} are called: (i)~the
+\Code{compile} method invokes the system Java compiler on
+the assembled Java code, collecting any error messages, which are then sent
+to a \Code{CompilationException}; abd (ii)~the \Code{loadAlgorithm} method
+returns an instance of class \Code{Algorithm} with the algorithm's name --
+the corresponding class file is stored in a directory specified by user
+preference.
+
 \section{Text Editing and File Management} \label{sec:editing}
 
 \section{Graph Editing and the Graph Window} \label{sec:graph_window}
@@ -484,4 +506,4 @@ Adapting the technique to the other query types will take more work because
 they need to throw exceptions and repeat the request for input if the user's
 response is not satisfactory (a malformed number, a non-existent node or edge).
 
-% [Last modified: 2016 12 19 at 19:28:59 GMT]
+% [Last modified: 2016 12 29 at 20:40:29 GMT]

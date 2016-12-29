@@ -489,7 +489,10 @@ public abstract class Algorithm implements Runnable {
 
     public Double weight(GraphElement ge) throws GalantException {
         checkGraphElement(ge);
-        return ge.getWeight();
+        Double returnWeight = ge.getWeight();
+        if ( returnWeight == null )
+            throw new GalantException("Graph element has no weight: " + ge);
+        return returnWeight;
     }
     public void setWeight(GraphElement ge, double weight) throws Terminate, GalantException {
         checkGraphElement(ge);
@@ -1130,4 +1133,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2016 12 29 at 02:30:01 GMT]
+//  [Last modified: 2016 12 29 at 18:09:52 GMT]

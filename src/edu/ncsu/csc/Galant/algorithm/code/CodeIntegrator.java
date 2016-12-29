@@ -18,23 +18,22 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 /**
- * <p>
- * The "pseudo-compiler" &mdash; a rather misleading name, which is why I've called it something
- * that I think is more accurate.
- * </p>
- * <p>
- * The purpose of this class is to integrate the user's algorithm code into the running application.
- * It does so with the following steps:
+ * <p> The "pseudo-compiler" &mdash; a rather misleading name, which is why
+ * I've called it something that I think is more accurate.</p>
+ * <p> The purpose of this class is to integrate the user's algorithm code
+ * into the running application.  It does so with the following steps:
  * <ol>
+ * <li>Stripping comments.
  * <li>Replacing any macros with the equivalent Java code.</li>
  * <li>Inserting the code into a basic class structure.</li>
- * <li>Compiling the completed Java class into a .class file, which is stored in the folder defined
- * by {@link GalantPreferences#OUTPUT_DIRECTORY}.</li>
- * <li>Loading the .class file into the program so that its <code>runAlgorithm</code> method can be
- * called.</li>
- * <li>Creating an <code>Algorithm</code> from the loaded class for easy reference.
- * </ol>
- * </p>
+ * <li>Compiling the completed Java class into a <code>.class</code> file,
+ *  which is stored in the folder defined by
+ * {@link GalantPreferences#OUTPUT_DIRECTORY}.</li>
+ * <li>Loading the <code>.class</code> file into the program so that its
+ * <code>runAlgorithm</code> method can be called.</li>
+ * <li>Creating an <code>Algorithm</code> from the loaded class
+ * for easy reference.</li>
+ * </ol> </p>
  */
 public class CodeIntegrator	{
     public static final String METHOD_NAME = "runAlgorithm";
@@ -53,14 +52,17 @@ public class CodeIntegrator	{
     private static final String ALGORITHM_BODY = "{Algorithm Body}";
 
     /**
-     * Here is the real code that appears before and after the algorithm.
+     * the code that appears at the beginning and end of the algorithm, to
+     * call on initialization and cleanup routines
      */
     private static final String REAL_ALGORITHM_HEAD = "initialize();";
     private static final String REAL_ALGORITHM_TAIL = "finishAlgorithm();";
 
-    // The basic class structure into which the user's code can be inserted so it can be
-    // compiled.
-    //@formatter:off
+    /**
+     * The basic class structure into which the user's code can be inserted
+     * so it can be compiled.
+     * @formatter:off
+     */
     private static final String CLASS_STRUCTURE =
         "package " + PACKAGE + ";" +
         "import java.util.*;" +
@@ -115,17 +117,18 @@ public class CodeIntegrator	{
         + "}";
 
     /**
-     * Converts the unmodified user algorithm code into a proper Java class, as would be found
-     * in a .java file.
+     * Converts the unmodified user algorithm code into a proper Java class,
+     * as would be found in a .java file.
      */
     // protected so it can be accessed by tests
-    protected static String toJavaClass(String algorithmName, String userCode) throws MalformedMacroException
+    protected static String toJavaClass(String algorithmName, String userCode)
+        throws MalformedMacroException
     {
-        // separate imports from main code
-        // find lines starting with "import"
+        // separate animator declared imports from main code; these are
+        // assumed to be at the beginning of the program
         Matcher matcher = Pattern.compile("import.*;").matcher(userCode);
         int splitAt = 0;
-        while(matcher.find())
+        while ( matcher.find() )
             splitAt = matcher.end();
         // splitAt should be 1st char in 1st line not starting with "import"
         String imports = userCode.substring(0, splitAt);
@@ -133,21 +136,27 @@ public class CodeIntegrator	{
 
         userCode = removeAllComments(userCode);
 
-        // Rebuild the algorithm and add head or tail as needed
-
-        if ( userCode.indexOf("algorithm") < 0 ) {
+        // Rebuild the algorithm and add head or tail as needed; this
+        // essentially expands the 'algorithm' macro
+        int startOfAlgorithm = userCode.indexOf("algorithm");
+        if ( startOfAlgorithm < 0 ) {
             throw new MalformedMacroException("Algorithm needs to be contained in 'algorithm { ... }'");
         }
+        // everything up to the key word 'algorithm'
         StringBuilder sb
-            = new StringBuilder( userCode.substring(0, userCode.indexOf("algorithm")));
-        sb.append(modifyAlgorithm( REAL_ALGORITHM_HEAD,
-                                   REAL_ALGORITHM_TAIL,
-                                   userCode ) );
+            = new StringBuilder(userCode.substring(0, startOfAlgorithm));
+
+        // add the algorithm body as a run() method with calls on
+        // initialization and cleanup methods
+        sb.append(modifyAlgorithm(REAL_ALGORITHM_HEAD,
+                                  REAL_ALGORITHM_TAIL,
+                                  userCode));
         userCode = sb.toString();
 
         // apply macros
-        for(Macro macro : Macro.MACROS) {
-            userCode = macro.applyTo(userCode); }
+        for ( Macro macro : Macro.MACROS ) {
+            userCode = macro.applyTo(userCode);
+        }
         // apply generated macros, removing each one so if the code is recompiled,
         // you don't end up with incorrect/duplicate macros
         while(!Macro.GENERATED_MACROS.isEmpty())
@@ -169,116 +178,121 @@ public class CodeIntegrator	{
     public static Algorithm integrateCode(String algorithmName, String userCode)
         throws CompilationException, MalformedMacroException, GalantException
     {
-        // Make sure the name is a valid Java identifier
-        StringBuilder nameBuilder = new StringBuilder(algorithmName.length());
-        for(int i = 0; i < algorithmName.codePointCount(0, algorithmName.length()); i++)
-            {
-                int c = algorithmName.codePointAt(i);
-                if(i == 0 ? Character.isJavaIdentifierStart(c) : Character
-                   .isJavaIdentifierPart(c))
-                    nameBuilder.appendCodePoint(c);
-                else
-                    nameBuilder.appendCodePoint('_');
-            }
+        // Make sure the name is a valid Java identifier; use the file name
+        // and replace all illegal characters with _'s
+        int nameLength = algorithmName.length();
+        StringBuilder nameBuilder = new StringBuilder(nameLength);
+        for(int i = 0; i < algorithmName.codePointCount(0, nameLength); i++) {
+            int c = algorithmName.codePointAt(i);
+            if ( i == 0 ? Character.isJavaIdentifierStart(c)
+                 : Character.isJavaIdentifierPart(c) )
+                nameBuilder.appendCodePoint(c);
+            else
+                nameBuilder.appendCodePoint('_');
+        }
         String className = nameBuilder.toString();
         String qualifiedName = PACKAGE + "." + className;
 
         // Replace macros and insert into class structure
         String sourceCode = toJavaClass(className, userCode);
-				
+
         // Display source code after macro processing
         LogHelper.showSourceCode(sourceCode);
 
         // Compile
         DiagnosticCollector<JavaFileObject> diagnostics =
             CompilerAndLoader.compile(qualifiedName, sourceCode);
-        if(diagnostics != null)
+        if ( diagnostics != null )
             throw new CompilationException(diagnostics);
-					
+
         // Load
         return CompilerAndLoader.loadAlgorithm(qualifiedName);
     }
 
     /**
-     * Modify Algorithm as needed 
-     * @param head code block to be appended before the substantial algorithm part
-     * @param tail code block to be appended after the substantial algorithm part
-     * @param userCode user code containing algorithm{}
+     * @returns a modified version of the algorithm structure with the
+     * placeholders replaced by their real counterparts
+     * @param head initialization code before the algorithm
+     * @param tail cleanup code after algorithm
+     * @param userCode user code within algorithm brackets
      */
     public static String modifyAlgorithm(String head, String tail, String userCode) throws MalformedMacroException {
-        String modifiedBody ;
-
+        String modifiedBody;
+        String modifiedAlgorithm;
         try{
-            modifiedBody = getCodeBlock(userCode.substring(userCode.indexOf("algorithm"), userCode.length()));
-        } catch (IOException e) {
-            throw new MalformedMacroException() ;
+            modifiedBody
+                = getCodeBlock(userCode.substring(userCode.indexOf("algorithm"), userCode.length()));
+        }
+        catch (IOException e) {
+            throw new MalformedMacroException("something went wrong when processing algorithm block");
         }
 
-        try {
-            return ALGORITHM_STRUCTURE.replace(ALGORITHM_HEAD, head).replace(ALGORITHM_TAIL, tail).replace(ALGORITHM_BODY, modifiedBody);
-        } catch (NullPointerException e) {
-            return ALGORITHM_STRUCTURE.replace(ALGORITHM_HEAD, "").replace(ALGORITHM_TAIL, "").replace(ALGORITHM_BODY, modifiedBody);
-        }
+        modifiedAlgorithm = ALGORITHM_STRUCTURE;
+        modifiedAlgorithm = modifiedAlgorithm.replace(ALGORITHM_HEAD, head);
+        modifiedAlgorithm = modifiedAlgorithm.replace(ALGORITHM_TAIL, tail);
+        modifiedAlgorithm = modifiedAlgorithm.replace(ALGORITHM_BODY,
+                                                      modifiedBody);
+        return modifiedAlgorithm;
     }
 
     /**
      * Read and return code in between { and } in the given code
-     * @param code code to be proceessed 
+     * @param code code to be processed
      */
     private static String getCodeBlock(String code) throws IOException {
         /* Convert code string to a BufferReader */
         // http://www.coderanch.com/t/519147/java/java/ignore-remove-comments-java-file
+        /**
+         * @todo the code below could be significantly simplified if strings
+         * were used directly; it's not clear what the convolution buys you:
+         * thread safety? efficiency?
+         */
         InputStream codeInput = new ByteArrayInputStream(code.getBytes());
         BufferedReader reader = new BufferedReader(new InputStreamReader(codeInput));
-			
         StringBuilder sb = new StringBuilder();
-			
-        /* Increment counter when meet a {, decrement it when meet a } 
-         * Stop when counter hit 0;
-         */
+        /* Increment counter when meet a {, decrement it when meet a }
+         * Stop when counter hits 0 */
         int counter = 0;
-			
-        /* If false, means that the first { has not been read yet. This circumstance will not stop the 
-         * reader even though counter is 0;
+        /* If false, means that the first { has not been read yet. This
+         * circumstance will not stop the reader even though counter is 0;
          */
         boolean firstEncounter = false;
-        boolean startScan = false;
-			
-        int char1 = reader.read();
-        if (char1 != -1) {
-            do {
-                if(char1 == '{') {
-                    counter ++;
-                    firstEncounter = true;
-                } else if(char1 == '}'){
-                    counter --;
-                }
+        int currentChar = reader.read();
+        while ( currentChar != -1 ) {
+            // not at end of stream yet
+            if ( currentChar == '{' ) {
+                counter++;
+                firstEncounter = true;
+            }
+            else if ( currentChar == '}' ) {
+                counter --;
+            }
 
-                if(firstEncounter == true) {
-                    sb.append((char)char1);
-                    if(counter == 0) {
-                        break;
-                    }
+            if ( firstEncounter == true ) {
+                sb.append((char)currentChar);
+                if ( counter == 0 ) {
+                    break;
                 }
+            }
 
-                char1 = reader.read();
-					
-            } while (char1 != -1);
-            // use substring to ignore the first pair of { and }. They are mean for marking the start and end of algorithm {}	
-        }	return sb.toString().substring(1, sb.length() - 1);
+            currentChar = reader.read();
+        }
+        // use substring to ignore the first pair of { and }. They are
+        // mean for marking the start and end of algorithm {}
+        return sb.toString().substring(1, sb.length() - 1);
     }
 
     public enum State {
-        DEFAULT,            // not in comment, last char not '/'
-            SLASH,          // not in comment, last char is '/'
-            SLASH_STAR,     // in C-style comment, last char not '*'
-            STAR,           // in C-style comment, last char is '*'
-            SLASH_SLASH,    // in C++-style comment
-            IN_STRING       // inside a double-quoted string (escapes not
-                            // recognized for now)
-            }
+        DEFAULT,                // not in comment, last char not '/'
+        SLASH,                  // not in comment, last char is '/'
+        SLASH_STAR,             // in C-style comment, last char not '*'
+        STAR,                   // in C-style comment, last char is '*'
+        SLASH_SLASH,            // in C++-style comment
+        IN_STRING               // inside a double-quoted string (escapes not
+                                // recognized for now)
+    }
 
-    /** 
+    /**
      * @return code with all the comments removed; uses a simple
      * finite-state machine; preserves line numbering -- all line breaks
      * remain intact.
@@ -296,7 +310,7 @@ public class CodeIntegrator	{
                 //LogHelper.logDebug("    state = DEFAULT");
                 if ( current == '/' ) state = State.SLASH;
                 else {
-                    if ( current == '"' ) state = State.IN_STRING; 
+                    if ( current == '"' ) state = State.IN_STRING;
                     withoutComments += current;
                 }
             }
@@ -343,4 +357,4 @@ public class CodeIntegrator	{
     }
 }
 
-//  [Last modified: 2016 12 13 at 19:41:51 GMT]
+//  [Last modified: 2016 12 29 at 15:39:08 GMT]

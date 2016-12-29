@@ -106,24 +106,25 @@ public class CompilerAndLoader
 			}
 
 		/**
-		 * Loads the class with the given name as an <code>Algorithm</code>, and returns an instance of it.
+		 * Loads the class with the given name as an <code>Algorithm</code>,
+		 * and returns an instance of it. The algorithm's <code>.class</code>
+		 * file is stored in a directory specified by preferences.
 		 * @param qualifiedName the qualified name of the class to load.
-		 * @return an <code>Algorithm</code> object representing the desired algorithm.
+		 * @return an <code>Algorithm</code> object representing the desired
+		 * algorithm.
 		 */
-		public static Algorithm loadAlgorithm(String qualifiedName)
-			{
-				try
-					{
-						ClassLoader cl =
-							new URLClassLoader(new URL[]{GalantPreferences.OUTPUT_DIRECTORY.get().toURI().toURL()});
-						return cl.loadClass(qualifiedName).asSubclass(Algorithm.class).newInstance();
-					}
-				catch(Exception e)
-					{	
-						ExceptionDialog.displayExceptionInDialog(e);
-					}
-                return null;
-			}
+		public static Algorithm loadAlgorithm(String qualifiedName) {
+            try {
+                ClassLoader cl
+                    = new URLClassLoader(new URL[]{GalantPreferences.OUTPUT_DIRECTORY.get().toURI().toURL()});
+                return cl.loadClass(qualifiedName).asSubclass(Algorithm.class).newInstance();
+            }
+            catch(Exception e) {
+                ExceptionDialog.displayExceptionInDialog(e);
+            }
+            return null;
+        }
+
 		private static void removeClassFiles(File directory)
 			{
 				for(File file : directory.listFiles())
@@ -184,4 +185,4 @@ class DynamicJavaSourceCodeObject extends SimpleJavaFileObject
 			}
 	}
 
-//  [Last modified: 2016 12 28 at 00:02:09 GMT]
+//  [Last modified: 2016 12 29 at 20:27:53 GMT]

@@ -500,7 +500,9 @@ public abstract class Algorithm implements Runnable {
     }
     public String label(GraphElement ge) throws GalantException {
         checkGraphElement(ge);
-        return ge.getLabel();
+        String returnLabel = ge.getLabel();
+        if ( returnLabel == null ) returnLabel = "";
+        return returnLabel;
     }
     public boolean hasLabel(GraphElement ge) throws GalantException {
         checkGraphElement(ge);
@@ -509,6 +511,10 @@ public abstract class Algorithm implements Runnable {
     public boolean hasWeight(GraphElement ge) throws GalantException {
         checkGraphElement(ge);
         return ge.hasWeight();
+    }
+    public boolean hasNoWeight(GraphElement ge) throws GalantException {
+        checkGraphElement(ge);
+        return ! ge.hasWeight();
     }
 
     /**
@@ -520,11 +526,13 @@ public abstract class Algorithm implements Runnable {
      */
     public void setLabel(GraphElement ge, Object s) throws Terminate, GalantException {
         checkGraphElement(ge);
-        ge.setLabel("" + s);
+        if ( s == null ) ge.clearLabel();
+        else ge.setLabel("" + s);
     }
     public void label(GraphElement ge, Object s) throws Terminate, GalantException {
         checkGraphElement(ge);
-        ge.setLabel("" + s);
+        if ( s == null ) ge.clearLabel();
+        else ge.setLabel("" + s);
     }
     public void clearLabel(GraphElement ge) throws Terminate, GalantException {
         checkGraphElement(ge);
@@ -1133,4 +1141,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2016 12 29 at 18:09:52 GMT]
+//  [Last modified: 2016 12 31 at 14:59:48 GMT]

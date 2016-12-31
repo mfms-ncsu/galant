@@ -349,6 +349,25 @@ and their procedural variants have \Code{String} arguments
 in the RGB format \texttt{\#RRGGBB}; for example,
 the string \texttt{\#0000ff} is blue.
 The predefined color constants are listed in Table~\ref{tab:colors}.
+Note: In the graph display \emph{highlighting takes precedence over color};
+if a node is highlighted, its color is ignored and the default highlight
+color is used.
+
+Special handling is required when any attribute is nonexistent or has a
+\Code{null} value -- these two are equivalent.
+When displayed in the graph window, nonexistent labels and weights simply do
+not show up while nonexistent colors are rendered as thin black lines
+(thickness determined by user preference).
+In an animation program, however, nonexistent attributes are handled
+differently.
+\begin{itemize}
+\item \Code{color()} returns null as expected
+\item \Code{label()} returns an empty string; this ensures that it is always
+  safe to use a label in an expression calling for a string
+\item \Code{weight()} throws an exception; there is no obvious default
+  weight; a program can test for the presence/absence of a weight using the
+  \Code{hasWeight()} or \Code{hasNoWeight()} methods
+\end{itemize}
 
 Of the attributes listed above, weight, label, color and position can be
 accessed and modified by the user as well as the program.
@@ -447,4 +466,4 @@ The programmer can change this default
 by redefining the Java \Code{compareTo()} method,
 but this requires finesse and Java expertise.
 
-% [Last modified: 2016 12 29 at 14:03:42 GMT]
+% [Last modified: 2016 12 31 at 14:46:26 GMT]

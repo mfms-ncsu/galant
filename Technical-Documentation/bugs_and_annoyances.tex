@@ -112,6 +112,10 @@ Text representations of graphs can either be edited or generated externally.}}
   line numbers). Because of the macro preprocessing,
   it may be necessary to look at the console
   to get an idea of what is causing a particular error.
+  If the parentheses/brackets/braces inside a function definition or body of
+  one of the \Code{for\_\ldots} macros are unbalanced, the macro preprocessor
+  will simply report the fact with no indication of the location of the error
+  except for an excerpt from the beginning of the body.
 
 \item Line numbers do, however, get out of sync if the header of a function
   declaration takes up more than one line. For example, in
@@ -145,4 +149,4 @@ The first three lines are treated as one.
 \end{itemize}
 
 
-% [Last modified: 2016 12 16 at 14:16:59 GMT]
+% [Last modified: 2016 12 31 at 14:43:17 GMT]

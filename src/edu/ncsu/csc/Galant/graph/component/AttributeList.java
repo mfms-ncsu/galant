@@ -155,14 +155,16 @@ public class AttributeList {
     /**
      * The following method removes an item from the list. It does nothing if
      * there was no item with the given key.
+     * @return true if the attribute was present
      */
-    public void remove(String key) {
+    public boolean remove(String key) {
         for ( int i = 0; i < attributes.size(); i++ ) {
             if ( attributes.get(i).getKey().equals(key) ) {
                 attributes.remove(i);
-                return;
+                return true;
             }
         }
+        return false;
     }
 
     /**
@@ -180,7 +182,7 @@ public class AttributeList {
         AttributeList newAttributeList = new AttributeList();
         for ( Attribute attribute : this.attributes ) {
             newAttributeList.add(attribute);
-        } 
+        }
         return newAttributeList;
     }
 
@@ -197,4 +199,4 @@ public class AttributeList {
 
 }
 
-//  [Last modified: 2016 10 17 at 12:45:45 GMT]
+//  [Last modified: 2016 12 31 at 14:12:54 GMT]

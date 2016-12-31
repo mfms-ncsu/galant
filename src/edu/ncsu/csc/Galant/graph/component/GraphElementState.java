@@ -42,8 +42,8 @@ public class GraphElementState {
 
     /**
      * This serves essentially as a copy constructor: creates the new object
-     * in a different algorithm state and copies all the information for the node
-     * (state) - except, of course, the state
+     * in a different algorithm state and copies all the information for the
+     * node (state) - except, of course, the state
      */
     public GraphElementState(GraphElementState elementState) {
         this.dispatch = GraphDispatch.getInstance();
@@ -51,8 +51,17 @@ public class GraphElementState {
         this.attributes = elementState.getAttributes().duplicate();
     }
 
+    /**
+     * The setters below have two additional features:
+     *   - they remove an attribute from the list if the given value is null
+     *   - they return true if the attribute was present prior to the call
+     */
+
     /************** Integer attributes ***************/
 	public boolean set(String key, Integer value) {
+        if ( value == null ) {
+            return remove(key);
+        }
         return attributes.set(key, value);
 	}
 	public Integer getIntegerAttribute(String key) {
@@ -61,6 +70,9 @@ public class GraphElementState {
 
     /************** Double attributes ***************/
 	public boolean set(String key, Double value) {
+        if ( value == null ) {
+            return remove(key);
+        }
         return attributes.set(key, value);
 	}
 	public Double getDoubleAttribute(String key) {
@@ -69,6 +81,9 @@ public class GraphElementState {
 
     /************** Boolean attributes ***************/
 	public boolean set(String key, Boolean value) {
+        if ( value == null ) {
+            return remove(key);
+        }
         return attributes.set(key, value);
 	}
     public boolean set(String key) {
@@ -83,6 +98,9 @@ public class GraphElementState {
 
     /************** String attributes ***************/
 	public boolean set(String key, String value) {
+        if ( value == null ) {
+            return remove(key);
+        }
         return attributes.set(key, value);
 	}
 	public String getStringAttribute(String key) {
@@ -92,11 +110,12 @@ public class GraphElementState {
     /**
      * Removes the attribute with the given key from the list and updates
      * state information appropriately.
+     * @return true if the attribute was present before the call
      */
-    public void remove(String key) {
-        attributes.remove(key);
+    public boolean remove(String key) {
+        return attributes.remove(key);
     }
- 
+
     /**
      * Creates a string that can be used to form the "interior" of a GraphML
      * representation of this element.
@@ -148,4 +167,4 @@ public class GraphElementState {
     }
 }
 
-//  [Last modified: 2016 12 06 at 17:37:20 GMT]
+//  [Last modified: 2016 12 31 at 14:22:13 GMT]

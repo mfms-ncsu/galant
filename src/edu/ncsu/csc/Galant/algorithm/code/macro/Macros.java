@@ -121,9 +121,20 @@ public class Macros {
                                              String[] args,
                                              String whitespace,
                                              String block) {
-                    String node = args[0], edge = args[1], adjacentNode = args[2];
-                    return Matcher.quoteReplacement("for(Edge " + edge + " : " + node + ".getOutgoingEdges())" + whitespace +
-                                                    "{ Node " + adjacentNode + " = " + node + ".travel(" + edge + ");" + block + "}");
+                    String node = args[0],
+                        edge = args[1],
+                        adjacentNode = args[2];
+                    return Matcher.quoteReplacement("for ( Edge "
+                                                    + edge + " : "
+                                                    + "outEdges(" + node + ") )"
+                                                    + whitespace
+                                                    + "{ Node "
+                                                    + adjacentNode
+                                                    + " = "
+                                                    + "otherEnd("
+                                                    + edge + ", "
+                                                    + node + ");"
+                                                    + block + "}");
                 }
             });
 
@@ -132,10 +143,11 @@ public class Macros {
          * graph), based solely on source/target information and not
          * on whether the graph is directed.
          *
-         * Usage: for_incoming(<em>node</em>, <em>edge</em>, <em>adjNode</em>) {<em>code_block</em>}
+         * Usage:
+         * for_incoming(<em>node</em>, <em>edge</em>,
+         *              <em>adjNode</em>) {<em>code_block</em>}
          *
          * Parameters:
-         *
          * <em>node</em>: the name of a variable of type Node; this is the
          * starting node.
          * <em>adjNode</em>: a variable name; within the code block, this can
@@ -143,9 +155,9 @@ public class Macros {
          * <em>edge</em>: a variable name; within the code block, this can be
          * used to refer to the current incident edge as an Edge object.
          * <em>edge</em> connects <em>node</em> and <em>adjNode</em>.
-         *
-         * code_block: a block of code that is executed for each adjacent node / incident
-         * edge of <em>node</em>. The curly braces are required.
+         * <em>code_block</em>: a block of code that is executed for each
+         * adjacent node / incident edge of <em>node</em>. The curly braces
+         * are required.
          */
         Macro.MACROS.add(new ParameterizedMacro("for_incoming", 3, true){
                 @Override
@@ -153,11 +165,21 @@ public class Macros {
                                              MatchResult nameMatch,
                                              String[] args,
                                              String whitespace,
-                                             String block)
-                {
-                    String node = args[0], edge = args[1], adjacentNode = args[2];
-                    return Matcher.quoteReplacement("for(Edge " + edge + " : " + node + ".getIncomingEdges())" + whitespace +
-                                                    "{ Node " + adjacentNode + " = " + node + ".travel(" + edge + ");" + block + "}");
+                                             String block) {
+                    String node = args[0],
+                        edge = args[1],
+                        adjacentNode = args[2];
+                    return Matcher.quoteReplacement("for ( Edge "
+                                                    + edge + " : "
+                                                    + "inEdges(" + node + ") )"
+                                                    + whitespace
+                                                    + "{ Node "
+                                                    + adjacentNode
+                                                    + " = "
+                                                    + "otherEnd("
+                                                    + edge + ", "
+                                                    + node + ");"
+                                                    + block + "}");
                 }
             });
 
@@ -185,46 +207,57 @@ public class Macros {
          */
         Macro.MACROS.add(new ParameterizedMacro("for_adjacent", 3, true){
                 @Override
-                protected String modifyMatch(String code, MatchResult nameMatch, String[] args, String whitespace,
-                                             String block)
-                {
-                    String node = args[0], edge = args[1], adjacentNode = args[2];
-                    return Matcher.quoteReplacement("for(Edge " + edge + " : " + node + ".getIncidentEdges())" + whitespace +
-                                                    "{ Node " + adjacentNode + " = " + node + ".travel(" + edge + ");" + block + "}");
+                protected String modifyMatch(String code,
+                                             MatchResult nameMatch,
+                                             String[] args,
+                                             String whitespace,
+                                             String block) {
+                    String node = args[0],
+                        edge = args[1],
+                        adjacentNode = args[2];
+                    return Matcher.quoteReplacement("for ( Edge "
+                                                    + edge + " : "
+                                                    + "edges(" + node + ") )"
+                                                    + whitespace
+                                                    + "{ Node "
+                                                    + adjacentNode
+                                                    + " = "
+                                                    + "otherEnd("
+                                                    + edge + ", "
+                                                    + node + ");"
+                                                    + block + "}");
                 }
             });
 
         /**
-         * for_nodes: iterates over all nodes in the graph.
-         * 
-         * Usage: for_nodes(<em>node</em>) <em>code_block</em>
-         * 
-         * Parameters:
-         * 
-         * node: a variable name. Within the code block, this can be used to refer
-         * to the current node as a Node object.
-         * 
-         * code_block: a block of code that is executed for each node in the graph.
+         * for_nodes: iterates over all nodes in the graph.  Usage:
+         * for_nodes(<em>node</em>) <em>code_block</em> Parameters:
+         * <em>node</em>: a variable name. Within the code block, this can be
+         * used to refer to the current node as a Node object.
+         * <em>code_block</em>: a block of code that is executed for each
+         * node in the graph.
          */
         Macro.MACROS.add(new ParameterizedMacro("for_nodes", 1){
                 @Override
-                protected String modifyMatch(String code, MatchResult nameMatch, String[] args, String whitespace,
-                                             String block)
-                {
-                    return Matcher.quoteReplacement("for(Node " + args[0] + " : getNodes())");
+                protected String modifyMatch(String code,
+                                             MatchResult nameMatch,
+                                             String[] args,
+                                             String whitespace,
+                                             String block) {
+                    return Matcher.quoteReplacement("for(Node "
+                                                    + args[0]
+                                                    + " : getNodes())");
                 }
             });
+
         /**
-         * for_edges: iterates over all edges in the graph.
-         * 
+         * <code>for_edges</code>: iterates over all edges in the graph.
          * Usage: for_edges(<em>edge</em>) <em>code_block</em>
-         * 
          * Parameters:
-         * 
-         * edge: a variable name. Within the code block, this can be used to refer
-         * to the current edge as an Edge object.
-         * 
-         * code_block: a block of code that is executed for each edge in the graph.
+         * <em>edge</em>: a variable name. Within the code block, this can be
+         * used to refer to the current edge as an Edge object.
+         * <em>code_block</em>: a block of code that is executed for each
+         * edge in the graph.
          */
         Macro.MACROS.add(new ParameterizedMacro("for_edges", 1){
                 @Override
@@ -337,4 +370,4 @@ public class Macros {
     }
 }
 
-//  [Last modified: 2016 12 29 at 19:36:57 GMT]
+//  [Last modified: 2016 12 31 at 03:00:05 GMT]

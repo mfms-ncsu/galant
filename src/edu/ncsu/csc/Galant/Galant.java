@@ -35,7 +35,6 @@ public class Galant {
             }
 		});
 	}
-	
 }
 
-//  [Last modified: 2016 11 30 at 22:00:41 GMT]
+//  [Last modified: 2017 01 03 at 17:08:53 GMT]

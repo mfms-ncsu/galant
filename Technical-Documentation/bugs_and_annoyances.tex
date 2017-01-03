@@ -32,6 +32,8 @@ Text representations of graphs can either be edited or generated externally.}}
   while an algorithm is running, Galant hangs;
   it appears that you can exit (quit) from
   the file menu of the graph window, however.
+  Oddly, when Galant hangs, you can bring it back to life by executing a
+  command in a separate terminal window (at least this works on a Mac).
 
 \item
   Syntax highlighting of functions and macros is oblivious of comments.
@@ -97,6 +99,12 @@ Text representations of graphs can either be edited or generated externally.}}
 
 \begin{itemize}
 
+\item
+  When there are compilation errors the user cannot scroll the text window
+  (or make modifications in it) while the popup window showing the errors is
+  displayed. There are two possible workarounds: (i)~open the algorithm in an
+  external editor, or (ii)~view the error messages in the console.
+
 \item Every once in a while an exception occurs when an error-free algorithm
   is executed or when Galant initially fires up, but it is possible to step
   through the animation normally after hitting the \textsf{Continue} button.
@@ -149,4 +157,4 @@ The first three lines are treated as one.
 \end{itemize}
 
 
-% [Last modified: 2016 12 31 at 14:43:17 GMT]
+% [Last modified: 2017 01 02 at 17:13:56 GMT]

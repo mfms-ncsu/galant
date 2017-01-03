@@ -440,7 +440,7 @@ The method \Code{toJavaClass} does all the important work:
 \begin{description}
 \item[removes comments] using method \Code{removeAllComments}, being careful
   to preserve line breaks,
-\item[converts the \Code{algorithm}] code to the run
+\item[converts the \Code{algorithm}] code to the \Code{run}
   method, adding initialization and cleanup code
 \item[does macro replacement] one macro at a time, using the \Code{applyTo}
   method in class \Code{Macro},
@@ -450,7 +450,7 @@ The method \Code{toJavaClass} does all the important work:
 Finally, two methods in \Code{CompilerAndLoader} are called: (i)~the
 \Code{compile} method invokes the system Java compiler on
 the assembled Java code, collecting any error messages, which are then sent
-to a \Code{CompilationException}; abd (ii)~the \Code{loadAlgorithm} method
+to a \Code{CompilationException}; and (ii)~the \Code{loadAlgorithm} method
 returns an instance of class \Code{Algorithm} with the algorithm's name --
 the corresponding class file is stored in a directory specified by user
 preference.
@@ -506,4 +506,4 @@ Adapting the technique to the other query types will take more work because
 they need to throw exceptions and repeat the request for input if the user's
 response is not satisfactory (a malformed number, a non-existent node or edge).
 
-% [Last modified: 2016 12 29 at 20:40:29 GMT]
+% [Last modified: 2016 12 31 at 17:15:38 GMT]

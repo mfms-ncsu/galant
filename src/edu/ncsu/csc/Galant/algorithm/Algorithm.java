@@ -348,7 +348,7 @@ public abstract class Algorithm implements Runnable {
     }
     public void clearMarks() throws Terminate {
         beginMultiStep();
-        clearNodeMarks();
+        graph.clearNodeMarks();
         endMultiStep();
     }
     public void clearNodeHighlighting() throws Terminate {
@@ -381,6 +381,17 @@ public abstract class Algorithm implements Runnable {
         graph.clearEdgeWeights();
         endMultiStep();
     }
+    public void clearNodeColors() throws Terminate {
+        beginMultiStep();
+        graph.clearAllNode(GraphElement.COLOR);
+        endMultiStep();
+    }
+    public void clearEdgeColors() throws Terminate {
+        beginMultiStep();
+        graph.clearAllEdge(GraphElement.COLOR);
+        endMultiStep();
+    }
+
     public void clearAllNode(String attribute) throws Terminate {
         beginMultiStep();
         graph.clearAllNode(attribute);
@@ -731,6 +742,9 @@ public abstract class Algorithm implements Runnable {
         checkGraphElement(v);
         return v.visibleNeighbors();
     }
+    public Integer visibleDegree(Node v) throws GalantException {
+        return v.visibleNeighbors().size();
+    }
 
     public EdgeSet visibleEdges(Node v) throws GalantException {
         checkGraphElement(v);
@@ -740,9 +754,15 @@ public abstract class Algorithm implements Runnable {
         checkGraphElement(v);
         return v.visibleIncomingEdges();
     }
+    public Integer visibleIndegree(Node v) throws GalantException {
+        return v.visibleIncomingEdges().size();
+    }
     public EdgeSet visibleOutEdges(Node v) throws GalantException {
         checkGraphElement(v);
         return v.visibleOutgoingEdges();
+    }
+    public Integer visibleOutdegree(Node v) throws GalantException {
+        return v.visibleOutgoingEdges().size();
     }
 
     /**
@@ -1141,4 +1161,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2016 12 31 at 14:59:48 GMT]
+//  [Last modified: 2017 01 02 at 21:34:06 GMT]

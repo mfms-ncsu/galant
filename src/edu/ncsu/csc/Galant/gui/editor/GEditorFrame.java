@@ -3,6 +3,7 @@ package edu.ncsu.csc.Galant.gui.editor;
 import java.awt.BorderLayout;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.awt.Dimension;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -86,6 +87,9 @@ public class GEditorFrame extends JFrame implements WindowListener {
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		addWindowListener(this);
 		
+      this.setMinimumSize(new Dimension(GraphWindow.DEFAULT_WIDTH,
+                                        GraphWindow.DEFAULT_HEIGHT));
+      this.pack();
 		setVisible(true);
 	}
 	
@@ -227,4 +231,4 @@ public class GEditorFrame extends JFrame implements WindowListener {
 	public void windowOpened(WindowEvent e) {}
 }
 
-//  [Last modified: 2016 12 14 at 20:56:43 GMT]
+//  [Last modified: 2017 01 03 at 17:37:22 GMT]

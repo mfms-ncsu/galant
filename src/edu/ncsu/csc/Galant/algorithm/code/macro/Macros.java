@@ -15,22 +15,14 @@ public class Macros {
      *
      * <p> Current implementation includes: </p>
      * <p> SimpleReplacementMacro "bool" </p>
-     * <p> FetchingMacro "numOfNodes" <br>
-     * FetchingMacro "numOfEdges" <br>
-     * FetchingMacro "NodeList" <br>
-     * FetchingMacro "EdgeList" </p>
      * <p>  ParamterizedMacro "for_outgoing"<br>
      * ParamterizedMacro "for_incoming"<br>
      * ParamterizedMacro "for_adjacent"<br>
      * ParamterizedMacro "for_nodes"<br>
+     * ParamterizedMacro "for_edges"<br>
      * ParamterizedMacro "function (.., ..) {...}"</p>
      */
 
-    /**
-     * @todo the FetchingMacros are currently obviated by methods in the
-     * Algorithm class and it's not clear what the SimpleReplacementMacros
-     * accomplish.
-     */
     public static void macros() {
 
         /** This is only for the purpose of syntax highlighting */
@@ -47,39 +39,6 @@ public class Macros {
                 }
             });
 
-
-        /**
-         * @todo the following were eliminated because they would interfere
-         * with data structures defined in Galant code (a work in progress)
-         */
-
-        // Macro.MACROS.add(new FetchingMacro("NodeList", "List<Node>"){
-        //         @Override
-        //         protected String includeInAlgorithm() {
-        //             return "= getNodes();";
-        //         }
-        //     });
-
-        // Macro.MACROS.add(new FetchingMacro("EdgeList", "List<Edge>"){
-        //         @Override
-        //         protected String includeInAlgorithm() {
-        //             return "= getEdges();";
-        //         }
-        //     });
-
-        // Macro.MACROS.add(new FetchingMacro("numOfNodes", "int"){
-        //         @Override
-        //         protected String includeInAlgorithm() {
-        //             return "= graph.getNodes().size();";
-        //         }
-        //     });
-
-        // Macro.MACROS.add(new FetchingMacro("numOfEdges", "int"){
-        //         @Override
-        //         protected String includeInAlgorithm() {
-        //             return "= graph.getEdges().size();";
-        //         }
-        //     });
 
         Macro.MACROS.add(new ParameterizedMacro("sort", 1, false) {
                 @Override
@@ -370,4 +329,4 @@ public class Macros {
     }
 }
 
-//  [Last modified: 2016 12 31 at 03:00:05 GMT]
+//  [Last modified: 2017 01 03 at 16:04:50 GMT]

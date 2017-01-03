@@ -84,15 +84,26 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
 
 	/**
 	 * An immutable list of all keywords employed in the Java language, plus
-	 * others that come from Java and are relevant to Galant.
+	 * others that come from Java and are relevant to Galant. Also includes
+	 * all Galant-specific types.
 	 */
-	public static final String[] allJavaKeywords = new String[] { "abstract", "assert", "boolean",
-		"break", "byte", "case", "catch", "char", "class", "const", "continue", "default", "do",
-		"double", "else", "enum", "extends", "final", "finally", "float", "for", "goto", "if",
-		"implements", "import", "instanceof", "int", "interface", "long", "native", "new",
-		"package", "private", "protected", "public", "return", "short", "static", "strictfp",
-		"super", "switch", "synchronized", "this", "throw", "throws", "transient", "try",
-                                                                  "void", "volatile", "while", "false", "null", "true", "boolean", "Integer", "Double", "equals" };
+	public static final String[] allJavaKeywords = new String[] {
+        "abstract", "assert", "boolean",
+		"break", "byte", "case", "catch", "char", "class", "const",
+        "continue", "default", "do", "double", "else", "enum", "extends",
+        "final", "finally", "float", "for", "goto", "if",
+		"implements", "import", "instanceof", "int", "interface", "long",
+        "native", "new",
+		"package", "private", "protected", "public", "return", "short",
+        "static", "strictfp",
+		"super", "switch", "synchronized", "this", "throw", "throws",
+        "transient", "try",
+        "void", "volatile", "while", "false", "null", "true", "equals",
+        "Integer", "Double", "Boolean", "String", "Node", "Edge",
+        "NodeList", "EdgeList", "NodeSet", "EdgeSet",
+        "NodeQueue", "EdgeQueue", "NodePriorityQueue", "EdgePriorityQueue",
+        "NodeStack", "EdgeStack"
+    };
 
 	/**
 	 * An immutable list of all API calls predefined for the user's
@@ -101,27 +112,32 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
      * @todo Need to organize this
 	 */
 		public static final String[] allAPIkeywords = new String[] {
-            "beginStep", "endStep", "movesNodes", "isDirected", "setDirected",
-			"getNodes", "getEdges", "getNodeById", "getEdgeById", "select", "addNode", "addEdge",
-            "isSelected", "setSelected", "isVisited", "setVisited", "isMarked", "mark", "unmark", "marked",
+            "beginStep", "endStep", "step",
+            "movesNodes", "isDirected", "setDirected",
+            "source", "target", "otherEnd",
+            "neighbors", "inEdges", "outEdges",
+            "visibleNeighbors", "visibleEdges",
+            "visibleInEdges", "visibleOutEdges",
+			"nodes", "edges", "startNode", "id", "select", "highlight",
+            "selected", "marked", "mark", "unmark", "marked",
             "highlight", "unhighlight", "highlighted",
-            "getWeight", "setWeight", "weight",
+            "addNode", "addEdge",
+            "setWeight", "weight",
             "label", "color", "uncolor", "set", "clear",
-            "getUnvisitedPaths", "getVisitedPaths",
             "clearLabel", "clearWeight",
-			"getUnvisitedAdjacentNodes", "travel", "getId", "getColor", "setColor", "getLabel", "setLabel", "getPosition",
-			"setPosition", "setStringAttribute", "getStringAttribute", "setIntegerAttribute", "getIntegerAttribute",
-			"setDoubleAttribute", "getDoubleAttribute", "getSourceNode", "setSourceNode", "getTargetNode", "setTargetNode",
-			"getOtherEndpoint", "Graph", "Node", "Edge", "for_adjacent", "for_nodes", "for_edges", "function", "graph",
-			"setRootNode", "getRootNode", "getTargetNode", "setTargetNode", "getPaths", "NodeQueue", "EdgeQueue", "NodeStack",
-                                                                   "EdgeStack", "NodePriorityQueue", "EdgePriorityQueue", "NodeSet", "EdgeSet", "nodeQ", "edgeQ", "nodeStack", "edgeStack", "nodePQ",
-			"edgePQ", "getId", "id", "Graph", "Node", "Edge", "for_adjacent", "for_nodes", "for_edges", "function", "graph", "getInteger", "getNode", "getEdge", "getNodeSet", "getEdgeSet",
-            "hide", "show", "hideLabel", "showLabel", "hideWeight", "showWeight",
-            "hideEdgeWeights", "showEdgeWeights", "hideEdgeLabels", "showEdgeLabels",
-            "hideNodeWeights", "showNodeWeights", "hideNodeLabels", "showNodeLabels",
-            "clearEdgeLabels", "clearEdgeWeights", "clearNodeLabels", "clearNodeWeights",
-            "neighbors", "edges", "inEdges", "outEdges",
-            "visibleNeighbors", "visibleEdges", "visibleInEdges", "visibleOutEdges" 
+            "clearNodeLabels", "clearNodeWeights", "clearNodeColors",
+            "clearEdgeLabels", "clearEdgeWeights", "clearEdgeColors",
+            "clearAllNode", "clearAllEdge",
+			"getPosition", "setPosition", "getX", "getY", "setX", "setY",
+            "getInteger", "getDouble", "getBoolean", "getReal",
+            "getNodeSet", "getEdgeSet",
+            "hide", "show",
+            "hideLabel", "showLabel",
+            "hideWeight", "showWeight",
+            "hideEdgeWeights", "showEdgeWeights",
+            "hideEdgeLabels", "showEdgeLabels",
+            "hideNodeWeights", "showNodeWeights",
+            "hideNodeLabels", "showNodeLabels"
         };
 
 	/**
@@ -135,10 +151,14 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
 		try {
 			String content = textpane.getText().replace("\r\n", "\n");
 			StyledDocument doc = textpane.getStyledDocument();
-			doc.setCharacterAttributes (0, doc.getLength (), doc.getStyle("regular"), true);
-	        applyStyleToKeywords(doc, content, allJavaKeywords, javaKeywordStyleName);
-	        applyStyleToKeywords(doc, content, allAPIkeywords, "apiKeyword");
-	        applyStyleToKeywords(doc, content, allMacrokeywords, "macroKeyword");
+			doc.setCharacterAttributes (0, doc.getLength (),
+                                        doc.getStyle("regular"), true);
+	        applyStyleToKeywords(doc, content,
+                                 allJavaKeywords, javaKeywordStyleName);
+	        applyStyleToKeywords(doc, content,
+                                 allAPIkeywords, "apiKeyword");
+	        applyStyleToKeywords(doc, content,
+                                 allMacrokeywords, "macroKeyword");
 	        textpane.setDocument(doc);
 		} catch (Exception e) {
 			ExceptionDialog.displayExceptionInDialog(e);
@@ -161,19 +181,28 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
 		StyleConstants.setForeground(m, macroKeywordColor);
 	}
 
-	private static void applyStyleToKeywords(StyledDocument doc, String content, String[] keywords, String styleName)
-		{
-			for(String keyword : keywords) {
-	        	int index = 0;
-	        	while((index = content.indexOf(keyword, index)) != -1) {
-	        		char prev = (index > 0) ? content.charAt(index-1) : ' ';
-	        		char next = (index+keyword.length() < content.length()) ? content.charAt(index+keyword.length()) : ' ';
-	        		if(!Character.isJavaIdentifierPart(prev) && !Character.isJavaIdentifierPart(next)) {
-	        			doc.setCharacterAttributes(index, keyword.length(), doc.getStyle(styleName), true);	        		}
-	        		index += keyword.length();
-	        	}
-	        }
-		}
+	private static void applyStyleToKeywords(StyledDocument doc,
+                                             String content,
+                                             String[] keywords,
+                                             String styleName)
+    {
+        for ( String keyword : keywords ) {
+            int index = 0;
+            while ( (index = content.indexOf(keyword, index)) != -1 ) {
+                char prev = (index > 0) ? content.charAt(index-1) : ' ';
+                char next = (index+keyword.length() < content.length())
+                    ? content.charAt(index+keyword.length()) : ' ';
+                if ( ! Character.isJavaIdentifierPart(prev)
+                     && ! Character.isJavaIdentifierPart(next) ) {
+                    doc.setCharacterAttributes(index,
+                                               keyword.length(),
+                                               doc.getStyle(styleName),
+                                               true);
+                }
+                index += keyword.length();
+            }
+        }
+    }
 }
 
-//  [Last modified: 2016 12 29 at 16:38:16 GMT]
+//  [Last modified: 2017 01 03 at 16:51:43 GMT]

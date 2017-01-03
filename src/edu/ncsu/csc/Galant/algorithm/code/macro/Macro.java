@@ -27,19 +27,11 @@ import java.util.regex.Pattern;
  * modified version of the code with a <code>StringBuffer</code>.
  * </p>
  * <p>
- * There are three subclasses:
+ * There are two subclasses:
  * <ol>
  * <li>
  * SimpleReplacementMacro - used for simple text replacement.
  * </li>
- * <li>
- * FetchingMacro - used for definitions of types; in addition to text
- * replacement (a) there is a check to make sure the item that follows is a
- * variable; and (b) an initialization must be specified by overriding the
- * includeInAlgorithm() method.
- *
- * @todo Item (b) does not appear to work as expected. Probably was not tested.
-  * </li>
  * <li>
  * ParameterizedMacro - used for anything that looks like a function with
  * parameters; any number of parameters, including an unspecified number, can
@@ -141,58 +133,23 @@ public abstract class Macro {
     public String applyTo(String code) throws MalformedMacroException {
         Matcher matcher;
         int start = 0;
-
-        // If this macro is an instance of FetchingMacro,
-        // it means we have to split initilization part and decaration part.
-        if ( this instanceof FetchingMacro ) {
-            // use regular expression replacement to replace every
-            // occurrence of the macro with its replacement
-            String originalExpression = "";
-            matcher = getPattern().matcher(code);
-            if ( matcher.find() ) {
-                originalExpression = matcher.group(0);
-
-                // Find the new expression
-                String newCode = code;
-                String newExpression = modify(code, matcher) + ";";
-
-                // Find the variable name
-                /**
-                 * @todo not clear why getVariableName() is not
-                 * appropriate here; this whole process seems convoluted.
-                 */
-                matcher = Pattern.compile("(\\s)(.*)$").matcher(modify(code, matcher));
-                matcher.find();
-                String variableName = matcher.group(0);
-
-                newCode = code.replaceAll("(algorithm(.*)\\{)", "algorithm{" + variableName + includeInAlgorithm());
-                newCode = newCode.replace(originalExpression, newExpression);
-                return newCode;
+        matcher = getPattern().matcher(code).region(start, code.length());
+        while ( matcher.find() ) {
+            StringBuffer newCode = new StringBuffer();
+            String modified = modify(code, matcher);
+            if ( modified != null ) {
+                matcher.appendReplacement(newCode, modified);
             }
-            return code;
-        }
-        else {
-            // can't do regular expression replacement here because
-            // it's not a simple text replacement
-            matcher = getPattern().matcher(code).region(start, code.length());
-            while ( matcher.find() ) {
-                StringBuffer newCode = new StringBuffer();
-                String modified = modify(code, matcher);
-                if ( modified != null ) {
-                    matcher.appendReplacement(newCode, modified);
-                }
-                matcher.appendTail(newCode);
-                code = newCode.toString();
-                if ( matcher.start() < code.length() - 1 ) {
-                    start = matcher.start() + 1;
-                    matcher = getPattern().matcher(code)
-                        .region(start, code.length());
-                }
+            matcher.appendTail(newCode);
+            code = newCode.toString();
+            if ( matcher.start() < code.length() - 1 ) {
+                start = matcher.start() + 1;
+                matcher = getPattern().matcher(code)
+                    .region(start, code.length());
             }
-
-            return code;
         }
+        return code;
     }
 }
 
-//  [Last modified: 2016 12 29 at 21:10:31 GMT]
+//  [Last modified: 2017 01 03 at 16:01:30 GMT]

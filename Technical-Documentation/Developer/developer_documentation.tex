@@ -455,6 +455,19 @@ returns an instance of class \Code{Algorithm} with the algorithm's name --
 the corresponding class file is stored in a directory specified by user
 preference.
 
+\cmt{
+  Subsection on macro expansion?
+
+  Explain
+  \begin{itemize}
+  \item how macros are applied one at a time, each to the whole of the code
+  \item how regular expressions are used in \Code{modify}
+  \item complications with \Code{ParameterizedMacro} and suggestion for
+    change: do a replacement for the macro with block first and then check
+    for version without block -- \Code{for\_nodes}, etc.
+  \end{itemize}
+}
+
 \section{Text Editing and File Management} \label{sec:editing}
 
 \section{Graph Editing and the Graph Window} \label{sec:graph_window}
@@ -498,12 +511,11 @@ Implementations of query windows are all in the \Code{gui.util} package.
 The current implementation of these queries is somewhat opaque and does not
 follow standard procedure for use of Java's \Code{JOptionPane}, but it's a
 case of "if it ain't broke \ldots".
-However, the class \Code{Queries} (not shown in Figs.~\ref{fig:overview} or
-Figs.~\ref{fig:directory_listing_gui}) has an implementation of a simple
+However, the class \Code{Queries} has an implementation of a simple
 Boolean query that appears to work; it is invoked in \Code{Algorithm} to make
 it accessible to the animator.
 Adapting the technique to the other query types will take more work because
 they need to throw exceptions and repeat the request for input if the user's
 response is not satisfactory (a malformed number, a non-existent node or edge).
 
-% [Last modified: 2016 12 31 at 17:15:38 GMT]
+% [Last modified: 2017 01 03 at 16:18:24 GMT]

@@ -19,6 +19,11 @@ import edu.ncsu.csc.Galant.algorithm.code.macro.Macro;
  *
  */
 public class GAlgorithmSyntaxHighlighting implements Runnable {
+    /**
+     * @todo colors for comments and string should probably be preferences
+     */
+    public static final Color COMMENT_COLOR = Color.GRAY;
+    public static final Color STRING_COLOR = Color.decode("#990099"); // dark violet
 	public static final String javaKeywordStyleName = "javaKeyword";
 	public static final Hashtable<String, String> APIdictionary = new Hashtable<String, String>();
 	public static Color javaKeywordColor = GalantPreferences.JAVA_KEYWORD_COLOR.get();
@@ -108,11 +113,10 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
 	/**
 	 * An immutable list of all API calls predefined for the user's
 	 * benefit.
-     *
-     * @todo Need to organize this
 	 */
 		public static final String[] allAPIkeywords = new String[] {
             "beginStep", "endStep", "step",
+            "display", "print",
             "movesNodes", "isDirected", "setDirected",
             "source", "target", "otherEnd",
             "neighbors", "inEdges", "outEdges",
@@ -125,13 +129,13 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
             "setWeight", "weight",
             "label", "color", "uncolor", "set", "clear",
             "clearLabel", "clearWeight",
-            "clearNodeLabels", "clearNodeWeights", "clearNodeColors",
+            "clearNodeLabels", "clearNodeWeights", "clearNodeColors", "clearMarks",
             "clearEdgeLabels", "clearEdgeWeights", "clearEdgeColors",
             "clearAllNode", "clearAllEdge",
 			"getPosition", "setPosition", "getX", "getY", "setX", "setY",
             "getInteger", "getDouble", "getBoolean", "getReal",
             "getNodeSet", "getEdgeSet",
-            "hide", "show",
+            "hide", "show", "visible", "hidden",
             "hideLabel", "showLabel",
             "hideWeight", "showWeight",
             "hideEdgeWeights", "showEdgeWeights",
@@ -151,14 +155,15 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
 		try {
 			String content = textpane.getText().replace("\r\n", "\n");
 			StyledDocument doc = textpane.getStyledDocument();
-			doc.setCharacterAttributes (0, doc.getLength (),
-                                        doc.getStyle("regular"), true);
+			doc.setCharacterAttributes(0, doc.getLength(),
+                                       doc.getStyle("regular"), true);
 	        applyStyleToKeywords(doc, content,
                                  allJavaKeywords, javaKeywordStyleName);
 	        applyStyleToKeywords(doc, content,
                                  allAPIkeywords, "apiKeyword");
 	        applyStyleToKeywords(doc, content,
                                  allMacrokeywords, "macroKeyword");
+            applyStyleToCommentsAndStrings(doc, content, "comment", "string");
 	        textpane.setDocument(doc);
 		} catch (Exception e) {
 			ExceptionDialog.displayExceptionInDialog(e);
@@ -179,6 +184,14 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
 
 		Style m = doc.addStyle("macroKeyword", regular);
 		StyleConstants.setForeground(m, macroKeywordColor);
+
+        Style comment = doc.addStyle("comment", regular);
+        StyleConstants.setItalic(comment, true);
+        StyleConstants.setForeground(comment, COMMENT_COLOR);
+
+        Style string = doc.addStyle("string", regular);
+        StyleConstants.setFontFamily(string, "Monospaced");
+        StyleConstants.setForeground(string, STRING_COLOR);
 	}
 
 	private static void applyStyleToKeywords(StyledDocument doc,
@@ -203,6 +216,69 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
             }
         }
     }
+
+    /**
+     * @todo eventually, comments in this context and in CodeIntegrator might
+     * be handled by a single mechanism encapsulated in a class
+     */
+    private enum State {
+        DEFAULT,                // not in comment, last char not '/'
+        SLASH,                  // not in comment, last char is '/'
+        SLASH_STAR,             // in C-style comment, last char not '*'
+        STAR,                   // in C-style comment, last char is '*'
+        SLASH_SLASH,            // in C++-style comment
+        IN_STRING               // inside a double-quoted string (escapes not
+                                // recognized for now)
+    }
+
+    private static void applyStyleToCommentsAndStrings(StyledDocument doc,
+                                                       String content,
+                                                       String commentStyle,
+                                                       String stringStyle) {
+        State state = State.DEFAULT;
+
+        for ( int i = 0; i < content.length(); i++ ) {
+            char current = content.charAt(i);
+
+            if ( state == State.DEFAULT ) {
+                if ( current == '/' ) state = State.SLASH;
+                else if ( current == '"' ) {
+                    state = State.IN_STRING;
+                    doc.setCharacterAttributes(i, 1, doc.getStyle(stringStyle), true);
+                }
+            }
+            else if ( state == State.SLASH ) {
+                if ( current == '*' ) {
+                    state = State.SLASH_STAR;
+                    doc.setCharacterAttributes(i - 1, 2, doc.getStyle(commentStyle), true);
+                }
+                else if ( current == '/' ) {
+                    state = State.SLASH_SLASH;
+                    doc.setCharacterAttributes(i - 1, 2, doc.getStyle(commentStyle), true);
+                }
+                else {
+                    state = State.DEFAULT;
+                }
+            }
+            else if ( state == State.SLASH_STAR ) {
+                if ( current == '*' ) state = State.STAR;
+                doc.setCharacterAttributes(i, 1, doc.getStyle(commentStyle), true);
+            }
+            else if ( state == State.STAR ) {
+                if ( current == '/' ) state = State.DEFAULT;
+                else state = State.SLASH_STAR;
+                doc.setCharacterAttributes(i, 1, doc.getStyle(commentStyle), true);
+            }
+            else if ( state == State.SLASH_SLASH ) {
+                if ( current == '\n' ) state = State.DEFAULT;
+                doc.setCharacterAttributes(i, 1, doc.getStyle(commentStyle), true);
+            }
+            else if ( state == State.IN_STRING ) {
+                if ( current == '"' ) state = state.DEFAULT;
+                doc.setCharacterAttributes(i, 1, doc.getStyle(stringStyle), true);
+            } // states
+        } // for all chars in content
+    } // applyStyleToCommentsAndStrings
 }
 
-//  [Last modified: 2017 01 03 at 16:51:43 GMT]
+//  [Last modified: 2017 01 03 at 22:12:04 GMT]

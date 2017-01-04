@@ -55,7 +55,11 @@ import edu.ncsu.csc.Galant.prefs.PreferenceVisitor;
  */
 public class PreferencesPanel extends JPanel
 	{
-		private static final int DEFAULT_X = 300, DEFAULT_Y = 150, DEFAULT_WIDTH = 700, DEFAULT_HEIGHT = 350;
+		private static final int
+            DEFAULT_X = 300,
+            DEFAULT_Y = 150,
+            DEFAULT_WIDTH = 700,
+            DEFAULT_HEIGHT = 350;
         private static final int DEFAULT_GROUP_PANEL_WIDTH = 200;
         private static final int DEFAULT_GROUP_PANEL_HEIGHT = 240;
 		private static final PreferencesPanel PREFS_PANEL = new PreferencesPanel();
@@ -85,7 +89,6 @@ public class PreferencesPanel extends JPanel
 								PreferenceComponent.componentMap.get(preference).show();
 							}
 					});
-					
 					SwingUtilities.getWindowAncestor(PREFS_PANEL).setVisible(true);
 				}
 		};
@@ -115,7 +118,6 @@ public class PreferencesPanel extends JPanel
 
 				// Add apply/save/cancel buttons
 				add(initButtons(), BorderLayout.SOUTH);
-				
 				// Initialize to the first child of the root
 				setCurrentGroup(PreferenceGroup.ROOT.getChildAt(0));
 				
@@ -234,6 +236,7 @@ public class PreferencesPanel extends JPanel
 				WindowUtil.preserveWindowBounds(dialog, DEFAULT_X, DEFAULT_Y, DEFAULT_WIDTH, DEFAULT_HEIGHT);
 				dialog.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 				dialog.setContentPane(this);
+                this.setMinimumSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
 			}
 
 		/**
@@ -249,4 +252,4 @@ public class PreferencesPanel extends JPanel
 			}
 	}
 
-//  [Last modified: 2015 05 29 at 21:31:08 GMT]
+//  [Last modified: 2017 01 04 at 00:36:13 GMT]

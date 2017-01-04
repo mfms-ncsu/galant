@@ -288,8 +288,8 @@ public class CodeIntegrator	{
         SLASH_STAR,             // in C-style comment, last char not '*'
         STAR,                   // in C-style comment, last char is '*'
         SLASH_SLASH,            // in C++-style comment
-        IN_STRING               // inside a double-quoted string (escapes not
-                                // recognized for now)
+        IN_STRING,              // inside a double-quoted string
+        BACKSLASH               // inside a double-quoted string, escaped (\)
     }
 
     /**
@@ -347,7 +347,12 @@ public class CodeIntegrator	{
                 // do nothing otherwise -- in a comment
             }
             else if ( state == State.IN_STRING ) {
+                if ( current == '\\' ) state = State.BACKSLASH;
                 if ( current == '"' ) state = state.DEFAULT;
+                withoutComments += current;
+            }
+            else if ( state == State.BACKSLASH ) {
+                state = State.IN_STRING;
                 withoutComments += current;
             }
         }
@@ -357,4 +362,4 @@ public class CodeIntegrator	{
     }
 }
 
-//  [Last modified: 2016 12 29 at 15:39:08 GMT]
+//  [Last modified: 2017 01 04 at 00:00:15 GMT]

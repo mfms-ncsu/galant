@@ -116,7 +116,7 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
 	 */
 		public static final String[] allAPIkeywords = new String[] {
             "beginStep", "endStep", "step",
-            "display", "print",
+            "display", "print", "error",
             "movesNodes", "isDirected", "setDirected",
             "source", "target", "otherEnd",
             "neighbors", "inEdges", "outEdges",
@@ -227,8 +227,8 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
         SLASH_STAR,             // in C-style comment, last char not '*'
         STAR,                   // in C-style comment, last char is '*'
         SLASH_SLASH,            // in C++-style comment
-        IN_STRING               // inside a double-quoted string (escapes not
-                                // recognized for now)
+        IN_STRING,              // inside a double-quoted string
+        BACKSLASH               // inside double-quoted string, escaped (\)
     }
 
     private static void applyStyleToCommentsAndStrings(StyledDocument doc,
@@ -236,6 +236,8 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
                                                        String commentStyle,
                                                        String stringStyle) {
         State state = State.DEFAULT;
+        int startComment = -1;  // position of beginning of most recent comment
+        int startString = -1;   // position of beginning of most recent string
 
         for ( int i = 0; i < content.length(); i++ ) {
             char current = content.charAt(i);
@@ -244,17 +246,17 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
                 if ( current == '/' ) state = State.SLASH;
                 else if ( current == '"' ) {
                     state = State.IN_STRING;
-                    doc.setCharacterAttributes(i, 1, doc.getStyle(stringStyle), true);
+                    startString = i;
                 }
             }
             else if ( state == State.SLASH ) {
                 if ( current == '*' ) {
                     state = State.SLASH_STAR;
-                    doc.setCharacterAttributes(i - 1, 2, doc.getStyle(commentStyle), true);
+                    startComment = i - 1;
                 }
                 else if ( current == '/' ) {
                     state = State.SLASH_SLASH;
-                    doc.setCharacterAttributes(i - 1, 2, doc.getStyle(commentStyle), true);
+                    startComment = i - 1;
                 }
                 else {
                     state = State.DEFAULT;
@@ -262,23 +264,43 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
             }
             else if ( state == State.SLASH_STAR ) {
                 if ( current == '*' ) state = State.STAR;
-                doc.setCharacterAttributes(i, 1, doc.getStyle(commentStyle), true);
             }
             else if ( state == State.STAR ) {
-                if ( current == '/' ) state = State.DEFAULT;
+                if ( current == '/' ) {
+                    state = State.DEFAULT;
+                    doc.setCharacterAttributes(startComment,
+                                               i - startComment,
+                                               doc.getStyle(commentStyle),
+                                               true);
+                }
                 else state = State.SLASH_STAR;
-                doc.setCharacterAttributes(i, 1, doc.getStyle(commentStyle), true);
             }
             else if ( state == State.SLASH_SLASH ) {
-                if ( current == '\n' ) state = State.DEFAULT;
-                doc.setCharacterAttributes(i, 1, doc.getStyle(commentStyle), true);
+                if ( current == '\n' ) {
+                    state = State.DEFAULT;
+                    doc.setCharacterAttributes(startComment,
+                                               i - startComment,
+                                               doc.getStyle(commentStyle),
+                                               true);
+                }
             }
             else if ( state == State.IN_STRING ) {
-                if ( current == '"' ) state = state.DEFAULT;
-                doc.setCharacterAttributes(i, 1, doc.getStyle(stringStyle), true);
+                if ( current == '"' ) {
+                    state = State.DEFAULT;
+                    doc.setCharacterAttributes(startString,
+                                               i - startString,
+                                               doc.getStyle(stringStyle),
+                                               true);
+                }
+                else if ( current == '\\' ) {
+                    state = State.BACKSLASH;
+                }
+            }
+            else if ( state == State.BACKSLASH ) {
+                state = State.IN_STRING;
             } // states
         } // for all chars in content
     } // applyStyleToCommentsAndStrings
 }
 
-//  [Last modified: 2017 01 03 at 22:12:04 GMT]
+//  [Last modified: 2017 01 04 at 00:15:51 GMT]

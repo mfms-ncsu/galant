@@ -31,25 +31,28 @@ import edu.ncsu.csc.Galant.prefs.PreferenceGroupVisitor;
 import edu.ncsu.csc.Galant.prefs.PreferenceVisitor;
 
 /**
- * <p>
- * The panel in which preferences are displayed. There is a single panel that is used whenever a
- * preference dialog is displayed, which can be done with {@link #SHOW_PREFS_DIALOG}.
+ * <p> The panel in which preferences are displayed. There is a single panel
+ * that is used whenever a preference dialog is displayed, which can be done
+ * with {@link #SHOW_PREFS_DIALOG}.
  * </p>
- * <p>
- * The panel consists of three main components:
+
+ * <p> The panel consists of three main components:
  * </p>
  * <ul>
- * <li>The main component is the {@link PreferenceGroupPanel} of the selected
- * {@link PreferenceGroup}. This displays the preferences in the current preference group.</li>
- * <li>To the left is a {@link JTree} showing the preference-group hierarchy, which allows users to
- * select a group.</li>
- * <li>At the bottom are the following buttons, all of which act on all preferences, not just those
- * shown:</li>
+ * <li>The main component is the {@link PreferenceGroupPanel}
+ * of the selected {@link PreferenceGroup}. This
+ * displays the preferences in the current preference group.</li>
+ * <li>To the left is a {@link JTree} showing the preference-group hierarchy,
+ * which allows users to select a group.</li>
+ * <li>At the bottom are the following buttons, all of which act on all
+ * preferences, not just those shown:</li>
  * <ul>
- * <li>Apply: propogates the values the user set on the components to their associated
- * {@link Preference} objects and then to the backing store.</li>
- * <li>Save: the same as Apply, but closes the dialog afterwards.</li>
- * <li>Cancel: closes the dialog without applying the values the user set, which are lost.</li>
+ * <li>Apply: propogates the values the user set on the components to
+ * their associated {@link Preference} objects and then to the backing
+ * store.</li>
+ * <li>Save: the same as Apply, but closes the dialog * afterwards.</li>
+ * <li>Cancel: closes the dialog without applying the values * the user set,
+ * which are lost.</li>
  * </ul>
  * </ul>
  */
@@ -58,8 +61,8 @@ public class PreferencesPanel extends JPanel
 		private static final int
             DEFAULT_X = 300,
             DEFAULT_Y = 150,
-            DEFAULT_WIDTH = 700,
-            DEFAULT_HEIGHT = 350;
+            DEFAULT_WIDTH = 400,
+            DEFAULT_HEIGHT = 400;
         private static final int DEFAULT_GROUP_PANEL_WIDTH = 200;
         private static final int DEFAULT_GROUP_PANEL_HEIGHT = 240;
 		private static final PreferencesPanel PREFS_PANEL = new PreferencesPanel();
@@ -89,6 +92,8 @@ public class PreferencesPanel extends JPanel
 								PreferenceComponent.componentMap.get(preference).show();
 							}
 					});
+					SwingUtilities.getWindowAncestor(PREFS_PANEL)
+                 .setMinimumSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
 					SwingUtilities.getWindowAncestor(PREFS_PANEL).setVisible(true);
 				}
 		};
@@ -123,6 +128,8 @@ public class PreferencesPanel extends JPanel
 				
 				// Add to dialog
 				initDialog();
+
+            //this.setPreferredSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
 			}
 
 		private Component initPreferenceGroupTree()
@@ -236,7 +243,6 @@ public class PreferencesPanel extends JPanel
 				WindowUtil.preserveWindowBounds(dialog, DEFAULT_X, DEFAULT_Y, DEFAULT_WIDTH, DEFAULT_HEIGHT);
 				dialog.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 				dialog.setContentPane(this);
-                this.setMinimumSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
 			}
 
 		/**
@@ -252,4 +258,4 @@ public class PreferencesPanel extends JPanel
 			}
 	}
 
-//  [Last modified: 2017 01 04 at 00:36:13 GMT]
+//  [Last modified: 2017 01 04 at 01:11:38 GMT]

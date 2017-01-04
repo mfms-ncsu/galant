@@ -19,6 +19,7 @@ import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
 import java.awt.BasicStroke;
+import java.awt.Dimension;
 import java.awt.font.TextLayout;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
@@ -44,18 +45,18 @@ import edu.ncsu.csc.Galant.algorithm.Terminate;
 import edu.ncsu.csc.Galant.algorithm.AlgorithmExecutor;
 
 public class GraphPanel extends JPanel{
-	
-	private GraphWindow gw;
-	public boolean setGraphWindow(GraphWindow a){
-		this.gw = a;
-		return false;
-	}
+
+  private GraphWindow gw;
+  public boolean setGraphWindow(GraphWindow a){
+    this.gw = a;
+    return false;
+  }
 
   /**
    * preferred panel dimensions
    */
-  public static final PANEL_WIDTH = 600;
-  public static final PANEL_HEIGHT = 600;
+  public static final int PANEL_WIDTH = 600;
+  public static final int PANEL_HEIGHT = 600;
 
     /**
      * padding on sides and top/bottom for layered graph drawing
@@ -249,8 +250,7 @@ public class GraphPanel extends JPanel{
 		this.dispatch = _dispatch;
 		this.gw = a;
 		
-		this.setPreferredSize(PANEL_WIDTH, PANEL_HEIGHT);
-		//this.setMinimumSize(new Dimension(600, 600));
+        //		this.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
 		
         this.setBackground(Color.WHITE);
 		LogHelper.guiExitConstructor(getClass());
@@ -1015,4 +1015,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2017 01 04 at 16:21:01 GMT]
+//  [Last modified: 2017 01 04 at 17:08:31 GMT]

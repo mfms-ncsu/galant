@@ -74,7 +74,7 @@ import edu.ncsu.csc.Galant.algorithm.Terminate;
 
 public class GraphWindow extends JPanel implements PropertyChangeListener, ComponentListener {
 
-	public static final int DEFAULT_WIDTH = 500, DEFAULT_HEIGHT = 500;
+	public static final int DEFAULT_WIDTH = 700, DEFAULT_HEIGHT = 600;
     public static final int TOOLBAR_HEIGHT = 24;
     public static final int ANIMATION_BUTTON_SIZE = 40;
 	   
@@ -478,7 +478,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 
 		frame.setName("graph_window");
 		WindowUtil.preserveWindowBounds(frame, 0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
-      // frame.setMinimumSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
+        //frame.setPreferredSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
       frame.pack();
 		frame.setVisible(true);
         
@@ -1142,4 +1142,4 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	}
 }
 
-//  [Last modified: 2017 01 04 at 16:22:11 GMT]
+//  [Last modified: 2017 01 04 at 16:52:19 GMT]

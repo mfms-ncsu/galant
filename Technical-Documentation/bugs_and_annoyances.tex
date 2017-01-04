@@ -36,18 +36,12 @@ Text representations of graphs can either be edited or generated externally.}}
   command in a separate terminal window (at least this works on a Mac).
 
 \item
-  Syntax highlighting of functions and macros is oblivious of comments.
-  Thus, if the name of a Galant function
-  such as \texttt{edges} appears in a comment,
-  it will be highlighted.
+  Some preferences, such as syntax highlight colors, require the user to exit
+  Galant before they take effect.
 
 \item
-  Some preferences, such as syntax highlight colors, require the user to exit Galant before
-  they take effect.
-
-\item
-  When saving a file, Galant complains if the extension is not correct (\textsf{.graphml}
-  or \textsf{.alg}) but does not fill it in automatically.
+  When saving a file, Galant complains if the extension is not correct
+  (\textsf{.graphml} or \textsf{.alg}) but does not fill it in automatically.
 
 \end{itemize}
 
@@ -59,17 +53,13 @@ Text representations of graphs can either be edited or generated externally.}}
   to select a collection of nodes and move them all at once.
 
 \item The force directed layout algorithm clusters nodes too close to each
-  other when there are cliques or near cliques. This has been partially
-  mitigated. If you use the \textsf{Ctrl-i} keyboard shortcut, you are asked
-  for a ``degree repelling boost'' -- nodes with high degree will repel each
-  other more if this number is large.
-
-\item The force directed layout places nodes too close to the bottom edge so
-  that they are obscured when an algorithm is running.
+  other when there are cliques or near cliques.
 
 \item Semantics of force directed layout when combined with adding edges is
   not intuitive (force directed layout takes over if the button is pressed,
-  so state dependent).
+  so adding nodes/edges is dependent on the state of the button). It's
+  generally a bad idea to change the graph when the smart reposition button
+  is pressed.
 
 \item It is not possible to change the thickness of an edge or node boundary
   directly from the editor or an algorithm nor is it possible to change the
@@ -78,20 +68,18 @@ Text representations of graphs can either be edited or generated externally.}}
 
 \item Once you choose a color for a node in the editor, you can't uncolor it in
   the editor. The best you can do is set it to black, but then it appears
-  thicker.
+  thicker. However, the algorithm \Code{strip\_attributes.alg} can be run to
+  reset colors and other nonessential attributes. You can save the cleaned up
+  graph using \Code{File$\rightarrow$Export} in the graph window.
 
 \item If a node is selected for editing (other than immediately on creation)
   its weight is set to 0 when the spinner shows up.  Initially a node has no
   weight at all; this should continue to be the case unless the user
   specifies a weight.
 
-\item If user attempts to change weight/label of a node/edge and clicks on
-  the graph panel in the middle of the operation, the change is lost.
-  There
-  is no ``ok'' prompt as there is with color.
-
-\item When user creates a new edge via keyboard shortcut, there is no obvious
-  way to enter the weight and label.
+\item When user creates a new node/edge via keyboard shortcut, there is no
+  obvious way to enter the weight and label (except to click in the
+  appropriate text field).
 
 \end{itemize}
 
@@ -113,7 +101,8 @@ Text representations of graphs can either be edited or generated externally.}}
   and the user overrides in the middle of execution, Galant sometimes freezes
   when user terminates the algorithm. This appears to happen more frequently
   if user does a lot of fast forward/reverse between visibility changes. The
-  problem does not seem to occur if user toggles visibility via keyboard shortcuts.
+  problem does not seem to occur if user toggles visibility via keyboard
+  shortcuts.
 
 \item
   Compiler error messages can be cryptic (but at least they refer to the correct
@@ -143,7 +132,7 @@ The first three lines are treated as one.
   the answer as if it were whatever the answer to the previous such query, if
   any, was (if there was no previous answer, it's null).
 
-\item After hitting \texttt{Enter} or \texttt{Return} at the end of a query,
+\item After hitting \Code{Enter} or \Code{Return} at the end of a query,
   user still needs to step forward to do the next step of the algorithm.
 
 \item
@@ -157,4 +146,4 @@ The first three lines are treated as one.
 \end{itemize}
 
 
-% [Last modified: 2017 01 02 at 17:13:56 GMT]
+% [Last modified: 2017 01 04 at 02:35:12 GMT]

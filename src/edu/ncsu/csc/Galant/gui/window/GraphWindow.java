@@ -478,7 +478,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 
 		frame.setName("graph_window");
 		WindowUtil.preserveWindowBounds(frame, 0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
-      frame.setMinimumSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
+      // frame.setMinimumSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
       frame.pack();
 		frame.setVisible(true);
         
@@ -1142,4 +1142,4 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	}
 }
 
-//  [Last modified: 2017 01 04 at 00:25:09 GMT]
+//  [Last modified: 2017 01 04 at 16:22:11 GMT]

@@ -37,8 +37,8 @@ public class GEditorFrame extends JFrame implements WindowListener {
 	public static final String GALANT = "Galant " + Galant.VERSION + ": Text Editor";
 	public static final String CONFIRM = "One or more files have unsaved changes. Really close Galant?";
 	
-	public static final int defaultWidth = 800;
-	public static final int defaultHeight = 600;
+	public static final int DEFAULT_WIDTH = 750;
+	public static final int DEFAULT_HEIGHT = 600;
 	
 	private static GEditorFrame singleton;
 	
@@ -71,7 +71,8 @@ public class GEditorFrame extends JFrame implements WindowListener {
 		singleton = this;
 		setResizable(true);
 		setName("text_editor");
-		WindowUtil.preserveWindowBounds(this, GraphWindow.DEFAULT_WIDTH, 0, defaultWidth, defaultHeight);
+		WindowUtil.preserveWindowBounds(this, DEFAULT_WIDTH, 0,
+                                      DEFAULT_WIDTH, DEFAULT_HEIGHT);
 		setLayout(new BorderLayout());
 
 		tabbedPane = new GTabbedPane();
@@ -87,8 +88,7 @@ public class GEditorFrame extends JFrame implements WindowListener {
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		addWindowListener(this);
 		
-      this.setMinimumSize(new Dimension(GraphWindow.DEFAULT_WIDTH,
-                                        GraphWindow.DEFAULT_HEIGHT));
+      this.setPreferredSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
       this.pack();
 		setVisible(true);
 	}
@@ -231,4 +231,4 @@ public class GEditorFrame extends JFrame implements WindowListener {
 	public void windowOpened(WindowEvent e) {}
 }
 
-//  [Last modified: 2017 01 03 at 17:37:22 GMT]
+//  [Last modified: 2017 01 04 at 16:29:00 GMT]

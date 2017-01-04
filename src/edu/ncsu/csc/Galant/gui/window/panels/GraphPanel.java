@@ -51,6 +51,12 @@ public class GraphPanel extends JPanel{
 		return false;
 	}
 
+  /**
+   * preferred panel dimensions
+   */
+  public static final PANEL_WIDTH = 600;
+  public static final PANEL_HEIGHT = 600;
+
     /**
      * padding on sides and top/bottom for layered graph drawing
      * @todo make this a preference
@@ -243,7 +249,7 @@ public class GraphPanel extends JPanel{
 		this.dispatch = _dispatch;
 		this.gw = a;
 		
-		this.setSize(600, 600);
+		this.setPreferredSize(PANEL_WIDTH, PANEL_HEIGHT);
 		//this.setMinimumSize(new Dimension(600, 600));
 		
         this.setBackground(Color.WHITE);
@@ -1009,4 +1015,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2016 12 21 at 15:19:29 GMT]
+//  [Last modified: 2017 01 04 at 16:21:01 GMT]

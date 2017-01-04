@@ -93,7 +93,7 @@ public class PreferencesPanel extends JPanel
 							}
 					});
 					SwingUtilities.getWindowAncestor(PREFS_PANEL)
-                 .setMinimumSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
+                 .setPreferredSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
 					SwingUtilities.getWindowAncestor(PREFS_PANEL).setVisible(true);
 				}
 		};
@@ -258,4 +258,4 @@ public class PreferencesPanel extends JPanel
 			}
 	}
 
-//  [Last modified: 2017 01 04 at 01:11:38 GMT]
+//  [Last modified: 2017 01 04 at 16:30:01 GMT]

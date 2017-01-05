@@ -129,8 +129,10 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
             "setWeight", "weight",
             "label", "color", "uncolor", "set", "clear",
             "clearLabel", "clearWeight",
-            "clearNodeLabels", "clearNodeWeights", "clearNodeColors", "clearMarks",
+            "clearNodeLabels", "clearNodeWeights", "clearNodeColors",
+            "clearNodeHighlighting", "clearMarks",
             "clearEdgeLabels", "clearEdgeWeights", "clearEdgeColors",
+            "clearEdgeHighlighting",
             "clearAllNode", "clearAllEdge",
 			"getPosition", "setPosition", "getX", "getY", "setX", "setY",
             "getInteger", "getDouble", "getBoolean", "getReal",
@@ -303,4 +305,4 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
     } // applyStyleToCommentsAndStrings
 }
 
-//  [Last modified: 2017 01 04 at 00:15:51 GMT]
+//  [Last modified: 2017 01 05 at 16:16:45 GMT]

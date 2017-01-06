@@ -93,8 +93,8 @@ public class GraphPanel extends JPanel{
     /**
      * Default width of an edge or node boundary
      */
-    public static final int DEFAULT_WIDTH = 2;
-    
+    public static final int DEFAULT_WIDTH = 1;
+
     /**
      * Maximum width of a node boundary or edge that can be specified by a
      * spinner in the preferences panel
@@ -105,12 +105,12 @@ public class GraphPanel extends JPanel{
      * default width for a highlighted or colored edge or node boundary and
      * for a selected edge during editing
      */
-    public static final int DEFAULT_HIGHLIGHT_WIDTH = 5;
+    public static final int DEFAULT_HIGHLIGHT_WIDTH = 4;
 
     /**
      * This is the default value if none is specified in the preferences
      */
-    public static final int DEFAULT_NODE_RADIUS = 12;
+    public static final int DEFAULT_NODE_RADIUS = 11;
 
     /**
      * This is the maximum value that can be specified via a spinner in the
@@ -1015,4 +1015,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2017 01 04 at 17:08:31 GMT]
+//  [Last modified: 2017 01 06 at 01:56:13 GMT]

@@ -151,7 +151,7 @@ public class GalantPreferences
 		};
 
 		API_CALL_COLOR =
-				ALGORITHM_EDITOR.addPreference(new Preference<Color>("API Call Color", new Color(0, 255, 0),
+				ALGORITHM_EDITOR.addPreference(new Preference<Color>("API Call Color", new Color(192, 0, 32),
 						Accessors.COLOR_ACCESSOR));
 		new ColorPanel(API_CALL_COLOR){
 			@Override
@@ -164,7 +164,7 @@ public class GalantPreferences
 
 		// Macro keywords are set to be orange
 		MACRO_KEYWORD_COLOR =
-				ALGORITHM_EDITOR.addPreference(new Preference<Color>("Macro Keyword Color", new Color(255, 200, 0),
+				ALGORITHM_EDITOR.addPreference(new Preference<Color>("Macro Keyword Color", new Color(0, 128, 128),
 						Accessors.COLOR_ACCESSOR));
 		new ColorPanel(MACRO_KEYWORD_COLOR){
 			@Override
@@ -259,4 +259,4 @@ public class GalantPreferences
 	{}
 }
 
-//  [Last modified: 2015 05 30 at 18:10:01 GMT]
+//  [Last modified: 2017 01 06 at 01:53:11 GMT]

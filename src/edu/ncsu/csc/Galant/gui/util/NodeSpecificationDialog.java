@@ -88,8 +88,8 @@ public abstract class NodeSpecificationDialog extends JDialog
         LogHelper.exitConstructor(getClass());
     }
 
-    /** action to be performed when source and target are identified;
-     * specified by subclass */
+    /** action to be performed when node is identified; specified by
+     * subclass */
     protected abstract void performAction(Node node)
         throws Terminate, GalantException;
 
@@ -100,14 +100,19 @@ public abstract class NodeSpecificationDialog extends JDialog
 
     /** This method reacts to state changes in the option pane. */
     public void propertyChange(PropertyChangeEvent event) {
-        LogHelper.enterMethod(getClass(), "propertyChange");
+      LogHelper.disable();
         String prop = event.getPropertyName();
-
+        LogHelper.enterMethod(getClass(), "propertyChange " + prop);
+        LogHelper.logDebug(" optionPane? " + (event.getSource() == optionPane));
+        LogHelper.logDebug(" visible? " + isVisible());
         if ( isVisible()
-             && (event.getSource() == optionPane)
-             && (JOptionPane.VALUE_PROPERTY.equals(prop) ||
-                 JOptionPane.INPUT_VALUE_PROPERTY.equals(prop)) ) {
+               && (event.getSource() == optionPane)
+               && (JOptionPane.VALUE_PROPERTY.equals(prop) ||
+                   JOptionPane.INPUT_VALUE_PROPERTY.equals(prop) )
+             ) {
             Object value = optionPane.getValue();
+
+            LogHelper.logDebug(" visible, value = " + value);
 
             if ( value == JOptionPane.UNINITIALIZED_VALUE ) {
                 // ignore reset
@@ -138,13 +143,14 @@ public abstract class NodeSpecificationDialog extends JDialog
                     nodeText = null;
                     nodeTextField.requestFocusInWindow();
                 }
-            } // enter button pushed
+            } // enter button pushed (do nothing otherwise)
             else { //user closed dialog or clicked cancel
-                this.dispose();
+              this.dispose();
             }
-        }
+        } // some action occurred in visible window
         LogHelper.exitMethod(getClass(), "propertyChange");
+        LogHelper.restoreState();
     }
 }
 
-//  [Last modified: 2016 12 19 at 15:52:33 GMT]
+//  [Last modified: 2017 01 06 at 21:06:15 GMT]

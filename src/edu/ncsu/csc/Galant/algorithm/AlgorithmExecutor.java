@@ -151,7 +151,8 @@ public class AlgorithmExecutor {
         if ( displayState == algorithmState
              && ! synchronizer.algorithmFinished()
              && ! synchronizer.stopped()
-             && ! synchronizer.exceptionThrown() ) {
+             && ! synchronizer.exceptionThrown()
+             && dispatch.getActiveQuery() == null ) {
             displayState++;
             algorithmState++;
 
@@ -229,4 +230,4 @@ public class AlgorithmExecutor {
     }
 }
 
-//  [Last modified: 2016 12 22 at 18:39:26 GMT]
+//  [Last modified: 2017 01 06 at 21:03:49 GMT]

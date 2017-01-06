@@ -42,221 +42,224 @@ import edu.ncsu.csc.Galant.prefs.Preference;
 import edu.ncsu.csc.Galant.prefs.PreferenceGroup;
 import edu.ncsu.csc.Galant.gui.window.panels.GraphPanel;
 
-/** 
- * The actual preferences available in the program. 
+/**
+ * The actual preferences available in the program.
  * @author Alex McCabe
  */
-public class GalantPreferences
-{
-	private GalantPreferences()
-	{}
+public class GalantPreferences {
+  private GalantPreferences() {}
 
-	// ======== Declaration ========
+  // ======== Declaration ========
 
-	// Editors
+  // Editors
 
-	public static final PreferenceGroup TEXT_EDITORS;
+  public static final PreferenceGroup TEXT_EDITORS;
 
-	public static final Preference<Integer> FONT_SIZE;
+  public static final Preference<Integer> FONT_SIZE;
 
-	public static final Preference<Integer> TAB_SIZE;
+  public static final Preference<Integer> TAB_SIZE;
 
-	// - Algorithm editor
+  // - Algorithm editor
 
-	public static final PreferenceGroup ALGORITHM_EDITOR;
+  public static final PreferenceGroup ALGORITHM_EDITOR;
 
-	public static final Preference<Color> JAVA_KEYWORD_COLOR;
+  public static final Preference<Color> JAVA_KEYWORD_COLOR;
 
-	public static final Preference<Color> API_CALL_COLOR;
+  public static final Preference<Color> API_CALL_COLOR;
 
-	public static final Preference<Color> MACRO_KEYWORD_COLOR;
+  public static final Preference<Color> MACRO_KEYWORD_COLOR;
 
-	// -Text graph editor
+  // -Text graph editor
 
-	public static final PreferenceGroup TEXT_GRAPH_EDITOR;
+  public static final PreferenceGroup TEXT_GRAPH_EDITOR;
 
-	public static final Preference<Color> GML_KEYWORD_COLOR;
+  public static final Preference<Color> GML_KEYWORD_COLOR;
 
-	// -Visual graph editor
+  // -Visual graph editor
 
-	public static final PreferenceGroup VISUAL_GRAPH_EDITOR;
+  public static final PreferenceGroup VISUAL_GRAPH_EDITOR;
 
-	public static final Preference<Integer> NORMAL_WIDTH;
+  public static final Preference<Integer> NORMAL_WIDTH;
 
-	public static final Preference<Integer> HIGHLIGHT_WIDTH;
+  public static final Preference<Integer> HIGHLIGHT_WIDTH;
 
-	public static final Preference<Integer> NODE_RADIUS;
+  public static final Preference<Integer> NODE_RADIUS;
 
-// 	public static final Preference<Boolean> DISPLAY_NODE_ID;
+  // Open/Save
 
-	// Open/Save
+  public static final PreferenceGroup OPEN_SAVE;
 
-	public static final PreferenceGroup OPEN_SAVE;
+  public static final Preference<File> DEFAULT_DIRECTORY;
 
-	public static final Preference<File> DEFAULT_DIRECTORY;
+  // Compilation
 
-	// Compilation
+  public static final PreferenceGroup COMPILATION;
 
-	public static final PreferenceGroup COMPILATION;
+  public static final Preference<File> OUTPUT_DIRECTORY;
 
-	public static final Preference<File> OUTPUT_DIRECTORY;
+  // ======== Initialization ========
 
-	// ======== Initialization ========
+  static {
+    // -------- Editors --------
 
-	static
-	{
-		// -------- Editors --------
+    TEXT_EDITORS = PreferenceGroup.ROOT.addNewChild("Text Window");
 
-		TEXT_EDITORS = PreferenceGroup.ROOT.addNewChild("Text Window");
+    FONT_SIZE =
+      TEXT_EDITORS.addPreference(new Preference<Integer>("Font Size",
+                                                         UIManager.getDefaults()
+                                                         .getFont("TextPane.font")
+                                                         .getSize(),
+                                                         Accessors.INT_ACCESSOR));
+    new PreferenceSpinner(FONT_SIZE, 1, null, 1){
+      @Override
+      public void apply() {
+        super.apply();
+        GEditorFrame.getSingleton().setFontSize(FONT_SIZE.get());
+        /** @todo need to apply font size preference to the current session */
+      }
+    };
 
-		FONT_SIZE =
-				TEXT_EDITORS.addPreference(new Preference<Integer>("Font Size", UIManager.getDefaults()
-						.getFont("TextPane.font").getSize(), Accessors.INT_ACCESSOR));
-		new PreferenceSpinner(FONT_SIZE, 1, null, 1){
-			@Override
-			public void apply()
-			{
-				super.apply();
-				GEditorFrame.getSingleton().setFontSize(FONT_SIZE.get());
-				// TODO: apply it to the current session
-			}
+    TAB_SIZE =
+      TEXT_EDITORS.addPreference(new Preference<Integer>("Tab Size",
+                                                         2,
+                                                         Accessors.INT_ACCESSOR));
+
+    new PreferenceSpinner(TAB_SIZE, 1, null, 1) {
+      @Override
+      public void apply() {
+        super.apply();
+        /** @todo need to apply tab size preference to the current session */
+      }
+    };
+
+    // ---- Algorithm Editor ----
+
+    ALGORITHM_EDITOR = PreferenceGroup.ROOT.addNewChild("Algorithm Editor");
+
+    JAVA_KEYWORD_COLOR =        // blue
+      ALGORITHM_EDITOR
+      .addPreference(new Preference<Color>("Java Keyword Color",
+                                           new Color(0, 0, 255),
+                                           Accessors.COLOR_ACCESSOR));
+    new ColorPanel(JAVA_KEYWORD_COLOR){
+      @Override
+      public void apply() {
+        super.apply();
+        /** @todo need to apply font color preferences to the current session */
+      }
+    };
+
+    API_CALL_COLOR =            // dark red
+      ALGORITHM_EDITOR
+      .addPreference(new Preference<Color>("API Call Color",
+                                           new Color(192, 0, 32),
+                                           Accessors.COLOR_ACCESSOR));
+    new ColorPanel(API_CALL_COLOR){
+      @Override
+      public void apply() {
+        super.apply();
+      }
+    };
+
+    MACRO_KEYWORD_COLOR =       // teal
+      ALGORITHM_EDITOR
+      .addPreference(new Preference<Color>("Macro Keyword Color",
+                                           new Color(0, 128, 128),
+                                           Accessors.COLOR_ACCESSOR));
+    new ColorPanel(MACRO_KEYWORD_COLOR){
+      @Override
+      public void apply() {
+        super.apply();
+      }
+    };
+
+    // ---- Text Graph Editor ----
+
+    TEXT_GRAPH_EDITOR = PreferenceGroup.ROOT.addNewChild("Textual Graph Editor");
+
+    GML_KEYWORD_COLOR =         // blue
+      TEXT_GRAPH_EDITOR
+      .addPreference(new Preference<Color>("GraphML Keyword Color",
+                                           new Color(0, 0, 255),
+                                           Accessors.COLOR_ACCESSOR));
+    new ColorPanel(GML_KEYWORD_COLOR){
+      @Override
+      public void apply() {
+        super.apply();
+      }
+    };
+
+    // ---- Visual Graph Editor ----
+
+    VISUAL_GRAPH_EDITOR = PreferenceGroup.ROOT.addNewChild("Graph Display");
+
+    NORMAL_WIDTH =
+      VISUAL_GRAPH_EDITOR
+      .addPreference(new Preference<Integer>("Line Width",
+                                             GraphPanel.DEFAULT_WIDTH,
+                                             Accessors.INT_ACCESSOR));
+    PreferenceSpinner normalWidthSpinner
+      = new PreferenceSpinner(NORMAL_WIDTH, 1, GraphPanel.MAXIMUM_LINE_WIDTH, 1) {
+          @Override
+          public void apply() {
+            GraphDispatch.getInstance().pushToGraphEditor();
+            super.apply();
+          }
 		};
 
-		// TODO find the default tab size (I'm just using "4" for now; we could just stick
-		// with that, I guess)
-		TAB_SIZE = TEXT_EDITORS.addPreference(new Preference<Integer>("Tab Size", 4, Accessors.INT_ACCESSOR));
-		new PreferenceSpinner(TAB_SIZE, 1, null, 1){
-			@Override
-			public void apply()
-			{
-				super.apply();
-				// TODO: apply it to the current session
-			}
+    HIGHLIGHT_WIDTH =
+      VISUAL_GRAPH_EDITOR
+      .addPreference(new Preference<Integer>("Highlight Line Width",
+                                             GraphPanel.DEFAULT_HIGHLIGHT_WIDTH,
+                                             Accessors.INT_ACCESSOR));
+    PreferenceSpinner highlightWidthSpinner
+      = new PreferenceSpinner(HIGHLIGHT_WIDTH, 1,
+                              GraphPanel.MAXIMUM_LINE_WIDTH, 1) {
+          @Override
+          public void apply() {
+            GraphDispatch.getInstance().pushToGraphEditor();
+            super.apply();
+          }
 		};
 
-		// ---- Algorithm Editor ----
+    NODE_RADIUS =
+      VISUAL_GRAPH_EDITOR
+      .addPreference(new Preference<Integer>("Node radius",
+                                             GraphPanel.DEFAULT_NODE_RADIUS,
+                                             Accessors.INT_ACCESSOR));
+    new PreferenceSpinner(NODE_RADIUS, 1, GraphPanel.MAXIMUM_NODE_RADIUS, 1) {
+      @Override
+      public void apply() {
+        GraphDispatch.getInstance().pushToGraphEditor();
+        super.apply();
+      }
+    };
 
-		ALGORITHM_EDITOR = PreferenceGroup.ROOT.addNewChild("Algorithm Editor");
+    // -------- Open/Save --------
 
-		JAVA_KEYWORD_COLOR =
-				ALGORITHM_EDITOR.addPreference(new Preference<Color>("Java Keyword Color", new Color(0, 0, 255),
-						Accessors.COLOR_ACCESSOR));
-		new ColorPanel(JAVA_KEYWORD_COLOR){
-			@Override
-			public void apply()
-			{
-				super.apply();
-				// TODO: apply it to the current session
-			}
-		};
+    OPEN_SAVE = PreferenceGroup.ROOT.addNewChild("Open/Save");
 
-		API_CALL_COLOR =
-				ALGORITHM_EDITOR.addPreference(new Preference<Color>("API Call Color", new Color(192, 0, 32),
-						Accessors.COLOR_ACCESSOR));
-		new ColorPanel(API_CALL_COLOR){
-			@Override
-			public void apply()
-			{
-				super.apply();
-				// TODO: apply it to the current session
-			}
-		};
+    DEFAULT_DIRECTORY =
+      OPEN_SAVE.addPreference(new Preference<File>("Default Directory",
+                                                   FileSystemView.getFileSystemView()
+                                                   .getHomeDirectory(),
+                                                   Accessors.FILE_ACCESSOR));
+    new FilePanel(DEFAULT_DIRECTORY, "Select", JFileChooser.DIRECTORIES_ONLY);
 
-		// Macro keywords are set to be orange
-		MACRO_KEYWORD_COLOR =
-				ALGORITHM_EDITOR.addPreference(new Preference<Color>("Macro Keyword Color", new Color(0, 128, 128),
-						Accessors.COLOR_ACCESSOR));
-		new ColorPanel(MACRO_KEYWORD_COLOR){
-			@Override
-			public void apply()
-			{
-				super.apply();
-				// TODO: apply it to the current session
-			}
-		};
+    // -------- Compilation --------
 
-		// ---- Text Graph Editor ----
+    COMPILATION = PreferenceGroup.ROOT.addNewChild("Compilation");
 
-		TEXT_GRAPH_EDITOR = PreferenceGroup.ROOT.addNewChild("Textual Graph Editor");
+    OUTPUT_DIRECTORY =
+      COMPILATION.addPreference(new Preference<File>("Output Directory",
+                                                     new File(".galant"),
+                                                     Accessors.FILE_ACCESSOR));
+    new FilePanel(OUTPUT_DIRECTORY, "Select", JFileChooser.DIRECTORIES_ONLY);
+  }
 
-		GML_KEYWORD_COLOR =
-				TEXT_GRAPH_EDITOR.addPreference(new Preference<Color>("GraphML Keyword Color", new Color(0, 0, 255),
-						Accessors.COLOR_ACCESSOR));
-		new ColorPanel(GML_KEYWORD_COLOR){
-			@Override
-			public void apply()
-			{
-				super.apply();// TODO: apply it to the current session
-			}
-		};
+  /** Make sure all this stuff is actually called. */
+  public static void initPrefs() {}
 
-		// ---- Visual Graph Editor ----
-
-		VISUAL_GRAPH_EDITOR = PreferenceGroup.ROOT.addNewChild("Graph Display");
-
-		NORMAL_WIDTH =
-				VISUAL_GRAPH_EDITOR.addPreference( new Preference<Integer>( "Line Width", 
-                                                                           GraphPanel.DEFAULT_WIDTH,
-                                                                           Accessors.INT_ACCESSOR ) );
-		PreferenceSpinner normalWidthSpinner
-            = new PreferenceSpinner(NORMAL_WIDTH, 1, GraphPanel.MAXIMUM_LINE_WIDTH, 1) {
-			@Override
-			public void apply()
-			{
-				GraphDispatch.getInstance().pushToGraphEditor();
-				super.apply();
-			}
-		};
-
-		HIGHLIGHT_WIDTH =
-				VISUAL_GRAPH_EDITOR.addPreference( new Preference<Integer>( "Highlight Line Width", 
-                                                                           GraphPanel.DEFAULT_HIGHLIGHT_WIDTH,
-                                                                           Accessors.INT_ACCESSOR ) );
-		PreferenceSpinner highlightWidthSpinner
-            = new PreferenceSpinner(HIGHLIGHT_WIDTH, 1, GraphPanel.MAXIMUM_LINE_WIDTH, 1) {
-			@Override
-			public void apply()
-			{
-				GraphDispatch.getInstance().pushToGraphEditor();
-				super.apply();
-			}
-		};
-
-		NODE_RADIUS =
-				VISUAL_GRAPH_EDITOR.addPreference( new Preference<Integer>( "Node radius",
-                                                                            GraphPanel.DEFAULT_NODE_RADIUS,
-                                                                            Accessors.INT_ACCESSOR ) );
-		new PreferenceSpinner(NODE_RADIUS, 1, GraphPanel.MAXIMUM_NODE_RADIUS, 1) {
-			@Override
-			public void apply()
-			{
-				GraphDispatch.getInstance().pushToGraphEditor();
-				super.apply();
-			}
-		};
-
-		// -------- Open/Save --------
-
-		OPEN_SAVE = PreferenceGroup.ROOT.addNewChild("Open/Save");
-
-		DEFAULT_DIRECTORY =
-				OPEN_SAVE.addPreference(new Preference<File>("Default Directory", FileSystemView.getFileSystemView()
-						.getHomeDirectory(), Accessors.FILE_ACCESSOR));
-		new FilePanel(DEFAULT_DIRECTORY, "Select", JFileChooser.DIRECTORIES_ONLY);
-
-		// -------- Compilation --------
-
-		COMPILATION = PreferenceGroup.ROOT.addNewChild("Compilation");
-
-		OUTPUT_DIRECTORY =
-				COMPILATION.addPreference(new Preference<File>("Output Directory", new File(".galant"),
-						Accessors.FILE_ACCESSOR));
-		new FilePanel(OUTPUT_DIRECTORY, "Select", JFileChooser.DIRECTORIES_ONLY);
-	}
-
-	/** Make sure all this stuff is actually called. */
-	public static void initPrefs()
-	{}
 }
 
-//  [Last modified: 2017 01 06 at 01:53:11 GMT]
+//  [Last modified: 2017 01 06 at 13:32:38 GMT]

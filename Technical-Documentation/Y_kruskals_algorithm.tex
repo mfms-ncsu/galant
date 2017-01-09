@@ -4,26 +4,21 @@
 \begin{verbatim}
 // standard disjoint set untilities; not doing union by rank or path
 // compression; efficiency is not an issue
-
 Node [] parent;
-
 function INIT_SET(Node x) { parent[id(x)] = x; }
-
 function LINK(Node x, Node y) { parent[id(x)] = y; }
-
 function Node FIND_SET(Node x) {
     if (x != parent[id(x)])
         parent[id(x)] = FIND_SET(parent[id(x)]);
     return parent[id(x)];
 }
-
 function UNION(Node x, Node y) { LINK(FIND_SET(x), FIND_SET(y)); }
 
 algorithm {
+    hideNodeWeights();
+
     parent= new Node[nodeIds()];
-    for_nodes(u) {
-        INIT_SET(u);
-    }
+    for_nodes(u) { INIT_SET(u); }
 
     EdgeList edgeList = getEdges();
     sort(edgeList);
@@ -38,24 +33,24 @@ algorithm {
         Node t = target(e);
         // show e's endpoints as it's being considered
         // marking is used for display purposes only
-        mark(h); mark(t);
-        endStep();
-
-        beginStep();
+        mark(h);
+        mark(t);
+        endStep(); beginStep();
         // if the vertices aren't part of the same set
         if ( FIND_SET(h) != FIND_SET(t) ) {
             // add the edge to the MST and highlight it
             highlight(e);
             UNION(h, t);
-            totalWeight += e.getWeight();
+            totalWeight += weight(e);
             display( "Weight so far is " + totalWeight );
         }
         else {
             display( "Vertices are already in the same component." );
         }
+        endStep(); beginStep();
+        unmark(h);
+        unmark(t);
         endStep();
-
-        beginStep(); unMark(h); unMark(t); endStep();
     }
     display( "MST has total weight " + totalWeight );
 }
@@ -65,3 +60,5 @@ algorithm {
 \caption{The implementation of Kruskal's algorithm animation.}
 \label{fig:kruskals_algorithm}
 \end{figure}
+
+% [Last modified: 2017 01 08 at 15:39:38 GMT]

@@ -1017,20 +1017,20 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                   // choose a random position to place new node
                   Point p = Node.genRandomPosition();
                   Node n = g.addInitialNode(p.x, p.y);
-							
+
                   // select the new node
                   Node nNew = graphPanel.selectTopClickedNode(p);
                   componentEditPanel.setWorkingComponent(nNew);
                   LogHelper.guiLogDebug( " select: node = " + n );
-                  
+
                   componentEditPanel.setWorkingComponent(nNew);
                   LogHelper.guiLogDebug( " setWorking: node = " + n );
-            
+
                   dispatch.pushToTextEditor();
               } //Create new node
               //delete already pressed, delete node
               if ( deletePressed ) {
-                  LogHelper.guiLogDebug("DELETE NODE");	
+                  LogHelper.guiLogDebug("DELETE NODE");
                   // the dialog is self contained; only needs to be
                   // instantiated
                   NodeDeletionDialog dialog = new NodeDeletionDialog(frame);
@@ -1070,7 +1070,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
           synchronized(this){
               if ( ! dispatch.getWorkingGraph().isDirected() ) {
                   changeDirectedness(Directedness.DIRECTED);
-              } 
+              }
               else {
                   changeDirectedness(Directedness.UNDIRECTED);
               }
@@ -1142,4 +1142,4 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 	}
 }
 
-//  [Last modified: 2017 01 04 at 16:52:19 GMT]
+//  [Last modified: 2017 01 09 at 20:46:07 GMT]

@@ -1,21 +1,15 @@
 
 \subsubsection*{Input/output}
 
-\begin{itemize}
-
-\item
-When you save the current state of an animation using \texttt{File->Export}
-on the graph panel some of the information might not be saved.
-In particular, weights and labels are saved, but highlighting is not (since it is not equivalent to an actual color change of a node or edge).
-
-\end{itemize}
-
 \subsubsection*{Text editing (of programs or graphs)\footnote{
 Galant's editor  is primitive, but
 programs can easily be edited externally.
 Text representations of graphs can either be edited or generated externally.}}
 
 \begin{itemize}
+
+\item There is no ``undo'' mechanism, either for the text editor or the
+  editor in the graph window.
 
 \item Tabs for graphs and algorithms are often hard to deal with: (a) if you
   reread a graph or algorithm, it appears twice; (b) you can only run an
@@ -48,6 +42,11 @@ Text representations of graphs can either be edited or generated externally.}}
 \subsubsection*{Graph editing (in graph panel or via keyboard shortcuts)}
 
 \begin{itemize}
+
+\item Editing is mode-driven: the effect of a mouse action is determined by
+  which of the four modes (select, create node, create edge, delete) is
+  selected on the toolbar. This has unpleasant consequences if, for example,
+  the user forgets that she is in delete mode.
 
 \item Nodes have to be moved individually. In a large graph there is no way
   to select a collection of nodes and move them all at once.
@@ -142,4 +141,4 @@ The first three lines are treated as one.
 \end{itemize}
 
 
-% [Last modified: 2017 01 06 at 21:08:34 GMT]
+% [Last modified: 2017 01 09 at 20:35:10 GMT]

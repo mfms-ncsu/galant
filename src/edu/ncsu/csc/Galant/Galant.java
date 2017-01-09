@@ -16,21 +16,21 @@ public class Galant {
   public static final String VERSION = "v6.0";
   public static void main(String[] args) {
     ExceptionDialog.setDialogExceptionHandlerAsDefault();
-    SwingUtilities.invokeLater(new Runnable(){
-			@Override
-			public void run(){
-				GraphDispatch gd = GraphDispatch.getInstance();
-				GalantPreferences.initPrefs();
-				GraphWindow g = new GraphWindow(gd);
-				gd.setGraphWindow(g);
-				g.updateStatusLabel("No algorithm running");
-				GEditorFrame gef = new GEditorFrame();
-				GraphWindow.getGraphFrame().addWindowListener(gef);
-				WindowUtil.linkWindows();
-				GraphDispatch.getInstance().pushToGraphEditor();
-            }
-		});
-	}
+    SwingUtilities.invokeLater(new Runnable() {
+        @Override
+        public void run() {
+          GraphDispatch gd = GraphDispatch.getInstance();
+          GalantPreferences.initPrefs();
+          GraphWindow g = new GraphWindow(gd);
+          gd.setGraphWindow(g);
+          g.updateStatusLabel("No algorithm running");
+          GEditorFrame gef = new GEditorFrame();
+          GraphWindow.getGraphFrame().addWindowListener(gef);
+          WindowUtil.linkWindows();
+          GraphDispatch.getInstance().pushToGraphEditor();
+        }
+      });
+  }
 }
 
-//  [Last modified: 2017 01 03 at 17:39:23 GMT]
+//  [Last modified: 2017 01 08 at 16:00:06 GMT]

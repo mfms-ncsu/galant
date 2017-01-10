@@ -31,271 +31,269 @@ import edu.ncsu.csc.Galant.algorithm.Terminate;
 import edu.ncsu.csc.Galant.logging.LogHelper;
 
 /**
- * Parses a text file and creates a <code>Graph</code> from it. Allows for graph-to-editor
- * and editor-to-graph manipulation.
+ * Parses a text file and creates a <code>Graph</code> from it. Allows for
+ * graph-to-editor and editor-to-graph manipulation.
  * @author Ty Devries
- *
  */
 public class GraphMLParser {
 
-	Graph graph;
-	File graphMLFile;
-	Document document;
-    LogHelper logHelper = LogHelper.getInstance();
+  Graph graph;
+  File graphMLFile;
+  Document document;
 
-	public GraphMLParser(File graphMLFile) throws GalantException {
-		this.graph = generateGraph(graphMLFile);
-	}
+  public GraphMLParser(File graphMLFile) throws GalantException {
+    this.graph = generateGraph(graphMLFile);
+  }
 
-	public GraphMLParser(String xml) throws GalantException {
-        if ( xml == null || xml.equals( "" ) ) {
-            throw new GalantException( "empty graph when invoking GraphMLParser" );
-        }
-		this.graph = generateGraph(xml);
-	}
+  public GraphMLParser(String xml) throws GalantException {
+    if ( xml == null || xml.equals( "" ) ) {
+      throw new GalantException( "No text when invoking GraphMLParser" );
+    }
+    this.graph = generateGraph(xml);
+  }
 
-	public DocumentBuilder getDocumentBuilder( DocumentBuilderFactory dbf )
-        throws GalantException
-    {
-		DocumentBuilder db = null;
+  public DocumentBuilder getDocumentBuilder( DocumentBuilderFactory dbf )
+    throws GalantException
+  {
+    DocumentBuilder db = null;
 
-		try {
-			db = dbf.newDocumentBuilder();
-		} catch (ParserConfigurationException e) {
-            throw new GalantException( e.getMessage()
-                                       + "\n - in getDocumentBuilder",
-                                       e );
-		}
-
-		return db;
-	}
-
-    /**
-     * @todo Not clear the this is ever called
-     */
-	public void setDocument( DocumentBuilder db, File file )
-        throws GalantException {
-		try {
-			this.document = db.parse(file);
-		}
-        catch ( Exception e ) {
-            throw new GalantException( e.getMessage()
-                                       + "\n - in setDocument(DocumentBuilder, File)",
-                                       e );
-        }
-	}
-	
-	public void setDocument( DocumentBuilder db, String xml )
-        throws GalantException
-    {
-		InputSource is = new InputSource(new StringReader(xml));
-		try {
-			this.document = db.parse(is);
-		}
-        catch (Exception e) {
-            throw new GalantException( e.getMessage()
-                                       + "\n - in setDocument(DocumentBuilder,String)",
-                                       e );
-		}
-	}
-	
-    /**
-     * Sets the value stored in the xml node. Parsing is left to the
-     * graphElement via initializeAfterParsing().
-     * @see edu.ncsu.csc.Galant.graph.component.GraphElement
-     * @see edu.ncsu.csc.Galant.graph.component.Edge
-     * @see edu.ncsu.csc.Galant.graph.component.Node
-     */
-    private void processAttribute(GraphElement graphElement, org.w3c.dom.Node xmlNode) {
-        LogHelper.logDebug("-> processAttribute for " + graphElement);
-        String attributeName = xmlNode.getNodeName();
-        String attributeValueString = xmlNode.getTextContent();
-        try {
-            graphElement.set(attributeName, attributeValueString);
-        }
-        catch ( Terminate t ) { // should not happen
-            t.printStackTrace();
-        }
-        LogHelper.logDebug("<- processAttribute for " + graphElement);
+    try {
+      db = dbf.newDocumentBuilder();
+    } catch (ParserConfigurationException e) {
+      throw new GalantException( e.getMessage()
+                                 + "\n - in getDocumentBuilder",
+                                 e );
     }
 
-	public Graph buildGraphFromInput( DocumentBuilder db )
-        throws GalantException
-    {
-        LogHelper.enterMethod( getClass(), "buildGraphFromInput" );
-		GraphDispatch dispatch = GraphDispatch.getInstance();
+    return db;
+  }
 
-		Graph graphUnderConstruction = new Graph();
-		NodeList nodes;
-		NodeList edges;
-		NodeList graph;
-		nodes = getNodes();
-		edges = getEdges();
-		graph = getGraphNode();
+  /**
+   * @todo Not clear the this is ever called
+   */
+  public void setDocument( DocumentBuilder db, File file )
+    throws GalantException {
+    try {
+      this.document = db.parse(file);
+    }
+    catch ( Exception e ) {
+      throw new GalantException( e.getMessage()
+                                 + "\n - in setDocument(DocumentBuilder, File)",
+                                 e );
+    }
+  }
 
-        //only one graph => hardcode 0th index
-		NamedNodeMap attributes = graph.item(0).getAttributes();
+  public void setDocument( DocumentBuilder db, String xml )
+    throws GalantException
+  {
+    InputSource is = new InputSource(new StringReader(xml));
+    try {
+      this.document = db.parse(is);
+    }
+    catch (Exception e) {
+      throw new GalantException( e.getMessage()
+                                 + "\n - in setDocument(DocumentBuilder,String)",
+                                 e );
+    }
+  }
 
-        // the awkward ?: construction is needed because org.w3c.dom.Node
-        // conflicts with Galant Node
-		String directed = ((attributes.getNamedItem("edgedefault") != null)
-                           ? attributes.getNamedItem("edgedefault").getNodeValue()
-                           : "undirected");
-		graphUnderConstruction.setDirected(directed.equalsIgnoreCase("directed"));
+  /**
+   * Sets the value stored in the xml node. Parsing is left to the
+   * graphElement via initializeAfterParsing().
+   * @see edu.ncsu.csc.Galant.graph.component.GraphElement
+   * @see edu.ncsu.csc.Galant.graph.component.Edge
+   * @see edu.ncsu.csc.Galant.graph.component.Node
+   */
+  private void processAttribute(GraphElement graphElement, org.w3c.dom.Node xmlNode) {
+    LogHelper.logDebug("-> processAttribute for " + graphElement);
+    String attributeName = xmlNode.getNodeName();
+    String attributeValueString = xmlNode.getTextContent();
+    try {
+      graphElement.set(attributeName, attributeValueString);
+    }
+    catch ( Terminate t ) { // should not happen
+      t.printStackTrace();
+    }
+    LogHelper.logDebug("<- processAttribute for " + graphElement);
+  }
 
-        String name = (attributes.getNamedItem( "name" ) != null )
-            ? attributes.getNamedItem("name").getNodeValue()
-            : null;
-        graphUnderConstruction.setName( name );
-        String comment = ( attributes.getNamedItem( "comment" ) != null )
-                       ? attributes.getNamedItem("comment").getNodeValue()
-                       : null;
-        graphUnderConstruction.setComment( comment );
-        String type = ( attributes.getNamedItem( "type" ) != null )
-                       ? attributes.getNamedItem("type").getNodeValue()
-                       : null;
-        String typename = ( attributes.getNamedItem( "type" ) != null )
-                       ? attributes.getNamedItem("type").getNodeValue()
-                       : null;
-        if ( typename != null && typename.equalsIgnoreCase( "layered" ) ) {
-            graphUnderConstruction.setLayered( true );
+  public Graph buildGraphFromInput( DocumentBuilder db )
+    throws GalantException
+  {
+    LogHelper.enterMethod( getClass(), "buildGraphFromInput" );
+    GraphDispatch dispatch = GraphDispatch.getInstance();
+
+    Graph graphUnderConstruction = new Graph();
+    NodeList nodes;
+    NodeList edges;
+    NodeList graph;
+    nodes = getNodes();
+    edges = getEdges();
+    graph = getGraphNode();
+
+    //only one graph => hardcode 0th index
+    NamedNodeMap attributes = graph.item(0).getAttributes();
+
+    // the awkward ?: construction is needed because org.w3c.dom.Node
+    // conflicts with Galant Node
+    String directed = ((attributes.getNamedItem("edgedefault") != null)
+                       ? attributes.getNamedItem("edgedefault").getNodeValue()
+                       : "undirected");
+    graphUnderConstruction.setDirected(directed.equalsIgnoreCase("directed"));
+
+    String name = (attributes.getNamedItem( "name" ) != null )
+      ? attributes.getNamedItem("name").getNodeValue()
+      : null;
+    graphUnderConstruction.setName( name );
+    String comment = ( attributes.getNamedItem( "comment" ) != null )
+      ? attributes.getNamedItem("comment").getNodeValue()
+      : null;
+    graphUnderConstruction.setComment( comment );
+    String type = ( attributes.getNamedItem( "type" ) != null )
+      ? attributes.getNamedItem("type").getNodeValue()
+      : null;
+    String typename = ( attributes.getNamedItem( "type" ) != null )
+      ? attributes.getNamedItem("type").getNodeValue()
+      : null;
+    if ( typename != null && typename.equalsIgnoreCase( "layered" ) ) {
+      graphUnderConstruction.setLayered( true );
+    }
+    else {
+      graphUnderConstruction.setLayered( false );
+    }
+
+    LogHelper.logDebug( "Created new graph:\n" + graphUnderConstruction );
+    LogHelper.logDebug( " number of nodes = " + nodes.getLength() );
+    LogHelper.logDebug( " number of edges = " + edges.getLength() );
+
+    LogHelper.setEnabled(false);
+    LogHelper.beginIndent();
+    for ( int nodeIndex = 0; nodeIndex < nodes.getLength(); nodeIndex++ ) {
+      LogHelper.logDebug( " processing " + nodeIndex + "th node." );
+      org.w3c.dom.Node xmlNode = nodes.item(nodeIndex);
+      Node graphNode = new Node(graphUnderConstruction);
+      NamedNodeMap nodeAttributes = xmlNode.getAttributes();
+      if ( attributes != null ) {
+        for ( int i = 0; i < nodeAttributes.getLength(); i++ ) {
+          org.w3c.dom.Node attribute = nodeAttributes.item(i);
+          processAttribute(graphNode, attribute);
+          LogHelper.logDebug("Node attribute " + attribute.getNodeName()
+                             + ", value = " + attribute.getTextContent());
         }
-        else {
-            graphUnderConstruction.setLayered( false );
+      }
+      graphNode.initializeAfterParsing();
+      LogHelper.logDebug( "adding node " + graphNode );
+      graphUnderConstruction.addNode(graphNode);
+    }
+    LogHelper.endIndent();
+
+    LogHelper.disable();
+    LogHelper.beginIndent();
+    for ( int nodeIndex = 0; nodeIndex < edges.getLength(); nodeIndex++ ) {
+      LogHelper.logDebug( " processing " + nodeIndex + "th edge." );
+      org.w3c.dom.Node xmlNode = edges.item(nodeIndex);
+      Edge graphEdge = new Edge(graphUnderConstruction);
+      NamedNodeMap edgeAttributes = xmlNode.getAttributes();
+      if ( attributes != null ) {
+        for ( int i = 0; i < edgeAttributes.getLength(); i++ ) {
+          org.w3c.dom.Node attribute = edgeAttributes.item(i);
+          processAttribute(graphEdge, attribute);
+          LogHelper.logDebug("Edge attribute " + attribute.getNodeName()
+                             + ", value = " + attribute.getTextContent());
         }
+      }
+      graphEdge.initializeAfterParsing();
+      LogHelper.logDebug( "adding edge " + graphEdge );
+      graphUnderConstruction.addEdge(graphEdge);
+    }
+    LogHelper.endIndent();
+    LogHelper.restoreState();
 
-        LogHelper.logDebug( "Created new graph:\n" + graphUnderConstruction );
-        LogHelper.logDebug( " number of nodes = " + nodes.getLength() );
-        LogHelper.logDebug( " number of edges = " + edges.getLength() );
+    LogHelper.exitMethod( getClass(), "buildGraphFromInput:\n" + graphUnderConstruction );
 
-        LogHelper.setEnabled(false);
-        LogHelper.beginIndent();
-		for ( int nodeIndex = 0; nodeIndex < nodes.getLength(); nodeIndex++ ) {
-            LogHelper.logDebug( " processing " + nodeIndex + "th node." );
-            org.w3c.dom.Node xmlNode = nodes.item(nodeIndex);
-            Node graphNode = new Node(graphUnderConstruction);
-            NamedNodeMap nodeAttributes = xmlNode.getAttributes();
-            if ( attributes != null ) {
-                for ( int i = 0; i < nodeAttributes.getLength(); i++ ) {
-                    org.w3c.dom.Node attribute = nodeAttributes.item(i);
-                    processAttribute(graphNode, attribute);
-                    logHelper.logDebug("Node attribute " + attribute.getNodeName()
-                                       + ", value = " + attribute.getTextContent());
-                }
-            }
-            graphNode.initializeAfterParsing();
-            LogHelper.logDebug( "adding node " + graphNode );
-            graphUnderConstruction.addNode(graphNode);
-		}
-        LogHelper.endIndent();
-
-        LogHelper.disable();
-        LogHelper.beginIndent();
-		for ( int nodeIndex = 0; nodeIndex < edges.getLength(); nodeIndex++ ) {
-            LogHelper.logDebug( " processing " + nodeIndex + "th edge." );
-            org.w3c.dom.Node xmlNode = edges.item(nodeIndex);
-            Edge graphEdge = new Edge(graphUnderConstruction);
-            NamedNodeMap edgeAttributes = xmlNode.getAttributes();
-            if ( attributes != null ) {
-                for ( int i = 0; i < edgeAttributes.getLength(); i++ ) {
-                    org.w3c.dom.Node attribute = edgeAttributes.item(i);
-                    processAttribute(graphEdge, attribute);
-                    logHelper.logDebug("Edge attribute " + attribute.getNodeName()
-                                       + ", value = " + attribute.getTextContent());
-                }
-            }
-            graphEdge.initializeAfterParsing();
-            LogHelper.logDebug( "adding edge " + graphEdge );
-            graphUnderConstruction.addEdge(graphEdge);
-		}
-        LogHelper.endIndent();
-        LogHelper.restoreState();
-
-        LogHelper.exitMethod( getClass(), "buildGraphFromInput:\n" + graphUnderConstruction );
-
-        graphUnderConstruction.initializeAfterParsing();
-        return graphUnderConstruction;
-    } // buildGraphFromInput
+    graphUnderConstruction.initializeAfterParsing();
+    return graphUnderConstruction;
+  } // buildGraphFromInput
 
     /**
      * @todo the exception handling here needs to go at least one level up
      */
-	public Graph generateGraph(String xml) throws GalantException {
-        LogHelper.enterMethod( getClass(), "generateGraph( String )" );
-		DocumentBuilderFactory dbf = null;
-		DocumentBuilder db = null;
-        Graph newGraph = null;
+  public Graph generateGraph(String xml) throws GalantException {
+    LogHelper.enterMethod( getClass(), "generateGraph( String )" );
+    DocumentBuilderFactory dbf = null;
+    DocumentBuilder db = null;
+    Graph newGraph = null;
 
-        dbf = DocumentBuilderFactory.newInstance();
-        db = getDocumentBuilder(dbf);
-        setDocument(db, xml);
-        newGraph = buildGraphFromInput(db);
+    dbf = DocumentBuilderFactory.newInstance();
+    db = getDocumentBuilder(dbf);
+    setDocument(db, xml);
+    newGraph = buildGraphFromInput(db);
 
-        // /**
-        //  * @todo these exceptions should really be caught by the editor
-        //  */
-        // catch ( Exception exception ) {
-        //     if ( exception instanceof GalantException ) {
-        //         GalantException ge = (GalantException) exception;
-        //         ge.report( "" );
-        //         try {
-        //             ge.display();
-        //         }
-        //         catch ( Terminate t ) { // should not happen
-        //             t.printStackTrace();
-        //         }
-        //     }
-        //     else exception.printStackTrace( System.out );
-        // }
+    // /**
+    //  * @todo these exceptions should really be caught by the editor
+    //  */
+    // catch ( Exception exception ) {
+    //     if ( exception instanceof GalantException ) {
+    //         GalantException ge = (GalantException) exception;
+    //         ge.report( "" );
+    //         try {
+    //             ge.display();
+    //         }
+    //         catch ( Terminate t ) { // should not happen
+    //             t.printStackTrace();
+    //         }
+    //     }
+    //     else exception.printStackTrace( System.out );
+    // }
 
-        LogHelper.exitMethod( getClass(), "generateGraph( String )" );
-		return newGraph;
-	}
+    LogHelper.exitMethod( getClass(), "generateGraph( String )" );
+    return newGraph;
+  }
 
-	public Graph generateGraph(File file) throws GalantException {
-        LogHelper.enterMethod( getClass(), "generateGraph( File )" );
-		DocumentBuilderFactory dbf = null;
-		DocumentBuilder db = null;
-        Graph newGraph = null;
+  public Graph generateGraph(File file) throws GalantException {
+    LogHelper.enterMethod( getClass(), "generateGraph( File )" );
+    DocumentBuilderFactory dbf = null;
+    DocumentBuilder db = null;
+    Graph newGraph = null;
 
-        dbf = DocumentBuilderFactory.newInstance();
-        db = getDocumentBuilder(dbf);
-        setDocument(db, file);
-        newGraph = buildGraphFromInput(db);
+    dbf = DocumentBuilderFactory.newInstance();
+    db = getDocumentBuilder(dbf);
+    setDocument(db, file);
+    newGraph = buildGraphFromInput(db);
 
-        // catch ( Exception exception ) {
-        //     GalantException topLevelException
-        //         = new GalantException( exception.getMessage()
-        //                                + "\n - in generateGraph(File)" );
-        //     topLevelException.report( "" );
-        //     try {
-        //         topLevelException.display();
-        //     }
-        //     catch ( Terminate t ) {
-        //         // ignore - probably not relevant
-        //     }
-        // }
+    // catch ( Exception exception ) {
+    //     GalantException topLevelException
+    //         = new GalantException( exception.getMessage()
+    //                                + "\n - in generateGraph(File)" );
+    //     topLevelException.report( "" );
+    //     try {
+    //         topLevelException.display();
+    //     }
+    //     catch ( Terminate t ) {
+    //         // ignore - probably not relevant
+    //     }
+    // }
 
-        LogHelper.exitMethod( getClass(), "generateGraph( File )" );
-        return newGraph;
-	}
+    LogHelper.exitMethod( getClass(), "generateGraph( File )" );
+    return newGraph;
+  }
 
-	public NodeList getGraphNode() {
-		return this.document.getElementsByTagName("graph");
-	}
+  public NodeList getGraphNode() {
+    return this.document.getElementsByTagName("graph");
+  }
 
-	public NodeList getNodes() {
-		return this.document.getElementsByTagName("node");
-	}
+  public NodeList getNodes() {
+    return this.document.getElementsByTagName("node");
+  }
 
-	public NodeList getEdges() {
-		return this.document.getElementsByTagName("edge");
-	}
-	
-	public Graph getGraph() {
-		return this.graph;
-	}
-	
+  public NodeList getEdges() {
+    return this.document.getElementsByTagName("edge");
+  }
+
+  public Graph getGraph() {
+    return this.graph;
+  }
+
 }
 
-//  [Last modified: 2016 12 22 at 17:17:23 GMT]
+//  [Last modified: 2017 01 10 at 20:54:34 GMT]

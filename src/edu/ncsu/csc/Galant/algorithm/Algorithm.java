@@ -155,9 +155,22 @@ public abstract class Algorithm implements Runnable {
      */
     public class NodeQueue extends AbstractQueue<Node> {
         private Queue<Node> Q = new ArrayDeque<Node>();
-        public void enqueue(Node v) { Q.offer(v); }
-        public Node dequeue() { return Q.poll(); }
-        public Node remove() { return Q.remove(); }
+        public void enqueue(Node v) throws GalantException {
+          if ( v == null )
+            throw new GalantException("Attempt to add null node to queue");
+          Q.offer(v);
+        }
+        public Node dequeue() throws GalantException {
+          if ( Q.isEmpty() )
+            throw new GalantException("Attempt to remove item from empty queue");
+          return Q.poll();
+        }
+      // can't throw a GalantException here because remove() overrides
+      // existing Queue method
+      @Override
+        public Node remove() {
+          return Q.remove();
+        }
         public Node element() { return Q.element(); }
         @Override
             public boolean offer(Node e) { return Q.offer(e); }
@@ -173,9 +186,20 @@ public abstract class Algorithm implements Runnable {
     public class EdgeQueue extends AbstractQueue<Edge> {
         private Queue<Edge> Q = new ArrayDeque<Edge>();
 
-        public void enqueue(Edge e) { Q.offer(e); }
-        public Edge dequeue() { return Q.poll(); }
-        public Edge remove() { return Q.remove(); }
+        public void enqueue(Edge e) throws GalantException {
+          if ( e == null )
+            throw new GalantException("Attempt to add null node to queue");
+          Q.offer(e);
+        }
+        public Edge dequeue() throws GalantException {
+          if ( Q.isEmpty() )
+            throw new GalantException("Attempt to remove item from empty queue");
+          return Q.poll();
+        }
+      @Override
+        public Edge remove() {
+          return Q.remove();
+        }
         public Edge element() { return Q.element(); }
         @Override
             public boolean offer(Edge e) { return Q.offer(e); }
@@ -1165,4 +1189,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2017 01 09 at 19:36:12 GMT]
+//  [Last modified: 2017 01 10 at 20:45:54 GMT]

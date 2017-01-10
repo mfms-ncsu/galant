@@ -245,7 +245,7 @@ public class GraphPanel extends JPanel{
 	 * @param _dispatch A reference to the GraphDispatch
 	 */
 	public GraphPanel(GraphDispatch _dispatch, GraphWindow a) {
-		LogHelper.guiEnterConstructor(getClass());
+		LogHelper.enterConstructor(getClass());
 		
 		this.dispatch = _dispatch;
 		this.gw = a;
@@ -253,7 +253,7 @@ public class GraphPanel extends JPanel{
         //		this.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
 		
         this.setBackground(Color.WHITE);
-		LogHelper.guiExitConstructor(getClass());
+		LogHelper.exitConstructor(getClass());
 	}
 
 	@Override
@@ -890,7 +890,7 @@ public class GraphPanel extends JPanel{
    * @return the selected node, or null if no selected node 
    */
 	public Node selectTopClickedNode(Point p) {
-		LogHelper.guiEnterMethod(getClass(), "selectTopClickedNode");
+		LogHelper.enterMethod(getClass(), "selectTopClickedNode");
 		Graph g = dispatch.getWorkingGraph();
 		Node top = null;
 		for (Node n : g.getNodes()) {
@@ -901,24 +901,24 @@ public class GraphPanel extends JPanel{
 		previousNode = selectedNode;
 		selectedNode = top;
 		selectedEdge = null;
-		LogHelper.guiExitMethod( getClass(), "selectTopClickedNode, node = "
+		LogHelper.exitMethod( getClass(), "selectTopClickedNode, node = "
                               + (selectedNode == null ? "null"
                                  : selectedNode.getId() ) );
 		return top;
 	}
 	
 	public void setSelectedNode(Node n) {
-		LogHelper.guiEnterMethod(getClass(), "setSelectedNode");
+		LogHelper.enterMethod(getClass(), "setSelectedNode");
 		
 		this.previousNode = (n == null) ? null : this.selectedNode;
 		this.selectedNode = n;
 		
-		LogHelper.guiExitMethod(getClass(), "setSelectedNode");
+		LogHelper.exitMethod(getClass(), "setSelectedNode");
 	}
 	
 	public Node getSelectedNode() {
-		LogHelper.guiEnterMethod( getClass(), "getSelectedNode" );
-		LogHelper.guiExitMethod( getClass(), "getSelectedNode, node = "
+		LogHelper.enterMethod( getClass(), "getSelectedNode" );
+		LogHelper.exitMethod( getClass(), "getSelectedNode, node = "
                               + selectedNode );
 		return this.selectedNode;
 	}
@@ -932,7 +932,7 @@ public class GraphPanel extends JPanel{
 	}
 	
 	public Edge selectTopClickedEdge(Point p) {
-		LogHelper.guiEnterMethod(getClass(), "selectTopClickedEdge");
+		LogHelper.enterMethod(getClass(), "selectTopClickedEdge");
 		
 		Graph g = dispatch.getWorkingGraph();
 		
@@ -941,7 +941,7 @@ public class GraphPanel extends JPanel{
 		for (int i=1; i <= EDGE_SELECTION_WIDTH; i++) {
 			double width = i;
 			double centerVal = width/2;
-            LogHelper.guiLogDebug( "centerVal = " + centerVal );
+            LogHelper.logDebug( "centerVal = " + centerVal );
 			Rectangle2D clickArea = new Rectangle2D.Double(p.getX() - centerVal, p.getY() - centerVal - 1, i, i);
 			
             for (Edge e : g.getEdges()) {
@@ -964,14 +964,14 @@ public class GraphPanel extends JPanel{
 		this.selectedNode = null;
 		this.previousNode = null;
 		
-		LogHelper.guiExitMethod(getClass(), "selectTopClickedEdge");
+		LogHelper.exitMethod(getClass(), "selectTopClickedEdge");
 		return top;
 	}
 	
 	public void setSelectedEdge(Edge e) {
-		LogHelper.guiEnterMethod(getClass(), "setSelectedEdge");
+		LogHelper.enterMethod(getClass(), "setSelectedEdge");
 		this.selectedEdge = e;
-		LogHelper.guiExitMethod(getClass(), "setSelectedEdge");
+		LogHelper.exitMethod(getClass(), "setSelectedEdge");
 	}
 	
 	public void setEdgeTracker(Point p) {
@@ -1015,4 +1015,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2017 01 06 at 01:56:13 GMT]
+//  [Last modified: 2017 01 10 at 14:54:50 GMT]

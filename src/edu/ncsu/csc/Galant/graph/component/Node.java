@@ -191,10 +191,10 @@ public class Node extends GraphElement {
                 String layerString = getString("layer");
                 String positionString = getString("positionInLayer");
                 if ( layerString == null )
-                    throw new GalantException("missing layer for"
+                    throw new GalantException("Missing layer for"
                                               + " layered graph node " + this);
                 if ( positionString == null )
-                    throw new GalantException("missing positionInLayer for"
+                    throw new GalantException("Missing positionInLayer for"
                                               + " layered graph node " + this);
                 Integer layer = Integer.MIN_VALUE;
                 Integer positionInLayer = Integer.MIN_VALUE;
@@ -646,4 +646,4 @@ public class Node extends GraphElement {
 	}
 }
 
-//  [Last modified: 2016 12 22 at 18:36:20 GMT]
+//  [Last modified: 2017 01 10 at 20:15:04 GMT]

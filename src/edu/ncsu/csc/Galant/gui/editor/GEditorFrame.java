@@ -137,7 +137,7 @@ public class GEditorFrame extends JFrame implements WindowListener {
 	public void saveAs() throws GalantException {
 		GEditorPanel gaep = tabbedPane.getSelectedPanel();
         if ( gaep == null )
-            throw new GalantException("invalid tab - use untitled graph or untitled algorithm");
+            throw new GalantException("Invalid tab - use untitled graph or untitled algorithm");
 
 		if (GGraphEditorPanel.class.isInstance(gaep)) {
 			updateWorkingGraph((GGraphEditorPanel) gaep);
@@ -156,7 +156,7 @@ public class GEditorFrame extends JFrame implements WindowListener {
 		LogHelper.enterMethod(getClass(), "save()");
 		GEditorPanel gaep = tabbedPane.getSelectedPanel();
         if ( gaep == null )
-            throw new GalantException("invalid tab - use untitled graph or untitled algorithm");
+            throw new GalantException("Invalid tab - use untitled graph or untitled algorithm");
 
 		if (GGraphEditorPanel.class.isInstance(gaep)) {
 			updateWorkingGraph((GGraphEditorPanel) gaep);
@@ -231,4 +231,4 @@ public class GEditorFrame extends JFrame implements WindowListener {
 	public void windowOpened(WindowEvent e) {}
 }
 
-//  [Last modified: 2017 01 04 at 16:29:00 GMT]
+//  [Last modified: 2017 01 10 at 21:01:43 GMT]

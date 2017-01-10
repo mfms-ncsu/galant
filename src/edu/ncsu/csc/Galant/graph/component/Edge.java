@@ -11,7 +11,7 @@ import edu.ncsu.csc.Galant.logging.LogHelper;
 
 /**
  * Edge graph object. Connects two <code>Node<code>s, and can be directored or undirected.
- * For undirected graphs, "source" and "destination" are meaningless.
+ * For undirected graphs, "source" and "target" (destination) are meaningless.
  * @author Jason Cockrell, Ty Devries, Alex McCabe, Michael Owoc, with major
  * modifications by Matthias Stallmann.
  *
@@ -90,9 +90,9 @@ public class Edge extends GraphElement {
             this.hasExplicitId = true;
         }
         if ( sourceString == null )
-            throw new GalantException("missing source for " + this);
+            throw new GalantException("Missing source for " + this);
         if ( targetString == null )
-            throw new GalantException("missing target for " + this);
+            throw new GalantException("Missing target for " + this);
         try {
             sourceId = Integer.parseInt(sourceString);
         }
@@ -181,4 +181,4 @@ public class Edge extends GraphElement {
 	}
 }
 
-//  [Last modified: 2016 12 22 at 17:23:18 GMT]
+//  [Last modified: 2017 01 10 at 22:03:32 GMT]

@@ -4,133 +4,133 @@
   \begin{tabular}{| m{0.35\textwidth} | m{0.6\textwidth} |}
     \hline
     \shortstack[l]{
-      \textsf{List$\langle$Node$\rangle$ getNodes()}\\
-      \textsf{NodeList getNodes()}
+      \Code{List$\langle$Node$\rangle$ getNodes()}\\
+      \Code{NodeSet getNodeSet()}
     }
     &
-    returns a list of the nodes of the graph; type \textsf{NodeList}
+    returns a list or set of the nodes of the graph; type \Code{NodeSet}
     is built into Galant
-    and essentially equivalent to the Java \textsf{List$\langle$Node$\rangle$};
-    see Table~\ref{tab:data_structures}
+    -- see Table~\ref{tab:data_structures}, but the templated \Code{List} has
+    not yet been replaced with \Code{NodeList}
     \\ \hline
     \shortstack[l]{
-      \textsf{List$\langle$Edge$\rangle$ edges()}\\
-      \textsf{EdgeList edges()}
+      \Code{List$\langle$Edge$\rangle$ getEdges()}\\
+      \Code{EdgeSet getEdgeSet()}
     }
     &
-    returns a list of edges of the graph; return type
-    \textsf{EdgeList} is analogous to \textsf{NodeList}
+    returns a list of edges of the graph; return types are analogous to those
+    for nodes
     \\ \hline
-    \textsf{for\_nodes(v) \{
+    \Code{for\_nodes(v) \{
       \emph{code block}
       \}}
     &
     \shortstack[l]{
       equivalent to
-      \textsf{for ( Node v : nodes() ) \{ \emph{code block} \}};\\
-      the statements are executed for each node \textsf{v}
+      \Code{for ( Node v : nodes() ) \{ \emph{code block} \}};\\
+      the statements are executed for each node \Code{v}
     }
     \\ \hline
-    \textsf{for\_edges(e)  \{ \emph{code block} \}}
+    \Code{for\_edges(e)  \{ \emph{code block} \}}
     &
-    analogous to \textsf{for\_nodes}
+    analogous to \Code{for\_nodes}
     \\ \hline
-    \textsf{Integer numberOfNodes()}
+    \Code{Integer numberOfNodes()}
     &
     returns the number of nodes
     \\ \hline
-    \textsf{Integer numberOfEdges()}
+    \Code{Integer numberOfEdges()}
     &
     returns the number of edges
     \\ \hline
-    \textsf{int~id(Node~v)}, \textsf{int~id(Edge e)}
+    \Code{int~id(Node~v)}, \Code{int~id(Edge e)}
     &
-    returns the unique identifier of \textsf{v} or \textsf{e}
+    returns the unique identifier of \Code{v} or \Code{e}
     \\ \hline
-    \textsf{int~nodeIds()}, \textsf{int~edgeIds()}
+    \Code{int~nodeIds()}, \Code{int~edgeIds()}
     &
     returns the largest node/edge identifier plus one;
     useful when an array is to be indexed using node/edge identifiers,
     since these are not necessarily contiguous
     \\ \hline
-    \textsf{source(Edge e)}, \textsf{target(Edge e)}
+    \Code{source(Edge e)}, \Code{target(Edge e)}
     &
-    returns the source/target of edge \textsf{e}, sometimes called the (arrow)
+    returns the source/target of edge \Code{e}, sometimes called the (arrow)
     tail/head or source/destination
     \\ \hline
     \shortstack[l]{
-      \textsf{Integer degree(Node v)}\\
-      \textsf{Integer indegree(Node v)}\\
-      \textsf{Integer outdegree(Node v)}
+      \Code{Integer degree(Node v)}\\
+      \Code{Integer indegree(Node v)}\\
+      \Code{Integer outdegree(Node v)}
     }
     &
-    the number of edges incident on \textsf{v}, total, incoming and outgoing;
+    the number of edges incident on \Code{v}, total, incoming and outgoing;
     if the graph is undirected, the outdegree is the same as the degree
     \\ \hline
     \shortstack[l]{
-      \textsf{EdgeList edges(Node v)}\\
-      \textsf{EdgeList inEdges(Node v)}\\
-      \textsf{EdgeList outEdges(Node v)}
+      \Code{EdgeList edges(Node v)}\\
+      \Code{EdgeList inEdges(Node v)}\\
+      \Code{EdgeList outEdges(Node v)}
     }
     &
-    returns a list of \textsf{v}'s
+    returns a list of \Code{v}'s
     incident, incoming or outgoing edges, respectively;
     outgoing edges are the same as incident edges if the graph is undirected 
     \\ \hline
     \shortstack[l]{
-      \textsf{Node otherEnd(Edge e, Node v)}\\
-      \textsf{Node otherEnd(Node v, Edge e)}
+      \Code{Node otherEnd(Edge e, Node v)}\\
+      \Code{Node otherEnd(Node v, Edge e)}
     }
     &
-    returns the node opposite \textsf{v} on edge \textsf{e};
-    if \textsf{v} is the source \textsf{otherEnd} returns the target and
+    returns the node opposite \Code{v} on edge \Code{e};
+    if \Code{v} is the source \Code{otherEnd} returns the target and
     vice-versa
     \\ \hline
-    \textsf{NodeList neighbors(Node v)}
+    \Code{NodeList neighbors(Node v)}
     &
-    returns a list of nodes adjacent to \textsf{v}
+    returns a list of nodes adjacent to \Code{v}
     \\ \hline
     \shortstack[l]{
-      \textsf{for\_adjacent(v, e, w) \{ \emph{code block} \}} \\
-      \textsf{for\_incoming(v, e, w) \{ \emph{code block} \}} \\ 
-      \textsf{for\_outgoing(v, e, w) \{ \emph{code block} \}}
+      \Code{for\_adjacent(v, e, w) \{ \emph{code block} \}} \\
+      \Code{for\_incoming(v, e, w) \{ \emph{code block} \}} \\ 
+      \Code{for\_outgoing(v, e, w) \{ \emph{code block} \}}
     }
     &
-    \textsf{for\_adjacent} executes the code block for each edge \textsf{e}
-    incident on \textsf{v}, where \textsf{w} is \textsf{otherEnd(e,v)};
-    \textsf{v} must already be declared but \textsf{e} and \textsf{w} are
+    \Code{for\_adjacent} executes the code block for each edge \Code{e}
+    incident on \Code{v}, where \Code{w} is \Code{otherEnd(e,v)};
+    \Code{v} must already be declared but \Code{e} and \Code{w} are
     declared by the macro;
     the other two are analogous for incoming and outgoing edges 
     \\ \hline
-    \textsf{getStartNode()}
+    \Code{getStartNode()}
     &
     returns the first node in the list of nodes, typically the one with smallest id;
     used by algorithms that require a start node
     \\ \hline
-    \textsf{isDirected()}
+    \Code{isDirected()}
     &
     returns true if the graph is directed
     \\ \hline
-    \textsf{setDirected(boolean directed)}
+    \Code{setDirected(boolean directed)}
     &
     makes the graph directed or undirected depending on whether \texttt{directed}
     is true or false, respectively
     \\ \hline
     \shortstack[l]{
-      \textsf{Node addNode()}\\
-      \textsf{Node addNode(Integer x, Integer y)}
+      \Code{Node addNode()}\\
+      \Code{Node addNode(Integer x, Integer y)}
     }
     &
     returns a new node and adds it to the list of nodes;
     the id is the smallest integer not currently in use as an id;
     attributes such as weight, label and position are absent and must be set explicitly
     by appropriate method calls;
-    the second version puts the node at position \textsf{(x,y)},
-    where \textsf{x} and \textsf{y} are pixel coordinates.
+    the second version puts the node at position \Code{(x,y)},
+    where \Code{x} and \Code{y} are pixel coordinates.
     \\ \hline
     \shortstack[l]{
-      \textsf{addEdge(Node source, Node target)}\\
-      \textsf{addEdge(int sourceId, int targetId)}
+      \Code{addEdge(Node source, Node target)}\\
+      \Code{addEdge(int sourceId, int targetId)}
     }
     &
     adds an edge from the source to
@@ -139,15 +139,17 @@
     as in the case of adding a node, the edge is added to the list of edges and
     its weight and label are absent
     \\ \hline
-    \textsf{deleteNode(Node v)}
+    \Code{deleteNode(Node v)}
     &
-    removes node \textsf{v} and its incident edges from the graph
+    removes node \Code{v} and its incident edges from the graph
     \\ \hline
-    \textsf{deleteEdge(Edge e)}
+    \Code{deleteEdge(Edge e)}
     &
-    removes edge \textsf{e} from the graph
+    removes edge \Code{e} from the graph
     \\ \hline
   \end{tabular}
   \caption{Functions and macros that apply to the structure of a graph.}
   \label{tab:graph_functions}
 \end{table}
+
+% [Last modified: 2017 01 10 at 16:00:23 GMT]

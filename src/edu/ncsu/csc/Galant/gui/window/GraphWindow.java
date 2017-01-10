@@ -74,1072 +74,1072 @@ import edu.ncsu.csc.Galant.algorithm.Terminate;
 
 public class GraphWindow extends JPanel implements PropertyChangeListener, ComponentListener {
 
-	public static final int DEFAULT_WIDTH = 700, DEFAULT_HEIGHT = 600;
-    public static final int TOOLBAR_HEIGHT = 24;
-    public static final int ANIMATION_BUTTON_SIZE = 40;
+  public static final int DEFAULT_WIDTH = 700, DEFAULT_HEIGHT = 600;
+  public static final int TOOLBAR_HEIGHT = 24;
+  public static final int ANIMATION_BUTTON_SIZE = 40;
 	   
-	/** Refers to the singleton GraphDispatch to push global information */
-	private final GraphDispatch dispatch;
+  /** Refers to the singleton GraphDispatch to push global information */
+  private final GraphDispatch dispatch;
 	
-	/** The main frame for the Visual Graph Editor **/
-	private static JFrame frame;
+  /** The main frame for the Visual Graph Editor **/
+  private static JFrame frame;
 	
-	private static JMenu fileMenu; 
-	private static JMenuBar menuBar;
-	private static JToolBar toolBar;
+  private static JMenu fileMenu; 
+  private static JMenuBar menuBar;
+  private static JToolBar toolBar;
 	
-	/** The Graph panel used to draw the active graph **/
-	private static GraphPanel graphPanel;
+  /** The Graph panel used to draw the active graph **/
+  private static GraphPanel graphPanel;
 	
-	/** A panel used to edit Graph element's properties **/ 
-	public static ComponentEditPanel componentEditPanel;
+  /** A panel used to edit Graph element's properties **/ 
+  public static ComponentEditPanel componentEditPanel;
 	
-	/** A panel used to navigate through an animation **/
-	private static JPanel animationButtons;
-	private final JButton stepForward;
-	public JButton getStepForward(){
-		return stepForward;
-	}
-	private final JButton stepBack;
-    public JButton getStepBack(){
-		return stepBack;
-	}
-    private final JButton done;
+  /** A panel used to navigate through an animation **/
+  private static JPanel animationButtons;
+  private final JButton stepForward;
+  public JButton getStepForward(){
+    return stepForward;
+  }
+  private final JButton stepBack;
+  public JButton getStepBack(){
+    return stepBack;
+  }
+  private final JButton done;
 	
-	private ButtonGroup modeGroup = new ButtonGroup();
-	private JToggleButton select;
-	private JToggleButton addNode;
-	private JToggleButton addEdge;
-	private JToggleButton deleteBtn;
+  private ButtonGroup modeGroup = new ButtonGroup();
+  private JToggleButton select;
+  private JToggleButton addNode;
+  private JToggleButton addEdge;
+  private JToggleButton deleteBtn;
 	
-	private ButtonGroup directedGroup = new ButtonGroup();
-	private JToggleButton directedBtn;
-	private JToggleButton undirectedBtn;
+  private ButtonGroup directedGroup = new ButtonGroup();
+  private JToggleButton directedBtn;
+  private JToggleButton undirectedBtn;
 
-	private JToggleButton nodeLabels;
-	private JToggleButton edgeLabels;
-	private JToggleButton nodeWeights;
-	private JToggleButton edgeWeights;
+  private JToggleButton nodeLabels;
+  private JToggleButton edgeLabels;
+  private JToggleButton nodeWeights;
+  private JToggleButton edgeWeights;
 
-	private JToggleButton repositionBtn;
+  private JToggleButton repositionBtn;
 
-    /**
-     * Another message text label, used primarily to show current algorithm
-     * and display states
-     */
-	private JLabel statusLabel;
+  /**
+   * Another message text label, used primarily to show current algorithm
+   * and display states
+   */
+  private JLabel statusLabel;
 
-	/**
-     * Updates the status message to display the current states
-	 */
-	public void updateStatusLabel() {
-        AlgorithmExecutor executor
-            = dispatch.getAlgorithmExecutor();
-        AlgorithmSynchronizer synchronizer
-            = dispatch.getAlgorithmSynchronizer();
-        if ( executor == null
-             || synchronizer == null ) {
-            updateStatusLabel("Algorithm no longer running");
-        }
-        else if ( synchronizer.exceptionThrown() )
-            updateStatusLabel("Terminated because of exception");
-        else if ( executor.infiniteLoop )
-            updateStatusLabel("Terminated because of possible infinite loop");
-        else {
-            int algorithmState = executor.getAlgorithmState();
-            int displayState = executor.getDisplayState();
-            String message = "algorithm state is "
-                + algorithmState + ", display state is " + displayState;
-            statusLabel.setText(message);
-        }
-	}
-
-	/**
-	 * @param message a String to display as status message
-	 */
-	public void updateStatusLabel(String message) {
-		statusLabel.setText(message);
-	}
-
-	public String getStatusLabelAsAString(){
-		return statusLabel.getText();
-	}
-
-	private GraphMode mode = null;
-
-    private EdgeSpecificationDialog edgeSelectionDialog;
-    private NodeSpecificationDialog nodeDeletionDialog;
-
-    public ComponentEditPanel getComponentEditPanel() {
-        return componentEditPanel;
+  /**
+   * Updates the status message to display the current states
+   */
+  public void updateStatusLabel() {
+    AlgorithmExecutor executor
+      = dispatch.getAlgorithmExecutor();
+    AlgorithmSynchronizer synchronizer
+      = dispatch.getAlgorithmSynchronizer();
+    if ( executor == null
+         || synchronizer == null ) {
+      updateStatusLabel("Algorithm no longer running");
     }
-
-	/**
-	 * The Edit modes GraphWindow can assume. Used in the listener for the
-	 * GraphPanel instance to update the Graph appropriately when edited visually
-	 */
-	public enum GraphMode {
-		SELECT("select"),
-		CREATE_NODE("newnode"),
-		CREATE_EDGE("newedge"),
-		DELETE("close");
-		
-		private ImageIcon icon;
-		
-		private GraphMode(String iconName) {
-            java.net.URL imageURL
-                = GraphWindow.class.getResource("images/" + iconName + "_24.png");
-            icon = new ImageIcon(imageURL);
-        }
-		
-		public ImageIcon getIcon() {
-            return icon;
-        }
-	}
-	
-	/**
-	 * Enumerates the types of displayed components the user can
-	 * toggle on and off
-	 */
-	public enum GraphDisplays {
-		NODE_LABELS("nodelabel"),
-		EDGE_LABELS("edgelabel"),
-		NODE_WEIGHTS("weightednode"),
-		EDGE_WEIGHTS("weightededge");
-		
-		private ImageIcon icon;
-		private boolean isShown;
-		
-		private GraphDisplays(String iconName) {
-            java.net.URL imageURL 
-                = GraphWindow.class.getResource("images/" + iconName + "_24.png");
-			   icon = new ImageIcon(imageURL);
-        }
-		
-		public ImageIcon getIcon() {
-            return icon;
-        }
-		public boolean isShown() {
-            return isShown;
-        }
-		public void setShown(boolean shown) {
-            isShown = shown;
-            Preference.PREFERENCES_NODE.putBoolean(name(), isShown);
-        }
-	}
-	
-	/**
-	 * Enumerates the directedness properties of a Graph
-	 */
-	public enum Directedness {
-		DIRECTED("directed"),
-		UNDIRECTED("undirected");
-		
-		private ImageIcon icon;
-		
-		private Directedness(String iconName) {
-            java.net.URL imageURL
-                = GraphWindow.class.getResource("images/" + iconName + "_24.png");
-            icon = new ImageIcon(imageURL);
-        }
-		
-		public ImageIcon getIcon() {
-            return icon;
-        }
-	}
-	
-	public static JFrame getGraphFrame() {
-        return frame;
+    else if ( synchronizer.exceptionThrown() )
+      updateStatusLabel("Terminated because of exception");
+    else if ( executor.infiniteLoop )
+      updateStatusLabel("Terminated because of possible infinite loop");
+    else {
+      int algorithmState = executor.getAlgorithmState();
+      int displayState = executor.getDisplayState();
+      String message = "algorithm state is "
+        + algorithmState + ", display state is " + displayState;
+      statusLabel.setText(message);
     }
-	
-	public static GraphPanel getGraphPanel() {
-		return graphPanel;
-	}
-	
-	/**
-	 * Create a new GraphWindow and all of its associated components
-	 * @param _dispatch The GraphDispatch object used to share data between Galant windows
-	 */
-	public GraphWindow(GraphDispatch _dispatch) {
-		LogHelper.enterConstructor(getClass());
+  }
 
-		this.dispatch = _dispatch;
-		// Register this object as a change listener. Allows GraphDispatch notifications to be pushed to this object
-		_dispatch.getWorkingGraph().graphWindow = this;
-		_dispatch.addChangeListener(this);
+  /**
+   * @param message a String to display as status message
+   */
+  public void updateStatusLabel(String message) {
+    statusLabel.setText(message);
+  }
 
-		// Create the panel that renders the active Graph
-		graphPanel = new GraphPanel(dispatch, this);
+  public String getStatusLabelAsAString(){
+    return statusLabel.getText();
+  }
 
-		// Add a listener to handle visual editing of the Graph
-		graphPanel.addMouseMotionListener( new MouseMotionListener() {
-                @Override
-                    public void mouseDragged(MouseEvent arg0) {
-                    // If you start dragging, set dragging mode so you don't
-                    // perform any other operations on the Node until after
-                    // releasing it
-                    Node sel = graphPanel.getSelectedNode();
-                    if ( sel != null ) {
-                        graphPanel.setDragging(true);
-                        graphPanel.setEdgeTracker(null);
-                        if ( ! dispatch.isAnimationMode()
-                             || ! dispatch.algorithmMovesNodes()) {
-                            try {
-                                sel.setFixedPosition( arg0.getPoint() );
-                            }
-                            catch ( Exception e ) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                    frame.repaint();
-                }
+  private GraphMode mode = null;
 
-                @Override
-                    public void mouseMoved(MouseEvent arg0) {
-                    // If you have the source selected in edge creation,
-                    // follow the mouse with an edge
-                    if ( ! dispatch.isAnimationMode() ) {
-                        if (mode == GraphMode.CREATE_EDGE) {
-                            graphPanel.setEdgeTracker(arg0.getPoint());
-                            frame.repaint();
-                        }
-                    }
-                }
-            }); // addMouseMotionListener
+  private EdgeSpecificationDialog edgeSelectionDialog;
+  private NodeSpecificationDialog nodeDeletionDialog;
+
+  public ComponentEditPanel getComponentEditPanel() {
+    return componentEditPanel;
+  }
+
+  /**
+   * The Edit modes GraphWindow can assume. Used in the listener for the
+   * GraphPanel instance to update the Graph appropriately when edited visually
+   */
+  public enum GraphMode {
+    SELECT("select"),
+    CREATE_NODE("newnode"),
+    CREATE_EDGE("newedge"),
+    DELETE("close");
 		
-		// Add a listener to handle visual editing of the Graph
-		graphPanel.addMouseListener( new MouseAdapter() {
-                Node prevNode;
-			
-                @Override
-                    public void mousePressed(MouseEvent e) {
-                        Point location = e.getPoint();
-                        LogHelper.guiLogDebug( "CLICK, location = " + location );
-					
-                        prevNode = graphPanel.getSelectedNode();
-                        Node n = graphPanel.selectTopClickedNode(location);
-                }
+    private ImageIcon icon;
+		
+    private GraphMode(String iconName) {
+      java.net.URL imageURL
+        = GraphWindow.class.getResource("images/" + iconName + "_24.png");
+      icon = new ImageIcon(imageURL);
+    }
+		
+    public ImageIcon getIcon() {
+      return icon;
+    }
+  }
+	
+  /**
+   * Enumerates the types of displayed components the user can
+   * toggle on and off
+   */
+  public enum GraphDisplays {
+    NODE_LABELS("nodelabel"),
+    EDGE_LABELS("edgelabel"),
+    NODE_WEIGHTS("weightednode"),
+    EDGE_WEIGHTS("weightededge");
+		
+    private ImageIcon icon;
+    private boolean isShown;
+		
+    private GraphDisplays(String iconName) {
+      java.net.URL imageURL 
+        = GraphWindow.class.getResource("images/" + iconName + "_24.png");
+      icon = new ImageIcon(imageURL);
+    }
+		
+    public ImageIcon getIcon() {
+      return icon;
+    }
+    public boolean isShown() {
+      return isShown;
+    }
+    public void setShown(boolean shown) {
+      isShown = shown;
+      Preference.PREFERENCES_NODE.putBoolean(name(), isShown);
+    }
+  }
+	
+  /**
+   * Enumerates the directedness properties of a Graph
+   */
+  public enum Directedness {
+    DIRECTED("directed"),
+    UNDIRECTED("undirected");
+		
+    private ImageIcon icon;
+		
+    private Directedness(String iconName) {
+      java.net.URL imageURL
+        = GraphWindow.class.getResource("images/" + iconName + "_24.png");
+      icon = new ImageIcon(imageURL);
+    }
+		
+    public ImageIcon getIcon() {
+      return icon;
+    }
+  }
+	
+  public static JFrame getGraphFrame() {
+    return frame;
+  }
+	
+  public static GraphPanel getGraphPanel() {
+    return graphPanel;
+  }
+	
+  /**
+   * Create a new GraphWindow and all of its associated components
+   * @param _dispatch The GraphDispatch object used to share data between Galant windows
+   */
+  public GraphWindow(GraphDispatch _dispatch) {
+    LogHelper.enterConstructor(getClass());
 
-                @Override
-                    public void mouseReleased(MouseEvent arg0) {       
-                        Point location = arg0.getPoint();
-                        LogHelper.guiLogDebug("RELEASE");
-                        LogHelper.guiLogDebug(mode.toString());
-				
-                        if ( graphPanel.isDragging() ) {
-                            LogHelper.guiLogDebug( "End of drag: location = " + location );
-                            // Finished dragging a node, now reset the
-                            // GraphPanel's tracking info
-                            graphPanel.setDragging(false);
-                            graphPanel.setSelectedNode(null);
-                            graphPanel.setPrevSelectedNode(null);
-                            graphPanel.setEdgeTracker(null);
-					
-                            // Unselected the node, so hide the edit panel
-                            componentEditPanel.setWorkingComponent(null);
-					
-                            dispatch.pushToTextEditor(); 
-							
-                        } // only allow dragging to move nodes in animation mode
-                        else if ( ! dispatch.isAnimationMode() ) {
-                            // release after click
-                            // not in animation mode
-                            Node clickNode = graphPanel.getSelectedNode();
-                            Edge clickEdge = null;
-                            if (clickNode == null) {
-                                prevNode = null;
-                                clickEdge = graphPanel.selectTopClickedEdge(location);
-                            }
-				
-                            // Perform the Edit action associated with the
-                            // currently selected mode
-                            if (clickNode != null) { 
-                                componentEditPanel.setWorkingComponent(clickNode);
-                            }
-                            else {
-                                componentEditPanel.setWorkingComponent(clickEdge);
-                            }
-						
-                            if ( mode == GraphMode.CREATE_NODE
-                                 && clickNode == null ) {
-                                // Create a new node if you haven't clicked on
-                                // any existing nodes
-                                LogHelper.guiLogDebug("CREATE NODE");
-							
-                                // add a new default node to the working
-                                // graph at this position
-				
-                                Graph g = dispatch.getWorkingGraph();
-                                Node n = g.addInitialNode(location.x, location.y);
-							
-                                // select the new node
-                                Node nNew = graphPanel.selectTopClickedNode(location);
-                                LogHelper.guiLogDebug( " select: node = " + n );
+    this.dispatch = _dispatch;
+    // Register this object as a change listener. Allows GraphDispatch notifications to be pushed to this object
+    _dispatch.getWorkingGraph().graphWindow = this;
+    _dispatch.addChangeListener(this);
 
-                                componentEditPanel.setWorkingComponent(nNew);
-                                LogHelper.guiLogDebug( " setWorking: node = " + n );
-                                
-                                dispatch.pushToTextEditor(); 
-							
-                            } // create node
-                            else if ( mode == GraphMode.CREATE_EDGE
-                                      && clickNode != null && prevNode != null) {
-                                // Create an edge if you've selected two nodes
-                                LogHelper.guiLogDebug("CREATE EDGE");
-							
-                                // add a new edge between the clicked nodes
-                                Graph g = dispatch.getWorkingGraph();
-                                Edge e = g.addInitialEdge(prevNode, clickNode);
-							
-                                // select the new edge and clear the edge
-                                // trackers
-                                graphPanel.setSelectedNode(null);
-                                graphPanel.setSelectedEdge(e);
-                                graphPanel.setEdgeTracker(null);
-							
-                                componentEditPanel.setWorkingComponent(e);
-							
-                                if ( repositionBtn.isSelected() ) {
-                                    g.smartReposition();
-                                }
-                                else {
-                                    g.undoReposition();
-                                }
-                                dispatch.pushToTextEditor(); 
-							
-                            } // create edge
-                            else if (mode == GraphMode.DELETE) {
-                                // Delete a component if you clicked on one
-                                // Priority goes to nodes
-                                if (clickNode != null) {
-                                    Graph g = dispatch.getWorkingGraph();
-                                    g.removeNode(clickNode);
-                                    graphPanel.setSelectedNode(null);
-								
-                                    if (repositionBtn.isSelected())
-                                        g.smartReposition();
-								
-                                } // node deletion
-                                else if (clickEdge != null) {
-                                    // If you didn't click on a node, look
-                                    // for an edge
-                                    Graph g = dispatch.getWorkingGraph();
-                                    g.removeEdge(clickEdge);
-                                    graphPanel.setSelectedEdge(null);
-								
-                                    if (repositionBtn.isSelected())
-                                        g.smartReposition();
-								
-                                } // edge deletion
-							
-                                componentEditPanel.setWorkingComponent(null);
-							
-                                dispatch.pushToTextEditor(); 
-							
-                            } // delete mode
-                        } // not in animation mode
-                    frame.repaint();
-                }
+    // Create the panel that renders the active Graph
+    graphPanel = new GraphPanel(dispatch, this);
+
+    // Add a listener to handle visual editing of the Graph
+    graphPanel.addMouseMotionListener( new MouseMotionListener() {
+        @Override
+        public void mouseDragged(MouseEvent arg0) {
+          // If you start dragging, set dragging mode so you don't
+          // perform any other operations on the Node until after
+          // releasing it
+          Node sel = graphPanel.getSelectedNode();
+          if ( sel != null ) {
+            graphPanel.setDragging(true);
+            graphPanel.setEdgeTracker(null);
+            if ( ! dispatch.isAnimationMode()
+                 || ! dispatch.algorithmMovesNodes()) {
+              try {
+                sel.setFixedPosition( arg0.getPoint() );
+              }
+              catch ( Exception e ) {
+                e.printStackTrace();
+              }
             }
-            ); // addMouseListener
+          }
+          frame.repaint();
+        }
+
+        @Override
+        public void mouseMoved(MouseEvent arg0) {
+          // If you have the source selected in edge creation,
+          // follow the mouse with an edge
+          if ( ! dispatch.isAnimationMode() ) {
+            if (mode == GraphMode.CREATE_EDGE) {
+              graphPanel.setEdgeTracker(arg0.getPoint());
+              frame.repaint();
+            }
+          }
+        }
+      }); // addMouseMotionListener
 		
-		frame = new JFrame("Galant " + Galant.VERSION + ": Graph Editor");
+    // Add a listener to handle visual editing of the Graph
+    graphPanel.addMouseListener( new MouseAdapter() {
+        Node prevNode;
+			
+        @Override
+        public void mousePressed(MouseEvent e) {
+          Point location = e.getPoint();
+          LogHelper.logDebug( "CLICK, location = " + location );
+					
+          prevNode = graphPanel.getSelectedNode();
+          Node n = graphPanel.selectTopClickedNode(location);
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent arg0) {       
+          Point location = arg0.getPoint();
+          LogHelper.logDebug("RELEASE");
+          LogHelper.logDebug(mode.toString());
+				
+          if ( graphPanel.isDragging() ) {
+            LogHelper.logDebug( "End of drag: location = " + location );
+            // Finished dragging a node, now reset the
+            // GraphPanel's tracking info
+            graphPanel.setDragging(false);
+            graphPanel.setSelectedNode(null);
+            graphPanel.setPrevSelectedNode(null);
+            graphPanel.setEdgeTracker(null);
+					
+            // Unselected the node, so hide the edit panel
+            componentEditPanel.setWorkingComponent(null);
+					
+            dispatch.pushToTextEditor(); 
+							
+          } // only allow dragging to move nodes in animation mode
+          else if ( ! dispatch.isAnimationMode() ) {
+            // release after click
+            // not in animation mode
+            Node clickNode = graphPanel.getSelectedNode();
+            Edge clickEdge = null;
+            if (clickNode == null) {
+              prevNode = null;
+              clickEdge = graphPanel.selectTopClickedEdge(location);
+            }
+				
+            // Perform the Edit action associated with the
+            // currently selected mode
+            if (clickNode != null) { 
+              componentEditPanel.setWorkingComponent(clickNode);
+            }
+            else {
+              componentEditPanel.setWorkingComponent(clickEdge);
+            }
+						
+            if ( mode == GraphMode.CREATE_NODE
+                 && clickNode == null ) {
+              // Create a new node if you haven't clicked on
+              // any existing nodes
+              LogHelper.logDebug("CREATE NODE");
+							
+              // add a new default node to the working
+              // graph at this position
+				
+              Graph g = dispatch.getWorkingGraph();
+              Node n = g.addInitialNode(location.x, location.y);
+							
+              // select the new node
+              Node nNew = graphPanel.selectTopClickedNode(location);
+              LogHelper.logDebug( " select: node = " + n );
+
+              componentEditPanel.setWorkingComponent(nNew);
+              LogHelper.logDebug( " setWorking: node = " + n );
+                                
+              dispatch.pushToTextEditor(); 
+							
+            } // create node
+            else if ( mode == GraphMode.CREATE_EDGE
+                      && clickNode != null && prevNode != null) {
+              // Create an edge if you've selected two nodes
+              LogHelper.logDebug("CREATE EDGE");
+							
+              // add a new edge between the clicked nodes
+              Graph g = dispatch.getWorkingGraph();
+              Edge e = g.addInitialEdge(prevNode, clickNode);
+							
+              // select the new edge and clear the edge
+              // trackers
+              graphPanel.setSelectedNode(null);
+              graphPanel.setSelectedEdge(e);
+              graphPanel.setEdgeTracker(null);
+							
+              componentEditPanel.setWorkingComponent(e);
+							
+              if ( repositionBtn.isSelected() ) {
+                g.smartReposition();
+              }
+              else {
+                g.undoReposition();
+              }
+              dispatch.pushToTextEditor(); 
+							
+            } // create edge
+            else if (mode == GraphMode.DELETE) {
+              // Delete a component if you clicked on one
+              // Priority goes to nodes
+              if (clickNode != null) {
+                Graph g = dispatch.getWorkingGraph();
+                g.removeNode(clickNode);
+                graphPanel.setSelectedNode(null);
+								
+                if (repositionBtn.isSelected())
+                  g.smartReposition();
+								
+              } // node deletion
+              else if (clickEdge != null) {
+                // If you didn't click on a node, look
+                // for an edge
+                Graph g = dispatch.getWorkingGraph();
+                g.removeEdge(clickEdge);
+                graphPanel.setSelectedEdge(null);
+								
+                if (repositionBtn.isSelected())
+                  g.smartReposition();
+								
+              } // edge deletion
+							
+              componentEditPanel.setWorkingComponent(null);
+							
+              dispatch.pushToTextEditor(); 
+							
+            } // delete mode
+          } // not in animation mode
+          frame.repaint();
+        }
+      }
+      ); // addMouseListener
 		
-		// The Main Galant class adds a listener that handles close operations to check if any dirty edit sessions exist
-		frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+    frame = new JFrame("Galant " + Galant.VERSION + ": Graph Editor");
 		
-		frame.setJMenuBar(initMenu());
+    // The Main Galant class adds a listener that handles close operations to check if any dirty edit sessions exist
+    frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		
-		frame.add(this);
+    frame.setJMenuBar(initMenu());
 		
-		frame.addComponentListener(this);
+    frame.add(this);
 		
-		// Create the buttons to navigate the graph state: forward, back, and stop
-		stepForward = new JButton(new ImageIcon(GraphWindow.class.getResource("images/stepforward_24.png")));
-		stepForward.setToolTipText("Step Forward\n[->]");
+    frame.addComponentListener(this);
+		
+    // Create the buttons to navigate the graph state: forward, back, and stop
+    stepForward = new JButton(new ImageIcon(GraphWindow.class.getResource("images/stepforward_24.png")));
+    stepForward.setToolTipText("Step Forward\n[->]");
     stepBack = new JButton(new ImageIcon(GraphWindow.class.getResource("images/stepback_24.png")));
-		stepBack.setToolTipText("Step Backward\n[<-]");
+    stepBack.setToolTipText("Step Backward\n[<-]");
     done = new JButton(new ImageIcon(GraphWindow.class.getResource("images/close_24.png")));
-		done.setToolTipText("Exit Animation\n[Esc]");
+    done.setToolTipText("Exit Animation\n[Esc]");
     
-		componentEditPanel = new ComponentEditPanel();
-		componentEditPanel.setVisible(false);
+    componentEditPanel = new ComponentEditPanel();
+    componentEditPanel.setVisible(false);
 
-		statusLabel = new JLabel("No status");
+    statusLabel = new JLabel("No status");
 		
-		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+    this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
-		this.add(initToolbar());
-		this.add(statusLabel);
-		this.add(graphPanel);
-		this.add(initAnimationPanel());
-		this.add(componentEditPanel);
+    this.add(initToolbar());
+    this.add(statusLabel);
+    this.add(graphPanel);
+    this.add(initAnimationPanel());
+    this.add(componentEditPanel);
 
-		frame.setName("graph_window");
-		WindowUtil.preserveWindowBounds(frame, 0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
-        //frame.setPreferredSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
-      frame.pack();
-		frame.setVisible(true);
+    frame.setName("graph_window");
+    WindowUtil.preserveWindowBounds(frame, 0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+    //frame.setPreferredSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
+    frame.pack();
+    frame.setVisible(true);
         
-		dispatch.setWindowSize(graphPanel.getHeight(), graphPanel.getWidth());
+    dispatch.setWindowSize(graphPanel.getHeight(), graphPanel.getWidth());
 		
-		LogHelper.exitConstructor(getClass());
-	} // constructor
+    LogHelper.exitConstructor(getClass());
+  } // constructor
 	
 	/**
 	 * Change the Graph edit mode
 	 * @param mode The new active Edit mode
 	 */
-	private void changeMode(GraphMode mode) {
-		LogHelper.guiEnterMethod(getClass(), "changeMode");
+  private void changeMode(GraphMode mode) {
+    LogHelper.enterMethod(getClass(), "changeMode");
 		
-		this.mode = mode;
-		graphPanel.setEdgeTracker(null);
+    this.mode = mode;
+    graphPanel.setEdgeTracker(null);
 				
-		switch(mode) {
-				case SELECT:{
-					select.setSelected(true);
-					break;
-				}
-				case CREATE_EDGE:{
-					addEdge.setSelected(true);
-					graphPanel.setSelectedNode(null);
-					break;
-				}
-				case CREATE_NODE:{
-					addNode.setSelected(true);
-					break;
-				}
-				case DELETE:{
-					deleteBtn.setSelected(true);
-				}
-			}
+    switch(mode) {
+    case SELECT:{
+      select.setSelected(true);
+      break;
+    }
+    case CREATE_EDGE:{
+      addEdge.setSelected(true);
+      graphPanel.setSelectedNode(null);
+      break;
+    }
+    case CREATE_NODE:{
+      addNode.setSelected(true);
+      break;
+    }
+    case DELETE:{
+      deleteBtn.setSelected(true);
+    }
+    }
 		
-		frame.repaint();
+    frame.repaint();
 		
-		LogHelper.guiExitMethod(getClass(), "changeMode");
-	}
+    LogHelper.exitMethod(getClass(), "changeMode");
+  }
 	
-	/**
-	 * Sets the graph to display as Directed or Undirected
-	 * @param mode
-	 */
-	private void changeDirectedness(Directedness mode) {
-		LogHelper.guiEnterMethod(getClass(), "changeDirectedness " + mode);
+  /**
+   * Sets the graph to display as Directed or Undirected
+   * @param mode
+   */
+  private void changeDirectedness(Directedness mode) {
+    LogHelper.enterMethod(getClass(), "changeDirectedness " + mode);
 		
-		switch(mode){
-				case DIRECTED:{
-					directedBtn.setSelected(true);
-					dispatch.getWorkingGraph().setDirected(true);
-					frame.repaint();
-					break;
-				}
-				case UNDIRECTED:{
-					undirectedBtn.setSelected(true);
-					dispatch.getWorkingGraph().setDirected(false);
-					frame.repaint();
-					break;
-				}
-			}
+    switch(mode){
+    case DIRECTED:{
+      directedBtn.setSelected(true);
+      dispatch.getWorkingGraph().setDirected(true);
+      frame.repaint();
+      break;
+    }
+    case UNDIRECTED:{
+      undirectedBtn.setSelected(true);
+      dispatch.getWorkingGraph().setDirected(false);
+      frame.repaint();
+      break;
+    }
+    }
 		
-		frame.repaint();
+    frame.repaint();
 		
-		LogHelper.guiExitMethod(getClass(), "changeDirectedNess");
-	}
+    LogHelper.exitMethod(getClass(), "changeDirectedNess");
+  }
 	
-	@Override
-	public void propertyChange(PropertyChangeEvent evt) {
-		// Update display to animation mode or edit mode based on the flag
-		if (evt.getPropertyName().equals(GraphDispatch.ANIMATION_MODE)) {
-			if ( (Boolean) evt.getNewValue() ) {
-				componentEditPanel.setWorkingComponent(null);
-				stepForward.setEnabled(true);
-				stepBack.setEnabled(false);
-				animationButtons.setVisible(true);
-                animationButtons.setFocusable(true);
-                animationButtons.requestFocusInWindow();
+  @Override
+  public void propertyChange(PropertyChangeEvent evt) {
+    // Update display to animation mode or edit mode based on the flag
+    if (evt.getPropertyName().equals(GraphDispatch.ANIMATION_MODE)) {
+      if ( (Boolean) evt.getNewValue() ) {
+        componentEditPanel.setWorkingComponent(null);
+        stepForward.setEnabled(true);
+        stepBack.setEnabled(false);
+        animationButtons.setVisible(true);
+        animationButtons.setFocusable(true);
+        animationButtons.requestFocusInWindow();
 
-                directedBtn.setVisible(false);
-                undirectedBtn.setVisible(false);
-				select.setVisible(false);
-                addNode.setVisible(false);
-                addEdge.setVisible(false);
-                deleteBtn.setVisible(false);
-                repositionBtn.setVisible(false);
-			}
-            else {
-				animationButtons.setVisible(false);
-                directedBtn.setVisible(true);
-                undirectedBtn.setVisible(true);
-				select.setVisible(true);
-                addNode.setVisible(true);
-                addEdge.setVisible(true);
-                deleteBtn.setVisible(true);
-                repositionBtn.setVisible(true);
-			}
-		} 
-		else if (evt.getPropertyName().equals(GraphDispatch.GRAPH_UPDATE)) {
-			if (dispatch.getWorkingGraph().isDirected()) {
-				changeDirectedness(Directedness.DIRECTED);
-			}
-			else {
-				changeDirectedness(Directedness.UNDIRECTED);
-			}
-		}
-		
-		frame.repaint();
-		
-	}
-	
-	/**
-	 * Creates menu bar components
-	 * @return menuBar the menu bar
-	 */
-	private static JMenuBar initMenu() {
-		LogHelper.guiEnterMethod(GraphWindow.class, "initMenu");
-		
-		menuBar = new JMenuBar();
-		
-		fileMenu = new JMenu("File");
-		fileMenu.add(PreferencesPanel.SHOW_PREFS_DIALOG);
-		fileMenu.add(WindowUtil.EXPORT_ACTION);
-		fileMenu.addSeparator();
-		fileMenu.add(WindowUtil.QUIT_ACTION);
-		
-		menuBar.add(fileMenu);
-
-
-		LogHelper.guiExitMethod(GraphWindow.class, "initMenu");
-		return menuBar;
-	}
-	
-	/**
-	 * Creates toolbar components
-	 * @return
-	 */
-	private JToolBar initToolbar() {
-		LogHelper.guiEnterMethod(getClass(), "initToolbar");
-		
-		toolBar = new JToolBar(SwingConstants.HORIZONTAL);
-		toolBar.setFloatable(false);
-		toolBar.setMaximumSize(new Dimension(DEFAULT_WIDTH, TOOLBAR_HEIGHT));
-		toolBar.setMinimumSize(new Dimension(DEFAULT_WIDTH, TOOLBAR_HEIGHT));
-		toolBar.setAlignmentY(0);
-		
-		select = createButton(GraphMode.SELECT);
-        select.setFocusable(false);
-        select.setToolTipText("Select");
-		addNode = createButton(GraphMode.CREATE_NODE);
-        addNode.setFocusable(false);
-		addNode.setToolTipText("Create Node");
-        addEdge = createButton(GraphMode.CREATE_EDGE);
-        addEdge.setFocusable(false);
-		addEdge.setToolTipText("Create Edge");
-        deleteBtn = createButton(GraphMode.DELETE);
-        deleteBtn.setFocusable(false);
-		deleteBtn.setToolTipText("Delete");
-        changeMode(GraphMode.SELECT);		
-    
-		toolBar.addSeparator();
-		
-		undirectedBtn = createButton(Directedness.UNDIRECTED);
-		undirectedBtn.setToolTipText("Undirected");
-        undirectedBtn.setFocusable(false);
-        directedBtn = createButton(Directedness.DIRECTED);
-		directedBtn.setToolTipText("Directed");
-        directedBtn.setFocusable(false);
+        directedBtn.setVisible(false);
+        undirectedBtn.setVisible(false);
+        select.setVisible(false);
+        addNode.setVisible(false);
+        addEdge.setVisible(false);
+        deleteBtn.setVisible(false);
+        repositionBtn.setVisible(false);
+      }
+      else {
+        animationButtons.setVisible(false);
+        directedBtn.setVisible(true);
+        undirectedBtn.setVisible(true);
+        select.setVisible(true);
+        addNode.setVisible(true);
+        addEdge.setVisible(true);
+        deleteBtn.setVisible(true);
+        repositionBtn.setVisible(true);
+      }
+    } 
+    else if (evt.getPropertyName().equals(GraphDispatch.GRAPH_UPDATE)) {
+      if (dispatch.getWorkingGraph().isDirected()) {
+        changeDirectedness(Directedness.DIRECTED);
+      }
+      else {
         changeDirectedness(Directedness.UNDIRECTED);
+      }
+    }
 		
-		toolBar.addSeparator();
+    frame.repaint();
 		
-		nodeLabels = createButton(GraphDisplays.NODE_LABELS);
-        nodeLabels.setFocusable(false);
-		nodeLabels.setToolTipText("Display Node Labels");
-        edgeLabels = createButton(GraphDisplays.EDGE_LABELS);
-        edgeLabels.setFocusable(false);
-		edgeLabels.setToolTipText("Display Edge Labels");
-        nodeWeights = createButton(GraphDisplays.NODE_WEIGHTS);
-        nodeWeights.setFocusable(false);
-		nodeWeights.setToolTipText("Display Node Weights");
-        edgeWeights = createButton(GraphDisplays.EDGE_WEIGHTS);
-        edgeWeights.setFocusable(false);
-		edgeWeights.setToolTipText("Display Edge Weights");
-
-		toolBar.addSeparator();
-		
-		java.net.URL imageURL = GraphWindow.class.getResource("images/autoposition_24.png");
-		repositionBtn = new JToggleButton(new ImageIcon(imageURL));
-        repositionBtn.setFocusable(false);
-		repositionBtn.setToolTipText("Intelligent Rearrange");
-        repositionBtn.addActionListener(new ActionListener(){
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (repositionBtn.isSelected()) {
-                    dispatch.getWorkingGraph().smartReposition();
-                }
-                else {
-                    dispatch.getWorkingGraph().undoReposition();
-                }
-                dispatch.pushToTextEditor();
-			}
-            });
-		toolBar.add(repositionBtn);
-		
-		LogHelper.guiExitMethod(this.getClass(), "initToolbar");
-		return toolBar;
-	}
+  }
 	
-	/**
-	 * Creates a GraphMode button. The icon URL associated with each is retrieved from the enum
-	 * @param mode The Edit mode to create a button for
-	 * @return the appropriate JToggleButton
-	 */
-	private JToggleButton createButton(final GraphMode mode){
-			JToggleButton button = new JToggleButton();
-			button.addActionListener(new ActionListener(){
-				@Override
-				public void actionPerformed(ActionEvent e){
-						changeMode(mode);
-					}
-			});
-			button.setIcon(mode.getIcon());
-			modeGroup.add(button);
-			toolBar.add(button);
-			return button;
-		}
-	
-	/**
-	 * Creates a Directedness toggle button. The icon URL associated with each is retrieved from the enum
-	 * @param mode Directed of Undirected
-	 * @return the appropriate JToggleButton
-	 */
-	private JToggleButton createButton(final Directedness mode)
-	{
-		JToggleButton button = new JToggleButton();
-		button.addActionListener(new ActionListener(){
-			@Override
-			public void actionPerformed(ActionEvent e){
-					changeDirectedness(mode);
-					dispatch.pushToTextEditor(); 
-				}
-		});
-		button.setIcon(mode.getIcon());
-		directedGroup.add(button);
-		toolBar.add(button);
-		return button;
-	}
-	
-	/**
-	 * Creates a toggle button for displaying and hiding various properties
-	 * @param displayType The type of property to hide
-	 * @return the appropriate JToggleButton
-	 */
-	private static JToggleButton createButton(final GraphDisplays displayType) {
-		final JToggleButton button = new JToggleButton();
-		button.addActionListener(new ActionListener(){
-			@Override
-			public void actionPerformed(ActionEvent e){
-					displayType.setShown(button.isSelected());
-					frame.repaint(); 
-				}
-		});
-		button.setIcon(displayType.getIcon());
-		toolBar.add(button);
-		displayType.setShown(Preference.PREFERENCES_NODE.getBoolean(displayType.name(), true));
-		button.setSelected(displayType.isShown());
-		return button;
-	}
-
-    /**
-     * The following give Graph.java access to the label/weight visibility
-     * buttons so that they will remain synchronized with the visibility
-     * state when an algorithm is running.
-     */
-    public void showNodeLabels(boolean show) {
-        GraphDisplays.NODE_LABELS.setShown(show);
-        nodeLabels.setSelected(show);
-    }
-    public void showNodeWeights(boolean show) {
-        GraphDisplays.NODE_WEIGHTS.setShown(show);
-        nodeWeights.setSelected(show);
-    }
-    public void showEdgeLabels(boolean show) {
-        GraphDisplays.EDGE_LABELS.setShown(show);
-        edgeLabels.setSelected(show);
-    }
-    public void showEdgeWeights(boolean show) {
-        GraphDisplays.EDGE_WEIGHTS.setShown(show);
-        edgeWeights.setSelected(show);
-    }
-
-    private synchronized void performStepBack() {
-        AlgorithmExecutor executor = dispatch.getAlgorithmExecutor();
-        if ( ! executor.hasPreviousState() ) return;
-        executor.decrementDisplayState();
-        stepForward.setEnabled(executor.hasNextState());
-        stepBack.setEnabled(executor.hasPreviousState());
-        updateStatusLabel();
-    }
-
-    private synchronized void performStepForward() {
-        AlgorithmExecutor executor = dispatch.getAlgorithmExecutor();
-        if ( ! executor.hasNextState() ) return;
-        executor.incrementDisplayState();
-        stepForward.setEnabled(executor.hasNextState());
-        stepBack.setEnabled(executor.hasPreviousState());
-        updateStatusLabel();
-    }
-
-    public synchronized void performDone() {
-        AlgorithmExecutor executor = dispatch.getAlgorithmExecutor();
-        // does not appear to help in case of infinite loop
-        //executor.algorithmThread.interrupt();
-        AlgorithmSynchronizer synchronizer
-            = dispatch.getAlgorithmSynchronizer();
-        // also does not appear to help in case of infinite loop
-        //synchronizer.finishStep();
-        executor.stopAlgorithm();
-        // in case user changed node positions during execution
-        if ( ! dispatch.algorithmMovesNodes() ) {
-            dispatch.pushToTextEditor();
-        }
-        updateStatusLabel();
-    }
-
-	/**
-	 * Initialize the animation panel controls
-	 * Steps through an Algorithm or exits the mode
-	 * @return
-	 */
-	private JPanel initAnimationPanel() {
-		LogHelper.guiEnterMethod(getClass(), "initAnimationPanel");
-		animationButtons = new JPanel();
-
-		stepBack.setEnabled(false);
-		stepBack.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-                performStepBack();
-                frame.repaint();
-			}
-		});
-    		
-		// Move the display state in GraphPanel forward one
-		stepForward.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-                performStepForward();
-				frame.repaint();
-			}
-		});
+  /**
+   * Creates menu bar components
+   * @return menuBar the menu bar
+   */
+  private static JMenuBar initMenu() {
+    LogHelper.enterMethod(GraphWindow.class, "initMenu");
 		
-		// Exit the animation and change back to Edit mode
-		done.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-                performDone();
-			}
-		});
+    menuBar = new JMenuBar();
+		
+    fileMenu = new JMenu("File");
+    fileMenu.add(PreferencesPanel.SHOW_PREFS_DIALOG);
+    fileMenu.add(WindowUtil.EXPORT_ACTION);
+    fileMenu.addSeparator();
+    fileMenu.add(WindowUtil.QUIT_ACTION);
+		
+    menuBar.add(fileMenu);
+
+
+    LogHelper.exitMethod(GraphWindow.class, "initMenu");
+    return menuBar;
+  }
+	
+  /**
+   * Creates toolbar components
+   * @return
+   */
+  private JToolBar initToolbar() {
+    LogHelper.enterMethod(getClass(), "initToolbar");
+		
+    toolBar = new JToolBar(SwingConstants.HORIZONTAL);
+    toolBar.setFloatable(false);
+    toolBar.setMaximumSize(new Dimension(DEFAULT_WIDTH, TOOLBAR_HEIGHT));
+    toolBar.setMinimumSize(new Dimension(DEFAULT_WIDTH, TOOLBAR_HEIGHT));
+    toolBar.setAlignmentY(0);
+		
+    select = createButton(GraphMode.SELECT);
+    select.setFocusable(false);
+    select.setToolTipText("Select");
+    addNode = createButton(GraphMode.CREATE_NODE);
+    addNode.setFocusable(false);
+    addNode.setToolTipText("Create Node");
+    addEdge = createButton(GraphMode.CREATE_EDGE);
+    addEdge.setFocusable(false);
+    addEdge.setToolTipText("Create Edge");
+    deleteBtn = createButton(GraphMode.DELETE);
+    deleteBtn.setFocusable(false);
+    deleteBtn.setToolTipText("Delete");
+    changeMode(GraphMode.SELECT);		
     
-		animationButtons.add(stepBack);
-		animationButtons.add(stepForward);
-		animationButtons.add(done);
-		animationButtons.setMaximumSize(new Dimension(DEFAULT_WIDTH, ANIMATION_BUTTON_SIZE));
-		animationButtons.setMinimumSize(new Dimension(DEFAULT_WIDTH, ANIMATION_BUTTON_SIZE));
+    toolBar.addSeparator();
 		
-		// make animation panel initially invisible
-		frame.addWindowListener(new WindowAdapter(){
-			@Override
-			public void windowOpened(WindowEvent e)
-				{
-					animationButtons.setVisible(false);
-				}
-		});
+    undirectedBtn = createButton(Directedness.UNDIRECTED);
+    undirectedBtn.setToolTipText("Undirected");
+    undirectedBtn.setFocusable(false);
+    directedBtn = createButton(Directedness.DIRECTED);
+    directedBtn.setToolTipText("Directed");
+    directedBtn.setFocusable(false);
+    changeDirectedness(Directedness.UNDIRECTED);
+		
+    toolBar.addSeparator();
+		
+    nodeLabels = createButton(GraphDisplays.NODE_LABELS);
+    nodeLabels.setFocusable(false);
+    nodeLabels.setToolTipText("Display Node Labels");
+    edgeLabels = createButton(GraphDisplays.EDGE_LABELS);
+    edgeLabels.setFocusable(false);
+    edgeLabels.setToolTipText("Display Edge Labels");
+    nodeWeights = createButton(GraphDisplays.NODE_WEIGHTS);
+    nodeWeights.setFocusable(false);
+    nodeWeights.setToolTipText("Display Node Weights");
+    edgeWeights = createButton(GraphDisplays.EDGE_WEIGHTS);
+    edgeWeights.setFocusable(false);
+    edgeWeights.setToolTipText("Display Edge Weights");
 
-  // add keyboard shortcuts
-  KeyboardFocusManager keyManager
+    toolBar.addSeparator();
+		
+    java.net.URL imageURL = GraphWindow.class.getResource("images/autoposition_24.png");
+    repositionBtn = new JToggleButton(new ImageIcon(imageURL));
+    repositionBtn.setFocusable(false);
+    repositionBtn.setToolTipText("Intelligent Rearrange");
+    repositionBtn.addActionListener(new ActionListener(){
+        @Override
+        public void actionPerformed(ActionEvent arg0) {
+          if (repositionBtn.isSelected()) {
+            dispatch.getWorkingGraph().smartReposition();
+          }
+          else {
+            dispatch.getWorkingGraph().undoReposition();
+          }
+          dispatch.pushToTextEditor();
+        }
+      });
+    toolBar.add(repositionBtn);
+		
+    LogHelper.exitMethod(this.getClass(), "initToolbar");
+    return toolBar;
+  }
+	
+  /**
+   * Creates a GraphMode button. The icon URL associated with each is retrieved from the enum
+   * @param mode The Edit mode to create a button for
+   * @return the appropriate JToggleButton
+   */
+  private JToggleButton createButton(final GraphMode mode){
+    JToggleButton button = new JToggleButton();
+    button.addActionListener(new ActionListener(){
+        @Override
+        public void actionPerformed(ActionEvent e){
+          changeMode(mode);
+        }
+      });
+    button.setIcon(mode.getIcon());
+    modeGroup.add(button);
+    toolBar.add(button);
+    return button;
+  }
+	
+  /**
+   * Creates a Directedness toggle button. The icon URL associated with each is retrieved from the enum
+   * @param mode Directed of Undirected
+   * @return the appropriate JToggleButton
+   */
+  private JToggleButton createButton(final Directedness mode)
+  {
+    JToggleButton button = new JToggleButton();
+    button.addActionListener(new ActionListener(){
+        @Override
+        public void actionPerformed(ActionEvent e){
+          changeDirectedness(mode);
+          dispatch.pushToTextEditor(); 
+        }
+      });
+    button.setIcon(mode.getIcon());
+    directedGroup.add(button);
+    toolBar.add(button);
+    return button;
+  }
+	
+  /**
+   * Creates a toggle button for displaying and hiding various properties
+   * @param displayType The type of property to hide
+   * @return the appropriate JToggleButton
+   */
+  private static JToggleButton createButton(final GraphDisplays displayType) {
+    final JToggleButton button = new JToggleButton();
+    button.addActionListener(new ActionListener(){
+        @Override
+        public void actionPerformed(ActionEvent e){
+          displayType.setShown(button.isSelected());
+          frame.repaint(); 
+        }
+      });
+    button.setIcon(displayType.getIcon());
+    toolBar.add(button);
+    displayType.setShown(Preference.PREFERENCES_NODE.getBoolean(displayType.name(), true));
+    button.setSelected(displayType.isShown());
+    return button;
+  }
+
+  /**
+   * The following give Graph.java access to the label/weight visibility
+   * buttons so that they will remain synchronized with the visibility
+   * state when an algorithm is running.
+   */
+  public void showNodeLabels(boolean show) {
+    GraphDisplays.NODE_LABELS.setShown(show);
+    nodeLabels.setSelected(show);
+  }
+  public void showNodeWeights(boolean show) {
+    GraphDisplays.NODE_WEIGHTS.setShown(show);
+    nodeWeights.setSelected(show);
+  }
+  public void showEdgeLabels(boolean show) {
+    GraphDisplays.EDGE_LABELS.setShown(show);
+    edgeLabels.setSelected(show);
+  }
+  public void showEdgeWeights(boolean show) {
+    GraphDisplays.EDGE_WEIGHTS.setShown(show);
+    edgeWeights.setSelected(show);
+  }
+
+  private synchronized void performStepBack() {
+    AlgorithmExecutor executor = dispatch.getAlgorithmExecutor();
+    if ( ! executor.hasPreviousState() ) return;
+    executor.decrementDisplayState();
+    stepForward.setEnabled(executor.hasNextState());
+    stepBack.setEnabled(executor.hasPreviousState());
+    updateStatusLabel();
+  }
+
+  private synchronized void performStepForward() {
+    AlgorithmExecutor executor = dispatch.getAlgorithmExecutor();
+    if ( ! executor.hasNextState() ) return;
+    executor.incrementDisplayState();
+    stepForward.setEnabled(executor.hasNextState());
+    stepBack.setEnabled(executor.hasPreviousState());
+    updateStatusLabel();
+  }
+
+  public synchronized void performDone() {
+    AlgorithmExecutor executor = dispatch.getAlgorithmExecutor();
+    // does not appear to help in case of infinite loop
+    //executor.algorithmThread.interrupt();
+    AlgorithmSynchronizer synchronizer
+      = dispatch.getAlgorithmSynchronizer();
+    // also does not appear to help in case of infinite loop
+    //synchronizer.finishStep();
+    executor.stopAlgorithm();
+    // in case user changed node positions during execution
+    if ( ! dispatch.algorithmMovesNodes() ) {
+      dispatch.pushToTextEditor();
+    }
+    updateStatusLabel();
+  }
+
+  /**
+   * Initialize the animation panel controls
+   * Steps through an Algorithm or exits the mode
+   * @return
+   */
+  private JPanel initAnimationPanel() {
+    LogHelper.enterMethod(getClass(), "initAnimationPanel");
+    animationButtons = new JPanel();
+
+    stepBack.setEnabled(false);
+    stepBack.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent arg0) {
+          performStepBack();
+          frame.repaint();
+        }
+      });
+    		
+    // Move the display state in GraphPanel forward one
+    stepForward.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent arg0) {
+          performStepForward();
+          frame.repaint();
+        }
+      });
+		
+    // Exit the animation and change back to Edit mode
+    done.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent arg0) {
+          performDone();
+        }
+      });
+    
+    animationButtons.add(stepBack);
+    animationButtons.add(stepForward);
+    animationButtons.add(done);
+    animationButtons.setMaximumSize(new Dimension(DEFAULT_WIDTH, ANIMATION_BUTTON_SIZE));
+    animationButtons.setMinimumSize(new Dimension(DEFAULT_WIDTH, ANIMATION_BUTTON_SIZE));
+		
+    // make animation panel initially invisible
+    frame.addWindowListener(new WindowAdapter(){
+        @Override
+        public void windowOpened(WindowEvent e)
+        {
+          animationButtons.setVisible(false);
+        }
+      });
+
+    // add keyboard shortcuts
+    KeyboardFocusManager keyManager
       = KeyboardFocusManager.getCurrentKeyboardFocusManager();
-  keyManager.addKeyEventDispatcher(new KeyEventDispatcher() {
-    /**
-     * Intent is to delay for about 1/60 second = roughly 17 milliseconds
-     * to allow the display to catch up to repeated keystrokes when an
-     * arrow key is held down.
-     */
-    static final long DELAY_TIME = 17;
-    boolean ctrlPressed = false;
-    boolean deletePressed = false;
-    boolean shiftPressed = false;
-    @Override
-    /**
-     * This method is called by the current KeyboardFocusManager requesting
-     * that this KeyEventDispatcher dispatch the specified event on its
-     * behalf.  This KeyEventDispatcher is free to retarget the event,
-     * consume it, dispatch it itself, or make other changes. This capability
-     * is typically used to deliver KeyEvents to Components other than the
-     * focus owner. This can be useful when navigating children of
-     * non-focusable Windows in an accessible environment, for example. Note
-     * that if a KeyEventDispatcher dispatches the KeyEvent itself, it must
-     * use redispatchEvent to prevent the current KeyboardFocusManager from
-     * recursively requesting that this KeyEventDispatcher dispatch the event
-     * again.
-     * 
-     * If an implementation of this method returns false, then the KeyEvent
-     * is passed to the next KeyEventDispatcher in the chain, ending with the
-     * current KeyboardFocusManager. If an implementation returns true, the
-     * KeyEvent is assumed to have been dispatched (although this need not be
-     * the case), and the current KeyboardFocusManager will take no further
-     * action with regard to the KeyEvent.  In such a case,
-     * KeyboardFocusManager.dispatchEvent should return true as well. If an
-     * implementation consumes the KeyEvent, but returns false, the consumed
-     * event will still be passed to the next KeyEventDispatcher in the
-     * chain. It is important for developers to check whether the KeyEvent
-     * has been consumed before dispatching it to a target. By default, the
-     * current KeyboardFocusManager will not dispatch a consumed KeyEvent.
-     *
-     * @param e the KeyEvent to dispatch
-     * @return true if the KeyboardFocusManager should take no further action
-     * with regard to the KeyEvent; false otherwise
-     */
-    public boolean dispatchKeyEvent(KeyEvent e) {
-        LogHelper.guiEnterMethod(getClass(), "dispatchKeyEvent, e = " + e);
-        //"left" step backward when in animation mode
-        if ( dispatch.isAnimationMode()
-             && e.getID() == KeyEvent.KEY_PRESSED
-             && e.getKeyCode()==KeyEvent.VK_LEFT ) {
+    keyManager.addKeyEventDispatcher(new KeyEventDispatcher() {
+        /**
+         * Intent is to delay for about 1/60 second = roughly 17 milliseconds
+         * to allow the display to catch up to repeated keystrokes when an
+         * arrow key is held down.
+         */
+        static final long DELAY_TIME = 17;
+        boolean ctrlPressed = false;
+        boolean deletePressed = false;
+        boolean shiftPressed = false;
+        @Override
+        /**
+         * This method is called by the current KeyboardFocusManager requesting
+         * that this KeyEventDispatcher dispatch the specified event on its
+         * behalf.  This KeyEventDispatcher is free to retarget the event,
+         * consume it, dispatch it itself, or make other changes. This capability
+         * is typically used to deliver KeyEvents to Components other than the
+         * focus owner. This can be useful when navigating children of
+         * non-focusable Windows in an accessible environment, for example. Note
+         * that if a KeyEventDispatcher dispatches the KeyEvent itself, it must
+         * use redispatchEvent to prevent the current KeyboardFocusManager from
+         * recursively requesting that this KeyEventDispatcher dispatch the event
+         * again.
+         * 
+         * If an implementation of this method returns false, then the KeyEvent
+         * is passed to the next KeyEventDispatcher in the chain, ending with the
+         * current KeyboardFocusManager. If an implementation returns true, the
+         * KeyEvent is assumed to have been dispatched (although this need not be
+         * the case), and the current KeyboardFocusManager will take no further
+         * action with regard to the KeyEvent.  In such a case,
+         * KeyboardFocusManager.dispatchEvent should return true as well. If an
+         * implementation consumes the KeyEvent, but returns false, the consumed
+         * event will still be passed to the next KeyEventDispatcher in the
+         * chain. It is important for developers to check whether the KeyEvent
+         * has been consumed before dispatching it to a target. By default, the
+         * current KeyboardFocusManager will not dispatch a consumed KeyEvent.
+         *
+         * @param e the KeyEvent to dispatch
+         * @return true if the KeyboardFocusManager should take no further action
+         * with regard to the KeyEvent; false otherwise
+         */
+        public boolean dispatchKeyEvent(KeyEvent e) {
+          LogHelper.enterMethod(getClass(), "dispatchKeyEvent, e = " + e);
+          //"left" step backward when in animation mode
+          if ( dispatch.isAnimationMode()
+               && e.getID() == KeyEvent.KEY_PRESSED
+               && e.getKeyCode()==KeyEvent.VK_LEFT ) {
             performStepBack();
             // may need to delay to allow display to catch up if user holds
             // down key
             try {
-                Thread.sleep(DELAY_TIME);
+              Thread.sleep(DELAY_TIME);
             } catch (InterruptedException f) {
-                System.out.println("Thread interrupted during step backward");
+              System.out.println("Thread interrupted during step backward");
             }
             frame.repaint();
-            LogHelper.guiExitMethod(getClass(), "step backward");
+            LogHelper.exitMethod(getClass(), "step backward");
             return true;
-        }
-        //"right" step forward when in animation mode
-        if ( dispatch.isAnimationMode()
-             && e.getID() == KeyEvent.KEY_PRESSED
-             && e.getKeyCode() == KeyEvent.VK_RIGHT ) {
+          }
+          //"right" step forward when in animation mode
+          if ( dispatch.isAnimationMode()
+               && e.getID() == KeyEvent.KEY_PRESSED
+               && e.getKeyCode() == KeyEvent.VK_RIGHT ) {
             performStepForward();
             try {
-                Thread.sleep(DELAY_TIME);
+              Thread.sleep(DELAY_TIME);
             } catch (InterruptedException f) {
-                System.out.println("Thread interrupted during step forward");
+              System.out.println("Thread interrupted during step forward");
             }
             frame.repaint();
-            LogHelper.guiExitMethod(getClass(), "step forward");
+            LogHelper.exitMethod(getClass(), "step forward");
             return true;
-        }
-        // "Esc" leave animation mode when in animation mode
-        if ( dispatch.isAnimationMode()
-             && e.getID() == KeyEvent.KEY_PRESSED
-             && e.getKeyCode() == KeyEvent.VK_ESCAPE ) {
+          }
+          // "Esc" leave animation mode when in animation mode
+          if ( dispatch.isAnimationMode()
+               && e.getID() == KeyEvent.KEY_PRESSED
+               && e.getKeyCode() == KeyEvent.VK_ESCAPE ) {
             performDone();
-            LogHelper.guiExitMethod(getClass(), "exit animation");
+            LogHelper.exitMethod(getClass(), "exit animation");
             return true;
-        }
-        // "Ctrl" pressed
-        if( e.getID() == KeyEvent.KEY_PRESSED
-            && e.getKeyCode() == KeyEvent.VK_CONTROL ) {
+          }
+          // "Ctrl" pressed
+          if( e.getID() == KeyEvent.KEY_PRESSED
+              && e.getKeyCode() == KeyEvent.VK_CONTROL ) {
             ctrlPressed = true;
-            LogHelper.guiExitMethod(getClass(), "Ctrl pressed");
+            LogHelper.exitMethod(getClass(), "Ctrl pressed");
             return true;
-        }
-        // "Ctrl" released
-        if ( e.getID()==KeyEvent.KEY_RELEASED
-           && e.getKeyCode()==KeyEvent.VK_CONTROL ){
+          }
+          // "Ctrl" released
+          if ( e.getID()==KeyEvent.KEY_RELEASED
+               && e.getKeyCode()==KeyEvent.VK_CONTROL ){
             ctrlPressed = false;
-            LogHelper.guiExitMethod(getClass(), "Ctrl released");
+            LogHelper.exitMethod(getClass(), "Ctrl released");
             return true;
-        }
-        // "Shift" pressed
-        if ( e.getID()==KeyEvent.KEY_PRESSED
-             && e.getKeyCode()==KeyEvent.VK_SHIFT ) {
+          }
+          // "Shift" pressed
+          if ( e.getID()==KeyEvent.KEY_PRESSED
+               && e.getKeyCode()==KeyEvent.VK_SHIFT ) {
             shiftPressed = true;
-            LogHelper.guiExitMethod(getClass(), "shift pressed");
+            LogHelper.exitMethod(getClass(), "shift pressed");
             return true;
-        }
-        // "Shift" released
-      if ( e.getID()==KeyEvent.KEY_RELEASED
-           && e.getKeyCode()==KeyEvent.VK_SHIFT ) {
-          shiftPressed = false;
-          LogHelper.guiExitMethod(getClass(), "shift released");
-          return true;
-      }
-      // "Delete" pressed
-      if ( ! dispatch.isAnimationMode() && e.getID()==KeyEvent.KEY_PRESSED
-                                      && e.getKeyCode()==KeyEvent.VK_DELETE ) {
-          deletePressed = true;
-          LogHelper.guiExitMethod(getClass(), "delete pressed");
-          return true;
-      }
-      // "Delete" released
-      if ( e.getID()==KeyEvent.KEY_RELEASED
-          && e.getKeyCode()==KeyEvent.VK_DELETE ) {
-        deletePressed = false;
-        LogHelper.guiExitMethod(getClass(), "delete released");
-        return true;
-      }
-      // "E" pressed
-      if ( ! dispatch.isAnimationMode() && e.getID()==KeyEvent.KEY_PRESSED
-           && e.getKeyCode()==KeyEvent.VK_E ) {
-          //          synchronized(this) {
-              // "ctrl" already pressed, create new edge
-              if ( ctrlPressed ) {
-                  LogHelper.guiLogDebug("CREATE EDGE");
-                  // the dialog is self contained; only needs to be
-                  // instantiated
-                  EdgeCreationDialog dialog = new EdgeCreationDialog(frame);
-              } // create new edge
-              if ( deletePressed ) {
-                  LogHelper.guiLogDebug("DELETE EDGE");
-                  // the dialog is self contained; only needs to be
-                  // instantiated
-                  EdgeDeletionDialog dialog = new EdgeDeletionDialog(frame);
-              } // delete edge
+          }
+          // "Shift" released
+          if ( e.getID()==KeyEvent.KEY_RELEASED
+               && e.getKeyCode()==KeyEvent.VK_SHIFT ) {
+            shiftPressed = false;
+            LogHelper.exitMethod(getClass(), "shift released");
+            return true;
+          }
+          // "Delete" pressed
+          if ( ! dispatch.isAnimationMode() && e.getID()==KeyEvent.KEY_PRESSED
+               && e.getKeyCode()==KeyEvent.VK_DELETE ) {
+            deletePressed = true;
+            LogHelper.exitMethod(getClass(), "delete pressed");
+            return true;
+          }
+          // "Delete" released
+          if ( e.getID()==KeyEvent.KEY_RELEASED
+               && e.getKeyCode()==KeyEvent.VK_DELETE ) {
+            deletePressed = false;
+            LogHelper.exitMethod(getClass(), "delete released");
+            return true;
+          }
+          // "E" pressed
+          if ( ! dispatch.isAnimationMode() && e.getID()==KeyEvent.KEY_PRESSED
+               && e.getKeyCode()==KeyEvent.VK_E ) {
+            //          synchronized(this) {
+            // "ctrl" already pressed, create new edge
+            if ( ctrlPressed ) {
+              LogHelper.logDebug("CREATE EDGE");
+              // the dialog is self contained; only needs to be
+              // instantiated
+              EdgeCreationDialog dialog = new EdgeCreationDialog(frame);
+            } // create new edge
+            if ( deletePressed ) {
+              LogHelper.logDebug("DELETE EDGE");
+              // the dialog is self contained; only needs to be
+              // instantiated
+              EdgeDeletionDialog dialog = new EdgeDeletionDialog(frame);
+            } // delete edge
               //}
-          LogHelper.guiExitMethod(getClass(), "'e' pressed");
-          return true;
-      }
-      // "N" pressed
-      if ( ! dispatch.isAnimationMode() && e.getID()==KeyEvent.KEY_PRESSED
-           && e.getKeyCode()==KeyEvent.VK_N ) {
-          synchronized(this) {
+            LogHelper.exitMethod(getClass(), "'e' pressed");
+            return true;
+          }
+          // "N" pressed
+          if ( ! dispatch.isAnimationMode() && e.getID()==KeyEvent.KEY_PRESSED
+               && e.getKeyCode()==KeyEvent.VK_N ) {
+            synchronized(this) {
               // "ctrl" already pressed, create new node
               if ( ctrlPressed ) {
-                  LogHelper.guiLogDebug("CREATE NODE");
+                LogHelper.logDebug("CREATE NODE");
 
-                  // add a new default node to the working
-                  Graph g = dispatch.getWorkingGraph();
-                  // choose a random position to place new node
-                  Point p = Node.genRandomPosition();
-                  Node n = g.addInitialNode(p.x, p.y);
+                // add a new default node to the working
+                Graph g = dispatch.getWorkingGraph();
+                // choose a random position to place new node
+                Point p = Node.genRandomPosition();
+                Node n = g.addInitialNode(p.x, p.y);
 
-                  // select the new node
-                  Node nNew = graphPanel.selectTopClickedNode(p);
-                  componentEditPanel.setWorkingComponent(nNew);
-                  LogHelper.guiLogDebug( " select: node = " + n );
+                // select the new node
+                Node nNew = graphPanel.selectTopClickedNode(p);
+                componentEditPanel.setWorkingComponent(nNew);
+                LogHelper.logDebug( " select: node = " + n );
 
-                  componentEditPanel.setWorkingComponent(nNew);
-                  LogHelper.guiLogDebug( " setWorking: node = " + n );
+                componentEditPanel.setWorkingComponent(nNew);
+                LogHelper.logDebug( " setWorking: node = " + n );
 
-                  dispatch.pushToTextEditor();
+                dispatch.pushToTextEditor();
               } //Create new node
               //delete already pressed, delete node
               if ( deletePressed ) {
-                  LogHelper.guiLogDebug("DELETE NODE");
-                  // the dialog is self contained; only needs to be
-                  // instantiated
-                  NodeDeletionDialog dialog = new NodeDeletionDialog(frame);
+                LogHelper.logDebug("DELETE NODE");
+                // the dialog is self contained; only needs to be
+                // instantiated
+                NodeDeletionDialog dialog = new NodeDeletionDialog(frame);
               } //delete node
+            }
+            LogHelper.exitMethod(getClass(), "'n' pressed");
+            return true;
           }
-          LogHelper.guiExitMethod(getClass(), "'n' pressed");
-          return true;
-      }
-      //"ctrl + i" toggle intelligent rearrange
-      if ( ! dispatch.isAnimationMode() && e.getID()==KeyEvent.KEY_PRESSED
-           && e.getKeyCode()==KeyEvent.VK_I && ctrlPressed ) {
-          synchronized(this) {
+          //"ctrl + i" toggle intelligent rearrange
+          if ( ! dispatch.isAnimationMode() && e.getID()==KeyEvent.KEY_PRESSED
+               && e.getKeyCode()==KeyEvent.VK_I && ctrlPressed ) {
+            synchronized(this) {
               if ( ! repositionBtn.isSelected() ) {
-                  repositionBtn.setSelected(true);
-                  // The following does not appear to make enough difference
-                  // to be worth it.
-                  // DoubleQuery query
-                  //     = new DoubleQuery("Degree repelling boost", true);
-                  // Double boost = dispatch.getDoubleAnswer();
-                  // if ( boost == null )
-                  dispatch.getWorkingGraph().smartReposition();
-                  // else
-                      // dispatch.getWorkingGraph().smartReposition(boost);
+                repositionBtn.setSelected(true);
+                // The following does not appear to make enough difference
+                // to be worth it.
+                // DoubleQuery query
+                //     = new DoubleQuery("Degree repelling boost", true);
+                // Double boost = dispatch.getDoubleAnswer();
+                // if ( boost == null )
+                dispatch.getWorkingGraph().smartReposition();
+                // else
+                // dispatch.getWorkingGraph().smartReposition(boost);
               }
               else {
-                  repositionBtn.setSelected(false);
-                  dispatch.getWorkingGraph().undoReposition();
+                repositionBtn.setSelected(false);
+                dispatch.getWorkingGraph().undoReposition();
               }
               dispatch.pushToTextEditor();
+            }
+            LogHelper.exitMethod(getClass(), "'i' pressed");
+            return true;
           }
-          LogHelper.guiExitMethod(getClass(), "'i' pressed");
-          return true;
-      }
-      // "ctrl+d" switch between directed and undirected
-      if( ! dispatch.isAnimationMode() && e.getID()==KeyEvent.KEY_PRESSED
-          && e.getKeyCode()==KeyEvent.VK_D && ctrlPressed ) {
-          synchronized(this){
+          // "ctrl+d" switch between directed and undirected
+          if( ! dispatch.isAnimationMode() && e.getID()==KeyEvent.KEY_PRESSED
+              && e.getKeyCode()==KeyEvent.VK_D && ctrlPressed ) {
+            synchronized(this){
               if ( ! dispatch.getWorkingGraph().isDirected() ) {
-                  changeDirectedness(Directedness.DIRECTED);
+                changeDirectedness(Directedness.DIRECTED);
               }
               else {
-                  changeDirectedness(Directedness.UNDIRECTED);
+                changeDirectedness(Directedness.UNDIRECTED);
               }
+            }
+            LogHelper.exitMethod(getClass(), "'d' pressed");
+            return true;
           }
-          LogHelper.guiExitMethod(getClass(), "'d' pressed");
-          return true;
-      }
-      // "ctrl+l" display node labels "ctrl+L" display edge labels
-      if(e.getID()==KeyEvent.KEY_PRESSED && e.getKeyCode()==KeyEvent.VK_L && ctrlPressed){
-        synchronized(this){
-          if (shiftPressed) {
-            GraphDisplays.EDGE_LABELS.setShown(!edgeLabels.isSelected());
-            edgeLabels.setSelected(!edgeLabels.isSelected());
-          } else {
-            GraphDisplays.NODE_LABELS.setShown(!nodeLabels.isSelected());
-            nodeLabels.setSelected(!nodeLabels.isSelected());
+          // "ctrl+l" display node labels "ctrl+L" display edge labels
+          if(e.getID()==KeyEvent.KEY_PRESSED && e.getKeyCode()==KeyEvent.VK_L && ctrlPressed){
+            synchronized(this){
+              if (shiftPressed) {
+                GraphDisplays.EDGE_LABELS.setShown(!edgeLabels.isSelected());
+                edgeLabels.setSelected(!edgeLabels.isSelected());
+              } else {
+                GraphDisplays.NODE_LABELS.setShown(!nodeLabels.isSelected());
+                nodeLabels.setSelected(!nodeLabels.isSelected());
+              }
+              frame.repaint();
+            }
+            LogHelper.exitMethod(getClass(), "'ell' pressed");
+            return true;
           }
-          frame.repaint();
+          // "ctrl+w" display node weights "ctrl+W" display edge weights
+          if(e.getID()==KeyEvent.KEY_PRESSED && e.getKeyCode()==KeyEvent.VK_W && ctrlPressed){
+            synchronized(this){
+              if (shiftPressed) {
+                GraphDisplays.EDGE_WEIGHTS.setShown(!edgeWeights.isSelected());
+                edgeWeights.setSelected(!edgeWeights.isSelected());
+              } else {
+                GraphDisplays.NODE_WEIGHTS.setShown(!nodeWeights.isSelected());
+                nodeWeights.setSelected(!nodeWeights.isSelected());
+              }
+              frame.repaint();
+            }
+            LogHelper.exitMethod(getClass(), "'w' pressed");
+            return true;
+          }
+          LogHelper.exitMethod(getClass(), "unrecognized key pressed");
+          return false;
         }
-        LogHelper.guiExitMethod(getClass(), "'ell' pressed");
-        return true;
-      }
-      // "ctrl+w" display node weights "ctrl+W" display edge weights
-      if(e.getID()==KeyEvent.KEY_PRESSED && e.getKeyCode()==KeyEvent.VK_W && ctrlPressed){
-        synchronized(this){
-          if (shiftPressed) {
-            GraphDisplays.EDGE_WEIGHTS.setShown(!edgeWeights.isSelected());
-            edgeWeights.setSelected(!edgeWeights.isSelected());
-          } else {
-            GraphDisplays.NODE_WEIGHTS.setShown(!nodeWeights.isSelected());
-            nodeWeights.setSelected(!nodeWeights.isSelected());
-          }
-          frame.repaint();
-        }
-        LogHelper.guiExitMethod(getClass(), "'w' pressed");
-        return true;
-      }
-      LogHelper.guiExitMethod(getClass(), "unrecognized key pressed");
-      return false;
-    }
-  });
+      });
 
-		LogHelper.guiExitMethod(getClass(), "initAnimationPanel");
-		return animationButtons;
-	}
+    LogHelper.exitMethod(getClass(), "initAnimationPanel");
+    return animationButtons;
+  }
 
-	@Override
-	public void componentHidden(ComponentEvent arg0) {
-		// TODO Auto-generated method stub
+  @Override
+  public void componentHidden(ComponentEvent arg0) {
+    // TODO Auto-generated method stub
 		
-	}
+  }
 
-	@Override
-	public void componentMoved(ComponentEvent arg0) {
-		// TODO Auto-generated method stub
+  @Override
+  public void componentMoved(ComponentEvent arg0) {
+    // TODO Auto-generated method stub
 		
-	}
+  }
 
-    @Override
-	public void componentResized(ComponentEvent e){
-        dispatch.setWindowSize(graphPanel.getHeight(), graphPanel.getWidth());
-        frame.repaint();
-    }
+  @Override
+  public void componentResized(ComponentEvent e){
+    dispatch.setWindowSize(graphPanel.getHeight(), graphPanel.getWidth());
+    frame.repaint();
+  }
 
 
-	@Override
-	public void componentShown(ComponentEvent arg0) {
-		// TODO Auto-generated method stub
-	}
+  @Override
+  public void componentShown(ComponentEvent arg0) {
+    // TODO Auto-generated method stub
+  }
 }
 
-//  [Last modified: 2017 01 09 at 20:46:07 GMT]
+//  [Last modified: 2017 01 10 at 15:52:39 GMT]

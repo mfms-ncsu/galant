@@ -12,10 +12,11 @@ All Galant code is effectively Java, either natively, or via macro preprocessing
 The text panel provides a crude editor for algorithms (as well as GraphML
 descriptions of graphs);
 its limited capabilities make it useful primarily for fine tuning and error correction.
-The first author uses emacs in Java mode to edit algorithms offline, for example,
+The animator should use a program editor such as \Code{Emacs} or
+\Code{Notepad++} (in Java mode) to edit algorithms offline,
 not a major inconvenience -- it is easy to reload algorithms when they are modified
 without exiting Galant.
-The Galant editor is also useful in that it provides syntax highlighting of Galant
+The Galant editor is, however, useful in that it provides syntax highlighting of Galant
 functions and macros.
 
 The source code for an algorithm begins with any number (including none)
@@ -27,11 +28,15 @@ The code for the algorithm itself follows, starting with the keyword
 A \emph{code block}
 is a sequence of statements, each terminated by a semicolon, just as in
 Java.
-The main algorithm has the form
+An animation program has the form
 \begin{quote}
-\Code{algorithm \{}\\
-\hspace*{2em}\emph{code block}\\
-\Code{\}}
+  \emph{global variable declarations}\\
+  \\
+  \emph{function definitions}\\
+  \\
+  \Code{algorithm \{}\\
+  \hspace*{2em}\emph{code block}\\
+  \Code{\}}
 \end{quote}
 
 Declarations of global variables are also like those of Java:\\
@@ -41,6 +46,11 @@ or\\
 to declare an array of the given type.
 All variables must be initialized either within a function definition or
 in the algorithm.
+Unlike Java variables, they cannot be initialized in the statement that
+declares them.\footnote{This restriction applies to global variables
+  only. Variables local to function definitions or to the algorithm can be
+  initialized in-line, just as in Java.
+}
 The Java incantation\\
 \hspace*{1em}\emph{type} \emph{variable\_name}
 \texttt{= new} \emph{type}\texttt{[} \emph{size} \texttt{]}\\
@@ -65,6 +75,9 @@ generate a next step,
 but the programmer can override this using a \Code{beginStep()} and
 \Code{endStep()} pair. For example, the beginning of our implementation of
 Dijkstra's algorithm looks like
+
+\begin{center}
+\begin{minipage}{0.5\textwidth}
 \begin{verbatim}
 beginStep();
 for_nodes(node) {
@@ -73,6 +86,9 @@ for_nodes(node) {
 }
 endStep();
 \end{verbatim}
+\end{minipage}
+\end{center}
+
 Without the \Code{beginStep}/\Code{endStep}
 override, this initialization would require the observer to click
 through multiple steps (one for each node) before getting to the interesting
@@ -86,6 +102,11 @@ under the presumption that there may be an infinite loop.
 \input{Y_utility_functions}
 
 Functions and macros for the graph as a whole are shown in Table~\ref{tab:graph_functions}, while Table~\ref{tab:utility_functions} lists some algorithm functions not related to any aspect of a graph.
+
+\emph{\textbf{Note:} The functions/methods provided by Galant may have multiple synonyms for
+convenience and backward compatibility. A full list of methods and functions
+is given in \Code{Algorithm.java} in the subdirectory
+\Code{src/edu/ncsu/csc/Galant/algorithm}.}
 
 The nodes and edges, of type \textsf{Node} and \textsf{Edge}, respectively,
 are subtypes/extensions of \textsf{GraphElement}.
@@ -111,7 +132,6 @@ large enough to accommodate the appropriate id's as indexes. So code such as
 \begin{verbatim}
         Integer myArray[] = new Integer[nodeIds()];
         for_nodes(v) { myArray[id(v)] = 1; }
-}
 \end{verbatim}
 \end{minipage}
 
@@ -136,14 +156,19 @@ and uses procedural syntax:
 Procedural syntax for the setters is also available:
 \Code{setColor(}$x$,$c$\Code{)} is a synonym for $x$.\Code{setColor(}$c$\Code{)}.
 In the special cases of color and label it is possible to omit the \Code{set}
-(since it reads naturally): \Code{color(}$x$,$c$\Code{)} instead of \Code{setColor(}$x$,$c$\Code{)}.
+(since it reads naturally):
+\Code{color($x$,$c$)} instead of
+\Code{setColor($x$,$c$)};
+and
+\Code{label($x$,$c$)} instead of
+\Code{setLabel($x$,$c$)}.
 
 \subsubsection{Logical attributes: functions and macros}
 
-\textbf{Nodes.}
-From a node's point of view we would like information about the adjacent nodes and incident edges.
-The relevant \emph{methods} require the use of Java generics, but macros are provided
-to simplify graph API access. The macros, which have equivalents in GDR, are:
+\textbf{Nodes.} From a node's point of view we would like information about
+ the adjacent nodes and incident edges.  The relevant \emph{methods} require
+ the use of Java generics, but macros are provided to simplify graph API
+ access. The macros (which are borrowed from their equivalents in GDR) are:
 
 \begin{itemize}
 
@@ -171,20 +196,19 @@ The actual API methods hiding behind these macros are (these are Node methods):
 
 \begin{itemize}
 \item
-\Code{List$\langle$Edge$\rangle$~getIncidentEdges()} returns a list of all edges incident to this node,
-both incoming and outgoing.
+\Code{List$\langle$Edge$\rangle$~edges($v$)} returns a list of all edges
+incident to $v$, both incoming and outgoing.
 \item
-\Code{List$\langle$Edge$\rangle$~getOutgoingEdges()} returns a list of edges directed away
-from this node (all incident edges if the graph is undirected).
+\Code{List$\langle$Edge$\rangle$~outgoingEdges($v$)} returns a list of edges
+directed away from $v$ (all incident edges if the graph is undirected).
 \item
-\Code{List$\langle$Edge$\rangle$~getIncomingEdges()} returns a list of edges directed toward
-this node (all incident edges if the graph is undirected).
+\Code{List$\langle$Edge$\rangle$~incomingEdges($v$)} returns a list of edges
+directed toward $v$ (all incident edges if the graph is undirected).
 \item
-\Code{Node~travel(Edge~e)} returns the other endpoint of \Code{e}.
+\Code{Node~otherEnd($e$, $v$)} returns the endpoint, other than $v$, of $e$.
 \end{itemize}
 
-The above all use Java syntax, as in \Code{v.travel(e)}.
-The following are node-related functions with procedural syntax.
+The following are node functions with procedural syntax.
 
 \begin{itemize}
 \item \Code{degree(v)}, \Code{indegree(v)} and \Code{outdegree(v)} return the appropriate
@@ -198,28 +222,34 @@ of the arguments.
 
 \bigskip
 \textbf{Edges.}
-The logical attributes of an edge are its source and target (destination).
-
-\begin{itemize}
-\item
-\Code{setSourceNode(Node)} and \Code{Node~getSourceNode()}
-\item
-\Code{setTargetNode(Node)} and \Code{Node~getTargetNode()}
-\item
-\Code{getOtherEndPoint(Node~u)} returns \Code{v} where this edge is
-either \Code{uv} or \Code{vu}.
-\end{itemize}
+The logical attributes of an edge $e$ are its source and target (destination)
+accessed using \Code{source($e$)} and \Code{target($e$)}, respectively.
 
 \bigskip
 \textbf{Graph Elements.}
 Nodes and edges both have a mechanism for setting (and getting)
 arbitrary attributes of type Integer, String, and Double.
-the relevant methods are\\
-\Code{setIntegerAttribute(String~key,Integer~value)}\\ 
-to associate an integer value with a node and\\
-\Code{Integer~getIntegerAttribute(String~key)}\\
-to retrieve it.
-String and Double attributes work the same way as integer attributes.
+the relevant methods are listed below.
+Note that the type can be implicit for the setters -- the compiler can figure
+that out, but needs to be explicit for the getters -- in Java, two methods
+that differ only in their return type are indistinguishable.
+In each case $g$ stands for a graph element (node or edge).
+\begin{itemize}
+  \item \Code{set($g$, String \emph{attribute}, $\langle \mathit{type} \rangle$ \emph{value})},
+    where \emph{type} can be \Code{String}, \Code{Boolean}, \Code{Integer},
+    or \Code{Double}.
+  \item \Code{set($g$, String \emph{attribute})}; here the attribute is assumed to
+    be Boolean and the value is implicitly \Code{true}.
+  \item \Code{String getString($g$, String \emph{attribute})}
+  \item \Code{Boolean getBoolean($g$, String \emph{attribute})}
+    \item \Code{Boolean is(String \emph{attribute})}, a synonym for
+      \Code{getBoolean} 
+  \item \Code{Integer getInteger($g$, String \emph{attribute})}
+  \item \Code{Double getDouble($g$, String \emph{attribute})}
+\end{itemize}
+An object oriented syntax can also be used -- this is especially natural in
+case of \Code{is}, as in \Code{v.is("inTree")} (see \Code{boruvka} in the
+\Code{Algorithms} directory.
 These are useful when an algorithm requires arbitrary information to be
 associated with nodes and/or edges.
 The user-defined attributes may differ from one node or edge to the next.
@@ -362,6 +392,9 @@ In an animation program, however, nonexistent attributes are handled
 differently.
 \begin{itemize}
 \item \Code{color()} returns null as expected
+\item all functions returning Boolean values, such as \Code{highlighted()},
+  \Code{marked()} and those for attributes defined by the animator, return
+  \Code{false}
 \item \Code{label()} returns an empty string; this ensures that it is always
   safe to use a label in an expression calling for a string
 \item \Code{weight()} throws an exception; there is no obvious default
@@ -396,13 +429,7 @@ These functionalities can be accomplished by
 \textsf{hideNodeWeights} or \textsf{hideAllNodeWeights}, respectively.
 A summary of these capabilities is given in Table~\ref{tab:graph_attribute_functions}.
 
-\subsection{Additional programmer information}
-
-A Galant algorithm/program is executed as a method within a Java class.
-In order to shield the Galant programmer from Java idiosyncrasies,
-some features have been added.
-
-\subsubsection{Definition of Functions/Methods}\label{sec:functions}
+\subsection{Definition of Functions/Methods}\label{sec:functions}
 
 A programmer can define arbitrary functions (methods) using the construct
 
@@ -434,7 +461,7 @@ is complex and may result in indecipherable error messages.
 
 \input{Y_data_structures}
 
-\subsubsection{Data Structures}
+\subsection{Data Structures}
 
 Galant provides some standard data structures for nodes and edges automatically.
 These are described in detail in Table~\ref{tab:data_structures}.
@@ -466,4 +493,92 @@ The programmer can change this default
 by redefining the Java \Code{compareTo()} method,
 but this requires finesse and Java expertise.
 
-% [Last modified: 2016 12 31 at 14:46:26 GMT]
+\subsection{Queries}
+
+An animation program can query the user for various kinds of input.
+For example, the \Code{interactive\_dfs} algorithm asks the user to give a
+starting node for a (directed) depth-first search and to give another start
+node if the search terminates before all nodes are visited. The different
+query options are listed in Table~\ref{tab:utility_functions}.
+
+A query statement in an animation program initiates an algorithm step
+unconditionally, i.e., even if it occurs within a
+\Code{beginStep}-\Code{endStep} pair.
+After the user responds to the query she has to do another step forward
+before the animation proceeds (except in case of a Boolean query).
+If the user steps backward after responding to a query, the query is not
+invoked again. Subsequent forward steps use the same answer.
+Thus it is not possible to allow a user to explore multiple alternative
+executions in the same run (such a feature would require major enhancements
+to the existing implementation).
+
+Queries for nodes and edges ask for node id's (two of them in case of an
+edge). Galant checks whether an id is that of a valid node and, in case of an
+edge, whether an edge between the two nodes exists. If the graph is currently
+directed, the direction of the edge also has to correspond. Any violation
+causes an exception to be thrown -- a popup window reports the nature of the
+error and allows the user to choose (a) different id(s).
+The animator can impose additional restrictions by specifying a set of
+permissible nodes/edges (unvisited nodes in the case of
+\Code{interactive\_dfs}). If so, the animator also specifies an error message
+in case the additional restriction is violated.
+
+Other queries allow an animation to get strings, Boolean values, or numbers
+from the user. Examples are in the \Code{binary\_tree} and \Code{grid}
+algorithms which create complete binary trees or grid graphs based on tree
+height or grid dimensions, respectively, specified as integers by the user.
+These queries work the same way as those for vertices and edges. In case of
+numbers Galant checks whether the input string is a valid integer or
+floating point number and reports an error otherwise.
+
+Boolean queries are a special case. The user does not type a response. The
+only options are to press one of two buttons with the mouse or to press the
+\Code{Enter} key to specify the default answer (true).
+The animator can specify the text displayed on the buttons; defaults are
+\Code{"yes"} and \Code{"no"}.
+Another difference with Boolean queries is that the algorithm steps forward
+immediately when the user responds to the query.\footnote{The reason this is
+  not the case with other queries is that errors may need to be handled
+  before the algorithm can proceed. Synchronization between the query and the
+  algorithm is not straightforward.}
+
+\subsection{Exceptions: Compile and Runtime Errors}
+
+\input{Y-galant_exceptions}
+
+Errors can occur at compile time, either because a macro is malformed or
+because the Java code, after macro translation, has errors.
+The reporting of Java compiler errors is straightforward. They are reported,
+with line numbers, on the console. The line numbers correspond to those in
+the Java code listing that also appears on the console (even if there are no
+errors). In almost all cases the line numbers also correspond to those of the
+original algorithm (before macro translation) in the text
+window.\footnote{The only known exception is a function definition where the
+  parameters are placed on multiple lines.}
+
+Errors due to malformed macros are not, unfortunately, reported with line
+numbers. To make matters worse, unbalanced parentheses or braces inside a
+function definition or one of the \Code{for\_\ldots} macros result in a
+malformed macro exception. The best strategy is to use a program editor that
+does automatic indentation.
+
+Runtime errors are also reported with (almost always correct) line
+numbers. Galant makes every effort to catch errors before they result in, for
+example, null pointer exceptions in the Galant implementation. Every function
+with a graph element argument checks that the argument is not null and
+reports a \Code{GalantException} if it is.
+The second or third line in the stack trace
+refers to the point in the algorithm where the exception occurred.
+All exceptions, whether those caught as \Code{GalantException}'s with
+meaningful messages or those caught in the Galant impemmentation code, result
+in a stack trace on the console and a popup window.
+The latter allows to user to choose whether to continue, meaning that the
+algorithm is terminated and Galant returns to edit mode, or exit from Galant
+completely.
+
+Exceptions can also occur in edit mode: when reading a graph from a
+file, when specifying a node or edge after a keyboard shortcut, or when
+giving the weight of a node or edge.
+A complete list of Galant exceptions is in Table~\ref{tab:galant_exceptions}.
+
+% [Last modified: 2017 01 10 at 22:26:55 GMT]

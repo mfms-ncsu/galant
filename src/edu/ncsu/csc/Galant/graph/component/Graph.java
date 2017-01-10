@@ -13,9 +13,7 @@ import java.util.TreeMap;
 
 import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.GraphDispatch;
-import edu.ncsu.csc.Galant.graph.container.NodeSet;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow;
-//import edu.ncsu.csc.Galant.gui.window.panels.GraphPanel;
 import edu.ncsu.csc.Galant.gui.util.EdgeSelectionDialog;
 import edu.ncsu.csc.Galant.gui.util.NodeSelectionDialog;
 import edu.ncsu.csc.Galant.algorithm.Terminate;
@@ -23,9 +21,17 @@ import edu.ncsu.csc.Galant.logging.LogHelper;
 
 /**
  * @todo in future this can be used as a return value for nodes and edges
- * that are currently returned as lists.
+ * that are currently returned as lists; current methods getNodeSet and
+ * getEdgeSet already exist for this purpose
  */
 import edu.ncsu.csc.Galant.graph.container.EdgeSet;
+import edu.ncsu.csc.Galant.graph.container.NodeSet;
+
+/**
+ * @todo NodeList and EdgeList need to be handled like the corresponding set
+ * containers; in all cases we can define static methods with procedural
+ * syntax, as described in Algorithm.java
+ */
 
 /**
  * Stores all nodes, edges and related information for use in graph algorithms.
@@ -686,9 +692,9 @@ public class Graph {
 	 * @return all edges as a list
      * @todo get rid of the template
 	 */
-	public ArrayList<Edge> getEdges()
+	public List<Edge> getEdges()
     {
-		ArrayList<Edge> retEdges = new ArrayList<Edge>();
+		List<Edge> retEdges = new ArrayList<Edge>();
 		for (Edge e : this.edges) {
 			if (e.inScope()) {
 				retEdges.add(e);
@@ -858,12 +864,12 @@ public class Graph {
         throws GalantException
     {
         if ( this.nodes.size() == 0 ) {
-            throw new GalantException( "empty graph"
+            throw new GalantException( "Empty graph"
                                        + "\n - in getNodeById" );
         }
 
 		if ( ! nodeById.containsKey( id ) ) {
-            throw new GalantException( "no node with id = "
+            throw new GalantException( "No node with id = "
                                        + id
                                        + " exists"
                                        + "\n - in getNodeById" );
@@ -872,7 +878,7 @@ public class Graph {
         Node n = nodeById.get( id );
 
         if ( n.isDeleted() ) {
-            throw new GalantException( "node has been deleted, id = "
+            throw new GalantException( "Node has been deleted, id = "
                                        + id
                                        + "\n - in getNodeById" );
 		}
@@ -904,7 +910,7 @@ public class Graph {
 	 */
 	public Node getStartNode() throws GalantException {
         if ( this.nodes.size() == 0 ) {
-            throw new GalantException("getStartNode: graph is empty.");
+            throw new GalantException("Empty graph in getStartNode.");
         }
         return this.nodes.get(0);
 	}
@@ -919,18 +925,18 @@ public class Graph {
         throws GalantException
     {
         if ( this.edges.size() == 0 ) {
-            throw new GalantException( "graph has no edges"
+            throw new GalantException( "Graph has no edges"
                                        + "\n - in getEdgeById" );
         }
 		if ( ! edgeById.containsKey( id ) ) {
-            throw new GalantException( "no edge with id = "
+            throw new GalantException( "No edge with id = "
                                        + id
                                        + " exists"
                                        + "\n - in getEdgeById" );
         }
         Edge edge = edgeById.get( id );
         if ( edge.isDeleted() ) {
-            throw new GalantException( "edge has been deleted, id = "
+            throw new GalantException( "Edge has been deleted, id = "
                                        + id
                                        + "\n - in getEdgeById" );
 		}
@@ -1306,4 +1312,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2016 12 22 at 18:35:06 GMT]
+//  [Last modified: 2017 01 10 at 20:05:46 GMT]

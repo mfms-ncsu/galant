@@ -3,41 +3,41 @@
   \centering
   \begin{tabular}{| m{0.35\textwidth} | m{0.6\textwidth} |}
     \hline
-    \textsf{print(String s)}
+    \Code{print(String s)}
     &
     prints \texttt{s} on the console; useful for debugging
     \\ \hline
-    \textsf{display(String s)}
+    \Code{display(String s)}
     &
-    writes the string \textsf{s} at the top of the window
+    writes the string \Code{s} at the top of the window
     \\ \hline
-    \textsf{String getMessage()}
+    \Code{String getMessage()}
     &
     returns the message currently displayed on the message banner
     \\ \hline
-    \textsf{error(String s)}
+    \Code{error(String s)}
     &
-    prints \textsf{s} on the console with a stack trace; also displays
-    \textsf{s} in popup window with an option to view the stack trace;
+    prints \Code{s} on the console with a stack trace; also displays
+    \Code{s} in popup window with an option to view the stack trace;
     the algorithm terminates and the user can choose whether to terminate
     Galant entirely or continue interacting
     \\ \hline
-    \textsf{beginStep()},
-    \textsf{endStep()}, \textsf{step()}
+    \Code{beginStep()},
+    \Code{endStep()}, \Code{step()}
     &
-    any actions between a \textsf{beginStep()} and an \textsf{endStep()}
+    any actions between a \Code{beginStep()} and an \Code{endStep()}
     take place atomically, i.e.,
-    all in a single ``step forward'' action by the user; \textsf{step()} is a
-    synonym for \textsf{endStep();~beginStep()}
+    all in a single ``step forward'' action by the user; \Code{step()} is a
+    synonym for \Code{endStep();~beginStep()}
     \\ \hline
-    \textsf{Node getNode(String message)}
+    \Code{Node getNode(String message)}
     &
     pops up a window with the given message and prompts the user to enter the
     identifier of a node, which is returned;
     if no node with that id exists,
     an error popup is displayed and the user is prompted again
     \\ \hline
-    \textsf{Edge getEdge(String message)}
+    \Code{Edge getEdge(String message)}
     &
     pops up a window with the given message and prompts the user to enter the
     identifiers of two nodes, the endpoints of an edge, which is returned;
@@ -48,44 +48,59 @@
     \shortstack[l] {
       \mbox{}
       \\[\smallskipamount]
-      \textsf{Node getNode(String p,} \\
-      \textsf{~~~~~~~~~~~~~~~~~~~NodeSet s,} \\
-      \textsf{~~~~~~~~~~~~~~~~~~~String e)} \\
-      \textsf{Edge getEdge(String p,} \\
-      \textsf{~~~~~~~~~~~~~~~~~~~EdgeSet s,} \\
-      \textsf{~~~~~~~~~~~~~~~~~~~String e)} \\
+      \Code{Node getNode(String p,} \\
+      \Code{~~~~~~~~~~~~~~~~~~~NodeSet s,} \\
+      \Code{~~~~~~~~~~~~~~~~~~~String e)} \\
+      \Code{Edge getEdge(String p,} \\
+      \Code{~~~~~~~~~~~~~~~~~~~EdgeSet s,} \\
+      \Code{~~~~~~~~~~~~~~~~~~~String e)} \\
       \mbox{}
     }
     &
-    variations of \textsf{getNode} and \textsf{getEdge}; here \textsf{p}
-    is the prompt, \textsf{s} is the set from which the node or edge must be
-    chosen and \textsf{e} an error message if the node/edge does not belong to the specified set;
+    variations of \Code{getNode} and \Code{getEdge}; here \Code{p}
+    is the prompt, \Code{s} is the set from which the node or edge must be
+    chosen and \Code{e} an error message if the node/edge does not belong to the specified set;
     useful when wanting to specify an adjacent node or an outgoing edge
     \\ \hline
     \shortstack[l] {
       \mbox{}
       \\[\smallskipamount]
-      \textsf{String getString(String message)}\\
-      \textsf{Integer getInteger(String message)}\\
-      \textsf{Double getReal(String message)} \\
+      \Code{String getString(String message)}\\
+      \Code{Integer getInteger(String message)}\\
+      \Code{Double getReal(String message)} \\
       \mbox{}
     }
     &
-    analogous to \textsf{getNode} and \textsf{getEdge}; allow algorithm to engage
-    in dialog with the user
+    analogous to \Code{getNode} and \Code{getEdge}; allows algorithm to engage
+    in dialog with the user to obtain values of various types;
+    \Code{getDouble} is synonymous with \Code{getReal}
+    \\ \hline
+    \shortstack[l] {
+      \mbox{}\\
+      \Code{Boolean getBoolean(String message)}\\
+      \Code{Boolean getBoolean(String message,}\\
+      \Code{~~~~~~~~~~~~~~String yes, String no})\\
+      \mbox{}
+    }
+    &
+    similar to \Code{getString}, etc., but differs in that only user input is
+    a mouse click or the \Code{Enter} key and the algorithm
+    steps forward immediately after the query is answered; the second
+    variation specifies the text for each of the two buttons -- default is
+    \Code{"yes"} and \Code{"no"}
     \\ \hline
     \shortstack[l] {
       \mbox{}
       \\[\smallskipamount]
-      \textsf{Integer integer(String s)}\\
-      \textsf{Double real(String s)} \\
+      \Code{Integer integer(String s)}\\
+      \Code{Double real(String s)} \\
       \mbox{}
     }
     &
     performs conversion from a string to an integer/double; useful when parsing
     labels that represent numbers
     \\ \hline
-    \textsf{windowWidth()}, \textsf{windowHeight()}
+    \Code{windowWidth()}, \Code{windowHeight()}
     &
     current width and height of the window, in case the algorithm wants to rescale
     the graph
@@ -96,4 +111,4 @@
 \end{table}
 
 
-% [Last modified: 2016 12 05 at 16:35:45 GMT]
+% [Last modified: 2017 01 10 at 16:18:02 GMT]

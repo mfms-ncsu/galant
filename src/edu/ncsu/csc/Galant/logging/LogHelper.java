@@ -1,5 +1,7 @@
 package edu.ncsu.csc.Galant.logging;
 
+import java.util.Stack;
+
 /**
  * Debug class for monitoring GALANT's actions
  * @author Michael Owoc, modified by Matthias Stallmann
@@ -9,28 +11,27 @@ public class LogHelper {
     private static final String INDENT_STRING = "..";
 	private static LogHelper logHelper = null;
 	private static boolean loggingEnabled = false;
-    /**
-     * Logging related to the graph panel, i.e., mouse actions and drawing,
-     * clutter the loggin unnecessarily unless they are specifically
-     * desired. - mfms
-     */
+
+  /**
+   * a stack is used in order to selectively enable/disable debug printing in
+   * a sequence of nested method calls.
+   */
+  private static Stack<Boolean> savedStates = new Stack<Boolean>();
+
+  /**
+   * Logging related to the graph panel, i.e., mouse actions and drawing,
+   * clutter the loggin unnecessarily unless they are specifically
+   * desired. - mfms
+   */
     private static boolean guiLoggingEnabled = false;
-    private static boolean savedState = loggingEnabled;
 
+  /**
+   * degree of indentation, i.e., the number of occurrences of INDENT_STRING
+   */
 	private static int spaces = 0;
-	public static LogHelper getInstance() {
-		if (logHelper == null) {
-			logHelper = new LogHelper();
-		}
-
-		return logHelper;
-	}
-
-	private LogHelper() {
-	}
 
     public static void setEnabled( boolean enabled ) {
-        savedState = loggingEnabled;
+      savedStates.push(loggingEnabled);
         loggingEnabled = enabled;
     }
 
@@ -48,7 +49,12 @@ public class LogHelper {
      * - mfms
      */
     public static void restoreState() {
-        loggingEnabled = savedState;
+      if ( savedStates.isEmpty() ) {
+        loggingEnabled = false;
+      }
+      else {
+        loggingEnabled = savedStates.pop();
+      }
     }
 
 	public static void logDebug(String msg) {
@@ -61,68 +67,63 @@ public class LogHelper {
 
 	public static void enterConstructor(Class<?> cls) {
 		spaces++;
-		
 		if (loggingEnabled)
 			System.out.println(spaceString() + "=> " + cls.getName() + "()");
 	}
-	
 	public static void exitConstructor(Class<?> cls) {
 		if (loggingEnabled)
 			System.out.println(spaceString() + "<= " + cls.getName() + "()");
-		
 		spaces--;
 	}
-	
+
 	public static void enterMethod(Class<?> cls, String methodName) {
 		if (loggingEnabled) {
             spaces++;
 			System.out.println(spaceString() + "-> " + cls.getName() + "." + methodName);
         }
 	}
-	
+
 	public static void exitMethod(Class<?> cls, String methodName) {
 		if (loggingEnabled) {
 			System.out.println(spaceString() + "<- " + cls.getName() + "." + methodName);
             spaces--;
         }
 	}
-	
+
 	public static void guiLogDebug(String msg) {
 		if ( guiLoggingEnabled ) {
 			for (String line: msg.split("\n")){
          		System.out.println(spaceString() + line);
       		}
-		}	
+		}
 	}
-	
+
 	public static void guiEnterConstructor(Class<?> cls) {
 		spaces++;
-		
 		if ( guiLoggingEnabled )
 			System.out.println(spaceString() + "=> " + cls.getName() + "()");
 	}
-	
+
 	public static void guiExitConstructor(Class<?> cls) {
 		if ( guiLoggingEnabled )
 			System.out.println(spaceString() + "<= " + cls.getName() + "()");
-		
 		spaces--;
 	}
-	
+
 	public static void guiEnterMethod(Class<?> cls, String methodName) {
 		if ( guiLoggingEnabled ) {
             spaces++;
 			System.out.println(spaceString() + "-> " + cls.getName() + "." + methodName);
         }
 	}
-	
+
 	public static void guiExitMethod(Class<?> cls, String methodName) {
 		if ( guiLoggingEnabled ) {
 			System.out.println(spaceString() + "<- " + cls.getName() + "." + methodName);
             spaces--;
         }
 	}
-	
+
     public static void beginIndent() {
         spaces++;
     }
@@ -148,9 +149,8 @@ public class LogHelper {
 				spc++;
 			}
 		}
-		
 		return spaceStr;
 	}
 }
 
-//  [Last modified: 2016 12 22 at 17:15:56 GMT]
+//  [Last modified: 2017 01 10 at 14:50:35 GMT]

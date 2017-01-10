@@ -69,7 +69,7 @@ public class NodePriorityQueue extends PriorityQueue<Node> {
     public Node removeBest() throws GalantException {
         Node v = this.poll();
         if ( v == null )
-            throw new GalantException("attempt to remove item from empty queue");
+            throw new GalantException("Attempt to remove item from empty queue");
         return v;
     }
 
@@ -78,7 +78,7 @@ public class NodePriorityQueue extends PriorityQueue<Node> {
      */
     public Node removeMin() throws GalantException {
         if ( isMaxHeap )
-            throw new GalantException("attempt to removeMin from max heap");
+            throw new GalantException("Attempt to removeMin from max heap");
         return removeBest();
     }
 
@@ -87,7 +87,7 @@ public class NodePriorityQueue extends PriorityQueue<Node> {
      */
     public Node removeMax() throws GalantException {
         if ( ! isMaxHeap )
-            throw new GalantException("attempt to removeMax from min heap");
+            throw new GalantException("Attempt to removeMax from min heap");
         return removeBest();
     }
 
@@ -98,9 +98,9 @@ public class NodePriorityQueue extends PriorityQueue<Node> {
      */
     public boolean insert(Node v) throws GalantException {
         if ( v == null )
-            throw new GalantException("attempt to add null node to priority queue");
+            throw new GalantException("Attempt to add null node to priority queue");
         if ( v.getDouble(attribute) == null )
-            throw new GalantException("node " + v.getId() + " has no attribute "
+            throw new GalantException("Node " + v.getId() + " has no attribute "
                                       + attribute + " when attempting to add to"
                                       + " priority queue");
         return super.add(v);
@@ -112,7 +112,7 @@ public class NodePriorityQueue extends PriorityQueue<Node> {
      */
     public boolean insert(Node v, double key) throws GalantException, Terminate {
         if ( v == null )
-            throw new GalantException("attempt to add null node to priority queue");
+            throw new GalantException("Attempt to add null node to priority queue");
         v.set(attribute, key);
         return super.add(v);
     }
@@ -150,4 +150,4 @@ public class NodePriorityQueue extends PriorityQueue<Node> {
     }
 }
 
-//  [Last modified: 2016 11 17 at 22:12:04 GMT]
+//  [Last modified: 2017 01 10 at 20:53:46 GMT]

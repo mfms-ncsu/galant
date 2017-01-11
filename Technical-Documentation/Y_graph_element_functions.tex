@@ -3,136 +3,138 @@
   \centering
   \begin{tabular}{| m{0.4\textwidth} | m{0.55\textwidth} |}
     \hline
-    \textsf{id(\emph{element})}
+    \Code{id(\emph{element})}
     &
     returns the unique identifier of the node or edge
     \\ \hline
-    \textsf{source(Edge e)}, \textsf{target(Edge e)}
+    \Code{source(Edge e)}, \Code{target(Edge e)}
     &
-    returns the source/target of edge \textsf{e}, sometimes called the (arrow)
+    returns the source/target of edge \Code{e}, sometimes called the (arrow)
     tail/head or source/destination
     \\ \hline
-    \textsf{mark(Node v), unmark(Node v)}
+    \Code{mark(Node v), unmark(Node v)}
     &
     shades the interior of a node or undoes that
     \\ \hline
-    \textsf{Boolean marked(Node v)}
+    \Code{Boolean marked(Node v)}
     &
-    returns \textsf{true} if the node is marked
+    returns \Code{true} if the node is marked
     \\ \hline
-    \textsf{highlight(\emph{element}), unhighlight(\emph{element})}
+    \Code{highlight(\emph{element}), unhighlight(\emph{element})}
     &
     makes the node or edge highlighted, i.e.,
     thickens the border or line and makes it red / undoes the highlighting
     \\ \hline
-    \textsf{Boolean highlighted(\emph{element})}
+    \Code{Boolean highlighted(\emph{element})}
     &
-    returns \textsf{true} if the node or edge is highlighted
+    returns \Code{true} if the node or edge is highlighted
     \\ \hline
     \shortstack[l]{
-      \textsf{select(\emph{element})}, \textsf{deselect(\emph{element})}\\
-      \textsf{selected(\emph{element})}
+      \Code{select(\emph{element})}, \Code{deselect(\emph{element})}\\
+      \Code{selected(\emph{element})}
     }
     &
-    synonyms for \textsf{highlight}, \textsf{unhighlight} and \textsf{highlighted}
+    synonyms for \Code{highlight}, \Code{unhighlight} and \Code{highlighted}
     \\ \hline
     \shortstack[l]{
-      \textsf{Double weight(\emph{element})}\\
-      \textsf{setWeight(\emph{element}, double weight)}
+      \Code{Double weight(\emph{element})}\\
+      \Code{setWeight(\emph{element}, double weight)}
     }
     &
     get/set the weight of the element
     \\ \hline
     \shortstack[l]{
-      \textsf{showWeight(\emph{element})},
-      \textsf{hideWeight(\emph{element})}\\
-      \textsf{Boolean weightIsVisible(\emph{element})}\\
-      \textsf{Boolean weightIsHidden(\emph{element})}
+      \Code{showWeight(\emph{element})},
+      \Code{hideWeight(\emph{element})}\\
+      \Code{Boolean weightIsVisible(\emph{element})}\\
+      \Code{Boolean weightIsHidden(\emph{element})}
     }
     &
     make the weight of the element visible/invisible,
     query their visibility; weights of the element type
     have to be
     globally visible -- see Table~\ref{tab:graph_attribute_functions}
-    -- for \textsf{showWeight} to have an effect
+    -- for \Code{showWeight} to have an effect
     \\ \hline
     \shortstack[l]{
-      \textsf{String label(\emph{element})}\\
-      \textsf{label(\emph{element}, Object obj)}
+      \Code{String label(\emph{element})}\\
+      \Code{label(\emph{element}, Object obj)}
     }
     &
-    get/set the label of the element, the \textsf{Object} argument allows an object
-    of any other type to be converted to a (\textsf{String}) label,
-    as long as there is a \textsf{toString} method, which is true of all major classes
-    (you have to be careful, for example, to use \textsf{Integer} instead of \textsf{int})
+    get/set the label of the element, the \Code{Object} argument allows an object
+    of any other type to be converted to a (\Code{String}) label,
+    as long as there is a \Code{toString} method, which is true of all major classes
+    (you have to be careful, for example, to use \Code{Integer} instead of \Code{int})
     \\ \hline
     \shortstack[l]{
-      \textsf{showLabel(\emph{element})},
-      \textsf{hideLabel(\emph{element})}\\
-      \texttt{Boolean labelIsVisible(\emph{element})}\\
-      \texttt{Boolean labelIsHidden(\emph{element})}
+      \Code{showLabel(\emph{element})},
+      \Code{hideLabel(\emph{element})}\\
+      \Code{Boolean labelIsVisible(\emph{element})}\\
+      \Code{Boolean labelIsHidden(\emph{element})}
     }
     &
     analogous to the corresponding weight functions
     \\ \hline
     \shortstack[l]{
-      \textsf{hide(\emph{element})},
-      \textsf{show(\emph{element})}\\
-      \texttt{Boolean hidden(\emph{element})}\\
-      \texttt{Boolean visible(\emph{element})}
+      \Code{hide(\emph{element})},
+      \Code{show(\emph{element})}\\
+      \Code{Boolean hidden(\emph{element})}\\
+      \Code{Boolean visible(\emph{element})}
     }
     &
     makes nodes/edges disappear/reappear and tests whether they are visible or hidden; useful when an algorithm (logically) deletes objects, but they need to be revealed again upon completion
     \\ \hline
      \shortstack[l]{
-      \textsf{String color(\emph{element})}\\
-      \textsf{color(\emph{element}, String c)}\\
-      \textsf{uncolor(\emph{element})}
+      \Code{String color(\emph{element})}\\
+      \Code{color(\emph{element}, String c)}\\
+      \Code{uncolor(\emph{element})}
     }
     &
     get/set/remove the color of the border of a node or line representing an edge;
     colors are encoded as strings of the form
-    \textsf{"\#RRBBGG"}, the RR, BB and GG being hexadecimal numbers representing the
+    \Code{"\#RRBBGG"}, the RR, BB and GG being hexadecimal numbers representing the
     red, blue and green components of the color, respectively; see Table~\ref{tab:colors}
     for a list of predefined colors;
     when an element has no color, the line is thinner and black
     \\ \hline
-    \textsf{boolean set(\emph{element}, String key, $\langle$\emph{type}$\rangle$ value)}
+    \Code{boolean set(\emph{element}, String key, $\langle$\emph{type}$\rangle$ value)}
     &
-    sets an arbitrary attribute, \textsf{key}, of the element to have a value of a given type, where
-    the type is one of \textsf{Integer}, \textsf{Double}, \textsf{Boolean}
-    or \textsf{String};
-    in the special case of \textsf{Boolean} the third argument may be omitted
-    and defaults to \textsf{true};
-    so \textsf{set(v,"attr")} is equivalent to \textsf{set(v,"attr",true)};
-    returns \textsf{true} if the element already has a value for the given attribute,
-    \textsf{false} otherwise
+    sets an arbitrary attribute, \Code{key}, of the element to have a value of a given type, where
+    the type is one of \Code{Integer}, \Code{Double}, \Code{Boolean}
+    or \Code{String};
+    in the special case of \Code{Boolean} the third argument may be omitted
+    and defaults to \Code{true};
+    so \Code{set(v,"attr")} is equivalent to \Code{set(v,"attr",true)};
+    returns \Code{true} if the element already has a value for the given attribute,
+    \Code{false} otherwise
     \\ \hline
-    \textsf{boolean clear(\emph{element}, String key)}
+    \Code{boolean clear(\emph{element}, String key)}
     &
-    removes the attribute \textsf{key} from the element; if the \texttt{key} refers to
+    removes the attribute \Code{key} from the element; if the \Code{key} refers to
     a Boolean attribute, this is logically equivalent to making it false
     \\ \hline
     \shortstack[l]{
-    \textsf{$\langle$\emph{type}$\rangle$ get$\langle$\emph{type}$\rangle$(\emph{element}, String key)}\\
-    \textsf{Boolean is(\emph{element}, String key)}
+    \Code{$\langle$\emph{type}$\rangle$ get$\langle$\emph{type}$\rangle$(\emph{element}, String key)}\\
+    \Code{Boolean is(\emph{element}, String key)}
     }
     &
-    returns the value associated with \textsf{key} or \textsf{null}
-    if the graph has no value of the given type for \textsf{key}, i.e.,
+    returns the value associated with \Code{key} or \Code{null}
+    if the graph has no value of the given type for \Code{key}, i.e.,
     if no
-    \textsf{set(String~key,~$\langle$\emph{type}$\rangle$~value)} has occurred;
-    in the special case of a \textsf{Boolean} attribute, the second formulation
+    \Code{set(String~key,~$\langle$\emph{type}$\rangle$~value)} has occurred;
+    in the special case of a \Code{Boolean} attribute, the second formulation
     may be used;
-    the object-oriented syntax, such as \textsf{e.is("inTree")}, sometimes
+    the object-oriented syntax, such as \Code{e.is("inTree")}, sometimes
     reads more naturally
     \\ \hline
   \end{tabular}
 
   \caption{Functions that query and manipulate attributes of individual
     nodes and edges.
-    Here, \emph{element} refers to either a \textsf{Node} or an \textsf{Edge},
+    Here, \emph{element} refers to either a \Code{Node} or an \Code{Edge},
     both the type and the formal parameter.
   }
   \label{tab:graph_element_functions}
 \end{table}
+
+% [Last modified: 2017 01 11 at 01:52:34 GMT]

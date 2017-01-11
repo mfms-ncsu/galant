@@ -238,8 +238,8 @@ In each case $g$ stands for a graph element (node or edge).
   \item \Code{set($g$, String \emph{attribute}, $\langle \mathit{type} \rangle$ \emph{value})},
     where \emph{type} can be \Code{String}, \Code{Boolean}, \Code{Integer},
     or \Code{Double}.
-  \item \Code{set($g$, String \emph{attribute})}; here the attribute is assumed to
-    be Boolean and the value is implicitly \Code{true}.
+  \item \Code{set($g$, String \emph{attribute})}; the attribute is assumed to
+    be Boolean, the value is set to \Code{true}.
   \item \Code{String getString($g$, String \emph{attribute})}
   \item \Code{Boolean getBoolean($g$, String \emph{attribute})}
     \item \Code{Boolean is(String \emph{attribute})}, a synonym for
@@ -248,7 +248,7 @@ In each case $g$ stands for a graph element (node or edge).
   \item \Code{Double getDouble($g$, String \emph{attribute})}
 \end{itemize}
 An object oriented syntax can also be used -- this is especially natural in
-case of \Code{is}, as in \Code{v.is("inTree")} (see \Code{boruvka} in the
+case of \Code{is}, as in \Code{v.is("inTree")} -- see \Code{boruvka} in the
 \Code{Algorithms} directory.
 These are useful when an algorithm requires arbitrary information to be
 associated with nodes and/or edges.
@@ -264,23 +264,26 @@ are all straight lines and the positions of their labels are fixed.
 The relevant methods for nodes -- using procedural syntax -- are
 \Code{int~getX(Node)}, \Code{int~getY(Node)}
 and \Code{Point~getPosition(Node)}
-for the 'getters'. To set a position,
+for the getters. To set a position,
 one should use\\
 \hspace*{2em}\Code{setPosition(Node,Point)}\\
 or\\
 \hspace*{2em}\Code{setPosition(Node,int,int)}.\\
 Once a node has an established position, it is possible to change
-only one coordinate using \Code{setX(Node,int)} or \Code{setY(Node,int)}.
+one coordinate at a time using \Code{setX(Node,int)} or \Code{setY(Node,int)}.
 Object-oriented variants of all of these, e.g.,
 \Code{v.setX(100)}, are also available.
 
-Ordinarily the user can move nodes during algorithm execution
+The user is allowed to move nodes during algorithm execution
 and the resulting positions persist after execution terminates.
-For some algorithms, such as sorting, the algorithm itself needs to move
+Node position is the only attribute that can be "edited" at runtime.
+For some animations, however, such as sorting,
+the animation itself needs to move
 nodes.
-It is desirable then to keep the user from moving nodes.
-The declaration \Code{movesNodes()} at the beginning of an algorithm
-accomplishes this.
+To avoid potential conflicts between position changes inflicted by the user
+and those desired by the animation.
+the function \Code{movesNodes()}, called at the beginning of an algorithm
+will prevent the user from moving nodes.
 
 \subsubsection{Display attributes} \label{sec:display_attributes}
 
@@ -299,8 +302,9 @@ and \Code{real(String)}
 -- see Table~\ref{tab:utility_functions}
 -- provide a convenient mechanism for treating labels as objects of class
 \Code{Integer} or \Code{Double}, respectively.
-The argument of \Code{setLabel} and its relatives -- see below
--- is not the expected \Code{String}
+The second argument of \Code{label} (or single argument of the
+object-oriented \Code{setLabel})
+is not the expected \Code{String}
 but \Code{Object};
 any type of object that has a Java \Code{toString} method will work
 -- numbers have to be of type \Code{Integer} or \Code{Double}
@@ -309,7 +313,7 @@ in Java.\footnote{
   Galant functions return objects, \Code{Integer} or \Code{Double}, when
   return values are numbers for this reason.
 }
-So conversion between string labels and numbers works both ways.
+Thus, conversion between string labels and numbers works both ways.
 
 Aside from the setters and getters: \Code{setWeight(double)},
 \mbox{\Code{Double getWeight()}}, \Code{setLabel(Object)}
@@ -318,14 +322,15 @@ manipulate and test for the absence of weights/labels using
 \Code{clearWeight()} and \Code{boolean~hasWeight()},
 and the corresponding methods for labels.
 The procedural variants in this case are
-\Code{setWeight(Node,double)},
-\mbox{\Code{Double weight(Node)}},\footnote{
-  The \emph{get} is omitted here for more natural syntax.}
-\Code{label(Node,Object)},\footnote{
-  A natural syntax that resembles English. However,
-  \Code{setLabel(Node,Object)} is also allowed.
-}
-and \mbox{\Code{String label(Node)}}
+\begin{itemize}
+  \item \Code{setWeight(Node,double)},
+  \item \mbox{\Code{Double getWeight(Node)}} or the more natural
+    \mbox{\Code{Double weight(Node)}},
+   \item \Code{setLabel(Node,Object)} or the more natural
+     \Code{label(Node,Object)},
+   \item \Code{getLabel(Node)} or the more natural
+     \mbox{\Code{String label(Node)}}
+\end{itemize}
 
 Nodes can either be plain, highlighted (selected), marked (visited) or both highlighted and
 marked.
@@ -378,7 +383,13 @@ The \Code{getColor} and \Code{setColor} methods
 and their procedural variants have \Code{String} arguments
 in the RGB format \texttt{\#RRGGBB}; for example,
 the string \texttt{\#0000ff} is blue.
-The predefined color constants are listed in Table~\ref{tab:colors}.
+Here, as in the case of label, \Code{color($g$)} and \Code{color($g$,$c$)}
+can be used in place of \Code{getColor($g$)} and \Code{setColor($g$,$c$)},
+respectively.
+Galant defines several color constants for convenience -- 
+these are listed in Table~\ref{tab:colors} -- so one can say, e.g.,
+\Code{color($g$,TEAL)} instead of \Code{color($g$,"\#009999")}.
+
 Note: In the graph display \emph{highlighting takes precedence over color};
 if a node is highlighted, its color is ignored and the default highlight
 color is used.
@@ -404,8 +415,10 @@ differently.
 
 Of the attributes listed above, weight, label, color and position can be
 accessed and modified by the user as well as the program.
-In all cases, modifications by execution of the animation are ephemeral
--- the graph returns to its original state after execution.
+In all cases (of display attributes -- recall that node positions are an
+exception), modifications during runtime are ephemeral
+-- the graph returns to its original, pre-execution, state after running the
+animation.
 The user can save the mid-execution state of the graph:
 select the \Code{Export} option on the file menu of the
 \emph{graph} window.
@@ -452,19 +465,22 @@ static int plus( int a, int b ) {
 \end{verbatim}
 
 The \textsl{return\_type} is optional. If it is missing, the function behaves like
-a \textsf{void} method in Java. An example is the recursive
+a \textsf{void} method in Java. An example is the recursive function
+\Code{visit} in depth-first search.
 \\
 \Code{function visit( Node v ) \{} \textsl{code} \Code{\}}
-\\
-The conversion of functions into Java methods when Galant code is compiled
-is complex and may result in indecipherable error messages.
 
 \input{Y_data_structures}
 
 \subsection{Data Structures}
 
 Galant provides some standard data structures for nodes and edges automatically.
-These are described in detail in Table~\ref{tab:data_structures}.
+These are described in detail in Tables~\ref{tab:algorithm_data_structures} and~\ref{tab:graph_data_structures}.
+Table~\ref{tab:algorithm_data_structures} gives information about the simpler
+structures -- lists, stacks and queues,
+while Table~\ref{tab:graph_data_structures} describes the more sophisticated
+-- sets and priority queues.
+
 Data structures use object-oriented syntax.
 For example, to add a node \Code{v} to a \Code{NodeList} \Code{L},
 the appropriate syntax is \Code{L.add(v)}.
@@ -487,11 +503,36 @@ which would translate to
      pq.remove(v);
      pq.add(v)
 \end{verbatim}
-As pointed out above, the weight of a node or edge is used for priority in a priority
+As pointed out earlier,
+the weight of a node or edge is used for priority in a priority
 queue or for sorting.
 The programmer can change this default
-by redefining the Java \Code{compareTo()} method,
-but this requires finesse and Java expertise.
+as well as the fact that the nodes/edges prioritized by increasing weight
+(the priority queue is a min-heap).
+
+The functionality of a priority queue depends on how it is initialized via a
+constructor. Taking \Code{EdgePriorityQueue} as an example
+(\Code{NodePriorityQueue} is analogous), the standard initialization, one
+that defines a min-heap that uses weights as key is\\
+\Code{EdgePriorityQueue q = new EdgePriorityQueue()}\\
+or the
+declaration\\
+\Code{EdgePriorityQueue q}\\
+could be separate from\\
+\Code{q = new EdgePriorityQueue()}\\
+
+Variations on the constructor call (part following \Code{new}) are
+\begin{itemize}
+\item \Code{EdgePriorityQueue(true)} to create a max-heap based on weights
+  (if the argument is \Code{false} the result is a min-heap, the default)
+\item \Code{EdgePriorityQueue("attribute")}, where \Code{"attribute"} is a
+  numerical attribute of an edge
+\item \Code{EdgePriorityQueue("attribute", true)} to create a max-heap with
+  the given attribute.
+\end{itemize}
+
+\cmt{A workaround to the fact that the "attribute" constructors don't work is
+a setAttribute() method}
 
 \subsection{Queries}
 
@@ -581,4 +622,4 @@ file, when specifying a node or edge after a keyboard shortcut, or when
 giving the weight of a node or edge.
 A complete list of Galant exceptions is in Table~\ref{tab:galant_exceptions}.
 
-% [Last modified: 2017 01 10 at 22:26:55 GMT]
+% [Last modified: 2017 01 11 at 03:19:32 GMT]

@@ -224,7 +224,7 @@ public class CodeIntegrator	{
                 = getCodeBlock(userCode.substring(userCode.indexOf("algorithm"), userCode.length()));
         }
         catch (IOException e) {
-            throw new MalformedMacroException("something went wrong when processing algorithm block");
+            throw new MalformedMacroException("Something went wrong when processing algorithm block");
         }
 
         modifiedAlgorithm = ALGORITHM_STRUCTURE;
@@ -362,4 +362,4 @@ public class CodeIntegrator	{
     }
 }
 
-//  [Last modified: 2017 01 04 at 00:00:15 GMT]
+//  [Last modified: 2017 01 12 at 18:39:14 GMT]

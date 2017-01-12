@@ -10,6 +10,7 @@ package edu.ncsu.csc.Galant.graph.container;
 import java.util.PriorityQueue;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.Comparator;
 
 import edu.ncsu.csc.Galant.graph.component.Edge;
 import edu.ncsu.csc.Galant.graph.component.GraphElement;
@@ -59,6 +60,13 @@ public class EdgePriorityQueue extends PriorityQueue<Edge> {
 //         this.attribute = attribute;
 //     }
 
+  /**
+   * creates a heap using the given comparator
+   */
+  public EdgePriorityQueue(Comparator<GraphElement> C) {
+    super(INITIAL_SIZE, C);
+  }
+  
     /**
      * @return the maximum or minimum item on the queue, depending on how the
      * queue was initialized (isMax argument in the constructor); null if the
@@ -139,4 +147,4 @@ public class EdgePriorityQueue extends PriorityQueue<Edge> {
     }
 }
 
-//  [Last modified: 2016 10 14 at 19:25:25 GMT]
+//  [Last modified: 2017 01 11 at 21:03:53 GMT]

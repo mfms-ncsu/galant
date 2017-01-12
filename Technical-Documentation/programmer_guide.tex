@@ -616,10 +616,13 @@ in a stack trace on the console and a popup window.
 The latter allows to user to choose whether to continue, meaning that the
 algorithm is terminated and Galant returns to edit mode, or exit from Galant
 completely.
+Null pointer exceptions can almost always be tracked down by looking for the
+first reference to the algorithm in the stack trace, an item of the form\\
+\hspace*{4em}\Code{Galant.algorithm.code.compiled.\emph{algorithm\_name}.run(\emph{algorithm\_name}:\emph{line\_number})}
 
 Exceptions can also occur in edit mode: when reading a graph from a
 file, when specifying a node or edge after a keyboard shortcut, or when
 giving the weight of a node or edge.
 A complete list of Galant exceptions is in Table~\ref{tab:galant_exceptions}.
 
-% [Last modified: 2017 01 11 at 03:19:32 GMT]
+% [Last modified: 2017 01 12 at 19:02:34 GMT]

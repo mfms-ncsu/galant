@@ -11,16 +11,17 @@ import java.util.regex.Pattern;
  */
 public class Macros {
     /**
-     * <p> Defines macros and add it to an array list: MACROS </p>
-     *
-     * <p> Current implementation includes: </p>
-     * <p> SimpleReplacementMacro "bool" </p>
-     * <p>  ParamterizedMacro "for_outgoing"<br>
-     * ParamterizedMacro "for_incoming"<br>
-     * ParamterizedMacro "for_adjacent"<br>
-     * ParamterizedMacro "for_nodes"<br>
-     * ParamterizedMacro "for_edges"<br>
-     * ParamterizedMacro "function (.., ..) {...}"</p>
+     * Defines macros and add it to an array list: MACROS<br>
+     * Current implementation includes:<br>
+     * SimpleReplacementMacro "algorithm" (for syntax highlighting only)<br>
+     * SimpleReplacementMacro "bool" <br>
+     * ParameterizedMacro "sort" <br>
+     * ParameterizedMacro "for_outgoing"<br>
+     * ParameterizedMacro "for_incoming"<br>
+     * ParameterizedMacro "for_adjacent"<br>
+     * ParameterizedMacro "for_nodes"<br>
+     * ParameterizedMacro "for_edges"<br>
+     * ParameterizedMacro "function (.., ..) {...}"</p>
      */
 
     public static void macros() {
@@ -32,7 +33,19 @@ public class Macros {
                 }
             });
 
-        Macro.MACROS.add(new SimpleReplacementMacro("\\bbool\\b", "boolean"){
+        /**
+         * @todo For some odd reason, a simple replacement does not work
+         * here; maybe it's the fact that when I tried it in an algorithm, I
+         * said 'sort(' - no space between 'sort' and the paren; in any case
+         * it made the macro preprocessor hang.
+         */
+        // Macro.MACROS.add(new SimpleReplacementMacro("sort", "Collections.sort") {
+        //         public String getName() {
+        //             return "sort";
+        //         }
+        //     });
+
+        Macro.MACROS.add(new SimpleReplacementMacro("bool", "boolean"){
                 @Override
                 public String getName() {
                     return "bool";
@@ -40,18 +53,29 @@ public class Macros {
             });
 
 
-        Macro.MACROS.add(new ParameterizedMacro("sort", 1, false) {
-                @Override
-                protected String modifyMatch(String code,
-                                             MatchResult nameMatch,
-                                             String[] args,
-                                             String whitespace,
-                                             String block) {
-                    String toBeSorted = args[0];
-                    return Matcher.quoteReplacement("Collections.sort(" + toBeSorted +")");
-                }
+        /**
+         * Either sort(Collection L) or sort(Collection L, Comparator C)
+         */
+        Macro.MACROS.add(new ParameterizedMacro("sort", 1, 2, false) {
+            @Override
+            protected String modifyMatch(String code,
+                                         MatchResult nameMatch,
+                                         String[] args,
+                                         String whitespace,
+                                         String block) {
+              String toBeSorted = args[0];
+              if ( args.length == 1 )
+                return Matcher.quoteReplacement("Collections.sort("
+                                                + toBeSorted + ")");
+              else {
+                String comparator = args[1];
+                return Matcher.quoteReplacement("Collections.sort("
+                                                + toBeSorted
+                                                + ", " + comparator + ")");
+              }
             }
-            );
+          }
+          );
 
         /**
          * for_outgoing: iterates over the outgoing nodes and edges
@@ -329,4 +353,4 @@ public class Macros {
     }
 }
 
-//  [Last modified: 2017 01 03 at 16:04:50 GMT]
+//  [Last modified: 2017 01 12 at 17:17:26 GMT]

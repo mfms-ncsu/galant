@@ -48,6 +48,13 @@ public class NodePriorityQueue extends PriorityQueue<Node> {
         this.isMaxHeap = true;
     }
 
+  /**
+   * creates a heap using the given comparator
+   */
+  public NodePriorityQueue(Comparator<GraphElement> C) {
+    super(INITIAL_SIZE, C);
+  }
+  
     /**
      * creates a min heap whose keys are based on the given attribute, which
      * must have Double values
@@ -150,4 +157,4 @@ public class NodePriorityQueue extends PriorityQueue<Node> {
     }
 }
 
-//  [Last modified: 2017 01 10 at 20:53:46 GMT]
+//  [Last modified: 2017 01 12 at 18:52:47 GMT]

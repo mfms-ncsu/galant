@@ -117,6 +117,7 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
 		public static final String[] allAPIkeywords = new String[] {
             "beginStep", "endStep", "step",
             "display", "print", "error",
+            "integer", "real",
             "movesNodes", "isDirected", "setDirected",
             "source", "target", "otherEnd",
             "neighbors", "inEdges", "outEdges",
@@ -305,4 +306,4 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
     } // applyStyleToCommentsAndStrings
 }
 
-//  [Last modified: 2017 01 05 at 16:16:45 GMT]
+//  [Last modified: 2017 01 12 at 18:26:50 GMT]

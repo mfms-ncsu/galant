@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Stack;
+import java.util.Comparator;
 import java.awt.Color;
 import java.awt.Point;
 
@@ -879,6 +880,60 @@ public abstract class Algorithm implements Runnable {
         return dispatch.getStringAnswer();
     }
 
+  /**
+   * @return a comparator that uses string (lexicographic) comparisons on the
+   * given attribute of each graph element
+   */
+  public Comparator<GraphElement> getStringComparator(String attribute) {
+    return GraphElement.getStringComparator(attribute);
+  }
+  
+  /**
+   * @return a comparator that uses integer (increasing order) comparisons on
+   * the given attribute of each graph element
+   */
+  public Comparator<GraphElement> getIntegerComparator(String attribute) {
+    return GraphElement.getIntegerComparator(attribute);
+  }
+
+  /**
+   * @return a comparator that uses double (increasing) comparisons on the
+   * given attribute of each graph element
+   */
+  public Comparator<GraphElement> getDoubleComparator(String attribute) {
+    return GraphElement.getDoubleComparator(attribute);
+  }
+  
+  /**
+   * @return a comparator that uses string (lexicographic) comparisons on the
+   * given attribute of each graph element
+   * @param reverse use the reverse of the natural order if true
+   */
+  public Comparator<GraphElement> getStringComparator(String attribute,
+                                                      boolean reverse) {
+    return GraphElement.getStringComparator(attribute, reverse);
+  }
+  
+  /**
+   * @return a comparator that uses integer (increasing order) comparisons on
+   * the given attribute of each graph element
+   * @param reverse use the reverse of the natural order if true
+   */
+  public Comparator<GraphElement> getIntegerComparator(String attribute,
+                                                       boolean reverse) {
+    return GraphElement.getIntegerComparator(attribute, reverse);
+  }
+
+  /**
+   * @return a comparator that uses double (increasing) comparisons on the
+   * given attribute of each graph element
+   * @param reverse use the reverse of the natural order if true
+   */
+  public Comparator<GraphElement> getDoubleComparator(String attribute,
+                                                      boolean reverse) {
+    return GraphElement.getDoubleComparator(attribute);
+  }
+  
     /**
      * @return an integer typed by the user in a dialog
      */
@@ -1189,4 +1244,4 @@ public abstract class Algorithm implements Runnable {
     public abstract void run();
 }
 
-//  [Last modified: 2017 01 10 at 20:45:54 GMT]
+//  [Last modified: 2017 01 12 at 18:25:36 GMT]

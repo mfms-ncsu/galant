@@ -463,7 +463,8 @@ public class GraphElement implements Comparable<GraphElement> {
      * - id: integer
      * - weight: double
      * - highlighted: boolean
-     * - deleted: boolean (not clear if this ever becomes an issue; not implemented)
+     * - deleted: boolean (not clear if this ever becomes an issue; not
+     *   implemented)
      * 
      * Attributes for nodes are ...
      * - x, y: integer
@@ -583,7 +584,7 @@ public class GraphElement implements Comparable<GraphElement> {
      * @return a comparator that compares two graph elements based on the
      * designated attribute; the attribute must have a Double value
      */
-    public static Comparator<GraphElement> getComparator(String attribute) {
+    public static Comparator<GraphElement> getDoubleComparator(String attribute) {
         return new Comparator<GraphElement>() {
             public int compare(GraphElement ge_1, GraphElement ge_2) {
                 Double value_1 = ge_1.getDouble(attribute);
@@ -594,6 +595,91 @@ public class GraphElement implements Comparable<GraphElement> {
             }
         };
     }
+
+    /**
+     * @return a comparator that compares two graph elements based on the
+     * designated attribute; the attribute must have an Integer value
+     */
+    public static Comparator<GraphElement> getIntegerComparator(String attribute) {
+        return new Comparator<GraphElement>() {
+            public int compare(GraphElement ge_1, GraphElement ge_2) {
+                Integer value_1 = ge_1.getInteger(attribute);
+                Integer value_2 = ge_2.getInteger(attribute);
+                if ( value_1 > value_2 ) return 1;
+                else if ( value_2 > value_1 ) return -1;
+                else return 0;
+            }
+        };
+    }
+
+   /**
+     * @return a comparator that compares two graph elements based on the
+     * designated attribute; the attribute must have an Integer value
+     */
+    public static Comparator<GraphElement> getStringComparator(String attribute) {
+        return new Comparator<GraphElement>() {
+            public int compare(GraphElement ge_1, GraphElement ge_2) {
+                String value_1 = ge_1.getString(attribute);
+                String value_2 = ge_2.getString(attribute);
+                return value_1.compareTo(value_2);
+            }
+        };
+    }
+
+  /**
+   * @return a comparator that compares two graph elements based on the
+   * designated attribute; the attribute must have a Double value
+   * @param reverse use the reverse of the natural order if true
+   */
+  public static Comparator<GraphElement> getDoubleComparator(String attribute,
+                                                             boolean reverse) {
+        return new Comparator<GraphElement>() {
+            public int compare(GraphElement ge_1, GraphElement ge_2) {
+                Double value_1 = ge_1.getDouble(attribute);
+                Double value_2 = ge_2.getDouble(attribute);
+                if ( reverse )
+                  return value_2.compareTo(value_1);
+                else return value_1.compareTo(value_2);
+            }
+        };
+    }
+
+  /**
+   * @return a comparator that compares two graph elements based on the
+   * designated attribute; the attribute must have an Integer value
+   * @param reverse use the reverse of the natural order if true
+   */
+  public static Comparator<GraphElement> getIntegerComparator(String attribute,
+                                                              boolean reverse) {
+        return new Comparator<GraphElement>() {
+            public int compare(GraphElement ge_1, GraphElement ge_2) {
+                Integer value_1 = ge_1.getInteger(attribute);
+                Integer value_2 = ge_2.getInteger(attribute);
+                if ( reverse )
+                  return value_2.compareTo(value_1);
+                else return value_1.compareTo(value_2);
+            }
+        };
+    }
+
+  /**
+   * @return a comparator that compares two graph elements based on the
+   * designated attribute; the attribute must have a String value
+   * @param reverse use the reverse of the natural order if true
+   */
+  public static Comparator<GraphElement> getStringComparator(String attribute,
+                                                             boolean reverse) {
+        return new Comparator<GraphElement>() {
+            public int compare(GraphElement ge_1, GraphElement ge_2) {
+                String value_1 = ge_1.getString(attribute);
+                String value_2 = ge_2.getString(attribute);
+                if ( reverse )
+                  return value_2.compareTo(value_1);
+                else return value_1.compareTo(value_2);
+            }
+        };
+    }
+
 }
 
-//  [Last modified: 2016 12 21 at 15:25:00 GMT]
+//  [Last modified: 2017 01 12 at 18:05:14 GMT]

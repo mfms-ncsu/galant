@@ -1,0 +1,138 @@
+\begin{table}
+  \small
+  \centering
+  \begin{tabular}{| p{0.3\textwidth} | c | p{0.5\textwidth}|}
+    \hline
+    \multicolumn{1}{|c|}{\textbf{message}}
+    & \textbf{type/source}
+    & \multicolumn{1}{c|}{\textbf{explanation}} \\
+    \hline
+    programmer message $m$ & runtime
+    & animation program has encountered an \Code{error($m$)} call
+    \\
+    \hline
+    programmer message $m$ & runtime
+    & user selected a node or edge not in the set speficied by a query of the
+    form \Code{getNode/getEdge($p$, $S$, $m$)}, where $p$ is the prompt, $S$
+    the set, and $m$ the error message 
+    \\
+    \hline
+    Nonexistent node or edge & runtime
+    & a node/edge is null or does not exist in current state
+    \\
+    \hline
+    Graph element has no weight & runtime
+    & no weight was given, neither during editing nor earlier during execution
+    \\
+    \hline
+    No edge with source $v$ and target $w$ exists & runtime
+    & can occur when user responds to a query for an edge or the algorithm asks
+    for a specific edge using \Code{getEdge($v,w$)}
+    \\
+    \hline
+    Empty graph & runtime & animation attempts to get a node when there is
+    none
+    \\
+    \hline
+    No node with id $i$ exists & runtime
+    & called \Code{getNodeById($i$)} when no node with id $i$ exists
+    \\
+    \hline
+    Node has been deleted & runtime
+    & called \Code{getNodeById($i$)} when node has been deleted
+    \\
+    \hline
+    Attempt to removeMin from max heap (or vice versa) & runtime
+    & priority queues can be initialized as either min heaps or max heaps;
+    Galant checks to make sure the correct remove method is used
+    \\
+    \hline
+    Attempt to add null node/edge to (priority) queue & runtime
+    & what it says, prevents later problem with null element
+    \\
+    \hline
+    Node/edge has no attribute $a$ when attempting to add to priority queue
+    & runtime
+    & Attribute $a$, which was specified as the one to use for comparisons
+    when the priority queue was initialized, is not present for the element;
+    the default attribute is \Code{weight}
+    \\
+    \hline
+    Unable to compute center for node & any time
+    & something got messed up with the x and y coordinates (or the layer
+    information in case of a layered graph), e.g., with a \Code{setPosition}
+    call
+    \\
+    \hline
+    Something went wrong when processing algorithm block & macro processing
+    & probably some unbalanced parens, braces or brackets in the algorithm
+    \\
+    \hline
+    Missing \emph{right paren, bracket, brace} in \emph{code} \ldots
+    & macro processing
+    & what it says; the \emph{code} shows only the beginning of the code
+    block in which the error occurred
+    \\
+    \hline
+    \emph{macro name}: Curly braces required & macro processing
+    & missing curly braces after a function header
+    \\
+    \hline
+    No compiler found, need a JDK & compiler
+    & either no JDK is installed or \Code{JAVA\_HOME} is not set up correctly
+    \\
+    \hline
+    Invalid tab - use untitled graph or untitled algorithm & text editor
+    & attempt to save a file when there's something wrong with the current
+    tab/panel (should not happen)
+    \\
+    \hline
+    No text when invoking GraphMLParser & GraphML parser
+    & attempting to parse empty file
+    \\
+    \hline
+    Missing id for node & GraphML parser
+    & no id specified for the node; nodes are required to have id's; they are
+    optional for edges
+    \\
+    \hline
+    Bad id & GraphML parser
+    & the id of a node or edge is not an integer
+    \\
+    \hline
+    Duplicate id $i$ & GraphML parser
+    & there is more than node/edge with id $i$
+    \\
+    \hline
+    Missing source/target & GraphML parser
+    & an edge has no source/target in its GraphML representation
+    \\
+    \hline
+    Bad source/target id & GraphML parser
+    & the source/target specified in the GraphML file is not a legal integer
+    \\
+    \hline
+    Source/target node missing & GraphML parser
+    & the integer id of the source/target does not correspond with any node
+    \\
+    \hline
+    Bad weight & GraphML parser
+    & the weight of a node/edge is not a valid floating point number
+    \\
+    \hline
+    Bad x/y-coordinate & GraphML parser
+    & the x or y coordinate of a node is not a legal integer
+    \\
+    \hline
+    Missing/bad layer/positionInLayer & GraphML parser
+    & something is wrong with layer or positionInLayer of a node in a layered
+    graph
+    \\
+    \hline
+  \end{tabular}
+
+  \caption{Galant exceptions.}
+  \label{tab:galant_exceptions}
+\end{table}
+
+% [Last modified: 2017 01 12 at 18:50:45 GMT]

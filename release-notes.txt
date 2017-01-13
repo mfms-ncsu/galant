@@ -1,6 +1,6 @@
 Release notes for Galant, most recent first.
 
-v5.4 (upcoming)
+v6.0 (upcoming)
 
 User
 
@@ -24,6 +24,10 @@ Animator
 - new NodePriorityQueue and EdgePriorityQueue methods as well as ability to
   define a max heap using an optional boolean argument; these include
   removeMax, removeBest and changeKey (as an alternative to decreaseKey)
+
+- the priority queues and the sort function can use an optional comparator
+  based on a different attribute than weight, e.g., sort(edges,
+  getStringComparator("label"))
 
 - functions that return sets of neighbors, incident edges, incoming edges and
   outgoing edges for a node (instead of lists) [still in the works]

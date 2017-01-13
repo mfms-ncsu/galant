@@ -1,0 +1,47 @@
+  \textbf{NodePriorityQueue and EdgePriorityQueue:} priority queues of nodes or edges, respectively.
+
+  \medskip
+  \begin{tabular}{| m{0.35\textwidth} | m{0.6\textwidth} |}
+    \hline
+      \textsf{void~add(\emph{element})}
+    &
+    adds the element to the priority queue;
+    the priority is defined to be its weight -- see Section~\ref{sec:display_attributes}
+    \\ \hline
+    \textsf{\emph{type}~removeMin()}
+    &
+    returns and removes the element with minimum weight;
+    returns \textsf{null} if the queue is empty
+    \\ \hline
+    \hline
+    \textsf{boolean~remove(\emph{element})}
+    &
+    removes the element;
+    returns \textsf{true} if it is present,
+    \textsf{false} otherwise
+    \\ \hline
+    \textsf{void~decreaseKey(\emph{element},~double~key)}
+    &
+    changes the weight of the element to the new key
+    and reorganizes the priority queue appropriately;
+    since this is accomplished by removing and reinserting the object, i.e.,
+    inefficiently, this method can also be used to increase the key
+    \\ \hline
+    \textsf{size()}, \textsf{isEmpty()}
+    &
+    analogous to the corresponding queue methods
+    \\ \hline
+  \end{tabular}
+
+  \bigskip
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \\ \hline
+    \textsf{sort(\emph{list})}
+    &
+    use the weights of the nodes/edges to sort the list \textsf{L};
+    sort is actually a macro that invokes Java \textsf{Collections.sort(L)};
+    this means that \textsf{L} can be any collection (list, stack, queue, set)
+    of comparable elements
+
+% [Last modified: 2017 01 13 at 13:36:54 GMT]

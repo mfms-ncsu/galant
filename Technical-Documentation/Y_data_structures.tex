@@ -1,33 +1,40 @@
 \begin{table}
   \small
   \textbf{NodeList and EdgeList:} lists of nodes or edges, respectively.
-  We use \emph{list} as shorthand for either \textsf{NodeList~L} or
-  \textsf{EdgeList L}, \emph{type} for either \textsf{Node} or \textsf{Edge}
-  and \emph{element} for \textsf{Node v} or \textsf{Edge e}.
+  We use \emph{list} as shorthand for either \Code{NodeList} or
+  \Code{EdgeList}, \emph{type} for either \Code{Node} or \Code{Edge}
+  and \emph{element} for \Code{Node v} or \Code{Edge e}.
   
   \medskip
   \begin{tabular}{| m{0.35\textwidth} | m{0.6\textwidth} |}
+    \multicolumn{2}{c}{\textbf{Initialization}}
+    \\
     \hline
-    \textsf{\emph{type} first(\emph{list})}
+    \Code{\emph{list} $L$ = new \emph{type}List();}
+    & creates an empty list $L$
+    \\
+    \hline
+    \multicolumn{2}{c}{\textbf{Other methods}}
+    \\
+    \hline
+    \Code{\emph{type} first(\emph{list} $L$)}
     &
-    returns the first element of this list
+    returns the first element of $L$
     \\ \hline
-    \textsf{add(\emph{element}, \emph{list})}
+    \Code{\emph{type} get(int $i$, \emph{list} $L$)}
     &
-    adds the element
-    to the end of the list; along with \textsf{first}
+    returns the $i$-th element of $L$; indexing is 0-based, so
+    \Code{get(0,$L$)} is the same as \Code{first($L$)}
+    \\ \hline
+    \Code{add(\emph{element} $x$, \emph{list} $L$)}
+    &
+    adds the element $x$
+    to the end of list $L$; along with \Code{first}
     we get the effect of a queue
     \\ \hline
-    \textsf{remove(\emph{element}, \emph{list})}
+    \Code{remove(\emph{element} $x$, \emph{list} $L$)}
     &
-    removes the first occurrence of the element from the list
-    \\ \hline
-    \textsf{sort(\emph{list})}
-    &
-    use the weights of the nodes/edges to sort the list \textsf{L};
-    sort is actually a macro that invokes Java \textsf{Collections.sort(L)};
-    this means that \textsf{L} can be any collection (list, stack, queue, set)
-    of comparable elements
+    removes the first occurrence of $x$ from $L$
     \\ \hline
   \end{tabular}  
   
@@ -38,39 +45,39 @@
   \medskip
   \begin{tabular}{| m{0.35\textwidth} | m{0.6\textwidth} |}
     \hline
-      \textsf{void~enqueue(\emph{element})}
+      \Code{void~enqueue(\emph{element})}
     &
     adds the element to the rear of the queue
     \\ \hline
-    \textsf{\emph{type} dequeue()}
+    \Code{\emph{type} dequeue()}
     &
     returns and removes the element at the front of the queue;
-    returns \textsf{null} if the queue is empty
+    returns \Code{null} if the queue is empty
     \\ \hline
-    \textsf{\emph{type} remove()}
+    \Code{\emph{type} remove()}
     &
     returns and removes the element at the front of the queue;
     throws an exception if the queue is empty
     \\ \hline
-    \textsf{\emph{type}~element()}
+    \Code{\emph{type}~element()}
     &
     returns the element at the front of the queue
     without removing it;
     throws an exception if the queue is empty
     \\ \hline
-    \textsf{\emph{type} peek()}
+    \Code{\emph{type} peek()}
     &
     returns the element at the front of the queue
     without removing it;
-    returns \textsf{null} if the queue is empty
+    returns \Code{null} if the queue is empty
     \\ \hline
-    \textsf{size()}
+    \Code{size()}
     &
     returns the number of elements in the queue
     \\ \hline
-    \textsf{isEmpty()}
+    \Code{isEmpty()}
     &
-    returns \textsf{true} if the queue is empty 
+    returns \Code{true} if the queue is empty 
     \\ \hline
   \end{tabular}
 
@@ -80,58 +87,22 @@
   \medskip
   \begin{tabular}{| m{0.35\textwidth} | m{0.6\textwidth} |}
     \hline
-      \textsf{void~push(\emph{element})}
+      \Code{void~push(\emph{element})}
     &
     adds the element to the top of the stack
     \\ \hline
-    \textsf{\emph{type}~pop()}
+    \Code{\emph{type}~pop()}
     &
     returns and removes the element at the top of the stack;
     throws an exception if the stack is empty
     \\ \hline
-    \textsf{\emph{type} peek()}
+    \Code{\emph{type} peek()}
     &
     returns the element at the top of the stack
     without removing it;
     returns null if the stack is empty
     \\ \hline
-    \textsf{size()}, \textsf{isEmpty()}
-    &
-    analogous to the corresponding queue methods
-    \\ \hline
-  \end{tabular}
-
-  \bigskip
-  \textbf{NodePriorityQueue and EdgePriorityQueue:} priority queues of nodes or edges, respectively.
-
-  \medskip
-  \begin{tabular}{| m{0.35\textwidth} | m{0.6\textwidth} |}
-    \hline
-      \textsf{void~add(\emph{element})}
-    &
-    adds the element to the priority queue;
-    the priority is defined to be its weight -- see Section~\ref{sec:display_attributes}
-    \\ \hline
-    \textsf{\emph{type}~removeMin()}
-    &
-    returns and removes the element with minimum weight;
-    returns \textsf{null} if the queue is empty
-    \\ \hline
-    \hline
-    \textsf{boolean~remove(\emph{element})}
-    &
-    removes the element;
-    returns \textsf{true} if it is present,
-    \textsf{false} otherwise
-    \\ \hline
-    \textsf{void~decreaseKey(\emph{element},~double~key)}
-    &
-    changes the weight of the element to the new key
-    and reorganizes the priority queue appropriately;
-    since this is accomplished by removing and reinserting the object, i.e.,
-    inefficiently, this method can also be used to increase the key
-    \\ \hline
-    \textsf{size()}, \textsf{isEmpty()}
+    \Code{size()}, \Code{isEmpty()}
     &
     analogous to the corresponding queue methods
     \\ \hline
@@ -143,22 +114,22 @@
   \medskip
   \begin{tabular}{| m{0.35\textwidth} | m{0.6\textwidth} |}
     \hline
-    \textsf{boolean~add(\emph{element})}
+    \Code{boolean~add(\emph{element})}
     &
     adds the element to the set;
     returns true if the element was a new addition, false otherwise
     \\ \hline
-    \textsf{boolean~remove(\emph{element})}
+    \Code{boolean~remove(\emph{element})}
     &
     removes the element
-    returns \textsf{true} if the element was present,
-    \textsf{false} otherwise
+    returns \Code{true} if the element was present,
+    \Code{false} otherwise
     \\ \hline
-    \textsf{boolean~contains(\emph{element})}
+    \Code{boolean~contains(\emph{element})}
     &
     returns true if the element is in the set
     \\ \hline
-    \textsf{size()}, \textsf{isEmpty()}
+    \Code{size()}, \Code{isEmpty()}
     &
     analogous to the corresponding methods for other data structures
     \\ \hline
@@ -168,7 +139,9 @@
      These methods use object-oriented syntax:
 $\langle$\emph{structure}$\rangle$.$\langle$\emph{method}$\rangle$($\langle$\emph{arguments}$\rangle$)
     and are created using, e.g.,
-    \textsf{NodeQueue~Q~=~new~NodeQueue();} the \textsf{new} operator in Java.
+    \Code{NodeQueue~Q~=~new~NodeQueue();} the \Code{new} operator in Java.
   }
   \label{tab:data_structures}
 \end{table}
+
+% [Last modified: 2017 01 13 at 13:48:06 GMT]

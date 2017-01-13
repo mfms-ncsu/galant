@@ -4,3 +4,6 @@
 *.brf
 *.log
 *.out
+*.lof
+*.lot
+*.toc

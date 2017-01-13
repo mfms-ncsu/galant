@@ -137,7 +137,7 @@ large enough to accommodate the appropriate id's as indexes. So code such as
 
 is immune to array out of bounds errors.
 
-\subsection{Node and edge methods}
+\subsection{Node and edge methods} \label{sec:nodes_and_edges}
 
 Nodes and edges have `getters' and `setters' for
 a variety of attributes, i.e.,
@@ -474,17 +474,36 @@ a \textsf{void} method in Java. An example is the recursive function
 
 \subsection{Data Structures}
 
-Galant provides some standard data structures for nodes and edges automatically.
-These are described in detail in Tables~\ref{tab:algorithm_data_structures} and~\ref{tab:graph_data_structures}.
-Table~\ref{tab:algorithm_data_structures} gives information about the simpler
-structures -- lists, stacks and queues,
-while Table~\ref{tab:graph_data_structures} describes the more sophisticated
--- sets and priority queues.
-
+Galant provides some standard data structures for nodes and edges.
+These are described in detail in Tables~\ref{tab:data_structures}.
 Data structures use object-oriented syntax.
 For example, to add a node \Code{v} to a \Code{NodeList} \Code{L},
 the appropriate syntax is \Code{L.add(v)}.
-Most data structure operations are as efficient as one might expect.
+
+\subsection{Sorting, Priority Queues, and Comparators}
+
+Priority queues of nodes and edges are also provided by Galant -- see
+Table~\ref{tab:priority_queues}.
+Closely related is the \Code{sort} macro, which translates to the Java
+\Code{Collections.sort} method.
+By default, sorting and priority queues use the weight of a node or edge as
+its key and sorting is by increasing weight, while priority queues are
+min-heaps -- lowest weight item is extracted using the \Code{removeMin} method.
+However, this can be overriden if a comparator for a different attribute is
+provided when sort is called or when the priority queue is created.
+The other attributes can be of type String, Integer or Double -- see earlier
+discussion in Section~\ref{sec:nodes_and_edges}
+and the appropriate functions in Table~\ref{tab:graph_element_functions}.
+Comparators for them are generated with calls to functions of the form
+\Code{get\emph{type}Comparator}, where \emph{type} is String, Integer or
+Double.
+There is an optional second argument, which, if \Code{true} causes the
+comparisons to be the reverse of the usual order, i.e., decreasing for
+numbers and a max-heap instead of a min-heap.
+
+In case of a priority queue the type of heap and the attribute used for comparison
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
 A notable exception is \Code{decreaseKey}
 for priority queues.
 The operation \Code{pq.decreaseKey(v,k)}
@@ -625,4 +644,4 @@ file, when specifying a node or edge after a keyboard shortcut, or when
 giving the weight of a node or edge.
 A complete list of Galant exceptions is in Table~\ref{tab:galant_exceptions}.
 
-% [Last modified: 2017 01 12 at 19:02:34 GMT]
+% [Last modified: 2017 01 12 at 22:23:29 GMT]

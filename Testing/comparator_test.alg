@@ -29,10 +29,11 @@ algorithm {
     color(e, GREEN);
     pq.insert(e);
   }
+  pq.changeStringKey(edgeList.get(0), "abc");
   while ( ! pq.isEmpty() ) {
     Edge e = pq.removeBest();
     color(e, RED);
   }
 }
 
-//  [Last modified: 2017 01 12 at 18:10:48 GMT]
+//  [Last modified: 2017 01 13 at 20:57:28 GMT]

@@ -5,7 +5,7 @@
  * a different attribute instead of the default - weight.
  */
 
-package edu.ncsu.csc.Galant.graph.container;
+package edu.ncsu.csc.Galant.graph.datastructure;
 
 import java.util.PriorityQueue;
 import java.util.Collections;
@@ -182,4 +182,4 @@ public class EdgePriorityQueue extends PriorityQueue<Edge> {
   }
 }
 
-//  [Last modified: 2017 01 13 at 21:24:06 GMT]
+//  [Last modified: 2017 01 14 at 22:35:11 GMT]

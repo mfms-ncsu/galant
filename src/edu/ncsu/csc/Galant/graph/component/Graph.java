@@ -17,21 +17,10 @@ import edu.ncsu.csc.Galant.gui.window.GraphWindow;
 import edu.ncsu.csc.Galant.gui.util.EdgeSelectionDialog;
 import edu.ncsu.csc.Galant.gui.util.NodeSelectionDialog;
 import edu.ncsu.csc.Galant.algorithm.Terminate;
+import edu.ncsu.csc.Galant.graph.datastructure.NodeList;
+import edu.ncsu.csc.Galant.graph.datastructure.EdgeSet;
+import edu.ncsu.csc.Galant.graph.datastructure.NodeSet;
 import edu.ncsu.csc.Galant.logging.LogHelper;
-
-/**
- * @todo in future this can be used as a return value for nodes and edges
- * that are currently returned as lists; current methods getNodeSet and
- * getEdgeSet already exist for this purpose
- */
-import edu.ncsu.csc.Galant.graph.container.EdgeSet;
-import edu.ncsu.csc.Galant.graph.container.NodeSet;
-
-/**
- * @todo NodeList and EdgeList need to be handled like the corresponding set
- * containers; in all cases we can define static methods with procedural
- * syntax, as described in Algorithm.java
- */
 
 /**
  * Stores all nodes, edges and related information for use in graph algorithms.
@@ -657,11 +646,11 @@ public class Graph {
      * @todo Just like the Algorithm provides NodeQueue, etc., it should also
      * provide NodeList as a data structure to avoid the template.
 	 */
-	public List<Node> getNodes() {
-		List<Node> retNodes = new ArrayList<Node>();
-		for (Node n : this.nodes) {
-			if (n.inScope()) {
-				retNodes.add(n);
+	public NodeList getNodes() {
+      NodeList retNodes = new NodeList();
+		for ( Node v : this.nodes ) {
+			if ( v.inScope() ) {
+				retNodes.add(v);
 			}
 		}
 		return retNodes;
@@ -1312,4 +1301,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2017 01 10 at 20:05:46 GMT]
+//  [Last modified: 2017 01 14 at 22:32:25 GMT]

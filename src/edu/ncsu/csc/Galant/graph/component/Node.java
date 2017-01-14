@@ -11,8 +11,8 @@ import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.GraphDispatch;
 import edu.ncsu.csc.Galant.algorithm.Terminate;
 import edu.ncsu.csc.Galant.logging.LogHelper;
-import edu.ncsu.csc.Galant.graph.container.NodeSet;
-import edu.ncsu.csc.Galant.graph.container.EdgeSet;
+import edu.ncsu.csc.Galant.graph.datastructure.NodeSet;
+import edu.ncsu.csc.Galant.graph.datastructure.EdgeSet;
 
 /**
  * Represents node entities as elements of a graph. Encapsulates attributes
@@ -646,4 +646,4 @@ public class Node extends GraphElement {
 	}
 }
 
-//  [Last modified: 2017 01 10 at 20:15:04 GMT]
+//  [Last modified: 2017 01 14 at 22:34:32 GMT]

@@ -33,11 +33,12 @@ import edu.ncsu.csc.Galant.graph.component.LayeredGraph;
 import edu.ncsu.csc.Galant.graph.component.GraphElement;
 import edu.ncsu.csc.Galant.graph.component.Node;
 import edu.ncsu.csc.Galant.graph.component.Edge;
-import edu.ncsu.csc.Galant.graph.container.NodeSet;
-import edu.ncsu.csc.Galant.graph.container.EdgeSet;
-import edu.ncsu.csc.Galant.graph.container.NodePriorityQueue;
-import edu.ncsu.csc.Galant.graph.container.EdgePriorityQueue;
-import edu.ncsu.csc.Galant.graph.container.GraphElementComparator;
+import edu.ncsu.csc.Galant.graph.datastructure.NodeSet;
+import edu.ncsu.csc.Galant.graph.datastructure.EdgeSet;
+import edu.ncsu.csc.Galant.graph.datastructure.NodeList;
+import edu.ncsu.csc.Galant.graph.datastructure.NodePriorityQueue;
+import edu.ncsu.csc.Galant.graph.datastructure.EdgePriorityQueue;
+import edu.ncsu.csc.Galant.graph.datastructure.GraphElementComparator;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow.GraphDisplays;
 import edu.ncsu.csc.Galant.gui.util.StringQuery;
@@ -131,13 +132,10 @@ public abstract class Algorithm implements Runnable {
   public Integer size(Collection C) { return C.size(); }
   public Boolean empty(Collection C) { return C.isEmpty(); }
 
-  /** 
-   * Node and Edge lists - can also be used as stacks in preference to
-   * NodeStack and EdgeStack below (which merely extend their Java counterparts)
-   */
-  public class NodeList extends ArrayList<Node> { }
-
-  public class EdgeList extends ArrayList<Edge> { }
+  public class EdgeList extends ArrayList<Edge> {
+    public EdgeList() { super(); }
+    public EdgeList(Collection<Edge> C) { super(C); }
+  }
 
   public void add(Node v, NodeList L) { L.add(v); }
   public void push(Node v, NodeList L) { L.add(0, v); }
@@ -1390,4 +1388,4 @@ public abstract class Algorithm implements Runnable {
   public abstract void run();
 }
 
-//  [Last modified: 2017 01 13 at 21:45:09 GMT]
+//  [Last modified: 2017 01 14 at 22:33:00 GMT]

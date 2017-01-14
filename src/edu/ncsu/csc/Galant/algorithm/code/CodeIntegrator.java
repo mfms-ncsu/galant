@@ -71,10 +71,12 @@ public class CodeIntegrator	{
         "import edu.ncsu.csc.Galant.graph.component.Graph;" +
         "import edu.ncsu.csc.Galant.graph.component.Node;" +
         "import edu.ncsu.csc.Galant.graph.component.Edge;" +
-        "import edu.ncsu.csc.Galant.graph.container.NodeSet;" +
-        "import edu.ncsu.csc.Galant.graph.container.EdgeSet;" +
-        "import edu.ncsu.csc.Galant.graph.container.NodePriorityQueue;" +
-        "import edu.ncsu.csc.Galant.graph.container.EdgePriorityQueue;" +
+        "import edu.ncsu.csc.Galant.graph.datastructure.NodeSet;" +
+        "import edu.ncsu.csc.Galant.graph.datastructure.EdgeSet;" +
+        "import edu.ncsu.csc.Galant.graph.datastructure.NodeList;" +
+        "import edu.ncsu.csc.Galant.graph.datastructure.EdgeList;" +
+        "import edu.ncsu.csc.Galant.graph.datastructure.NodePriorityQueue;" +
+        "import edu.ncsu.csc.Galant.graph.datastructure.EdgePriorityQueue;" +
         "import edu.ncsu.csc.Galant.algorithm.code.macro.Function;" +
         "import edu.ncsu.csc.Galant.algorithm.code.macro.Pair;" +
         "import edu.ncsu.csc.Galant.GalantException;" +
@@ -362,4 +364,4 @@ public class CodeIntegrator	{
     }
 }
 
-//  [Last modified: 2017 01 12 at 18:39:14 GMT]
+//  [Last modified: 2017 01 14 at 22:40:46 GMT]

@@ -8,7 +8,7 @@ import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.GraphDispatch;
 import edu.ncsu.csc.Galant.logging.LogHelper;
 import edu.ncsu.csc.Galant.algorithm.Terminate;
-import edu.ncsu.csc.Galant.graph.container.GraphElementComparator;
+import edu.ncsu.csc.Galant.graph.datastructure.GraphElementComparator;
 
 /**
  * Abstract class containing graph element manipulation methods
@@ -685,4 +685,4 @@ public class GraphElement implements Comparable<GraphElement> {
 
 }
 
-//  [Last modified: 2017 01 13 at 20:13:19 GMT]
+//  [Last modified: 2017 01 14 at 22:34:02 GMT]

@@ -4,7 +4,7 @@
  * that use attributes other than weight
  */
 
-package edu.ncsu.csc.Galant.graph.container;
+package edu.ncsu.csc.Galant.graph.datastructure;
 
 import java.util.Comparator;
 
@@ -27,4 +27,4 @@ public class GraphElementComparator implements Comparator<GraphElement> {
   }
 }
 
-//  [Last modified: 2017 01 13 at 20:00:31 GMT]
+//  [Last modified: 2017 01 14 at 22:38:18 GMT]

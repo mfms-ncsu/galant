@@ -3,6 +3,17 @@
  */
 
 algorithm {
+  // testing compiler on type conversions
+  List<Edge> L1 = new EdgeList();
+  EdgeList L2 = new EdgeList(getEdges());
+  NodeList L3 = new NodeList(getNodeSet());
+  NodeSet S = new NodeSet(getNodes());
+
+  print(L1);
+  print(L2);
+  print(L3);
+  print(S);
+
   EdgeSet allEdges = getEdgeSet();
   NodeSet allNodes = getNodeSet();
   EdgeList L = new EdgeList();
@@ -30,4 +41,4 @@ algorithm {
   }
 }
 
-//  [Last modified: 2017 01 13 at 18:03:21 GMT]
+//  [Last modified: 2017 01 14 at 22:43:25 GMT]

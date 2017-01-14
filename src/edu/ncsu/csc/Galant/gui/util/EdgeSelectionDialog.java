@@ -13,7 +13,7 @@ import edu.ncsu.csc.Galant.gui.window.GraphWindow;
 import edu.ncsu.csc.Galant.graph.component.Edge;
 import edu.ncsu.csc.Galant.graph.component.Graph;
 import edu.ncsu.csc.Galant.graph.component.Node;
-import edu.ncsu.csc.Galant.graph.container.EdgeSet;
+import edu.ncsu.csc.Galant.graph.datastructure.EdgeSet;
 
 public class EdgeSelectionDialog extends EdgeSpecificationDialog {
 
@@ -57,4 +57,4 @@ public class EdgeSelectionDialog extends EdgeSpecificationDialog {
     }
 }
 
-//  [Last modified: 2016 12 05 at 16:51:03 GMT]
+//  [Last modified: 2017 01 14 at 22:37:37 GMT]

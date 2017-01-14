@@ -5,7 +5,7 @@
  * that gave the wrong answer for contains() method. Odd.
  */
 
-package edu.ncsu.csc.Galant.graph.container;
+package edu.ncsu.csc.Galant.graph.datastructure;
 
 import java.util.Set;
 import java.util.AbstractSet;
@@ -40,4 +40,4 @@ public class EdgeSet extends AbstractSet<Edge> {
         public Iterator<Edge> iterator() { return set.iterator(); }
 }
 
-//  [Last modified: 2016 08 04 at 14:58:35 GMT]
+//  [Last modified: 2017 01 14 at 22:38:19 GMT]

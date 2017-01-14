@@ -14,7 +14,7 @@ import edu.ncsu.csc.Galant.gui.util.NodeSpecificationDialog;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow;
 import edu.ncsu.csc.Galant.graph.component.Node;
 import edu.ncsu.csc.Galant.graph.component.Graph;
-import edu.ncsu.csc.Galant.graph.container.NodeSet;
+import edu.ncsu.csc.Galant.graph.datastructure.NodeSet;
 
 public class NodeSelectionDialog extends NodeSpecificationDialog {
 
@@ -57,4 +57,4 @@ public class NodeSelectionDialog extends NodeSpecificationDialog {
     }
 }
 
-//  [Last modified: 2016 11 27 at 22:16:01 GMT]
+//  [Last modified: 2017 01 14 at 22:37:59 GMT]

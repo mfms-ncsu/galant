@@ -24,6 +24,20 @@ algorithm {
     color(e, RED);
     push(e, L);
   }
+  // use opportunity to test set operations
+  EdgeSet ES1 = new EdgeSet();
+  for ( Edge e : ES ) {
+    if ( size(ES1) > 2 ) break;
+    add(e, ES1);
+  }
+  print("ES1 = " + ES1);
+  EdgeSet ES2 = new EdgeSet(L);
+  print("ES2 = " + ES2);
+  print("union = " + union(ES1, ES2));
+  print("intersection = " + intersection(ES1, ES2));
+  print("ES1 - ES2 = " + difference(ES1, ES2));
+  print("ES1 delta ES2 = " + symmetricDifference(ES1, ES2));
+  // now do the popping
   while ( ! empty(L) ) {
     Edge e = pop(L);
     color(e, BLUE);
@@ -54,4 +68,4 @@ algorithm {
   }
 }
 
-//  [Last modified: 2017 01 15 at 21:27:09 GMT]
+//  [Last modified: 2017 01 15 at 22:57:40 GMT]

@@ -4,18 +4,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.GraphDispatch;
 import edu.ncsu.csc.Galant.algorithm.Terminate;
 import edu.ncsu.csc.Galant.logging.LogHelper;
+import edu.ncsu.csc.Galant.graph.datastructure.EdgeSet;
 
 /**
  * Edge graph object. Connects two <code>Node<code>s, and can be directored or undirected.
  * For undirected graphs, "source" and "target" (destination) are meaningless.
  * @author Jason Cockrell, Ty Devries, Alex McCabe, Michael Owoc, with major
  * modifications by Matthias Stallmann.
- *
- *
  */
 public class Edge extends GraphElement {
     Node source;
@@ -69,6 +69,11 @@ public class Edge extends GraphElement {
 
     public boolean hasExplicitId() { return this.hasExplicitId; }
 
+  /**
+   * natural syntax for set containment
+   */
+  public Boolean in(EdgeSet S) { return S.contains(this); }
+  
     /**
      * Makes sure that all the attributes specific to edges are properly
      * initialized. The relevant ones are ...
@@ -181,4 +186,4 @@ public class Edge extends GraphElement {
 	}
 }
 
-//  [Last modified: 2017 01 10 at 22:03:32 GMT]
+//  [Last modified: 2017 01 15 at 22:52:11 GMT]

@@ -603,6 +603,11 @@ public class Node extends GraphElement {
 		return new Point(x, y);
 	}
 
+  /**
+   * natural syntax for set containment
+   */
+  public Boolean in(NodeSet S) { return S.contains(this); }
+  
     /**
      * This version is used after the graph is originally read or when it is
      * refreshed during editing. Also when saved to a file.
@@ -649,4 +654,4 @@ public class Node extends GraphElement {
 	}
 }
 
-//  [Last modified: 2017 01 15 at 17:22:36 GMT]
+//  [Last modified: 2017 01 15 at 22:51:11 GMT]

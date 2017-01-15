@@ -187,6 +187,41 @@ public abstract class Algorithm implements Runnable {
   }
 
   /**
+   * procedural versions of set methods
+   */
+  public void add(Edge edge, EdgeSet S) { S.add(edge); }
+  public void remove(Edge edge, EdgeSet S) { S.remove(edge); }
+  /**
+   * @see graph.component.Edge for natural syntax edge.in(S)
+   */
+  public EdgeSet union(EdgeSet S1, EdgeSet S2) { return S1.union(S2); }
+  public EdgeSet intersection(EdgeSet S1, EdgeSet S2) {
+    return S1.intersection(S2);
+  }
+  public EdgeSet difference(EdgeSet S1, EdgeSet S2) {
+    return S1.difference(S2);
+  }
+  public EdgeSet symmetricDifference(EdgeSet S1, EdgeSet S2) {
+    return S1.symmetricDifference(S2);
+  }
+  
+  public void add(Node node, NodeSet S) { S.add(node); }
+  public void remove(Node node, NodeSet S) { S.remove(node); }
+  /**
+   * @see graph.component.Node for natural syntax node.in(S)
+   */
+  public NodeSet union(NodeSet S1, NodeSet S2) { return S1.union(S2); }
+  public NodeSet intersection(NodeSet S1, NodeSet S2) {
+    return S1.intersection(S2);
+  }
+  public NodeSet difference(NodeSet S1, NodeSet S2) {
+    return S1.difference(S2);
+  }
+  public NodeSet symmetricDifference(NodeSet S1, NodeSet S2) {
+    return S1.symmetricDifference(S2);
+  }
+  
+  /**
    * procedural (and simpler) versions of the most important queue methods
    */
   public Node front(NodeQueue Q) throws GalantException {
@@ -1307,4 +1342,4 @@ public abstract class Algorithm implements Runnable {
   public abstract void run();
 }
 
-//  [Last modified: 2017 01 15 at 21:19:09 GMT]
+//  [Last modified: 2017 01 15 at 23:00:00 GMT]

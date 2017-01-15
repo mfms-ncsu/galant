@@ -8,41 +8,65 @@
 package edu.ncsu.csc.Galant.graph.datastructure;
 
 import java.util.Set;
-import java.util.AbstractSet;
 import java.util.HashSet;
 import java.util.Collection;
 import java.util.Iterator;
 
 import edu.ncsu.csc.Galant.graph.component.Node;
 
-public class NodeSet extends AbstractSet<Node> {
-  private HashSet<Node> set;
-  public NodeSet() { set = new HashSet<Node>(); }
+public class NodeSet extends HashSet<Node> {
+  public NodeSet() { super(); }
   public NodeSet(Collection<Node> C) {
-    set = new HashSet<Node>(C);
+    super(C);
   }
-  /** adds the node
-   * @return true if the node is not present, false if it is already in
-   * the set
-   */
-  @Override
-  public boolean add(Node e) { return set.add(e); }
-  /** removes the node
-   * @return true if it is present, false otherwise
-   */
-  public boolean remove(Node e) { return set.remove(e); }
-  public boolean contains(Node e) { return set.contains(e); }
-  @Override
-  public boolean isEmpty() { return set.isEmpty(); }
-  @Override
-  public int size() { return set.size(); }
-  @Override
-  public Iterator<Node> iterator() { return set.iterator(); }
 
+  public NodeSet union(NodeSet other) {
+    NodeSet theUnion = new NodeSet(this);
+    for ( Node node : other ) {
+      theUnion.add(node);
+    }
+    return theUnion;
+  }
+
+  public NodeSet intersection(NodeSet other) {
+    NodeSet theIntersection = new NodeSet();
+    for ( Node node : other ) {
+      if ( this.contains(node) ) {
+        theIntersection.add(node);
+      }
+    }
+    return theIntersection;
+  }
+
+  public NodeSet difference(NodeSet other) {
+    NodeSet theDifference = new NodeSet();
+    for ( Node node : this ) {
+      if ( ! other.contains(node) ) {
+        theDifference.add(node);
+      }
+    }
+    return theDifference;
+  }
+  
+  public NodeSet symmetricDifference(NodeSet other) {
+    NodeSet theDifference = new NodeSet();
+    for ( Node node : this ) {
+      if ( ! other.contains(node) ) {
+        theDifference.add(node);
+      }
+    }
+    for ( Node node : other ) {
+      if ( ! this.contains(node) ) {
+        theDifference.add(node);
+      }
+    }
+    return theDifference;
+  }
+  
   @Override
   public String toString() {
     String s = "{";
-    for ( Node v : set ) {
+    for ( Node v : this ) {
       s += " " + v.getId();
     }
     s += " }";
@@ -50,4 +74,4 @@ public class NodeSet extends AbstractSet<Node> {
   }
 }
 
-//  [Last modified: 2017 01 15 at 16:42:17 GMT]
+//  [Last modified: 2017 01 15 at 23:01:49 GMT]

@@ -152,10 +152,20 @@ public class NodePriorityQueue extends PriorityQueue<Node> {
   }
 
   /**
-   * Changes the value of v's attribute (works only for weight) and the
-   * position of v in the queue to reflect the change
+   * Changes the value of v's attribute (works only for Double attributes)
+   * and the position of v in the queue to reflect the change
    */
-  public void changeKey(Node v, double key) throws GalantException, Terminate {
+  public void changeKey(Node v, Double key) throws GalantException, Terminate {
+    this.remove(v);
+    v.set(attribute, key);
+    this.insert(v);
+  }
+
+  /**
+   * Changes the value of v's attribute (works only for Double attributes)
+   * and the position of v in the queue to reflect the change
+   */
+  public void changeDoubleKey(Node v, Double key) throws GalantException, Terminate {
     this.remove(v);
     v.set(attribute, key);
     this.insert(v);
@@ -171,12 +181,22 @@ public class NodePriorityQueue extends PriorityQueue<Node> {
     this.insert(v);
   }
 
+  /**
+   * Changes the value of e's attribute (this one works for Integer attributes)
+   * and the position of e in the queue to reflect the change
+   */
+  public void changeIntegerKey(Node v, Integer key) throws GalantException, Terminate {
+    this.remove(v);
+    v.set(attribute, key);
+    this.insert(v);
+  }
+
   public void decreaseKey(Node v, double key) throws GalantException, Terminate {
     changeKey(v, key);
   }
 
   public String toString() {
-    String string = "[";
+    String string = "[pq:";
     for ( Node v : this ) {
       if ( v == null ) string += " null";
       else string += " " + v.getId();
@@ -185,4 +205,4 @@ public class NodePriorityQueue extends PriorityQueue<Node> {
   }
 }
 
-//  [Last modified: 2017 01 14 at 22:38:13 GMT]
+//  [Last modified: 2017 01 15 at 17:56:43 GMT]

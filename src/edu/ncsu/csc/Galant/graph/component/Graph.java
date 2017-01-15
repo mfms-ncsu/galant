@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.Collection;
 
 import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.GraphDispatch;
@@ -18,6 +19,7 @@ import edu.ncsu.csc.Galant.gui.util.EdgeSelectionDialog;
 import edu.ncsu.csc.Galant.gui.util.NodeSelectionDialog;
 import edu.ncsu.csc.Galant.algorithm.Terminate;
 import edu.ncsu.csc.Galant.graph.datastructure.NodeList;
+import edu.ncsu.csc.Galant.graph.datastructure.EdgeList;
 import edu.ncsu.csc.Galant.graph.datastructure.EdgeSet;
 import edu.ncsu.csc.Galant.graph.datastructure.NodeSet;
 import edu.ncsu.csc.Galant.logging.LogHelper;
@@ -38,13 +40,13 @@ public class Graph {
     private boolean layered = false;
     private LayerInformation layerInformation;
 
-	private List<Node> nodes;
+	private NodeList nodes;
 
     private TreeMap<Integer,Node> nodeById = new TreeMap<Integer,Node>();
 
     private TreeMap<Integer,Edge> edgeById = new TreeMap<Integer,Edge>();
 
-	private List<Edge> edges;
+	private EdgeList edges;
 
     private MessageBanner banner;
 
@@ -94,8 +96,8 @@ public class Graph {
 	public Graph() {
         dispatch = GraphDispatch.getInstance();
         graphWindow = dispatch.getGraphWindow();
-		nodes = new ArrayList<Node>();
-		edges = new ArrayList<Edge>();
+		nodes = new NodeList();
+		edges = new EdgeList();
         states = new ArrayList<GraphState>();
         try {
             this.addState(new GraphState());
@@ -659,9 +661,9 @@ public class Graph {
 	/**
 	 * @return all nodes in the graph that exist in the given state.
 	 */
-	public List<Node> getNodes(int state)
+	public NodeList getNodes(int state)
     {
-		List<Node> retNodes = new ArrayList<Node>();
+		NodeList retNodes = new NodeList();
 		for (Node n : this.nodes) {
 			if (n.inScope(state)) {
 				retNodes.add(n);
@@ -673,17 +675,17 @@ public class Graph {
 	/**
 	 * @param nodes new set of nodes to be added to the graph
 	 */
-	public void setNodes(List<Node> nodes) {
-		this.nodes = nodes;
+	public void setNodes(Collection<Node> nodes) {
+      this.nodes = new NodeList(nodes);
 	}
 
 	/**
 	 * @return all edges as a list
      * @todo get rid of the template
 	 */
-	public List<Edge> getEdges()
+	public EdgeList getEdges()
     {
-		List<Edge> retEdges = new ArrayList<Edge>();
+		EdgeList retEdges = new EdgeList();
 		for (Edge e : this.edges) {
 			if (e.inScope()) {
 				retEdges.add(e);
@@ -747,9 +749,9 @@ public class Graph {
 	/**
 	 * @return all edges at the current algorithm state
 	 */
-	public List<Edge> getEdges(int state)
+	public EdgeList getEdges(int state)
     {
-		List<Edge> retEdges = new ArrayList<Edge>();
+		EdgeList retEdges = new EdgeList();
 		for (Edge e : this.edges) {
 			if (e.inScope(state)) {
 				retEdges.add(e);
@@ -762,8 +764,8 @@ public class Graph {
 	 * Replaces the current <code>Edge</code>s.
 	 * @param edges new set of edges to be added to the graph
 	 */
-	public void setEdges(List<Edge> edges) {
-		this.edges = edges;
+	public void setEdges(Collection<Edge> edges) {
+      this.edges = new EdgeList(edges);
 	}
 
 	/**
@@ -1301,4 +1303,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2017 01 14 at 22:32:25 GMT]
+//  [Last modified: 2017 01 15 at 17:20:06 GMT]

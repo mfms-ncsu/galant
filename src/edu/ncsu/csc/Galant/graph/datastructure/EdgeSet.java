@@ -38,6 +38,16 @@ public class EdgeSet extends AbstractSet<Edge> {
         public int size() { return set.size(); }
     @Override
         public Iterator<Edge> iterator() { return set.iterator(); }
+
+  @Override
+  public String toString() {
+    String s = "{";
+    for ( Edge e : set ) {
+      s += " (" + e.getSource().getId() + "," + e.getTarget().getId() + ")";
+    }
+    s += " }";
+    return s;
+  }
 }
 
-//  [Last modified: 2017 01 14 at 22:38:19 GMT]
+//  [Last modified: 2017 01 15 at 16:47:15 GMT]

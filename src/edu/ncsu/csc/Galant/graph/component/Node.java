@@ -6,11 +6,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Collection;
 
 import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.GraphDispatch;
 import edu.ncsu.csc.Galant.algorithm.Terminate;
 import edu.ncsu.csc.Galant.logging.LogHelper;
+import edu.ncsu.csc.Galant.graph.datastructure.NodeList;
+import edu.ncsu.csc.Galant.graph.datastructure.EdgeList;
 import edu.ncsu.csc.Galant.graph.datastructure.NodeSet;
 import edu.ncsu.csc.Galant.graph.datastructure.EdgeSet;
 
@@ -31,14 +34,14 @@ public class Node extends GraphElement {
     private int id;
     private int xCoordinate;
     private int yCoordinate;
-	private List<Edge> incidentEdges;
+	private EdgeList incidentEdges;
 
     /**
      * When a node is created during parsing and id is not known.
      */
 	public Node(Graph graph) {
         super(graph);
-		incidentEdges = new ArrayList<Edge>();
+		incidentEdges = new EdgeList();
 	}
 
     /**
@@ -48,7 +51,7 @@ public class Node extends GraphElement {
     public Node(Graph graph, int id) {
         super(graph);
         this.id = id;
-		incidentEdges = new ArrayList<Edge>();
+		incidentEdges = new EdgeList();
     }
 
     /**
@@ -60,7 +63,7 @@ public class Node extends GraphElement {
     public Node(Graph graph, int id, Integer x, Integer y) {
         super(graph);
         this.id = id;
-		incidentEdges = new ArrayList<Edge>();
+		incidentEdges = new EdgeList();
         this.xCoordinate = x;
         this.yCoordinate = y;
         // set starting position based on the initial one
@@ -76,8 +79,8 @@ public class Node extends GraphElement {
      */
     public Integer getId() { return id; }
 
-    public void setIncidentEdges(List<Edge> edges) {
-        this.incidentEdges = edges;
+    public void setIncidentEdges(Collection<Edge> edges) {
+      this.incidentEdges = new EdgeList(edges);
     }
 
     /**
@@ -308,8 +311,8 @@ public class Node extends GraphElement {
 	 * @return the node's outgoing edges, based on source and target
 	 * specs; if the graph is undirected, all incident edges are returned
 	 */
-	public List<Edge> getOutgoingEdges() {
-		List<Edge> currentEdges = new ArrayList<Edge>();
+	public EdgeList getOutgoingEdges() {
+		EdgeList currentEdges = new EdgeList();
 		for ( Edge e : incidentEdges ) {
 			if ( e.inScope() ) {
 				if ( this.equals( e.getSourceNode() )
@@ -325,8 +328,8 @@ public class Node extends GraphElement {
 	 * @return the node's incoming edges, based on source and target
 	 * specs; if the graph is undirected, all edges are incoming
 	 */
-	public List<Edge> getIncomingEdges() {
-		List<Edge> currentEdges = new ArrayList<Edge>();
+	public EdgeList getIncomingEdges() {
+		EdgeList currentEdges = new EdgeList();
 		for ( Edge e : incidentEdges ) {
 			if ( e.inScope() ) {
 				if ( this.equals( e.getTargetNode() )
@@ -342,8 +345,8 @@ public class Node extends GraphElement {
      * @return a list of edges incident on this node regardless of whether
      * they are incoming or outgoing.
      */
-    public List<Edge> getIncidentEdges() {
- 		List<Edge> currentEdges = new ArrayList<Edge>();
+    public EdgeList getIncidentEdges() {
+ 		EdgeList currentEdges = new EdgeList();
 
 		for ( Edge e : incidentEdges ) {
 			if ( e.inScope() ) {
@@ -356,16 +359,16 @@ public class Node extends GraphElement {
     /**
      * @return the edges incident on this node (as a templated list)
      */
-    public List<Edge> getEdges() {
+    public EdgeList getEdges() {
         return getIncidentEdges();
     }
 
     /**
      * @return the nodes adjacent to this node (as a templated list)
      */
-    public List<Node> getAdjacentNodes() {
-        List<Edge> edges = getIncidentEdges();
-        List<Node> nodes = new ArrayList<Node>();
+    public NodeList getAdjacentNodes() {
+        EdgeList edges = getIncidentEdges();
+        NodeList nodes = new NodeList();
         for ( Edge e: edges ) {
             nodes.add(travel(e));
         }
@@ -466,8 +469,8 @@ public class Node extends GraphElement {
 	 * Gets a list of Edges incident to this node whose visited flag
 	 * is set to false.
 	 */
-	public List<Edge> getUnvisitedPaths() {
-		List<Edge> unvisited = new ArrayList<Edge>();
+	public EdgeList getUnvisitedPaths() {
+		EdgeList unvisited = new EdgeList();
 		for (Edge e : incidentEdges) {
 			if (!e.inScope() || e.isDeleted()) {
 				continue;
@@ -492,8 +495,8 @@ public class Node extends GraphElement {
 	 * Gets a list of Edges incident to this node whose visited flag
 	 * is set to true.
 	 */
-	public List<Edge> getVisitedPaths() {
-		List<Edge> visited = new ArrayList<Edge>();
+	public EdgeList getVisitedPaths() {
+		EdgeList visited = new EdgeList();
 		for (Edge e : incidentEdges) {
 			if (!e.inScope() || e.isDeleted()) {
 				continue;
@@ -514,8 +517,8 @@ public class Node extends GraphElement {
 		return visited;
 	}
 
-	public List<Node> getUnvisitedAdjacentNodes() {
-		List<Node> nodes = new ArrayList<Node>();
+	public NodeList getUnvisitedAdjacentNodes() {
+		NodeList nodes = new NodeList();
 		for (Edge e : incidentEdges) {
 			if (!e.inScope() || e.isDeleted()) {
 				continue;
@@ -646,4 +649,4 @@ public class Node extends GraphElement {
 	}
 }
 
-//  [Last modified: 2017 01 14 at 22:34:32 GMT]
+//  [Last modified: 2017 01 15 at 17:22:36 GMT]

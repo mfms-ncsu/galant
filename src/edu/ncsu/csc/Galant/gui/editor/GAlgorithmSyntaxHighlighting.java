@@ -32,7 +32,13 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
 	private JTextPane textpane;
 	public GAlgorithmSyntaxHighlighting(JTextPane _textpane) {
 		textpane = _textpane;
-		APIdictionary.put("beginStep", "Forces the animation to consider all graph changes one step until endStep() or another beginStep() is called.");
+
+        /**
+         * @todo The hints below do not appear to have any effect. And if
+         * they did, they would have to be brought up to date, which is a
+         * daunting task, given all the synonyms and overloading.
+         */
+        APIdictionary.put("beginStep", "Forces the animation to consider all graph changes one step until endStep() or another beginStep() is called.");
 		APIdictionary.put("endStep", "Ends a step in the graph state. If no beginStep() has been called previously, does nothing.");
 		APIdictionary.put("isDirected", "Returns True if the graph is directed, False otherwise.");
 		APIdictionary.put("setDirected", "Sets the graph to directed for True and undirected for False");
@@ -113,6 +119,8 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
 	/**
 	 * An immutable list of all API calls predefined for the user's
 	 * benefit.
+     *
+     * @todo there are almost certainly missing items
 	 */
 		public static final String[] allAPIkeywords = new String[] {
             "beginStep", "endStep", "step",
@@ -306,4 +314,4 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
     } // applyStyleToCommentsAndStrings
 }
 
-//  [Last modified: 2017 01 12 at 18:26:50 GMT]
+//  [Last modified: 2017 01 15 at 17:29:57 GMT]

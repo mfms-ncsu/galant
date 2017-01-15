@@ -16,28 +16,38 @@ import java.util.Iterator;
 import edu.ncsu.csc.Galant.graph.component.Node;
 
 public class NodeSet extends AbstractSet<Node> {
-    private HashSet<Node> set;
-    public NodeSet() { set = new HashSet<Node>(); }
-    public NodeSet(Collection<Node> C) {
-        set = new HashSet<Node>(C);
+  private HashSet<Node> set;
+  public NodeSet() { set = new HashSet<Node>(); }
+  public NodeSet(Collection<Node> C) {
+    set = new HashSet<Node>(C);
+  }
+  /** adds the node
+   * @return true if the node is not present, false if it is already in
+   * the set
+   */
+  @Override
+  public boolean add(Node e) { return set.add(e); }
+  /** removes the node
+   * @return true if it is present, false otherwise
+   */
+  public boolean remove(Node e) { return set.remove(e); }
+  public boolean contains(Node e) { return set.contains(e); }
+  @Override
+  public boolean isEmpty() { return set.isEmpty(); }
+  @Override
+  public int size() { return set.size(); }
+  @Override
+  public Iterator<Node> iterator() { return set.iterator(); }
+
+  @Override
+  public String toString() {
+    String s = "{";
+    for ( Node v : set ) {
+      s += " " + v.getId();
     }
-    /** adds the node
-     * @return true if the node is not present, false if it is already in
-     * the set
-     */
-    @Override
-        public boolean add(Node e) { return set.add(e); }
-    /** removes the node
-     * @return true if it is present, false otherwise
-     */
-    public boolean remove(Node e) { return set.remove(e); }
-    public boolean contains(Node e) { return set.contains(e); }
-    @Override
-        public boolean isEmpty() { return set.isEmpty(); }
-    @Override
-        public int size() { return set.size(); }
-    @Override
-        public Iterator<Node> iterator() { return set.iterator(); }
+    s += " }";
+    return s;
+  }
 }
 
-//  [Last modified: 2017 01 14 at 22:36:46 GMT]
+//  [Last modified: 2017 01 15 at 16:42:17 GMT]

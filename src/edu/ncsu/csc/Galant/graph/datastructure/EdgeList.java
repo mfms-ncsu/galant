@@ -13,6 +13,16 @@ import edu.ncsu.csc.Galant.graph.component.Edge;
 public class EdgeList extends ArrayList<Edge> {
   public EdgeList() { super(); }
   public EdgeList(Collection<Edge> C) { super(C); }
+
+  @Override
+  public String toString() {
+    String s = "[";
+    for ( Edge e : this ) {
+      s += " (" + e.getSource().getId() + "," + e.getTarget().getId() + ")";
+    }
+    s += " ]";
+    return s;
+  }
 }
 
-//  [Last modified: 2017 01 14 at 22:42:22 GMT]
+//  [Last modified: 2017 01 15 at 17:34:49 GMT]

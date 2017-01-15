@@ -14,8 +14,6 @@
 package edu.ncsu.csc.Galant.algorithm;
 
 import java.util.Collection;
-import java.util.AbstractQueue;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -36,6 +34,9 @@ import edu.ncsu.csc.Galant.graph.component.Edge;
 import edu.ncsu.csc.Galant.graph.datastructure.NodeSet;
 import edu.ncsu.csc.Galant.graph.datastructure.EdgeSet;
 import edu.ncsu.csc.Galant.graph.datastructure.NodeList;
+import edu.ncsu.csc.Galant.graph.datastructure.EdgeList;
+import edu.ncsu.csc.Galant.graph.datastructure.NodeQueue;
+import edu.ncsu.csc.Galant.graph.datastructure.EdgeQueue;
 import edu.ncsu.csc.Galant.graph.datastructure.NodePriorityQueue;
 import edu.ncsu.csc.Galant.graph.datastructure.EdgePriorityQueue;
 import edu.ncsu.csc.Galant.graph.datastructure.GraphElementComparator;
@@ -132,11 +133,9 @@ public abstract class Algorithm implements Runnable {
   public Integer size(Collection C) { return C.size(); }
   public Boolean empty(Collection C) { return C.isEmpty(); }
 
-  public class EdgeList extends ArrayList<Edge> {
-    public EdgeList() { super(); }
-    public EdgeList(Collection<Edge> C) { super(C); }
-  }
-
+  /**
+   * procedural versions of list methods
+   */
   public void add(Node v, NodeList L) { L.add(v); }
   public void push(Node v, NodeList L) { L.add(0, v); }
   public Node pop(NodeList L) throws GalantException {
@@ -188,97 +187,7 @@ public abstract class Algorithm implements Runnable {
   }
 
   /**
-   * A queue of nodes
-   *
-   * @todo Node and Edge Queue, Stack, PriorityQueue and List should be
-   * turned into independent classes that can be used elsewhere, such as
-   * when a Node object returns a list of incident edges. This should
-   * prevent the Collections.sort() issue with List<Edge>
-   */
-  public class NodeQueue extends AbstractQueue<Node> {
-    private Queue<Node> Q = new ArrayDeque<Node>();
-    public void enqueue(Node v) throws GalantException {
-      if ( v == null )
-        throw new GalantException("Attempt to add null node to queue");
-      Q.offer(v);
-    }
-    public Node dequeue() throws GalantException {
-      if ( Q.isEmpty() )
-        throw new GalantException("Attempt to remove item from empty queue");
-      return Q.poll();
-    }
-    /**
-     * @return the front item of the queue and remove it; null if the queue
-     * is empty
-     */
-    @Override
-    public Node remove() {
-      return Q.remove();
-    }
-    /** 
-     * @return the front of queue without removing it; same as peek()
-     * except that it throws an exception instead of returning null if Q is
-     * empty
-     */
-    @Override
-    public Node element() { return Q.element(); }
-    @Override
-    public boolean offer(Node e) { return Q.offer(e); }
-    @Override
-    public Node poll() { return Q.poll(); }
-    @Override
-    public Node peek() { return Q.peek(); }
-    @Override
-    public Iterator<Node> iterator() { return Q.iterator(); }
-    @Override
-    public int size() { return Q.size(); }
-  }
-
-  public class EdgeQueue extends AbstractQueue<Edge> {
-    private Queue<Edge> Q = new ArrayDeque<Edge>();
-
-    public void enqueue(Edge e) throws GalantException {
-      if ( e == null )
-        throw new GalantException("Attempt to add null node to queue");
-      Q.offer(e);
-    }
-    public Edge dequeue() throws GalantException {
-      if ( Q.isEmpty() )
-        throw new GalantException("Attempt to remove item from empty queue");
-      return Q.poll();
-    }
-    /**
-     * @return the front item of the queue and remove it; null if the queue
-     * is empty
-     */
-    @Override
-    public Edge remove() {
-      return Q.remove();
-    }
-    /** 
-     * @return the front of queue without removing it; same as peek()
-     * except that it throws an exception instead of returning null if Q is
-     * empty
-     */
-    @Override
-    public Edge element() { return Q.element(); }
-    @Override
-    public boolean offer(Edge e) { return Q.offer(e); }
-    @Override
-    public Edge poll() { return Q.poll(); }
-    @Override
-    /** 
-     * @return the front of Q without removing it; null if Q is empty
-     */
-    public Edge peek() { return Q.peek(); }
-    @Override
-    public Iterator<Edge> iterator() { return Q.iterator(); }
-    @Override
-    public int size() { return Q.size(); }
-  }
-
-  /**
-   * procedural (and simpler) versions of most important queue functions
+   * procedural (and simpler) versions of the most important queue methods
    */
   public Node front(NodeQueue Q) throws GalantException {
     if ( Q == null )
@@ -312,6 +221,9 @@ public abstract class Algorithm implements Runnable {
     Q.enqueue(e);
   }
 
+  /**
+   * procedural versions of the most important priority queue methods
+   */
   public Node removeBest(NodePriorityQueue Q) throws GalantException {
     if ( Q == null )
       throw new GalantException("Uninitialized queue in removeBest() -- use 'new'");
@@ -327,6 +239,10 @@ public abstract class Algorithm implements Runnable {
       throw new GalantException("Uninitialized queue in insert() -- use 'new'");
     Q.insert(v);
   }
+  /**
+   * Note: the actual change in value of the key must take place externally,
+   * i.e., you have to do set(v, key, new_value) first
+   */
   public void changeKey(Node v, NodePriorityQueue Q) throws GalantException {
     if ( Q == null )
       throw new GalantException("Uninitialized queue in changeKey() -- use 'new'");
@@ -348,6 +264,10 @@ public abstract class Algorithm implements Runnable {
       throw new GalantException("Uninitialized queue in insert() -- use 'new'");
     Q.insert(e);
   }
+  /**
+   * Note: the actual change in value of the key must take place externally,
+   * i.e., you have to do set(v, key, new_value) first
+   */
   public void changeKey(Edge e, EdgePriorityQueue Q) throws GalantException {
     if ( Q == null )
       throw new GalantException("Uninitialized queue in changeKey() -- use 'new'");
@@ -882,19 +802,19 @@ public abstract class Algorithm implements Runnable {
     checkGraphElement(e);
     return v.travel(e);
   }
-  public List<Node> neighbors(Node v) throws GalantException {
+  public NodeList neighbors(Node v) throws GalantException {
     checkGraphElement(v);
     return v.getAdjacentNodes();
   }
-  public List<Edge> edges(Node v) throws GalantException {
+  public EdgeList edges(Node v) throws GalantException {
     checkGraphElement(v);
     return v.getIncidentEdges();
   }
-  public List<Edge> inEdges(Node v) throws GalantException {
+  public EdgeList inEdges(Node v) throws GalantException {
     checkGraphElement(v);
     return v.getIncomingEdges();
   }
-  public List<Edge> outEdges(Node v) throws GalantException {
+  public EdgeList outEdges(Node v) throws GalantException {
     checkGraphElement(v);
     return v.getOutgoingEdges();
   }
@@ -931,9 +851,19 @@ public abstract class Algorithm implements Runnable {
     return v.visibleOutgoingEdges();
   }
   public Integer visibleOutdegree(Node v) throws GalantException {
+    checkGraphElement(v);
     return v.visibleOutgoingEdges().size();
   }
 
+  public NodeList unvisitedNeighbors(Node v) throws GalantException {
+    checkGraphElement(v);
+    return v.getUnvisitedAdjacentNodes();
+  }
+  public NodeList unmarkedNeighbors(Node v) throws GalantException {
+    checkGraphElement(v);
+    return v.getUnvisitedAdjacentNodes();
+  }
+  
   /**
    * @return true if (v,w) is an edge; direction important if the graph is
    * directed
@@ -941,7 +871,7 @@ public abstract class Algorithm implements Runnable {
   public Boolean isEdge(Node v, Node w) throws GalantException {
     checkGraphElement(v);
     checkGraphElement(w);
-    List<Edge> incidenceList
+    EdgeList incidenceList
       = v.getOutgoingEdges();
     for ( Edge e : incidenceList ) {
       if ( v.travel(e) == w ) {
@@ -960,17 +890,6 @@ public abstract class Algorithm implements Runnable {
     EdgeSet incidentEdges = new EdgeSet(v.getIncidentEdges());
     return incidentEdges.contains(e);
   }
-
-  /**
-   * The following are provided because, while it's okay to say
-   *     NodeList L = nodes();
-   * even though nodes() returns List<Node>, it's not okay then to say
-   *     Node v = first(L);
-   * since first would require a NodeList rather than a List<Node>; the
-   * error is not reported until runtime
-   */
-  public Node firstNode(List<Node> L) { return L.get(0); }
-  public Edge firstEdge(List<Edge> L) { return L.get(0); }
 
   /**
    * Procedural versions of getters and setters for node positions
@@ -1215,7 +1134,7 @@ public abstract class Algorithm implements Runnable {
     graph.setDirected(directed);
   }
 
-  public List<Node> getNodes() {
+  public NodeList getNodes() {
     return graph.getNodes();
   }
 
@@ -1236,7 +1155,7 @@ public abstract class Algorithm implements Runnable {
     return graph.getNodes().size();
   }
 
-  public List<Edge> getEdges() {
+  public EdgeList getEdges() {
     return graph.getEdges();
   }
 
@@ -1388,4 +1307,4 @@ public abstract class Algorithm implements Runnable {
   public abstract void run();
 }
 
-//  [Last modified: 2017 01 14 at 22:33:00 GMT]
+//  [Last modified: 2017 01 15 at 21:19:09 GMT]

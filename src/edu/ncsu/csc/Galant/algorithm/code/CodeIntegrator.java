@@ -75,6 +75,8 @@ public class CodeIntegrator	{
         "import edu.ncsu.csc.Galant.graph.datastructure.EdgeSet;" +
         "import edu.ncsu.csc.Galant.graph.datastructure.NodeList;" +
         "import edu.ncsu.csc.Galant.graph.datastructure.EdgeList;" +
+        "import edu.ncsu.csc.Galant.graph.datastructure.NodeQueue;" +
+        "import edu.ncsu.csc.Galant.graph.datastructure.EdgeQueue;" +
         "import edu.ncsu.csc.Galant.graph.datastructure.NodePriorityQueue;" +
         "import edu.ncsu.csc.Galant.graph.datastructure.EdgePriorityQueue;" +
         "import edu.ncsu.csc.Galant.algorithm.code.macro.Function;" +
@@ -93,23 +95,24 @@ public class CodeIntegrator	{
      * may not even call a method that throws Terminate
      * that's why we need the "instanceof" tests
      */
-    public static final String FINAL_EXCEPTION_HANDLING
-        = "catch (Exception e) {"
-        + " if (e instanceof Terminate) {"
-        + "  System.out.println(\"Algorithm finished\");"
-        + " }"
-        + " else if (e instanceof GalantException) {"
-        + "  GalantException ge = (GalantException) e;"
-        + "  ge.report(\"\");"
-        + "  try {ge.display();}"
-        + "  catch (Terminate t) {"
-        + "   System.out.println(\"finished during exception display\");"
-        + "  }"
-        + " }"
-        + " else {"
-        + "  e.printStackTrace(System.out);displayException(e);"
-        + " }"
-        + "}";
+  public static final String FINAL_EXCEPTION_HANDLING
+    = "catch (Exception e) {"
+    + " if (e instanceof Terminate) {"
+    + "  System.out.println(\"Algorithm finished\");"
+    + " }"
+    + " else if (e instanceof GalantException) {"
+    + "  GalantException ge = (GalantException) e;"
+    + "  ge.report(\"\");"
+    + "  try {ge.display();}"
+    + "  catch (Terminate t) {" // in case user exits when exception is
+                                // displayed
+    + "   System.out.println(\"finished during exception display\");"
+    + "  }"
+    + " }"
+    + " else {"
+    + "  e.printStackTrace(System.out);displayException(e);"
+    + " }"
+    + "}";
 
     public static final String ALGORITHM_STRUCTURE
         = "public void run(){ try {" +
@@ -364,4 +367,4 @@ public class CodeIntegrator	{
     }
 }
 
-//  [Last modified: 2017 01 14 at 22:40:46 GMT]
+//  [Last modified: 2017 01 15 at 21:12:22 GMT]

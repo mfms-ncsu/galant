@@ -149,23 +149,43 @@ public class EdgePriorityQueue extends PriorityQueue<Edge> {
   }
 
   /**
-   * Changes the value of e's attribute (works for numerical attributes)
-   * and the position of e in the queue to reflect the change
+   * Changes the value of edge's attribute (works only for Double attributes)
+   * and the position of edge in the queue to reflect the change
    */
-  public void changeKey(Edge e, double key) throws GalantException, Terminate {
-    this.remove(e);
-    e.set(attribute, key);
-    this.insert(e);
+  public void changeKey(Edge edge, Double key) throws GalantException, Terminate {
+    this.remove(edge);
+    edge.set(attribute, key);
+    this.insert(edge);
   }
 
   /**
-   * Changes the value of e's attribute (this one works for String attributes)
-   * and the position of e in the queue to reflect the change
+   * Changes the value of edge's attribute (works only for Double attributes)
+   * and the position of edge in the queue to reflect the change
    */
-  public void changeStringKey(Edge e, String key) throws GalantException, Terminate {
-    this.remove(e);
-    e.set(attribute, key);
-    this.insert(e);
+  public void changeDoubleKey(Edge edge, Double key) throws GalantException, Terminate {
+    this.remove(edge);
+    edge.set(attribute, key);
+    this.insert(edge);
+  }
+
+  /**
+   * Changes the value of edge's attribute (this one works for String
+   * attributes) and the position of edge in the queue to reflect the change
+   */
+  public void changeStringKey(Edge edge, String key) throws GalantException, Terminate {
+    this.remove(edge);
+    edge.set(attribute, key);
+    this.insert(edge);
+  }
+
+  /**
+   * Changes the value of edge's attribute (this one works for Integer
+   * attributes) and the position of edge in the queue to reflect the change
+   */
+  public void changeIntegerKey(Edge edge, Integer key) throws GalantException, Terminate {
+    this.remove(edge);
+    edge.set(attribute, key);
+    this.insert(edge);
   }
 
   public void decreaseKey(Edge e, double key) throws GalantException, Terminate {
@@ -173,13 +193,14 @@ public class EdgePriorityQueue extends PriorityQueue<Edge> {
   }
 
   public String toString() {
-    String string = "[";
+    String string = "[pq: ";
     for ( Edge e : this ) {
       if ( e == null ) string += " null";
-      else string += " (" + e.getSource() + "," + e.getTarget() + ")";
+      else string += " (" + e.getSource().getId() +
+             "," + e.getTarget().getId() + ")";
     }
     return string + " ]";
   }
 }
 
-//  [Last modified: 2017 01 14 at 22:35:11 GMT]
+//  [Last modified: 2017 01 15 at 18:01:21 GMT]

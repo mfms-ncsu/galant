@@ -4,18 +4,19 @@
 
 algorithm {
   // testing compiler on type conversions
-  List<Edge> L1 = new EdgeList();
-  EdgeList L2 = new EdgeList(getEdges());
-  NodeList L3 = new NodeList(getNodeSet());
-  NodeSet S = new NodeSet(getNodes());
+  List<Edge> EL = new EdgeList();
+  EdgeList allEdges = getEdges();
+  NodeList NL = new NodeList(getNodeSet());
+  NodeSet allNodes = new NodeSet(getNodes());
+  EdgeSet ES = new EdgeSet(getEdges());
+  EdgeQueue EQ = new EdgeQueue(getEdgeSet());
+  
+  print(EL);
+  print(allEdges);
+  print(NL);
+  print(allNodes);
+  print(ES);
 
-  print(L1);
-  print(L2);
-  print(L3);
-  print(S);
-
-  EdgeSet allEdges = getEdgeSet();
-  NodeSet allNodes = getNodeSet();
   EdgeList L = new EdgeList();
   // treat the list as a stack
   for ( Edge e : allEdges ) {
@@ -25,6 +26,18 @@ algorithm {
   }
   while ( ! empty(L) ) {
     Edge e = pop(L);
+    color(e, BLUE);
+  }
+  clearEdgeColors();
+  // edge queue
+  EdgeQueue EQ2 = new EdgeQueue();
+  for ( Edge e : EQ ) {
+    if ( size(EQ2) > 2 ) break;
+    color(e, RED);
+    put(e, EQ2);
+  }
+  while ( ! empty(EQ2) ) {
+    Edge e = get(EQ2);
     color(e, BLUE);
   }
   clearEdgeColors();
@@ -41,4 +54,4 @@ algorithm {
   }
 }
 
-//  [Last modified: 2017 01 14 at 22:43:25 GMT]
+//  [Last modified: 2017 01 15 at 21:27:09 GMT]

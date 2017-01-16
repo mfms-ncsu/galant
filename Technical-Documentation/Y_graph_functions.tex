@@ -4,17 +4,15 @@
   \begin{tabular}{| m{0.35\textwidth} | m{0.6\textwidth} |}
     \hline
     \shortstack[l]{
-      \Code{List$\langle$Node$\rangle$ getNodes()}\\
+      \Code{NodeList getNodes()}\\
       \Code{NodeSet getNodeSet()}
     }
     &
-    returns a list or set of the nodes of the graph; type \Code{NodeSet}
-    is built into Galant
-    -- see Table~\ref{tab:data_structures}, but the templated \Code{List} has
-    not yet been replaced with \Code{NodeList}
+    returns a list or set of the nodes of the graph; see
+    Section~\ref{sec:datastructures} for more information about the return types
     \\ \hline
     \shortstack[l]{
-      \Code{List$\langle$Edge$\rangle$ getEdges()}\\
+      \Code{EdgeList getEdges()}\\
       \Code{EdgeSet getEdgeSet()}
     }
     &
@@ -28,7 +26,7 @@
     \shortstack[l]{
       equivalent to
       \Code{for ( Node v : nodes() ) \{ \emph{code block} \}};\\
-      the statements are executed for each node \Code{v}
+      the statements in \emph{code block} are executed for each node \Code{v}
     }
     \\ \hline
     \Code{for\_edges(e)  \{ \emph{code block} \}}
@@ -109,7 +107,7 @@
     \\ \hline
     \Code{isDirected()}
     &
-    returns true if the graph is directed
+    returns \Code{true} if the graph is directed
     \\ \hline
     \Code{setDirected(boolean directed)}
     &
@@ -152,4 +150,4 @@
   \label{tab:graph_functions}
 \end{table}
 
-% [Last modified: 2017 01 10 at 16:00:23 GMT]
+% [Last modified: 2017 01 16 at 17:14:33 GMT]

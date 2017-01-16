@@ -7,7 +7,45 @@ Java (object oriented) syntax can also be used: \Code{v.setWeight(0)}.
 A key advantage of Galant is that a seasoned Java programmer can
 not only use the Java syntax but can also augment Galant algorithms with
 arbitrary Java classes defined externally, using \Code{import} statements.
-All Galant code is effectively Java, either natively, or via macro preprocessing.
+All Galant code is effectively Java, either natively, or via macro
+preprocessing.
+
+Some Java constructs have no equivalent procedural syntax. Most notably
+\Code{\emph{s\_one}.equals(\emph{s\_two})}, where \emph{s\_one} and
+\emph{s\_two} are strings (of type \Code{String}) is the only means of
+equality comparison for strings. Equality of numbers is tested using the
+\Code{==} operator.
+To compare strings lexicographically you have to use
+\Code{\emph{s\_one}.compareTo(\emph{s\_two})}, which returns a positive
+number, negative number, or 0 depending on whether \emph{s\_one}
+lexicographically follows,
+precedes or is equal to \emph{s\_two}, respectively .
+
+Descriptions in this document give the most natural and most common
+constructs for procedures and functions, usually procedural rather
+than object-oriented.
+A perusal of the file \Code{Algorithm.java} in directory\\ 
+\Code{src/edu/ncsu/csc/Galant/algorithm}\\
+shows the animator the variety of
+synonyms for these constructs
+as well as functions not described here. For the seasoned Java programmer,
+object-oriented syntax appears as a call in the body of the corresponding
+function/procedure. For example,
+\begin{verbatim}
+  public void mark(Node n) throws Terminate, GalantException {
+    checkGraphElement(n);
+    n.mark();
+  }
+\end{verbatim}
+shows how the procedural version of \Code{mark} translates to the
+corresponding \Code{Node} method. Here, \Code{checkGraphElement(n)} throws an
+exception with a meaningful error message if \Code{n} is \Code{null}.
+The \Code{Terminate} exception results when the user chooses to exit the
+animation (not really an exception so much as an alert to the animation
+program).
+
+We encourage an animator to browse the example animations in subdirectories
+\Code{Algorithm}, \Code{Test} and in the subdirectories of \Code{Research}.
 
 The text panel provides a crude editor for algorithms (as well as GraphML
 descriptions of graphs);
@@ -40,9 +78,9 @@ An animation program has the form
 \end{quote}
 
 Declarations of global variables are also like those of Java:\\
-\hspace*{1em}\emph{type} \emph{variable\_name}\texttt{;}\\
+\hspace*{1em}\Code{\emph{type} \emph{variable\_name};}\\
 or\\
-\hspace*{1em}\emph{type} \texttt{[]} \emph{variable\_name}\texttt{;}\\
+\hspace*{1em}\Code{\emph{type} [] \emph{variable\_name};}\\
 to declare an array of the given type.
 All variables must be initialized either within a function definition or
 in the algorithm.
@@ -52,11 +90,24 @@ declares them.\footnote{This restriction applies to global variables
   initialized in-line, just as in Java.
 }
 The Java incantation\\
-\hspace*{1em}\emph{type} \emph{variable\_name}
-\texttt{= new} \emph{type}\texttt{[} \emph{size} \texttt{]}\\
+\hspace*{1em}\Code{\emph{type} \emph{variable\_name}
+= new \emph{type}[\emph{size}]}\\
 is used to initialize an array with \emph{size} elements initialized to \textsf{null}
-or 0.
-Arrays use 0-based indexing: the largest index is $\mathit{size} - 1$.
+or 0. Arrays use 0-based indexing: the largest index is $\mathit{size} -
+1$. The \emph{type} prefix is omitted if the array has been declared
+globally.
+For example, you could have a global declaration\\
+\hspace*{1em}\Code{String [] alpha;}\\
+and then, within a function or the algorithm body,\\
+\hspace*{1em}\Code{alpha = new String[10]}.
+The array \Code{alpha} would then contain 10 null strings (not to be confused
+with \Code{""})\footnote{
+  For example, \Code{alpha[2].equals("")} would cause a null pointer
+  exception but not if you did \Code{alpha[2] = "abc"} first -- then it would
+  simply return \Code{false}.
+}
+indexed from 0 through 9.
+
 Detailed
 information about function declarations is in Section~\ref{sec:functions}
 below.
@@ -120,7 +171,7 @@ $<$node \emph{attribute\_1}="\emph{value\_1}" ... \emph{attribute\_k}="\emph{val
 Each node and edge has a unique integer id.
 The id's are assigned consecutively as nodes/edges are created;
 they may not be altered.
-The id of a node or edge can be accessed via the \Code{id()} function.
+The id of a node or edge $x$ can be accessed via the function call \Code{id($x$)}.
 Often, as is the case with the depth-first search algorithm, it makes sense to use
 arrays indexed by node or edge id's.
 Since graphs may be generated externally and/or have undergone deletions of nodes or
@@ -137,7 +188,7 @@ large enough to accommodate the appropriate id's as indexes. So code such as
 
 is immune to array out of bounds errors.
 
-\subsection{Node and edge methods} \label{sec:nodes_and_edges}
+\subsection{Node and edge attributes and methods} \label{sec:nodes_and_edges}
 
 Nodes and edges have `getters' and `setters' for
 a variety of attributes, i.e.,
@@ -173,22 +224,22 @@ and
 \begin{itemize}
 
 \item
-\Code{for\_adjacent(x, e, y)\{ \emph{code block} \}}
-executes the statements in the code block for each edge incident on \verb$x$.
-The statements can refer to \verb$x$, or \verb$e$, the current incident edge,
-or \verb$y$, the other endpoint of \verb$e$.
-The macro assumes that \Code{x} has already been declared as \Code{Node}
-but \Code{e} and \Code{y} are declared automatically.
+\Code{for\_adjacent($v, e, w$) \{ \emph{code block} \}}
+executes the statements in the code block for each edge incident on node $v$.
+The statements can refer to $v$, or $e$, the current incident edge,
+or $w$, the other endpoint of $e$.
+The macro assumes that $v$ has already been declared as \Code{Node}
+but it declares $e$ as \Code{Edge} and $w$ as \Code{Node} automatically.
 
 \item
-\Code{for\_outgoing(Node x, Edge e, Node y)\{ \emph{code block} \}}\\
+\Code{for\_outgoing($v, e, w$) \{ \emph{code block} \}}\\
 behaves like \Code{for\_adjacent} except that, when the graph is directed,
-it iterates only over the edges whose source is \verb$x$ (it still iterates over all the edges when the graph is undirected). 
+it iterates only over the edges whose source is $v$ (it still iterates over all the edges when the graph is undirected). 
 
 \item
-\Code{for\_incoming(Node x, Edge e, Node y)\{ \emph{code block} \}}\\
+\Code{for\_incoming($v, e, w$) \{ \emph{code block} \}}\\
 behaves like \Code{for\_adjacent} except that, when the graph is directed,
-it iterates only over the edges whose sink is \verb$x$ (it still iterates over all the edges when the graph is undirected). 
+it iterates only over the edges whose target (destination) is $v$ (it still iterates over all the edges when the graph is undirected). 
 
 \end{itemize}
 
@@ -196,13 +247,13 @@ The actual API methods hiding behind these macros are (these are Node methods):
 
 \begin{itemize}
 \item
-\Code{List$\langle$Edge$\rangle$~edges($v$)} returns a list of all edges
+\Code{EdgeList~edges($v$)} returns a list of all edges
 incident to $v$, both incoming and outgoing.
 \item
-\Code{List$\langle$Edge$\rangle$~outgoingEdges($v$)} returns a list of edges
+\Code{EdgeList~outgoingEdges($v$)} returns a list of edges
 directed away from $v$ (all incident edges if the graph is undirected).
 \item
-\Code{List$\langle$Edge$\rangle$~incomingEdges($v$)} returns a list of edges
+\Code{EdgeList~incomingEdges($v$)} returns a list of edges
 directed toward $v$ (all incident edges if the graph is undirected).
 \item
 \Code{Node~otherEnd($e$, $v$)} returns the endpoint, other than $v$, of $e$.
@@ -229,7 +280,7 @@ accessed using \Code{source($e$)} and \Code{target($e$)}, respectively.
 \textbf{Graph Elements.}
 Nodes and edges both have a mechanism for setting (and getting)
 arbitrary attributes of type Integer, String, and Double.
-the relevant methods are listed below.
+the relevant functions are listed below.
 Note that the type can be implicit for the setters -- the compiler can figure
 that out, but needs to be explicit for the getters -- in Java, two methods
 that differ only in their return type are indistinguishable.
@@ -242,18 +293,41 @@ In each case $g$ stands for a graph element (node or edge).
     be Boolean, the value is set to \Code{true}.
   \item \Code{String getString($g$, String \emph{attribute})}
   \item \Code{Boolean getBoolean($g$, String \emph{attribute})}
-    \item \Code{Boolean is(String \emph{attribute})}, a synonym for
+    \item \Code{Boolean is($g$, String \emph{attribute})}, a synonym for
       \Code{getBoolean} 
   \item \Code{Integer getInteger($g$, String \emph{attribute})}
   \item \Code{Double getDouble($g$, String \emph{attribute})}
 \end{itemize}
 An object oriented syntax can also be used -- this is especially natural in
-case of \Code{is}, as in \Code{v.is("inTree")} -- see \Code{boruvka} in the
+case of \Code{is}, as in \Code{v.is("inTree")} -- see \Code{boruvka.alg} in the
 \Code{Algorithms} directory.
-These are useful when an algorithm requires arbitrary information to be
+
+Arbitrary attributes
+are useful when an algorithm requires additional information to be
 associated with nodes and/or edges.
 The user-defined attributes may differ from one node or edge to the next.
 For example, some nodes may have a \Code{depth} attribute while others do not.
+
+\textbf{Note:} \emph{Attributes retain their types throughout algorithm
+  execution but Galant does not attempt to guess the type of an attribute
+  when reading a graph from a file.}
+For example, suppose an algorithm does \Code{set(v, "pre", 5)}.
+To read the value of attribute \Code{pre} for node \Code{v} the algorithm
+will have to use \Code{getInteger(v, "pre")} (or one of its synonyms) --
+\Code{getDouble(v, "pre")} or \Code{getString(v, "pre")} will return
+\Code{null}. 
+However, suppose the user exports the graph to a file \Code{mine.graphml}
+after setting the attribute.
+The GraphML representation for node \Code{v} will have \Code{pre="5"},
+but when Galant reads \Code{mine.graphml}, the attribute \Code{pre}, and any
+other user-defined attribute, will be treated as a string attribute. So  
+\Code{getInteger(v, "pre")} will return \Code{null} whereas
+\Code{getString(v, "pre")} will return the string \Code{"5"}.
+This is not a problem unless the user wants to save the state of an algorithm
+execution midstream \emph{and then use it as a starting point}.
+The only workaround is for an animation program to do its own parsing, using
+the utility functions \Code{integer} and \Code{real} -- see
+Table~\ref{tab:utility_functions}.
 
 \subsubsection{Geometric attributes}
 
@@ -261,29 +335,32 @@ Currently, the only geometric attributes are the positions of the
 nodes. 
 Unlike GDR, the edges in Galant
 are all straight lines and the positions of their labels are fixed.
-The relevant methods for nodes -- using procedural syntax -- are
-\Code{int~getX(Node)}, \Code{int~getY(Node)}
-and \Code{Point~getPosition(Node)}
-for the getters. To set a position,
-one should use\\
-\hspace*{2em}\Code{setPosition(Node,Point)}\\
+The relevant functions are
+\Code{int~getX(Node $v$)}, \Code{int~getY(Node $v$)}
+and \Code{Point~getPosition(Node $v$)}
+for the getters. The Java type/class \Code{Point} has fields \Code{x} and
+\Code{y} that can be retrieved using \Code{$p$.x} and \Code{$p$.y}, where $p$
+is a \Code{Point}. To set a position, use\\
+\hspace*{2em}\Code{setPosition(Node $v$, Point $p$)}\\
 or\\
-\hspace*{2em}\Code{setPosition(Node,int,int)}.\\
+\hspace*{2em}\Code{setPosition(Node $v$, int $x$, int $y$)}.\\
 Once a node has an established position, it is possible to change
-one coordinate at a time using \Code{setX(Node,int)} or \Code{setY(Node,int)}.
-Object-oriented variants of all of these, e.g.,
-\Code{v.setX(100)}, are also available.
+one coordinate at a time using \Code{setX(Node $v$, int $x$)} or
+\Code{setY(Node $v$, int $y$)}.
 
 The user is allowed to move nodes during algorithm execution
-and the resulting positions persist after execution terminates.
-Node position is the only attribute that can be "edited" at runtime.
+and the resulting positions persist after execution terminates
+(other attributes do not).
+Node position is the only attribute that can be "edited" by the user
+at runtime.
 For some animations, however, such as sorting,
 the animation itself needs to move
 nodes.
 To avoid potential conflicts between position changes inflicted by the user
 and those desired by the animation.
-the function \Code{movesNodes()}, called at the beginning of an algorithm
-will prevent the user from moving nodes.
+the function \Code{movesNodes()}, called at the beginning of an algorithm,
+will keep the user from moving nodes (mouse actions on the graph panel have
+no effect).
 
 \subsubsection{Display attributes} \label{sec:display_attributes}
 
@@ -302,8 +379,7 @@ and \Code{real(String)}
 -- see Table~\ref{tab:utility_functions}
 -- provide a convenient mechanism for treating labels as objects of class
 \Code{Integer} or \Code{Double}, respectively.
-The second argument of \Code{label} (or single argument of the
-object-oriented \Code{setLabel})
+The second argument of \Code{label}
 is not the expected \Code{String}
 but \Code{Object};
 any type of object that has a Java \Code{toString} method will work
@@ -315,41 +391,44 @@ in Java.\footnote{
 }
 Thus, conversion between string labels and numbers works both ways.
 
-Aside from the setters and getters: \Code{setWeight(double)},
-\mbox{\Code{Double getWeight()}}, \Code{setLabel(Object)}
-and \mbox{\Code{String getLabel()}}, the programmer can also
+In order to make the display of weights more attractive, weights that happen
+to be integers are shown without the decimal point and at most two positions
+to the right of the decimal point are shown.
+
+Aside from the setters and getters: \Code{setWeight(GraphElement $g$, double $wt$)},
+\mbox{\Code{Double getWeight($g$)}}, \Code{label($g$, Object $o$)}
+and \mbox{\Code{String label($g$)}}, the programmer can also
 manipulate and test for the absence of weights/labels using
-\Code{clearWeight()} and \Code{boolean~hasWeight()},
+\Code{clearWeight($g$)} and \Code{Boolean~hasWeight($g$)},
 and the corresponding methods for labels.
-The procedural variants in this case are
-\begin{itemize}
-  \item \Code{setWeight(Node,double)},
-  \item \mbox{\Code{Double getWeight(Node)}} or the more natural
-    \mbox{\Code{Double weight(Node)}},
-   \item \Code{setLabel(Node,Object)} or the more natural
-     \Code{label(Node,Object)},
-   \item \Code{getLabel(Node)} or the more natural
-     \mbox{\Code{String label(Node)}}
-\end{itemize}
+It is also possible to remove an arbitrary attribute $a$ using
+\Code{clear($g$, String $a$)}, but there is not yet a \Code{has} function for
+arbitrary attributes.\footnote{Semantic details, such as whether to implement
+  \Code{hasString($g$, $a$)}, \Code{hasInteger($g$, $a$)}, etc. and/or to use
+  \Code{has($g$, $a$)} to check whether the attribute exists in any form need
+    to be worked out.
+}
+You have to test whether the getter returns \Code{null}.
 
 Nodes can either be plain, highlighted (selected), marked (visited) or both highlighted and
 marked.
 Being highlighted alters the
-the boundary (color and thickness) of a node (as controlled by the
-implementation), while being marked affects the fill color.
+the boundary (color and thickness) of a node (thickness is controlled by user
+preference),
+while being marked affects the fill color.
 Edges can be plain or selected, with thickness and color modified in the
 latter case.
 
 The relevant methods are
-(here \Code{Element} refers to either a \Code{Node} or an \Code{Edge}):
+(here $g$ refers to an object of type \Code{GraphElement}, a \Code{Node} or
+an \Code{Edge}):
 \begin{itemize}
-\item \Code{highlight(Element)}, \Code{unhighlight(Element)}
-  and \Code{Boolean~isHighlighted(Element)}
-\item correspondingly, \Code{setSelected(true)}, \Code{setSelected(false)},
-and \Code{boolean~isSelected()}
-\item \Code{mark(Node)}, \Code{unmark(Node)}
-  and \Code{Boolean~isMarked(Node)},
-  equivalently \Code{Boolean~marked(Node)}.
+\item \Code{highlight($g$)}, \Code{unhighlight($g$)}
+  and \Code{Boolean~highlighted($g$)}
+\item correspondingly, \Code{select($g$)}, \Code{deselect($g$)},
+and \Code{Boolean~selected($g$)}
+\item \Code{mark(Node $v$)}, \Code{unmark(Node $v$)}
+  and \Code{Boolean~marked(Node $v$)}
 \end{itemize}
 
 \begin{table}
@@ -377,15 +456,13 @@ Although the specific colors for displaying the outlines of nodes
 or the lines representing edges are
 predetermined for plain
 and highlighted nodes/edges,
-the animation implementation can modify these colors,
+the animation implementation can modify colors explicitly,
 thus allowing for many different kinds of highlighting.
-The \Code{getColor} and \Code{setColor} methods
-and their procedural variants have \Code{String} arguments
+Use the \Code{color($g$)} (getter), \Code{color($g$, $c$)} (setter)
+and \Code{uncolor($g$)} functions, where $g$ is a
+node/edge and $c$ a color string
 in the RGB format \texttt{\#RRGGBB}; for example,
 the string \texttt{\#0000ff} is blue.
-Here, as in the case of label, \Code{color($g$)} and \Code{color($g$,$c$)}
-can be used in place of \Code{getColor($g$)} and \Code{setColor($g$,$c$)},
-respectively.
 Galant defines several color constants for convenience -- 
 these are listed in Table~\ref{tab:colors} -- so one can say, e.g.,
 \Code{color($g$,TEAL)} instead of \Code{color($g$,"\#009999")}.
@@ -394,7 +471,8 @@ Note: In the graph display \emph{highlighting takes precedence over color};
 if a node is highlighted, its color is ignored and the default highlight
 color is used.
 
-Special handling is required when any attribute is nonexistent or has a
+Special handling is required when one of the native Galant attributes
+is nonexistent or has a
 \Code{null} value -- these two are equivalent.
 When displayed in the graph window, nonexistent labels and weights simply do
 not show up while nonexistent colors are rendered as thin black lines
@@ -402,21 +480,23 @@ not show up while nonexistent colors are rendered as thin black lines
 In an animation program, however, nonexistent attributes are handled
 differently.
 \begin{itemize}
-\item \Code{color()} returns null as expected
-\item all functions returning Boolean values, such as \Code{highlighted()},
-  \Code{marked()} and those for attributes defined by the animator, return
+\item \Code{color($g$)} returns null as expected
+\item all functions returning Boolean values, such as \Code{highlighted($g$)},
+  \Code{marked(Node $v$)} and those for attributes defined by the animator, return
   \Code{false}
-\item \Code{label()} returns an empty string; this ensures that it is always
+\item \Code{label($g$)} returns an empty string; this ensures that it is always
   safe to use a label in an expression calling for a string
-\item \Code{weight()} throws an exception; there is no obvious default
+\item \Code{weight($g$)} throws an exception; there is no obvious default
   weight; a program can test for the presence/absence of a weight using the
-  \Code{hasWeight()} or \Code{hasNoWeight()} methods
+  \Code{hasWeight($g$)} or \Code{hasNoWeight($g$)} methods
 \end{itemize}
 
 Of the attributes listed above, weight, label, color and position can be
 accessed and modified by the user as well as the program.
-In all cases (of display attributes -- recall that node positions are an
-exception), modifications during runtime are ephemeral
+Except in case of node positions, as noted above,
+the user can do this only in edit mode.
+In all cases of display attributes
+modifications during runtime are ephemeral
 -- the graph returns to its original, pre-execution, state after running the
 animation.
 The user can save the mid-execution state of the graph:
@@ -472,7 +552,7 @@ a \textsf{void} method in Java. An example is the recursive function
 
 \input{Y_data_structures}
 
-\subsection{Data Structures}
+\subsection{Data Structures} \label{sec:datastructures}
 
 Galant provides some standard data structures for nodes and edges.
 These are described in detail in Tables~\ref{tab:data_structures}.
@@ -644,4 +724,4 @@ file, when specifying a node or edge after a keyboard shortcut, or when
 giving the weight of a node or edge.
 A complete list of Galant exceptions is in Table~\ref{tab:galant_exceptions}.
 
-% [Last modified: 2017 01 12 at 22:23:29 GMT]
+% [Last modified: 2017 01 16 at 18:30:28 GMT]

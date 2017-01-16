@@ -139,19 +139,17 @@ public class GraphPanel extends JPanel{
     private final int SELF_LOOP_DIAMETER = 24;
 
     /**
-     * Node weights are stacked on top of labels; their left edge is
-     * tangent to the rightmost point of the node. The line separating them
-     * is level with the center point of the node
+     * Node weights and labels are to the right of their nodes. Weights
+     * appear above labels.
      *
-     * Edge weights are to the left of labels. The (vertical) separating line
-     * intersects the midpoint of the edge. Centers of labels and weights are
-     * aligned vertically with the (horizontal) line that intesects the
-     * midpoint of the edge
+     * Edge weights are to the left of labels. The (vertical) line separating
+     * weights from labels intersects the midpoint of the edge. Centers of
+     * labels and weights are aligned vertically with the (horizontal) line
+     * that intesects the midpoint of the edge. Edge weights and labels are
+     * inside bordered rectabgles.
      *
      * Node labels/weights are on top of a (white) filled rectangle with
      * padding all around.
-     *
-     * Edge labels/weights are the same with the addition of a border.
      *
      * In the relevant code, the position of each label/weight is recorded in
      * the appropriate variable: it is the position of the top left corner of
@@ -226,8 +224,8 @@ public class GraphPanel extends JPanel{
     }
 
 	/** 
-	 * Sets whether the user has pressed the mouse button and is dragging the mouse
-	 * Used by GraphWindow to determine certain graph changes. 
+	 * Sets whether the user has pressed the mouse button and is dragging the
+	 * mouse Used by GraphWindow to determine certain graph changes.
 	 */
 	private boolean isDragging;
 
@@ -1015,4 +1013,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2017 01 10 at 14:54:50 GMT]
+//  [Last modified: 2017 01 16 at 13:10:01 GMT]

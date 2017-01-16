@@ -724,6 +724,18 @@ public abstract class Algorithm implements Runnable {
     checkGraphElement(ge);
     return ge.getString(s);
   }
+  public Integer getInteger(String s, GraphElement ge) throws GalantException {
+    checkGraphElement(ge);
+    return ge.getInteger(s);
+  }
+  public Double getDouble(String s, GraphElement ge) throws GalantException {
+    checkGraphElement(ge);
+    return ge.getDouble(s);
+  }
+  public String getString(String s, GraphElement ge) throws GalantException {
+    checkGraphElement(ge);
+    return ge.getString(s);
+  }
 
   public void color(GraphElement ge, String color) throws Terminate, GalantException {
     checkGraphElement(ge);
@@ -1342,4 +1354,4 @@ public abstract class Algorithm implements Runnable {
   public abstract void run();
 }
 
-//  [Last modified: 2017 01 15 at 23:00:00 GMT]
+//  [Last modified: 2017 01 16 at 13:38:30 GMT]

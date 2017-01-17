@@ -1,0 +1,81 @@
+\begin{table}
+  \centering
+  \fbox{
+    \begin{minipage}{0.9\textwidth}
+      In the table below \emph{EdgeCollection} refers to any preexisting
+      data structure whose elements are edges while \emph{NodeCollection}
+      refers to one whose elements are nodes. Each type of structure can be
+      initialized as empty or as containing elements of a given
+      collection. As with arrays -- see page~\pageref{page:arrays} -- the
+      \Code{new} operator creates a new instance of a structure.
+    \end{minipage}
+  }
+
+  \medskip
+  \begin{tabular}{|l | l |}
+    \hline
+    data structure & initializers \\
+    \hline
+    \Code{EdgeList}
+    &
+    \shortstack[l]{\Code{new EdgeList()}\\
+      \Code{new EdgeList(\emph{EdgeCollection})}
+      }
+    \\
+    \hline
+    \Code{NodeList}
+    &
+    \shortstack[l]{\Code{new NodeList()}\\
+      \Code{new NodeList(\emph{NodeCollection})}
+      }
+    \\
+    \hline
+    \Code{EdgeSet}
+    &
+    \shortstack[l]{\Code{new EdgeSet()}\\
+      \Code{new EdgeSet(\emph{EdgeCollection})}
+      }
+    \\
+    \hline
+    \Code{NodeSet}
+    &
+    \shortstack[l]{\Code{new NodeSet()}\\
+      \Code{new NodeSet(\emph{NodeCollection})}
+      }
+    \\
+    \hline
+    \Code{EdgeQueue}
+    &
+    \shortstack[l]{\Code{new EdgeQueue()}\\
+      \Code{new EdgeQueue(\emph{EdgeCollection})}
+      }
+    \\
+    \hline
+    \Code{NodeQueue}
+    &
+    \shortstack[l]{\Code{new NodeQueue()}\\
+      \Code{new NodeQueue(\emph{NodeCollection})}
+      }
+    \\
+    \hline
+    \Code{EdgePriorityQueue}
+    &
+    \shortstack[l]{\Code{new EdgePriorityQueue()}\\
+      \Code{new EdgePriorityQueue(\emph{EdgeCollection})}
+      }
+    \\
+    \hline
+    \Code{NodePriorityQueue}
+    &
+    \shortstack[l]{\Code{new NodePriorityQueue()}\\
+      \Code{new NodePriorityQueue(\emph{NodeCollection})}
+      }
+    \\
+    \hline
+  \end{tabular}
+
+  \caption{Basic Galant data structures and initialization.}
+  \label{tab:data_structure_summary}
+\end{table}
+
+% [Last modified: 2017 01 17 at 19:59:54 GMT]

@@ -2,7 +2,7 @@ Animation programmers can write algorithms in notation that resembles
 textbook pseudocode
 in files that have a \Code{.alg} extension.
 The animation examples have used procedural syntax for function calls, as in, for example,
-\Code{setWeight(v,0)}.
+\Code{setWeight(v, 0)}.
 Java (object oriented) syntax can also be used: \Code{v.setWeight(0)}.
 A key advantage of Galant is that a seasoned Java programmer can
 not only use the Java syntax but can also augment Galant algorithms with
@@ -11,24 +11,24 @@ All Galant code is effectively Java, either natively, or via macro
 preprocessing.
 
 Some Java constructs have no equivalent procedural syntax. Most notably
-\Code{\emph{s\_one}.equals(\emph{s\_two})}, where \emph{s\_one} and
-\emph{s\_two} are strings (of type \Code{String}) is the only means of
+\Code{\emph{sOne}.equals(\emph{sTwo})}, where \emph{sOne} and
+\emph{sTwo} are strings (of type \Code{String}) is the only means of
 equality comparison for strings. Equality of numbers is tested using the
 \Code{==} operator.
 To compare strings lexicographically you have to use
-\Code{\emph{s\_one}.compareTo(\emph{s\_two})}, which returns a positive
-number, negative number, or 0 depending on whether \emph{s\_one}
+\Code{\emph{sOne}.compareTo(\emph{sTwo})}, which returns a positive
+number, negative number, or 0 depending on whether \emph{sOne}
 lexicographically follows,
-precedes or is equal to \emph{s\_two}, respectively .
+precedes or is equal to \emph{sTwo}, respectively .
 
 Descriptions in this document give the most natural and most common
 constructs for procedures and functions, usually procedural rather
 than object-oriented.
 A perusal of the file \Code{Algorithm.java} in directory\\ 
-\Code{src/edu/ncsu/csc/Galant/algorithm}\\
+\hspace*{1em}\Code{src/edu/ncsu/csc/Galant/algorithm}\\
 shows the animator the variety of
 synonyms for these constructs
-as well as functions not described here. For the seasoned Java programmer,
+as well as functions not described here. For the interested Java programmer,
 object-oriented syntax appears as a call in the body of the corresponding
 function/procedure. For example,
 \begin{verbatim}
@@ -62,7 +62,7 @@ of global variable declarations and function definitions.
 The animator can import code from other sources using appropriate
 \Code{import} statements; these must occur at the very beginning.
 The code for the algorithm itself follows, starting with the keyword
-\textsf{algorithm}.
+\Code{algorithm}.
 A \emph{code block}
 is a sequence of statements, each terminated by a semicolon, just as in
 Java.
@@ -79,7 +79,7 @@ An animation program has the form
 
 Declarations of global variables are also like those of Java:\\
 \hspace*{1em}\Code{\emph{type} \emph{variable\_name};}\\
-or\\
+to declare a variable or\\
 \hspace*{1em}\Code{\emph{type} [] \emph{variable\_name};}\\
 to declare an array of the given type.
 All variables must be initialized either within a function definition or
@@ -92,7 +92,7 @@ declares them.\footnote{This restriction applies to global variables
 The Java incantation\\
 \hspace*{1em}\Code{\emph{type} \emph{variable\_name}
 = new \emph{type}[\emph{size}]}\\
-is used to initialize an array with \emph{size} elements initialized to \textsf{null}
+is used to initialize an array with \emph{size} elements initialized to \Code{null}
 or 0. Arrays use 0-based indexing: the largest index is $\mathit{size} -
 1$. The \emph{type} prefix is omitted if the array has been declared
 globally.
@@ -107,6 +107,7 @@ with \Code{""})\footnote{
   simply return \Code{false}.
 }
 indexed from 0 through 9.
+\label{page:arrays}
 
 Detailed
 information about function declarations is in Section~\ref{sec:functions}
@@ -133,7 +134,7 @@ Dijkstra's algorithm looks like
 beginStep();
 for_nodes(node) {
     setWeight(node, INFINITY);
-    nodePQ.add(node);
+    insert(node, pq);
 }
 endStep();
 \end{verbatim}
@@ -144,7 +145,7 @@ Without the \Code{beginStep}/\Code{endStep}
 override, this initialization would require the observer to click
 through multiple steps (one for each node) before getting to the interesting
 part of the animation.
-For convenience the function \Code{step()} is a synomym for \Code{endStep();~beginStep()}.
+For convenience the function \Code{step()} is a synonym for \Code{endStep();~beginStep()}.
 If a step takes longer than \Timeout\ seconds, the program is terminated
 under the presumption that there may be an infinite loop.
 
@@ -159,12 +160,12 @@ convenience and backward compatibility. A full list of methods and functions
 is given in \Code{Algorithm.java} in the subdirectory
 \Code{src/edu/ncsu/csc/Galant/algorithm}.}
 
-The nodes and edges, of type \textsf{Node} and \textsf{Edge}, respectively,
-are subtypes/extensions of \textsf{GraphElement}.
+The nodes and edges, of type \Code{Node} and \Code{Edge}, respectively,
+are subtypes/extensions of \Code{GraphElement}.
 Arbitrary attributes can be assigned to each graph element. In the GraphML file
 these show up as, for example,\\
 \hspace*{3em}
-\textsf{
+\Code{
 $<$node \emph{attribute\_1}="\emph{value\_1}" ... \emph{attribute\_k}="\emph{value\_k}" /$>$
 }
 
@@ -175,7 +176,10 @@ The id of a node or edge $x$ can be accessed via the function call \Code{id($x$)
 Often, as is the case with the depth-first search algorithm, it makes sense to use
 arrays indexed by node or edge id's.
 Since graphs may be generated externally and/or have undergone deletions of nodes or
-edges, the id's are not always contiguous.
+edges, the id's are not always contiguous.\footnote{
+  The edges in GraphML files are not required to have id's. If they have
+  none, id's are assigned as the file is parsed.
+}
 The functions \Code{nodeIds()} and \Code{edgeIds()} return the size of an array
 large enough to accommodate the appropriate id's as indexes. So code such as
 
@@ -214,17 +218,22 @@ and
 \Code{label($x$,$c$)} instead of
 \Code{setLabel($x$,$c$)}.
 
+In the subsections below we discuss attributes in more detail, using the
+categories articulated in the GDR paper -- (earlier) citation in the technical
+report.
+
 \subsubsection{Logical attributes: functions and macros}
 
 \textbf{Nodes.} From a node's point of view we would like information about
- the adjacent nodes and incident edges.  The relevant \emph{methods} require
- the use of Java generics, but macros are provided to simplify graph API
- access. The macros (which are borrowed from their equivalents in GDR) are:
+the adjacent nodes and incident edges.
+Macros that hide some Java syntax and extra function calls are provided for
+that purpose.
+The macros (which are borrowed from their equivalents in GDR) are:
 
 \begin{itemize}
 
 \item
-\Code{for\_adjacent($v, e, w$) \{ \emph{code block} \}}
+\Code{for\_adjacent($v, e, w$) \{ \emph{code block} \}}\\
 executes the statements in the code block for each edge incident on node $v$.
 The statements can refer to $v$, or $e$, the current incident edge,
 or $w$, the other endpoint of $e$.
@@ -357,7 +366,7 @@ For some animations, however, such as sorting,
 the animation itself needs to move
 nodes.
 To avoid potential conflicts between position changes inflicted by the user
-and those desired by the animation.
+and those desired by the animation,
 the function \Code{movesNodes()}, called at the beginning of an algorithm,
 will keep the user from moving nodes (mouse actions on the graph panel have
 no effect).
@@ -404,7 +413,7 @@ and the corresponding methods for labels.
 It is also possible to remove an arbitrary attribute $a$ using
 \Code{clear($g$, String $a$)}, but there is not yet a \Code{has} function for
 arbitrary attributes.\footnote{Semantic details, such as whether to implement
-  \Code{hasString($g$, $a$)}, \Code{hasInteger($g$, $a$)}, etc. and/or to use
+  \Code{hasString($g$, $a$)}, \Code{hasInteger($g$, $a$)}, etc., and/or to use
   \Code{has($g$, $a$)} to check whether the attribute exists in any form need
     to be worked out.
 }
@@ -507,6 +516,8 @@ select the \Code{Export} option on the file menu of the
 
 A summary of functions relevant to node and edge attributes (their procedural versions)
 is given in Table~\ref{tab:graph_element_functions}.
+Some of the most important functions, those relevant to the structure of the
+graph, are listed in Table~\ref{tab:graph_functions}.
 
 \subsubsection{Global access for individual node/edge attributes and graph attributes}
 
@@ -519,7 +530,7 @@ because they are not relevant
 or hide them initially and reveal them for individual nodes as
 the algorithm progresses.
 These functionalities can be accomplished by
-\textsf{hideNodeWeights} or \textsf{hideAllNodeWeights}, respectively.
+\Code{hideNodeWeights} or \Code{hideAllNodeWeights}, respectively.
 A summary of these capabilities is given in Table~\ref{tab:graph_attribute_functions}.
 
 \subsection{Definition of Functions/Methods}\label{sec:functions}
@@ -545,93 +556,184 @@ static int plus( int a, int b ) {
 \end{verbatim}
 
 The \textsl{return\_type} is optional. If it is missing, the function behaves like
-a \textsf{void} method in Java. An example is the recursive function
+a \Code{void} method in Java. An example is the recursive function
 \Code{visit} in depth-first search.
 \\
 \Code{function visit( Node v ) \{} \textsl{code} \Code{\}}
+
+\input{Y-data_structure_summary}
 
 \input{Y_data_structures}
 
 \subsection{Data Structures} \label{sec:datastructures}
 
 Galant provides some standard data structures for nodes and edges.
-These are described in detail in Tables~\ref{tab:data_structures}.
-Data structures use object-oriented syntax.
-For example, to add a node \Code{v} to a \Code{NodeList} \Code{L},
-the appropriate syntax is \Code{L.add(v)}.
+These are described in detail in Tables~\ref{tab:data_structure_summary}
+and~\ref{tab:data_structures}.
+All Galant data structures are instances of the Java \Code{Collection}
+interface and therefore automatically have the methods required of a
+collection. For the interested Java programmer, they are also extensions of
+relevant concrete Java classes and inherit those methods as well. For
+details, see the Java source code in directory\\
+\Code{src/edu/ncsu/csc/Galant/graph/datastructure}.
 
-\subsection{Sorting, Priority Queues, and Comparators}
+Galant provides procedural versions of the required methods \Code{size},
+\Code{isEmpty}, \Code{add} and \Code{remove} for all structures, i.e., if $C$
+is a collection (data structure) and $g$ is a graph element of the
+appropriate type, the functions are \Code{size($C$)}, \Code{empty($C$)},
+\Code{add($e$, $C$)} and \Code{remove($e$, $C$)}, respectively.
 
-Priority queues of nodes and edges are also provided by Galant -- see
-Table~\ref{tab:priority_queues}.
-Closely related is the \Code{sort} macro, which translates to the Java
-\Code{Collections.sort} method.
-By default, sorting and priority queues use the weight of a node or edge as
-its key and sorting is by increasing weight, while priority queues are
-min-heaps -- lowest weight item is extracted using the \Code{removeMin} method.
-However, this can be overriden if a comparator for a different attribute is
-provided when sort is called or when the priority queue is created.
-The other attributes can be of type String, Integer or Double -- see earlier
-discussion in Section~\ref{sec:nodes_and_edges}
-and the appropriate functions in Table~\ref{tab:graph_element_functions}.
-Comparators for them are generated with calls to functions of the form
-\Code{get\emph{type}Comparator}, where \emph{type} is String, Integer or
-Double.
-There is an optional second argument, which, if \Code{true} causes the
-comparisons to be the reverse of the usual order, i.e., decreasing for
-numbers and a max-heap instead of a min-heap.
+Table~\ref{tab:data_structure_summary} shows how each data structure can be
+initialized in two different ways. One is to create a collection with no
+elements, the other creates one from another collection that has the same
+element type. For example, if \Code{S} is a previously declared and initialized
+\Code{EdgeSet} (with elements added initially or later) you can say\\
+\hspace*{1em}\Code{EdgeList L = new EdgeList(S)}\\
+This becomes especially useful for priority queues -- see
+Section~\ref{sec:sorting} and Table~\ref{tab:priority_queues} below for more
+details on initializing and using these.
+To create a priority queue containing all edges you would simply say\\
+\hspace*{1em}\Code{EdgePriorityQueue PQ = new EdgePriorityQueue(getEdges())}
 
-In case of a priority queue the type of heap and the attribute used for comparison
-%%%%%%%%%%%%%%%%%%%%%%%%%
+Java collections also have iterators. The syntax for accessing all elements
+of a data structure is\\
+\hspace*{1em}\Code{for ( \emph{type} $g$ : \emph{collection} ) \{ \emph{code
+    body} \}}\\
+where \emph{type} is either \Code{Node} or \Code{Edge}, $g$ is a variable,
+and \emph{collection} is a data structure containing elements of the given
+type. The code body is executed for each element in the collection,
+referenced as $g$. For example, if \Code{S} is an \Code{EdgeSet} you could do
 
-A notable exception is \Code{decreaseKey}
-for priority queues.
-The operation \Code{pq.decreaseKey(v,k)}
-does \Code{pq.remove(v)} followed by \Code{pq.add(v)}.
-The new key is implicit -- it is the weight of the element.
-In practice, assuming \Code{pq} is a \Code{NodePriorityQueue},
-\Code{v} is a \Code{Node}
-and \Code{k} is a \Code{Double}, the sequence would be
+\begin{minipage}{\textwidth}
 \begin{verbatim}
-     setWeight(v, k);
-     pq.decreaseKey(v,k);
+   for ( Edge e : S ) {
+      highlight(e);
+   }
 \end{verbatim}
-which would translate to
-\begin{verbatim}
-     setWeight(v, k);
-     pq.remove(v);
-     pq.add(v)
-\end{verbatim}
-As pointed out earlier,
-the weight of a node or edge is used for priority in a priority
-queue or for sorting.
-The programmer can change this default
-as well as the fact that the nodes/edges prioritized by increasing weight
-(the priority queue is a min-heap).
+\end{minipage}
 
-The functionality of a priority queue depends on how it is initialized via a
-constructor. Taking \Code{EdgePriorityQueue} as an example
-(\Code{NodePriorityQueue} is analogous), the standard initialization, one
-that defines a min-heap that uses weights as key is\\
-\Code{EdgePriorityQueue q = new EdgePriorityQueue()}\\
-or the
-declaration\\
-\Code{EdgePriorityQueue q}\\
-could be separate from\\
-\Code{q = new EdgePriorityQueue()}\\
+to highlight all the edge in \Code{S}.
+The order of appearance of the elements depends on the structure.
+For lists and queues it is the order in which they were added, for sets it is
+random (the elements are hashed), and for priority queues it is based on the
+values of the keys.
 
-Variations on the constructor call (part following \Code{new}) are
+It is possible to create structures of type \Code{EdgeStack} and
+\Code{NodeStack} but if you want simple procedural syntax and friendlier error reporting
+we recommend using lists instead.
+
+Table~\ref{tab:data_structures} summarizes the operations available on each
+of the data structures.
+The semantics of functions \Code{add}, \Code{remove}, \Code{size}, and
+\Code{empty} are shown in the table only for lists, but apply to the others as well.
+
+\subsection{Sorting, Priority Queues, and Comparators} \label{sec:sorting}
+
+\input{Y-priority_queues}
+
+Priority queues are a special case in that the order of appearance, which
+affects the semantics of the key functions,
+is dependent on the \emph{comparator} that is used to
+determine their total order. Sorting also depends on a comparator, so we
+discuss sorting and priority queues in the same section.
+The default comparator for graph elements, nodes and edges, sorts them by
+increasing weight. If $L$ is a list of nodes or edges\\
+\hspace*{1em}\Code{sort($L$)}\\
+rearranges the elements of $L$ so that they are in order of increasing weight
+(if any element has no weight there is a null pointer exception). Galant \Code{sort} is
+actually a Galant macro that expands to the Java \Code{Collections.sort}.
+A comparator as second argument to \Code{sort} can alter the default
+behavior. Galant makes available comparators that specify the attribute
+(instead of weight) and the ordering (increasing or decreasing) as follows.
 \begin{itemize}
-\item \Code{EdgePriorityQueue(true)} to create a max-heap based on weights
-  (if the argument is \Code{false} the result is a min-heap, the default)
-\item \Code{EdgePriorityQueue("attribute")}, where \Code{"attribute"} is a
-  numerical attribute of an edge
-\item \Code{EdgePriorityQueue("attribute", true)} to create a max-heap with
-  the given attribute.
+  \item \Code{getDoubleComparator(String attribute)} returns a comparator
+    based on the values of the given attribute, in increasing order;\\
+    the default comparator is equivalent to \Code{getDoubleComparator("weight")}
+  \item \Code{getDoubleComparator(String attribute, boolean reverse)} returns a comparator
+    based on the values of the given attribute, in decreasing order if
+    \Code{reverse} is \Code{true}, increasing if it is false;\\
+    the default comparator is equivalent to \Code{getDoubleComparator("weight",
+      false)}.
+  \item \Code{getIntegerComparator(String attribute)} and
+    \Code{getIntegerComparator(String attribute, boolean reverse)} behave
+    like \Code{getDoubleComparator} except that the attribute has integer
+    values;\\
+    for example, \Code{getIntegerComparator("id", true)}
+    sorts nodes (or edges) by decreasing \Code{id}.
+  \item \Code{getStringComparator(String attribute)} and
+    \Code{getStringComparator(String attribute, boolean reverse)} behave like
+    their numerical counterparts; here the ordering is lexicographic;\\
+    for example, \Code{getStringComparator("label", true)} sorts
+    nodes or edges based on their labels, in decreasing lexicographic order
+    ("zebra" comes before "antelope").
 \end{itemize}
+To do the sorting simply call \Code{sort} with the appropriate comparator as
+second argument. For example, after
+\begin{verbatim}
+   EdgeList edges = getEdges();
+   sort(edges, getStringComparator("label", true));
+\end{verbatim}
+the list \Code{edges} consists of all edges of the graph, sorted in
+decreasing lexicographic order by their labels.
 
-\cmt{A workaround to the fact that the "attribute" constructors don't work is
-a setAttribute() method}
+\textbf{Caution:} \emph{The type of the attribute must match the type of the
+  comparator.}
+The incantation \Code{getIntegerComparator("label")} does not work as
+expected.
+Because \Code{label} is not an integer attribute, the values being compared
+will all be \Code{null} and any sort or priority queue operation based on the
+comparator will result in a null pointer exception.
+
+Table~\ref{tab:priority_queues} shows the procedural versions of priority
+queue methods made available by Galant, along with the four ways to
+initialize priority queues. Also listed are object-oriented methods that
+yield additional functionality not yet implemented in procedural form.
+
+If the priority queue is initialized from an existing data structure $C$ the
+only option is for it to be a min-heap (the element that can be accessed and
+removed efficiently is the one with smallest value) based on weight.
+An empty queue can be initialized as a max-heap (using weight) or as a heap
+that uses any valid comparator.
+A \Code{GraphElementComparator} is a special case that stores both the
+attribute used for comparison and whether the heap is to be min or max,
+obtained using the \Code{get\emph{type}Comparator} functions described
+earlier.
+The additional information allows Galant to report errors if an element to be
+added has a null value for the given attribute or if the animation program
+attempts to \Code{removeMin} from a max-heap or vice-versa.
+
+Priority queue functions are usually as efficient as expected.
+A notable exception is \Code{changeKey}.
+The operation \Code{changeKey($g$, $Q$)}
+does \Code{remove($g$, $Q$)} followed by \Code{insert($g$, $Q$)}
+and takes O($|Q|$) because of the \Code{remove}, which needs to search the
+whole queue.
+
+Unless you use object-oriented syntax you have to change the value of an
+attribute before calling \Code{changeKey}. For example, you can do
+
+\begin{minipage}{0.9\textwidth}
+\begin{verbatim}
+  NodePriorityQueue Q = new NodePriorityQueue();
+  ...
+  Node v = ...;
+\end{verbatim}
+\end{minipage}
+
+and later
+
+\begin{minipage}{0.4\textwidth}
+\begin{verbatim}
+  setWeight(v, 25);
+  changeKey(v, Q);
+\end{verbatim}
+\end{minipage}
+or
+\begin{minipage}{0.4\textwidth}
+\begin{verbatim}
+  Q.changeKey(v, 25);
+\end{verbatim}
+\end{minipage}
 
 \subsection{Queries}
 
@@ -710,7 +812,7 @@ reports a \Code{GalantException} if it is.
 The second or third line in the stack trace
 refers to the point in the algorithm where the exception occurred.
 All exceptions, whether those caught as \Code{GalantException}'s with
-meaningful messages or those caught in the Galant impemmentation code, result
+meaningful messages or those caught in the Galant implementation code, result
 in a stack trace on the console and a popup window.
 The latter allows to user to choose whether to continue, meaning that the
 algorithm is terminated and Galant returns to edit mode, or exit from Galant
@@ -722,6 +824,6 @@ first reference to the algorithm in the stack trace, an item of the form\\
 Exceptions can also occur in edit mode: when reading a graph from a
 file, when specifying a node or edge after a keyboard shortcut, or when
 giving the weight of a node or edge.
-A complete list of Galant exceptions is in Table~\ref{tab:galant_exceptions}.
+A list of the most common Galant exceptions is in Table~\ref{tab:galant_exceptions}.
 
-% [Last modified: 2017 01 16 at 18:30:28 GMT]
+% [Last modified: 2017 01 17 at 20:15:49 GMT]

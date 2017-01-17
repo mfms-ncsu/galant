@@ -1,47 +1,148 @@
-  \textbf{NodePriorityQueue and EdgePriorityQueue:} priority queues of nodes or edges, respectively.
+\begin{table}
+  \centering
+  \textbf{Initialization}
 
   \medskip
-  \begin{tabular}{| m{0.35\textwidth} | m{0.6\textwidth} |}
+  \begin{tabular}{| m{0.375\textwidth} | m{0.575\textwidth} |}
     \hline
-      \textsf{void~add(\emph{element})}
+    \shortstack[l]{
+      \mbox{}\\
+      \Code{new EdgePriorityQueue()}\\
+      \Code{new NodePriorityQueue()}\\
+      \mbox{}
+    }
     &
-    adds the element to the priority queue;
-    the priority is defined to be its weight -- see Section~\ref{sec:display_attributes}
-    \\ \hline
-    \textsf{\emph{type}~removeMin()}
-    &
-    returns and removes the element with minimum weight;
-    returns \textsf{null} if the queue is empty
-    \\ \hline
+    creates an empty min-heap that uses weight as key
+    \\
     \hline
-    \textsf{boolean~remove(\emph{element})}
+    \shortstack[l]{
+      \mbox{}\\
+      \Code{new EdgePriorityQueue($C$)}\\
+      \Code{new NodePriorityQueue($C$)}\\
+      \mbox{}
+    }
     &
-    removes the element;
-    returns \textsf{true} if it is present,
-    \textsf{false} otherwise
+    creates a min-heap that uses weight as key and contains all the elements
+    of $C$, which can be a list, set, or queue
+    \\
+    \hline
+    \shortstack[l]{
+      \Code{new EdgePriorityQueue(boolean isMax)}\\
+      \Code{new NodePriorityQueue(boolean isMax)}
+    }
+    &
+    creates an empty priority queue that uses weight as key, if \Code{isMax}
+    is true, the queue is a max-heap, otherwise it's a min-heap
+    \\
+    \hline
+    \shortstack[l]{
+      \Code{new EdgePriorityQueue(Comparator C)}\\
+      \Code{new NodePriorityQueue(Comparator C)}
+    }
+    &
+    creates an empty priority queue that uses \Code{C} to compare elements;
+    if \Code{C} is a \Code{GraphElementComparator}, the attribute and whether
+    it's a min or max heap are extracted from the comparator
+    \\
+    \hline
+  \end{tabular}
+
+  \medskip
+  \parbox{0.9\textwidth}{
+    \textbf{Functions.} Here $g$ is a \Code{GraphElement}, i.e., an
+    \Code{Edge} or \Code{Node} and $Q$ is a
+    priority queue of the appropriate type. The return type \emph{element} is
+    either \Code{Edge} or \Code{Node}.
+  }
+  
+  \medskip
+  \begin{tabular}{| m{0.375\textwidth} | m{0.575\textwidth} |}
+    \hline
+      \Code{void~add($g$, $Q$)}
+      &
+      adds $g$ to the priority queue;
+      the priority is defined by the initialization method
+      \\ \hline
+      \Code{void~insert($g$, $Q$)}
+      &
+      same as \Code{add} but does error checking
+      \\ \hline
+      \Code{void~remove($g$, $Q$)}
+      &
+      removes $g$ from $Q$; used for any element; not efficient because it
+      searches the whole queue
+      \\ \hline
+      \Code{\emph{element}~best($Q$)}
+      &
+      returns the best element, min or max value as determined by
+      initialization, in $Q$; runtime is constant
+      \\ \hline
+      \Code{\emph{element}~removeBest($Q$)}
+      &
+      returns and removes the best element, min or max value as determined by
+      initialization, in $Q$; runtime is O($\lg |Q|$)
+      \\ \hline
+      \Code{void~changeKey($g$, $Q$}
+      &
+      reorganizes $Q$ taking into account a change in value for $g$ of the attribute
+      specified at initialization; \emph{the animation program must execute
+        the actual change beforehand}; runtime is O($|Q|$) because this
+      translates to a \Code{remove} followed by an \Code{insert}
+      \\ \hline
+  \end{tabular}
+
+  \medskip
+  \parbox{0.9\textwidth}{
+    \textbf{Methods.} These have not (yet) been made available in procedural
+    syntax. Conventions same as for functions
+  }
+
+  \medskip
+  \begin{tabular}{| m{0.375\textwidth} | m{0.575\textwidth} |}
+    \hline
+    \shortstack[l]{
+      \Code{\emph{element} $Q$.min()}\\
+      \Code{\emph{element} $Q$.max()}
+    }
+    &
+    equivalent to \Code{\emph{element}~best($Q$)}, specific to min/max
+    heap; an exception if heap is the wrong kind, based on initialization
     \\ \hline
-    \textsf{void~decreaseKey(\emph{element},~double~key)}
+    \shortstack[l]{
+      \Code{\emph{element} $Q$.removeMin()}\\
+      \Code{\emph{element} $Q$.removeMax()}
+    }
     &
-    changes the weight of the element to the new key
-    and reorganizes the priority queue appropriately;
-    since this is accomplished by removing and reinserting the object, i.e.,
-    inefficiently, this method can also be used to increase the key
+    equivalent to \Code{\emph{element}~removeBest($Q$)}, specific to min/max
+    heap; an exception if heap is the wrong kind, based on initialization
     \\ \hline
-    \textsf{size()}, \textsf{isEmpty()}
+    \Code{$Q$.changeKey($g$, \emph{val})}
     &
-    analogous to the corresponding queue methods
+    equivalent to \Code{set(\emph{$g$, "a", val})}, where \emph{a} is an
+    attribute, followed by \Code{changeKey($g$, $Q$)}; here \emph{a} must be
+    an attribute with a \Code{Double} value -- otherwise the method has no effect
+    \\ \hline
+    \Code{$Q$.changeIntegerKey($g$, \emph{val})}
+    &
+    same as \Code{$Q$.changeKey($g$, \emph{val})} except that
+    \emph{a} must be
+    an attribute with an \Code{Integer} value
+    \\ \hline
+    \Code{$Q$.changeStringKey($g$, \emph{val})}
+    &
+    same as \Code{$Q$.changeKey($g$, \emph{val})} except that
+    \emph{a} must be
+    an attribute with a \Code{String} value
+    \\ \hline
+    \Code{$Q$.decreaseKey($g$, \emph{val})}
+    &
+    same as \Code{$Q$.changeKey($g$, \emph{val})}; provided because it's
+    standard nomenclature in many algorithms
     \\ \hline
   \end{tabular}
 
-  \bigskip
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \caption{Priority queue initialization and functions in Galant.}
+  \label{tab:priority_queues}
+\end{table}
 
-  \\ \hline
-    \textsf{sort(\emph{list})}
-    &
-    use the weights of the nodes/edges to sort the list \textsf{L};
-    sort is actually a macro that invokes Java \textsf{Collections.sort(L)};
-    this means that \textsf{L} can be any collection (list, stack, queue, set)
-    of comparable elements
-
-% [Last modified: 2017 01 13 at 13:36:54 GMT]
+% [Last modified: 2017 01 17 at 18:10:16 GMT]

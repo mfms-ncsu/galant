@@ -25,13 +25,13 @@
     &
     \shortstack[l]{
       equivalent to
-      \Code{for ( Node v : nodes() ) \{ \emph{code block} \}};\\
+      \Code{for ( Node v : getNodes() ) \{ \emph{code block} \}};\\
       the statements in \emph{code block} are executed for each node \Code{v}
     }
     \\ \hline
     \Code{for\_edges(e)  \{ \emph{code block} \}}
     &
-    analogous to \Code{for\_nodes}
+    analogous to \Code{for\_nodes} with \Code{getEdges()} in place of \Code{getNodes()}
     \\ \hline
     \Code{Integer numberOfNodes()}
     &
@@ -150,4 +150,4 @@
   \label{tab:graph_functions}
 \end{table}
 
-% [Last modified: 2017 01 16 at 17:14:33 GMT]
+% [Last modified: 2017 01 17 at 19:27:02 GMT]

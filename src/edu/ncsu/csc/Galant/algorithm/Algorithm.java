@@ -224,6 +224,8 @@ public abstract class Algorithm implements Runnable {
   /**
    * procedural (and simpler) versions of the most important queue methods
    */
+  public void add(Node node, NodeQueue Q) { Q.add(node); }
+  public void remove(Node node, NodeQueue Q) { Q.remove(node); }
   public Node front(NodeQueue Q) throws GalantException {
     if ( Q == null )
       throw new GalantException("Uninitialized queue in front() -- use 'new'");
@@ -240,6 +242,8 @@ public abstract class Algorithm implements Runnable {
     Q.enqueue(v);
   }
 
+  public void add(Edge edge, EdgeQueue Q) { Q.add(edge); }
+  public void remove(Edge edge, EdgeQueue Q) { Q.remove(edge); }
   public Edge front(EdgeQueue Q) throws GalantException {
     if ( Q == null )
       throw new GalantException("Uninitialized queue in front() -- use 'new'");
@@ -259,6 +263,8 @@ public abstract class Algorithm implements Runnable {
   /**
    * procedural versions of the most important priority queue methods
    */
+  public void add(Node node, NodePriorityQueue Q) { Q.add(node); }
+  public void remove(Node node, NodePriorityQueue Q) { Q.remove(node); }
   public Node removeBest(NodePriorityQueue Q) throws GalantException {
     if ( Q == null )
       throw new GalantException("Uninitialized queue in removeBest() -- use 'new'");
@@ -284,6 +290,8 @@ public abstract class Algorithm implements Runnable {
     Q.changeKey(v);
   }
   
+  public void add(Edge edge, EdgePriorityQueue Q) { Q.add(edge); }
+  public void remove(Edge edge, EdgePriorityQueue Q) { Q.remove(edge); }
   public Edge removeBest(EdgePriorityQueue Q) throws GalantException {
     if ( Q == null )
       throw new GalantException("Uninitialized queue in removeBest() -- use 'new'");
@@ -1354,4 +1362,4 @@ public abstract class Algorithm implements Runnable {
   public abstract void run();
 }
 
-//  [Last modified: 2017 01 16 at 13:38:30 GMT]
+//  [Last modified: 2017 01 17 at 14:45:44 GMT]

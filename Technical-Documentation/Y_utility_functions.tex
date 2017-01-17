@@ -9,7 +9,7 @@
     \\ \hline
     \Code{display(String s)}
     &
-    writes the string \Code{s} at the top of the window
+    writes the message \Code{s} as a banner at the top of the window
     \\ \hline
     \Code{String getMessage()}
     &
@@ -59,8 +59,8 @@
     &
     variations of \Code{getNode} and \Code{getEdge}; here \Code{p}
     is the prompt, \Code{s} is the set from which the node or edge must be
-    chosen and \Code{e} an error message if the node/edge does not belong to the specified set;
-    useful when wanting to specify an adjacent node or an outgoing edge
+    chosen and \Code{e} an error message if the node/edge does not belong to \Code{s};
+    useful when wanting user to specify an adjacent node or an outgoing edge
     \\ \hline
     \shortstack[l] {
       \mbox{}
@@ -83,7 +83,7 @@
       \mbox{}
     }
     &
-    similar to \Code{getString}, etc., but differs in that only user input is
+    similar to \Code{getString}, etc., but differs in that the only user input is
     a mouse click or the \Code{Enter} key and the algorithm
     steps forward immediately after the query is answered; the second
     variation specifies the text for each of the two buttons -- default is
@@ -102,7 +102,7 @@
     \\ \hline
     \Code{windowWidth()}, \Code{windowHeight()}
     &
-    current width and height of the window, in case the algorithm wants to rescale
+    current width and height of the window, in case the algorithm wants to re-scale
     the graph
     \\ \hline
   \end{tabular}
@@ -111,4 +111,4 @@
 \end{table}
 
 
-% [Last modified: 2017 01 10 at 16:18:02 GMT]
+% [Last modified: 2017 01 17 at 19:31:57 GMT]

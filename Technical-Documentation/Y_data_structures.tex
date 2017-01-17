@@ -1,147 +1,118 @@
 \begin{table}
-  \small
   \textbf{NodeList and EdgeList:} lists of nodes or edges, respectively.
   We use \emph{list} as shorthand for either \Code{NodeList} or
   \Code{EdgeList}, \emph{type} for either \Code{Node} or \Code{Edge}
   and \emph{element} for \Code{Node v} or \Code{Edge e}.
   
   \medskip
-  \begin{tabular}{| m{0.35\textwidth} | m{0.6\textwidth} |}
-    \multicolumn{2}{c}{\textbf{Initialization}}
-    \\
-    \hline
-    \Code{\emph{list} $L$ = new \emph{type}List();}
-    & creates an empty list $L$
-    \\
-    \hline
-    \multicolumn{2}{c}{\textbf{Other methods}}
-    \\
+  \begin{tabular}{| m{0.3\textwidth} | m{0.65\textwidth} |}
     \hline
     \Code{\emph{type} first(\emph{list} $L$)}
     &
     returns the first element of $L$
     \\ \hline
-    \Code{\emph{type} get(int $i$, \emph{list} $L$)}
+    \Code{\emph{type} top(\emph{list} $L$)}
     &
-    returns the $i$-th element of $L$; indexing is 0-based, so
-    \Code{get(0,$L$)} is the same as \Code{first($L$)}
+    returns the first element of $L$ (top of stack)
     \\ \hline
-    \Code{add(\emph{element} $x$, \emph{list} $L$)}
+    \Code{add(\emph{element} $g$, \emph{list} $L$)}
     &
-    adds the element $x$
-    to the end of list $L$; along with \Code{first}
-    we get the effect of a queue
+    adds the element $g$
+    to the end of list $L$
     \\ \hline
-    \Code{remove(\emph{element} $x$, \emph{list} $L$)}
+    \Code{push(\emph{element}, \emph{list} $L$)}
     &
-    removes the first occurrence of $x$ from $L$
+    adds the element $g$
+    to the front of list $L$ (pushes on stack)
+    \\ \hline
+    \Code{\emph{type} pop(\emph{list} $L$)}
+    &
+    removes and returns the first element of $L$
+    \\ \hline
+    \Code{remove(\emph{element}, \emph{list} $L$)}
+    &
+    removes the first occurrence of $g$ from $L$
+    \\ \hline
+    \Code{size(\emph{list} $L$)}
+    &
+    returns the number of elements in $L$
+    \\ \hline
+    \Code{empty(\emph{list} $L$)}
+    &
+    returns \Code{true} if $L$ is empty
     \\ \hline
   \end{tabular}  
   
   \bigskip
   \textbf{NodeQueue and EdgeQueue:} queues of nodes or edges, respectively.
-  Same conventions as for lists.
+  Same conventions as for lists, except we use \emph{queue} in place of
+  \emph{list}.
 
   \medskip
-  \begin{tabular}{| m{0.35\textwidth} | m{0.6\textwidth} |}
+  \begin{tabular}{| m{0.3\textwidth} | m{0.65\textwidth} |}
     \hline
-      \Code{void~enqueue(\emph{element})}
+      \Code{void~put(\emph{element}, \emph{queue})}
     &
-    adds the element to the rear of the queue
+    adds the element to the rear of the queue; throws an exception if the element is
+    \Code{null}
     \\ \hline
-    \Code{\emph{type} dequeue()}
-    &
-    returns and removes the element at the front of the queue;
-    returns \Code{null} if the queue is empty
-    \\ \hline
-    \Code{\emph{type} remove()}
+    \Code{\emph{type} get(\emph{queue})}
     &
     returns and removes the element at the front of the queue;
     throws an exception if the queue is empty
     \\ \hline
-    \Code{\emph{type}~element()}
+    \Code{\emph{type}~front(\emph{queue})}
     &
     returns the element at the front of the queue
     without removing it;
     throws an exception if the queue is empty
     \\ \hline
-    \Code{\emph{type} peek()}
-    &
-    returns the element at the front of the queue
-    without removing it;
-    returns \Code{null} if the queue is empty
-    \\ \hline
-    \Code{size()}
-    &
-    returns the number of elements in the queue
-    \\ \hline
-    \Code{isEmpty()}
-    &
-    returns \Code{true} if the queue is empty 
-    \\ \hline
   \end{tabular}
 
-  \bigskip
-  \textbf{NodeStack and EdgeStack:} stacks of nodes or edges, respectively.
+   \bigskip
+  \textbf{NodeSet and EdgeSet:} sets of nodes or edges, respectively; same
+  conventions as for lists, except for the use of \emph{set}.
+  The first two table entries give natural syntax for set membership.
 
   \medskip
-  \begin{tabular}{| m{0.35\textwidth} | m{0.6\textwidth} |}
+  \begin{tabular}{| m{0.3\textwidth} | m{0.65\textwidth} |}
     \hline
-      \Code{void~push(\emph{element})}
+    \Code{boolean~\emph{set}.contains($g$)}
     &
-    adds the element to the top of the stack
+    returns true if $g$ is an element of the set, where $g$ is a node or
+    edge, as appropriate; if $g$ has the wrong type, this method will simply
+    return \Code{false}
+    \\
+    \hline
+    \Code{boolean~$g$.in(\emph{set})}
+    &
+    returns true if $g$ is an element of the set, where $g$ is a node or
+    edge, as appropriate; here, if $g$ has the wrong type, the error will be
+    caught by the compiler
     \\ \hline
-    \Code{\emph{type}~pop()}
+    \Code{union($s_1$, $s_2$)}
     &
-    returns and removes the element at the top of the stack;
-    throws an exception if the stack is empty
+    returns the union of $s_1$ and $s_2$; here $s_1$, $s_2$ and the return
+    value are all of type \Code{NodeSet} or \Code{EdgeSet} 
     \\ \hline
-    \Code{\emph{type} peek()}
+    \Code{intersection($s_1$, $s_2$)}
     &
-    returns the element at the top of the stack
-    without removing it;
-    returns null if the stack is empty
+    returns the intersection of $s_1$ and $s_2$
     \\ \hline
-    \Code{size()}, \Code{isEmpty()}
+    \Code{difference($s_1$, $s_2$)}
     &
-    analogous to the corresponding queue methods
+    returns the set difference $s_1 - s_2$, elements that are in $s_1$ but
+    not in $s_2$
+    \\ \hline
+    \Code{symmetricDifference($s_1$, $s_2$)}
+    &
+    returns the set symmetric difference of $s_1$ and $s_2$, i.e., the union
+    of $s_1 - s_2$ and $s_2 - s_1$
     \\ \hline
   \end{tabular}
 
-  \bigskip
-  \textbf{NodeSet and EdgeSet:} sets of nodes or edges, respectively.
-
-  \medskip
-  \begin{tabular}{| m{0.35\textwidth} | m{0.6\textwidth} |}
-    \hline
-    \Code{boolean~add(\emph{element})}
-    &
-    adds the element to the set;
-    returns true if the element was a new addition, false otherwise
-    \\ \hline
-    \Code{boolean~remove(\emph{element})}
-    &
-    removes the element
-    returns \Code{true} if the element was present,
-    \Code{false} otherwise
-    \\ \hline
-    \Code{boolean~contains(\emph{element})}
-    &
-    returns true if the element is in the set
-    \\ \hline
-    \Code{size()}, \Code{isEmpty()}
-    &
-    analogous to the corresponding methods for other data structures
-    \\ \hline
-  \end{tabular}
-
-  \caption{Built-in data structures and their methods.
-     These methods use object-oriented syntax:
-$\langle$\emph{structure}$\rangle$.$\langle$\emph{method}$\rangle$($\langle$\emph{arguments}$\rangle$)
-    and are created using, e.g.,
-    \Code{NodeQueue~Q~=~new~NodeQueue();} the \Code{new} operator in Java.
-  }
+  \caption{Operations on Galant data structures (procedural versions).}
   \label{tab:data_structures}
 \end{table}
 
-% [Last modified: 2017 01 13 at 13:48:06 GMT]
+% [Last modified: 2017 01 16 at 23:42:47 GMT]

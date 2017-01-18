@@ -1162,6 +1162,15 @@ public abstract class Algorithm implements Runnable {
   }
 
   /**
+   * @return a string of the form (source,target) for the edge; useful for
+   * printing and display; source and target refer to node id's
+   */
+  public String string(Edge edge) throws GalantException {
+    checkGraphElement(edge);
+    return "(" + edge.getSource() + "," + edge.getTarget() + ")";
+  }
+  
+  /**
    * Displays the exception in a dialog window
    */
   public void displayException(Exception e) {
@@ -1362,4 +1371,4 @@ public abstract class Algorithm implements Runnable {
   public abstract void run();
 }
 
-//  [Last modified: 2017 01 17 at 14:45:44 GMT]
+//  [Last modified: 2017 01 18 at 14:07:33 GMT]

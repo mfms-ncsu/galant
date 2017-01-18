@@ -1,6 +1,6 @@
 /** 
- * Implementation of breadth-first search. Undirected edges are regarded as
- * being directed both ways.
+ * Implementation of breadth-first search. If the graph is undirected, the
+ * edges are regarded as being directed both ways.
  */
 
 NodeQueue queue;
@@ -16,26 +16,25 @@ algorithm {
   Node start = getStartNode();
   setWeight(start, 0);
   highlight(start);
-  queue.enqueue(start);
+  put(start, queue);
   endStep();
 
-  while ( ! queue.isEmpty() ) {
-    Node n = queue.dequeue();
-    print("current node = " + n);
-    highlight(n);
+  while ( ! empty(queue) ) {
+    Node next = get(queue);
+    highlight(next);
 
-    for_outgoing( n, e, head ) {
-      if ( ! highlighted(head) ) {
+    for_outgoing( next, e, other ) {
+      if ( ! highlighted(other) ) {
         beginStep();
         highlight(e);
-        highlight(head);
-        Double distance = weight(n) + 1;
-        setWeight(head, distance);
-        queue.enqueue(head);
+        highlight(other);
+        Double distance = weight(next) + 1;
+        setWeight(other, distance);
+        put(other, queue);
         endStep();
       }
     }
   }
 }
 
-//  [Last modified: 2017 01 15 at 21:00:56 GMT]
+//  [Last modified: 2017 01 18 at 13:20:47 GMT]

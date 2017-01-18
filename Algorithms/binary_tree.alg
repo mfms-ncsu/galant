@@ -18,7 +18,7 @@ function Node createTree( int tree_height,
     highlight(root);
     endStep();
 
-    if ( tree_height == 1 ) return root;
+    if ( tree_height == 0 ) return root;
 
     Node left = createTree( tree_height - 1,
                             root_x - local_width / 2, root_y + local_height,
@@ -39,12 +39,10 @@ function Node createTree( int tree_height,
 }
 
 /**
- * erases the graph so we start with a clean slate (does not work as expected
- * and should not be needed).
+ * erases the graph so we start with a clean slate.
  */
 function clearGraph() {
     for_nodes( v ) { 
-        print(v);
         deleteNode(v);
     }
 }
@@ -53,11 +51,12 @@ algorithm {
     int tree_height = getInteger("Tree height?");
     int width = windowWidth();
     int height = windowHeight();
-	int padding = height / (tree_height + 1);
+    // the + 2 is required to center the tree in the window
+	int padding = height / (tree_height + 2);
     beginStep();
-    //    clearGraph();
+    clearGraph();
     endStep();
 	Node root = createTree(tree_height, width / 2, padding, width / 2, padding);
 }	
 
-//  [Last modified: 2016 10 08 at 17:18:10 GMT]
+//  [Last modified: 2017 01 18 at 13:34:37 GMT]

@@ -39,7 +39,7 @@ function initialize_one_median() {
     total_weight = 0.0;
     deg = new Integer[nodeIds()];
     wt = new Double[nodeIds()];
-    for_nodes(v) {
+    for_nodes( v ) {
         deg[id(v)] = degree(v);
         if ( deg[id(v)] <= 1 ) leaves.enqueue(v);
         wt[id(v)] = weight(v);
@@ -47,39 +47,33 @@ function initialize_one_median() {
     }
 }
 
-function Node firstVisibleNeighbor(Node v) {
-    for_adjacent(v, e, w) {
-        if ( visible(e) ) return w;
-    }
-    return null;
-}
-
 /**
  * @return the one-median of the current tree, as initialized by either
  * initialize_one_median (true one_median) or init_with_dfs (subtree medians)
  */
 function Node compute_one_median() {
-    Boolean done = false;
-    Node median = null;
-    // exit the following loop if either
-    //  - only one node remains (it will also be the sole leaf), or
-    //  - a leaf has weight more than half of the total
-    while ( true ) {
-        if ( leaves.isEmpty() ) {
-            error("Graph is not a tree.");
-        }
-        // merge a leaf x with its neighbor y and let the new weight of y be
-        // the sum of the two weights
-        Node x = leaves.dequeue();
-        if ( leaves.isEmpty() || wt[id(x)] >= total_weight / 2 ) {
-            median = x; break;
-        }
-        Node y = firstVisibleNeighbor(x);
-        deg[id(y)] = deg[id(y)] - 1;
-        wt[id(y)] = wt[id(x)] + wt[id(y)];
-        if ( deg[id(y)] == 1 ) leaves.enqueue(y);
+  Boolean done = false;
+  Node median = null;
+  // exit the following loop if either
+  //  - only one node remains (it will also be the sole leaf), or
+  //  - a leaf has weight more than half of the total
+  while ( true ) {
+    if ( empty(leaves) ) {
+      error("Graph is not a tree.");
     }
-    return median;
+    // merge a leaf x with its neighbor y and let the new weight of y be
+    // the sum of the two weights
+    Node x = leaves.dequeue();
+    if ( empty(leaves) || wt[id(x)] >= total_weight / 2 ) {
+      median = x; break;
+    }
+    Node y = first(visibleNeighbors(x));
+    deg[id(y)] = deg[id(y)] - 1;
+    wt[id(y)] = wt[id(x)] + wt[id(y)];
+    if ( deg[id(y)] == 1 ) leaves.enqueue(y);
+    hide(x);
+  }
+  return median;
 }
 
 /**
@@ -152,7 +146,7 @@ function Double compute_cost(Node median) {
         setLabel(v, cost);
         total_cost = total_cost + cost;
         for_adjacent(v, e, w) {
-            if ( isVisible(e) && ! marked(w) ) {
+            if ( visible(e) && ! marked(w) ) {
                 distance[id(w)] = distance[id(v)] + weight(e);
                 mark(w);
                 pathFound.enqueue(w);
@@ -181,6 +175,7 @@ function show_two_median(Node two_median) {
 function compute_and_display_one_median() {
     initialize_one_median();
     one_median = compute_one_median();
+    showNodes();
     color(one_median, BLUE);
     label(one_median, "M");
     Double cost = compute_cost(one_median);
@@ -215,16 +210,16 @@ function compute_and_display_two_medians() {
         show(edge);
     }
     highlight(min_cut_edge);
-    label(one_median, label(one_median) + ":M");
     hide(min_cut_edge);
     clearMarks();
     compute_cost(first_two_median);
     compute_cost(second_two_median);
     clearMarks();
+    showNodes();
     show(min_cut_edge);
     show_two_median(first_two_median);
     show_two_median(second_two_median);
-    display("Minimum of cost two-median solution = " + min_total_cost);
+    display("Cost of two-median solution = " + min_total_cost);
 }
 
 function compute_three_medians() {
@@ -234,12 +229,15 @@ function compute_three_medians() {
         for_edges( f ) {
             if ( id(f) > id(e) ) {
                 hide(e); hide(f);
+                display("first subtree root = " + id(source(e)));
                 Node first_subtree_median = subtree_median(source(e));
                 display("first_subtree_median is " + id(first_subtree_median));
+                display("second subtree root = " + id(target(e)));
                 Node second_subtree_median = subtree_median(target(e));
                 display("second_subtree_median is " + id(second_subtree_median));
                 Node root = source(f);
                 if ( marked(root) ) root = target(f);
+                display("third subtree root = " + id(root));
                 Node third_subtree_median = subtree_median(root);
                 display("third_subtree_median is " + id(third_subtree_median));
                 clearMarks();
@@ -312,8 +310,9 @@ algorithm {
     cost = cost + compute_cost(second_three_median);
     cost = cost + compute_cost(third_three_median);
     clearMarks();
+    showNodes();
     show(first_cut_edge); show(second_cut_edge);
     display_three_medians(cost);
 }
 
-//  [Last modified: 2017 01 05 at 17:03:15 GMT]
+//  [Last modified: 2017 01 18 at 22:03:47 GMT]

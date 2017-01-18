@@ -456,27 +456,27 @@ public class Graph {
     /**
      * @return the set of visible nodes
      */
-    public NodeSet visibleNodes() {
-        NodeSet nodeSet = new NodeSet();
+    public NodeList visibleNodes() {
+        NodeList nodeList = new NodeList();
         for ( Node node: nodes ) {
             if ( ! node.isHidden() ) {
-                nodeSet.add(node);
+                nodeList.add(node);
             }
         }
-        return nodeSet;
+        return nodeList;
     }
 
     /**
      * @return the set of visible edges
      */
-    public EdgeSet visibleEdges() {
-        EdgeSet edgeSet = new EdgeSet();
+    public EdgeList visibleEdges() {
+        EdgeList edgeList = new EdgeList();
         for ( Edge edge: edges ) {
             if ( ! edge.isHidden() ) {
-                edgeSet.add(edge);
+                edgeList.add(edge);
             }
         }
-        return edgeSet;
+        return edgeList;
     }
 
     /**
@@ -1303,4 +1303,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2017 01 15 at 17:20:06 GMT]
+//  [Last modified: 2017 01 18 at 19:52:02 GMT]

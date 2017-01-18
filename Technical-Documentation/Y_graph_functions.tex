@@ -105,6 +105,17 @@
     returns the first node in the list of nodes, typically the one with smallest id;
     used by algorithms that require a start node
     \\ \hline
+    \shortstack[l]{
+      \Code{NodeList visibleNeighbors(Node v)}\\
+      \Code{EdgeList visbleEdges(Node v)}\\
+      \Code{EdgeList visbleInEdges(Node v)}\\
+      \Code{EdgeList visbleOutEdges(Node v)}
+    }
+    &
+    return lists of neighbors and edges like the corresponding functions
+    (without the visible modifier) defined above; here only the visible
+    nodes/edges are returned -- see Table~\ref{tab:graph_element_functions}
+    \\ \hline
     \Code{isDirected()}
     &
     returns \Code{true} if the graph is directed
@@ -150,4 +161,4 @@
   \label{tab:graph_functions}
 \end{table}
 
-% [Last modified: 2017 01 17 at 19:27:02 GMT]
+% [Last modified: 2017 01 18 at 19:43:38 GMT]

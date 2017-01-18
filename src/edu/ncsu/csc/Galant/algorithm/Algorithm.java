@@ -874,15 +874,15 @@ public abstract class Algorithm implements Runnable {
     return v.getOutgoingEdges();
   }
 
-  public NodeSet visibleNodes() {
+  public NodeList visibleNodes() {
     return graph.visibleNodes();
   }
 
-  public EdgeSet visibleEdges() {
+  public EdgeList visibleEdges() {
     return graph.visibleEdges();
   }
 
-  public NodeSet visibleNeighbors(Node v) throws GalantException {
+  public NodeList visibleNeighbors(Node v) throws GalantException {
     checkGraphElement(v);
     return v.visibleNeighbors();
   }
@@ -890,18 +890,18 @@ public abstract class Algorithm implements Runnable {
     return v.visibleNeighbors().size();
   }
 
-  public EdgeSet visibleEdges(Node v) throws GalantException {
+  public EdgeList visibleEdges(Node v) throws GalantException {
     checkGraphElement(v);
     return v.visibleEdges();
   }
-  public EdgeSet visibleInEdges(Node v) throws GalantException {
+  public EdgeList visibleInEdges(Node v) throws GalantException {
     checkGraphElement(v);
     return v.visibleIncomingEdges();
   }
   public Integer visibleIndegree(Node v) throws GalantException {
     return v.visibleIncomingEdges().size();
   }
-  public EdgeSet visibleOutEdges(Node v) throws GalantException {
+  public EdgeList visibleOutEdges(Node v) throws GalantException {
     checkGraphElement(v);
     return v.visibleOutgoingEdges();
   }
@@ -1167,7 +1167,8 @@ public abstract class Algorithm implements Runnable {
    */
   public String string(Edge edge) throws GalantException {
     checkGraphElement(edge);
-    return "(" + edge.getSource() + "," + edge.getTarget() + ")";
+    return "(" + edge.getSource().getId()
+      + "," + edge.getTarget().getId() + ")";
   }
   
   /**
@@ -1371,4 +1372,4 @@ public abstract class Algorithm implements Runnable {
   public abstract void run();
 }
 
-//  [Last modified: 2017 01 18 at 14:07:33 GMT]
+//  [Last modified: 2017 01 18 at 19:53:22 GMT]

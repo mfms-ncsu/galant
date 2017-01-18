@@ -69,6 +69,8 @@ function Edge lowestWeight(Node v) {
       }
     }
   }
+  if ( best != null )
+    unhighlight(best);          // let the algorithm highlight this later
   return best;
 }
 
@@ -174,4 +176,4 @@ algorithm {
   endStep();
 }
 
-/*  [Last modified: 2017 01 18 at 14:07:56 GMT] */
+/*  [Last modified: 2017 01 18 at 17:44:28 GMT] */

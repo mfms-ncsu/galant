@@ -376,10 +376,10 @@ public class Node extends GraphElement {
     }
 
     /**
-     * @return the visible neighbors of this node (as a NodeSet)
+     * @return the visible neighbors of this node (as a NodeList)
      */
-    public NodeSet visibleNeighbors() {
-        NodeSet neighbors = new NodeSet();
+    public NodeList visibleNeighbors() {
+        NodeList neighbors = new NodeList();
         for ( Edge e : incidentEdges ) {
 			if ( e.inScope() && ! e.isHidden() ) {
                 Node neighbor = travel(e);
@@ -394,8 +394,8 @@ public class Node extends GraphElement {
     /**
      * @return the visible incident edges of this node
      */
-    public EdgeSet visibleEdges() {
-        EdgeSet visibleEdges = new EdgeSet();
+    public EdgeList visibleEdges() {
+        EdgeList visibleEdges = new EdgeList();
         for ( Edge e : incidentEdges ) {
 			if ( e.inScope() && ! e.isHidden() ) {
                 visibleEdges.add(e);
@@ -408,8 +408,8 @@ public class Node extends GraphElement {
     /**
      * @return the visible incoming edges of this node
      */
-    public EdgeSet visibleIncomingEdges() {
-		EdgeSet visibleEdges = new EdgeSet();
+    public EdgeList visibleIncomingEdges() {
+		EdgeList visibleEdges = new EdgeList();
 		for ( Edge e : incidentEdges ) {
 			if ( e.inScope() && ! e.isDeleted() && ! e.isHidden() ) {
 				if ( this.equals( e.getTargetNode() )
@@ -424,8 +424,8 @@ public class Node extends GraphElement {
     /**
      * @return the visible outgoing edges of this node
      */
-    public EdgeSet visibleOutgoingEdges() {
-		EdgeSet visibleEdges = new EdgeSet();
+    public EdgeList visibleOutgoingEdges() {
+		EdgeList visibleEdges = new EdgeList();
 		for ( Edge e : incidentEdges ) {
 			if ( e.inScope() && ! e.isDeleted() && ! e.isHidden() ) {
 				if ( this.equals( e.getSourceNode() )
@@ -654,4 +654,4 @@ public class Node extends GraphElement {
 	}
 }
 
-//  [Last modified: 2017 01 15 at 22:51:11 GMT]
+//  [Last modified: 2017 01 18 at 19:59:08 GMT]

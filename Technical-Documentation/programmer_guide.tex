@@ -400,6 +400,15 @@ in Java.\footnote{
 }
 Thus, conversion between string labels and numbers works both ways.
 
+The \Code{display} and \Code{print} functions also take arbitrary objects as
+arguments. So \Code{display($g$)} and \Code{print($g$)}, where $g$ is a node
+or edge will print information about the attributes of $g$ (as a list in
+square brackets). Often, you only want to display/print the id of a node or
+the source and target of an edge. The appropriate incantations for
+\Code{display} are \Code{display(id($g$))} and \Code{display(string($g$))},
+respectively. The \Code{string} function is designed specifically for this
+purpose and applies only to edges.
+
 In order to make the display of weights more attractive, weights that happen
 to be integers are shown without the decimal point and at most two positions
 to the right of the decimal point are shown.
@@ -826,4 +835,4 @@ file, when specifying a node or edge after a keyboard shortcut, or when
 giving the weight of a node or edge.
 A list of the most common Galant exceptions is in Table~\ref{tab:galant_exceptions}.
 
-% [Last modified: 2017 01 17 at 20:15:49 GMT]
+% [Last modified: 2017 01 18 at 17:30:38 GMT]

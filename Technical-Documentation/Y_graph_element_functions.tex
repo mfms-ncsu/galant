@@ -16,6 +16,11 @@
     returns the source/target of edge \Code{e}, sometimes called the (arrow)
     tail/head or source/destination
     \\ \hline
+    \Code{string(Edge e)}
+    &
+    returns a string of the form \Code{"($s$,$t$)"}, where $s =$
+    \Code{source(e)} and $t =$ \Code{target(e)}
+    \\ \hline
     \Code{mark(Node v), unmark(Node v)}
     &
     shades the interior of a node or undoes that
@@ -90,7 +95,11 @@
       \Code{Boolean visible(\emph{element})}
     }
     &
-    makes nodes/edges disappear/reappear and tests whether they are visible or hidden; useful when an algorithm (logically) deletes objects, but they need to be revealed again upon completion
+    makes nodes/edges disappear/reappear and tests whether they are visible
+    or hidden; useful when an algorithm (logically) deletes objects, but they
+    need to be revealed again upon completion; if node is hidden, all its
+    incident edges are hidden as well; \Code{show($v$)}, where $v$ is a node,
+    will show the incident edges \emph{even if they were independently hidden}
     \\ \hline
      \shortstack[l]{
       \Code{String color(\emph{element})}\\
@@ -143,4 +152,4 @@
   \label{tab:graph_element_functions}
 \end{table}
 
-% [Last modified: 2017 01 17 at 19:47:29 GMT]
+% [Last modified: 2017 01 18 at 21:20:56 GMT]

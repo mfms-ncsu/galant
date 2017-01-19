@@ -521,6 +521,18 @@ The user can save the mid-execution state of the graph:
 select the \Code{Export} option on the file menu of the
 \emph{graph} window.
 
+A final display attribute is visibility. An algorithm sometimes involves
+deletion of nodes or edges, or, as is the case with our implementation of
+Boruvka's algorithm, some edges are no longer important.
+Graph elements can be hidden and made to reappear using the \Code{hide} and
+\Code{show} functions.
+For edges, the semantics are straightforward: hide an edge and it does not
+appear on the display, show it and it reappears.
+Nodes are more complicated: \Code{hide($v$)} effectively hides the incident
+edges of $v$,
+but \Code{show($v$)} restores only the visibility of those edges
+that were not separately hidden.
+
 \input{Y_graph_element_functions}
 
 A summary of functions relevant to node and edge attributes (their procedural versions)
@@ -541,6 +553,32 @@ the algorithm progresses.
 These functionalities can be accomplished by
 \Code{hideNodeWeights} or \Code{hideAllNodeWeights}, respectively.
 A summary of these capabilities is given in Table~\ref{tab:graph_attribute_functions}.
+
+The animator should be careful with functions that show nodes or edges
+globally -- see Table~\ref{tab:graph_element_functions} for the individual
+element versions. The idea behind \Code{showEdges} and \Code{showNodes} is to
+undo hiding of all relevant graph elements.  The function \Code{showEdges}
+restores visibility of edges only, not necessarily their endpoints, and is
+designed for use when edges only have been hidden.  On the other hand,
+\Code{showNodes} will not necessarily undo the effects of hiding each node.
+Recall that when you do \Code{hide($v$)}, where $v$ is a node, all of $v$'s
+incident edges are hidden as well.  The singular \Code{show($v$)}, however,
+does not undo the hiding all of $v$'s incident edges, only of those
+\emph{whose visibility was restored in the interim}.
+Therefore \Code{showNodes} makes visible only those edges that were made
+visible individually since the hiding of their endpoints.
+In practice there are three useful scenarios.
+\begin{itemize}
+\item An algorithm hides some edges individually and uses \Code{showEdges} to
+  make all of them visible in one step later.
+\item An algorithm hides some nodes individually (along with their incident
+  edges); it later makes all nodes visible and selectively makes some of
+  their incident edges visible; nodes that were not hidden are unaffected;
+  the visibility of any edges is not affected either.
+\item An algorithm hides individual nodes and edges and later restores
+  visibility to the whole graph; the function to use in this case is
+  \Code{showGraph}.
+\end{itemize}
 
 \subsection{Definition of Functions/Methods}\label{sec:functions}
 
@@ -835,4 +873,4 @@ file, when specifying a node or edge after a keyboard shortcut, or when
 giving the weight of a node or edge.
 A list of the most common Galant exceptions is in Table~\ref{tab:galant_exceptions}.
 
-% [Last modified: 2017 01 18 at 17:30:38 GMT]
+% [Last modified: 2017 01 19 at 15:05:40 GMT]

@@ -75,10 +75,11 @@
     gets rid of all node/edge labels/weights; this not only makes them invisible,
     but also erases whatever values they have
     \\ \hline
-    \Code{showNodes(), showEdges()}
+    \Code{showNodes(), showEdges(), showGraph()}
     &
     undo any hiding of nodes/edges that has taken place during the algorithm;
-    \Code{showNodes()} also undoes hiding of the edges
+    \Code{showNodes()} only shows edges currently visible; \Code{showGraph()}
+    restores visibility of both nodes and edges
     \\ \hline
     \shortstack[l]{
       \Code{NodeSet visibleNodes()} \\
@@ -150,4 +151,4 @@
   \label{tab:graph_attribute_functions}
 \end{table}
 
-% [Last modified: 2017 01 18 at 21:17:42 GMT]
+% [Last modified: 2017 01 19 at 14:41:49 GMT]

@@ -14,7 +14,6 @@ public class Macros {
      * Defines macros and add it to an array list: MACROS<br>
      * Current implementation includes:<br>
      * SimpleReplacementMacro "algorithm" (for syntax highlighting only)<br>
-     * SimpleReplacementMacro "bool" <br>
      * ParameterizedMacro "sort" <br>
      * ParameterizedMacro "for_outgoing"<br>
      * ParameterizedMacro "for_incoming"<br>
@@ -44,14 +43,6 @@ public class Macros {
         //             return "sort";
         //         }
         //     });
-
-        Macro.MACROS.add(new SimpleReplacementMacro("bool", "boolean"){
-                @Override
-                public String getName() {
-                    return "bool";
-                }
-            });
-
 
         /**
          * Either sort(Collection L) or sort(Collection L, Comparator C)
@@ -353,4 +344,4 @@ public class Macros {
     }
 }
 
-//  [Last modified: 2017 01 12 at 17:17:26 GMT]
+//  [Last modified: 2017 01 19 at 17:11:15 GMT]

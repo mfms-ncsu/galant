@@ -457,7 +457,8 @@ public abstract class Algorithm implements Runnable {
 
   /**
    * It's sometimes useful to reveal all nodes and/or edges that have been
-   * hidden
+   * hidden; when a node is shown, all incident edges are shown as well;
+   * therefore the equivalent synonym showGraph() is provided
    */
   public void showNodes() throws Terminate {
     beginMultiStep();
@@ -466,6 +467,12 @@ public abstract class Algorithm implements Runnable {
   }
   public void showEdges() throws Terminate {
     beginMultiStep();
+    graph.showEdges();
+    endMultiStep();
+  }
+  public void showGraph() throws Terminate {
+    beginMultiStep();
+    graph.showNodes();
     graph.showEdges();
     endMultiStep();
   }
@@ -1372,4 +1379,4 @@ public abstract class Algorithm implements Runnable {
   public abstract void run();
 }
 
-//  [Last modified: 2017 01 18 at 19:53:22 GMT]
+//  [Last modified: 2017 01 19 at 14:22:24 GMT]

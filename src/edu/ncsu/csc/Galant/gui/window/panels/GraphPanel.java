@@ -309,7 +309,9 @@ public class GraphPanel extends JPanel{
 			
                 // Draw edges first to put them behind nodes
                 for (Edge e : edges) {
-                    if ( e.inScope(state) && ! e.isHidden(state) )
+                    if ( e.inScope(state) && ! e.isHidden(state)
+                         && ! e.getSource().isHidden(state)
+                         && ! e.getTarget().isHidden(state) )
                         drawEdge(graph, e, g2d);
                 }
 			
@@ -1013,4 +1015,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2017 01 16 at 13:10:01 GMT]
+//  [Last modified: 2017 01 19 at 15:10:12 GMT]

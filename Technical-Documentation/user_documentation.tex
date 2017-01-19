@@ -1,5 +1,7 @@
 
-What follows are instructions for interacting with the Galant GUI interface.
+What follows are instructions for interacting with the Galant graphical user
+interface, primarily for creating, editing, saving and loading graphs and
+animations and for executing animations.
 
 \subsection{Overview}
 
@@ -17,9 +19,11 @@ the text window shows an algorithm or the GraphML representation of the graph)
 \end{enumerate}
 
 It is usually more convenient to edit algorithms
-offline using a program editor.
+offline using a program editor such as Emacs or Notepad++, setting
+preferences so that files with the .alg extension are treated as if they were
+Java source files.
 The primary use of the text editor is to correct minor errors and
-to see the syntax highlighting related to macros and Galant API functions.
+to see the syntax highlighting related to Galant API functions and macros.
 The graph window is the primary mechanism for editing graphs.
 One exception is when precise adjustments node positions are desired.
 Weights and labels are sometimes also easier to edit in the text window.
@@ -34,16 +38,14 @@ Sec.~\ref{sec:animating_algorithms}.
 
 \subsection{Workspace}
 
-Opened graph and algorithm files are displayed in the text window,
-which has tabs that allow the user to switch among different algorithms/graphs.
-New algorithms are created using the icon that looks like
-a page of text at the top left of the
-window; new graphs are created
-using the graph/tree icon to the left of that.
-More commonly, algorithm and graph files are loaded via the \Code{File->Open}
-browser dialog. The \Code{File} drop-down menu also allows saving of files
-and editing of preferences. Algorithm files have the extension \Code{.alg}
-and graph files the extension \Code{.graphml}.
+Opened graph and algorithm files are displayed in the text window, which has
+tabs that allow the user to switch among different algorithms/graphs.  New
+algorithms are created using the icon that looks like a page of text at the
+top left of the window; new graphs are created using the graph/tree icon to
+the left of that.  More commonly, algorithm and graph files are loaded via
+the \Code{File$\rightarrow$Open} browser dialog. The \Code{File} drop-down
+menu also allows saving of files and editing of preferences. Algorithm files
+have the extension \Code{.alg} and graph files the extension \Code{.graphml}.
 
 Fig.~\ref{fig:user_interface} shows both the graph window (top) and the text
 window (bottom). Annotations on the graph window describe the components of
@@ -58,7 +60,7 @@ These editors are linked:
 any change in the visual representation is immediately reflected in the text
 representation (and will overwrite what was originally there);
 a change in the GraphML representation will take effect in the visual representation
-when the file is saved.
+only when the file is saved.
 
 An improperly formatted GraphML file loaded from an external source will
 result in an error.
@@ -76,14 +78,18 @@ has a toolbar with four sections:
 this includes the \emph{select}, \emph{create node}, \emph{create edge}, and \emph{delete} buttons.
 Only one button is active at any time; it determines the effect
 of a user's interaction (mouse clicking, dragging, etc.) with the window.
-if there are conflicts in selection of objects, nodes with higher id numbers have precedence (are above those with lower id numbers) and nodes
-have precedence over edges (are above edges).
+If there are conflicts in selection of objects, nodes with higher id numbers have precedence (are above those with lower id numbers) and nodes
+have precedence over edges (are above edges -- so that the lines
+corresponding to edges are hidden below the filled circles corresponding to nodes).
 \begin{itemize}
-\item \emph{Select.} A mouse click selects the graph component with highest precedence.
-If the component is a node, it is shaded light blue; if it's an edge, it
-becomes dashed.
-The in-line editor at the bottom of the graph window allows editing of the
-component's label, weight, and color.
+\item \emph{Select.} A mouse click selects the graph component with highest
+  precedence.  If the component is a node, it is shaded light blue; if it's
+  an edge, it becomes dashed.  The in-line editor at the bottom of the graph
+  window allows editing of the component's label, weight, and color.  This is
+  the default mode.  The square should be outlined in gray unless the user
+  wants to alter the graph in some way. If any other mode is active, e.g.,
+  delete, the consequences can be unpleasant (there is currently no "undo"
+  mechanism). A future release will have "modeless" editing.
 \item \emph{Create node.}
 A node is created at the location of a mouse click if there is not already a node there.
 If another node is present it is simply selected.
@@ -122,7 +128,7 @@ Labels and weights are also all displayed at the beginning of execution of
 an animation.
 The animation program can choose to hide labels and/or weights with simple
 directives.
-Hiding is usually unnecessary -- the graphs that are subjects of the animations
+Hiding is often unnecessary -- the graphs that are subjects of the animations
 typically have only the desired attributes set.
 
 \item
@@ -137,25 +143,35 @@ Galant, when reading the graph initially, assigned random positions to the nodes
 
 \end{enumerate}
 
+\begin{table}[t]
+  \centering
+  \begin{tabular}{| l | p{0.8\textwidth} |}
+    \hline
+    \textsf{Ctrl-n} & create a new node in a random position \\ \hline
+    \textsf{Ctrl-e} & create a new edge; user is prompted for id's of the nodes to
+    be connected \\ \hline
+    \textsf{Ctrl-i} & do a smart repositioning (force-directed)
+    of nodes of the graph, useful when positions were chosen randomly
+    \\ \hline
+    \textsf{Del-n} & (hold delete key when typing \Code{n})
+    delete a node; user is prompted for id \\ \hline
+    \textsf{Del-e} & delete an edge; user is prompted for id's of the endpoints \\ \hline
+    \textsf{Ctrl-$\ell$} & toggle display of node labels \\ \hline
+    \textsf{Ctrl-L} & toggle display of edge labels \\ \hline
+    \textsf{Ctrl-w} & toggle display of node weights \\ \hline
+    \textsf{Ctrl-W} & toggle display of edge weights \\ \hline
+    \Code{Ctrl-d} & toggle graph directedness
+    \\ \hline
+  \end{tabular}
+
+  \caption{Keyboard shortcuts for editing operations.}
+  \label{tab:keyboard_shortcuts}
+\end{table}
+
 \input{Y-force_directed}
 
-Keyboard shortcuts for graph editing operations are as follows:
-
-\begin{tabular}{l @{ -- } p{0.9\textwidth}}
-\textsf{Ctrl-n} & create a new node in a random position \\
-\textsf{Ctrl-e} & create a new edge; user is prompted for id's of the nodes to
-be connected \\
-\textsf{Ctrl-i} & do a smart repositioning (force-directed)
-of nodes of the graph, useful when positions were chosen randomly
-\\
-\textsf{Del-n} & (hold delete key when typing \Code{n})
-delete a node; user is prompted for id \\
-\textsf{Del-e} & delete an edge; user is prompted for id's of the endpoints \\
-\textsf{Ctrl-$\ell$} & toggle display of node labels \\
-\textsf{Ctrl-L} & toggle display of edge labels \\
-\textsf{Ctrl-w} & toggle display of node weights \\
-\textsf{Ctrl-W} & toggle display of edge weights \\
-\end{tabular}
+Table~\ref{tab:keyboard_shortcuts} lists keyboard shortcuts for various
+editing operations.
 
 \subsection{Algorithm editing}
 \label{sec:algorithm_editing}
@@ -218,7 +234,7 @@ These are re-enabled when the user exits the animation by pressing the red \text
 \subsection{Preferences}
 \label{sec:preferences}
 
-Galant preferences can be accessed via the \Code{File->Preferences}
+Galant preferences can be accessed via the \Code{File$\rightarrow$Preferences}
 menu item or by using the keyboard shortcut \textsf{Ctrl-P}
 (\textsf{Cmd-P} for Mac).
 Preferences that can be edited are:
@@ -238,7 +254,8 @@ Node radius (\Code{Graph~Display});
 when the radius is below a threshold (9 pixels), node id's are not displayed;
 this is useful when running animations on large graphs.
 \item
-Edge width (\Code{Graph~Display}).
+  Edge width and node boundary width, both normal and highlighted/colored
+  (\Code{Graph~Display}).
 \end{itemize}
 
 \input{Y-preference_panels}
@@ -246,4 +263,4 @@ Edge width (\Code{Graph~Display}).
 Fig.~\ref{fig:preference_panels} shows the four preference panels of most
 interest to the user.
 
-% [Last modified: 2017 01 08 at 15:43:30 GMT]
+% [Last modified: 2017 01 19 at 21:41:40 GMT]

@@ -18,10 +18,8 @@ function double euclidian(Node v, Node w) {
 
 function init_edge_costs() {
     for_edges(edge) {
-        Node source = edge.getSourceNode();
-        Node destination = edge.getDestNode();
-        double distance = euclidian( source, destination );
-        edge.setWeight( distance );
+        double distance = euclidian(source(edge), target(edge));
+        setWeight(edge, distance);
     }
 }
 
@@ -67,4 +65,4 @@ algorithm {
     } // stop when priority queue is empty
 }
 
-//  [Last modified: 2016 11 04 at 17:07:39 GMT]
+//  [Last modified: 2017 01 19 at 22:01:07 GMT]

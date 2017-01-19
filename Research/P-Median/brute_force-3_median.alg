@@ -30,7 +30,8 @@ Edge second_cut_edge;
  * tree.
  */
 function initialize_one_median() {
-    for_edges ( e ) {
+  // in case no edge weight have been set - default weight is 1
+  for_edges ( e ) {
         if ( hasNoWeight(e) || weight(e) == 0 ) {
             setWeight(e, 1);
         }
@@ -49,7 +50,9 @@ function initialize_one_median() {
 
 /**
  * @return the one-median of the current tree, as initialized by either
- * initialize_one_median (true one_median) or init_with_dfs (subtree medians)
+ * initialize_one_median (true one_median) or init_with_dfs (subtree
+ * medians); operates an the subtree accessible without traversing hidden
+ * edges
  */
 function Node compute_one_median() {
   Boolean done = false;
@@ -73,13 +76,15 @@ function Node compute_one_median() {
     if ( deg[id(y)] == 1 ) leaves.enqueue(y);
     hide(x);
   }
+  // undo hiding of nodes, which was done only for this algorithm
+  showNodes();
   return median;
 }
 
 /**
- * visits nodes reachable from v without traversing cut edges and sets the
- * appropriate array values, queueing up leaves in the process, as with the
- * initialization for the one_median algorithm
+ * visits nodes reachable from v without traversing cut (hidden) edges and
+ * sets the appropriate array values, queueing up leaves in the process, as
+ * with the initialization for the one_median algorithm
  */
 function dfs(Node v) {
     display("dfs(" + id(v) + ")");
@@ -117,8 +122,8 @@ function init_with_dfs(Node root) {
 }
 
 /**
- * @return the median of the subtree rooted at root assuming that the edge is
- * missing
+ * @return the median of the subtree visible from the root, i.e., no hidden
+ * edges are traversed
  */
 function Node subtree_median(Node root) {
     init_with_dfs(root);
@@ -262,6 +267,32 @@ function compute_three_medians() {
     }
 }
 
+function boolean is_two_median(Node v) {
+  return v == first_two_median || v == second_two_median;
+}
+
+function boolean is_three_median(Node v) {
+  return v == first_three_median
+    || v == second_three_median
+    || v == third_three_median;
+}
+
+/**
+ * Tries to make different variations on status of a node more obvious
+ */
+function median_coloring(Node v) {
+  if ( v == one_median ) color(v, BLUE);
+  if ( v == one_median && is_two_median(v) ) color(v, VIOLET);
+  if ( v == one_median && is_three_median(v) ) color(v, TEAL);
+  if ( v == one_median && is_two_median(v) && is_three_median(v) )
+    color(v, MAGENTA);
+  if ( v != one_median && is_two_median(v) ) color(v, RED);
+  if ( v != one_median && ! is_two_median(v) && is_three_median(v) )
+    color(v, GREEN);
+  if ( v != one_median && is_two_median(v) && is_three_median(v) )
+    color(v, ORANGE);
+}
+
 /**
  * uses color and node labels to show the three medians and diplays them and
  * their costs on the message banner
@@ -279,18 +310,16 @@ function display_three_medians(Double cost) {
     for_nodes( v ) {
         if ( v == one_median ) {
           label(v, label(v) + ":M");
-            color(v, BLUE);
         }
         if ( v == first_two_median || v == second_two_median ) {
             label(v, label(v) + ":m");
-            color(v, RED);
         }
         if ( v == first_three_median
              || v == second_three_median
              || v == third_three_median ) {
             label(v, label(v) + ":u");
-            color(v, GREEN);
         }
+        median_coloring(v);
     }
 }
 
@@ -315,4 +344,4 @@ algorithm {
     display_three_medians(cost);
 }
 
-//  [Last modified: 2017 01 18 at 22:03:47 GMT]
+//  [Last modified: 2017 01 19 at 17:12:30 GMT]

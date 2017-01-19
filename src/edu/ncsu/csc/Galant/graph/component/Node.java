@@ -447,23 +447,24 @@ public class Node extends GraphElement {
     /**
      * when hiding a node, you also have to hide its incident edges
      */
-    public void hide() throws Terminate {
-        GraphDispatch dispatch = GraphDispatch.getInstance();
-        super.hide();
-        for ( Edge edge: getEdges() ) {
-            edge.hide();
-        }
-    }
+    // public void hide() throws Terminate {
+    //     GraphDispatch dispatch = GraphDispatch.getInstance();
+    //     super.hide();
+    //     for ( Edge edge: getEdges() ) {
+    //         edge.hide();
+    //     }
+    // }
 
     /**
-     * when showing (unhiding) a node, you also have to show its incident edges
+     * when showing (unhiding) a node, you also have to show its incident
+     * edges, being careful not to show the hidden ones
      */
-    public void show() throws Terminate {
-        super.show();
-        for ( Edge edge: getEdges() ) {
-            edge.show();
-        }
-    }
+    // public void show() throws Terminate {
+    //     super.show();
+    //     for ( Edge edge: getEdges() ) {
+    //       if ( ! edge.isHiddent() ) edge.show();
+    //     }
+    // }
 
 	/**
 	 * Gets a list of Edges incident to this node whose visited flag
@@ -654,4 +655,4 @@ public class Node extends GraphElement {
 	}
 }
 
-//  [Last modified: 2017 01 18 at 19:59:08 GMT]
+//  [Last modified: 2017 01 19 at 15:08:14 GMT]

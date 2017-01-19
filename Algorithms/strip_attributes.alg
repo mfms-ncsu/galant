@@ -13,7 +13,7 @@ algorithm {
         if ( label(node) != null
              && label(node).equals("") ) clearLabel(node);
         if ( weight(node) != null && weight(node) != 0 ) no_weights = false;
-        if ( color(node).equals("#000000") ) {
+        if ( color(node) != null && color(node).equals("#000000") ) {
             uncolor(node);
         }
         if ( ! graph.isLayered() ) {
@@ -34,7 +34,7 @@ algorithm {
         if ( label(edge) != null
              && label(edge).equals("") ) clearLabel(edge);
         if ( weight(edge) != null && weight(edge) != 0 ) no_weights = false;
-        if ( color(edge).equals("#000000") ) {
+        if ( color(edge) != null && color(edge).equals("#000000") ) {
             uncolor(edge);
         }
     }
@@ -45,4 +45,4 @@ algorithm {
     display("done cleaning edges");
 }
 
-//  [Last modified: 2016 12 16 at 14:26:52 GMT]
+//  [Last modified: 2017 01 19 at 22:10:32 GMT]

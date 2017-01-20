@@ -1,3 +1,5 @@
+The following are known bugs/problems with Galant. Some of them, marked
+\textbf{*} have only been observed on a Mac (on my Mac specifically).
 
 \subsubsection*{Input/output}
 
@@ -18,16 +20,15 @@ Text representations of graphs can either be edited or generated externally.}}
   may be impossible if there are other intervening graphs and algorithms
   and the window is not wide enough.
 
-\item A text panel for a graph is often marked as having been changed when
-  this is not really the case. This will happen if an algorithm runs on the
-  graph and sometimes immediately when the graph is read from a file.
+\item A text panel for a graph is marked as having been changed when
+  this is not really the case.
 
-\item If you attempt to do anything in the text window (File menu or tabs)
-  while an algorithm is running, Galant hangs;
+\item \textbf{*} Occasionally Galant simply hangs;
   it appears that you can exit (quit) from
-  the file menu of the graph window, however.
+  the file menu of the graph window or from the the \Code{Galant} menu on the
+  task bar.
   Oddly, when Galant hangs, you can bring it back to life by executing a
-  command in a separate terminal window (at least this works on a Mac).
+  command in a separate terminal window.
 
 \item
   Some preferences, such as syntax highlight colors, require the user to exit
@@ -90,6 +91,11 @@ Text representations of graphs can either be edited or generated externally.}}
 
 \begin{itemize}
 
+\item \textbf{*}
+  If you try to manipulate anything in the text window (e.g., click on
+  \Code{File}) when an algorithm is running, Galant hangs. You must quit
+  Galant completely without saving anything.
+  
 \item
   When there are compilation errors the user cannot scroll the text window
   (or make modifications in it) while the popup window showing the errors is
@@ -144,5 +150,4 @@ The first three lines are treated as one.
 
 \end{itemize}
 
-
-% [Last modified: 2017 01 19 at 19:27:58 GMT]
+% [Last modified: 2017 01 20 at 22:09:19 GMT]

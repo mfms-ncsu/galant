@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns 
+http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+ <graph  edgedefault="undirected">
+  <node id="0" x="299" y="185"  weight="0.0" />
+  <node id="1" x="484" y="264"  weight="0.0" />
+  <node id="2" x="478" y="166"  weight="0.0" />
+  <node id="3" x="412" y="183"  weight="0.0" />
+  <node id="4" x="648" y="180"  weight="1.0" />
+  <node id="5" x="636" y="207"  weight="1.0" />
+  <node id="6" x="592" y="317"  weight="1.0" />
+  <node id="7" x="556" y="357"  weight="1.0" />
+  <node id="8" x="708" y="315"  weight="2.0" />
+  <node id="9" x="734" y="371"  weight="2.0" />
+  <node id="10" x="762" y="242"  weight="2.0" />
+  <node id="11" x="722" y="264"  weight="2.0" />
+ </graph></graphml>

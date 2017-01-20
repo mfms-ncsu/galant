@@ -146,6 +146,7 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
 			"getPosition", "setPosition", "getX", "getY", "setX", "setY",
             "getInteger", "getDouble", "getBoolean", "getReal",
             "getNodeSet", "getEdgeSet",
+            "neighborSet", "edgeSet", "incomingSet", "outgoingSet",
             "hide", "show", "visible", "hidden",
             "hideLabel", "showLabel",
             "hideWeight", "showWeight",
@@ -314,4 +315,4 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
     } // applyStyleToCommentsAndStrings
 }
 
-//  [Last modified: 2017 01 15 at 17:29:57 GMT]
+//  [Last modified: 2017 01 20 at 12:39:14 GMT]

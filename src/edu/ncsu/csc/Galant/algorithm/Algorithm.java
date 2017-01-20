@@ -881,6 +881,26 @@ public abstract class Algorithm implements Runnable {
     return v.getOutgoingEdges();
   }
 
+  /**
+   * The following can be used if sets of neighbors, etc., are desired
+   */
+  public NodeSet neighborSet(Node v) throws GalantException {
+    checkGraphElement(v);
+    return new NodeSet(v.getAdjacentNodes());
+  }
+  public EdgeSet edgeSet(Node v) throws GalantException {
+    checkGraphElement(v);
+    return new EdgeSet(v.getIncidentEdges());
+  }
+  public EdgeSet incomingSet(Node v) throws GalantException {
+    checkGraphElement(v);
+    return new EdgeSet(v.getIncomingEdges());
+  }
+  public EdgeSet outgoingSet(Node v) throws GalantException {
+    checkGraphElement(v);
+    return new EdgeSet(v.getOutgoingEdges());
+  }
+
   public NodeList visibleNodes() {
     return graph.visibleNodes();
   }
@@ -1386,4 +1406,4 @@ public abstract class Algorithm implements Runnable {
   public abstract void run();
 }
 
-//  [Last modified: 2017 01 20 at 01:35:53 GMT]
+//  [Last modified: 2017 01 20 at 12:37:23 GMT]

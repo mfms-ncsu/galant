@@ -1,6 +1,7 @@
 \begin{table}
-  \small
   \centering
+  \begin{minipage}{\textwidth}
+  \small
   \begin{tabular}{| m{0.35\textwidth} | m{0.6\textwidth} |}
     \hline
     \shortstack[l]{
@@ -75,6 +76,13 @@
     incident, incoming or outgoing edges, respectively;
     outgoing edges are the same as incident edges if the graph is undirected 
     \\ \hline
+    \Code{NodeList neighbors(Node v)}\footnote{The functions \Code{edges},
+      \Code{inEdges}, \Code{outEdges}, and \Code{neighbors} have equivalents
+      that return sets: \Code{edgeSet}, \Code{incomingSet},
+      \Code{outgoingSet} and \Code{neighborSet}, respectively.}
+    &
+    returns a list of nodes adjacent to \Code{v}
+    \\ \hline
     \shortstack[l]{
       \Code{Node otherEnd(Edge e, Node v)}\\
       \Code{Node otherEnd(Node v, Edge e)}
@@ -83,10 +91,6 @@
     returns the node opposite \Code{v} on edge \Code{e};
     if \Code{v} is the source \Code{otherEnd} returns the target and
     vice-versa
-    \\ \hline
-    \Code{NodeList neighbors(Node v)}
-    &
-    returns a list of nodes adjacent to \Code{v}
     \\ \hline
     \shortstack[l]{
       \Code{for\_adjacent(v, e, w) \{ \emph{code block} \}} \\
@@ -157,8 +161,10 @@
     removes edge \Code{e} from the graph
     \\ \hline
   \end{tabular}
+  \end{minipage}
+
   \caption{Functions and macros that apply to the structure of a graph.}
   \label{tab:graph_functions}
 \end{table}
 
-% [Last modified: 2017 01 18 at 19:43:38 GMT]
+% [Last modified: 2017 01 20 at 12:47:23 GMT]

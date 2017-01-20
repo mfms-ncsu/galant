@@ -46,22 +46,22 @@ function visit(Node v, Node parent) {
 }
 
 algorithm {
-    discovery = new int[numberOfNodes()];
-    finish = new int[numberOfNodes()];
-    time = 0;
-    showNodeLabels();
-    showEdgeLabels();
+  discovery = new int[nodeIds()];
+  finish = new int[nodeIds()];
+  time = 0;
+  showNodeLabels();
+  showEdgeLabels();
 
-    beginStep();
-    clearNodeLabels();
-    clearEdgeLabels();
-    endStep();
+  beginStep();
+  clearNodeLabels();
+  clearEdgeLabels();
+  endStep();
 
-    for_nodes( u ) {
-        if ( ! marked(u) ) {
-            visit( u, null );
-        }
+  for_nodes( u ) {
+    if ( ! marked(u) ) {
+      visit( u, null );
     }
+  }
 }
 
-//  [Last modified: 2016 11 04 at 16:58:58 GMT]
+//  [Last modified: 2017 01 19 at 22:24:00 GMT]

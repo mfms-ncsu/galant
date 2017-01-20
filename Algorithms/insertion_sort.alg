@@ -30,65 +30,67 @@ Node [] nodes;                  // actual nodes
  * Lines up the nodes in a single horizontal row
  */
 function lineUpNodes() {
-    // note: we can allocate the arrays to have only as many entries as the
-    // number of nodes; their values are filled contiguously
-    numNodes = numberOfNodes();
-    A = new double[numNodes];
-    xCoord = new int[numNodes];
-    nodes = new Node[numNodes];
+  // note: we can allocate the arrays to have only as many entries as the
+  // number of nodes; their values are filled contiguously
+  numNodes = numberOfNodes();
+  A = new double[numNodes];
+  xCoord = new int[numNodes];
+  nodes = new Node[numNodes];
 
-    int xPosition = HORIZONTAL_GAP;
-    int yPosition = 2 * VERTICAL_GAP;
-    int i = 0;
-    for_nodes ( n ) { 
-        nodes[i] = n;
-        xCoord[i] = xPosition;
-        A[i] = weight(n);
-        setPosition(n, xPosition, yPosition);
-        xPosition += HORIZONTAL_GAP;
-        i++;
-    }
+  int xPosition = HORIZONTAL_GAP;
+  int yPosition = 2 * VERTICAL_GAP;
+  int i = 0;
+  for_nodes ( n ) { 
+    nodes[i] = n;
+    xCoord[i] = xPosition;
+    A[i] = weight(n);
+    setPosition(n, xPosition, yPosition);
+    xPosition += HORIZONTAL_GAP;
+    i++;
+  }
 }
 
 algorithm {
-    movesNodes();
+  movesNodes();
 
+  beginStep();
+  lineUpNodes();
+  endStep();
+
+  beginStep();
+  Node toInsert = addNode(xCoord[1], VERTICAL_GAP);
+  highlight(toInsert);
+  mark(nodes[0]);
+  endStep();
+
+  for ( int i = 1; i < numNodes; i++ ) {
     beginStep();
-    lineUpNodes();
+    Double x = A[i]; setWeight(toInsert, A[i]);
+    setX(toInsert, xCoord[i]);
     endStep();
-
-    beginStep();
-    Node toInsert = addNode(xCoord[1], VERTICAL_GAP);
-    highlight(toInsert);
-    mark(nodes[0]);
-    endStep();
-
-    for ( int i = 1; i < numNodes; i++ ) {
-        beginStep();
-        Double x = A[i]; setWeight(toInsert, A[i]);
-        setX(toInsert, xCoord[i]);
-        endStep();
-        Integer j = i - 1;
-        while ( j >= 0 ) {  
-            beginStep();
-            setX(toInsert, xCoord[j]);
-            highlight(nodes[j]);
-            endStep();
-            if ( A[j] <= x ) break;
-            beginStep();
-            A[j+1] = A[j]; setWeight(nodes[j+1], A[j]);
-            unhighlight(nodes[j]);
-            unmark(nodes[j]);
-            mark(nodes[j+1]);
-            endStep();
-            j = j - 1;
-        }
-        beginStep();
-        A[j+1] = x; setWeight(nodes[j+1], x);
-        mark(nodes[j+1]);
-        endStep();
+    Integer j = i - 1;
+    while ( j >= 0 ) {  
+      // show the comparison; normally the loop condition would include
+      // A[j] > x
+      beginStep();
+      setX(toInsert, xCoord[j]);
+      highlight(nodes[j]);
+      endStep();
+      unhighlight(nodes[j]);
+      if ( A[j] <= x ) break;
+      beginStep();
+      A[j+1] = A[j]; setWeight(nodes[j+1], A[j]);
+      unmark(nodes[j]);
+      mark(nodes[j+1]);
+      endStep();
+      j = j - 1;
     }
-    deleteNode(toInsert);
+    beginStep();
+    A[j+1] = x; setWeight(nodes[j+1], x);
+    mark(nodes[j+1]);
+    endStep();
+  }
+  deleteNode(toInsert);
 }
 
-//  [Last modified: 2016 11 04 at 17:08:00 GMT]
+//  [Last modified: 2017 01 20 at 00:09:23 GMT]

@@ -44,13 +44,25 @@ function lineUpNodes() {
 }
 
 /**
+ * @return a string of the form "[ w_1 w_2 ... w_n ]", where w_i is the
+ * weight of the i-th element of list
+ */
+function String listToString(NodeList list) {
+  String s = "[";
+  for ( Node v : list ) {
+    s += " " + integer(weight(v));
+  }
+  return s + " ]";
+}
+
+/**
  * Recursive quick sort function for a list of nodes
  * @param nodes List of nodes to be sorted
  * @param color_index Curren "level" of color
  *        this maps to the id of the colors array
  * @return the sorted list by weight
  */
-function List<Node> Quicksort(List<Node> nodes, int color_index) {
+function NodeList Quicksort(NodeList nodes, int color_index) {
    if(color_index >= colors.length) {
       color_index = 0;
    }
@@ -63,7 +75,9 @@ function List<Node> Quicksort(List<Node> nodes, int color_index) {
    //For now get middle
 
    final Node pivot = nodes.get(nodes.size()/2);
-
+   display("sorting " + listToString(nodes) + ", pivot = "
+           + integer(weight(pivot)));
+   
    //Set pivot color
    beginStep();
    highlight(pivot);
@@ -71,14 +85,14 @@ function List<Node> Quicksort(List<Node> nodes, int color_index) {
    endStep();
 
    //Partition defitions
-   List<Node> sortedNodes = new ArrayList<Node>();
-   List<Node> lowerNodes = new ArrayList<Node>();
-   List<Node> upperNodes = new ArrayList<Node>();
+   NodeList sortedNodes = new NodeList();
+   NodeList lowerNodes = new NodeList();
+   NodeList upperNodes = new NodeList();
 
    //Now handle new positions of nodes!
    int centerX = getX(pivot);
    int centerY = getY(pivot);
-   int newY = centerY + VERTICAL_GAP;
+   int newY = centerY + 2 * VERTICAL_GAP;
 
    //Compares
    int newXU = 1;
@@ -98,7 +112,7 @@ function List<Node> Quicksort(List<Node> nodes, int color_index) {
          beginStep();
          highlight(node);
          setX(pivot, getX(node));
-         setY(pivot, getY(node) - VERTICAL_GAP);
+         setY(pivot, newY - VERTICAL_GAP);
          endStep();
 
          //Illustrate the move
@@ -119,7 +133,7 @@ function List<Node> Quicksort(List<Node> nodes, int color_index) {
          beginStep();
          highlight(node);
          setX(pivot, getX(node));
-         setY(pivot, getY(node) - VERTICAL_GAP);
+         setY(pivot, newY - VERTICAL_GAP);
          endStep();
 
          //Illustrate the move
@@ -161,7 +175,7 @@ function List<Node> Quicksort(List<Node> nodes, int color_index) {
    }
 
    //Now move the nodes back to the center level!
-   bool leftOfPivot = true;
+   boolean leftOfPivot = true;
 
    int upperCount = 1;
    int lowerCount = lowerNodes.size();
@@ -203,6 +217,7 @@ function List<Node> Quicksort(List<Node> nodes, int color_index) {
    unhighlight(pivot);
    unmark(pivot);
    endStep();
+   display("done sorting " + listToString(sortedNodes));
    return sortedNodes;
 }
 
@@ -218,4 +233,4 @@ algorithm {
     Quicksort(getNodes(), 0);
 }
 
-//  [Last modified: 2016 12 13 at 20:20:56 GMT]
+//  [Last modified: 2017 01 20 at 01:57:28 GMT]

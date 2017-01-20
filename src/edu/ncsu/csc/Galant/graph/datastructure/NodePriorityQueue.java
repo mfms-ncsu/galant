@@ -8,6 +8,7 @@
 package edu.ncsu.csc.Galant.graph.datastructure;
 
 import java.util.PriorityQueue;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Comparator;
@@ -32,12 +33,20 @@ public class NodePriorityQueue extends PriorityQueue<Node> {
   boolean isMaxHeap = false;
 
   /**
-   * creates a min heap whose keys are based on node weight 
+   * creates a min-heap whose keys are based on node weight
    */
   public NodePriorityQueue() {
     super();
   }
 
+  /**
+   * creates a min-heap whose keys are based on node weight from the elements
+   * in collection C
+   */
+  public NodePriorityQueue(Collection<Node> C) {
+    super(C);
+  }
+  
   /**
    * creates a max heap whose keys are based on node weight 
    * @param isMax true if this will be a max-heap
@@ -205,4 +214,4 @@ public class NodePriorityQueue extends PriorityQueue<Node> {
   }
 }
 
-//  [Last modified: 2017 01 15 at 17:56:43 GMT]
+//  [Last modified: 2017 01 20 at 02:11:10 GMT]

@@ -8,6 +8,7 @@
 package edu.ncsu.csc.Galant.graph.datastructure;
 
 import java.util.PriorityQueue;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 
@@ -31,10 +32,18 @@ public class EdgePriorityQueue extends PriorityQueue<Edge> {
   boolean isMaxHeap = false;
 
   /**
-   * creates a min heap whose keys are based on edge weight 
+   * creates a min-heap whose keys are based on edge weight 
    */
   public EdgePriorityQueue() {
     super();
+  }
+
+  /**
+   * creates a min-heap whose keys are based on edge weight from the elements
+   * in collection C
+   */
+  public EdgePriorityQueue(Collection<Edge> C) {
+    super(C);
   }
 
   /**
@@ -203,4 +212,4 @@ public class EdgePriorityQueue extends PriorityQueue<Edge> {
   }
 }
 
-//  [Last modified: 2017 01 15 at 18:01:21 GMT]
+//  [Last modified: 2017 01 20 at 02:13:33 GMT]

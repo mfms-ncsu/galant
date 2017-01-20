@@ -113,7 +113,10 @@ public class Graph {
      * animation.
      */
     public void reset() {
-        // first, reset any graph visibility attributes
+      int initialStateNumber = GraphDispatch.getInstance().getAlgorithmState();
+      
+      // first, reset any graph visibility attributes
+      // not currently used
         ArrayList<GraphState> initialStates
             = new ArrayList<GraphState>();
         for ( GraphState state : this.states ) {
@@ -122,6 +125,20 @@ public class Graph {
         }
         this.states = initialStates;
 
+        // get rid of any nodes and edges created by the algorithm; better to
+        // do this by gathering the ones that should not be removed and then
+        // resetting nodes/edges to be the gathered ones
+        NodeList validNodes = new NodeList();
+        for ( Node node : this.nodes ) {
+          if ( node.inScope(initialStateNumber) ) validNodes.add(node);
+        }
+        EdgeList validEdges = new EdgeList();
+        for ( Edge edge : this.edges ) {
+          if ( edge.inScope(initialStateNumber) ) validEdges.add(edge);
+        }
+        this.nodes = validNodes;
+        this.edges = validEdges;
+        
         // then reset the attributes of all nodes and edges
         for ( Node node : this.nodes ) {
             node.reset();
@@ -769,8 +786,7 @@ public class Graph {
 	}
 
 	/**
-	 * Removes the specified <code>Edge</code> from the <code>Graph</code>.
-	 * @param e the edge to remove
+	 * marks the edge e as deleted without physically removing it.
 	 */
 	public void deleteEdge(Edge e) throws Terminate {
 		e.setDeleted(true);
@@ -806,7 +822,8 @@ public class Graph {
 
 	/**
 	 * Deletes (but does not permanently remove) the specified
-	 * <code>Node</code> from the <code>Graph</code>.
+	 * <code>Node</code> from the <code>Graph</code>; simply marks it and its
+	 * incident edges deleted
 	 */
 	public void deleteNode(Node n) throws Terminate {
 		n.setDeleted(true);
@@ -1081,7 +1098,8 @@ public class Graph {
 
 	/**
 	 * Removes the specified <code>Edge</code> from the <code>Graph</code>
-	 * @param e the <code>Edge</code> to remove
+	 * @param e the <code>Edge</code> to remove; this version actually gets
+	 * rid of the edge rather than marking it deleted
 	 */
 	public void removeEdge(Edge e) {
         LogHelper.enterMethod(getClass(), "removeEdge " + e);
@@ -1106,7 +1124,8 @@ public class Graph {
 
 	/**
 	 * Removes the specified <code>Node</code> from the <code>Graph</code>
-	 * @param n the <code>Node</code> to remove
+	 * @param n the <code>Node</code> to remove; this one actually removes
+	 * the node and its incident edges rather than just marking it deleted
 	 */
 	public void removeNode(Node n) {
 		List<Edge> n_edges = n.getIncidentEdges();
@@ -1303,4 +1322,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2017 01 18 at 19:52:02 GMT]
+//  [Last modified: 2017 01 19 at 23:55:05 GMT]

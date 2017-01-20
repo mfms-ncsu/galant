@@ -1169,6 +1169,13 @@ public abstract class Algorithm implements Runnable {
   }
 
   /**
+   * @return x, rounded to nearest integer as an Integer object
+   */
+  public Integer integer(double x ) {
+    return (int) (x + 0.5);
+  }
+
+  /**
    * @return a string of the form (source,target) for the edge; useful for
    * printing and display; source and target refer to node id's
    */
@@ -1379,4 +1386,4 @@ public abstract class Algorithm implements Runnable {
   public abstract void run();
 }
 
-//  [Last modified: 2017 01 19 at 14:22:24 GMT]
+//  [Last modified: 2017 01 20 at 01:35:53 GMT]

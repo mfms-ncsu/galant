@@ -5,23 +5,31 @@ This software is licensed by a Gnu Public License. See
 https://www.gnu.org/licenses/gpl.html
 for details.
 
-To compile everything and run the program for the first time, simply type
-ant
-while in the home directory.
-After that you can run Galant, either by saying
-ant run
-or by executing
-java -jar build/jar/Galant.jar (this may not work on Windows)
+You can run Galant immediately by opening a terminal window, going to the
+galant home directory and executing:
+
+    java -jar build/jar/Galant.jar
+or (in Windows)    
+    java -jar build\jar\Galant.jar
+
+If you want to (re)compile everything, either because you edited and changed
+some of the details in the source files, or to simply get a clean install,
+you need Apache ant. Once that is installed, say
+
+    ant compile
+
+After that you can run Galant with
+
+    ant run
 
 Make sure that
-- you have Apache Ant installed (not necessary if running jar file?)
 - you have a JDK installed (Java Development Kit)
 - the JAVA_HOME environment variable is set properly; typical locations
    (Mac)      /Library/Java/JavaVirtualMachines/jdk1.x.x.jdk/Contents/Home/
    (Windows)  C:\Program Files\Java\jdk1.x.x
-   (Linux)    ??
+   (Linux)    don't need to do anything special on most Linux/Unix systems
 
-Otherwise you may get a null pointer exception from
+Otherwise you may get an exception from
      edu.ncsu.csc.Galant.algorithm.code.CompilerAndLoader.compile
 Galant needs to be able to fire up a Java compiler while it is running.
 
@@ -40,6 +48,8 @@ graph.
 Algorithm                                     Graph
 
 Algorithms/dfs_d.alg                            eight_node_graph.graphml
+
+Algorithms/interactive_dfs                      "
 
 Algorithms/dijkstra.alg                         weighted_example.graphml
      - try both undirected and directed

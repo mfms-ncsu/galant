@@ -194,31 +194,63 @@ public abstract class Algorithm implements Runnable {
   /**
    * @see graph.component.Edge for natural syntax edge.in(S)
    */
-  public EdgeSet union(EdgeSet S1, EdgeSet S2) { return S1.union(S2); }
+  public EdgeSet union(EdgeSet S1, EdgeSet S2) {
+    if ( S1 == null ) return S2;
+    if ( S2 == null ) return S1;
+    return S1.union(S2);
+  }
   public EdgeSet intersection(EdgeSet S1, EdgeSet S2) {
+    if ( S1 == null || S2 == null ) return new EdgeSet();
     return S1.intersection(S2);
   }
   public EdgeSet difference(EdgeSet S1, EdgeSet S2) {
+    if ( S1 == null ) return new EdgeSet();
+    if ( S2 == null ) return S1;
     return S1.difference(S2);
   }
   public EdgeSet symmetricDifference(EdgeSet S1, EdgeSet S2) {
+    if ( S1 == null ) return S2;
+    if ( S2 == null ) return S1;
     return S1.symmetricDifference(S2);
   }
+  public Boolean subset(EdgeSet S1, EdgeSet S2) {
+    if ( S1 == null ) return true;
+    if ( S2 == null ) return false;
+    return S1.subset(S2);
+  }
   
-  public void add(Node node, NodeSet S) { S.add(node); }
-  public void remove(Node node, NodeSet S) { S.remove(node); }
+  public void add(Node node, NodeSet S) {
+    S.add(node);
+  }
+  public void remove(Node node, NodeSet S) {
+    S.remove(node);
+  }
   /**
    * @see graph.component.Node for natural syntax node.in(S)
    */
-  public NodeSet union(NodeSet S1, NodeSet S2) { return S1.union(S2); }
+  public NodeSet union(NodeSet S1, NodeSet S2) {
+    if ( S1 == null ) return S2;
+    if ( S2 == null ) return S1;
+    return S1.union(S2);
+  }
   public NodeSet intersection(NodeSet S1, NodeSet S2) {
+    if ( S1 == null || S2 == null ) return new NodeSet();
     return S1.intersection(S2);
   }
   public NodeSet difference(NodeSet S1, NodeSet S2) {
+    if ( S1 == null ) return new NodeSet();
+    if ( S2 == null ) return S1;
     return S1.difference(S2);
   }
   public NodeSet symmetricDifference(NodeSet S1, NodeSet S2) {
+    if ( S1 == null ) return S2;
+    if ( S2 == null ) return S1;
     return S1.symmetricDifference(S2);
+  }
+  public Boolean subset(NodeSet S1, NodeSet S2) {
+    if ( S1 == null ) return true;
+    if ( S2 == null ) return false;
+    return S1.subset(S2);
   }
   
   /**
@@ -1406,4 +1438,4 @@ public abstract class Algorithm implements Runnable {
   public abstract void run();
 }
 
-//  [Last modified: 2017 01 20 at 12:37:23 GMT]
+//  [Last modified: 2017 01 20 at 20:56:21 GMT]

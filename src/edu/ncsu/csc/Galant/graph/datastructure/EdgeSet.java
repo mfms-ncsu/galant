@@ -63,6 +63,18 @@ public class EdgeSet extends HashSet<Edge> {
     return theDifference;
   }
   
+  /**
+   * @return true if this set is a subset of other
+   */
+  public Boolean subset(EdgeSet other) {
+    for ( Edge edge : this ) {
+      if ( ! other.contains(edge) ) {
+        return false;
+      }
+    }
+    return true;
+  }
+  
   @Override
   public String toString() {
     String s = "{";
@@ -74,4 +86,4 @@ public class EdgeSet extends HashSet<Edge> {
   }
 }
 
-//  [Last modified: 2017 01 15 at 22:39:15 GMT]
+//  [Last modified: 2017 01 20 at 20:36:18 GMT]

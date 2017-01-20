@@ -62,6 +62,18 @@ public class NodeSet extends HashSet<Node> {
     }
     return theDifference;
   }
+
+  /**
+   * @return true if this set is a subset of other
+   */
+  public Boolean subset(NodeSet other) {
+    for ( Node node : this ) {
+      if ( ! other.contains(node) ) {
+        return false;
+      }
+    }
+    return true;
+  }
   
   @Override
   public String toString() {
@@ -74,4 +86,4 @@ public class NodeSet extends HashSet<Node> {
   }
 }
 
-//  [Last modified: 2017 01 15 at 23:01:49 GMT]
+//  [Last modified: 2017 01 20 at 20:35:25 GMT]

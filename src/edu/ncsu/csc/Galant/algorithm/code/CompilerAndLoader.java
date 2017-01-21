@@ -47,7 +47,12 @@ public class CompilerAndLoader
 				/* Instantiating the java compiler */
 				JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
                 if ( compiler == null ) {
-                    throw new GalantException("No compiler found, need a JDK, java.home = " + System.getProperty("java.home"));
+					// problem might be that JAVA_HOME points to a jre instead of a jdk
+					String jdkHome = System.getProperty("java.home").replace("jre", "jdk");
+					System.setProperty("java.home", jdkHome);
+					compiler = ToolProvider.getSystemJavaCompiler();
+					if ( compiler == null )
+						throw new GalantException("No compiler found, need a JDK, java.home = " + System.getProperty("java.home"));
                 }
 				/**
 				 * Retrieving the standard file manager from compiler object,

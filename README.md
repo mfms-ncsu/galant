@@ -12,16 +12,6 @@ galant home directory and executing:
 or (in Windows)    
     java -jar build\jar\Galant.jar
 
-If you want to (re)compile everything, either because you edited and changed
-some of the details in the source files, or to simply get a clean install,
-you need Apache ant. Once that is installed, say
-
-    ant compile
-
-After that you can run Galant with
-
-    ant run
-
 Make sure that
 - you have a JDK installed (Java Development Kit)
 - the JAVA_HOME environment variable is set properly; typical locations
@@ -29,9 +19,16 @@ Make sure that
    (Windows)  C:\Program Files\Java\jdk1.x.x
    (Linux)    don't need to do anything special on most Linux/Unix systems
 
-Otherwise you may get an exception from
+Otherwise you may get an exception (null pointer or unexpected) from
      edu.ncsu.csc.Galant.algorithm.code.CompilerAndLoader.compile
 Galant needs to be able to fire up a Java compiler while it is running.
+
+If may want to (re)compile everything, either because you edited and changed
+some of the details in the source files, or if you use GitHub to keep up with
+the latest changes, you need Apache ant. Once that is installed, say
+    ant jar
+After that you can run Galant with
+    ant run
 
 *** Testing *** (see testingGalant.docx for more details)
 

@@ -23,12 +23,15 @@ Otherwise you may get an exception (null pointer or unexpected) from
      edu.ncsu.csc.Galant.algorithm.code.CompilerAndLoader.compile
 Galant needs to be able to fire up a Java compiler while it is running.
 
-If may want to (re)compile everything, either because you edited and changed
-some of the details in the source files, or if you use GitHub to keep up with
+You may want to (re)compile everything, either because you edited and changed
+some of the details in the source files, or, if you use GitHub to keep up with
 the latest changes, you need Apache ant. Once that is installed, say
     ant jar
 After that you can run Galant with
     ant run
+    
+Before you do a 'git pull' you should first either do 'ant clean' or remove
+the file build/jar/Galant.jar (build\jar\Galant.jar)
 
 *** Testing *** (see testingGalant.docx for more details)
 

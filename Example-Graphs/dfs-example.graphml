@@ -4,14 +4,15 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns 
 http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
  <graph  edgedefault="directed">
-  <node id="0" x="482" y="275"   />
-  <node id="1" x="303" y="257"   />
-  <node id="2" x="172" y="85"   />
+  <node id="0" x="556" y="289"   />
+  <node id="1" x="283" y="269"   />
+  <node id="2" x="192" y="108"   />
   <node id="3" x="42" y="244"   />
   <node id="4" x="193" y="368"   />
   <node id="5" x="144" y="554"   />
-  <node id="6" x="339" y="400"   />
-  <node id="7" x="318" y="592"   />
+  <node id="6" x="310" y="439"   />
+  <node id="7" x="314" y="603"   />
+  <node id="8" x="373" y="361"   />
   <edge id="0" source="0" target="1"  />
   <edge id="1" source="0" target="2"  />
   <edge id="2" source="1" target="2"  />
@@ -26,4 +27,7 @@ http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
   <edge id="11" source="7" target="4"  />
   <edge id="12" source="7" target="0"  />
   <edge id="13" source="1" target="4"  />
+  <edge id="14" source="8" target="0"  />
+  <edge id="15" source="1" target="8"  />
+  <edge id="16" source="8" target="6"  />
  </graph></graphml>

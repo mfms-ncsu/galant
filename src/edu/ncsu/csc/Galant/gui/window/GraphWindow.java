@@ -372,7 +372,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 				
               Graph g = dispatch.getWorkingGraph();
               Node n = g.addInitialNode(location.x, location.y);
-							
+
               // select the new node
               Node nNew = graphPanel.selectTopClickedNode(location);
               LogHelper.logDebug( " select: node = " + n );
@@ -1142,4 +1142,4 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
   }
 }
 
-//  [Last modified: 2017 01 10 at 15:52:39 GMT]
+//  [Last modified: 2017 01 21 at 20:52:47 GMT]

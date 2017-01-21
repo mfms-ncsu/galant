@@ -100,17 +100,21 @@ public class ComponentEditPanel extends JPanel {
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
 				Double wgt = (Double) weight.getValue();
-				Graph g = dispatch.getWorkingGraph();
-                try {
+                // avoid changing a null weight to 0.0 (usually not intended)
+                Double previousWeight = workingElement.getWeight();
+                if ( previousWeight != null || wgt != 0.0 ) {
+                  Graph g = dispatch.getWorkingGraph();
+                  try {
                     workingElement.setWeight(wgt);
-                }
-                catch ( Exception e ) {
+                  }
+                  catch ( Exception e ) {
                     e.printStackTrace();
+                  }
+                  dispatch.pushToTextEditor();
+                  dispatch.pushToGraphEditor();
                 }
-				dispatch.pushToTextEditor();
-				dispatch.pushToGraphEditor();
-			}
-		});
+            }
+          });
 
         // ensure that what the user types in the text field of the spinner
         // is handled properly
@@ -203,4 +207,4 @@ public class ComponentEditPanel extends JPanel {
 
 
 
-//  [Last modified: 2016 12 16 at 14:02:32 GMT]
+//  [Last modified: 2017 01 21 at 21:08:52 GMT]

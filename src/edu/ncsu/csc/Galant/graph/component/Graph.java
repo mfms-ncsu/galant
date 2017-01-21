@@ -895,15 +895,6 @@ public class Graph {
 	}
 
     /**
-     * @return the next available edge id; these are in numerical sequence
-     * starting at 0; to be used only when the input has no explicit id's for
-     * edges.
-     */
-    int getNextEdgeId() {
-        return nextEdgeId++;
-    }
-
-    /**
      * @return true if the input had explicit edge id's as determined by the
      * fact that none had to be assigned internally -- the assumption being
      * that either all or none of the edges have explicit id's.
@@ -1153,10 +1144,10 @@ public class Graph {
 	}
 
 	/**
-	 * @return an integer ID for the next <code>Node</code> to be
+	 * @return an integer ID for the next <code>Edge</code> to be
 	 * added. This will always be the largest id so far + 1
 	 */
-	private int nextEdgeId() {
+	public int nextEdgeId() {
         LogHelper.enterMethod(getClass(), "nextEdgeId");
         int id = 0;
         if ( ! edgeById.isEmpty() )
@@ -1322,4 +1313,4 @@ public class Graph {
 	}
 }
 
-//  [Last modified: 2017 01 19 at 23:55:05 GMT]
+//  [Last modified: 2017 01 21 at 21:26:01 GMT]

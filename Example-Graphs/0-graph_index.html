@@ -5,35 +5,46 @@
 <body>
 <h2>Example Graphs</h2>
 
-
 <ul>
+  <li>
+    <a href="0-SortingGraphs/0-sorting_graph_index.html">0-SortingGraphs</a>
+    - directory containing "graphs" appropriate for sorting algorithms; these
+    have nodes representing array/list elements with weights as keys and no
+    edges 
+  </li>
 <li><a href="createMesh.py">createMesh.py</a>
 - a python script for creating a mesh in graphml format;
 run standalone (no need to invoke python)
 with no arguments to get a usage message</li>
 
-<li><a href="eight_node_graph.graphml">eight_node_graph.graphml</a>
-- as the name suggests; this one is unweighted, suitable as
+<li><a href="unweighted_7.graphml">unweighted_7.graphml</a>
+- a seven-node, unweighted graph, suitable as
   a directed graph
-  for the <a href="../Algorithms/dfs_d.alg">dfs_d</a> algorithm</li>
+  for
+  the <a href="../Algorithms/dfs.alg">dfs</a> (undirected depth-first
+  search), 
+  <a href="../Algorithms/dfs_d.alg">dfs_d</a> (directed depth-first search),
+  and <a href="../Algorithms/interactive_dfs.alg">interactive_dfs</a> (depth
+  first search with start nodes controlled by user) algorithms
+  </li>
 
-<li><a href="large_sorting_test.graphml">large_sorting_test.graphml</a>
-- a "graph" with no edges, to be used for sorting algorithms;
-the weight of each node is the key to be used for sorting; there are eight
-elements
-</li>
+<li><a href="unweighted_8.graphml">unweighted_8.graphml</a>
+- an eight-node, unweighted graph, suitable for the dfs variations
+  </li>
 
-<li><a href="mst_example.graphml">mst_example.graphml</a>
-- a weighted graph, useful for demonstrating minimum spanning tree
-algorithms or shortest paths algorithms</li>
+<li><a href="unweighted_9.graphml">unweighted_9.graphml</a>
+- an nine-node, unweighted graph, suitable for the dfs variations
+  </li>
 
-<li><a href="sorting_test.graphml">sorting_test.graphml</a>
-- a small, four-element, no-edge graph for demonstrating sorting algorithms</li>
+<li><a href="weighted_10.graphml">weighted_10.graphml</a> - a weighted graph
+with ten nodes, useful for demonstrating minimum spanning tree algorithms or
+shortest paths algorithms; boruvka does two passes on this one</li>
 
-<li><a href="weighted_example.graphml">weighted_example.graphml</a>
-- a weighted graph, smaller than mst_example, used for demonstrating how
+<li><a href="weighted_6.graphml">weighted_6.graphml</a>
+- a weighted graph with six nodes, used for demonstrating how
 <a href="../Algorithms/dijkstra.alg">Dijkstra's algorithm</a>
-behaves differently for undirected versus directed graphs</li>
+behaves differently for undirected versus directed graphs; boruvka also does
+two passes on this one</li>
 
 <li>
   <a href="geo_40_67_1.graphml">geo_40_67_1.graphml</a>

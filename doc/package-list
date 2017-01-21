@@ -4,7 +4,7 @@ edu.ncsu.csc.Galant.algorithm.code
 edu.ncsu.csc.Galant.algorithm.code.compiled
 edu.ncsu.csc.Galant.algorithm.code.macro
 edu.ncsu.csc.Galant.graph.component
-edu.ncsu.csc.Galant.graph.container
+edu.ncsu.csc.Galant.graph.datastructure
 edu.ncsu.csc.Galant.graph.parser
 edu.ncsu.csc.Galant.gui.editor
 edu.ncsu.csc.Galant.gui.prefs

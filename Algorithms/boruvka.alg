@@ -112,7 +112,7 @@ function reset() {
 }
 
 algorithm {
-  hideNodeWeights();
+  showEdgeWeights();
 
   // number of edges in current spanning forest
   int forestEdges = 0;
@@ -176,4 +176,4 @@ algorithm {
   endStep();
 }
 
-/*  [Last modified: 2017 01 18 at 17:44:28 GMT] */
+/*  [Last modified: 2017 01 21 at 20:30:20 GMT] */

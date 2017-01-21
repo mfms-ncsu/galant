@@ -138,10 +138,13 @@ public class Edge extends GraphElement {
         // id may not exist for an edge; not really essential;
         // inputHasEdgeIds() returns true if they appeared in the input, in
         // which case they should be rendered in the output as the first
-        // attribute.
+        // attribute; edges with non-existent id's need to be given ones
         String idComponent = "";
-        if ( super.graph.hasExplicitEdgeIds() )
-            idComponent = "id=\"" + this.id + "\"";
+        if ( super.graph.hasExplicitEdgeIds() ) {
+          Integer edgeId = this.id;
+          if ( edgeId == null ) edgeId = super.graph.nextEdgeId();
+          idComponent = "id=\"" + edgeId + "\"";
+        }
  		String s = "<edge " + idComponent;
         // need this to get past here when the edge is first created and this
         // function is used for debugging.
@@ -186,4 +189,4 @@ public class Edge extends GraphElement {
 	}
 }
 
-//  [Last modified: 2017 01 15 at 22:52:11 GMT]
+//  [Last modified: 2017 01 21 at 21:25:22 GMT]

@@ -520,6 +520,15 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		
     LogHelper.exitMethod(getClass(), "changeMode");
   }
+
+  /**
+   * changes both the buttons and the status of the graph to reflect the
+   * given directedness - true if directed, false if undirected
+   */
+  public void setDirectedness(boolean directed) {
+    if ( directed ) changeDirectedness(Directedness.DIRECTED);
+    else changeDirectedness(Directedness.UNDIRECTED);
+  }
 	
   /**
    * Sets the graph to display as Directed or Undirected
@@ -529,19 +538,19 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
     LogHelper.enterMethod(getClass(), "changeDirectedness " + mode);
 		
     switch(mode){
-    case DIRECTED:{
+    case DIRECTED: {
       directedBtn.setSelected(true);
       dispatch.getWorkingGraph().setDirected(true);
       frame.repaint();
       break;
     }
-    case UNDIRECTED:{
+    case UNDIRECTED: {
       undirectedBtn.setSelected(true);
       dispatch.getWorkingGraph().setDirected(false);
       frame.repaint();
       break;
     }
-    }
+    } // switch
 		
     frame.repaint();
 		
@@ -1142,4 +1151,4 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
   }
 }
 
-//  [Last modified: 2017 01 21 at 20:52:47 GMT]
+//  [Last modified: 2017 01 22 at 03:02:29 GMT]

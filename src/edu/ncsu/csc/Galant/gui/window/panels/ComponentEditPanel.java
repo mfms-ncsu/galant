@@ -98,6 +98,13 @@ public class ComponentEditPanel extends JPanel {
 		editor.setPreferredSize(d);
 		weight.addChangeListener(new ChangeListener() {
 			@Override
+            /**
+             * @todo the weight spinner is the first to receive focus and its
+             * default value is 0; for now, we avoid accidentally setting a 0
+             * weight in a way that prevents intentional setting of weight to
+             * 0; eventually need to avoid spinners - would also be better
+             * for keyboard shortcuts
+             */
 			public void stateChanged(ChangeEvent arg0) {
 				Double wgt = (Double) weight.getValue();
                 // avoid changing a null weight to 0.0 (usually not intended)
@@ -207,4 +214,4 @@ public class ComponentEditPanel extends JPanel {
 
 
 
-//  [Last modified: 2017 01 21 at 21:08:52 GMT]
+//  [Last modified: 2017 01 21 at 23:09:02 GMT]

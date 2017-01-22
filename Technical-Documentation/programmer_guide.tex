@@ -178,7 +178,8 @@ arrays indexed by node or edge id's.
 Since graphs may be generated externally and/or have undergone deletions of nodes or
 edges, the id's are not always contiguous.\footnote{
   The edges in GraphML files are not required to have id's. If they have
-  none, id's are assigned as the file is parsed.
+  none, id's are assigned as the file is parsed. These assigned id's are not
+  preserved when the graph (GraphML file) is saved.
 }
 The functions \Code{nodeIds()} and \Code{edgeIds()} return the size of an array
 large enough to accommodate the appropriate id's as indexes. So code such as
@@ -873,4 +874,4 @@ file, when specifying a node or edge after a keyboard shortcut, or when
 giving the weight of a node or edge.
 A list of the most common Galant exceptions is in Table~\ref{tab:galant_exceptions}.
 
-% [Last modified: 2017 01 19 at 15:05:40 GMT]
+% [Last modified: 2017 01 22 at 00:45:07 GMT]

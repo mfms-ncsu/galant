@@ -419,7 +419,8 @@ public abstract class Algorithm implements Runnable {
    * labels and weights are visible.
    *
    * @todo There's an unnecessary level of indirection here; we could call
-   * on a GraphWindow method directly instead of going through the graph first.
+   * on a GraphWindow method directly instead of going through the graph
+   * first
    */
 
   /** makes node labels invisible */
@@ -1260,9 +1261,9 @@ public abstract class Algorithm implements Runnable {
     return graph.isDirected();
   }
 
-  /** @see edu.ncsu.csc.Galant.graph.component.Graph#setDirected(boolean) */
-  public void setDirected(boolean directed){
-    graph.setDirected(directed);
+  /**  */
+  public void setDirected(boolean directed) {
+    dispatch.getGraphWindow().setDirectedness(directed);
   }
 
   public NodeList getNodes() {
@@ -1438,4 +1439,4 @@ public abstract class Algorithm implements Runnable {
   public abstract void run();
 }
 
-//  [Last modified: 2017 01 20 at 20:56:21 GMT]
+//  [Last modified: 2017 01 22 at 03:03:04 GMT]

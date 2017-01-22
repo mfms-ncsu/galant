@@ -13,11 +13,17 @@
     edges 
   </li>
 <li><a href="createMesh.py">createMesh.py</a>
-- a python script for creating a mesh in graphml format;
-run standalone (no need to invoke python)
-with no arguments to get a usage message</li>
+  - a python script for creating a mesh in graphml format;
+  run standalone (no need to invoke python)
+  with no arguments to get a usage message.
+  See also the <a href="../Algorithms/grid.alg">grid algorithm</a>, which
+  creates a grid via an animation execution - it can be saved using the
+  Export option: File menu on the graph window. 
+</li>
 
-<li><a href="unweighted_7.graphml">unweighted_7.graphml</a>
+  <li><a href="tree.graphml">tree.graphml</a> - a simple tree (unweighted)
+    </li>
+  <li><a href="unweighted_7.graphml">unweighted_7.graphml</a>
 - a seven-node, unweighted graph, suitable as
   a directed graph
   for
@@ -46,6 +52,11 @@ shortest paths algorithms; boruvka does two passes on this one</li>
 behaves differently for undirected versus directed graphs; boruvka also does
 two passes on this one</li>
 
+<li><a href="weighted_7.graphml">weighted_7.graphml</a>
+  - based on an example for single-source shortest paths in Cormen et al.,
+  "Introduction to Algorithms"; one extra node was added.
+</li>
+
 <li>
   <a href="geo_40_67_1.graphml">geo_40_67_1.graphml</a>
   - a geometric graph (nodes are positioned as random points on the plane and
@@ -59,6 +70,10 @@ two passes on this one</li>
   force-directed layout
   </li>
 
+  <li>
+  <a href="layered_graph.graphml">layered_graph.graphml</a> - a small layered
+  graph; can be used to test how layered graph drawings adapt to window size.  
+  </li>
 </ul>
 
 <hr>

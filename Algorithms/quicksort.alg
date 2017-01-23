@@ -222,15 +222,17 @@ function NodeList Quicksort(NodeList nodes, int color_index) {
 }
 
 algorithm {
-    movesNodes();
-  //Line up the nodes
-    beginStep();
-    xCoord = new int[numberOfNodes()];
-    lineUpNodes();
-    endStep();
+  movesNodes();
+  showNodeWeights();
 
-    //Sort them (note: can't use 'sort' -- it's a Galant macro
-    Quicksort(getNodes(), 0);
+  beginStep();
+  xCoord = new int[numberOfNodes()];
+  lineUpNodes();
+  endStep();
+
+  //Sort the nodes
+  // Note: can't name this 'sort' -- it's a Galant macro
+  Quicksort(getNodes(), 0);
 }
 
-//  [Last modified: 2017 01 20 at 01:57:28 GMT]
+//  [Last modified: 2017 01 23 at 22:37:04 GMT]

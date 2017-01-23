@@ -24,6 +24,8 @@ function init_edge_costs() {
 }
 
 algorithm {
+  showNodeWeights();
+  showEdgeWeights();
     NodePriorityQueue pq = new NodePriorityQueue();
     Edge [] chosenEdge = new Edge[nodeIds()]; 
 
@@ -65,4 +67,4 @@ algorithm {
     } // stop when priority queue is empty
 }
 
-//  [Last modified: 2017 01 19 at 22:01:07 GMT]
+//  [Last modified: 2017 01 23 at 22:42:04 GMT]

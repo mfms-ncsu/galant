@@ -113,6 +113,7 @@ function reset() {
 
 algorithm {
   showEdgeWeights();
+  showNodeLabels();             // for component labeling
 
   // number of edges in current spanning forest
   int forestEdges = 0;
@@ -176,4 +177,4 @@ algorithm {
   endStep();
 }
 
-/*  [Last modified: 2017 01 21 at 20:30:20 GMT] */
+/*  [Last modified: 2017 01 23 at 22:41:15 GMT] */

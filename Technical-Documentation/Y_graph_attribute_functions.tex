@@ -12,46 +12,15 @@
   \begin{tabular}{| m{0.37\textwidth} | m{0.58\textwidth} |}
     \hline
     \shortstack[l]{
-      \Code{Boolean nodeLabelsAreVisible()}\\
-      \Code{Boolean edgeLabelsAreVisible()}\\
-      \Code{Boolean nodeWeightsAreVisible()}\\
-      \Code{Boolean edgeWeightsAreVisible()}
-    }
-    &
-    returns \Code{true} if node/edge labels/weights are \emph{globally} visible,
-    the default state, which can be altered by \Code{hideNodeLabels()}, etc.,
-    defined below
-    \\ \hline
-    \shortstack[l]{
-      \Code{hideNodeLabels(), hideEdgeLabels()}\\
-      \Code{hideNodeWeights(), hideEdgeWeights()}
-    }
-    &
-    hides all node/edge labels/weights; typically used at the beginning of an algorithm
-    to hide unnecessary information; labels and weights are shown by default
-    \\ \hline
-    \shortstack[l]{
-      \Code{showNodeLabels(), showEdgeLabels()}\\
-      \Code{showNodeWeights(), showEdgeWeights()}
-    }
-    &
-    undoes the hiding of labels/weights
-    \\ \hline
-    \shortstack[l]{
       \Code{hideAllNodeLabels()}\\
       \Code{hideAllEdgeLabels()}\\
       \Code{hideAllNodeWeights()}\\
       \Code{hideAllEdgeWeights()}
     }
     &
-    hides all node/edge labels/weights even if they are visible globally
-    by default or by
-    \Code{showNodeLabels()}, etc., or for individual nodes and edges;
-    in order for the label or weight of a node/edge to be displayed,
-    labels/weights must be visible globally and its label/weight must be visible;
-    initially, all labels/weights are visible, both globally and for individual
-    nodes/edges;
-    these functions are used to hide information so that it can be revealed subsequently,
+    hide all node/edge labels/weights
+    these functions are typically
+    used to hide information so that it can be revealed subsequently,
     one node or edge at a time
     \\ \hline
     \shortstack[l]{
@@ -61,9 +30,8 @@
       \Code{showAllEdgeWeights()}
     }
     &
-    makes all individual
-    node/edge weights/labels visible if they are globally visible by default
-    or via \Code{showNodeLabels()}, etc.;
+    make all individual
+    node/edge weights/labels visible
     this undoes the effect of \Code{hideAllNodeLabels()}, etc., and of
     any individual hiding of labels/weights
     \\ \hline
@@ -78,7 +46,7 @@
     \Code{showNodes(), showEdges(), showGraph()}
     &
     undo any hiding of nodes/edges that has taken place during the algorithm;
-    \Code{showNodes()} only shows edges currently visible; \Code{showGraph()}
+    \Code{showNodes()} only shows edges currently (logically) visible; \Code{showGraph()}
     restores visibility of both nodes and edges
     \\ \hline
     \shortstack[l]{
@@ -151,4 +119,4 @@
   \label{tab:graph_attribute_functions}
 \end{table}
 
-% [Last modified: 2017 01 19 at 14:41:49 GMT]
+% [Last modified: 2017 01 23 at 19:26:54 GMT]

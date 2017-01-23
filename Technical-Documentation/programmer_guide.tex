@@ -527,12 +527,15 @@ deletion of nodes or edges, or, as is the case with our implementation of
 Boruvka's algorithm, some edges are no longer important.
 Graph elements can be hidden and made to reappear using the \Code{hide} and
 \Code{show} functions.
-For edges, the semantics are straightforward: hide an edge and it does not
-appear on the display, show it and it reappears.
-Nodes are more complicated: \Code{hide($v$)} effectively hides the incident
-edges of $v$,
-but \Code{show($v$)} restores only the visibility of those edges
-that were not separately hidden.
+
+To understand how showing and hiding of nodes and edges works, we need to
+distinguish between the logical state of a node/edge and what is displayed.
+Logically, for any graph element $g$, \Code{show($g$)} makes $g$ visible and
+\Code{hide($g$)} makes it invisible.
+For nodes, the logical and display state are the same -- a logically visible
+node will be drawn on the graph window.
+But an edge will be drawn only if it is logically visible \emph{and both of its
+  endpoints are also logically visible.}
 
 \input{Y_graph_element_functions}
 
@@ -547,28 +550,22 @@ graph, are listed in Table~\ref{tab:graph_functions}.
 
 It is sometimes useful to access or manipulate attributes of nodes and edges
 globally.
-For example, an algorithm might want to hide node weights entirely
-because they are not relevant
-or hide them initially and reveal them for individual nodes as
-the algorithm progresses.
+For example, an animation might want to hide node weights initially
+and reveal them for individual nodes as
+they become relevant.
+Or it may want to hide edges individually as it progresses to get the effect
+of deleting them and then reveal them again at the end.
 These functionalities can be accomplished by
-\Code{hideNodeWeights} or \Code{hideAllNodeWeights}, respectively.
+\Code{hideAllNodeWeights}\footnote{
+  The modifier \Code{All} distinguishes
+  \Code{show}/\Code{hide}\Code{All}\Code{Node}/\Code{Edge}\Code{Labels}/\Code{Weights}
+  from
+  \Code{show}/\Code{hide}\Code{Node}/\Code{Edge}\Code{Labels}/\Code{Weights}.
+  The latter are designed to mimic user toggle buttons -- see Section~\ref{sec:declarations}.
+}
+or \Code{showEdges}, respectively.
 A summary of these capabilities is given in Table~\ref{tab:graph_attribute_functions}.
 
-The animator should be careful with functions that show nodes or edges
-globally -- see Table~\ref{tab:graph_element_functions} for the individual
-element versions. The idea behind \Code{showEdges} and \Code{showNodes} is to
-undo hiding of all relevant graph elements.  The function \Code{showEdges}
-restores visibility of edges only, not necessarily their endpoints, and is
-designed for use when edges only have been hidden.  On the other hand,
-\Code{showNodes} will not necessarily undo the effects of hiding each node.
-Recall that when you do \Code{hide($v$)}, where $v$ is a node, all of $v$'s
-incident edges are hidden as well.  The singular \Code{show($v$)}, however,
-does not undo the hiding all of $v$'s incident edges, only of those
-\emph{whose visibility was restored in the interim}.
-Therefore \Code{showNodes} makes visible only those edges that were made
-visible individually since the hiding of their endpoints.
-In practice there are three useful scenarios.
 \begin{itemize}
 \item An algorithm hides some edges individually and uses \Code{showEdges} to
   make all of them visible in one step later.
@@ -580,6 +577,37 @@ In practice there are three useful scenarios.
   visibility to the whole graph; the function to use in this case is
   \Code{showGraph}.
 \end{itemize}
+
+\input{Y-declarations}
+
+\subsubsection{Functions that behave as declarations} \label{sec:declarations}
+
+Some Galant functions are independent of animation steps and are intended as
+declarations at the beginning of the algorithm code.
+These are listed in Table~\ref{tab:declarations}.
+We already mentioned \Code{movesNodes()} -- it signals that the animation
+will control node movement and prevents the user from moving nodes.
+
+A second example is \Code{setDirected}. It has the same function as the
+toggle buttons at the top of the graph window. In some cases, such as
+shortest paths algorithms and breadth-first search, it makes sense for the
+user to decide whether or not the animation should treat the graph as a
+directed graph. Other animations, such as \Code{dfs\_d}, are specifically
+designed for directed graphs. In those cases it makes sense for the animation
+to make the graph directed. When \Code{setDirected} is called, the toggle
+buttons (not visible during execution) are set as well, so that the state of
+the buttons is consistent with that of the graph.
+
+The remaining declarations involve visibility of weights and labels. As with
+directedness, these functions mimic the actions of the appropriate toggle
+buttons. The user may also change visibility of labels and weights during
+execution. The declarations allow the animation to make visible exactly those
+attributes that are relevant during its execution.
+For example, the weighted graph algorithms (shortest paths and minimum
+spanning trees) need the edge weights to be visible; a
+\Code{showEdgeWeights()} call at the beginning ensures that this happens
+regardless of whether the user made edge weights visible during editing (or
+execution of a previous algorithm).
 
 \subsection{Definition of Functions/Methods}\label{sec:functions}
 
@@ -874,4 +902,4 @@ file, when specifying a node or edge after a keyboard shortcut, or when
 giving the weight of a node or edge.
 A list of the most common Galant exceptions is in Table~\ref{tab:galant_exceptions}.
 
-% [Last modified: 2017 01 22 at 00:45:07 GMT]
+% [Last modified: 2017 01 23 at 19:28:57 GMT]

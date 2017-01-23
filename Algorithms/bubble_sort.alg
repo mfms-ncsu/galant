@@ -68,6 +68,8 @@ function exchange(Node n1, Node n2) {
 
 algorithm {
     movesNodes();
+    showNodeWeights();
+
     nodes = new Node[numberOfNodes()];
     beginStep();
     lineUpNodes();
@@ -96,4 +98,4 @@ algorithm {
     }
 } 
 
-//  [Last modified: 2016 07 26 at 19:31:07 GMT]
+//  [Last modified: 2017 01 23 at 22:35:39 GMT]

@@ -1,0 +1,36 @@
+\begin{table}
+  \begin{tabular}{| m{0.37\textwidth} | m{0.58\textwidth} |}
+    \hline
+    \Code{movesNodes()}
+    &
+    keeps the \emph{user} from moving nodes during animation execution
+    \\ \hline
+    \Code{setDirected(boolean $d$)}
+    &
+    determine whether the animation will treat the graph as directed
+    (\Code{$d$ = true}) or undirected (\Code{$d$ = false})
+    \\ \hline
+    \shortstack[l]{
+      \Code{showNodeLabels(), showEdgeLabels()}\\
+      \Code{showNodeWeights(), showEdgeWeights()}
+    }
+    &
+    ensure that node/edge weights/labels will be visible throughout animation
+    execution, unless explicitly hidden by the animation, or visibility is
+    changed by the user using the toggle buttons
+    \\ \hline
+    \shortstack[l]{
+      \Code{hideNodeLabels(), hideEdgeLabels()}\\
+      \Code{hideNodeWeights(), hideEdgeWeights()}
+    }
+    &
+    ensure that the specified attributes remain hidden throughout the
+    animation unless visibility is changed using toggle buttons; the
+    attributes are hidden \emph{regardless of whether the animation shows or hides them}
+    \\ \hline
+  \end{tabular}
+  \caption{Functions that act as declarations.}
+  \label{tab:declarations}
+\end{table}
+
+% [Last modified: 2017 01 23 at 17:54:43 GMT]

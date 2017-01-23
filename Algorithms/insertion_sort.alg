@@ -52,6 +52,7 @@ function lineUpNodes() {
 
 algorithm {
   movesNodes();
+  showNodeWeights();
 
   beginStep();
   lineUpNodes();
@@ -93,4 +94,4 @@ algorithm {
   deleteNode(toInsert);
 }
 
-//  [Last modified: 2017 01 20 at 00:09:23 GMT]
+//  [Last modified: 2017 01 23 at 22:35:03 GMT]

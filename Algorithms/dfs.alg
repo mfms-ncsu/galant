@@ -46,11 +46,12 @@ function visit(Node v, Node parent) {
 }
 
 algorithm {
+  showNodeLabels();
+  showEdgeLabels();
+
   discovery = new int[nodeIds()];
   finish = new int[nodeIds()];
   time = 0;
-  showNodeLabels();
-  showEdgeLabels();
 
   beginStep();
   clearNodeLabels();
@@ -64,4 +65,4 @@ algorithm {
   }
 }
 
-//  [Last modified: 2017 01 19 at 22:24:00 GMT]
+//  [Last modified: 2017 01 23 at 22:38:28 GMT]

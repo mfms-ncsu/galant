@@ -6,148 +6,130 @@
 <h2>Galant Algorithm Examples</h2>
 
 
+<h3>Unweighted Graph Algorithms</h3>
+
 <ul>
 <br><hr>
 <li><b><a href=bfs.alg>bfs.alg</a></b> 
 <br>
-Implementation of breadth-first search. Undirected edges are regarded as<br>
-being directed both ways.<br>
-<br>
-<br><hr>
-<li><b><a href=binary_tree.alg>binary_tree.alg</a></b> 
-<br>
-Draws a binary tree that fits into current graph window. First queries the<br>
-user about the tree height.<br>
-<br>
-<br><hr>
-<li><b><a href=boruvka.alg>boruvka.alg</a></b> 
-<br>
-@file boruvka.alg<br>
-implementation of Boruvka's MST algorithm, using Galant; designed<br>
-to showcase some of the newer Galant facilities.<br>
-<br>
-Among these are:<br>
-- hideLabel() and showLabel() for graph elements -- a new "visible"<br>
-attribute that's used during algorithm execution<br>
-- hide() and show() for graph elements -- a new "hidden" attribute<br>
-- color() for graph elements with two arguments: the element and a color<br>
-string (which may have declared constants in Algorithm.java); also<br>
-uncolor()<br>
-<br>
-<br><hr>
-<li><b><a href=bubble_sort.alg>bubble_sort.alg</a></b> 
-
-An animation of bubble sort.<br>
-<br>
-Caution: assumes that the graph is a collection of nodes with no edges<br>
-weight of node = sorting key<br>
-this is the simplest version of bubble sort; makes a pass over the whole<br>
-list each iteration<br>
+An Animation of breadth-first search. Undirected edges are regarded as
+being directed both ways.
 <br>
 <br><hr>
 <li><b><a href=dfs.alg>dfs.alg</a></b> 
 <br>
-Implements depth-first search of a graph, directed or undirected; in the<br>
-undirected case, it behaves as if edges were directed in both directions.<br>
+Animates depth-first search of a graph, directed or undirected; in the
+undirected case, it behaves as if edges were directed in both directions.
 <br>
 <br><hr>
-<li><b><a href=dfs_d.alg>dfs_d.alg</a></b> 
+<li><b><a href=dfs_d.alg>dfs_d.alg</a></b>
 <br>
-Implements depth-first search of a directed graph only; directedness is<br>
-forced at the beginning of the algorithm.<br>
-<br>
-<br><hr>
-<li><b><a href=dijkstra.alg>dijkstra.alg</a></b> 
-
-Implementation of Dijkstra's shortest path algorithm. Interprets<br>
-undirected edges as going in both directions.<br>
-<br>
-<br><hr>
-<li><b><a href=euclidian.alg>euclidian.alg</a></b> 
-<br>
-
-Implementation of Dijkstra's shortest path algorithm. Interprets<br>
-undirected edges as going in both directions if run in undirected<br>
-mode. Unlike dijkstra.alg, the edge weights are set initially by the<br>
-algorithm, based on Euclidian distances between nodes.<br>
-<br>
-<br><hr>
-<li><b><a href=grid.alg>grid.alg</a></b> 
-<br>
-- creates a grid graph with dimensions supplied by user
-<br>
-<br><hr>
-<li><b><a href=insertion_sort.alg>insertion_sort.alg</a></b> 
-
-An animation of insertion sort.<br>
-<br>
-Caution: assumes that the graph is a collection of nodes with no edges<br>
-weight of node = sorting key; this can also be set up with an external<br>
-filter that transforms a list of numbers into the appropriate graph (with<br>
-nodes already lined up<br>
-<br>
-The already sorted part of the array is visited'. The element to be<br>
-inserted moves about the array -- the element to which it is compared at<br>
-each step is selected.<br>
+Animates depth-first search of a directed graph only; directedness is
+forced at the beginning of the algorithm.
+If the graph were undirected, tree edges would be relabeled as back edges and
+back edges relabeled as forward edges
 <br>
 <br><hr>
 <li><b><a href=interactive_dfs.alg>interactive_dfs.alg</a></b> 
 <br>
-- implements depth-first search of a directed graph
-only; directedness is forced at the beginning of the algorithm; allows<br>
-user to specify start node and next node to visit if a visit call returns<br>
-without visiting all nodes<br>
+Animates depth-first search of a directed graph
+only; directedness is forced at the beginning of the algorithm; allows
+user to specify start node and next node to visit in each iteration of the
+outer loop.
+<br>
+<br>
+</ul>
+
+<h3>Weighted Graph Algorithms</h3>
+
+<ul>
+<li><b><a href=dijkstra.alg>dijkstra.alg</a></b> 
+An animation of Dijkstra's shortest path algorithm. Interprets
+undirected edges as going in both directions.
 <br>
 <br><hr>
-<li><b><a href=kruskal.alg>kruskal.alg</a></b> 
+<li><b><a href="euclidian.alg">euclidian.alg</a></b> 
 <br>
-@file kruskal.alg<br>
-animation of Kruskal's MST algorithm<br>
+An animation of Dijkstra's shortest path algorithm. Interprets
+undirected edges as going in both directions.
+Unlike dijkstra.alg, the edge weights are set initially by the
+algorithm, based on Euclidian distances between nodes.
+<br>
+<br><hr>
+<li><b><a href="kruskal.alg">kruskal.alg</a></b> 
+<br>
+animation of Kruskal's MST algorithm; edges are sorted at the beginning and
+the algorithm continues until all edges have been considered
+<br>
+<br><hr>
+<br>
+<b><a href="kruskal_pq.alg">kruskal_pq.alg</a></b><br>
+An animation of Kruskal's MST algorithm; edges are put on a priority queue at
+the beginning and the algorithm stops when a tree has been formed; assumes
+that the graph is connected
+<br>
+<br><hr>
+<li><b><a href="boruvka.alg">boruvka.alg</a></b> 
+An animation of Boruvka's MST algorithm; designed
+to showcase some of the newer Galant facilities.<br>
+Among these are:<br>
+- hideLabel() and showLabel() for graph elements to identify components<br>
+- hide() and show() for graph elements to show only the edges that are relevant<br>
+- color() and uncolor() for graph elements using predefined colors
+<br>
+<br><hr>
+</ul>
+
+<h3>Sorting Algorithms</h3>
+
+All of these assume that the input graph has no edges and that the node
+weights represent the keys of elements to be sorted.
+
+<ul>
+<li><b><a href=bubble_sort.alg>bubble_sort.alg</a></b> 
+An animation of bubble sort.
+This is the simplest version of bubble sort; makes a pass over the whole
+list each iteration
+<br>
+<br><hr>
+<li><b><a href=insertion_sort.alg>insertion_sort.alg</a></b> 
+An animation of insertion sort.
+The already sorted part of the array is marked. The element to be
+inserted moves along the array -- the element to which it is compared at
+each step is highlighted.
 <br>
 <br><hr>
 <li><b><a href=quicksort.alg>quicksort.alg</a></b> 
 
 An animation of Quicksort<br>
-<em>[author: Hayden Fuss, Solomon Yeh, Jordan Connor]</em><br>
-@date 2015/4/28<br>
-Submitted for Project 3 in CSC 316<br>
+<em>authors: Hayden Fuss, Solomon Yeh, Jordan Connor</em><br>
+<em>CSC 316, Data Structures, Spring 2015, Project</em><br>
+This Quicksort implementation chooses the median index of the list
+as the pivot, and can handle an arbitrary sized array, but
+visual fidelity for large arrays requires extra vertical space
 <br>
-Caution: assumes that the graph is a collection of nodes with no edges<br>
-weight of node = sorting key;<br>
-Inital position of the Nodes does not affect output<br>
 <br>
-This Quicksort implementation chooses the median index of the list<br>
-as the pivot, and can handle an arbitrary sized array, but<br>
-visual fidelity may fall on larger indices<br>
+</ul>
+
+<h3>Miscellaneous Algorithms</h3>
+
+<ul>
+<li><b><a href="binary_tree.alg">binary_tree.alg</a></b> 
 <br>
-<br><hr>
-<li><b><a href=strip_attributes.alg>strip_attributes.alg</a></b> 
-<br>
-- strips out unneccessary attributes from graphs
-created before the cleaner handling of attributes was put in place; or<br>
-from ones where weights, labels and colors were created inadvertently<br>
-during editing.<br>
+Draws a binary tree that fits into current graph window. First queries the
+user about the tree height.
 <br>
 <br><hr>
-<li><b><a href=test.alg>test.alg</a></b> 
-Scaffoling for a variety of tests<br>
-<br><hr>
-<li><b><a href=test_edge_sorting.alg>test_edge_sorting.alg</a></b> 
+<li><b><a href="grid.alg">grid.alg</a></b> 
 <br>
-Tests use of Collections.sort() on the edges<br>
+Creates a grid graph with dimensions supplied by user
 <br>
 <br><hr>
-<li><b><a href=test_exception.alg>test_exception.alg</a></b>
-  <br>
-  Creates a couple of deliberate exceptions to see if
-  popup window and termination are handled correctly
+<li><b><a href="strip_attributes.alg">strip_attributes.alg</a></b> 
 <br>
-<br><hr>
-<li><b><a href=test_infinite_loop.alg>test_infinite_loop.alg</a></b> 
-<br><hr>
-<li><b><a href=test_macro.alg>test_macro.alg</a></b> 
-<br>
-- simple test of the for_nodes macro with no animations
+Strips out unneccessary attributes from graphs
+where weights, labels and colors were created inadvertently
+during editing.
 <br>
 </ul>
 

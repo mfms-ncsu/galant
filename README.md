@@ -47,15 +47,14 @@ graph.
 
 Algorithm                                     Graph
 
-Algorithms/dfs_d.alg                            eight_node_graph.graphml
+Algorithms/dfs_d.alg                        eight_node_graph.graphml
 
-Algorithms/interactive_dfs                      "
+Algorithms/interactive_dfs                  "
 
-Algorithms/dijkstra.alg                         weighted_example.graphml
+Algorithms/dijkstra.alg                     weighted_example.graphml
      - try both undirected and directed
 
-Algorithms/insertion_sort.alg                   sorting_test.graphml
-     - show vertex weights
+Algorithms/insertion_sort.alg               0-SortingGraphs/sorting_test.graphml
 
 Algorithms/binary_tree.alg                      empty graph
 

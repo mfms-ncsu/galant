@@ -29,7 +29,6 @@ function UNION(Node x, Node y) {
 }
 
 algorithm {
-    hideNodeWeights();
     showEdgeWeights();
 
     parent = new Node[nodeIds()];
@@ -80,4 +79,4 @@ algorithm {
     display( "MST has total weight " + totalWeight );
 }
 
-/*  [Last modified: 2017 01 20 at 02:13:10 GMT] */
+/*  [Last modified: 2017 01 23 at 22:43:57 GMT] */

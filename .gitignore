@@ -7,7 +7,7 @@ TAGS
 # stuff in the build directory is the result of compilation
 build
 # stuff in the doc directory: created when building javadoc
-doc/*
+doc
 # graphs created on the fly
 *.graphml
 *.sgf

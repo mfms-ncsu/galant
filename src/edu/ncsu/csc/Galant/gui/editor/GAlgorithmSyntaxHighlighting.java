@@ -299,8 +299,10 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
             else if ( state == State.IN_STRING ) {
                 if ( current == '"' ) {
                     state = State.DEFAULT;
+                    // we want the " to be included in the highlighting;
+                    // hence the + 1
                     doc.setCharacterAttributes(startString,
-                                               i - startString,
+                                               i - startString + 1,
                                                doc.getStyle(stringStyle),
                                                true);
                 }
@@ -315,4 +317,4 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
     } // applyStyleToCommentsAndStrings
 }
 
-//  [Last modified: 2017 01 20 at 12:39:14 GMT]
+//  [Last modified: 2017 01 24 at 18:27:19 GMT]

@@ -1,15 +1,18 @@
-/* This is a testing file */
-int x;
 /**
-   * Check if Fetching macro is masked successfully when it was included in comment line
-   * It should not be visible in log.
-   * nodesList parent
-   * /
+ * comment_test_1.alg - checks if a macro is masked successfully when
+ * included in a comment
+ */
+
+/**
+ * for_edges( e )
+ */
+
+int x;
 int y;
-// numOfEdges ne;
-// nodesList nl;
-	
-numOfEdges ne;
+// algorithm{}
+// function int foo() { }
 	
 algorithm{		
 }
+
+//  [Last modified: 2017 01 24 at 17:03:39 GMT]

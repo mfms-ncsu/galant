@@ -1,5 +1,5 @@
 /**
- * test_exception.alg - Creates a couple of deliberate exceptions to see if
+ * exception_test.alg - Creates a couple of deliberate exceptions to see if
  * popup window and termination are handled correctly
  */
 algorithm {
@@ -11,4 +11,4 @@ algorithm {
     endStep();
 }
 
-//  [Last modified: 2016 12 13 at 20:50:21 GMT]
+//  [Last modified: 2017 01 24 at 17:40:46 GMT]

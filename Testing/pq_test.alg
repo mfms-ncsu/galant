@@ -1,5 +1,6 @@
 /**
- * Tests of priority queue functionality for nodes and edges
+ * pq_test.alg - tests basic priority queue functionality for nodes and edges
+ * using object-oriented syntax and both a min-heap and a max-heap
  */
 
 algorithm {
@@ -17,4 +18,4 @@ algorithm {
     }
 }
 
-//  [Last modified: 2016 10 14 at 19:35:02 GMT]
+//  [Last modified: 2017 01 24 at 17:47:23 GMT]

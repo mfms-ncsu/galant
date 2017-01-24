@@ -1,0 +1,116 @@
+<html> <head>
+<title>Algorithms and graphs for testing</title>
+</head>
+
+<body text=black bgcolor=white>
+<h2>Algorithms and graphs for testing</h2>
+
+
+<ul>
+  <br><hr>
+  <li>
+    <a href="0-Test_Graphs/0-test_graph_index.html">Graphs used for
+    testing.</a>
+  </li>
+    <br><hr>
+<li><b><a href=attribute_test.alg>attribute_test.alg</a></b> 
+- tests the setting and displaying of attributes using
+both object-oriented and procedural syntax; requires that the graph have
+at least five nodes and at least two edges<br>
+<br><hr>
+<li><b><a href=color_test.alg>color_test.alg</a></b> 
+- a simple test of coloring nodes and edges
+<br><hr>
+<li><b><a href=comment_test_1.alg>comment_test_1.alg</a></b> 
+- checks if a macro is masked successfully when
+included in a comment
+<br>
+<br><hr>
+<li><b><a href=comment_test_2.alg>comment_test_2.alg</a></b> 
+<br>
+- tests various combinations of strings and comments
+<br>
+<br><hr>
+<li><b><a href=comparator_test.alg>comparator_test.alg</a></b> 
+- tests sorting and priority queues on both nodes and
+edges; requires use of the file <code>for_comparator_test.graphml</code>
+  in <code>0-Test_Graphs</code> and also tests
+  conversion of attributes; expected behavior on
+  the <code>for_comparator_test</code> graph:<br>
+  <ul>
+    <li> marks nodes in the order 3,1,2,0 based on myInt attribute
+      (increasing values)</li>
+    <li> colors the nodes blue in reverse order (they are sorted using a
+      reversed comparator)</li>
+    <li> colors edges orange in increasing lexicographic order of their
+      labels (based on use of <code>sort</code></li>
+    <li> colors edges green in the same order (based on a priority
+      queue)</li>
+    <li> changes label of the edge (0,1) to <code>"abc"</code>
+      using <code>changeStringKey</code></li>
+    <li> colors edges again, with the edge (0,1) colored first</li>
+  </ul>
+<br>
+<br><hr>
+<li><b><a href=conversion_test.alg>conversion_test.alg</a></b>
+- tests the conversion functions offered by Galant;
+also uses a query for a string at the beginning
+<br>
+<br><hr>
+<li><b><a href=data_structure_test.alg>data_structure_test.alg</a></b> 
+ tests of procedural syntax for lists, queues and priority queues<br>
+Expected behavior:<br>
+- an empty list is printed<br>
+- a list of all edges is printed<br>
+- a list of all nodes is printed<br>
+- all edges are printed as a set<br>
+- the first three edges on the list of all edges are colored red<br>
+- the same edges are colored blue in reverse order<br>
+- results of various set operations are printed<br>
+: ES1 is a set of three edges, the first three in the hashed set of edges<br>
+: ES2 is a set of three edges, the first three in the list of all edges<br>
+- the first three edges in the hashed set are colored red and queued<br>
+- the same edges are colored blue and removed from the queue
+<br>
+<br><hr>
+<li><b><a href=exception_test.alg>exception_test.alg</a></b> 
+- creates a couple of deliberate exceptions to see if
+popup window and termination are handled correctly
+<br>
+<br><hr>
+<li><b><a href=hiding_test.alg>hiding_test.alg</a></b> 
+- tests whether hiding and showing works correctly
+<br>
+<br><hr>
+<li><b><a href=infinite_loop_test.alg>infinite_loop_test.alg</a></b> 
+- a deliberate infinite loop to see if timeout works
+<br>
+<br><hr>
+<li><b><a href=macro_test.alg>macro_test.alg</a></b> 
+- test of various (parameterized) macros
+<br>
+<br><hr>
+<li><b><a href=pq_test.alg>pq_test.alg</a></b> 
+- tests basic priority queue functionality for nodes and edges
+using object-oriented syntax and both a min-heap and a max-heap
+<br>
+<br><hr>
+<li><b><a href=query_test.alg>query_test.alg</a></b> 
+- tests all types of queries
+<br>
+<br><hr>
+<li><b><a href=set_test.alg>set_test.alg</a></b> 
+- test whether incidence/adjacency tests, and by implication,
+EdgeSet, work correctly in queries. Also test sets directly.<br>
+<br>
+</ul>
+
+<hr>
+<address>
+<a href="http://people.engr.ncsu.edu/mfms/">
+Matthias F. (Matt) Stallmann
+</a>
+
+Created: 
+Tue Jan 24 13:05:38 EST 2017
+</address>

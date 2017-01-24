@@ -5,6 +5,9 @@ This software is licensed by a Gnu Public License. See
 https://www.gnu.org/licenses/gpl.html
 for details.
 
+If you have questions, comments or bugs to report, please contact me at
+mfms@ncsu.edu
+
 You can run Galant immediately by opening a terminal window, going to the
 galant home directory and executing:
 

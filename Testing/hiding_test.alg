@@ -1,5 +1,5 @@
 /**
- * Test whether hiding and showing works correctly
+ * hiding_test.alg - tests whether hiding and showing works correctly
  */
 
 algorithm {
@@ -38,4 +38,4 @@ algorithm {
     }
 }
 
-//  [Last modified: 2016 12 20 at 21:59:56 GMT]
+//  [Last modified: 2017 01 24 at 17:44:08 GMT]

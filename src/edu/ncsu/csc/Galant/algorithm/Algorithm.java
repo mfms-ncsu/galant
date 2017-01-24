@@ -1210,15 +1210,27 @@ public abstract class Algorithm implements Runnable {
     System.err.println("" + o);
   }
 
-  /**
-   * @todo Make sure these exceptions are caught by functions and algorithm
-   * conversions from strings to numbers
-   */
-  public Integer integer(String s) throws NumberFormatException {
-    return Integer.parseInt(s);
+  public Integer integer(String s) throws GalantException {
+    Integer i = null;
+    try {
+      i = Integer.parseInt(s);
+    }
+    catch ( NumberFormatException e ) {
+      throw new GalantException("\"" + s + "\""
+                                + " is not a legal integer");
+    }
+    return i; 
   }
-  public Double real(String s) throws NumberFormatException {
-    return Double.parseDouble(s);
+  public Double real(String s) throws GalantException {
+    Double x = null;
+    try {
+      x = Double.parseDouble(s);
+    }
+    catch ( NumberFormatException e ) {
+      throw new GalantException("\"" + s + "\""
+                                + " is not a legal floating point number");
+    }
+    return x; 
   }
 
   /**
@@ -1439,4 +1451,4 @@ public abstract class Algorithm implements Runnable {
   public abstract void run();
 }
 
-//  [Last modified: 2017 01 22 at 03:03:04 GMT]
+//  [Last modified: 2017 01 24 at 17:28:12 GMT]

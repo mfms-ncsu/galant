@@ -1,3 +1,7 @@
+/**
+ * comment_test_2.alg - tests various combinations of strings and comments
+ */
+
 /* t */
 x / 2
 /** a */
@@ -24,4 +28,4 @@ h
 algorithm {
 }
 
-//  [Last modified: 2015 12 10 at 19:20:15 GMT]
+//  [Last modified: 2017 01 24 at 17:04:46 GMT]

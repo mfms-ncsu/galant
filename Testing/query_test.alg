@@ -1,3 +1,7 @@
+/**
+ * query_test.alg - tests all types of queries
+ */
+
 algorithm {
     Boolean answer = getBoolean("Continue");
     display(answer);
@@ -17,4 +21,4 @@ algorithm {
     highlight(edge);
 }
 
-//  [Last modified: 2016 12 19 at 17:14:07 GMT]
+//  [Last modified: 2017 01 24 at 17:48:04 GMT]

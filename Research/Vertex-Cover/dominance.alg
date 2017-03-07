@@ -43,23 +43,24 @@ algorithm {
     //    print("pq = " + pq);
     Node v = pq.removeMin();
     if ( hidden(v) ) continue;
-    beginStep();
     highlight(v);
-    for ( Edge e : visibleEdges(v) ) {
-      Node w = otherEnd(v, e);
+    for ( Node w : visibleNeighbors(v) ) {
+      Edge e = getEdge(v, w);
+      display("checking neighbors: " + id(v) + "," + id(w));
       highlight(e);
-      endStep(); // goes with initial beginStep() or one at bottom of loop
+      step();
       NodeSet closedNeighborsV = new NodeSet(visibleNeighbors(v));
       closedNeighborsV.add(v);
       NodeSet closedNeighborsW = new NodeSet(visibleNeighbors(w));
       closedNeighborsW.add(w);
       if ( closedNeighborsV.subset(closedNeighborsW) ) {
+        display(id(w) + " dominates " + id(v));
         mark(w);
         cover.add(w);
         // inform neighbors that their degree and position in
         // queue has changed
         NodeSet neighborsOfW = new NodeSet(visibleNeighbors(w));
-        beginStep();
+        step();
         for ( Node x : neighborsOfW ) {
           color(x, GREEN);
           setWeight(x, weight(x) - 1);
@@ -76,20 +77,18 @@ algorithm {
           }
         }
         hide(w);
-        endStep();
-        beginStep();
+        step();
         for ( Node x : neighborsOfW ) uncolor(x);
-        //endStep();
+        step();
       } // dominance established
-      //beginStep();
       unhighlight(e);
     } // for visible incident edges on v
     unhighlight(v);
-  } // while pq not empty
-  beginStep();
+    step();
+} // while pq not empty
+  step();
   showNodes();
   checkCover();
-  endStep();
 }
 
-//  [Last modified: 2017 01 20 at 21:07:47 GMT]
+//  [Last modified: 2017 01 31 at 16:30:16 GMT]

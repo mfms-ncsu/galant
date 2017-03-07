@@ -470,6 +470,22 @@ preference.
 
 \section{Text Editing and File Management} \label{sec:editing}
 
+\subsection{Modified (dirty) files}
+
+Galant keeps track of which files have been modified since the start of the
+edit session or the last save.
+The filenames on the editor tabs are marked with \Code{*} to indicate a
+modification.
+The standard mechanism for keeping track of modifications is to monitor
+property changes on the panel, i.e., the overriden \Code{insertUpdate} and
+\Code{removeUpdate} events for \Code{GEditorPanel}.
+This works fine if the user is editing text directly or editing a graph in
+the graph window and changes are pushed to the text panel.
+However, insert updates also occur during GraphML parsing
+when a graph is being read from a file or when an algorithm animation
+modifies a graph in any way; the only modification that should trigger
+\Code{setDirty} during animation is when a user moves a node.
+
 \section{Graph Editing and the Graph Window} \label{sec:graph_window}
 
 \subsection{Editing attributes of edges and nodes}
@@ -518,4 +534,4 @@ Adapting the technique to the other query types will take more work because
 they need to throw exceptions and repeat the request for input if the user's
 response is not satisfactory (a malformed number, a non-existent node or edge).
 
-% [Last modified: 2017 01 03 at 16:18:24 GMT]
+% [Last modified: 2017 03 07 at 17:07:56 GMT]

@@ -32,203 +32,219 @@ import edu.ncsu.csc.Galant.logging.LogHelper;
  * @author Jason Cockrell
  */
 public class GEditorFrame extends JFrame implements WindowListener {
-	
-	public static final String FILENAME_EXTENSION_MESSAGE;
-	public static final String GALANT = "Galant " + Galant.VERSION + ": Text Editor";
-	public static final String CONFIRM = "One or more files have unsaved changes. Really close Galant?";
-	
-	public static final int DEFAULT_WIDTH = 750;
-	public static final int DEFAULT_HEIGHT = 600;
-	
-	private static GEditorFrame singleton;
-	
-	private final GTabbedPane tabbedPane;
-	private final JFileChooser jfc;
-	
-	static
-		{
-			StringBuilder extMessageBuilder = new StringBuilder("Filenames must end with extension ");
-			List<String> filenameExtensions = AlgorithmOrGraph.getAllFileExtensions();
-			for(int i = 0; i < filenameExtensions.size(); i++)
-				{
-					extMessageBuilder.append("." + filenameExtensions.get(i));
-					if(filenameExtensions.size() > 2 && i < filenameExtensions.size() - 1)
-						{
-							extMessageBuilder.append(",");
-							if(i != filenameExtensions.size() - 2)
-								extMessageBuilder.append(" ");
-						}
-					if(i == filenameExtensions.size() - 2)
-						extMessageBuilder.append(" or ");
-				}
-			extMessageBuilder.append(".");
-			FILENAME_EXTENSION_MESSAGE = extMessageBuilder.toString();
-		}
 
-	
-	public GEditorFrame() {
-		super(GALANT);
-		singleton = this;
-		setResizable(true);
-		setName("text_editor");
-		WindowUtil.preserveWindowBounds(this, DEFAULT_WIDTH, 0,
-                                      DEFAULT_WIDTH, DEFAULT_HEIGHT);
-		setLayout(new BorderLayout());
+  public static final String FILENAME_EXTENSION_MESSAGE;
+  public static final String GALANT = "Galant " + Galant.VERSION + ": Text Editor";
+  public static final String CONFIRM =
+    "One or more files have unsaved changes. Really close Galant?";
 
-		tabbedPane = new GTabbedPane();
-		jfc = new JFileChooser();		
-		
-		add(tabbedPane);
-		add(new GEditorMenuBar(this), BorderLayout.NORTH);
+  public static final int DEFAULT_WIDTH = 750;
+  public static final int DEFAULT_HEIGHT = 600;
 
-		jfc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-		jfc.setFileFilter(new FileNameExtensionFilter("", AlgorithmOrGraph.getAllFileExtensions().toArray(
-			new String[AlgorithmOrGraph.getAllFileExtensions().size()])));
-		
-		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-		addWindowListener(this);
-		
-      this.setPreferredSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
-      this.pack();
-		setVisible(true);
-	}
-	
-	public void open() {
-		jfc.setCurrentDirectory(GalantPreferences.DEFAULT_DIRECTORY.get());
-		int returnVal = jfc.showOpenDialog(this);
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File file = jfc.getSelectedFile();
-            GTabbedPane.AlgorithmOrGraph type = AlgorithmOrGraph.typeForFileName(file.getName());
-            if(type != null) {
-           	 Scanner scanner = null;
-           	  try {
-            	 scanner = new Scanner(file);
-            	 scanner.useDelimiter("\\A");
-            	 tabbedPane.addEditorTab(file.getName(), file.getPath(), scanner.hasNext() ? scanner.next() : "", type);
+  private static GEditorFrame singleton;
 
-           	  } catch(Exception e) { ExceptionDialog.displayExceptionInDialog(e); }
-           	  	finally { if(scanner != null) scanner.close(); }
-            } else JOptionPane.showMessageDialog(this, FILENAME_EXTENSION_MESSAGE); 
-        }
-	}
-	
-	public void loadCompiledAlgorithm() {		
-		// Filter for .class file
-		FileNameExtensionFilter filter = new FileNameExtensionFilter(".class File","class");
-		jfc.setFileFilter(filter);
+  private final GTabbedPane tabbedPane;
+  private final JFileChooser jfc;
 
-		// Set the initial Diectory as where .class file temporary stored.
-		jfc.setCurrentDirectory(GalantPreferences.OUTPUT_DIRECTORY.get());
-		int returnVal = jfc.showOpenDialog(this);
+  static
+  {
+    StringBuilder extMessageBuilder = new StringBuilder(
+        "Filenames must end with extension ");
+    List<String> filenameExtensions = AlgorithmOrGraph.getAllFileExtensions();
+    for ( int i = 0; i < filenameExtensions.size(); i++ ) {
+      extMessageBuilder.append( "." + filenameExtensions.get(i) );
+      if ( filenameExtensions.size() > 2 && i < filenameExtensions.size() - 1 ) {
+        extMessageBuilder.append(",");
+        if ( i != filenameExtensions.size() - 2 )
+          extMessageBuilder.append(" ");
+      }
+      if ( i == filenameExtensions.size() - 2 )
+        extMessageBuilder.append(" or ");
+    }
+    extMessageBuilder.append(".");
+    FILENAME_EXTENSION_MESSAGE = extMessageBuilder.toString();
+  }
 
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            if(jfc.getSelectedFile().isFile()) {
-            	File file = jfc.getSelectedFile();
 
-            	// Since files are filtered, no need to check the extension exception.
-            	try{
-            		 // The param content is not needed for compiled algorithm tab. We'll leave it null here. 
-	            	 tabbedPane.addEditorTab(file.getName(), file.getPath(), null, AlgorithmOrGraph.CompiledAlgorithm); 
-	            } catch(Exception e) { ExceptionDialog.displayExceptionInDialog(e); }
-            }
-        } 
-	}
+  public GEditorFrame() {
+    super(GALANT);
+    singleton = this;
+    setResizable(true);
+    setName("text_editor");
+    WindowUtil.preserveWindowBounds(this, DEFAULT_WIDTH, 0,
+                                    DEFAULT_WIDTH, DEFAULT_HEIGHT);
+    setLayout( new BorderLayout() );
 
-	public void saveAs() throws GalantException {
-		GEditorPanel gaep = tabbedPane.getSelectedPanel();
-        if ( gaep == null )
-            throw new GalantException("Invalid tab - use untitled graph or untitled algorithm");
+    tabbedPane = new GTabbedPane();
+    jfc = new JFileChooser();
 
-		if (GGraphEditorPanel.class.isInstance(gaep)) {
-			updateWorkingGraph((GGraphEditorPanel) gaep);
-		}
-		
-		jfc.setCurrentDirectory(GalantPreferences.DEFAULT_DIRECTORY.get());
-		File file = null;
-		int returnVal = jfc.showSaveDialog(this);
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			file = jfc.getSelectedFile();
-			save(file, gaep);
-		}
-	}
-	
-	public void save() throws GalantException {
-		LogHelper.enterMethod(getClass(), "save()");
-		GEditorPanel gaep = tabbedPane.getSelectedPanel();
-        if ( gaep == null )
-            throw new GalantException("Invalid tab - use untitled graph or untitled algorithm");
+    add(tabbedPane);
+    add(new GEditorMenuBar(this), BorderLayout.NORTH);
 
-		if (GGraphEditorPanel.class.isInstance(gaep)) {
-			updateWorkingGraph((GGraphEditorPanel) gaep);
-		}
-		
-		if(gaep.getFilePath() != null) {
-			save(new File(gaep.getFilePath()), gaep);
-		} else { saveAs(); }
-		LogHelper.exitMethod(getClass(), "save()");
-	}
-		
-	public void save(File file, GEditorPanel gaep) {
-		LogHelper.enterMethod(getClass(), "save(File, GEditorPanel)");
-		
-		if (GGraphEditorPanel.class.isInstance(gaep)) {
-			updateWorkingGraph((GGraphEditorPanel) gaep);
-		}
-		
-		if(file != null && AlgorithmOrGraph.typeForFileName(file.getName()) != null) {
-			FileWriter outfile = null;
-           	try {
-				outfile = new FileWriter(file);
-           		outfile.write(gaep.getText());
-           		gaep.setDirty(false);
-           		gaep.setFileName(file.getName());
-           		gaep.setFilePath(file.getPath());
-           	} catch(Exception e) { ExceptionDialog.displayExceptionInDialog(e); } 
-           	finally { try { if(outfile != null) outfile.close(); } catch (IOException e) { ExceptionDialog.displayExceptionInDialog(e); } }
-        } else JOptionPane.showMessageDialog(this, FILENAME_EXTENSION_MESSAGE);
-		LogHelper.exitMethod(getClass(), "save(File, GEditorPanel)");
-	}
-	
-	public static GEditorFrame getSingleton() {return singleton;}
+    jfc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+    jfc.setFileFilter( new FileNameExtensionFilter( "",
+                                                    AlgorithmOrGraph.getAllFileExtensions()
+                                                    .toArray(
+                                                      new String[AlgorithmOrGraph.
+                                                                 getAllFileExtensions().
+                                                                 size()]) ) );
 
-	private static void updateWorkingGraph(GGraphEditorPanel gep) {
-		try {
-			GraphMLParser parser = new GraphMLParser(gep.getText());
-			GraphDispatch.getInstance().setWorkingGraph(parser.getGraph(), gep.getUUID());
-		}
-        catch (GalantException e) {
-            e.report("error while parsing");
-            e.displayStatic();
-        }
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            ExceptionDialog.displayExceptionInDialog(e);
-		}
-	}
-	
-	public void setFontSize(Integer size) {tabbedPane.setFontSize(size);}
-	public void setTabSize(Integer size) {tabbedPane.setTabSize(size);}
+    setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+    addWindowListener(this);
 
-	@Override
-	public void windowActivated(WindowEvent e) {}
-	@Override
-	public void windowClosed(WindowEvent e) {}
-	@Override
-	public void windowClosing(WindowEvent e) {
-		if(tabbedPane.isDirty()) {
-		if(JOptionPane.showOptionDialog(this, CONFIRM, GTabbedPane.CONFIRM, 
-				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[] {GTabbedPane.YES, GTabbedPane.NO}, GTabbedPane.NO) == 0) 
-			System.exit(0); }
-		else System.exit(0);
-	}
-	@Override
-	public void windowDeactivated(WindowEvent e) {}
-	@Override
-	public void windowDeiconified(WindowEvent e) {}
-	@Override
-	public void windowIconified(WindowEvent e) {}
-	@Override
-	public void windowOpened(WindowEvent e) {}
+    this.setPreferredSize( new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT) );
+    this.pack();
+    setVisible(true);
+  }
+
+  public void open() {
+    jfc.setCurrentDirectory( GalantPreferences.DEFAULT_DIRECTORY.get() );
+    int returnVal = jfc.showOpenDialog(this);
+    if ( returnVal == JFileChooser.APPROVE_OPTION ) {
+      File file = jfc.getSelectedFile();
+      GTabbedPane.AlgorithmOrGraph type =
+        AlgorithmOrGraph.typeForFileName( file.getName() );
+      if ( type != null ) {
+        Scanner scanner = null;
+        try {
+          scanner = new Scanner(file);
+          scanner.useDelimiter("\\A");
+          tabbedPane.addEditorTab(file.getName(), file.getPath(),
+                                  scanner.hasNext() ? scanner.next() : "", type);
+
+        } catch ( Exception e ) { ExceptionDialog.displayExceptionInDialog(e); }
+        finally { if ( scanner != null ) scanner.close(); }
+      } else JOptionPane.showMessageDialog(this, FILENAME_EXTENSION_MESSAGE);
+    }
+  }
+
+  public void loadCompiledAlgorithm() {
+    // Filter for .class file
+    FileNameExtensionFilter filter = new FileNameExtensionFilter(".class File", "class");
+    jfc.setFileFilter(filter);
+
+    // Set the initial Diectory as where .class file temporary stored.
+    jfc.setCurrentDirectory( GalantPreferences.OUTPUT_DIRECTORY.get() );
+    int returnVal = jfc.showOpenDialog(this);
+
+    if ( returnVal == JFileChooser.APPROVE_OPTION ) {
+      if ( jfc.getSelectedFile().isFile() ) {
+        File file = jfc.getSelectedFile();
+
+        // Since files are filtered, no need to check the extension exception.
+        try {
+          // The param content is not needed for compiled algorithm tab. We'll leave it
+          // null here.
+          tabbedPane.addEditorTab(file.getName(),
+                                  file.getPath(), null,
+                                  AlgorithmOrGraph.CompiledAlgorithm);
+        } catch ( Exception e ) { ExceptionDialog.displayExceptionInDialog(e); }
+      }
+    }
+  }
+
+  public void saveAs() throws GalantException {
+    GEditorPanel gaep = tabbedPane.getSelectedPanel();
+    if ( gaep == null )
+      throw new GalantException("Invalid tab - use untitled graph or untitled algorithm");
+
+
+    if ( GGraphEditorPanel.class.isInstance(gaep) ) {
+      updateWorkingGraph( (GGraphEditorPanel) gaep );
+    }
+
+    jfc.setCurrentDirectory( GalantPreferences.DEFAULT_DIRECTORY.get() );
+    File file = null;
+    int returnVal = jfc.showSaveDialog(this);
+    if ( returnVal == JFileChooser.APPROVE_OPTION ) {
+      file = jfc.getSelectedFile();
+      save(file, gaep);
+    }
+  }
+
+  public void save() throws GalantException {
+    LogHelper.enterMethod(getClass(), "save()");
+    GEditorPanel gaep = tabbedPane.getSelectedPanel();
+    if ( gaep == null )
+      throw new GalantException("Invalid tab - use untitled graph or untitled algorithm");
+
+
+    if ( GGraphEditorPanel.class.isInstance(gaep) ) {
+      updateWorkingGraph( (GGraphEditorPanel) gaep );
+    }
+
+    if ( gaep.getFilePath() != null ) {
+      save(new File( gaep.getFilePath() ), gaep);
+    } else { saveAs(); }
+    LogHelper.exitMethod(getClass(), "save()");
+  }
+
+  public void save(File file, GEditorPanel gaep) {
+    LogHelper.enterMethod(getClass(), "save(File, GEditorPanel)");
+
+    if ( GGraphEditorPanel.class.isInstance(gaep) ) {
+      updateWorkingGraph( (GGraphEditorPanel) gaep );
+    }
+
+    if ( file != null && AlgorithmOrGraph.typeForFileName( file.getName() ) != null ) {
+      FileWriter outfile = null;
+      try {
+        outfile = new FileWriter(file);
+        outfile.write( gaep.getText() );
+        gaep.setDirty(false);
+        gaep.setFileName( file.getName() );
+        gaep.setFilePath( file.getPath() );
+      } catch ( Exception e ) { ExceptionDialog.displayExceptionInDialog(e); }
+      finally { try { if ( outfile != null ) outfile.close();
+                } catch ( IOException e ) { ExceptionDialog.displayExceptionInDialog(e);
+                } }
+    } else JOptionPane.showMessageDialog(this, FILENAME_EXTENSION_MESSAGE);
+    LogHelper.exitMethod(getClass(), "save(File, GEditorPanel)");
+  }
+
+  public static GEditorFrame getSingleton() { return singleton; }
+
+  private static void updateWorkingGraph(GGraphEditorPanel gep) {
+    try {
+      GraphMLParser parser = new GraphMLParser( gep.getText() );
+      GraphDispatch.getInstance().setWorkingGraph( parser.getGraph(), gep.getUUID() );
+    }
+    catch ( GalantException e ) {
+      e.report("error while parsing");
+      e.displayStatic();
+    }
+    catch ( Exception e ) {
+      System.out.println( e.getMessage() );
+      ExceptionDialog.displayExceptionInDialog(e);
+    }
+  }
+
+  public void setFontSize(Integer size) { tabbedPane.setFontSize(size); }
+  public void setTabSize(Integer size) { tabbedPane.setTabSize(size); }
+
+  @Override
+  public void windowActivated(WindowEvent e) { }
+  @Override
+  public void windowClosed(WindowEvent e) { }
+  @Override
+  public void windowClosing(WindowEvent e) {
+    if ( tabbedPane.isDirty() ) {
+      if ( JOptionPane.showOptionDialog(this, CONFIRM, GTabbedPane.CONFIRM,
+                                        JOptionPane.YES_NO_OPTION,
+                                        JOptionPane.QUESTION_MESSAGE, null,
+                                        new Object[] { GTabbedPane.YES, GTabbedPane.NO },
+                                        GTabbedPane.NO) == 0 )
+        System.exit(0);
+    } else System.exit(0);
+  }
+  @Override
+  public void windowDeactivated(WindowEvent e) { }
+  @Override
+  public void windowDeiconified(WindowEvent e) { }
+  @Override
+  public void windowIconified(WindowEvent e) { }
+  @Override
+  public void windowOpened(WindowEvent e) { }
 }
 
-//  [Last modified: 2017 01 10 at 21:01:43 GMT]
+// [Last modified: 2017 01 10 at 21:01:43 GMT]

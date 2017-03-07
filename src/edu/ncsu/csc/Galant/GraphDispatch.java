@@ -37,20 +37,28 @@ public class GraphDispatch {
    * A unique identifier for a graph.
    * @todo not clear to me what the purpose is
    */
-		 private UUID graphSource;
+  private UUID graphSource;
 
-	 private int windowWidth;
-	 private int windowHeight;
+  private int windowWidth;
+  private int windowHeight;
 
-	 /** true if animating an algorithm instead of editing */
-	 private boolean animationMode = false;
+  /** true if animating an algorithm instead of editing */
+  private boolean animationMode = false;
 
-	 /**
+  /** 
+   * true if editing the working graph; may happen in animation mode if user
+   * is changing node positions
+   * need to save it if place where it's changed does not 'know' the current state
+   */
+  private boolean editMode = true;
+  private boolean savedEditMode = true;
+  
+  /**
    * reference to controller of algorithm execution from the point of view
    * of the display, i.e., the object whose methods are called when user
    * starts/stops algorithm and steps forward or backward.
    */
-		 private AlgorithmExecutor algorithmExecutor;
+  private AlgorithmExecutor algorithmExecutor;
 
   /**
    * reference to the object whose methods are called when the algorithm
@@ -172,10 +180,35 @@ public class GraphDispatch {
     return this.animationMode;
   }
 
+  public boolean isEditMode() {
+    return this.editMode;
+  }
+  
+  /**
+   * @param mode true when user is editing the working graph, false otherwise
+   */
+  public void setEditMode(boolean mode) {
+    LogHelper.enable();
+    LogHelper.enterMethod(getClass(), "setEditMode " + mode);
+    this.savedEditMode = this.editMode;
+    this.editMode = mode;
+    LogHelper.exitMethod(getClass(), "setEditMode, savedMode = " + savedEditMode);
+    LogHelper.restoreState();
+  }
+
+  public void resetEditMode() {
+    LogHelper.enable();
+    LogHelper.enterMethod(getClass(), "resetEditMode " + savedEditMode);
+    this.editMode = this.savedEditMode;
+    LogHelper.exitMethod(getClass(), "resetEditMode, mode = " + editMode);
+    LogHelper.restoreState();
+  }
+  
   public void setAnimationMode(boolean mode) {
     Boolean old = this.animationMode;
     this.animationMode = mode;
-    // if at the end of an animation, need to reset the graph
+    // if at the end of an animation, need to reset the graph and go back to
+    // edit mode
     if ( ! mode && old ) {
       this.workingGraph.reset();
     }
@@ -277,7 +310,7 @@ public class GraphDispatch {
    * somewhere.
    */
   public void pushToTextEditor() {
-    if ( ! animationMode ) {
+    if ( editMode ) {
       notifyListeners(TEXT_UPDATE, null, null);
     }
   }
@@ -325,4 +358,4 @@ public class GraphDispatch {
 
 }
 
-//  [Last modified: 2017 01 07 at 13:43:47 GMT]
+//  [Last modified: 2017 03 07 at 21:52:25 GMT]

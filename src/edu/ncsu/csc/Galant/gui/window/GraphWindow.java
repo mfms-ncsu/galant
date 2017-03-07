@@ -536,7 +536,8 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
    */
   private void changeDirectedness(Directedness mode) {
     LogHelper.enterMethod(getClass(), "changeDirectedness " + mode);
-		
+    // avoid setting dirty based on directedness change
+    if ( dispatch.isEditMode() ) dispatch.setEditMode(false);
     switch(mode){
     case DIRECTED: {
       directedBtn.setSelected(true);
@@ -553,7 +554,6 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
     } // switch
 		
     frame.repaint();
-		
     LogHelper.exitMethod(getClass(), "changeDirectedNess");
   }
 	
@@ -598,7 +598,6 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
     }
 		
     frame.repaint();
-		
   }
 	
   /**
@@ -1151,4 +1150,4 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
   }
 }
 
-//  [Last modified: 2017 01 22 at 03:02:29 GMT]
+//  [Last modified: 2017 03 07 at 22:21:06 GMT]

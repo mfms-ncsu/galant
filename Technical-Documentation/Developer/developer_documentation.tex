@@ -478,13 +478,57 @@ The filenames on the editor tabs are marked with \Code{*} to indicate a
 modification.
 The standard mechanism for keeping track of modifications is to monitor
 property changes on the panel, i.e., the overriden \Code{insertUpdate} and
-\Code{removeUpdate} events for \Code{GEditorPanel}.
+\Code{removeUpdate} events for \Code{GEditorPanel}, via calls to
+\Code{setDirty(true)}, making the file \emph{dirty}.\footnote{
+  \Code{setDirty(false)} clears the \Code{isDirty} flag when the file is
+  saved.
+}
 This works fine if the user is editing text directly or editing a graph in
-the graph window and changes are pushed to the text panel.
-However, insert updates also occur during GraphML parsing
-when a graph is being read from a file or when an algorithm animation
-modifies a graph in any way; the only modification that should trigger
-\Code{setDirty} during animation is when a user moves a node.
+the graph window and changes are pushed to the text panel via
+\Code{pushToTextEditor} in \Code{GraphDispatch}.
+Two situations require special care:
+\begin{enumerate}
+  \item The GraphML parser can change attributes of nodes and edges, for
+    example, to assign random positions to nodes that do have them. When
+    parsing is done the text panel for the graph is refreshed whether or not
+    a change has occurred. Since random positions of nodes are usually not
+    worth saving, it makes sense to ignore changes during the refresh.
+    A refresh also occurs at the end of animation execution.
+  \item A change in graph directedness should not make the file dirty;
+    a user may want to run an algorithm in each mode on the same graph with
+    different results (e.g., Dijkstra's); or simply check the directions of
+    the edges.
+\end{enumerate}
+Galant, in \Code{GraphDispatch}, keeps track of whether or not it is in edit
+mode.
+\Code{GGraphEditorPanel} overrides the definition of \Code{setDirty} so that
+it makes the file dirty only if Galant is in edit mode.
+Now the fun part: how to ensure that Galant is in edit mode at exactly the
+right times.
+
+The first situation above is handled by a \Code{setEditMode(false)} in two
+places: (i)~in the constructor for \Code{GGraphEditorPanel} (to forstall any
+dirty status until the text panel is fully initialized); and (ii)~right
+before a \Code{textPane.setText} when returning to edit mode from an
+animation (to forstall dirty status until text panel is refreshed).
+Edit mode is reset to true \emph{after} a property change in
+\Code{GGraphEditorPanel} when it's not the one returning from an
+animation.~\footnote{
+  Apparently a return from animation or text panel initialization generates
+  two property changes.
+}
+
+The second situation (change in directedness) is also handled in two places,
+this time in \Code{GraphWindow}:
+(i) a press of the directedness button does not generate a
+\Code{pushToTextEditor} -- see \Code{actionPerformed} for the
+\Code{Directedness} toggle button; and
+(ii)~edit mode is disabled at the beginning of
+\Code{changeDirectedness} -- this takes care of situations where change in
+directedness is not the result of a button press.\footnote{
+  An resulting bug/quirk is that, if an algorithm sets directedness, at least
+  two node movements are required before the graph text becomes dirty.
+}
 
 \section{Graph Editing and the Graph Window} \label{sec:graph_window}
 
@@ -534,4 +578,4 @@ Adapting the technique to the other query types will take more work because
 they need to throw exceptions and repeat the request for input if the user's
 response is not satisfactory (a malformed number, a non-existent node or edge).
 
-% [Last modified: 2017 03 07 at 17:07:56 GMT]
+% [Last modified: 2017 03 08 at 21:27:36 GMT]

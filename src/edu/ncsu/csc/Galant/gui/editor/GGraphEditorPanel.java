@@ -34,9 +34,10 @@ public class GGraphEditorPanel extends GEditorPanel {
   public GGraphEditorPanel(GTabbedPane gTabbedPane, String filename, String content) {
     super(gTabbedPane, filename, content);
     GraphDispatch dispatch = GraphDispatch.getInstance();
+    LogHelper.disable();
     LogHelper.enterConstructor( getClass() );
     // prevent setting dirty until parsing of graph is done
-    if ( dispatch.isEditMode() ) dispatch.setEditMode(false);
+    dispatch.setEditMode(false);
     dispatch.addChangeListener(this);
 
     try {
@@ -59,6 +60,7 @@ public class GGraphEditorPanel extends GEditorPanel {
     syntaxHighlighter = new GGraphSyntaxHighlighting(textPane);
     documentUpdated();
     LogHelper.exitConstructor( getClass() );
+    LogHelper.restoreState();
   }
 
   /**
@@ -67,7 +69,7 @@ public class GGraphEditorPanel extends GEditorPanel {
    */
   @Override
   public void setDirty(Boolean dirty) {
-    LogHelper.enable();
+    LogHelper.disable();
     LogHelper.enterMethod(getClass(), "setDirty");
     if ( ! dirty ) super.setDirty(dirty);
     else {
@@ -87,26 +89,35 @@ public class GGraphEditorPanel extends GEditorPanel {
    */
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
-    LogHelper.enable();
+    LogHelper.disable();
     LogHelper.enterMethod(getClass(), "propertyChange");
     if ( evt.getPropertyName().equals(GraphDispatch.ANIMATION_MODE) ) {
-      if ( (Boolean) evt.getNewValue() ) {                   // animation mode
+      if ( (Boolean) evt.getNewValue() ) {
+        // entering animation mode
         LogHelper.logDebug(" to animation mode; disable text panel");
         this.textPane.setEnabled(false);
-      } else {     // edit mode
+      }
+      else {
+        // back to edit mode
         this.textPane.setEnabled(true);
         LogHelper.logDebug(" to edit mode ...");
         if ( GraphDispatch.getInstance().getGraphSource().equals(uuid) ) {
           LogHelper.logDebug("  the right graph, updating");
+          // wait until text panel is reset before going back to edit mode (for
+          // dirty flag)
+          GraphDispatch.getInstance().setEditMode(false);
           textPane.setText( GraphDispatch.getInstance().getWorkingGraph().xmlString() );
         }
       }
-    } else if ( GraphDispatch.getInstance().getGraphSource().equals(uuid) ) {
+    } // end, in animation mode
+    else {
       LogHelper.logDebug(" nothing to do with animation ...");
-      LogHelper.logDebug("  just doing a text update");
-      textPane.setText( GraphDispatch.getInstance().getWorkingGraph().xmlString() );
-    }
-    GraphDispatch.getInstance().resetEditMode();
+      if ( GraphDispatch.getInstance().getGraphSource().equals(uuid) ) {
+        LogHelper.logDebug("  doing a text update in active panel");
+        textPane.setText( GraphDispatch.getInstance().getWorkingGraph().xmlString() );
+      }
+      GraphDispatch.getInstance().setEditMode(true);
+    } // end, not animation mode
     LogHelper.exitMethod(getClass(), "propertyChange");
     LogHelper.restoreState();
   }
@@ -117,4 +128,4 @@ public class GGraphEditorPanel extends GEditorPanel {
 
 }
 
-// [Last modified: 2017 03 07 at 22:20:34 GMT]
+// [Last modified: 2017 03 08 at 21:22:12 GMT]

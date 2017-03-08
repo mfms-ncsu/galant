@@ -120,7 +120,7 @@ public class GraphMLParser {
   public Graph buildGraphFromInput( DocumentBuilder db )
     throws GalantException
   {
-    LogHelper.enable();
+    LogHelper.disable();
     LogHelper.enterMethod( getClass(), "buildGraphFromInput" );
     GraphDispatch dispatch = GraphDispatch.getInstance();
 
@@ -167,7 +167,7 @@ public class GraphMLParser {
     LogHelper.logDebug( " number of nodes = " + nodes.getLength() );
     LogHelper.logDebug( " number of edges = " + edges.getLength() );
 
-    LogHelper.setEnabled(false);
+    LogHelper.disable();
     LogHelper.beginIndent();
     for ( int nodeIndex = 0; nodeIndex < nodes.getLength(); nodeIndex++ ) {
       LogHelper.logDebug( " processing " + nodeIndex + "th node." );
@@ -209,11 +209,9 @@ public class GraphMLParser {
     }
     LogHelper.endIndent();
     LogHelper.restoreState();
-
+    graphUnderConstruction.initializeAfterParsing();
     LogHelper.exitMethod( getClass(), "buildGraphFromInput:\n" + graphUnderConstruction );
     LogHelper.restoreState();
-
-    graphUnderConstruction.initializeAfterParsing();
     return graphUnderConstruction;
   } // buildGraphFromInput
 
@@ -221,7 +219,7 @@ public class GraphMLParser {
      * @todo the exception handling here needs to go at least one level up
      */
   public Graph generateGraph(String xml) throws GalantException {
-    LogHelper.enable();
+    LogHelper.disable();
     LogHelper.enterMethod( getClass(), "generateGraph( String )" );
     DocumentBuilderFactory dbf = null;
     DocumentBuilder db = null;
@@ -300,4 +298,4 @@ public class GraphMLParser {
 
 }
 
-//  [Last modified: 2017 03 07 at 17:55:15 GMT]
+//  [Last modified: 2017 03 08 at 21:21:40 GMT]

@@ -46,12 +46,10 @@ public class GraphDispatch {
   private boolean animationMode = false;
 
   /** 
-   * true if editing the working graph; may happen in animation mode if user
-   * is changing node positions
-   * need to save it if place where it's changed does not 'know' the current state
+   * true if editing a graph; false during parsing and when the
+   * directedness of a graph is changing
    */
   private boolean editMode = true;
-  private boolean savedEditMode = true;
   
   /**
    * reference to controller of algorithm execution from the point of view
@@ -188,19 +186,10 @@ public class GraphDispatch {
    * @param mode true when user is editing the working graph, false otherwise
    */
   public void setEditMode(boolean mode) {
-    LogHelper.enable();
+    LogHelper.disable();
     LogHelper.enterMethod(getClass(), "setEditMode " + mode);
-    this.savedEditMode = this.editMode;
     this.editMode = mode;
-    LogHelper.exitMethod(getClass(), "setEditMode, savedMode = " + savedEditMode);
-    LogHelper.restoreState();
-  }
-
-  public void resetEditMode() {
-    LogHelper.enable();
-    LogHelper.enterMethod(getClass(), "resetEditMode " + savedEditMode);
-    this.editMode = this.savedEditMode;
-    LogHelper.exitMethod(getClass(), "resetEditMode, mode = " + editMode);
+    LogHelper.exitMethod(getClass(), "setEditMode");
     LogHelper.restoreState();
   }
   
@@ -310,9 +299,7 @@ public class GraphDispatch {
    * somewhere.
    */
   public void pushToTextEditor() {
-    if ( editMode ) {
-      notifyListeners(TEXT_UPDATE, null, null);
-    }
+    notifyListeners(TEXT_UPDATE, null, null);
   }
 
   private void notifyListeners(String property, Object oldValue, Object newValue) {
@@ -358,4 +345,4 @@ public class GraphDispatch {
 
 }
 
-//  [Last modified: 2017 03 07 at 21:52:25 GMT]
+//  [Last modified: 2017 03 08 at 21:18:37 GMT]

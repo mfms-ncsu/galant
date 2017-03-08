@@ -341,7 +341,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 					
             dispatch.pushToTextEditor(); 
 							
-          } // only allow dragging to move nodes in animation mode
+          } // in animation mode, allow dragging only to move nodes (see mouseDragged)
           else if ( ! dispatch.isAnimationMode() ) {
             // release after click
             // not in animation mode
@@ -537,22 +537,19 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
   private void changeDirectedness(Directedness mode) {
     LogHelper.enterMethod(getClass(), "changeDirectedness " + mode);
     // avoid setting dirty based on directedness change
-    if ( dispatch.isEditMode() ) dispatch.setEditMode(false);
-    switch(mode){
+    dispatch.setEditMode(false);
+    switch(mode) {
     case DIRECTED: {
       directedBtn.setSelected(true);
       dispatch.getWorkingGraph().setDirected(true);
-      frame.repaint();
       break;
     }
     case UNDIRECTED: {
       undirectedBtn.setSelected(true);
       dispatch.getWorkingGraph().setDirected(false);
-      frame.repaint();
       break;
     }
     } // switch
-		
     frame.repaint();
     LogHelper.exitMethod(getClass(), "changeDirectedNess");
   }
@@ -729,7 +726,8 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
         @Override
         public void actionPerformed(ActionEvent e){
           changeDirectedness(mode);
-          dispatch.pushToTextEditor(); 
+          // treat directness as ephemeral unless user edits text
+          //          dispatch.pushToTextEditor(); 
         }
       });
     button.setIcon(mode.getIcon());
@@ -1150,4 +1148,4 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
   }
 }
 
-//  [Last modified: 2017 03 07 at 22:21:06 GMT]
+//  [Last modified: 2017 03 08 at 20:42:12 GMT]

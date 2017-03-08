@@ -88,6 +88,7 @@ public class AlgorithmExecutor {
      * thread.
      */
     public synchronized void stopAlgorithm() {
+      LogHelper.disable();
         LogHelper.enterMethod(getClass(), "stopAlgorithm");
         GraphDispatch dispatch = GraphDispatch.getInstance();
         dispatch.setAnimationMode(false);
@@ -117,6 +118,7 @@ public class AlgorithmExecutor {
             dispatch.getActiveQuery().dispose();
         algorithmState = displayState = 0;
         LogHelper.exitMethod(getClass(), "stopAlgorithm");
+        LogHelper.restoreState();
     }
 
 
@@ -230,4 +232,4 @@ public class AlgorithmExecutor {
     }
 }
 
-//  [Last modified: 2017 01 06 at 21:03:49 GMT]
+//  [Last modified: 2017 03 08 at 19:31:24 GMT]

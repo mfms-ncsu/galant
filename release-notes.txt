@@ -1,6 +1,13 @@
 Release notes for Galant, most recent first.
 
-v6.0 (upcoming)
+next (minor) release [already reflected in latest commit]
+
+User
+
+- problem with “dirty” graph files is solved, i.e., graph files are marked as modified (and trigger a query when closing) if and only if the user intentionally edited the graph
+
+=====================================================
+v6.0
 
 User
 

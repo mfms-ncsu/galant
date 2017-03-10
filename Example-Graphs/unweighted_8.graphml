@@ -4,24 +4,24 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns 
 http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
  <graph  name="dfs_example" edgedefault="directed">
-  <node id="0" x="296" y="43" />
-  <node id="1" x="420" y="221" />
-  <node id="2" x="115" y="387" />
-  <node id="3" x="273" y="379" />
-  <node id="4" x="437" y="452" />
-  <node id="5" x="287" y="542" />
-  <node id="6" x="120" y="510" />
-  <node id="7" x="244" y="218" />
-  <edge id="0" source="0" target="1" />
-  <edge id="1" source="1" target="7" />
-  <edge id="2" source="0" target="7" />
-  <edge id="3" source="7" target="2" />
-  <edge id="4" source="2" target="3" />
-  <edge id="5" source="3" target="4" />
-  <edge id="6" source="4" target="5" />
-  <edge id="7" source="6" target="5" />
-  <edge id="8" source="3" target="6" />
-  <edge id="9" source="3" target="7" />
-  <edge id="10" source="1" target="3" />
-  <edge id="11" source="5" target="3" />
+  <node id="0" x="296" y="43"   />
+  <node id="1" x="420" y="221"   />
+  <node id="2" x="115" y="387"   />
+  <node id="3" x="273" y="379"   />
+  <node id="4" x="437" y="452"   />
+  <node id="5" x="287" y="542"   />
+  <node id="6" x="120" y="510"   />
+  <node id="7" x="244" y="218"   />
+  <edge id="0" source="0" target="1"  />
+  <edge id="1" source="1" target="7"  />
+  <edge id="2" source="0" target="7"  />
+  <edge id="3" source="7" target="2"  />
+  <edge id="4" source="2" target="3"  />
+  <edge id="5" source="3" target="4"  />
+  <edge id="6" source="4" target="5"  />
+  <edge id="7" source="6" target="5"  />
+  <edge id="8" source="3" target="6"  />
+  <edge id="9" source="3" target="7"  />
+  <edge id="10" source="1" target="3"  />
+  <edge id="11" source="5" target="3"  />
  </graph></graphml>

@@ -8,7 +8,6 @@ int [] discovery;
 int [] finish;
 
 function visit(Node v, Node parent) {
-    print(v + " " + parent);
     time = time + 1;
     discovery[id(v)] = time;
     beginStep();

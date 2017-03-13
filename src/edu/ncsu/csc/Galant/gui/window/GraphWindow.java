@@ -806,10 +806,6 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
     // also does not appear to help in case of infinite loop
     //synchronizer.finishStep();
     executor.stopAlgorithm();
-    // in case user changed node positions during execution
-    if ( ! dispatch.algorithmMovesNodes() ) {
-      dispatch.pushToTextEditor();
-    }
     updateStatusLabel();
   }
 
@@ -1148,4 +1144,4 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
   }
 }
 
-//  [Last modified: 2017 03 08 at 20:42:12 GMT]
+//  [Last modified: 2017 03 13 at 19:31:25 GMT]

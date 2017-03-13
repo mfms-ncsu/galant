@@ -506,29 +506,21 @@ it makes the file dirty only if Galant is in edit mode.
 Now the fun part: how to ensure that Galant is in edit mode at exactly the
 right times.
 
-The first situation above is handled by a \Code{setEditMode(false)} in two
-places: (i)~in the constructor for \Code{GGraphEditorPanel} (to forstall any
-dirty status until the text panel is fully initialized); and (ii)~right
-before a \Code{textPane.setText} when returning to edit mode from an
-animation (to forstall dirty status until text panel is refreshed).
-Edit mode is reset to true \emph{after} a property change in
-\Code{GGraphEditorPanel} when it's not the one returning from an
-animation.~\footnote{
-  Apparently a return from animation or text panel initialization generates
-  two property changes.
+Edit mode is made false by default and is activated via
+\Code{setEditMode(true)} in \Code{GraphDispatch} when a change in the graph
+window is pushed to the text editor.
+As soon as the change is accomplished -- \Code{propertyChange} in
+\Code{GGraphEditorPanel} -- edit mode is set back to \Code{false};
+care is taken so that the reset occurs only in the panel corresponding to the
+active graph.\footnote{
+  The \Code{notifyListeners(TEXT\_UPDATE, null, null)}
+  call in \Code{GraphDispatch} is indiscriminate -- all text panels are notified.
 }
 
-The second situation (change in directedness) is also handled in two places,
-this time in \Code{GraphWindow}:
-(i) a press of the directedness button does not generate a
-\Code{pushToTextEditor} -- see \Code{actionPerformed} for the
-\Code{Directedness} toggle button; and
-(ii)~edit mode is disabled at the beginning of
-\Code{changeDirectedness} -- this takes care of situations where change in
-directedness is not the result of a button press.\footnote{
-  An resulting bug/quirk is that, if an algorithm sets directedness, at least
-  two node movements are required before the graph text becomes dirty.
-}
+A feature/bug in this approach is that the text panel will not become dirty
+if the user edits the GraphML text of a graph directly.
+Perhaps this is acceptable -- the change is not reflected in the graph window
+until the file is saved.
 
 \section{Graph Editing and the Graph Window} \label{sec:graph_window}
 
@@ -578,4 +570,4 @@ Adapting the technique to the other query types will take more work because
 they need to throw exceptions and repeat the request for input if the user's
 response is not satisfactory (a malformed number, a non-existent node or edge).
 
-% [Last modified: 2017 03 08 at 21:27:36 GMT]
+% [Last modified: 2017 03 13 at 19:49:34 GMT]

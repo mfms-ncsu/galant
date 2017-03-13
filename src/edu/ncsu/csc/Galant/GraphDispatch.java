@@ -49,7 +49,7 @@ public class GraphDispatch {
    * true if editing a graph; false during parsing and when the
    * directedness of a graph is changing
    */
-  private boolean editMode = true;
+  private boolean editMode = false;
   
   /**
    * reference to controller of algorithm execution from the point of view
@@ -294,11 +294,11 @@ public class GraphDispatch {
   }
 
   /**
-   * @todo this apparently causes the GraphMLParser to read the text in the
-   * editor and create a new graph from it; probably should be prevented
-   * somewhere.
+   * notifies the text panel corresponding to the graph window that a change
+   * has occurred; the text is updated to reflect the current state of the graph
    */
   public void pushToTextEditor() {
+    setEditMode(true);
     notifyListeners(TEXT_UPDATE, null, null);
   }
 
@@ -345,4 +345,4 @@ public class GraphDispatch {
 
 }
 
-//  [Last modified: 2017 03 08 at 21:18:37 GMT]
+//  [Last modified: 2017 03 13 at 19:47:59 GMT]

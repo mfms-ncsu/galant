@@ -106,19 +106,21 @@ public class ComponentEditPanel extends JPanel {
              * for keyboard shortcuts
              */
 			public void stateChanged(ChangeEvent arg0) {
-				Double wgt = (Double) weight.getValue();
+				Double newWeight = (Double) weight.getValue();
                 // avoid changing a null weight to 0.0 (usually not intended)
                 Double previousWeight = workingElement.getWeight();
-                if ( previousWeight != null || wgt != 0.0 ) {
+                if ( previousWeight != null || newWeight != 0.0 ) {
                   Graph g = dispatch.getWorkingGraph();
                   try {
-                    workingElement.setWeight(wgt);
+                    workingElement.setWeight(newWeight);
                   }
                   catch ( Exception e ) {
                     e.printStackTrace();
                   }
-                  dispatch.pushToTextEditor();
-                  dispatch.pushToGraphEditor();
+                  if ( ! newWeight.equals(previousWeight) ) { 
+                    dispatch.pushToTextEditor();
+                    dispatch.pushToGraphEditor();
+                  }
                 }
             }
           });
@@ -202,16 +204,16 @@ public class ComponentEditPanel extends JPanel {
 		}
 		label.setText(text);
 
-		Double wgt = ge.getWeight();
+		Double newWeight = ge.getWeight();
         /**
          * @todo use NaN here and a text field in place of the spinner; NaN
          * causes spinner to crash.
          */
-        if ( wgt == null ) wgt = 0.0;
-		weight.setValue(wgt);
+        if ( newWeight == null ) newWeight = 0.0;
+		weight.setValue(newWeight);
 	}
 }
 
 
 
-//  [Last modified: 2017 01 21 at 23:09:02 GMT]
+//  [Last modified: 2017 03 14 at 15:58:52 GMT]

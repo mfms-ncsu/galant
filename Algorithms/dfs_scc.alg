@@ -1,6 +1,6 @@
 /**
- * Implements depth-first search of a directed graph and computes strongly
- * connected components.
+ * Implements (interactive) depth-first search of a directed graph and
+ * computes strongly connected components.
  */
 
 int time;
@@ -13,7 +13,7 @@ int [] finish;
  */
 Character [] component_label =
 {
-  'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'K',
+  'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K',
   'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
   'U', 'V', 'W', 'X', 'Y', 'Z'
 };
@@ -21,8 +21,13 @@ Character [] component_label =
 String [] component_color =
 {
   RED, BLUE, YELLOW, CYAN, ORANGE,
-  TEAL, VIOLET, GREEN, MAGENTA, GRAY
+  TEAL, VIOLET, GREEN, BLACK, MAGENTA, GRAY
 };
+
+/**
+ * set of nodes not yet visited during first dfs
+ */
+NodeSet unvisited;
 
 /**
  * A stack (implemented as a list) is used to visit nodes by decreasing
@@ -31,6 +36,7 @@ String [] component_color =
 NodeList finished;
 
 function visit( Node v ) {
+    unvisited.remove(v);
     time = time + 1;
     discovery[id(v)] = time;
     beginStep();
@@ -94,10 +100,13 @@ algorithm {
 
   finished = new NodeList();
   
-  for_nodes( u ) {
-    if ( ! selected(u) ) {
-      visit( u );
-    }
+  unvisited = getNodeSet();
+  while ( ! unvisited.isEmpty() ) {
+    Node u = getNode("node to visit",
+                      unvisited,
+                      "node already visited");
+    step();
+    visit(u);
   }
 
   beginStep();
@@ -117,4 +126,4 @@ algorithm {
   }
 }
 
-//  [Last modified: 2017 03 10 at 22:08:06 GMT]
+//  [Last modified: 2017 03 15 at 15:44:25 GMT]

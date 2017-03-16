@@ -1,6 +1,7 @@
 /**
  * Implements (interactive) depth-first search of a directed graph and
- * computes strongly connected components.
+ * computes strongly connected components. Also does topological sort if the
+ * graph is a dag and topologically sorts components otherwise.
  */
 
 int time;
@@ -9,19 +10,12 @@ int [] discovery;
 int [] finish;
 
 /**
- * Each component is given a letter label and a color.
+ * Each component is given a unique color.
  */
-Character [] component_label =
-{
-  'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K',
-  'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
-  'U', 'V', 'W', 'X', 'Y', 'Z'
-};
-
 String [] component_color =
 {
-  RED, BLUE, YELLOW, CYAN, ORANGE,
-  TEAL, VIOLET, GREEN, BLACK, MAGENTA, GRAY
+  BLACK, RED, BLUE, BROWN, CYAN, ORANGE,
+  TEAL, YELLOW, MOSS, VIOLET, GREEN, MAGENTA, GRAY
 };
 
 /**
@@ -73,12 +67,17 @@ function visit( Node v ) {
 function reverse_visit( Node v, int component ) {
   beginStep();
   color(v, component_color[component % component_color.length]);
-  label(v, component_label[component % component_label.length]);
+  setWeight(v, component);
+  showWeight(v);
+  //  label(v, component_label[component % component_label.length]);
   mark(v);
   for_incoming( v, e, w ) {
     if ( ! marked(w) ) {
-      select(e);
+      color(e, component_color[component % component_color.length]);
       reverse_visit(w, component);
+    }
+    else if ( color(w).equals(color(v)) ) {
+      color(e, component_color[component % component_color.length]);
     }
   }
 }
@@ -86,6 +85,7 @@ function reverse_visit( Node v, int component ) {
 algorithm {
   showNodeLabels();
   showEdgeLabels();
+  showNodeWeights();
 
   time = 0;
   discovery = new int[nodeIds()];
@@ -96,6 +96,7 @@ algorithm {
   beginStep();
   clearNodeLabels();
   clearEdgeLabels();
+  hideAllNodeWeights();
   endStep();
 
   finished = new NodeList();
@@ -116,7 +117,7 @@ algorithm {
   clearNodeMarks();
   endStep();
 
-  int component = 0;
+  int component = 1;
   while ( ! empty(finished) ) {
     Node u = pop(finished);
     if ( ! marked(u) ) {
@@ -126,4 +127,4 @@ algorithm {
   }
 }
 
-//  [Last modified: 2017 03 15 at 15:44:25 GMT]
+//  [Last modified: 2017 03 16 at 17:50:21 GMT]

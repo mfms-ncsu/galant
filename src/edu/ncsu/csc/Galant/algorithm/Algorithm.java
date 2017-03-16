@@ -95,12 +95,14 @@ public abstract class Algorithm implements Runnable {
   public static final String RED       = "#ff0000";
   public static final String GREEN     = "#00ff00";
   public static final String BLUE      = "#0000ff";
-  public static final String YELLOW    = "#ffff00";
+  public static final String YELLOW    = "#fce700";
   public static final String MAGENTA   = "#ff00ff";
   public static final String CYAN      = "#00ffff";
   public static final String TEAL      = "#009999";
   public static final String VIOLET    = "#9900cc";
   public static final String ORANGE    = "#ff8000";
+  public static final String MOSS      = "#99ff00";
+  public static final String BROWN     = "#AA7755";
   public static final String GRAY      = "#808080";
   public static final String BLACK     = "#000000";
   public static final String WHITE     = "#ffffff";
@@ -1451,4 +1453,4 @@ public abstract class Algorithm implements Runnable {
   public abstract void run();
 }
 
-//  [Last modified: 2017 01 24 at 17:28:12 GMT]
+//  [Last modified: 2017 03 16 at 17:58:23 GMT]

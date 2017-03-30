@@ -26,45 +26,46 @@ function init_edge_costs() {
 algorithm {
   showNodeWeights();
   showEdgeWeights();
-    NodePriorityQueue pq = new NodePriorityQueue();
-    Edge [] chosenEdge = new Edge[nodeIds()]; 
+  NodePriorityQueue pq = new NodePriorityQueue();
+  Edge [] chosenEdge = new Edge[nodeIds()]; 
 
-    init_edge_costs();
+  beginStep();
+  init_edge_costs();
 
-    beginStep();
-    for_nodes(node) {
-        node.setWeight(INFINITY);
-        pq.add(node);
-    }
-    Node v = getStartNode();
-    v.setSelected( true );
-    v.setWeight(0);
-    endStep();
+  for_nodes(node) {
+    setWeight(node, INFINITY);
+    pq.add(node);
+  }
+  Node s = getNode("Start vertex?");
+  Node t = getNode("Terminal vertex?");
+  highlight(s);
+  pq.decreaseKey(s, euclidian(s, t));
+  color(t, BLUE);
+  endStep();
 
-    while ( ! pq.isEmpty() ) {
-        v = pq.removeMin();
-        v.setVisited( true );
-        v.setSelected( false );
-
-
-        for_outgoing ( v, e, w ) {
-            if ( ! w.isVisited() )  {
-                if ( ! w.isSelected() ) w.setSelected( true );
-                double distance = v.getWeight() + e.getWeight();
-                if ( distance < w.getWeight() ) {
-                    beginStep();
-                    e.setSelected( true );
-                    Edge previous_chosen = chosenEdge[id(w)];
-                    if (previous_chosen != null )
-                        previous_chosen.setSelected( false );
-                    pq.decreaseKey( w, distance );
-                    chosenEdge[id(w)] = e;
-                    endStep();
-                }
-            } // end, neighbor not visited (not in tree); do nothing if node is
-            // already in tree
-        } // end, adjacency list traversal
-    } // stop when priority queue is empty
+  while ( ! pq.isEmpty() ) {
+    Node v = pq.removeMin();
+    mark(v);
+    if ( v == t ) break;
+    highlight(v);
+    for_outgoing ( v, e, w ) {
+      if ( ! isMarked(w) )  {
+        if ( w != t ) highlight(w);
+        double distance = weight(v) + weight(e) + euclidian(w, t) - euclidian(v, t);
+        if ( distance < weight(w) ) {
+          beginStep();
+          highlight(e);
+          Edge previous_chosen = chosenEdge[id(w)];
+          if (previous_chosen != null )
+            unhighlight(previous_chosen);
+          pq.decreaseKey( w, distance );
+          chosenEdge[id(w)] = e;
+          endStep();
+        }
+      } // end, neighbor not visited (not in tree); do nothing if node is
+      // already in tree
+    } // end, adjacency list traversal
+  } // stop when priority queue is empty
 }
 
-//  [Last modified: 2017 01 23 at 22:42:04 GMT]
+//  [Last modified: 2017 03 30 at 23:45:45 GMT]

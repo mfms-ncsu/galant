@@ -17,15 +17,23 @@ class LayerInformation {
      */
     ArrayList<Integer> layerSize;
     
+  /**
+   * Stores the maximum position of a node on each layer
+   */
+  ArrayList<Integer> maxPosition;
+
     protected LayerInformation() {
         layerSize = new ArrayList<Integer>();
+        maxPosition = new ArrayList<Integer>();
     }
 
     /**
      * Uses layer and position in layer information about node v to update
-     * information about number of layers and/or layer size
+     * information about number of layers, layer size and max position
+     * INVARIANT: layerSize.size() == maxPosition.size()
      */
     protected void addNode(Node v) {
+      LogHelper.disable();
         LogHelper.enterMethod(getClass(),
                               "addNode: node = " + v 
                               + ", numberOfLayers = " + numberOfLayers);
@@ -35,19 +43,27 @@ class LayerInformation {
             int tempNumberOfLayers = layerSize.size();
             while ( tempNumberOfLayers < numberOfLayers ) {
                 layerSize.add(0);
+                maxPosition.add(0);
                 tempNumberOfLayers++;
             }
             layerSize.set(layer, 1);
+            maxPosition.set(layer, v.getPositionInLayer());
         }
         else {
             int sizeOfLayer = layerSize.get(layer);
             layerSize.set(layer, sizeOfLayer + 1);
+            int currentMaxPosition = maxPosition.get(layer);
+            if ( v.getPositionInLayer() > currentMaxPosition ) {
+              maxPosition.set(layer, v.getPositionInLayer());
+            }
         }
         LogHelper.exitMethod(getClass(),
                              "addNode: numberOfLayers = " + numberOfLayers
-                             + ", sizeOfLayer = " + layerSize.get(layer));
+                             + ", sizeOfLayer = " + layerSize.get(layer)
+                             + ", maxPosition = " + maxPosition.get(layer));
+        LogHelper.restoreState();
     }
 
 }
 
-//  [Last modified: 2015 12 24 at 18:01:29 GMT]
+//  [Last modified: 2017 04 06 at 17:32:37 GMT]

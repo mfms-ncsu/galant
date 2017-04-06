@@ -421,8 +421,9 @@ public class GraphPanel extends JPanel{
             int layer = n.getLayer(); // should not change during an
                                       // animation of a layered graph algorithm
             int position = n.getPositionInLayer(state);
+            // in case nodes on a layer have non-contiguous positions
             int layerSize
-                = dispatch.getWorkingGraph().numberOfNodesOnLayer(layer);
+                = dispatch.getWorkingGraph().maxPositionInLayer(layer) + 1;
             int width = dispatch.getWindowWidth();
             // center node in layer if it's unique; else do the usual
             if (layerSize == 1) {
@@ -1015,4 +1016,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2017 01 19 at 15:10:12 GMT]
+//  [Last modified: 2017 04 06 at 17:23:27 GMT]

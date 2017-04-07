@@ -1174,7 +1174,14 @@ public class Graph {
    * @return the maximum position of a node on layer i
    */
   public int maxPositionInLayer(int i) {
-    return layerInformation.maxPosition.get(i);
+    return layerInformation.maxPositionInLayer.get(i);
+  }
+
+  /**
+   * @return the maximum position of any node
+   */
+  public int maxPositionInAnyLayer() {
+    return layerInformation.maxPosition;
   }
 
   private GraphLayout savedLayout;
@@ -1321,4 +1328,4 @@ public class Graph {
   }
 }
 
-// [Last modified: 2017 04 06 at 17:22:06 GMT]
+// [Last modified: 2017 04 07 at 15:04:36 GMT]

@@ -25,7 +25,6 @@ function init_edge_costs() {
 
 algorithm {
   showNodeWeights();
-  showEdgeWeights();
   NodePriorityQueue pq = new NodePriorityQueue();
   Edge [] chosenEdge = new Edge[nodeIds()]; 
 
@@ -37,10 +36,10 @@ algorithm {
     pq.add(node);
   }
   Node s = getNode("Start vertex?");
+  color(s, RED);
   Node t = getNode("Terminal vertex?");
-  highlight(s);
-  pq.decreaseKey(s, euclidian(s, t));
   color(t, BLUE);
+  pq.decreaseKey(s, euclidian(s, t));
   endStep();
 
   while ( ! pq.isEmpty() ) {
@@ -50,7 +49,7 @@ algorithm {
     highlight(v);
     for_outgoing ( v, e, w ) {
       if ( ! isMarked(w) )  {
-        if ( w != t ) highlight(w);
+        if ( w != t && ! highlighted(w) ) highlight(w);
         double distance = weight(v) + weight(e) + euclidian(w, t) - euclidian(v, t);
         if ( distance < weight(w) ) {
           beginStep();
@@ -66,6 +65,19 @@ algorithm {
       // already in tree
     } // end, adjacency list traversal
   } // stop when priority queue is empty
+
+  // trace path back from t
+  beginStep();
+  Node currentNode = t;
+  Edge currentEdge = chosenEdge[id(t)];
+  while ( currentEdge != null ) {
+    unhighlight(currentNode);
+    color(currentNode, BLUE);
+    unhighlight(currentEdge);
+    color(currentEdge, BLUE);
+    currentNode = otherEnd(currentEdge, currentNode);
+    currentEdge = chosenEdge[id(currentNode)];
+  }
 }
 
-//  [Last modified: 2017 03 30 at 23:45:45 GMT]
+//  [Last modified: 2017 04 18 at 15:53:15 GMT]

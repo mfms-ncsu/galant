@@ -1,10 +1,17 @@
 Release notes for Galant, most recent first.
 
-next (minor) release [already reflected in latest commit]
+====================================================
+v6.0.1
 
 User
 
 - problem with “dirty” graph files is solved, i.e., graph files are marked as modified (and trigger a query when closing) if and only if the user intentionally edited the graph
+
+Animator
+
+- made dfs_scc interactive
+
+- made euclidian (version of Dijkstra’s) algorithm interactive
 
 =====================================================
 v6.0

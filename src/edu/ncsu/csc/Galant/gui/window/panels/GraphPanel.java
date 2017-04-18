@@ -421,15 +421,11 @@ public class GraphPanel extends JPanel{
             int layer = n.getLayer(); // should not change during an
                                       // animation of a layered graph algorithm
             int position = n.getPositionInLayer(state);
-            /**
-             * @todo This formulation is for drawings where non-verticality is
-             * being minimized and positions are not necessarily contiguous.
-             * When positions on each layer *are* contiguous, nodes are
-             * pushed as far to the left as possible, which is usually not
-             * desirable. Future versions should explore several options for
-             * drawing layered graphs and procedures for editing them.
-             */
             int layerSize = 1;
+            // vertical layered graphs have gaps in positions on some layers,
+            // i.e., positions on some layers are not contiguous; in that
+            // case, positions should be taken "literally", i.e., position p
+            // means the same thing on every layer
             if ( dispatch.getWorkingGraph().isVertical() )
               layerSize = dispatch.getWorkingGraph().maxPositionInAnyLayer() + 1;
             else
@@ -1026,4 +1022,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2017 04 18 at 19:53:14 GMT]
+//  [Last modified: 2017 04 18 at 20:12:27 GMT]

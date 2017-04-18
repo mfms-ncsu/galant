@@ -3,24 +3,39 @@
  *  undirected edges as going in both directions.
  */
 
-/** Required: edge weights defined */
+/** Required: edge weights defined; otherwise they will be based on geometry */
 
+function double euclidian(Node v, Node w) {
+    return getPosition(v).distance(getPosition(w));
+}
+
+function init_edge_costs() {
+  for_edges(edge) {
+    if ( ! hasWeight(edge) ) {
+      double distance = euclidian(source(edge), target(edge));
+      setWeight(edge, distance);
+    }
+  }
+}
 algorithm {
   showNodeWeights();
   showEdgeWeights();
   NodePriorityQueue pq = new NodePriorityQueue();
   Edge [] chosenEdge = new Edge[nodeIds()]; 
   beginStep();
+  init_edge_costs();
   for_nodes(node) {
     setWeight(node, INFINITY);
     insert(node, pq);
   }
-  Node v = getStartNode();
-  setWeight(v, 0);
+  Node s = getNode("Start vertex?");
+  setWeight(s, 0);
+  changeKey(s, pq);
+  color(s, BLUE);
   endStep();
 
   while ( ! empty(pq) ) {
-    v = removeBest(pq);
+    Node v = removeBest(pq);
     mark(v);        // nodes are marked when visited
     unhighlight(v); // and highlighted when on the frontier
     for_outgoing ( v, e, w ) {
@@ -44,4 +59,4 @@ algorithm {
   } // stop when priority queue is empty
 } // end, algorithm
 
-//  [Last modified: 2017 01 17 at 19:16:29 GMT]
+//  [Last modified: 2017 04 18 at 19:25:58 GMT]

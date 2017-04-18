@@ -429,8 +429,11 @@ public class GraphPanel extends JPanel{
              * desirable. Future versions should explore several options for
              * drawing layered graphs and procedures for editing them.
              */
-            int layerSize
-              = dispatch.getWorkingGraph().maxPositionInAnyLayer() + 1;
+            int layerSize = 1;
+            if ( dispatch.getWorkingGraph().isVertical() )
+              layerSize = dispatch.getWorkingGraph().maxPositionInAnyLayer() + 1;
+            else
+              layerSize = dispatch.getWorkingGraph().numberOfNodesOnLayer(layer);
             int width = dispatch.getWindowWidth();
             // center node in layer if it's unique; else do the usual
             if (layerSize == 1) {
@@ -1023,4 +1026,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2017 04 07 at 14:40:02 GMT]
+//  [Last modified: 2017 04 18 at 19:53:14 GMT]

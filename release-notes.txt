@@ -1,5 +1,11 @@
 Release notes for Galant, most recent first.
 
+[since latest release]
+
+- dijkstra is now interactive and uses positions to calculate edge weights if they don't exist
+
+- some improvements in drawing layered graphs
+
 ====================================================
 v6.0.1
 

@@ -574,6 +574,13 @@ public class Graph {
     return layered;
   }
 
+  public boolean isVertical() {
+    if ( layered ) {
+      return layerInformation.vertical;
+    }
+    else return false;
+  }
+
   /**
    * Changes the contents of the current message banner
    */
@@ -1245,6 +1252,7 @@ public class Graph {
         this.edgeById.put(edge.getId(), edge);
       }
     }
+    if ( layered ) layerInformation.initializeAfterParsing();
   }
 
   /**
@@ -1328,4 +1336,4 @@ public class Graph {
   }
 }
 
-// [Last modified: 2017 04 07 at 15:04:36 GMT]
+// [Last modified: 2017 04 18 at 19:59:20 GMT]

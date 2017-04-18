@@ -13,7 +13,7 @@ import java.util.PriorityQueue;
 double INFINITY = Double.POSITIVE_INFINITY;
 
 function double euclidian(Node v, Node w) {
-    return v.getPosition().distance(w.getPosition());
+    return getPosition(v).distance(getPosition(w));
 }
 
 function init_edge_costs() {
@@ -26,7 +26,7 @@ function init_edge_costs() {
 algorithm {
   showNodeWeights();
   NodePriorityQueue pq = new NodePriorityQueue();
-  Edge [] chosenEdge = new Edge[nodeIds()]; 
+  Edge [] chosenEdge = new Edge[nodeIds()];
 
   beginStep();
   init_edge_costs();
@@ -80,4 +80,4 @@ algorithm {
   }
 }
 
-//  [Last modified: 2017 04 18 at 15:53:15 GMT]
+//  [Last modified: 2017 04 18 at 19:19:58 GMT]

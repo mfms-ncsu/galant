@@ -87,6 +87,8 @@ public abstract class Algorithm implements Runnable {
   public static final Double INFINITY = Double.POSITIVE_INFINITY;
   public static final Double Infinity = Double.POSITIVE_INFINITY;
   public static final Double NEGATIVE_INFINITY = Double.NEGATIVE_INFINITY;
+  public static final Integer MAX_INTEGER = Integer.MAX_VALUE;
+  public static final Integer MIN_INTEGER = Integer.MIN_VALUE;
 
   /**
    * Color constants: included for convenience since Galant represents
@@ -952,6 +954,14 @@ public abstract class Algorithm implements Runnable {
     return v.visibleNeighbors().size();
   }
 
+  public NodeList unmarkedNeighbors(Node v) throws GalantException {
+    checkGraphElement(v);
+    return v.getUnvisitedAdjacentNodes();
+  }
+  public Intger unmarkedDegree(Node v) throws GalantException {
+    return unmarkedNeighbors(v).size();
+  }
+  
   public EdgeList visibleEdges(Node v) throws GalantException {
     checkGraphElement(v);
     return v.visibleEdges();
@@ -1044,8 +1054,12 @@ public abstract class Algorithm implements Runnable {
    * Displays a message during algorithm execution; the message could be
    * any object that has a toString() method
    */
-  public void display(Object message) throws Terminate {
-    graph.writeMessage("" + message);
+  public void display(Object... message) throws Terminate {
+    String toBeDisplayed = "";
+    for ( Object o : message ) {
+      toBeDisplayed += o;
+    }
+    graph.writeMessage(toBeDisplayed);
   }
 
   /**
@@ -1208,8 +1222,12 @@ public abstract class Algorithm implements Runnable {
    * Prints a string on the console (e.g., for debugging); as with display,
    * the message can be any object with a toString() method
    */
-  public void print(Object o) {
-    System.err.println("" + o);
+  public void print(Object... message) {
+    String toBePrinted = "";
+    for ( Object o : message ) {
+      toBePrinted += o;
+    }
+    System.err.println(toBePrinted);
   }
 
   public Integer integer(String s) throws GalantException {
@@ -1238,7 +1256,7 @@ public abstract class Algorithm implements Runnable {
   /**
    * @return x, rounded to nearest integer as an Integer object
    */
-  public Integer integer(double x ) {
+  public Integer integer(double x) {
     return (int) (x + 0.5);
   }
 
@@ -1453,4 +1471,4 @@ public abstract class Algorithm implements Runnable {
   public abstract void run();
 }
 
-//  [Last modified: 2017 03 16 at 17:58:23 GMT]
+//  [Last modified: 2017 04 25 at 21:58:28 GMT]

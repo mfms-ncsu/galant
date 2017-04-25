@@ -333,12 +333,12 @@ algorithm {
     // and to move m_2 to m" (there may be several choices)
     //   C_2 = C_2 - wt[m"] - weight(m") + weight(m_2) + wt[m_2] - wt[m"]
 
-    // The w[x] and c[x] values are computed bottom up as follows. Suppose x
+    // The wt[x] and c[x] values are computed bottom up as follows. Suppose x
     // has children y_1,...,y_k, whose values have been computed. Then
-    //    w[x] = weight(x) + sum_i w[y_i]
+    //    wt[x] = weight(x) + sum_i wt[y_i]
     //    c[x] = sum_i c[y_i] + sum_i w[y_i]
     // If edges have nonuniform distances, the terms in the last sum are
     // multiplied by d(x,y_i)
 }
 
-//  [Last modified: 2016 09 19 at 13:53:17 GMT]
+//  [Last modified: 2017 04 20 at 17:41:03 GMT]

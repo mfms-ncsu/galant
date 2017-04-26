@@ -954,14 +954,6 @@ public abstract class Algorithm implements Runnable {
     return v.visibleNeighbors().size();
   }
 
-  public NodeList unmarkedNeighbors(Node v) throws GalantException {
-    checkGraphElement(v);
-    return v.getUnvisitedAdjacentNodes();
-  }
-  public Intger unmarkedDegree(Node v) throws GalantException {
-    return unmarkedNeighbors(v).size();
-  }
-  
   public EdgeList visibleEdges(Node v) throws GalantException {
     checkGraphElement(v);
     return v.visibleEdges();
@@ -989,6 +981,9 @@ public abstract class Algorithm implements Runnable {
   public NodeList unmarkedNeighbors(Node v) throws GalantException {
     checkGraphElement(v);
     return v.getUnvisitedAdjacentNodes();
+  }
+  public Integer unmarkedDegree(Node v) throws GalantException {
+    return unmarkedNeighbors(v).size();
   }
   
   /**
@@ -1471,4 +1466,4 @@ public abstract class Algorithm implements Runnable {
   public abstract void run();
 }
 
-//  [Last modified: 2017 04 25 at 21:58:28 GMT]
+//  [Last modified: 2017 04 26 at 01:30:10 GMT]

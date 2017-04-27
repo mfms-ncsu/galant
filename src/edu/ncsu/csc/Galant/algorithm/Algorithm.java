@@ -1358,6 +1358,9 @@ public abstract class Algorithm implements Runnable {
   public Edge getEdge(Node source, Node target) throws GalantException {
     return graph.getEdge(source, target);
   }
+  public Edge edge(Node source, Node target) throws GalantException {
+    return graph.getEdge(source, target);
+  }
 
   /**
    * adds an edge based on the integer id's of the two endpoints
@@ -1466,4 +1469,4 @@ public abstract class Algorithm implements Runnable {
   public abstract void run();
 }
 
-//  [Last modified: 2017 04 26 at 01:30:10 GMT]
+//  [Last modified: 2017 04 27 at 20:33:43 GMT]

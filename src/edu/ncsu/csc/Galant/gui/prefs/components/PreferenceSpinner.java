@@ -40,28 +40,6 @@ public class PreferenceSpinner extends PreferenceComponent<Integer, JSpinner>
                     = ((JSpinner.DefaultEditor) editor).getTextField();
                 textField.setColumns( SPINNER_FIELD_WIDTH );
                 textField.setHorizontalAlignment( JTextField.CENTER );
-                // apparently there's no need to override the change listener
-// 				getComponent().addChangeListener(
-//                                                  new ChangeListener(){
-// 					@Override
-// 					public void stateChanged(ChangeEvent e)
-// 						{
-// 							JComponent editor = getComponent().getEditor();
-// 							Dimension preferred = editor.getPreferredSize();
-// 							int prevWidth = preferred.width;
-// 							preferred.width
-//                                 = SwingUtilities.computeStringWidth(editor.getFontMetrics(editor.getFont()), "000" );
-//                                 = SPINNER_FIELD_WIDTH;
-//                                 The method below appears to give windows
-//                                 that are too small
-//                             String numberFormat = NumberFormat.getInstance().format(getValue());
-// 								SwingUtilities.computeStringWidth(editor.getFontMetrics(editor.getFont()), numberFormat );
-// 							editor.setMinimumSize(preferred);
-//                             getComponent().setEditor(editor);
-// 							if(prevWidth != preferred.width)
-// 								getComponent().getParent().validate();
-// 						}
-// 				});
 			}
 		@Override
 		protected Integer getValue()
@@ -79,4 +57,4 @@ public class PreferenceSpinner extends PreferenceComponent<Integer, JSpinner>
 			}
 	}
 
-//  [Last modified: 2015 05 30 at 00:34:24 GMT]
+//  [Last modified: 2017 04 26 at 21:00:21 GMT]

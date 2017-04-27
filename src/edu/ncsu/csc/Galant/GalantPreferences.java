@@ -5,23 +5,6 @@
  *
  * @todo The mechanism here is heavily dependent on specific GUI features --
  * it should be possible to select preferences via keyboard shortcuts.
- *
- * @todo Organize the options under "Graph Display", now called "Visual Graph
- * Editor", as follows:
- *
- * Nodes                            (a header, bold font)
- *  Default border thickness        (spinner)
- *  Highlight border thickness      (spinner)
- *  Highlight color
- *  Radius                          (spinner)
- *  Show id's                       (toggle)
- * Edges
- *  Default width
- *  Highlight width
- *  Highlight color
- *
- * Eventually think about how to indicate that a node or edge is
- * selected. Highest priority is the toggle for showing id's.
  */
 
 package edu.ncsu.csc.Galant;
@@ -262,4 +245,4 @@ public class GalantPreferences {
 
 }
 
-//  [Last modified: 2017 01 06 at 13:32:38 GMT]
+//  [Last modified: 2017 04 26 at 20:30:41 GMT]

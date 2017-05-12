@@ -1,52 +1,48 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<graphml xmlns="http://graphml.graphdrawing.org/xmlns"
-xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns
+<?xml version="1.0" encoding="UTF-8"?> 
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns 
 http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
-<comments>
- random 21 vertices, 20 edges, seed = 1
-</comments>
-<graph edgedefault="undirected">
-<node id="1" x="212" y="451" weight="4" />
-<node id="2" x="284" y="52" weight="8" />
-<node id="3" x="244" y="173" weight="4" />
-<node id="4" x="195" y="312" weight="9" />
-<node id="5" x="109" y="227" weight="4" />
-<node id="6" x="442" y="65" weight="10" />
-<node id="7" x="282" y="360" weight="4" />
-<node id="8" x="295" y="416" weight="3" />
-<node id="9" x="444" y="42" weight="6" />
-<node id="10" x="188" y="246" weight="3" />
-<node id="11" x="215" y="112" weight="3" />
-<node id="12" x="241" y="489" weight="4" />
-<node id="13" x="154" y="31" weight="7" />
-<node id="14" x="345" y="240" weight="6" />
-<node id="15" x="82" y="159" weight="3" />
-<node id="16" x="254" y="372" weight="5" />
-<node id="17" x="207" y="144" weight="4" />
-<node id="18" x="456" y="351" weight="9" />
-<node id="19" x="481" y="315" weight="2" />
-<node id="20" x="397" y="410" weight="7" />
-<node id="21" x="88" y="36" weight="2" />
-<edge source="1" target="2" />
-<edge source="1" target="3" />
-<edge source="2" target="4" />
-<edge source="4" target="5" />
-<edge source="5" target="6" />
-<edge source="3" target="7" />
-<edge source="6" target="8" />
-<edge source="6" target="9" />
-<edge source="4" target="10" />
-<edge source="3" target="11" />
-<edge source="2" target="12" />
-<edge source="3" target="13" />
-<edge source="5" target="14" />
-<edge source="13" target="15" />
-<edge source="15" target="16" />
-<edge source="3" target="17" />
-<edge source="12" target="18" />
-<edge source="8" target="19" />
-<edge source="18" target="20" />
-<edge source="13" target="21" />
-</graph>
-</graphml>
+ <graph  edgedefault="undirected">
+  <node id="1" x="444" y="420"  weight="4.0"  />
+  <node id="2" x="573" y="568"  weight="8.0"  />
+  <node id="3" x="315" y="274"  weight="4.0"  />
+  <node id="4" x="710" y="534"  weight="9.0"  />
+  <node id="5" x="842" y="482"  weight="4.0"  />
+  <node id="6" x="962" y="495"  weight="10.0"  />
+  <node id="7" x="354" y="133"  weight="4.0"  />
+  <node id="8" x="1052" y="580"  weight="3.0"  />
+  <node id="9" x="1019" y="380"  weight="6.0"  />
+  <node id="10" x="740" y="660"  weight="3.0"  />
+  <node id="11" x="298" y="70"  weight="3.0"  />
+  <node id="12" x="561" y="837"  weight="4.0"  />
+  <node id="13" x="191" y="318"  weight="7.0"  />
+  <node id="14" x="871" y="329"  weight="6.0"  />
+  <node id="15" x="107" y="438"  weight="3.0"  />
+  <node id="16" x="50" y="546"  weight="5.0"  />
+  <node id="17" x="259" y="188"  weight="4.0"  />
+  <node id="18" x="550" y="1081"  weight="9.0"  />
+  <node id="19" x="1123" y="635"  weight="2.0"  />
+  <node id="20" x="543" y="1274"  weight="7.0"  />
+  <node id="21" x="126" y="214"  weight="2.0"  />
+  <edge  source="1" target="2"  />
+  <edge  source="1" target="3"  />
+  <edge  source="2" target="4"  />
+  <edge  source="4" target="5"  />
+  <edge  source="5" target="6"  />
+  <edge  source="3" target="7"  />
+  <edge  source="6" target="8"  />
+  <edge  source="6" target="9"  />
+  <edge  source="4" target="10"  />
+  <edge  source="3" target="11"  />
+  <edge  source="2" target="12"  />
+  <edge  source="3" target="13"  />
+  <edge  source="5" target="14"  />
+  <edge  source="13" target="15"  />
+  <edge  source="15" target="16"  />
+  <edge  source="3" target="17"  />
+  <edge  source="12" target="18"  />
+  <edge  source="8" target="19"  />
+  <edge  source="18" target="20"  />
+  <edge  source="13" target="21"  />
+ </graph></graphml>

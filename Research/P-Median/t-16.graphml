@@ -4,22 +4,22 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns 
 http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
  <graph  edgedefault="undirected">
-  <node id="1" x="322" y="506"  weight="4.0"  />
-  <node id="2" x="493" y="250"  weight="8.0"  />
-  <node id="3" x="283" y="734"  weight="9.0"  />
-  <node id="4" x="717" y="467"  weight="9.0"  />
-  <node id="5" x="787" y="575"  weight="3.0"  />
-  <node id="6" x="890" y="712"  weight="1.0"  />
-  <node id="7" x="414" y="951"  weight="4.0"  />
-  <node id="8" x="929" y="937"  weight="2.0"  />
-  <node id="9" x="756" y="938"  weight="9.0"  />
-  <node id="10" x="642" y="584"  weight="2.0"  />
-  <node id="11" x="241" y="946"  weight="4.0"  />
-  <node id="12" x="496" y="508"  weight="1.0"  />
-  <node id="13" x="131" y="908"  weight="6.0"  />
-  <node id="14" x="720" y="716"  weight="1.0"  />
-  <node id="15" x="61" y="1078"  weight="6.0"  />
-  <node id="16" x="61" y="1258"  weight="3.0"  />
+  <node id="1" x="414" y="380"  weight="4.0"  />
+  <node id="2" x="570" y="270"  weight="8.0"  />
+  <node id="3" x="264" y="505"  weight="9.0"  />
+  <node id="4" x="739" y="237"  weight="9.0"  />
+  <node id="5" x="899" y="289"  weight="3.0"  />
+  <node id="6" x="1020" y="431"  weight="1.0"  />
+  <node id="7" x="272" y="654"  weight="4.0"  />
+  <node id="8" x="1123" y="455"  weight="2.0"  />
+  <node id="9" x="1043" y="604"  weight="9.0"  />
+  <node id="10" x="759" y="70"  weight="2.0"  />
+  <node id="11" x="185" y="388"  weight="4.0"  />
+  <node id="12" x="540" y="110"  weight="1.0"  />
+  <node id="13" x="153" y="674"  weight="6.0"  />
+  <node id="14" x="970" y="160"  weight="1.0"  />
+  <node id="15" x="76" y="844"  weight="6.0"  />
+  <node id="16" x="50" y="1005"  weight="3.0"  />
   <edge  source="1" target="2"  />
   <edge  source="1" target="3"  />
   <edge  source="2" target="4"  />

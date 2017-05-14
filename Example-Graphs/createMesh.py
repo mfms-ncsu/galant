@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 
 ## createMesh.py
 # - creates a mesh with specified width, height, and inter-node distance in
@@ -69,4 +69,4 @@ def main():
 
 main()
 
-#  [Last modified: 2015 04 07 at 11:38:08 GMT]
+#  [Last modified: 2017 05 14 at 00:01:24 GMT]

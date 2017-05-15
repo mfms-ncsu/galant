@@ -25,6 +25,9 @@ def parse_arguments():
     parser.add_argument("-pad", "--padding", type=int, dest="padding", default=50,
                         help="padding around edges of window;"
                         + " applies only if node positions are requested")
+    parser.add_argument("-pL", "--power_law", type=float, dest="power_law",
+                        help="each node attaches to the i-th previous node with"
+                        + " probability (POWER_LAW)^i")
     parser.add_argument("-s", "--seed", type=int, dest="seed", default=None,
                         help="random seed for weights and connections;"
                         + " current time is used if none is given")
@@ -62,6 +65,29 @@ def random_edges(node_list, edge_weights):
             edge_list.append((node[0], other_node[0], weight))
         else:
             edge_list.append((node[0], other_node[0]))
+    return edge_list
+
+# returns a list of edges where the k-th node attempts to attach to the i-th
+# node, for i = 1, ..., k-1, with probability (power_law)^i; if no attachment
+# occurs, the choice is then made uniformly; edge_weights are as with random_edges
+def power_law_edges(node_list, power_law, edge_weights):
+    edge_list = []
+    for list_position in range(1, len(node_list)):
+        node_id = node_list[list_position][0]
+        edge = None
+        base = power_law
+        for other_node in node_list[:list_position]:
+            if random.random() <= base:
+                edge = (node_id, other_node[0])
+                break
+            base *= power_law
+        if edge == None:
+            other_node = random.choice(node_list[:list_position])
+            edge = (node_id, other_node[0])
+        if edge_weights != None:
+            weight = random.randint(1, edge_weights)
+            edge = (edge[0], edge[1], weight)
+        edge_list.append(edge)
     return edge_list
 
 def euclidean_distance(node_one, node_two):
@@ -168,7 +194,10 @@ def main():
                          for node_id in node_list]
         else:
             node_list = [(node_id, 0) for node_id in node_list]
-        edge_list = random_edges(node_list, args.edge_weights)
+        if args.power_law != None:
+            edge_list = power_law_edges(node_list, args.power_law, args.edge_weights)
+        else:
+            edge_list = random_edges(node_list, args.edge_weights)
     # at this point the list items are as follows
     #  node_list has items of the form
     #     (id,0)     if nodes have neither position nor weight
@@ -182,4 +211,4 @@ def main():
 
 main()    
 
-#  [Last modified: 2017 05 14 at 18:56:25 GMT]
+#  [Last modified: 2017 05 15 at 12:40:33 GMT]

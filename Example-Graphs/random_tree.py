@@ -27,7 +27,10 @@ def parse_arguments():
                         + " applies only if node positions are requested")
     parser.add_argument("-pL", "--power_law", type=float, dest="power_law",
                         help="each node attaches to the i-th previous node with"
-                        + " probability (POWER_LAW)^i")
+                        + " probability (POWER_LAW)^i;"
+                        + " if POWER_LAW is negative the (k-i)-th previous node is used;"
+                        + " thus POWER_LAW ranges from 1.0 (yielding a star)"
+                        + " to -1.0 (yielding a line)")
     parser.add_argument("-s", "--seed", type=int, dest="seed", default=None,
                         help="random seed for weights and connections;"
                         + " current time is used if none is given")
@@ -75,12 +78,18 @@ def power_law_edges(node_list, power_law, edge_weights):
     for list_position in range(1, len(node_list)):
         node_id = node_list[list_position][0]
         edge = None
+        other_nodes = node_list[:list_position]
         base = power_law
-        for other_node in node_list[:list_position]:
+        multiplier = power_law
+        if power_law < 0:
+            other_nodes.reverse()
+            base = -base
+            multiplier = -multiplier
+        for other_node in other_nodes:
             if random.random() <= base:
                 edge = (node_id, other_node[0])
                 break
-            base *= power_law
+            base *= multiplier
         if edge == None:
             other_node = random.choice(node_list[:list_position])
             edge = (node_id, other_node[0])
@@ -211,4 +220,4 @@ def main():
 
 main()    
 
-#  [Last modified: 2017 05 15 at 12:40:33 GMT]
+#  [Last modified: 2017 05 15 at 13:56:37 GMT]

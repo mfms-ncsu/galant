@@ -766,27 +766,33 @@ public abstract class Algorithm implements Runnable {
   }
   public Integer getInteger(GraphElement ge, String s) throws GalantException {
     checkGraphElement(ge);
-    return ge.getInteger(s);
+    Integer returnValue = ge.getInteger(s);
+    if ( returnValue == null )
+      throw new GalantException("Element " + ge + " has no integer attribute " + s);
+    return returnValue;
   }
   public Double getDouble(GraphElement ge, String s) throws GalantException {
     checkGraphElement(ge);
-    return ge.getDouble(s);
+    Double returnValue = ge.getDouble(s);
+    if ( returnValue == null )
+      throw new GalantException("Element " + ge + " has no double attribute " + s);
+    return returnValue;
   }
   public String getString(GraphElement ge, String s) throws GalantException {
     checkGraphElement(ge);
-    return ge.getString(s);
+    String returnValue = ge.getString(s);
+    if ( returnValue == null )
+      throw new GalantException("Element " + ge + " has no string attribute " + s);
+    return returnValue;
   }
   public Integer getInteger(String s, GraphElement ge) throws GalantException {
-    checkGraphElement(ge);
-    return ge.getInteger(s);
+    return getInteger(ge, s);
   }
   public Double getDouble(String s, GraphElement ge) throws GalantException {
-    checkGraphElement(ge);
-    return ge.getDouble(s);
+    return getDouble(ge, s);
   }
   public String getString(String s, GraphElement ge) throws GalantException {
-    checkGraphElement(ge);
-    return ge.getString(s);
+    return getString(ge, s);
   }
 
   public void color(GraphElement ge, String color) throws Terminate, GalantException {
@@ -1469,4 +1475,4 @@ public abstract class Algorithm implements Runnable {
   public abstract void run();
 }
 
-//  [Last modified: 2017 04 27 at 20:33:43 GMT]
+//  [Last modified: 2017 05 19 at 15:46:40 GMT]

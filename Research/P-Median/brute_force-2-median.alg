@@ -55,25 +55,27 @@ function Node one_median() {
  * candidate for a recursive call
  * @return the weight of the subtree rooted at root
  */
-function Double recursive_weight(Node root, Node parent) {
-    Double weight = weight(root);
+function Integer recursive_weight(Node root, Node parent) {
+  Integer weight = integer(weight(root));
     for_adjacent(root, e, child) {
         if ( child != parent ) {
             weight = weight + recursive_weight(child, root);
         }
     }
+    label(root, weight);
     return weight;
 }
 
 /**
- * sets the weight of each edge incident on the median to the total weight of
+ * sets the label of each edge incident on the median to the total weight of
  * the corresponding subtree
  */
 function compute_subtree_weights(Node median) {
+  Integer weight = 0;
     for_adjacent(median, e, subtree_root) {
-        Double weight = recursive_weight(subtree_root, median);
-        setWeight(e, weight);
+        weight += recursive_weight(subtree_root, median);
     }
+    label(median, weight);
 }
 
 /**
@@ -143,7 +145,7 @@ function Double compute_cost(Node median) {
         total_cost = total_cost + cost;
         for_adjacent(v, e, w) {
             if ( isVisible(e) && ! marked(w) ) {
-                distance[id(w)] = distance[id(v)] + 1;
+              distance[id(w)] = distance[id(v)] + integer(weight(e));
                 mark(w);
                 pathFound.enqueue(w);
             }
@@ -214,4 +216,4 @@ algorithm {
     endStep();
 }
 
-//  [Last modified: 2016 06 30 at 20:00:43 GMT]
+//  [Last modified: 2017 05 16 at 12:08:11 GMT]

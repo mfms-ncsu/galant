@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns 
+http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+ <graph  edgedefault="undirected">
+  <node id="0" x="553" y="423"  label="L1"  />
+  <node id="1" x="512" y="109"  label="L2"  />
+  <node id="2" x="391" y="591"  label="L3"  />
+  <node id="3" x="966" y="447"  label="L4"  />
+  <node id="4" x="202" y="424"  label="L5"  />
+  <node id="5" x="830" y="232"  label="L6"  />
+  <node id="6" x="212" y="773"  label="L7"  />
+  <node id="7" x="181" y="241"  label="R1" color="#009933"  />
+  <node id="8" x="382" y="436"  color="#009933" label="R2"  />
+  <node id="9" x="972" y="114"  label="R3"  />
+  <node id="10" x="213" y="596"  color="#009933" label="R4"  />
+  <node id="11" x="771" y="416"  color="#009900" label="R5"  />
+  <node id="12" x="565" y="583"  label="R6"  />
+  <node id="13" x="966" y="629"  color="#009933" label="R7"  />
+  <edge id="0" source="0" target="8" color="#0000CC"  />
+  <edge id="1" source="1" target="7" color="#000099"  />
+  <edge id="2" source="0" target="11"  />
+  <edge id="3" source="4" target="7"  />
+  <edge id="4" source="1" target="9"  />
+  <edge id="5" source="2" target="8"  />
+  <edge id="6" source="1" target="11"  />
+  <edge id="7" source="4" target="8"  />
+  <edge id="8" source="2" target="10"  />
+  <edge id="9" source="3" target="9"  />
+  <edge id="10" source="2" target="12" color="#0033CC"  />
+  <edge id="11" source="5" target="9" color="#000099"  />
+  <edge id="12" source="3" target="13"  />
+  <edge id="13" source="6" target="10"  />
+  <edge id="14" source="3" target="11" color="#0033FF"  />
+  <edge id="15" source="4" target="10" color="#0000FF"  />
+ </graph></graphml>

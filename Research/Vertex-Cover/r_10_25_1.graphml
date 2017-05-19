@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns 
+http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+ <graph  edgedefault="directed">
+  <node id="1" x="774" y="363"   />
+  <node id="2" x="756" y="167"   />
+  <node id="3" x="631" y="528"   />
+  <node id="4" x="387" y="362"   />
+  <node id="5" x="430" y="72"   />
+  <node id="6" x="219" y="178"   />
+  <node id="7" x="158" y="577"   />
+  <node id="8" x="541" y="188"   />
+  <node id="9" x="91" y="397"   />
+  <node id="10" x="404" y="489"   />
+  <edge  source="1" target="2" weight="6139.0"  />
+  <edge  source="1" target="3" weight="3368.0"  />
+  <edge  source="2" target="4" weight="313.0"  />
+  <edge  source="4" target="5" weight="6341.0"  />
+  <edge  source="5" target="6" weight="4432.0"  />
+  <edge  source="3" target="7" weight="1249.0"  />
+  <edge  source="6" target="8" weight="3943.0"  />
+  <edge  source="6" target="9" weight="7340.0"  />
+  <edge  source="4" target="10" weight="9721.0"  />
+  <edge  source="4" target="7" weight="7204.0"  />
+  <edge  source="3" target="10" weight="254.0"  />
+  <edge  source="7" target="9" weight="487.0"  />
+  <edge  source="4" target="8" weight="6273.0"  />
+  <edge  source="1" target="6" weight="9929.0"  />
+  <edge  source="4" target="6" weight="6623.0"  />
+  <edge  source="2" target="5" weight="6364.0"  />
+  <edge  source="5" target="8" weight="6008.0"  />
+  <edge  source="7" target="10" weight="3459.0"  />
+  <edge  source="4" target="9" weight="5473.0"  />
+  <edge  source="2" target="8" weight="9572.0"  />
+  <edge  source="9" target="10" weight="1323.0"  />
+  <edge  source="1" target="10" weight="6031.0"  />
+  <edge  source="8" target="9" weight="6707.0"  />
+  <edge  source="3" target="4" weight="5687.0"  />
+  <edge  source="3" target="8" weight="6187.0"  />
+ </graph></graphml>

@@ -164,6 +164,11 @@ public class GraphElement implements Comparable<GraphElement> {
         }
 	}
 
+  /**
+   * @todo Would be nice to have methods hasInteger(String key), etc., so
+   * that animator can say ge.hasInteger("attribute"), e.g.
+   */
+
     /************** Integer attributes ***************/
 	public boolean set(String key, Integer value) throws Terminate {
         GraphElementState newState = newState();
@@ -179,7 +184,6 @@ public class GraphElement implements Comparable<GraphElement> {
         GraphElementState validState = getLatestValidState(state);
 		return validState == null ? null : validState.getAttributes().getInteger(key);
 	}
-
 
     /************** Double attributes ***************/
 	public boolean set(String key, Double value) throws Terminate {
@@ -226,8 +230,9 @@ public class GraphElement implements Comparable<GraphElement> {
 	}
 	public Boolean getBoolean(int state, String key) {
         GraphElementState validState = getLatestValidState(state);
-		return validState == null ? false
-            : validState.getAttributes().getBoolean(key);
+        if ( validState == null ) return false;
+        if ( validState.getAttributes() == null ) return false;
+		return validState.getAttributes().getBoolean(key);
 	}
 
     /**
@@ -685,4 +690,4 @@ public class GraphElement implements Comparable<GraphElement> {
 
 }
 
-//  [Last modified: 2017 01 14 at 22:34:02 GMT]
+//  [Last modified: 2017 07 21 at 18:56:14 GMT]

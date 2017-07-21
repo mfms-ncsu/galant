@@ -771,6 +771,12 @@ public abstract class Algorithm implements Runnable {
       throw new GalantException("Element " + ge + " has no integer attribute " + s);
     return returnValue;
   }
+  public Boolean hasInteger(GraphElement ge, String s) throws GalantException {
+    checkGraphElement(ge);
+    Integer attributeValue = ge.getInteger(s);
+    if ( attributeValue == null ) return false;
+    return true;
+  }
   public Double getDouble(GraphElement ge, String s) throws GalantException {
     checkGraphElement(ge);
     Double returnValue = ge.getDouble(s);
@@ -778,12 +784,24 @@ public abstract class Algorithm implements Runnable {
       throw new GalantException("Element " + ge + " has no double attribute " + s);
     return returnValue;
   }
+  public Boolean hasDouble(GraphElement ge, String s) throws GalantException {
+    checkGraphElement(ge);
+    Double attributeValue = ge.getDouble(s);
+    if ( attributeValue == null ) return false;
+    return true;
+  }
   public String getString(GraphElement ge, String s) throws GalantException {
     checkGraphElement(ge);
     String returnValue = ge.getString(s);
     if ( returnValue == null )
       throw new GalantException("Element " + ge + " has no string attribute " + s);
     return returnValue;
+  }
+  public Boolean hasString(GraphElement ge, String s) throws GalantException {
+    checkGraphElement(ge);
+    String attributeValue = ge.getString(s);
+    if ( attributeValue == null ) return false;
+    return true;
   }
   public Integer getInteger(String s, GraphElement ge) throws GalantException {
     return getInteger(ge, s);
@@ -1475,4 +1493,4 @@ public abstract class Algorithm implements Runnable {
   public abstract void run();
 }
 
-//  [Last modified: 2017 05 19 at 15:46:40 GMT]
+//  [Last modified: 2017 05 20 at 19:16:59 GMT]

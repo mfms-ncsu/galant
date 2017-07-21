@@ -4,6 +4,14 @@ The following are known bugs/problems with Galant. Some of them, marked
 \subsubsection*{Input/output}
 
 \begin{itemize}
+
+\item
+  If a graph has been saved via a \Code{File$\rightarrow$Export} in the graph
+  window, runtime attributes such as \Code{hidden} may cause problems when
+  the graph is read and displayed. This is because there is no state
+  information available at the point when the graph is read. It's not clear
+  what the right solution is. Probably check if an algorithm is running, and,
+  if not, use the stateless variant of the attribute retrieval.
   
 \item \textbf{*} Occasionally there is an exception involving the user
   interface with a stack entry that says something about
@@ -154,4 +162,4 @@ The first three lines are treated as one.
 
 \end{itemize}
 
-% [Last modified: 2017 04 27 at 20:54:55 GMT]
+% [Last modified: 2017 07 21 at 19:08:35 GMT]

@@ -254,12 +254,58 @@ public class GraphPanel extends JPanel{
 		LogHelper.exitConstructor(getClass());
 	}
 
+  public void drawGraph(Graph graph, Graphics2D g2d, int state)
+    throws GalantException
+  {
+    List<Node> nodes = null;
+    List<Edge> edges = null;
+    // If there is a message, draw it
+    String message = graph.getMessage(state);
+    if ( message != null ) {
+      drawMessageBanner(message, g2d);
+    }
+    nodes = graph.getNodes(state);
+    edges = graph.getEdges(state);
+		
+    // Draw edges first to put them behind nodes
+    for (Edge e : edges) {
+      if ( e.inScope(state) && ! e.isHidden(state)
+           && ! e.getSource().isHidden(state)
+           && ! e.getTarget().isHidden(state) )
+        drawEdge(graph, e, g2d);
+    }
+		
+    for (Node n : nodes) {
+      if ( n.inScope(state) && ! n.isHidden(state) )
+        drawNode(n, g2d);
+    }
+  }
+
+  public void drawGraph(Graph graph, Graphics2D g2d)
+    throws GalantException
+  {
+    List<Node> nodes = null;
+    List<Edge> edges = null;
+    nodes = graph.getNodes();
+    edges = graph.getEdges();
+
+    // Draw edges first to put them behind nodes
+    for (Edge e : edges) {
+      if ( ! e.isHidden()
+           && ! e.getSource().isHidden()
+           && ! e.getTarget().isHidden() )
+        drawEdge(graph, e, g2d);
+    }
+
+    for (Node n : nodes) {
+      if ( ! n.isHidden() )
+        drawNode(n, g2d);
+    }
+  }
+
 	@Override
 	public void paintComponent(Graphics g) {
         try {
-            // Get the display state: 0 means no algorithm running
-            int state = dispatch.getDisplayState();
-
             // Get the graph to draw
             Graph graph = dispatch.getWorkingGraph();
 
@@ -291,33 +337,14 @@ public class GraphPanel extends JPanel{
             }
 		
             if (graph != null) {
-                List<Node> nodes = null;
-                List<Edge> edges = null;
                 if ( dispatch.isAnimationMode() ) {
-                    // If there is a message, draw it
-                    String message = graph.getMessage(state);
-                    if ( message != null ) {
-                        drawMessageBanner(message, g2d);
-                    }
-                    nodes = graph.getNodes(state);
-                    edges = graph.getEdges(state);
+                  // Get the display state if algorithm is running
+                  int state = dispatch.getDisplayState();
+                  drawGraph(graph, g2d, state);
                 }
                 else {
-                    nodes = graph.getNodes();
-                    edges = graph.getEdges();
-                }
-			
-                // Draw edges first to put them behind nodes
-                for (Edge e : edges) {
-                    if ( e.inScope(state) && ! e.isHidden(state)
-                         && ! e.getSource().isHidden(state)
-                         && ! e.getTarget().isHidden(state) )
-                        drawEdge(graph, e, g2d);
-                }
-			
-                for (Node n : nodes) {
-                    if ( n.inScope(state) && ! n.isHidden(state) )
-                        drawNode(n, g2d);
+                  // otherwise, there is no valid state
+                  drawGraph(graph, g2d);
                 }
             }
         }
@@ -1022,4 +1049,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2017 04 18 at 20:12:27 GMT]
+//  [Last modified: 2017 07 21 at 19:34:11 GMT]

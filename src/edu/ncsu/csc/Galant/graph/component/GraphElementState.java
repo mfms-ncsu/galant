@@ -12,6 +12,12 @@ import edu.ncsu.csc.Galant.logging.LogHelper;
  * @author Jason Cockrell, Ty Devries, Alex McCabe, Michael Owoc
  *
  * Adapted for a more general, flexible model by Matthias Stallmann
+ *
+ * @todo It did not occur to me at the time, but now that all of the standard
+ * attributes are instances of classes (Integer, Double, Boolean) rather than
+ * primitive types, the AttributeList can be reserved for user-defined
+ * attributes. When a standard attribute is null, it can then simply not be
+ * added to a saved graphml file.
  */
 public class GraphElementState {
 
@@ -167,4 +173,4 @@ public class GraphElementState {
     }
 }
 
-//  [Last modified: 2016 12 31 at 14:22:13 GMT]
+//  [Last modified: 2017 07 22 at 13:42:50 GMT]

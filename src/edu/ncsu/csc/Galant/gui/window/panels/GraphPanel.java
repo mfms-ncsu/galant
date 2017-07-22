@@ -281,6 +281,9 @@ public class GraphPanel extends JPanel{
     }
   }
 
+  /**
+   * @todo This should not need to be a special case.
+   */
   public void drawGraph(Graph graph, Graphics2D g2d)
     throws GalantException
   {
@@ -291,14 +294,14 @@ public class GraphPanel extends JPanel{
 
     // Draw edges first to put them behind nodes
     for (Edge e : edges) {
-      if ( ! e.isHidden()
+      if ( e.inScope(0) && ! e.isHidden()
            && ! e.getSource().isHidden()
            && ! e.getTarget().isHidden() )
         drawEdge(graph, e, g2d);
     }
 
     for (Node n : nodes) {
-      if ( ! n.isHidden() )
+      if ( n.inScope(0) && ! n.isHidden() )
         drawNode(n, g2d);
     }
   }
@@ -1049,4 +1052,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2017 07 21 at 19:34:11 GMT]
+//  [Last modified: 2017 07 22 at 12:18:17 GMT]

@@ -335,7 +335,7 @@ public class GraphElement implements Comparable<GraphElement> {
 
     /**
      * Need to convert the argument to a double because it eventually
-     * converts to Double -- see cleanupAfterParsing()
+     * converts to Double -- see initializeAfterParsing()
      */
 	public void setWeight(double weight) throws Terminate {
         set(WEIGHT, (double) weight);
@@ -480,7 +480,22 @@ public class GraphElement implements Comparable<GraphElement> {
      * Attributes for edges are ...
      * - source, target: integer (id's of nodes)
      */
-    public void initializeAfterParsing() throws GalantException {
+
+  /**
+   * @todo The "right" way to do this, if reading of exported files
+   * mid-animation is to be fully supported, is as follows.
+   *
+   *  for each attribute (key, value) in the list of attributes do
+   *     [note that value will be a string at this point]
+   *     if key is a standard attribute, handle it appropriately
+   *     otherwise, try to parse value using the following order of attempts:
+   *        Integer
+   *        Double
+   *        Boolean
+   *     and then default to String
+   *   attributes particular to Node or Edge may need to be dealt with first.
+   */
+  public void initializeAfterParsing() throws GalantException {
         try { // need to catch Terminate exception -- should not happen
             String idString = getString(ID);
             if ( idString != null ) {
@@ -512,6 +527,19 @@ public class GraphElement implements Comparable<GraphElement> {
                 remove(HIGHLIGHTED);
                 if ( highlighted )
                     set(HIGHLIGHTED, highlighted);
+            }
+            /**
+             * @todo need to do something like this for other standard
+             * attributes such as HIDDEN_LABEL, HIDDEN_WEIGHT, DELETED in
+             * order to avoid errors when reading files exported during
+             * animations.
+             */
+            String hiddenString = getString(HIDDEN);
+            if ( hiddenString != null ) {
+                Boolean hidden = Boolean.parseBoolean(hiddenString);
+                remove(HIDDEN);
+                if ( hidden )
+                    set(HIDDEN, hidden);
             }
         }
         catch ( Terminate t ) { // should not happen
@@ -690,4 +718,4 @@ public class GraphElement implements Comparable<GraphElement> {
 
 }
 
-//  [Last modified: 2017 07 21 at 18:56:14 GMT]
+//  [Last modified: 2017 07 22 at 12:14:16 GMT]

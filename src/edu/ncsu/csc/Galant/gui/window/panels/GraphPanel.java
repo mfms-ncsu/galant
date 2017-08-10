@@ -43,6 +43,7 @@ import edu.ncsu.csc.Galant.gui.window.GraphWindow.GraphDisplays;
 import edu.ncsu.csc.Galant.logging.LogHelper;
 import edu.ncsu.csc.Galant.algorithm.Terminate;
 import edu.ncsu.csc.Galant.algorithm.AlgorithmExecutor;
+import edu.ncsu.csc.Galant.Timer;
 
 public class GraphPanel extends JPanel{
 
@@ -257,6 +258,7 @@ public class GraphPanel extends JPanel{
   public void drawGraph(Graph graph, Graphics2D g2d, int state)
     throws GalantException
   {
+    Timer.drawingTime.start();
     List<Node> nodes = null;
     List<Edge> edges = null;
     // If there is a message, draw it
@@ -279,6 +281,7 @@ public class GraphPanel extends JPanel{
       if ( n.inScope(state) && ! n.isHidden(state) )
         drawNode(n, g2d);
     }
+    Timer.drawingTime.stop();
   }
 
   /**
@@ -287,6 +290,7 @@ public class GraphPanel extends JPanel{
   public void drawGraph(Graph graph, Graphics2D g2d)
     throws GalantException
   {
+    Timer.drawingTime.start();
     List<Node> nodes = null;
     List<Edge> edges = null;
     nodes = graph.getNodes();
@@ -304,6 +308,7 @@ public class GraphPanel extends JPanel{
       if ( n.inScope(0) && ! n.isHidden() )
         drawNode(n, g2d);
     }
+    Timer.drawingTime.stop();
   }
 
 	@Override
@@ -1052,4 +1057,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2017 07 22 at 12:18:17 GMT]
+//  [Last modified: 2017 07 25 at 19:42:47 GMT]

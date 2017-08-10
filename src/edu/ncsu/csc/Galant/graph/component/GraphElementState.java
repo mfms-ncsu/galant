@@ -18,6 +18,11 @@ import edu.ncsu.csc.Galant.logging.LogHelper;
  * primitive types, the AttributeList can be reserved for user-defined
  * attributes. When a standard attribute is null, it can then simply not be
  * added to a saved graphml file.
+ *
+ * @todo Another idea: store all the user-defined attributes as String's. The
+ * setters can do the automatic conversion using the ' "" + ' incantation, or
+ * a simple test for Booleans (where it's about presence or absence
+ * anyhow). The getters can do parsing.
  */
 public class GraphElementState {
 
@@ -173,4 +178,4 @@ public class GraphElementState {
     }
 }
 
-//  [Last modified: 2017 07 22 at 13:42:50 GMT]
+//  [Last modified: 2017 07 22 at 18:41:38 GMT]

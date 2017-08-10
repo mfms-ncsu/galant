@@ -22,6 +22,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.WindowConstants;
 
 import edu.ncsu.csc.Galant.logging.LogHelper;
+import edu.ncsu.csc.Galant.Timer;
 
 /**
  * <p> Methods to support showing exceptions in dialog windows, so users
@@ -143,8 +144,11 @@ public class ExceptionDialog {
             onClose.run();
         Object selected = pane.getValue();
         if ( selected != null )
-            if ( options[1].equals(selected) )
-                System.exit(1);
+          if ( options[1].equals(selected) ) {
+            Timer.parsingTime.print();
+            Timer.drawingTime.print();
+            System.exit(1);
+          }
         LogHelper.logDebug("<- displayExceptionInDialog(e, interpretation, onClose)");
     }
 
@@ -214,4 +218,4 @@ public class ExceptionDialog {
     }
 }
 
-//  [Last modified: 2016 12 28 at 16:35:34 GMT]
+//  [Last modified: 2017 07 25 at 19:30:55 GMT]

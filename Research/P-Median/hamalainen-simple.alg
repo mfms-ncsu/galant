@@ -62,7 +62,7 @@ function Node compute_one_median() {
     // merge a leaf x with its neighbor y and let the new weight of y be
     // the sum of the two weights
     Node x = get(leaves);
-    if ( empty(leaves) || wt[id(x)] >= total_weight / 2 ) {
+    if ( empty(leaves) || wt[id(x)] >= total_weight / 2.0 ) {
       median = x; break;
     }
     Node y = first(unmarkedNeighbors(x));
@@ -147,7 +147,7 @@ function init_with_dfs(Node root, Node other) {
  * between root and other is missing
  */
 function Node side_median(Node root, Node other) {
-  init_with_dfs(root, other);
+ init_with_dfs(root, other);
   clearMarks();
   mark(other);
   return compute_one_median();
@@ -204,7 +204,6 @@ function cleanup(Edge edge) {
  * @return the sum of the "serve" attributes for all the edges to children of v
  */
 function Integer pq_dfs(Node v) {
-  print("-> pq_dfs: ", id(v));
   Integer sum_of_serves = 0;
   deg2[id(v)] = degree(v);
   set(v, "leaf_weight", integer(weight(v)));
@@ -220,11 +219,9 @@ function Integer pq_dfs(Node v) {
       // add the cost of v serving w and its subtrees
       serve += integer(weight(e) * wt[id(w)]);
       set(e, "serve", serve);
-      print("  serve for ", e, " is ", serve);
       sum_of_serves += serve;
     }
   }
-  print("<- pq_dfs: ", sum_of_serves);
   return sum_of_serves;
 }
 
@@ -277,6 +274,7 @@ function compute_two_medians(Node node, Node parent_node) {
     min_second_median = second_median;
     update_indicator = " *** new";
   }
+  clearMarks();
   display("first median is ", id(first_median),
           ", cost = ", first_cost,
           ", second median is ", id(second_median),
@@ -324,6 +322,9 @@ function explore_cut_edges() {
 }
 
 algorithm {
+  showNodeLabels();
+  showNodeWeights();
+  setDirected(false);
   parent = new Node[nodeIds()];
   min_total_cost = MAX_INTEGER;
   min_cut_edge = null;
@@ -353,7 +354,6 @@ algorithm {
   }
   clearNodeLabels();
   // first explore cut edges in the tree rooted at v_1
-  step();
   leaf_pq = new NodePriorityQueue(getIntegerComparator("leaf_weight"));
   deg2 = new Integer[nodeIds()];
   initialize_priority_queue(v_1);
@@ -413,4 +413,4 @@ algorithm {
   // multiplied by d(x,y_i)
 }
 
-//  [Last modified: 2017 05 19 at 19:27:32 GMT]
+//  [Last modified: 2017 07 26 at 20:41:38 GMT]

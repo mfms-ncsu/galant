@@ -301,6 +301,9 @@ public class CodeIntegrator	{
      * @return code with all the comments removed; uses a simple
      * finite-state machine; preserves line numbering -- all line breaks
      * remain intact.
+     *
+     * @todo Use a StringBuffer to make this more efficient (?); probably
+     * won't make a difference unless the algorithm has thousands of lines.
      */
     private static String removeAllComments(String code) {
         LogHelper.logDebug("-> removeAllComments, code =\n" + code);
@@ -367,4 +370,4 @@ public class CodeIntegrator	{
     }
 }
 
-//  [Last modified: 2017 01 15 at 21:12:22 GMT]
+//  [Last modified: 2017 08 05 at 21:53:59 GMT]

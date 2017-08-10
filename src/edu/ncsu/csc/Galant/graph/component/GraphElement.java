@@ -17,6 +17,17 @@ import edu.ncsu.csc.Galant.graph.datastructure.GraphElementComparator;
  */
 public class GraphElement implements Comparable<GraphElement> {
 
+  /**
+   * @todo Put all standard attributes here, even those relevant only to
+   * Nodes or only to Edges - they'll be simply ignored if they're not
+   * relevant.
+   *
+   * @todo Add the following standard display attributes.
+   *     - "fill": fill color for Nodes
+   *     - "dotted": use dotted lines for edges or node outlines
+   *     - "dashed": similar to dotted
+   */
+
     public static final String ID = "id";
     public static final String WEIGHT = "weight";
     public static final String LABEL = "label";
@@ -718,4 +729,4 @@ public class GraphElement implements Comparable<GraphElement> {
 
 }
 
-//  [Last modified: 2017 07 22 at 12:14:16 GMT]
+//  [Last modified: 2017 07 22 at 18:47:03 GMT]

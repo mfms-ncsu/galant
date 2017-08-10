@@ -26,6 +26,7 @@ import edu.ncsu.csc.Galant.gui.util.ExceptionDialog;
 import edu.ncsu.csc.Galant.gui.util.WindowUtil;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow;
 import edu.ncsu.csc.Galant.logging.LogHelper;
+import edu.ncsu.csc.Galant.Timer;
 
 /**
  * Frame for text editing in the editor window.
@@ -233,9 +234,17 @@ public class GEditorFrame extends JFrame implements WindowListener {
                                         JOptionPane.YES_NO_OPTION,
                                         JOptionPane.QUESTION_MESSAGE, null,
                                         new Object[] { GTabbedPane.YES, GTabbedPane.NO },
-                                        GTabbedPane.NO) == 0 )
+                                        GTabbedPane.NO) == 0 ) {
+        Timer.parsingTime.print();
+        Timer.drawingTime.print();
         System.exit(0);
-    } else System.exit(0);
+      }
+    }
+    else {
+      Timer.parsingTime.print();
+      Timer.drawingTime.print();
+      System.exit(0);
+    }
   }
   @Override
   public void windowDeactivated(WindowEvent e) { }
@@ -247,4 +256,4 @@ public class GEditorFrame extends JFrame implements WindowListener {
   public void windowOpened(WindowEvent e) { }
 }
 
-// [Last modified: 2017 01 10 at 21:01:43 GMT]
+// [Last modified: 2017 07 25 at 19:31:20 GMT]

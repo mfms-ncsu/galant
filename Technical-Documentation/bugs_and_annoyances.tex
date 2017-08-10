@@ -82,7 +82,8 @@ Text representations of graphs can either be edited or generated externally.}}
   not intuitive (force directed layout takes over if the button is pressed,
   so adding nodes/edges is dependent on the state of the button). It's
   generally a bad idea to change the graph when the smart reposition button
-  is pressed.
+  is pressed. \emph{If you delete nodes or edges when the smart reposition
+    button is highlighted, an ``unexpected exception'' is likely to occur.}
 
 \item It is not possible to change the thickness of an edge or node boundary
   directly from the editor or an algorithm nor is it possible to change the
@@ -108,16 +109,15 @@ Text representations of graphs can either be edited or generated externally.}}
 
 \begin{itemize}
 
-\item \textbf{*}
-  If you try to manipulate anything in the text window (e.g., click on
-  \Code{File}) when an algorithm is running, Galant hangs. You must quit
-  Galant completely without saving anything.
-  
 \item
   When there are compilation errors the user cannot scroll the text window
   (or make modifications in it) while the popup window showing the errors is
   displayed. There are two possible workarounds: (i)~open the algorithm in an
   external editor, or (ii)~view the error messages in the console.
+
+\item
+  If user edits the graph and runs an animation without saving the graph file
+  first, the animation runs on the previous version of the graph.
 
 \item Every once in a while an exception occurs when an error-free algorithm
   is executed or when Galant initially fires up, but it is possible to step
@@ -165,6 +165,11 @@ The first three lines are treated as one.
   generate multiple steps in rapid succession, but finer grained control is
   difficult.
 
+\item \textbf{*}
+  If you try to manipulate anything in the text window (e.g., click on
+  \Code{File}) when an algorithm is running, Galant hangs. You must quit
+  Galant completely without saving anything.
+
 \end{itemize}
 
-% [Last modified: 2017 07 22 at 13:38:29 GMT]
+% [Last modified: 2017 08 10 at 13:30:11 GMT]

@@ -7,6 +7,7 @@ import edu.ncsu.csc.Galant.gui.editor.GEditorFrame;
 import edu.ncsu.csc.Galant.gui.util.ExceptionDialog;
 import edu.ncsu.csc.Galant.gui.util.WindowUtil;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow;
+import edu.ncsu.csc.Galant.Timer;
 
 /**
  * Class from which Galant runs.
@@ -19,6 +20,8 @@ public class Galant {
     SwingUtilities.invokeLater(new Runnable() {
         @Override
         public void run() {
+          Timer.parsingTime = new Timer("parsing");
+          Timer.drawingTime = new Timer("drawing");
           GraphDispatch gd = GraphDispatch.getInstance();
           GalantPreferences.initPrefs();
           GraphWindow g = new GraphWindow(gd);
@@ -33,4 +36,4 @@ public class Galant {
   }
 }
 
-//  [Last modified: 2017 04 27 at 20:56:47 GMT]
+//  [Last modified: 2017 07 25 at 19:21:14 GMT]

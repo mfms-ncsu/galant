@@ -29,6 +29,7 @@ import edu.ncsu.csc.Galant.GraphDispatch;
 import edu.ncsu.csc.Galant.graph.component.*;
 import edu.ncsu.csc.Galant.algorithm.Terminate;
 import edu.ncsu.csc.Galant.logging.LogHelper;
+import edu.ncsu.csc.Galant.Timer;
 
 /**
  * Parses a text file and creates a <code>Graph</code> from it. Allows for
@@ -42,14 +43,18 @@ public class GraphMLParser {
   Document document;
 
   public GraphMLParser(File graphMLFile) throws GalantException {
+    Timer.parsingTime.start();
     this.graph = generateGraph(graphMLFile);
+    Timer.parsingTime.stop();
   }
 
   public GraphMLParser(String xml) throws GalantException {
     if ( xml == null || xml.equals( "" ) ) {
       throw new GalantException( "No text when invoking GraphMLParser" );
     }
+    Timer.parsingTime.start();
     this.graph = generateGraph(xml);
+    Timer.parsingTime.stop();
   }
 
   public DocumentBuilder getDocumentBuilder( DocumentBuilderFactory dbf )
@@ -298,4 +303,4 @@ public class GraphMLParser {
 
 }
 
-//  [Last modified: 2017 03 08 at 21:21:40 GMT]
+//  [Last modified: 2017 07 25 at 19:42:32 GMT]

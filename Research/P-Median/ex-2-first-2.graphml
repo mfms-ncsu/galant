@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns 
+http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+ <graph  edgedefault="undirected">
+  <node id="2" x="350" y="128"  color="#000000" label="24" subtree_weight="24" weight="1.0"  />
+  <node id="0" x="280" y="128"  color="#0000ff" label="51" weight="3.0"  />
+  <node id="1" x="210" y="128"  label="24" subtree_weight="24" weight="11.0"  />
+  <node id="3" x="140" y="128"  label="13" weight="12.0"  />
+  <node id="4" x="70" y="128"  color="#00FF00" label="1" weight="1.0"  />
+  <node id="5" x="420" y="128"  color="#000000" label="23" weight="2.0"  />
+  <node id="6" x="490" y="128"  color="#000000" label="21" weight="1.0"  />
+  <node id="7" x="560" y="128"  color="#0000FF" label="20" weight="1.0"  />
+  <node id="8" x="630" y="128"  color="#FFFFFF" label="19" weight="1.0"  />
+  <node id="9" x="700" y="128"  color="#FFFFFF" label="18" weight="1.0"  />
+  <node id="10" x="770" y="128"  color="#FFFFFF" label="17" weight="1.0"  />
+  <node id="11" x="840" y="128"  color="#FFFFFF" label="16" weight="1.0"  />
+  <node id="12" x="910" y="128"  color="#FFFFFF" label="15" weight="15.0"  />
+  <edge  source="1" target="0" weight="1.0"  />
+  <edge  source="2" target="0" color="#000000" weight="1.0"  />
+  <edge  source="3" target="1" weight="1.0"  />
+  <edge  source="4" target="3" color="#FF0000" weight="1.0"  />
+  <edge  source="5" target="2" color="#000000" weight="1.0"  />
+  <edge  source="6" target="5" color="#000000" weight="1.0"  />
+  <edge  source="7" target="6" color="#000000" weight="1.0"  />
+  <edge  source="8" target="7" color="#FFFFFF" weight="1.0"  />
+  <edge  source="9" target="8" color="#FFFFFF" weight="1.0"  />
+  <edge  source="10" target="9" color="#FFFFFF" weight="1.0"  />
+  <edge  source="11" target="10" color="#FFFFFF" weight="1.0"  />
+  <edge  source="12" target="11" color="#FFFFFF" weight="1.0"  />
+ </graph></graphml>

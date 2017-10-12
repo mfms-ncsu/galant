@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns 
+http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+ <graph  edgedefault="directed">
+  <node id="0" x="445" y="41"  weight="2.0"  />
+  <node id="1" x="347" y="46"  weight="1.0"  />
+  <node id="2" x="533" y="59"  weight="4.0"  />
+  <node id="3" x="56" y="126"  weight="1.0"  />
+  <node id="4" x="368" y="127"  weight="4.0"  />
+  <node id="5" x="275" y="130"  weight="5.0"  />
+  <node id="6" x="154" y="92"  weight="2.0"  />
+  <node id="7" x="253" y="65"  weight="9.0"  />
+  <node id="8" x="462" y="129"  weight="8.0"  />
+  <node id="9" x="584" y="130"  weight="9.0"  />
+  <edge  source="1" target="0" weight="4.0"  />
+  <edge  source="4" target="1" weight="5.0"  />
+  <edge  source="7" target="1" weight="3.0"  />
+  <edge  source="6" target="7" weight="2.0"  />
+  <edge  source="5" target="6" weight="4.0"  />
+  <edge  source="3" target="6" weight="6.0"  />
+  <edge  source="2" target="0" weight="1.0"  />
+  <edge  source="9" target="2" weight="2.0"  />
+  <edge  source="8" target="2" weight="3.0"  />
+ </graph></graphml>

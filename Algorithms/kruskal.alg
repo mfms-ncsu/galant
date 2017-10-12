@@ -29,6 +29,19 @@ function UNION(Node x, Node y) {
 	LINK(FIND_SET(x), FIND_SET(y));
 }
 
+function double euclidian(Node v, Node w) {
+    return getPosition(v).distance(getPosition(w));
+}
+
+function init_edge_costs() {
+  for_edges(edge) {
+    if ( ! hasWeight(edge) ) {
+      double distance = euclidian(source(edge), target(edge));
+      setWeight(edge, distance);
+    }
+  }
+}
+
 algorithm {
     showEdgeWeights();
 
@@ -37,6 +50,8 @@ algorithm {
         INIT_SET(u);
     }
 
+    init_edge_costs();
+    
     EdgeList edgeList = getEdges();
     sort(edgeList);
 
@@ -77,4 +92,4 @@ algorithm {
     display( "MST has total weight " + totalWeight );
 }
 
-/*  [Last modified: 2017 01 23 at 22:43:29 GMT] */
+/*  [Last modified: 2017 10 12 at 14:22:51 GMT] */

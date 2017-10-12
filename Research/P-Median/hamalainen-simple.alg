@@ -31,10 +31,15 @@ Integer max_reduction;
  * degree one vertices
  */
 function initialize_degrees_and_weights() {
-  // in case no edge weight have been set - default weight is 1
+  // in case no edge/node weight has been set - default weight is 1
   for_edges ( e ) {
     if ( hasNoWeight(e) || weight(e) == 0 ) {
       setWeight(e, 1);
+    }
+  }
+  for_nodes ( v ) {
+    if ( hasNoWeight(v) || weight(v) == 0 ) {
+      setWeight(v, 1);
     }
   }
   total_weight = 0;
@@ -252,8 +257,10 @@ function compute_two_medians(Node node, Node parent_node) {
   if ( first_median == one_median ) color(first_median, TEAL);
   else color(first_median, GREEN);
   Integer first_cost = compute_cost(first_median, edge);
-  display("first median is " + id(first_median)
-          + ", cost = " + first_cost);
+  Integer cost_m = compute_cost(one_median, edge) + first_cost;
+  display("first median is ", id(first_median),
+          ", cost = ", first_cost,
+          ", cost_m = ", cost_m);
   Integer reduction = getInteger(edge, "serve") - first_cost;
   String reduction_indicator = "";
   if ( reduction > max_reduction && parent_node != one_median ) {
@@ -277,11 +284,11 @@ function compute_two_medians(Node node, Node parent_node) {
   clearMarks();
   display("first median is ", id(first_median),
           ", cost = ", first_cost,
-          ", second median is ", id(second_median),
+          " | second median is ", id(second_median),
           ", cost = ", second_cost,
-          ", total = ", total_cost,
-          " *** min so far = ", min_total_cost, update_indicator,
-          " reduction = ", reduction, reduction_indicator);
+          " $ cost_m = ", cost_m,
+          " || total = ", total_cost,
+          " *** min so far = ", min_total_cost, update_indicator);
   step();
   cleanup(edge);
 }
@@ -413,4 +420,4 @@ algorithm {
   // multiplied by d(x,y_i)
 }
 
-//  [Last modified: 2017 07 26 at 20:41:38 GMT]
+//  [Last modified: 2017 09 15 at 12:07:21 GMT]

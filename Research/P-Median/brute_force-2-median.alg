@@ -1,3 +1,7 @@
+/**
+ * tries out every possible cut edge in no particular order
+ */
+
 Double total_weight;          // total weight of all vertices in (sub)-tree
 Integer deg[];                // degree during 1-median algorithm
 Double wt[];                  // current weight during 1-median algorithm
@@ -216,4 +220,4 @@ algorithm {
     endStep();
 }
 
-//  [Last modified: 2017 05 16 at 12:08:11 GMT]
+//  [Last modified: 2017 10 04 at 18:45:37 GMT]

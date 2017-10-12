@@ -10,19 +10,19 @@
 
 <ul>
 <br><hr>
-<li><b><a href=bfs.alg>bfs.alg</a></b> 
+<li><b><a href="bfs.alg">bfs.alg</a></b> 
 <br>
 An Animation of breadth-first search. Undirected edges are regarded as
 being directed both ways.
 <br>
 <br><hr>
-<li><b><a href=dfs.alg>dfs.alg</a></b> 
+<li><b><a href="dfs.alg">dfs.alg</a></b> 
 <br>
 Animates depth-first search of a graph, directed or undirected; in the
 undirected case, it behaves as if edges were directed in both directions.
 <br>
 <br><hr>
-<li><b><a href=dfs_d.alg>dfs_d.alg</a></b>
+<li><b><a href="dfs_d.alg">dfs_d.alg</a></b>
 <br>
 Animates depth-first search of a directed graph only; directedness is
 forced at the beginning of the algorithm.
@@ -30,7 +30,7 @@ If the graph were undirected, tree edges would be relabeled as back edges and
 back edges relabeled as forward edges
 <br>
 <br><hr>
-<li><b><a href=interactive_dfs.alg>interactive_dfs.alg</a></b> 
+<li><b><a href="interactive_dfs.alg">interactive_dfs.alg</a></b> 
 <br>
 Animates depth-first search of a directed graph
 only; directedness is forced at the beginning of the algorithm; allows
@@ -38,19 +38,19 @@ user to specify start node and next node to visit in each iteration of the
 outer loop.
 <br>
 <br><hr>
-<li><b><a href=dfs_scc.alg>dfs_scc.alg</a></b> 
+<li><b><a href="dfs_scc.alg">dfs_scc.alg</a></b> 
   <br>
   Same as interactive_dfs, but adds the reverse depth-first search that
   computes strongly connected components in topological order; can also be
   used to illustrate topological sort of a directed acyclic graph (each
-  vertex is a songleton strongly connected component).
+  vertex is a singleton strongly connected component).
 <br><br>
 </ul>
 
 <h3>Weighted Graph Algorithms</h3>
 
 <ul>
-<li><b><a href=dijkstra.alg>dijkstra.alg</a></b> 
+<li><b><a href="dijkstra.alg">dijkstra.alg</a></b> 
 An animation of Dijkstra's shortest path algorithm. Interprets
 undirected edges as going in both directions.
 <br>
@@ -67,13 +67,20 @@ algorithm, based on Euclidian distances between nodes.
 <br>
 animation of Kruskal's MST algorithm; edges are sorted at the beginning and
 the algorithm continues until all edges have been considered
-<br>
 <br><hr>
 <br>
 <b><a href="kruskal_pq.alg">kruskal_pq.alg</a></b><br>
 An animation of Kruskal's MST algorithm; edges are put on a priority queue at
 the beginning and the algorithm stops when a tree has been formed; assumes
 that the graph is connected
+<br>
+<br><hr>
+<li><b><a href="prim.alg">prim.alg</a></b> 
+<br>
+animation of Prim's MST algorithm; essentially the same as dijkstra.alg,
+except that graph is made undirected at the beginning and the weight of the
+connecting edge
+rather than distance from the start vertex is used as priority
 <br>
 <br><hr>
 <li><b><a href="boruvka.alg">boruvka.alg</a></b> 
@@ -93,20 +100,20 @@ All of these assume that the input graph has no edges and that the node
 weights represent the keys of elements to be sorted.
 
 <ul>
-<li><b><a href=bubble_sort.alg>bubble_sort.alg</a></b> 
+<li><b><a href="bubble_sort.alg">bubble_sort.alg</a></b> 
 An animation of bubble sort.
 This is the simplest version of bubble sort; makes a pass over the whole
 list each iteration
 <br>
 <br><hr>
-<li><b><a href=insertion_sort.alg>insertion_sort.alg</a></b> 
+<li><b><a href="insertion_sort.alg">insertion_sort.alg</a></b> 
 An animation of insertion sort.
 The already sorted part of the array is marked. The element to be
 inserted moves along the array -- the element to which it is compared at
 each step is highlighted.
 <br>
 <br><hr>
-<li><b><a href=quicksort.alg>quicksort.alg</a></b> 
+<li><b><a href="quicksort.alg">quicksort.alg</a></b> 
 
 An animation of Quicksort<br>
 <em>authors: Hayden Fuss, Solomon Yeh, Jordan Connor</em><br>

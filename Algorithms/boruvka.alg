@@ -12,6 +12,19 @@
  *    uncolor()
  */
 
+function double euclidian(Node v, Node w) {
+    return getPosition(v).distance(getPosition(w));
+}
+
+function init_edge_costs() {
+  for_edges(edge) {
+    if ( ! hasWeight(edge) ) {
+      double distance = euclidian(source(edge), target(edge));
+      setWeight(edge, distance);
+    }
+  }
+}
+
 /**
  * Labels each node in the same component as v (using spanning tree edges
  * only) with the given label. Also colors the tree edges green.
@@ -115,9 +128,11 @@ algorithm {
   showEdgeWeights();
   showNodeLabels();             // for component labeling
 
+  init_edge_costs();
+  
   // number of edges in current spanning forest
   int forestEdges = 0;
-  double totalWeight = 0;
+  int totalWeight = 0;
 
   while ( forestEdges < numberOfNodes() - 1 ) {
     // need to label components first
@@ -177,4 +192,4 @@ algorithm {
   endStep();
 }
 
-/*  [Last modified: 2017 01 23 at 22:41:15 GMT] */
+/*  [Last modified: 2017 10 12 at 14:23:48 GMT] */

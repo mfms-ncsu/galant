@@ -1,3 +1,7 @@
+/**
+ * tries out every possible pair of cut edges in no particular order
+ */
+
 Double total_weight;          // total weight of all vertices in (sub)-tree
 Integer deg[];                // degree during 1-median algorithm
 Double wt[];                  // current weight during 1-median algorithm
@@ -170,4 +174,4 @@ function NodeSet two_medians(Node v) {
     Node min_second_median = null;
 }
 
-//  [Last modified: 2016 10 18 at 13:07:23 GMT]
+//  [Last modified: 2017 10 04 at 18:46:08 GMT]

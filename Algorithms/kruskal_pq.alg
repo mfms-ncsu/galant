@@ -67,6 +67,7 @@ algorithm {
         }
         else {
             display( "Vertices are already in the same component." );
+            color(e, YELLOW);
         }
         endStep();
 

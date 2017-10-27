@@ -36,18 +36,25 @@ algorithm {
 
   while ( ! empty(pq) ) {
     Node v = removeBest(pq);
+    beginStep();
     mark(v);        // nodes are marked when visited
     unhighlight(v); // and highlighted when on the frontier
+    if ( chosenEdge[id(v)] != null )
+      color(chosenEdge[id(v)], BLUE);
+    endStep();
     for_outgoing ( v, e, w ) {
       if ( ! marked(w) )  {
         if ( ! highlighted(w) ) highlight(w);
         double distance = weight(v) + weight(e);
         if ( distance < weight(w) ) {
           beginStep();
-          highlight(e);
           Edge previous_chosen = chosenEdge[id(w)];
-          if (previous_chosen != null )
-            unhighlight(previous_chosen);
+          if (previous_chosen != null ) {
+            color(previous_chosen, YELLOW);
+            color(e, GREEN);
+          }
+          else
+            color(e, RED);
           setWeight(w, distance);
           changeKey(w, pq);
           chosenEdge[id(w)] = e;
@@ -59,4 +66,4 @@ algorithm {
   } // stop when priority queue is empty
 } // end, algorithm
 
-//  [Last modified: 2017 04 18 at 19:25:58 GMT]
+//  [Last modified: 2017 10 27 at 11:35:59 GMT]

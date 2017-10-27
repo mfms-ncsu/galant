@@ -43,8 +43,12 @@ algorithm {
     if ( v != s )
       total_weight += weight(chosenEdge[id(v)]);
     display("weight so far = ", total_weight);
+    beginStep();
     mark(v);        // nodes are marked when visited
     unhighlight(v); // and highlighted when on the frontier
+    if ( chosenEdge[id(v)] != null )
+      color(chosenEdge[id(v)], BLUE);
+    endStep();
     for_outgoing ( v, e, w ) {
       if ( ! marked(w) )  {
         if ( ! highlighted(w) ) highlight(w);
@@ -52,13 +56,12 @@ algorithm {
           beginStep();
           Edge previous_chosen = chosenEdge[id(w)];
           if (previous_chosen != null ) {
-            unhighlight(previous_chosen);
             color(previous_chosen, YELLOW);
-            color(e, BLUE);
+            color(e, GREEN);
           }
           // have to do this because highlight trumps color
           else
-            highlight(e);
+            color(e, RED);
           setWeight(w, weight(e));
           changeKey(w, pq);
           chosenEdge[id(w)] = e;
@@ -71,4 +74,4 @@ algorithm {
   display("total weight of MST = ", total_weight);
 } // end, algorithm
 
-//  [Last modified: 2017 10 12 at 16:55:31 GMT]
+//  [Last modified: 2017 10 27 at 12:11:58 GMT]

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns
+http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+<comments>
+   and reduced to the top two layers only
+</comments>
+<graph edgedefault="directed" name="two_layer_example" type="layered">
+<node id="0" layer="0" positionInLayer="0"/>
+<node id="1" layer="0" positionInLayer="1"/>
+<node id="2" layer="0" positionInLayer="2"/>
+<node id="3" layer="0" positionInLayer="3"/>
+<node id="4" layer="0" positionInLayer="4"/>
+<node id="5" layer="0" positionInLayer="5"/>
+<node id="6" layer="0" positionInLayer="6"/>
+<node id="7" layer="0" positionInLayer="7"/>
+<node id="8" layer="0" positionInLayer="8"/>
+<node id="9" layer="0" positionInLayer="9"/>
+<node id="10" layer="0" positionInLayer="10"/>
+<node id="11" layer="0" positionInLayer="11"/>
+<node id="12" layer="0" positionInLayer="12"/>
+<node id="13" layer="0" positionInLayer="13"/>
+<node id="14" layer="0" positionInLayer="14"/>
+<node id="15" layer="0" positionInLayer="15"/>
+<node id="16" layer="0" positionInLayer="16"/>
+<node id="17" layer="0" positionInLayer="17"/>
+<node id="18" layer="0" positionInLayer="18"/>
+<node id="19" layer="0" positionInLayer="19"/>
+<node id="20" layer="1" positionInLayer="0"/>
+<node id="21" layer="1" positionInLayer="1"/>
+<node id="22" layer="1" positionInLayer="2"/>
+<node id="23" layer="1" positionInLayer="3"/>
+<node id="24" layer="1" positionInLayer="4"/>
+<node id="25" layer="1" positionInLayer="5"/>
+<node id="26" layer="1" positionInLayer="6"/>
+<edge source="0" target="22"/>
+<edge source="0" target="25"/>
+<edge source="1" target="24"/>
+<edge source="2" target="26"/>
+<edge source="3" target="22"/>
+<edge source="4" target="22"/>
+<edge source="5" target="22"/>
+<edge source="6" target="22"/>
+<edge source="7" target="22"/>
+<edge source="8" target="22"/>
+<edge source="10" target="22"/>
+<edge source="11" target="26"/>
+<edge source="12" target="24"/>
+<edge source="13" target="26"/>
+<edge source="13" target="22"/>
+<edge source="14" target="26"/>
+<edge source="15" target="26"/>
+<edge source="16" target="26"/>
+<edge source="17" target="26"/>
+<edge source="18" target="26"/>
+<edge source="18" target="24"/>
+<edge source="18" target="22"/>
+<edge source="18" target="23"/>
+<edge source="18" target="20"/>
+<edge source="18" target="21"/>
+<edge source="18" target="25"/>
+<edge source="19" target="26"/>
+</graph>
+</graphml>

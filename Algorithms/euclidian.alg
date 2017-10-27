@@ -44,19 +44,27 @@ algorithm {
 
   while ( ! pq.isEmpty() ) {
     Node v = pq.removeMin();
+    beginStep();
     mark(v);
-    if ( v == t ) break;
     highlight(v);
+    if ( chosenEdge[id(v)] != null )
+      color(chosenEdge[id(v)], BLUE);
+    endStep();
+    if ( v == t ) break;
     for_outgoing ( v, e, w ) {
       if ( ! isMarked(w) )  {
         if ( w != t && ! highlighted(w) ) highlight(w);
         double distance = weight(v) + weight(e) + euclidian(w, t) - euclidian(v, t);
         if ( distance < weight(w) ) {
           beginStep();
-          highlight(e);
           Edge previous_chosen = chosenEdge[id(w)];
-          if (previous_chosen != null )
-            unhighlight(previous_chosen);
+          if (previous_chosen != null ) {
+            color(previous_chosen, YELLOW);
+            color(e, GREEN);
+          }
+          // have to do this because highlight trumps color
+          else
+            color(e, RED);
           pq.decreaseKey( w, distance );
           chosenEdge[id(w)] = e;
           endStep();
@@ -72,12 +80,14 @@ algorithm {
   Edge currentEdge = chosenEdge[id(t)];
   while ( currentEdge != null ) {
     unhighlight(currentNode);
-    color(currentNode, BLUE);
+    color(currentNode, BLACK);
     unhighlight(currentEdge);
-    color(currentEdge, BLUE);
+    color(currentEdge, BLACK);
     currentNode = otherEnd(currentEdge, currentNode);
     currentEdge = chosenEdge[id(currentNode)];
   }
+  unhighlight(s);
+  color(s, BLACK);
 }
 
-//  [Last modified: 2017 04 18 at 19:19:58 GMT]
+//  [Last modified: 2017 10 27 at 12:17:22 GMT]

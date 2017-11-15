@@ -166,7 +166,7 @@ algorithm {
           set(bestEdge, "inTree");
           forestEdges++;
           totalWeight += weight(bestEdge);
-          display("forest has weight " + totalWeight);
+          display("forest has weight ", totalWeight);
         }
         else {
           display("lowest weight outgoing edge already in tree");

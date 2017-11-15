@@ -486,7 +486,8 @@ public class GraphPanel extends JPanel{
                 int layerGap
                     = (height - 2 * VERTICAL_PADDING) / (numberOfLayers - 1);
                 y = VERTICAL_PADDING
-                    + (numberOfLayers - n.getLayer() - 1) * layerGap;
+                  + n.getLayer() * layerGap;
+                    // + (numberOfLayers - n.getLayer() - 1) * layerGap;
             }
             nodeCenter = new Point( x, y );
         }
@@ -1057,4 +1058,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2017 07 25 at 19:42:47 GMT]
+//  [Last modified: 2017 11 03 at 01:00:34 GMT]

@@ -15,7 +15,9 @@
 import edu.ncsu.csc.Galant.local.LayeredGraph;
 
 int MAX_ITERATIONS = 200;
+int crossings = 0;
 int minCrossings = Integer.MAX_VALUE;
+int edgeCrossings = 0;
 int minEdgeCrossings = Integer.MAX_VALUE;
 int iteration = 0;
 int pass = 0;
@@ -26,26 +28,30 @@ Edge maxCrossingsEdge;
 LayeredGraph layeredGraph;
 
 function checkCrossings() {
-    int crossings = layeredGraph.numberOfCrossings();
+    crossings = layeredGraph.numberOfCrossings();
     if ( crossings < minCrossings ) {
         minCrossings = crossings;
         minIteration = iteration;
         minPass = pass;
         layeredGraph.savePositions();
     }
-    if ( layeredGraph.getMaxEdgeCrossings() < minEdgeCrossings ) {
-        minEdgeCrossings = layeredGraph.getMaxEdgeCrossings();
+    edgeCrossings = layeredGraph.getMaxEdgeCrossings();
+    if ( edgeCrossings < minEdgeCrossings ) {
+      minEdgeCrossings = edgeCrossings;
     }
 }
 
 function displayCrossings() {
-    int crossings = layeredGraph.numberOfCrossings();
     layeredGraph.displayPositions();
     layeredGraph.displayMarks();
-    display( "pass = " + pass
-             + ", iteration = " + iteration
-             + ", crossings = " + crossings
-             + ", edge_crossings = " + minEdgeCrossings
+    String bestCrossingsString = "    ";
+    String bestBottleneckString = "    ";
+    if ( crossings == minCrossings ) bestCrossingsString = " ** ";
+    if ( edgeCrossings == minEdgeCrossings ) bestBottleneckString = " ** ";
+    display( "pass ", pass,
+             ", iteration ", iteration,
+             ", crossings = ", crossings, bestCrossingsString,
+             ", bottleneck = ",  edgeCrossings, bestBottleneckString
              );
 }
 
@@ -152,4 +158,4 @@ algorithm {
 
     print( "Minimum edge crossings = " + minEdgeCrossings );
 }
-//  [Last modified: 2016 10 16 at 15:32:29 GMT]
+//  [Last modified: 2017 11 15 at 16:02:52 GMT]

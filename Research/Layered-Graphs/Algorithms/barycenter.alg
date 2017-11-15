@@ -15,6 +15,8 @@ import edu.ncsu.csc.Galant.local.LayeredGraph;
 int MAX_ITERATIONS = 200;
 
 int minCrossings = Integer.MAX_VALUE;
+int edgeCrossings = 0;
+int minEdgeCrossings = Integer.MAX_VALUE;
 int iteration = 0;
 int pass = 0;
 int minIteration = 0;
@@ -26,12 +28,17 @@ LayeredGraph layeredGraph;
  */
 function displayMessage( int layer, String sweepDirection ) {
     int crossings = layeredGraph.numberOfCrossings();
-    display( "layer = " + layer
-                        + ", pass = " + pass
-                        + ", direction = " + sweepDirection
-                        + ", iteration = " + iteration
-                        + ", crossings = " + crossings 
-                        );
+    String bestCrossingsString = "    ";
+    String bestBottleneckString = "    ";
+    if ( crossings == minCrossings ) bestCrossingsString = " ** ";
+    if ( edgeCrossings == minEdgeCrossings ) bestBottleneckString = " ** ";
+    display( "pass ", pass,
+             ", iteration ", iteration,
+             ", layer ", layer,
+             ", direction ", sweepDirection,
+             ", crossings = ", crossings, bestCrossingsString,
+             ", bottleneck = ",  edgeCrossings, bestBottleneckString
+             );
 }
 
 /**
@@ -92,6 +99,10 @@ function checkCrossings() {
         minIteration = iteration;
         minPass = pass;
         layeredGraph.savePositions();
+    }
+    edgeCrossings = layeredGraph.getMaxEdgeCrossings();
+    if ( edgeCrossings < minEdgeCrossings ) {
+      minEdgeCrossings = edgeCrossings;
     }
 }
 
@@ -160,4 +171,4 @@ algorithm {
            );
 }
 
-//  [Last modified: 2016 10 16 at 15:35:08 GMT]
+//  [Last modified: 2017 11 15 at 16:15:53 GMT]

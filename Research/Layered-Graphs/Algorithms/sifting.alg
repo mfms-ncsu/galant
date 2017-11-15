@@ -19,6 +19,8 @@ int iteration = 1;
 int pass = 1;
 int minCrossings = Integer.MAX_VALUE;
 int minIteration = -1;
+int edgeCrossings = 0;
+int minEdgeCrossings = Integer.MAX_VALUE;
 
 LayeredGraph layeredGraph;
 
@@ -29,9 +31,14 @@ int MAX_ITERATIONS = 200;
  */
 function displayMessage() {
     int crossings = layeredGraph.numberOfCrossings();
-    display( "pass = " + pass
-             + ", iteration = " + iteration
-             + ", crossings = " + crossings 
+    String bestCrossingsString = "    ";
+    String bestBottleneckString = "    ";
+    if ( crossings == minCrossings ) bestCrossingsString = " ** ";
+    if ( edgeCrossings == minEdgeCrossings ) bestBottleneckString = " ** ";
+    display( "pass ", pass,
+             ", iteration ", iteration,
+             ", crossings = ", crossings, bestCrossingsString,
+             ", bottleneck = ",  edgeCrossings, bestBottleneckString
              );
 }
 
@@ -44,6 +51,10 @@ function checkCrossings() {
         minCrossings = crossings;
         minIteration = iteration;
         layeredGraph.savePositions();
+    }
+    edgeCrossings = layeredGraph.getMaxEdgeCrossings();
+    if ( edgeCrossings < minEdgeCrossings ) {
+      minEdgeCrossings = edgeCrossings;
     }
 }
 
@@ -198,4 +209,4 @@ algorithm {
 
 }
 
-//  [Last modified: 2016 10 16 at 15:34:31 GMT]
+//  [Last modified: 2017 11 15 at 16:19:43 GMT]

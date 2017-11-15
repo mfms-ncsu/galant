@@ -40,7 +40,7 @@ algorithm {
     mark(v);        // nodes are marked when visited
     unhighlight(v); // and highlighted when on the frontier
     if ( chosenEdge[id(v)] != null )
-      color(chosenEdge[id(v)], BLUE);
+      color(chosenEdge[id(v)], BLUE); // edge turns blue when part of tree
     endStep();
     for_outgoing ( v, e, w ) {
       if ( ! marked(w) )  {
@@ -50,10 +50,13 @@ algorithm {
           beginStep();
           Edge previous_chosen = chosenEdge[id(w)];
           if (previous_chosen != null ) {
+            // change color of edge to yellow to indicate no longer best
             color(previous_chosen, YELLOW);
+            // green means that this edge represents a change
             color(e, GREEN);
           }
           else
+            // edge is red if it is the first edge to connect v to the tree
             color(e, RED);
           setWeight(w, distance);
           changeKey(w, pq);
@@ -66,4 +69,4 @@ algorithm {
   } // stop when priority queue is empty
 } // end, algorithm
 
-//  [Last modified: 2017 10 27 at 11:35:59 GMT]
+//  [Last modified: 2017 11 14 at 20:48:38 GMT]

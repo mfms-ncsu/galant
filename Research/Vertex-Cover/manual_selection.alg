@@ -36,7 +36,7 @@ algorithm {
             edges_not_covered.remove(e);
         }
         mark(v);
-        display("cover size = " + cover.size());
+        display("cover size = ", cover.size());
         endStep();
         //beginStep();
         unhighlight(v);

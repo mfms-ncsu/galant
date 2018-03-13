@@ -1,5 +1,18 @@
 /**
- * Quadratic implementation of Hamalainen's two-median algorithm
+ * Algorithm for testing max-reduction conjecture. For now it's a minimal
+ * modification of the Hamalainen implementation. Idea is as follows (for
+ * each T-hat):
+ *     put leaves on queue
+ *     max_reduction_node = null with max_weighted_distance 0
+ *     while queue has more than one node do
+ *        current = remove(queue)
+ *        if weighted_distance(current) exceeds max_weighted_distance then
+ *            max_reduction_node = current
+ *            max_weighted_distance = weighted_distance(current)
+ *        endif
+ *        put parent of current on queue if all children have been processed
+ *     end while
+ *     now the path from max_reduction_node to the 1-median has the median in T-hat
  */
 
 Integer total_weight;     // total weight of all vertices in (sub)-tree --
@@ -9,8 +22,7 @@ Integer deg1[];           // degree during 1-median algorithm
 Integer deg2[];           // degree during 2-median algorithm
 Integer wt[];             // current weight during 1-median algorithm
 NodeQueue leaves;         // current leaves during 1-median algorithm
-NodePriorityQueue leaf_pq;      // priority queue in post-order edge-deletion
-                                // computation in stage two
+NodeQueue leaf_queue;     // queue holding leaves in T-hat
 
 // the following are global for convenience, so they don't have to be
 // returned from the function that computes them
@@ -84,13 +96,19 @@ function Node compute_one_median() {
  *  - the label of node is set to total weight of the subtree
  *  - sets the parent of each adjacent node v (except parent of root) to be the
  *    root for the recursive call, by setting parent[id(v)]
+ *  - sets the "distance" of each node to the total distance from the root
+ *  - sets the label of the edge between the node and its parent to the "distance"
  * @return the weight of the subtree rooted at root
  */
 function Integer recursive_weight(Node node) {
   Integer weight = integer(weight(node));
   for_adjacent(node, e, child) {
     if ( child != parent[id(node)] ) {
-      parent[id(child)] = node; 
+      parent[id(child)] = node;
+      Integer node_distance = getInteger(node, "distance");
+      Integer child_distance = node_distance + integer(weight(e));
+      set(child, "distance", child_distance);
+      label(e, child_distance);
       Integer subtree_weight = recursive_weight(child);
       weight = weight + subtree_weight;
     }
@@ -101,12 +119,15 @@ function Integer recursive_weight(Node node) {
 
 /**
  * sets the label (for display) and "subtree_weight" of each node incident on
- * the median to the total weight of the corresponding subtree; setup for
- * 2-median computation
+ * the median to the total weight of the corresponding subtree;
+ * also computes the distance of each node from the 1-median;
+ * setup for the 2-median computation
  */
 function compute_subtree_weights(Node root) {
   for_adjacent(root, e, subtree_root) {
     parent[id(subtree_root)] = root;
+    set(subtree_root, "distance", integer(weight(e)));
+    label(e, integer(weight(e)));
     Integer subtree_weight = recursive_weight(subtree_root);
     set(subtree_root, "subtree_weight", subtree_weight);
     label(subtree_root, getInteger(subtree_root, "subtree_weight"));
@@ -200,49 +221,35 @@ function cleanup(Edge edge) {
 }
 
 /**
- * does the dfs required to correctly perform initialize_priority_queue; this
+ * does the dfs required to correctly perform initialize_queue; this
  * is in context of the 2-median algorithm - hence the use of deg2, which
  * ends up being the degree of each vertex
- * Side effect:
- *    sets the "serve" attribute of each edge e = (v,w) to a child w
- *    one-median to the cost assuming v serves as 'median' for T_u 
- * @return the sum of the "serve" attributes for all the edges to children of v
  */
-function Integer pq_dfs(Node v) {
+function queue_dfs(Node v) {
   Integer sum_of_serves = 0;
   deg2[id(v)] = degree(v);
   set(v, "leaf_weight", integer(weight(v)));
   if ( deg2[id(v)] == 1 ) {
     label(v, getInteger(v, "leaf_weight"));
-    add(v, leaf_pq);
+    add(v, leaf_queue);
     color(v, BLACK);
   }
   for_adjacent(v, e, w) {
     if ( w != parent[id(v)] ) {
-      // start with the service costs of the subtrees
-      Integer serve = pq_dfs(w);
-      // add the cost of v serving w and its subtrees
-      serve += integer(weight(e) * wt[id(w)]);
-      set(e, "serve", serve);
-      sum_of_serves += serve;
+      queue_dfs(w);
     }
   }
-  return sum_of_serves;
 }
 
 /**
  * POST: deg[id(v)] = degree(v) for all vertices v in the subtree rooted at
- * root; leaf_pq contains all degree one vertices with priority =
- * getInteger(v, "leaf_weight")
+ * root; leaf_queue contains all degree one vertices
  * ASSUME: parent[v] = parent of v, using orientation with 1-median as root
  * Side effect:
  *    sets the "serve" attribute of the edge from the root to the one-median
  */
-function initialize_priority_queue(Node root) {
-  Integer serve = pq_dfs(root);
-  Edge root_edge = edge(root, one_median);
-  serve += integer(weight(root_edge) * wt[id(root)]);
-  set(root_edge, "serve", serve);
+function initialize_queue(Node root) {
+  queue_dfs(root);
 }
 
 /**
@@ -261,13 +268,6 @@ function compute_two_medians(Node node, Node parent_node) {
   display("first median is ", id(first_median),
           ", cost = ", first_cost,
           ", cost_m = ", cost_m);
-  Integer reduction = getInteger(edge, "serve") - first_cost;
-  String reduction_indicator = "";
-  if ( reduction > max_reduction && parent_node != one_median ) {
-    max_reduction = reduction;
-    reduction_indicator = " +++";
-  }
-
   second_median = side_median(parent_node, node);
   if ( second_median == one_median ) color(second_median, VIOLET);
   else color(second_median, RED);
@@ -294,44 +294,56 @@ function compute_two_medians(Node node, Node parent_node) {
 }
 
 /**
- * The meat of the algorithm. here the cut edges are explored in post-order
- * using the leaf_pq to decide which edge to consider next; priority of each
- * node on leaf_pq is its "leaf_weight" and nodes are considered smallest
- * weight first; when a node is considered it is currently a leaf; the edge
- * to its parent is considered as a cut edge and the cost of the medians is
- * computed; finally, the cut edge is contracted and, if the parent becomes a
- * leaf, it is added to the queue with a weight corresponding to its own
- * weight plus that of the leaf.
- * The computation of the two medians is brute force rather than using
- * incremental updates.
+ * The main algorithm to compute the max reduction node
  */
-function explore_cut_edges() {
-  while ( ! empty(leaf_pq) ) {
-    Node current = removeBest(leaf_pq);
+function Node get_max_reduction_node() {
+  Node max_reduction_node = null;
+  Integer max_reduction_weight = 0;
+  while ( ! empty(leaf_queue) ) {
+    Node current = get(leaf_queue);
+    mark(current);
     if ( current != one_median ) {
       Node parent_node = parent[id(current)];
-      compute_two_medians(current, parent_node);
-      if ( parent_node != one_median ) {
-        Integer new_weight = getInteger(parent_node, "leaf_weight")
-          + getInteger(current, "leaf_weight");
-        set(parent_node, "leaf_weight", new_weight);
-        label(parent_node, new_weight);
+      Integer current_weight = getInteger(current, "leaf_weight");
+      Integer weighted_distance = current_weight * getInteger(current, "distance");
+      if ( weighted_distance > max_reduction_weight ) {
+        highlight(current);
+        display("** new max reduction node, distance = ",
+                getInteger(current, "distance"),
+                ", subtree_weight = ", current_weight);
+        label(current, weighted_distance);
+        if ( max_reduction_node != null ) {
+          unhighlight(max_reduction_node);
+          label(max_reduction_node, "X");
+        }
+        max_reduction_weight = weighted_distance;
+        max_reduction_node = current;
+      }
+      else {
         label(current, "X");
+      }
+      if ( parent_node != one_median ) {
+        Integer parent_weight = getInteger(parent_node, "leaf_weight")
+          + current_weight;
+        set(parent_node, "leaf_weight", parent_weight);
+        label(parent_node, parent_weight);
         deg2[id(parent_node)] = deg2[id(parent_node)] - 1;
         if ( deg2[id(parent_node)] == 1 ) {
-          add(parent_node, leaf_pq);
+          add(parent_node, leaf_queue);
           color(parent_node, BLACK);
         }
       } // parent_node is not one_median
       uncolor(current);
     } // current is not one_median
-  } // while leaf_pq not empty
+  } // while leaf_queue not empty
+  return max_reduction_node;
 }
 
 algorithm {
-  clearMarks();
   showNodeLabels();
   showNodeWeights();
+  showEdgeLabels();
+  showEdgeWeights();
   setDirected(false);
   parent = new Node[nodeIds()];
   min_total_cost = MAX_INTEGER;
@@ -362,37 +374,44 @@ algorithm {
   }
   clearNodeLabels();
   // first explore cut edges in the tree rooted at v_1
-  leaf_pq = new NodePriorityQueue(getIntegerComparator("leaf_weight"));
+  leaf_queue = new NodeQueue();
   deg2 = new Integer[nodeIds()];
-  initialize_priority_queue(v_1);
+  initialize_queue(v_1);
   clearMarks();
-  step();
-  explore_cut_edges();
+  endStep();
+  Node max_reduction_node = get_max_reduction_node();
+  Node first_max_reduction_node = max_reduction_node;
+  //  explore_cut_edges();
   // then do it in the union of the other subtrees
-  leaf_pq = new NodePriorityQueue(getIntegerComparator("leaf_weight"));
+  leaf_queue = new NodeQueue();
   deg2 = new Integer[nodeIds()];
   step();
   for ( Node root : subtree_roots ) {
     if ( root != v_1 ) {
-      initialize_priority_queue(root);
+      initialize_queue(root);
     }
   }
   clearMarks();
-  explore_cut_edges();
-  step();
+  endStep();
+  max_reduction_node = get_max_reduction_node();
+  display("max reduction nodes are ",
+          id(first_max_reduction_node),
+          " and ", id(max_reduction_node));
+  //  explore_cut_edges();
+  //  step();
 
-  display("Min cost solution: first median is " + id(min_first_median)
-          + ", second median is " + id(min_second_median)
-          + ", total cost = " + min_total_cost);
-  highlight(min_cut_edge);
-  if ( min_first_median == one_median )
-    color(min_first_median, TEAL);
-  else
-    color(min_first_median, GREEN);
-  if ( min_second_median == one_median )
-    color(min_second_median, VIOLET);
-  else
-    color(min_second_median, RED);
+  // display("Min cost solution: first median is " + id(min_first_median)
+  //         + ", second median is " + id(min_second_median)
+  //         + ", total cost = " + min_total_cost);
+  // highlight(min_cut_edge);
+  // if ( min_first_median == one_median )
+  //   color(min_first_median, TEAL);
+  // else
+  //   color(min_first_median, GREEN);
+  // if ( min_second_median == one_median )
+  //   color(min_second_median, VIOLET);
+  // else
+  //   color(min_second_median, RED);
 
   // let y have child x and parent z on P and let C_1, C_2 be the
   // costs of the two subtrees if edge xy is cut and m_1 is the median on
@@ -421,4 +440,4 @@ algorithm {
   // multiplied by d(x,y_i)
 }
 
-//  [Last modified: 2017 09 15 at 12:07:21 GMT]
+//  [Last modified: 2017 12 06 at 21:25:48 GMT]

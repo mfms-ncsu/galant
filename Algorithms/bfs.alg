@@ -21,20 +21,21 @@ algorithm {
 
   while ( ! empty(queue) ) {
     Node next = get(queue);
-    highlight(next);
+    beginStep();
+    mark(next);
 
     for_outgoing( next, e, other ) {
       if ( ! highlighted(other) ) {
-        beginStep();
         highlight(e);
         highlight(other);
         Double distance = weight(next) + 1;
         setWeight(other, distance);
         put(other, queue);
-        endStep();
-      }
+        }
+      else color(e, BLUE);
     }
+    endStep();
   }
 }
 
-//  [Last modified: 2017 01 18 at 13:20:47 GMT]
+//  [Last modified: 2018 03 01 at 13:22:30 GMT]

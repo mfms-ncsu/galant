@@ -4,106 +4,106 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns 
 http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
  <graph  edgedefault="undirected">
-  <node id="1" x="1045" y="596"   />
-  <node id="2" x="592" y="555"   />
-  <node id="3" x="46" y="181"   />
-  <node id="4" x="833" y="589"   />
-  <node id="5" x="212" y="274"   />
-  <node id="6" x="119" y="463"   />
-  <node id="7" x="312" y="476"   />
-  <node id="8" x="909" y="254"   />
-  <node id="9" x="1010" y="522"   />
-  <node id="10" x="33" y="405"   />
-  <node id="11" x="1057" y="376"   />
-  <node id="12" x="443" y="94"   />
-  <node id="13" x="459" y="566"   />
-  <node id="14" x="968" y="322"   />
-  <node id="15" x="127" y="77"   />
-  <node id="16" x="237" y="493"   />
-  <node id="17" x="1094" y="525"   />
-  <node id="18" x="93" y="596"   />
-  <node id="19" x="174" y="527"   />
-  <node id="20" x="376" y="365"   />
-  <node id="21" x="767" y="285"   />
-  <node id="22" x="1109" y="336"   />
-  <node id="23" x="718" y="117"   />
-  <node id="24" x="568" y="40"   />
-  <node id="25" x="908" y="462"   />
-  <node id="26" x="975" y="397"   />
-  <node id="27" x="174" y="408"   />
-  <node id="28" x="85" y="342"   />
-  <node id="29" x="419" y="135"   />
-  <node id="30" x="995" y="266"   />
-  <node id="31" x="320" y="199"   />
-  <node id="32" x="1091" y="255"   />
-  <node id="33" x="1191" y="397"   />
-  <node id="34" x="127" y="276"   />
-  <node id="35" x="317" y="409"   />
-  <node id="36" x="776" y="212"   />
-  <node id="37" x="253" y="345"   />
-  <node id="38" x="853" y="531"   />
-  <node id="39" x="65" y="31"   />
-  <node id="40" x="571" y="215"   />
-  <node id="41" x="1179" y="203"   />
-  <node id="42" x="510" y="408"   />
-  <node id="43" x="714" y="564"   />
-  <node id="44" x="607" y="318"   />
-  <node id="45" x="294" y="148"   />
-  <node id="46" x="1184" y="525"   />
-  <node id="47" x="949" y="153"   />
-  <node id="48" x="692" y="485"   />
-  <node id="49" x="683" y="181"   />
-  <node id="50" x="335" y="68"   />
-  <node id="51" x="101" y="170"   />
-  <node id="52" x="341" y="527"   />
-  <node id="53" x="483" y="509"   />
-  <node id="54" x="773" y="385"   />
-  <node id="55" x="1162" y="44"   />
-  <node id="56" x="169" y="139"   />
-  <node id="57" x="134" y="214"   />
-  <node id="58" x="327" y="572"   />
-  <node id="59" x="162" y="335"   />
-  <node id="60" x="412" y="298"   />
-  <node id="61" x="260" y="98"   />
-  <node id="62" x="1128" y="479"   />
-  <node id="63" x="523" y="599"   />
-  <node id="64" x="838" y="40"   />
-  <edge  source="1" target="9" weight="126.01587201618692"  />
-  <edge  source="1" target="17" weight="76.68767828015137"  />
-  <edge  source="1" target="46" weight="140.71602609511115"  />
-  <edge  source="1" target="4" weight="236.00847442411893"  />
+  <node id="1" x="1045" y="596" />
+  <node id="2" x="592" y="555" />
+  <node id="3" x="46" y="181" />
+  <node id="4" x="833" y="589" />
+  <node id="5" x="212" y="274" />
+  <node id="6" x="119" y="463" />
+  <node id="7" x="312" y="476" />
+  <node id="8" x="909" y="254" />
+  <node id="9" x="1010" y="522" />
+  <node id="10" x="33" y="405" />
+  <node id="11" x="1057" y="376" />
+  <node id="12" x="443" y="94" />
+  <node id="13" x="459" y="566" />
+  <node id="14" x="968" y="322" />
+  <node id="15" x="127" y="77" />
+  <node id="16" x="237" y="493" />
+  <node id="17" x="1094" y="525" />
+  <node id="18" x="93" y="596" />
+  <node id="19" x="174" y="527" />
+  <node id="20" x="376" y="365" />
+  <node id="21" x="767" y="285" />
+  <node id="22" x="1109" y="336" />
+  <node id="23" x="718" y="117" />
+  <node id="24" x="568" y="40" />
+  <node id="25" x="908" y="462" />
+  <node id="26" x="975" y="397" />
+  <node id="27" x="174" y="408" />
+  <node id="28" x="85" y="342" />
+  <node id="29" x="419" y="135" />
+  <node id="30" x="995" y="266" />
+  <node id="31" x="320" y="199" />
+  <node id="32" x="1091" y="255" />
+  <node id="33" x="1191" y="397" />
+  <node id="34" x="127" y="276" />
+  <node id="35" x="317" y="409" />
+  <node id="36" x="776" y="212" />
+  <node id="37" x="253" y="345" />
+  <node id="38" x="853" y="531" />
+  <node id="39" x="65" y="31" />
+  <node id="40" x="571" y="215" />
+  <node id="41" x="1179" y="203" />
+  <node id="42" x="510" y="408" />
+  <node id="43" x="714" y="564" />
+  <node id="44" x="607" y="318" />
+  <node id="45" x="294" y="148" />
+  <node id="46" x="1184" y="525" />
+  <node id="47" x="949" y="153" />
+  <node id="48" x="692" y="485" />
+  <node id="49" x="683" y="181" />
+  <node id="50" x="335" y="68" />
+  <node id="51" x="101" y="170" />
+  <node id="52" x="341" y="527" />
+  <node id="53" x="483" y="509" />
+  <node id="54" x="773" y="385" />
+  <node id="55" x="1162" y="44" />
+  <node id="56" x="169" y="139" />
+  <node id="57" x="134" y="214" />
+  <node id="58" x="327" y="572" />
+  <node id="59" x="162" y="335" />
+  <node id="60" x="412" y="298" />
+  <node id="61" x="260" y="98" />
+  <node id="62" x="1128" y="479" />
+  <node id="63" x="523" y="599" />
+  <node id="64" x="838" y="40" />
+  <edge  source="1" target="9" weight="81.85963596303125"  />
+  <edge  source="1" target="17" weight="86.2670273047588"  />
+  <edge  source="1" target="46" weight="156.0833110873805"  />
+  <edge  source="1" target="4" weight="212.11553455605272"  />
   <edge  source="2" target="53" weight="118.30891766895681"  />
   <edge  source="2" target="48" weight="122.06555615733703"  />
   <edge  source="2" target="43" weight="122.3315167894194"  />
-  <edge  source="2" target="63" weight="101.9803902718557"  />
-  <edge  source="2" target="13" weight="141.41074923781431"  />
+  <edge  source="2" target="63" weight="81.83520025025906"  />
+  <edge  source="2" target="13" weight="133.4541119636259"  />
   <edge  source="3" target="39" weight="151.19854496654392"  />
   <edge  source="3" target="51" weight="56.089214649520635"  />
   <edge  source="3" target="57" weight="93.98404119849285"  />
   <edge  source="3" target="34" weight="124.84390253432484"  />
   <edge  source="3" target="28" weight="165.65627063289816"  />
   <edge  source="3" target="10" weight="224.37691503361035"  />
-  <edge  source="4" target="38" weight="91.13725912051558"  />
-  <edge  source="4" target="9" weight="190.3785702225962"  />
-  <edge  source="4" target="63" weight="324.1249758966439"  />
-  <edge  source="4" target="43" weight="146.01369798755184"  />
+  <edge  source="4" target="38" weight="61.35144660071187"  />
+  <edge  source="4" target="9" weight="189.25643978475344"  />
+  <edge  source="4" target="63" weight="310.16124838541646"  />
+  <edge  source="4" target="43" weight="121.59769734661919"  />
   <edge  source="5" target="59" weight="78.87331614684399"  />
   <edge  source="5" target="34" weight="85.0235261559999"  />
   <edge  source="5" target="57" weight="98.40731680114035"  />
   <edge  source="5" target="31" weight="131.48764200486676"  />
   <edge  source="5" target="60" weight="201.43485299222675"  />
   <edge  source="5" target="37" weight="81.98780397107853"  />
-  <edge  source="6" target="18" weight="290.73871431235295"  />
-  <edge  source="6" target="10" weight="100.60318086422517"  />
-  <edge  source="6" target="27" weight="162.2004932174992"  />
-  <edge  source="6" target="7" weight="269.56446353330773"  />
-  <edge  source="6" target="16" weight="182.7183625145541"  />
-  <edge  source="6" target="19" weight="116.70903992407786"  />
+  <edge  source="6" target="18" weight="135.51752654177244"  />
+  <edge  source="6" target="10" weight="103.73041983911952"  />
+  <edge  source="6" target="27" weight="77.78174593052023"  />
+  <edge  source="6" target="7" weight="193.43732835210477"  />
+  <edge  source="6" target="16" weight="121.75385004179539"  />
+  <edge  source="6" target="19" weight="84.38601779915912"  />
   <edge  source="7" target="35" weight="67.1863081289633"  />
   <edge  source="7" target="42" weight="209.35137926462295"  />
   <edge  source="7" target="53" weight="174.1551032843999"  />
-  <edge  source="7" target="52" weight="79.83107164506812"  />
-  <edge  source="7" target="16" weight="102.39628899525607"  />
+  <edge  source="7" target="52" weight="58.66856057549052"  />
+  <edge  source="7" target="16" weight="76.90253571892151"  />
   <edge  source="7" target="27" weight="153.8440769090575"  />
   <edge  source="8" target="21" weight="145.34441853748632"  />
   <edge  source="8" target="36" weight="139.47401191619892"  />
@@ -111,13 +111,13 @@ http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
   <edge  source="8" target="30" weight="86.83317338436964"  />
   <edge  source="8" target="14" weight="90.02777349240623"  />
   <edge  source="9" target="33" weight="219.9681795169474"  />
-  <edge  source="9" target="62" weight="104.47966309287182"  />
-  <edge  source="9" target="17" weight="93.96275858019496"  />
+  <edge  source="9" target="62" weight="125.59060474414477"  />
+  <edge  source="9" target="17" weight="84.0535543567314"  />
   <edge  source="9" target="38" weight="157.25775020646836"  />
   <edge  source="9" target="25" weight="118.33849753989612"  />
   <edge  source="10" target="28" weight="81.68843247363729"  />
   <edge  source="10" target="27" weight="141.0319112825179"  />
-  <edge  source="10" target="18" weight="359.43566879206634"  />
+  <edge  source="10" target="18" weight="200.2023975880409"  />
   <edge  source="11" target="26" weight="84.64632301523794"  />
   <edge  source="11" target="14" weight="104.10091258005379"  />
   <edge  source="11" target="22" weight="65.60487786742691"  />
@@ -125,10 +125,10 @@ http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
   <edge  source="12" target="29" weight="47.50789408087881"  />
   <edge  source="12" target="50" weight="111.08555261599052"  />
   <edge  source="12" target="24" weight="136.1653406708183"  />
-  <edge  source="13" target="63" weight="86.83893136145792"  />
-  <edge  source="13" target="58" weight="134.6291201783626"  />
-  <edge  source="13" target="52" weight="126.90547663517127"  />
-  <edge  source="13" target="53" weight="78.0"  />
+  <edge  source="13" target="63" weight="72.00694410957877"  />
+  <edge  source="13" target="58" weight="132.13629327327143"  />
+  <edge  source="13" target="52" weight="124.27791436936813"  />
+  <edge  source="13" target="53" weight="61.84658438426491"  />
   <edge  source="14" target="30" weight="62.16912416947821"  />
   <edge  source="14" target="32" weight="140.06427096158393"  />
   <edge  source="14" target="22" weight="141.69333082400175"  />
@@ -140,15 +140,15 @@ http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
   <edge  source="15" target="50" weight="208.19462048765814"  />
   <edge  source="15" target="61" weight="134.6476884316994"  />
   <edge  source="15" target="56" weight="74.88658090739622"  />
-  <edge  source="16" target="52" weight="106.73331251301067"  />
-  <edge  source="16" target="19" weight="179.60233851484227"  />
-  <edge  source="17" target="46" weight="87.36131867136622"  />
-  <edge  source="17" target="62" weight="39.56008088970496"  />
-  <edge  source="18" target="19" weight="229.10696191953662"  />
-  <edge  source="18" target="58" weight="60.53924347066124"  />
-  <edge  source="18" target="63" weight="228.79029699705362"  />
-  <edge  source="19" target="52" weight="268.00186566514793"  />
-  <edge  source="19" target="58" weight="251.24689052802225"  />
+  <edge  source="16" target="52" weight="109.41663493271945"  />
+  <edge  source="16" target="19" weight="71.58910531638176"  />
+  <edge  source="17" target="46" weight="90.0"  />
+  <edge  source="17" target="62" weight="57.201398584300364"  />
+  <edge  source="18" target="19" weight="106.4048871058092"  />
+  <edge  source="18" target="58" weight="235.2275494069519"  />
+  <edge  source="18" target="63" weight="430.01046498893487"  />
+  <edge  source="19" target="52" weight="167.0"  />
+  <edge  source="19" target="58" weight="159.48040632002414"  />
   <edge  source="20" target="37" weight="124.61540835707277"  />
   <edge  source="20" target="60" weight="76.05918747922567"  />
   <edge  source="20" target="42" weight="140.73023839957068"  />
@@ -199,7 +199,7 @@ http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
   <edge  source="32" target="41" weight="102.2154587134451"  />
   <edge  source="33" target="41" weight="194.3707796969493"  />
   <edge  source="33" target="46" weight="128.191263352851"  />
-  <edge  source="33" target="62" weight="138.3979768638256"  />
+  <edge  source="33" target="62" weight="103.40696301506973"  />
   <edge  source="34" target="57" weight="62.39390995922599"  />
   <edge  source="34" target="59" weight="68.60029154456998"  />
   <edge  source="35" target="37" weight="90.50966799187809"  />
@@ -224,13 +224,13 @@ http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
   <edge  source="42" target="53" weight="104.546640309481"  />
   <edge  source="42" target="60" weight="147.32277488562318"  />
   <edge  source="43" target="48" weight="82.00609733428362"  />
-  <edge  source="43" target="63" weight="201.4671189052943"  />
+  <edge  source="43" target="63" weight="194.18032856085088"  />
   <edge  source="44" target="54" weight="179.0111728356641"  />
   <edge  source="44" target="60" weight="196.02295783912658"  />
   <edge  source="45" target="61" weight="60.4648658313239"  />
   <edge  source="45" target="50" weight="89.89438247187641"  />
   <edge  source="45" target="56" weight="125.32358118087753"  />
-  <edge  source="46" target="62" weight="71.19691004531025"  />
+  <edge  source="46" target="62" weight="72.47068372797375"  />
   <edge  source="47" target="64" weight="158.39823231336896"  />
   <edge  source="47" target="55" weight="239.26972228010797"  />
   <edge  source="48" target="53" weight="210.3734774157617"  />
@@ -238,10 +238,10 @@ http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
   <edge  source="50" target="61" weight="80.77747210701756"  />
   <edge  source="51" target="56" weight="74.73285756613352"  />
   <edge  source="51" target="57" weight="55.0"  />
-  <edge  source="52" target="58" weight="41.23105625617661"  />
-  <edge  source="52" target="53" weight="160.4400199451496"  />
+  <edge  source="52" target="58" weight="47.12748667179272"  />
+  <edge  source="52" target="53" weight="143.13629868066312"  />
   <edge  source="55" target="64" weight="324.02469041725817"  />
   <edge  source="56" target="61" weight="99.80981915623332"  />
   <edge  source="56" target="57" weight="82.76472678623425"  />
-  <edge  source="58" target="63" weight="208.3122656014283"  />
+  <edge  source="58" target="63" weight="197.85095400325974"  />
  </graph></graphml>

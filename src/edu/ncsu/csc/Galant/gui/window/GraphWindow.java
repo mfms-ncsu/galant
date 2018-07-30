@@ -67,10 +67,19 @@ import edu.ncsu.csc.Galant.gui.editor.GEditorFrame; // for confirmation dialog
 import edu.ncsu.csc.Galant.algorithm.AlgorithmExecutor;
 import edu.ncsu.csc.Galant.algorithm.AlgorithmSynchronizer;
 import edu.ncsu.csc.Galant.algorithm.Terminate;
- public class GraphWindow extends JPanel implements PropertyChangeListener, ComponentListener {
-   public static final int DEFAULT_WIDTH = 700, DEFAULT_HEIGHT = 600;
+import edu.ncsu.csc.Galant.graph.datastructure.EdgeList; //shall be removed when I figure out how to update GraphPanel
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+public class GraphWindow extends JPanel implements PropertyChangeListener, ComponentListener {
+
+  public static final int DEFAULT_WIDTH = 700, DEFAULT_HEIGHT = 600;
   public static final int TOOLBAR_HEIGHT = 24;
   public static final int ANIMATION_BUTTON_SIZE = 40;
+  
+  ArrayList<Point> nodePositions=new ArrayList<Point>();
+  ArrayList<Integer> nodeIds=new ArrayList<Integer>();
 	   
   /** Refers to the singleton GraphDispatch to push global information */
   private final GraphDispatch dispatch;
@@ -88,6 +97,9 @@ import edu.ncsu.csc.Galant.algorithm.Terminate;
   /** A panel used to edit Graph element's properties **/ 
   public static ComponentEditPanel componentEditPanel;
 	
+  /** Denotes the current working graph **/
+  private static Graph graph;
+  
   /** A panel used to navigate through an animation **/
   private static JPanel animationButtons;
   private final JButton stepForward;
@@ -265,7 +277,10 @@ import edu.ncsu.csc.Galant.algorithm.Terminate;
           // If you start dragging, set dragging mode so you don't
           // perform any other operations on the Node until after
           // releasing it
+          
           Node sel = graphPanel.getSelectedNode();
+          nodePositions.add(sel.getFixedPosition());
+          nodeIds.add(sel.getId());
           if ( sel != null ) {
             graphPanel.setDragging(true);
             graphPanel.setEdgeTracker(null);
@@ -281,7 +296,8 @@ import edu.ncsu.csc.Galant.algorithm.Terminate;
           }
           frame.repaint();
         }
-         @Override
+
+        @Override
         public void mouseMoved(MouseEvent arg0) {
           // If you have the source selected in edge creation,
           // follow the mouse with an edge
@@ -813,6 +829,8 @@ import edu.ncsu.csc.Galant.algorithm.Terminate;
     // also does not appear to help in case of infinite loop
     //synchronizer.finishStep();
     executor.stopAlgorithm();
+    nodePositions.clear();
+    nodeIds.clear();
     updateStatusLabel();
   }
    /**
@@ -1049,7 +1067,14 @@ import edu.ncsu.csc.Galant.algorithm.Terminate;
             {
               synchronized(this) {
               LogHelper.logDebug("UNDO");
-              JOptionPane.showMessageDialog(null, "Undo for now, method yet to be called");
+                  try {
+                      undo();
+                  } catch (GalantException ex) {
+                      Logger.getLogger(GraphWindow.class.getName()).log(Level.SEVERE, null, ex);
+                  } catch (Terminate ex) {
+                      Logger.getLogger(GraphWindow.class.getName()).log(Level.SEVERE, null, ex);
+                  }
+              
                               }
               } //undo
           
@@ -1139,7 +1164,26 @@ import edu.ncsu.csc.Galant.algorithm.Terminate;
      LogHelper.exitMethod(getClass(), "initAnimationPanel");
     return animationButtons;
   }
-   @Override
+public void undo() throws GalantException, Terminate
+{
+    if(!nodePositions.isEmpty() && dispatch.isAnimationMode())
+    {
+    //size -2 is done as we are doing an undo, size-1 will give the latest node position, we want to retrieve the position which is 1 before the latest.
+    Point lastCoordinates=nodePositions.get(nodePositions.size()-2); 
+    int lastNodeId=nodeIds.get(nodeIds.size()-2);
+    //The following code can be removed once I figure out how to update animation view with the new node positions, perhaps GraphPanel.java can read the positions of the nodes if I can convey to it that state has changed 
+    //For now, I have replaced the full node with a new node in current graph, but GraphPanel does not know how to read this yet
+    graph=dispatch.getWorkingGraph(); //Ideally must be done in constructor but this code shall be removed anyway
+    Node sel=graph.getNodeById(lastNodeId);
+    EdgeList incidentEdges=sel.getEdges();
+    graph.removeNode(sel); //Problem-causes edges to be removed too. Hopefully GraphPanel can simply replace nodes
+    sel.setFixedPosition(lastCoordinates);
+    graph.addNode(sel);
+    for(Edge edge:incidentEdges)
+    graph.addEdge(edge);
+    }
+}
+  @Override
   public void componentHidden(ComponentEvent arg0) {
     // TODO Auto-generated method stub
 		

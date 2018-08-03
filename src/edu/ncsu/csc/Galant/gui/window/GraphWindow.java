@@ -77,10 +77,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
   public static final int DEFAULT_WIDTH = 700, DEFAULT_HEIGHT = 600;
   public static final int TOOLBAR_HEIGHT = 24;
   public static final int ANIMATION_BUTTON_SIZE = 40;
-  
-  ArrayList<Point> nodePositions=new ArrayList<Point>();
-  ArrayList<Integer> nodeIds=new ArrayList<Integer>();
-	   
+  	   
   /** Refers to the singleton GraphDispatch to push global information */
   private final GraphDispatch dispatch;
 	
@@ -279,8 +276,6 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
           // releasing it
           
           Node sel = graphPanel.getSelectedNode();
-          nodePositions.add(sel.getFixedPosition());
-          nodeIds.add(sel.getId());
           if ( sel != null ) {
             graphPanel.setDragging(true);
             graphPanel.setEdgeTracker(null);
@@ -829,8 +824,6 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
     // also does not appear to help in case of infinite loop
     //synchronizer.finishStep();
     executor.stopAlgorithm();
-    nodePositions.clear();
-    nodeIds.clear();
     updateStatusLabel();
   }
    /**
@@ -1066,15 +1059,15 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                && e.getKeyCode()==KeyEvent.VK_Z && ctrlPressed) 
             {
               synchronized(this) {
-              LogHelper.logDebug("UNDO");
-                  try {
-                      undo();
-                  } catch (GalantException ex) {
-                      Logger.getLogger(GraphWindow.class.getName()).log(Level.SEVERE, null, ex);
-                  } catch (Terminate ex) {
-                      Logger.getLogger(GraphWindow.class.getName()).log(Level.SEVERE, null, ex);
-                  }
-              
+//              LogHelper.logDebug("UNDO");
+//                  try {
+//                      undo();
+//                  } catch (GalantException ex) {
+//                      Logger.getLogger(GraphWindow.class.getName()).log(Level.SEVERE, null, ex);
+//                  } catch (Terminate ex) {
+//                      Logger.getLogger(GraphWindow.class.getName()).log(Level.SEVERE, null, ex);
+//                  }
+//              
                               }
               } //undo
           
@@ -1164,25 +1157,25 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
      LogHelper.exitMethod(getClass(), "initAnimationPanel");
     return animationButtons;
   }
-public void undo() throws GalantException, Terminate
-{
-    if(!nodePositions.isEmpty() && dispatch.isAnimationMode())
-    {
-    //size -2 is done as we are doing an undo, size-1 will give the latest node position, we want to retrieve the position which is 1 before the latest.
-    Point lastCoordinates=nodePositions.get(nodePositions.size()-2); 
-    int lastNodeId=nodeIds.get(nodeIds.size()-2);
-    //The following code can be removed once I figure out how to update animation view with the new node positions, perhaps GraphPanel.java can read the positions of the nodes if I can convey to it that state has changed 
-    //For now, I have replaced the full node with a new node in current graph, but GraphPanel does not know how to read this yet
-    graph=dispatch.getWorkingGraph(); //Ideally must be done in constructor but this code shall be removed anyway
-    Node sel=graph.getNodeById(lastNodeId);
-    EdgeList incidentEdges=sel.getEdges();
-    graph.removeNode(sel); //Problem-causes edges to be removed too. Hopefully GraphPanel can simply replace nodes
-    sel.setFixedPosition(lastCoordinates);
-    graph.addNode(sel);
-    for(Edge edge:incidentEdges)
-    graph.addEdge(edge);
-    }
-}
+//public void undo() throws GalantException, Terminate
+//{
+//    if(!nodePositions.isEmpty() && dispatch.isAnimationMode())
+//    {
+//    //size -2 is done as we are doing an undo, size-1 will give the latest node position, we want to retrieve the position which is 1 before the latest.
+//    Point lastCoordinates=nodePositions.get(nodePositions.size()-2); 
+//    int lastNodeId=nodeIds.get(nodeIds.size()-2);
+//    //The following code can be removed once I figure out how to update animation view with the new node positions, perhaps GraphPanel.java can read the positions of the nodes if I can convey to it that state has changed 
+//    //For now, I have replaced the full node with a new node in current graph, but GraphPanel does not know how to read this yet
+//    graph=dispatch.getWorkingGraph(); //Ideally must be done in constructor but this code shall be removed anyway
+//    Node sel=graph.getNodeById(lastNodeId);
+//    EdgeList incidentEdges=sel.getEdges();
+//    graph.removeNode(sel); //Problem-causes edges to be removed too. Hopefully GraphPanel can simply replace nodes
+//    sel.setFixedPosition(lastCoordinates);
+//    graph.addNode(sel);
+//    for(Edge edge:incidentEdges)
+//    graph.addEdge(edge);
+//    }
+//}
   @Override
   public void componentHidden(ComponentEvent arg0) {
     // TODO Auto-generated method stub

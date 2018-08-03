@@ -33,6 +33,8 @@ public class GraphDispatch {
 
   private static GraphDispatch instance;
   private Graph workingGraph;
+  
+  private Graph editGraph;
   /**
    * A unique identifier for a graph.
    * @todo not clear to me what the purpose is
@@ -151,7 +153,23 @@ public class GraphDispatch {
     }
     return instance;
   }
-
+public Graph cloneWorkingGraphToEditGraph()
+{
+    try
+    {
+    this.editGraph=(Graph) workingGraph.clone();
+    }
+    catch(CloneNotSupportedException ex)
+    {
+        ex.printStackTrace();
+    }
+    return editGraph;
+}
+public void setWorkingGraphToEditGraph()
+{
+    workingGraph=editGraph;
+//The previous workingGraph(graph at the end of animation) is Garbage Collected by java
+}
   public Graph getWorkingGraph() {
     if (workingGraph == null) {
       workingGraph = new Graph();
@@ -165,7 +183,7 @@ public class GraphDispatch {
     this.graphSource = u;
     notifyListeners(GRAPH_UPDATE, null, null);
   }
-
+ 
   public UUID getGraphSource() {
     return graphSource;
   }
@@ -199,7 +217,8 @@ public class GraphDispatch {
     // if at the end of an animation, need to reset the graph and go back to
     // edit mode
     if ( ! mode && old ) {
-      this.workingGraph.reset();
+    //this.workingGraph.reset();//reset() not needed anymore as we are resetting working graph back to edit graph instead
+    setWorkingGraphToEditGraph();
     }
     notifyListeners(ANIMATION_MODE, old, this.animationMode);
   }

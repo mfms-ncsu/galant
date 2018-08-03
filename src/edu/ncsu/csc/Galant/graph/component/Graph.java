@@ -29,7 +29,7 @@ import edu.ncsu.csc.Galant.logging.LogHelper;
  *
  * @author Michael Owoc, Ty Devries (major modifications by Matt Stallmann)
  */
-public class Graph {
+public class Graph implements Cloneable{
   public GraphWindow graphWindow;
   private GraphDispatch dispatch;
 
@@ -112,6 +112,7 @@ public class Graph {
    * Resets the graph to its original state at the end of an
    * animation.
    */
+  //The following method can be deleted as cloning accomplishes the same task
   public void reset() {
     int initialStateNumber = GraphDispatch.getInstance().getAlgorithmState();
 
@@ -123,7 +124,7 @@ public class Graph {
       if ( state.getState() > 0 ) break;
       initialStates.add(state);
     }
-    this.states = initialStates;
+    this.states = initialStates;  
 
     // get rid of any nodes and edges created by the algorithm; better to
     // do this by gathering the ones that should not be removed and then
@@ -165,6 +166,44 @@ public class Graph {
     GraphState state
       = new GraphState(latest);
     return state;
+  }
+  //The following method is for deep copy. It clones graph object completely and is used to store edit state of graph just before algo execution
+  @Override
+  public Graph clone() throws CloneNotSupportedException{
+    Graph clonedGraph=(Graph)super.clone();
+    EdgeList clonedEdgeList=new EdgeList(this.edges);
+    NodeList clonedNodeList=new NodeList(this.nodes);
+    String clonedName=this.name;
+    String clonedComment=this.comment;
+    boolean clonedDirected=this.directed;
+    boolean clonedLayered=this.layered;
+    LayerInformation clonedLayerInformation=this.layerInformation;
+    TreeMap<Integer, Node> clonedNodeById=new TreeMap<Integer, Node>(this.nodeById);
+    TreeMap<Integer, Edge> clonedEdgeById=new TreeMap<Integer, Edge>(this.edgeById);
+    MessageBanner clonedBanner=this.banner;
+    Edge clonedSelectedEdge=this.selectedEdge;
+    Node clonedSelectedNode=this.selectedNode;
+    List<GraphState> clonedStates=this.states;
+    Node clonedRootNode=this.rootNode;
+    int clonedNextEdgeId=this.nextEdgeId;
+    boolean clonedHasExplicitEdgeIds=this.hasExplicitEdgeIds;
+    clonedGraph.edges=clonedEdgeList;
+    clonedGraph.nodes=clonedNodeList;
+    clonedGraph.name=clonedName;
+    clonedGraph.comment=clonedComment;
+    clonedGraph.directed=clonedDirected;
+    clonedGraph.layered=clonedLayered;
+    clonedGraph.layerInformation=clonedLayerInformation;
+    clonedGraph.nodeById=clonedNodeById;
+    clonedGraph.edgeById=clonedEdgeById;
+    clonedGraph.banner=clonedBanner;
+    clonedGraph.selectedEdge=clonedSelectedEdge;
+    clonedGraph.selectedNode=clonedSelectedNode;
+    clonedGraph.states=clonedStates;
+    clonedGraph.rootNode=clonedRootNode;
+    clonedGraph.nextEdgeId=clonedNextEdgeId;
+    clonedGraph.hasExplicitEdgeIds=clonedHasExplicitEdgeIds;
+    return clonedGraph;
   }
 
   /**

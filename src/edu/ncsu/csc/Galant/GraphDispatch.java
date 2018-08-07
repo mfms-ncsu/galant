@@ -13,6 +13,8 @@ import edu.ncsu.csc.Galant.logging.LogHelper;
 import edu.ncsu.csc.Galant.algorithm.AlgorithmExecutor;
 import edu.ncsu.csc.Galant.algorithm.AlgorithmSynchronizer;
 import edu.ncsu.csc.Galant.algorithm.Terminate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Dispatch for managing working graphs in the editor; also used for passing
@@ -153,23 +155,7 @@ public class GraphDispatch {
     }
     return instance;
   }
-public Graph cloneWorkingGraphToEditGraph()
-{
-    try
-    {
-    this.editGraph=(Graph) workingGraph.clone();
-    }
-    catch(CloneNotSupportedException ex)
-    {
-        ex.printStackTrace();
-    }
-    return editGraph;
-}
-public void setWorkingGraphToEditGraph()
-{
-    workingGraph=editGraph;
-//The previous workingGraph(graph at the end of animation) is Garbage Collected by java
-}
+
   public Graph getWorkingGraph() {
     if (workingGraph == null) {
       workingGraph = new Graph();
@@ -216,13 +202,30 @@ public void setWorkingGraphToEditGraph()
     this.animationMode = mode;
     // if at the end of an animation, need to reset the graph and go back to
     // edit mode
-    if ( ! mode && old ) {
-    //this.workingGraph.reset();//reset() not needed anymore as we are resetting working graph back to edit graph instead
-    setWorkingGraphToEditGraph();
+    
+    if ( mode && ! old ) {
+        try {
+      
+            this.editGraph=this.workingGraph; //save working graph to edit graph before algo begins
+                  // start the animation with a clean copy of the edit graph, a copy without the edit states
+            this.workingGraph = (Graph)this.editGraph.copyCurrentState();
+        } catch (CloneNotSupportedException ex) {
+            Logger.getLogger(GraphDispatch.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
+    else if ( ! mode && old ) {
+         // go back to the edit graph when animation is done;
+         // the copy created for animation will be garbage collected
+         //this.workingGraph will be orverwritten with editGraph
+         workingGraph=null;
+         workingGraph = editGraph;
+         
+        }
+        
     notifyListeners(ANIMATION_MODE, old, this.animationMode);
   }
 
+  
   public AlgorithmExecutor getAlgorithmExecutor() {
     return algorithmExecutor;
   }

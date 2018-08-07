@@ -14,6 +14,7 @@ package edu.ncsu.csc.Galant.algorithm;
 import java.lang.Thread;
 import edu.ncsu.csc.Galant.algorithm.Algorithm;
 import edu.ncsu.csc.Galant.GraphDispatch;
+import edu.ncsu.csc.Galant.graph.component.Graph;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow;
 import edu.ncsu.csc.Galant.logging.LogHelper;
 
@@ -78,7 +79,6 @@ public class AlgorithmExecutor {
     public void startAlgorithm() {
         GraphDispatch dispatch = GraphDispatch.getInstance();
         dispatch.setActiveQuery(null);
-        dispatch.cloneWorkingGraphToEditGraph();//saving working graph into edit graph before animation start
         algorithmState = displayState = 0;
         algorithmThread.start();
         incrementDisplayState();

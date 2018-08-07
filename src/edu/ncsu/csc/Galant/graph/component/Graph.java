@@ -168,42 +168,42 @@ public class Graph implements Cloneable{
     return state;
   }
   //The following method is for deep copy. It clones graph object completely and is used to store edit state of graph just before algo execution
-  @Override
-  public Graph clone() throws CloneNotSupportedException{
-    Graph clonedGraph=(Graph)super.clone();
-    EdgeList clonedEdgeList=new EdgeList(this.edges);
-    NodeList clonedNodeList=new NodeList(this.nodes);
-    String clonedName=this.name;
-    String clonedComment=this.comment;
-    boolean clonedDirected=this.directed;
-    boolean clonedLayered=this.layered;
-    LayerInformation clonedLayerInformation=this.layerInformation;
-    TreeMap<Integer, Node> clonedNodeById=new TreeMap<Integer, Node>(this.nodeById);
-    TreeMap<Integer, Edge> clonedEdgeById=new TreeMap<Integer, Edge>(this.edgeById);
-    MessageBanner clonedBanner=this.banner;
-    Edge clonedSelectedEdge=this.selectedEdge;
-    Node clonedSelectedNode=this.selectedNode;
-    List<GraphState> clonedStates=this.states;
-    Node clonedRootNode=this.rootNode;
-    int clonedNextEdgeId=this.nextEdgeId;
-    boolean clonedHasExplicitEdgeIds=this.hasExplicitEdgeIds;
-    clonedGraph.edges=clonedEdgeList;
-    clonedGraph.nodes=clonedNodeList;
-    clonedGraph.name=clonedName;
-    clonedGraph.comment=clonedComment;
-    clonedGraph.directed=clonedDirected;
-    clonedGraph.layered=clonedLayered;
-    clonedGraph.layerInformation=clonedLayerInformation;
-    clonedGraph.nodeById=clonedNodeById;
-    clonedGraph.edgeById=clonedEdgeById;
-    clonedGraph.banner=clonedBanner;
-    clonedGraph.selectedEdge=clonedSelectedEdge;
-    clonedGraph.selectedNode=clonedSelectedNode;
-    clonedGraph.states=clonedStates;
-    clonedGraph.rootNode=clonedRootNode;
-    clonedGraph.nextEdgeId=clonedNextEdgeId;
-    clonedGraph.hasExplicitEdgeIds=clonedHasExplicitEdgeIds;
-    return clonedGraph;
+  
+  public Graph copyCurrentState() throws CloneNotSupportedException{
+   Graph copyOfGraph=(Graph)super.clone();
+    EdgeList edgeListCopy=new EdgeList(this.edges);
+    NodeList nodeListCopy=new NodeList(this.nodes);
+    String nameCopy=this.name;
+    String commentCopy=this.comment;
+    boolean directedCopy=this.directed;
+    boolean layeredCopy=this.layered;
+    LayerInformation layerInformationCopy=this.layerInformation;
+    TreeMap<Integer, Node> nodeByIdCopy=new TreeMap<Integer, Node>(this.nodeById);
+    TreeMap<Integer, Edge> edgeByIdCopy=new TreeMap<Integer, Edge>(this.edgeById);
+    MessageBanner bannerCopy=this.banner;
+    Edge selectedEdgeCopy=this.selectedEdge;
+    Node selectedNodeCopy=this.selectedNode;
+    List<GraphState> statesCopy=this.states;
+    Node rootNodeCopy=this.rootNode;
+    int nextEdgeIdCopy=this.nextEdgeId;
+    boolean hasExplicitEdgeIdsCopy=this.hasExplicitEdgeIds;
+    copyOfGraph.edges=edgeListCopy;
+    copyOfGraph.nodes=nodeListCopy;
+    copyOfGraph.name=nameCopy;
+    copyOfGraph.comment=commentCopy;
+    copyOfGraph.directed=directedCopy;
+    copyOfGraph.layered=layeredCopy;
+    copyOfGraph.layerInformation=layerInformationCopy;
+    copyOfGraph.nodeById=nodeByIdCopy;
+    copyOfGraph.edgeById=edgeByIdCopy;
+    copyOfGraph.banner=bannerCopy;
+    copyOfGraph.selectedEdge=selectedEdgeCopy;
+    copyOfGraph.selectedNode=selectedNodeCopy;
+    copyOfGraph.states=statesCopy;
+    copyOfGraph.rootNode=rootNodeCopy;
+    copyOfGraph.nextEdgeId=nextEdgeIdCopy;
+    copyOfGraph.hasExplicitEdgeIds=hasExplicitEdgeIdsCopy;
+    return copyOfGraph;
   }
 
   /**

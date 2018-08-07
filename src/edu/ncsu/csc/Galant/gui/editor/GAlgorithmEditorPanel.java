@@ -137,7 +137,6 @@ public class GAlgorithmEditorPanel extends GEditorPanel {
   public void run() {
     GraphDispatch dispatch = GraphDispatch.getInstance();
     dispatch.setAnimationMode(true);
-
     Algorithm algorithm = getCompiledAlgorithm();
     Graph theGraph = dispatch.getWorkingGraph();
     algorithm.setGraph(theGraph);

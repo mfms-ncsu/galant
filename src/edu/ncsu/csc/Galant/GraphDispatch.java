@@ -206,8 +206,8 @@ public class GraphDispatch {
     if ( mode && ! old ) {
         try {
       
-            this.editGraph=this.workingGraph; //save working graph to edit graph before algo begins
-                  // start the animation with a clean copy of the edit graph, a copy without the edit states
+            this.editGraph=(Graph)this.workingGraph.copyCurrentState(); //save working graph to edit graph before algo begins
+            // start the animation with a clean copy of the edit graph, a copy without the edit states
             this.workingGraph = (Graph)this.editGraph.copyCurrentState();
         } catch (CloneNotSupportedException ex) {
             Logger.getLogger(GraphDispatch.class.getName()).log(Level.SEVERE, null, ex);
@@ -218,6 +218,7 @@ public class GraphDispatch {
          // the copy created for animation will be garbage collected
          //this.workingGraph will be orverwritten with editGraph
          workingGraph=null;
+         //this.workingGraph.reset();
          workingGraph = editGraph;
          
         }
@@ -225,7 +226,6 @@ public class GraphDispatch {
     notifyListeners(ANIMATION_MODE, old, this.animationMode);
   }
 
-  
   public AlgorithmExecutor getAlgorithmExecutor() {
     return algorithmExecutor;
   }

@@ -15,7 +15,7 @@ import edu.ncsu.csc.Galant.graph.datastructure.GraphElementComparator;
  * @author Jason Cockrell, Ty Devries, Alex McCabe, Michael Owoc,
  *         completely rewritten by Matthias Stallmann
  */
-public class GraphElement implements Comparable<GraphElement> {
+public class GraphElement implements Comparable<GraphElement>,Cloneable {
 
   /**
    * @todo Put all standard attributes here, even those relevant only to
@@ -71,7 +71,10 @@ public class GraphElement implements Comparable<GraphElement> {
             t.printStackTrace();
         }
     }
-
+public GraphElement()
+{
+    
+}
     /**
      * Resets this element to its original state at the end of an animation.
      * @param graphState the initial state of the graph containing this element
@@ -174,6 +177,19 @@ public class GraphElement implements Comparable<GraphElement> {
             dispatch.pauseExecutionIfRunning();
         }
 	}
+        
+        public void copyCurrentState(GraphElement oldElement) throws CloneNotSupportedException
+        {
+        GraphElementState latestState=oldElement.latestState();
+        this.states.clear();
+        this.states.add(latestState);
+        AttributeList temp=(AttributeList) latestState.getAttributes();
+        for(int i=0;i<=temp.attributes.size()-1;i++)
+        {
+            Attribute attribute=temp.attributes.get(i);
+           //this.states.get(0).attributes.add(attribute);
+        }
+        }
 
   /**
    * @todo Would be nice to have methods hasInteger(String key), etc., so

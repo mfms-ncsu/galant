@@ -170,9 +170,23 @@ public class Graph implements Cloneable{
   //The following method is for deep copy. It clones graph object completely and is used to store edit state of graph just before algo execution
   
   public Graph copyCurrentState() throws CloneNotSupportedException{
-   Graph copyOfGraph=(Graph)super.clone();
+      
+   Graph copyOfGraph=this;
     EdgeList edgeListCopy=new EdgeList(this.edges);
     NodeList nodeListCopy=new NodeList(this.nodes);
+    for(int i=0;i<=this.nodes.size()-1;i++)
+    {
+        Node copyOfNode=nodeListCopy.get(i);
+        Node oldNode=this.nodes.get(i);
+        copyOfNode.copyCurrentState(oldNode);
+    }
+    for(int i=0;i<=this.edges.size()-1;i++)
+    {
+        Edge copyOfEdge=edgeListCopy.get(i);
+        Edge oldEdge=this.edges.get(i);
+        copyOfEdge.copyCurrentState(oldEdge);
+    }
+
     String nameCopy=this.name;
     String commentCopy=this.comment;
     boolean directedCopy=this.directed;
@@ -206,6 +220,7 @@ public class Graph implements Cloneable{
     return copyOfGraph;
   }
 
+   
   /**
    * @return The last state on the list of states. This is the default for
    * retrieving information about any attribute.

@@ -23,11 +23,11 @@ public class AttributeList implements Cloneable{
     public AttributeList copyAttributeList() throws CloneNotSupportedException
     {
         AttributeList clonedAttributeList=(AttributeList)super.clone();
-        ArrayList<Attribute> attributes=getAttributes();
-        for(Attribute attribute:attributes)
+        ArrayList<Attribute> attributesList=getAttributes();
+        for(Attribute attribute:attributesList)
         {
             Attribute clonedAttribute=attribute.clone();
-            clonedAttributeList.add(attribute);
+            clonedAttributeList.add(clonedAttribute);
         }
         return clonedAttributeList;
     }

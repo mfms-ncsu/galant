@@ -178,17 +178,12 @@ public GraphElement()
         }
 	}
         
-        public void copyCurrentState(GraphElement oldElement) throws CloneNotSupportedException
+        public GraphElement copyCurrentState() throws CloneNotSupportedException
         {
-        GraphElementState latestState=oldElement.latestState();
-        this.states.clear();
-        this.states.add(latestState);
-        AttributeList temp=(AttributeList) latestState.getAttributes();
-        for(int i=0;i<=temp.attributes.size()-1;i++)
-        {
-            Attribute attribute=temp.attributes.get(i);
-           //this.states.get(0).attributes.add(attribute);
-        }
+        GraphElement copiedState=this;
+        GraphElementState latestStateClone=(GraphElementState)this.states.get(0).copyGraphElementState();
+        copiedState.states.add(latestStateClone);
+        return copiedState;
         }
 
   /**

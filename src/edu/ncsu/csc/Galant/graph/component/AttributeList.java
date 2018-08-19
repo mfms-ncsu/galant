@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * attributes will appeare in the order they were added rather than
  * alphabetically by key.
  */
-public class AttributeList {
+public class AttributeList implements Cloneable{
 
     protected ArrayList<Attribute> attributes;
 
@@ -20,6 +20,11 @@ public class AttributeList {
      */
     public ArrayList<Attribute> getAttributes() { return attributes; }
 
+    public AttributeList copyAttributeList() throws CloneNotSupportedException
+    {
+        AttributeList clonedAttributeList=(AttributeList)super.clone();
+        return clonedAttributeList;
+    }
     /**
      * The getters traverse the list until they find a matching key or return
      * null if they don't.

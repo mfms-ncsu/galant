@@ -172,19 +172,19 @@ public class Graph implements Cloneable{
   public Graph copyCurrentState() throws CloneNotSupportedException{
       
    Graph copyOfGraph=this;
-    EdgeList edgeListCopy=new EdgeList(this.edges);
-    NodeList nodeListCopy=new NodeList(this.nodes);
+    EdgeList edgeListCopy=new EdgeList();
+    NodeList nodeListCopy=new NodeList();
     for(int i=0;i<=this.nodes.size()-1;i++)
     {
-        Node copyOfNode=nodeListCopy.get(i);
-        Node oldNode=this.nodes.get(i);
-        copyOfNode.copyCurrentState(oldNode);
+        GraphElement copiedNode=this.nodes.get(i);
+        copiedNode=copiedNode.copyCurrentState();
+        nodeListCopy.add((Node)copiedNode);
     }
     for(int i=0;i<=this.edges.size()-1;i++)
     {
-        Edge copyOfEdge=edgeListCopy.get(i);
         Edge oldEdge=this.edges.get(i);
-        copyOfEdge.copyCurrentState(oldEdge);
+        GraphElement copiedEdge=oldEdge.copyCurrentState();
+        edgeListCopy.add((Edge)copiedEdge);
     }
 
     String nameCopy=this.name;

@@ -24,7 +24,7 @@ import edu.ncsu.csc.Galant.logging.LogHelper;
  * a simple test for Booleans (where it's about presence or absence
  * anyhow). The getters can do parsing.
  */
-public class GraphElementState {
+public class GraphElementState implements Cloneable{
 
     /**
      * The sequence number (algorithm state) of this state.
@@ -175,6 +175,13 @@ public class GraphElementState {
         s += attributes.getAttributes();
         s += "}";
         return s;
+    }
+    public GraphElementState copyGraphElementState() throws CloneNotSupportedException
+    {
+        GraphElementState clonedState=(GraphElementState)super.clone();
+        AttributeList clonedAttributeList=clonedState.getAttributes().copyAttributeList();
+        clonedState.attributes=clonedAttributeList;
+        return clonedState;
     }
 }
 

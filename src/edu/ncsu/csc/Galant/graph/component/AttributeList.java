@@ -20,14 +20,17 @@ public class AttributeList implements Cloneable{
      */
     public ArrayList<Attribute> getAttributes() { return attributes; }
 
-    public AttributeList copyAttributeList() throws CloneNotSupportedException
+    @Override
+    public AttributeList clone() throws CloneNotSupportedException
     {
         AttributeList clonedAttributeList=(AttributeList)super.clone();
-        ArrayList<Attribute> attributesList=getAttributes();
+        ArrayList<Attribute> attributesList=this.attributes;
+        ArrayList<Attribute> copyOfAttributeList=new ArrayList<Attribute>();
         for(Attribute attribute:attributesList)
         {
-            Attribute clonedAttribute=attribute.clone();
-            clonedAttributeList.add(clonedAttribute);
+            Attribute copyOfAttribute=attribute.clone();
+            copyOfAttributeList.add(copyOfAttribute);
+            clonedAttributeList.attributes=copyOfAttributeList;
         }
         return clonedAttributeList;
     }

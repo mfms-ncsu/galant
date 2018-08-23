@@ -180,8 +180,10 @@ public GraphElement()
         
         public GraphElement copyCurrentState() throws CloneNotSupportedException
         {
+        
+        GraphElementState latestStateClone=(GraphElementState)this.states.get(0).clone();
+        this.states.clear();
         GraphElement copiedState=this;
-        GraphElementState latestStateClone=(GraphElementState)this.states.get(0).copyGraphElementState();
         copiedState.states.add(latestStateClone);
         return copiedState;
         }

@@ -206,9 +206,10 @@ public class GraphDispatch {
     if ( mode && ! old ) {
         try {
       
-            this.editGraph=(Graph)this.workingGraph.copyCurrentState(); //save working graph to edit graph before algo begins
+           this.editGraph=(Graph)this.workingGraph.copyCurrentState(); //save working graph to edit graph before algo begins
             // start the animation with a clean copy of the edit graph, a copy without the edit states
             this.workingGraph = (Graph)this.editGraph.copyCurrentState();
+            
         } catch (CloneNotSupportedException ex) {
             Logger.getLogger(GraphDispatch.class.getName()).log(Level.SEVERE, null, ex);
         }

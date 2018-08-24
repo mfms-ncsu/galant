@@ -182,10 +182,11 @@ public GraphElement()
         {
         
         GraphElementState latestStateClone=(GraphElementState)this.states.get(0).clone();
-        this.states.clear();
-        GraphElement copiedState=this;
-        copiedState.states.add(latestStateClone);
-        return copiedState;
+        GraphElement graphElementCopy = new GraphElement();
+        List<GraphElementState> initialStates=new ArrayList<GraphElementState>();
+        initialStates.add(latestStateClone);
+        graphElementCopy.states=initialStates;
+        return graphElementCopy; //this object cannot be type casted to Node or Edge type
         }
 
   /**

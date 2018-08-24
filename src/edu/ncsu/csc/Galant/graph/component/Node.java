@@ -74,6 +74,7 @@ public class Node extends GraphElement {
         }
    }
 
+
     /**
      * Setters and getters for node-specific information that does not change.
      */

@@ -2,6 +2,8 @@ package edu.ncsu.csc.Galant.graph.component;
 import java.awt.Point;
 import edu.ncsu.csc.Galant.GraphDispatch;
 import edu.ncsu.csc.Galant.logging.LogHelper;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The state of a GraphElement, used akin to a frame in an animation. As the
@@ -180,7 +182,9 @@ public class GraphElementState implements Cloneable{
     public GraphElementState clone() throws CloneNotSupportedException
     {
         GraphElementState clonedState=(GraphElementState)super.clone();
+        
         AttributeList clonedAttributeList=clonedState.getAttributes().clone();
+        clonedState.attributes.getAttributes().clear();
         clonedState.attributes=clonedAttributeList;
         return clonedState;
     }

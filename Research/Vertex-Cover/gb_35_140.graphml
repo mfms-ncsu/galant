@@ -4,41 +4,41 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns 
 http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
  <graph  edgedefault="undirected">
-  <node id="1" x="701" y="764"   />
-  <node id="2" x="495" y="838"   />
-  <node id="3" x="113" y="320"   />
-  <node id="4" x="614" y="807"   />
-  <node id="5" x="476" y="109"   />
-  <node id="6" x="447" y="651"   />
-  <node id="7" x="600" y="712"   />
-  <node id="8" x="676" y="293"   />
-  <node id="9" x="654" y="627"   />
-  <node id="10" x="136" y="603"   />
-  <node id="11" x="752" y="639"   />
-  <node id="12" x="263" y="32"   />
-  <node id="13" x="481" y="735"   />
-  <node id="14" x="916" y="540"   />
-  <node id="15" x="94" y="188"   />
-  <node id="16" x="374" y="817"   />
-  <node id="17" x="798" y="838"   />
-  <node id="18" x="134" y="842"   />
-  <node id="19" x="318" y="672"   />
-  <node id="20" x="599" y="205"   />
-  <node id="21" x="647" y="534"   />
-  <node id="22" x="950" y="621"   />
-  <node id="23" x="828" y="84"   />
-  <node id="24" x="386" y="76"   />
-  <node id="25" x="943" y="772"   />
-  <node id="26" x="789" y="507"   />
-  <node id="27" x="426" y="390"   />
-  <node id="28" x="328" y="408"   />
-  <node id="29" x="148" y="75"   />
-  <node id="30" x="810" y="238"   />
-  <node id="31" x="188" y="168"   />
-  <node id="32" x="923" y="417"   />
-  <node id="33" x="807" y="773"   />
-  <node id="34" x="272" y="345"   />
-  <node id="35" x="566" y="433"   />
+  <node id="1" x="904" y="424"   />
+  <node id="2" x="724" y="671"   />
+  <node id="3" x="215" y="379"   />
+  <node id="4" x="873" y="643"   />
+  <node id="5" x="552" y="147"   />
+  <node id="6" x="644" y="389"   />
+  <node id="7" x="828" y="390"   />
+  <node id="8" x="972" y="138"   />
+  <node id="9" x="1011" y="638"   />
+  <node id="10" x="322" y="587"   />
+  <node id="11" x="1107" y="335"   />
+  <node id="12" x="342" y="72"   />
+  <node id="13" x="721" y="566"   />
+  <node id="14" x="1067" y="274"   />
+  <node id="15" x="74" y="275"   />
+  <node id="16" x="628" y="532"   />
+  <node id="17" x="914" y="558"   />
+  <node id="18" x="456" y="599"   />
+  <node id="19" x="531" y="690"   />
+  <node id="20" x="803" y="153"   />
+  <node id="21" x="921" y="295"   />
+  <node id="22" x="1049" y="421"   />
+  <node id="23" x="1132" y="117"   />
+  <node id="24" x="200" y="159"   />
+  <node id="25" x="1210" y="579"   />
+  <node id="26" x="965" y="415"   />
+  <node id="27" x="531" y="292"   />
+  <node id="28" x="338" y="400"   />
+  <node id="29" x="60" y="130"   />
+  <node id="30" x="1129" y="209"   />
+  <node id="31" x="215" y="240"   />
+  <node id="32" x="1204" y="315"   />
+  <node id="33" x="1066" y="528"   />
+  <node id="34" x="357" y="293"   />
+  <node id="35" x="649" y="291"   />
   <edge  source="15" target="31" weight="3.04767617E8"  />
   <edge  source="15" target="3" weight="4.02483706E8"  />
   <edge  source="31" target="3" weight="4.21905183E8"  />

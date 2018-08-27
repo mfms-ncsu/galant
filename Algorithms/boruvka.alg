@@ -54,9 +54,14 @@ function Edge lowestWeight(Node v) {
   for_adjacent( v, e, w ) {
     if ( label(v).equals(label(w)) ) {
       if ( ! marked(w) && e.is("inTree") ) {
+        // a tree edge within the same component is colored blue
+        // and we search for the lowest weight outgoing edge in the subtree
+        // below it
         color(e, BLUE);
         Edge bestBelow = lowestWeight(w);
         if ( bestBelow != null && weight(bestBelow) < bestWeight ) {
+          // update the current lowest weight outgoing edge if a better one
+          // is found in the subtree below and change highlighting
           if ( best != null && ! best.is("inTree") )
             unHighlight(best);
           highlight(bestBelow);
@@ -64,9 +69,12 @@ function Edge lowestWeight(Node v) {
           bestWeight = weight(bestBelow);
         }
         else if ( bestBelow != null && ! best.is("inTree") )
+          // bestBelow may have been highlighted in the recursive search, so
+          // need to unHighlight if it's not better than current best
           unHighlight(bestBelow);
       }
       else if ( ! e.is("inTree") ) {
+        // edges within the component but not in tree should be hidden
         hide(e);
       }
     }
@@ -74,16 +82,19 @@ function Edge lowestWeight(Node v) {
       // in another tree
       if ( weight(e) < bestWeight ) {
         if ( best != null && ! best.is("inTree") )
+          // need to unhighlight current lowest weight edge from this
+          // component if e is better
           unHighlight(best);
         highlight(e);
-        display("best edge = " + string(e));
         best = e;
         bestWeight = weight(e);
       }
     }
   }
-  if ( best != null )
+  if ( best != null ) {
+    display("best edge = " + string(best));
     unhighlight(best);          // let the algorithm highlight this later
+  }
   return best;
 }
 
@@ -192,4 +203,4 @@ algorithm {
   endStep();
 }
 
-/*  [Last modified: 2017 10 12 at 14:23:48 GMT] */
+/*  [Last modified: 2018 08 27 at 21:15:23 GMT] */

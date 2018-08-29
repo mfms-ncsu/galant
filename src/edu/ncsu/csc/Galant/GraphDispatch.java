@@ -204,8 +204,8 @@ public class GraphDispatch {
     // edit mode
     
     if ( mode && ! old ) {
-           this.editGraph=(Graph)this.workingGraph.copyCurrentState(this.workingGraph); //save working graph to edit graph before algo begins
-          // this.editGraph=this.workingGraph;
+           //this.editGraph=(Graph)this.workingGraph.copyCurrentState(this.editGraph); //save working graph to edit graph before algo begins
+           editGraph=workingGraph;
             // start the animation with a clean copy of the edit graph, a copy without the edit states
             this.workingGraph = (Graph)this.editGraph.copyCurrentState(this.editGraph);
     }

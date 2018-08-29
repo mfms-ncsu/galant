@@ -180,14 +180,16 @@ public GraphElement()
         
         public GraphElement copyCurrentState() throws CloneNotSupportedException
         {
-        
-        GraphElementState latestStateClone=(GraphElementState)this.states.get(0).clone();
+        GraphElementState latestStateClone = new GraphElementState(this.states.get(0));
+       // GraphElement graphElementCopy = (GraphElement)super.clone();
         GraphElement graphElementCopy = new GraphElement();
         List<GraphElementState> initialStates=new ArrayList<GraphElementState>();
         initialStates.add(latestStateClone);
         graphElementCopy.states=initialStates;
         return graphElementCopy; //this object cannot be type casted to Node or Edge type
         }
+        
+       
 
   /**
    * @todo Would be nice to have methods hasInteger(String key), etc., so

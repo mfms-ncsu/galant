@@ -136,16 +136,16 @@ public class GAlgorithmEditorPanel extends GEditorPanel {
    */
   public void run() {
     GraphDispatch dispatch = GraphDispatch.getInstance();
-    dispatch.setAnimationMode(true);
+   // dispatch.setAnimationMode(true); //this results in a call to GraphelementState that needs algorithmExecutor to be set, hence this line is moved to after setting Algorithm Executor
     Algorithm algorithm = getCompiledAlgorithm();
     Graph theGraph = dispatch.getWorkingGraph();
     algorithm.setGraph(theGraph);
-
     AlgorithmSynchronizer algorithmSynchronizer = new AlgorithmSynchronizer();
     AlgorithmExecutor algorithmExecutor
       = new AlgorithmExecutor(algorithm, algorithmSynchronizer);
     dispatch.setAlgorithmSynchronizer(algorithmSynchronizer);
     dispatch.setAlgorithmExecutor(algorithmExecutor);
+    dispatch.setAnimationMode(true);
     dispatch.getGraphWindow().updateStatusLabel();
     algorithmExecutor.startAlgorithm();
     dispatch.getGraphWindow().updateStatusLabel();

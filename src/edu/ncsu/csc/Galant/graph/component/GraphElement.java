@@ -15,7 +15,7 @@ import edu.ncsu.csc.Galant.graph.datastructure.GraphElementComparator;
  * @author Jason Cockrell, Ty Devries, Alex McCabe, Michael Owoc,
  *         completely rewritten by Matthias Stallmann
  */
-public class GraphElement implements Comparable<GraphElement>,Cloneable {
+public class GraphElement implements Comparable<GraphElement> {
 
   /**
    * @todo Put all standard attributes here, even those relevant only to
@@ -178,11 +178,10 @@ public GraphElement()
         }
 	}
         
-        public GraphElement copyCurrentState() throws CloneNotSupportedException
+        public GraphElement copyCurrentState(Graph currentGraph)
         {
         GraphElementState latestStateClone = new GraphElementState(this.states.get(0));
-       // GraphElement graphElementCopy = (GraphElement)super.clone();
-        GraphElement graphElementCopy = new GraphElement();
+        GraphElement graphElementCopy = new GraphElement(currentGraph);
         List<GraphElementState> initialStates=new ArrayList<GraphElementState>();
         initialStates.add(latestStateClone);
         graphElementCopy.states=initialStates;

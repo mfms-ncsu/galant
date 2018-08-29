@@ -204,24 +204,17 @@ public class GraphDispatch {
     // edit mode
     
     if ( mode && ! old ) {
-        try {
-      
-           this.editGraph=(Graph)this.workingGraph.copyCurrentState(); //save working graph to edit graph before algo begins
+           this.editGraph=(Graph)this.workingGraph.copyCurrentState(this.workingGraph); //save working graph to edit graph before algo begins
+          // this.editGraph=this.workingGraph;
             // start the animation with a clean copy of the edit graph, a copy without the edit states
-            this.workingGraph = (Graph)this.editGraph.copyCurrentState();
-            
-        } catch (CloneNotSupportedException ex) {
-            Logger.getLogger(GraphDispatch.class.getName()).log(Level.SEVERE, null, ex);
-        }
+            this.workingGraph = (Graph)this.editGraph.copyCurrentState(this.editGraph);
     }
     else if ( ! mode && old ) {
          // go back to the edit graph when animation is done;
          // the copy created for animation will be garbage collected
          //this.workingGraph will be orverwritten with editGraph
          workingGraph=null;
-         //this.workingGraph.reset();
          workingGraph = editGraph;
-         
         }
         
     notifyListeners(ANIMATION_MODE, old, this.animationMode);

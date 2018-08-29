@@ -29,7 +29,7 @@ import edu.ncsu.csc.Galant.logging.LogHelper;
  *
  * @author Michael Owoc, Ty Devries (major modifications by Matt Stallmann)
  */
-public class Graph implements Cloneable{
+public class Graph{
   public GraphWindow graphWindow;
   private GraphDispatch dispatch;
 
@@ -169,7 +169,7 @@ public class Graph implements Cloneable{
   }
   //The following method is for deep copy. It clones graph object completely and is used to store edit state of graph just before algo execution
   
-  public Graph copyCurrentState() throws CloneNotSupportedException{
+  public Graph copyCurrentState(Graph currentGraph){
       
    Graph copyOfGraph=this;
     EdgeList edgeListCopy=new EdgeList();
@@ -177,13 +177,13 @@ public class Graph implements Cloneable{
     for(int i=0;i<=this.nodes.size()-1;i++)
     {
         GraphElement copiedNode=this.nodes.get(i);
-        copiedNode=copiedNode.copyCurrentState();
+        copiedNode=copiedNode.copyCurrentState(currentGraph);
         nodeListCopy.add((Node)copiedNode);
     }
     for(int i=0;i<=this.edges.size()-1;i++)
     {
         Edge oldEdge=this.edges.get(i);
-        GraphElement copiedEdge=oldEdge.copyCurrentState();
+        GraphElement copiedEdge=oldEdge.copyCurrentState(currentGraph);
         edgeListCopy.add((Edge)copiedEdge);
     }
 

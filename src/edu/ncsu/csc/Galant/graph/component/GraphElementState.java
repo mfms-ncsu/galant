@@ -178,16 +178,6 @@ public class GraphElementState implements Cloneable{
         s += "}";
         return s;
     }
-    @Override
-    public GraphElementState clone() throws CloneNotSupportedException
-    {
-        GraphElementState clonedState=(GraphElementState)super.clone();
-        
-        AttributeList clonedAttributeList=clonedState.getAttributes().clone();
-        clonedState.attributes.getAttributes().clear();
-        clonedState.attributes=clonedAttributeList;
-        return clonedState;
-    }
 }
 
 //  [Last modified: 2017 07 22 at 18:41:38 GMT]

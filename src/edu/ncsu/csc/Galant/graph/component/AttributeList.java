@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 /**
  * An AttributeList plays the role of a Map. A list is used so that
- * attributes will appeare in the order they were added rather than
+ * attributes will appear in the order they were added rather than
  * alphabetically by key.
  */
 public class AttributeList implements Cloneable{
@@ -20,20 +20,6 @@ public class AttributeList implements Cloneable{
      */
     public ArrayList<Attribute> getAttributes() { return attributes; }
 
-    @Override
-    public AttributeList clone() throws CloneNotSupportedException
-    {
-        AttributeList clonedAttributeList=(AttributeList)super.clone();
-        ArrayList<Attribute> attributesList=this.attributes;
-        ArrayList<Attribute> copyOfAttributeList=new ArrayList<Attribute>();
-        for(Attribute attribute:attributesList)
-        {
-            Attribute copyOfAttribute=attribute.clone();
-            copyOfAttributeList.add(copyOfAttribute);
-            clonedAttributeList.attributes=copyOfAttributeList;
-        }
-        return clonedAttributeList;
-    }
     /**
      * The getters traverse the list until they find a matching key or return
      * null if they don't.
@@ -167,7 +153,7 @@ public class AttributeList implements Cloneable{
 //         }
 //         return builder.toString();
 //     }
-
+    
 }
 
 //  [Last modified: 2018 08 27 at 20:44:20 GMT]

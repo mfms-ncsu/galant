@@ -37,6 +37,13 @@ public class Node extends GraphElement {
 	private EdgeList incidentEdges;
 
     /**
+     * create a blank instance for use when copying state at start of
+     * algorithm execution
+     */
+    public Node() {
+    }
+    
+    /**
      * When a node is created during parsing and id is not known.
      */
 	public Node(Graph graph) {
@@ -75,6 +82,14 @@ public class Node extends GraphElement {
    }
 
 
+    public Node copyCurrentState(Graph currentGraph) {
+        Node copy = new Node();
+        copy.graph = currentGraph;
+		copy.incidentEdges = new EdgeList();
+        super.copyCurrentState(currentGraph);
+        return copy;
+    }
+    
     /**
      * Setters and getters for node-specific information that does not change.
      */
@@ -656,4 +671,4 @@ public class Node extends GraphElement {
 	}
 }
 
-//  [Last modified: 2017 01 19 at 15:08:14 GMT]
+//  [Last modified: 2018 08 31 at 15:32:17 GMT]

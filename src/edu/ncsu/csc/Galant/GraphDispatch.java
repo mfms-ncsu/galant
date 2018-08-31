@@ -10,6 +10,7 @@ import javax.swing.JDialog;
 import edu.ncsu.csc.Galant.graph.component.Graph;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow;
 import edu.ncsu.csc.Galant.logging.LogHelper;
+import edu.ncsu.csc.Galant.algorithm.Algorithm;
 import edu.ncsu.csc.Galant.algorithm.AlgorithmExecutor;
 import edu.ncsu.csc.Galant.algorithm.AlgorithmSynchronizer;
 import edu.ncsu.csc.Galant.algorithm.Terminate;
@@ -197,28 +198,34 @@ public class GraphDispatch {
     LogHelper.restoreState();
   }
   
-  public void setAnimationMode(boolean mode) {
-    Boolean old = this.animationMode;
-    this.animationMode = mode;
-    // if at the end of an animation, need to reset the graph and go back to
-    // edit mode
-    
-    if ( mode && ! old ) {
-           //this.editGraph=(Graph)this.workingGraph.copyCurrentState(this.editGraph); //save working graph to edit graph before algo begins
-           editGraph=workingGraph;
-            // start the animation with a clean copy of the edit graph, a copy without the edit states
-            this.workingGraph = (Graph)this.editGraph.copyCurrentState(this.editGraph);
+    /**
+     * Does everything that's required to initiate execution of the algorithm
+     */
+    public void startAnimation(Algorithm algorithm) {
+        this.animationMode = true;
+        // save the current working graph so that changes made by algorithm
+        // can be undone easily
+        this.editGraph = this.workingGraph;
+        this.algorithmSynchronizer = new AlgorithmSynchronizer();
+        this.algorithmExecutor
+            = new AlgorithmExecutor(algorithm, this.algorithmSynchronizer);
+        this.graphWindow.updateStatusLabel();
+        // start the animation with a clean copy of the edit graph, a copy
+        // without the edit states
+        this.workingGraph = this.editGraph.copyCurrentState(this.editGraph);
+        algorithm.setGraph(workingGraph);
+        this.algorithmExecutor.startAlgorithm();
+        this.graphWindow.updateStatusLabel();
+        notifyListeners(ANIMATION_MODE, ! this.animationMode, this.animationMode);
     }
-    else if ( ! mode && old ) {
-         // go back to the edit graph when animation is done;
-         // the copy created for animation will be garbage collected
-         //this.workingGraph will be orverwritten with editGraph
-         workingGraph=null;
-         workingGraph = editGraph;
-        }
-        
-    notifyListeners(ANIMATION_MODE, old, this.animationMode);
-  }
+    
+    /**
+     * undoes effect of animation by returning to the edit graph
+     */
+    public void stopAlgorithm() {
+         this.workingGraph = editGraph;
+         notifyListeners(ANIMATION_MODE, ! this.animationMode, this.animationMode);
+    }
 
   public AlgorithmExecutor getAlgorithmExecutor() {
     return algorithmExecutor;
@@ -241,6 +248,7 @@ public class GraphDispatch {
    */
   public int getDisplayState() {
     if ( animationMode ) return algorithmExecutor.getDisplayState();
+    // will probably have to return the edit state once undo/redo is implemented
     return 0;
   }
 
@@ -361,4 +369,4 @@ public class GraphDispatch {
 
 }
 
-//  [Last modified: 2017 03 13 at 19:47:59 GMT]
+//  [Last modified: 2018 08 31 at 14:45:08 GMT]

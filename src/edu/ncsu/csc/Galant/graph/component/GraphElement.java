@@ -52,9 +52,14 @@ public class GraphElement implements Comparable<GraphElement> {
 	protected List<GraphElementState> states;
 
     /**
-     * Constructor to be used during parsing; all additional information is
-     * filled in by initializeAfterParsing(). The algorithm state is
-     * initialized elsewhere, currently in Graph.
+     * Create a clean copy, to be used at the start of algorithm execution
+     */
+    public GraphElement() {
+    }
+    
+    /**
+     * If this constructor is  used during parsing, all additional information is
+     * filled in by initializeAfterParsing().
      *
      * @todo let the Terminate exception propagate all the way to the top,
      * where it can be caught based on whether or not you're running an
@@ -71,10 +76,7 @@ public class GraphElement implements Comparable<GraphElement> {
             t.printStackTrace();
         }
     }
-public GraphElement()
-{
-    
-}
+
     /**
      * Resets this element to its original state at the end of an animation.
      * @param graphState the initial state of the graph containing this element
@@ -180,12 +182,13 @@ public GraphElement()
         
         public GraphElement copyCurrentState(Graph currentGraph)
         {
-        GraphElementState latestStateClone = new GraphElementState(this.states.get(0));
-        GraphElement graphElementCopy = new GraphElement(currentGraph);
-        List<GraphElementState> initialStates=new ArrayList<GraphElementState>();
-        initialStates.add(latestStateClone);
-        graphElementCopy.states=initialStates;
-        return graphElementCopy; //this object cannot be type casted to Node or Edge type
+        GraphElementState currentState = new GraphElementState(this.states.get(0));
+        GraphElement graphElementCopy = new GraphElement();
+        graphElementCopy.dispatch = GraphDispatch.getInstance();
+        graphElementCopy.states = new ArrayList<GraphElementState>();
+        graphElementCopy.graph = currentGraph;
+        graphElementCopy.states.add(currentState);
+        return graphElementCopy;
         }
         
        
@@ -744,4 +747,4 @@ public GraphElement()
 
 }
 
-//  [Last modified: 2017 07 22 at 18:47:03 GMT]
+//  [Last modified: 2018 08 31 at 15:11:53 GMT]

@@ -176,9 +176,9 @@ public class Graph{
     NodeList nodeListCopy=new NodeList();
     for(int i=0;i<=this.nodes.size()-1;i++)
     {
-        GraphElement copiedNode=this.nodes.get(i);
+        Node copiedNode=this.nodes.get(i);
         copiedNode=copiedNode.copyCurrentState(currentGraph);
-        nodeListCopy.add((Node)copiedNode);
+        nodeListCopy.add(copiedNode);
     }
     for(int i=0;i<=this.edges.size()-1;i++)
     {
@@ -1390,4 +1390,4 @@ public class Graph{
   }
 }
 
-// [Last modified: 2017 04 18 at 19:59:20 GMT]
+// [Last modified: 2018 08 31 at 15:15:11 GMT]

@@ -30,6 +30,13 @@ public class Edge extends GraphElement {
     boolean hasExplicitId = false;
 
     /**
+     * create a blank instance for use when copying state at start of
+     * algorithm execution
+     */
+    public Edge() {
+    }
+    
+    /**
      * When an edge is created during parsing when source, target and id are
      * not yet known.
      */
@@ -172,6 +179,13 @@ public class Edge extends GraphElement {
         s += " />";
 		return s;
 	}
+        
+        public Edge copyCurrentState(Graph currentGraph) {
+        Edge copy = new Edge();
+        copy.graph = currentGraph;
+        super.copyCurrentState(currentGraph);
+        return copy;
+    }
 
     /**
      * For debugging only

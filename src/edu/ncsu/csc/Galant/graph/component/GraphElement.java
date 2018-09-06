@@ -180,15 +180,19 @@ public class GraphElement implements Comparable<GraphElement> {
         }
 	}
         
-        public GraphElement copyCurrentState(Graph currentGraph)
+        public ArrayList<GraphElementState> copyCurrentState()
         {
-        GraphElementState currentState = new GraphElementState(this.states.get(0));
-        GraphElement graphElementCopy = new GraphElement();
-        graphElementCopy.dispatch = GraphDispatch.getInstance();
-        graphElementCopy.states = new ArrayList<GraphElementState>();
-        graphElementCopy.graph = currentGraph;
-        graphElementCopy.states.add(currentState);
-        return graphElementCopy;
+//        GraphElementState currentState = new GraphElementState(this.states.get(0));
+//        GraphElement graphElementCopy = new GraphElement();
+//        graphElementCopy.dispatch = GraphDispatch.getInstance();
+//        graphElementCopy.states = new ArrayList<GraphElementState>();
+//        graphElementCopy.graph = currentGraph;
+//        graphElementCopy.states.add(currentState);
+//        return graphElementCopy;
+           GraphElementState currentState = new GraphElementState(this.states.get(0));
+          ArrayList<GraphElementState> statesCopy  = new ArrayList<GraphElementState>();
+           statesCopy.add(currentState);
+           return statesCopy;
         }
         
        

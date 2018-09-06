@@ -180,10 +180,14 @@ public class Edge extends GraphElement {
 		return s;
 	}
         
-        public Edge copyCurrentState(Graph currentGraph) {
+        public Edge copyEdge(Graph currentGraph) {
         Edge copy = new Edge();
+        copy.source=this.source;
+        copy.target=this.target;
+        copy.dispatch=GraphDispatch.getInstance();
         copy.graph = currentGraph;
-        super.copyCurrentState(currentGraph);
+        ArrayList<GraphElementState> statesCopy=super.copyCurrentState();
+        copy.states=statesCopy;
         return copy;
     }
 

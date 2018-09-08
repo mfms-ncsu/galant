@@ -224,6 +224,7 @@ public class GraphDispatch {
      */
     public void stopAlgorithm() {
          this.workingGraph = editGraph;
+         this.animationMode=false;
          notifyListeners(ANIMATION_MODE, ! this.animationMode, this.animationMode);
     }
 

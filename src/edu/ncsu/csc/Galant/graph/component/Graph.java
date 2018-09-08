@@ -177,14 +177,14 @@ public class Graph{
     for(int i=0;i<=this.nodes.size()-1;i++)
     {
         Node copiedNode=this.nodes.get(i);
-        copiedNode=copiedNode.copyCurrentState(currentGraph);
+        copiedNode=copiedNode.copyNode(currentGraph);
         nodeListCopy.add(copiedNode);
     }
     for(int i=0;i<=this.edges.size()-1;i++)
     {
-        Edge oldEdge=this.edges.get(i);
-        GraphElement copiedEdge=oldEdge.copyCurrentState(currentGraph);
-        edgeListCopy.add((Edge)copiedEdge);
+        Edge copiedEdge=this.edges.get(i);
+        copiedEdge=copiedEdge.copyEdge(currentGraph);
+        edgeListCopy.add(copiedEdge);
     }
 
     String nameCopy=this.name;

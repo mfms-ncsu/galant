@@ -82,11 +82,16 @@ public class Node extends GraphElement {
    }
 
 
-    public Node copyCurrentState(Graph currentGraph) {
+    public Node copyNode(Graph currentGraph) {
         Node copy = new Node();
+        copy.dispatch=GraphDispatch.getInstance();
+        copy.id=this.id;
+        copy.xCoordinate=this.xCoordinate;
+        copy.yCoordinate=this.yCoordinate;
         copy.graph = currentGraph;
-		copy.incidentEdges = new EdgeList();
-        super.copyCurrentState(currentGraph);
+	copy.incidentEdges = new EdgeList();
+        ArrayList<GraphElementState> statesCopy=super.copyCurrentState();
+        copy.states=statesCopy;
         return copy;
     }
     

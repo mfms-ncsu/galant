@@ -5,7 +5,7 @@
 *.~*~
 TAGS
 # stuff in the build directory is the result of compilation
-build
+build/
 # stuff in the doc directory: created when building javadoc
 doc
 # graphs created on the fly

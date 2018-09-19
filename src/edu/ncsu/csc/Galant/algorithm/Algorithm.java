@@ -441,7 +441,6 @@ public abstract class Algorithm implements Runnable {
   public void hideEdgeWeights() { graph.showEdgeWeights(false); }
   /** makes node weights visible */
   public void showNodeWeights() { graph.showNodeWeights(true);
-      System.out.println("in showNodeWeights, edges = " + graph.getEdges());
   }
   /** makes edge weights visible */
   public void showEdgeWeights() { graph.showEdgeWeights(true); }

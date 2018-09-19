@@ -195,11 +195,8 @@ public class Graph{
     {
         Edge copiedEdge=this.edges.get(i);
         copiedEdge=copiedEdge.copyEdge(currentGraph);
-        System.out.println("copied edge = " + copiedEdge);
         edgeListCopy.add(copiedEdge);
     }
-    System.out.println("copied edge list is " + edgeListCopy);
-
     String nameCopy=this.name;
     String commentCopy=this.comment;
     boolean directedCopy=this.directed;

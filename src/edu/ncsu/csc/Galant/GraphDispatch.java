@@ -213,8 +213,6 @@ public class GraphDispatch {
         // start the animation with a clean copy of the edit graph, a copy
         // without the edit states
         this.workingGraph = this.editGraph.copyCurrentState(this.editGraph);
-        System.out.println("dispatch edge list is " + this.workingGraph.getEdges());
-
         algorithm.setGraph(workingGraph);
         this.algorithmExecutor.startAlgorithm();
         this.graphWindow.updateStatusLabel();

@@ -107,6 +107,12 @@ public class Graph{
     }
     banner = new MessageBanner(this);
   }
+  
+  public Graph(Graph newGraph)
+  {
+    
+  }
+  
 
   /**
    * Resets the graph to its original state at the end of an
@@ -171,7 +177,12 @@ public class Graph{
   
   public Graph copyCurrentState(Graph currentGraph){
       
-   Graph copyOfGraph=this;
+   Graph copyOfGraph=new Graph(currentGraph);
+   copyOfGraph.dispatch = GraphDispatch.getInstance();
+    copyOfGraph.graphWindow = dispatch.getGraphWindow();
+    copyOfGraph.nodes = new NodeList();
+    copyOfGraph.edges = new EdgeList();
+    copyOfGraph.states = new ArrayList<GraphState>();
     EdgeList edgeListCopy=new EdgeList();
     NodeList nodeListCopy=new NodeList();
     for(int i=0;i<=this.nodes.size()-1;i++)

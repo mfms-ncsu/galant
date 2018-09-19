@@ -1,6 +1,7 @@
 # .gitignore for galant
-# java class files
+# java class and jar files
 *.class
+*.jar
 # emacs backups and TAGS
 *.~*~
 TAGS

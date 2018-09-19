@@ -195,8 +195,10 @@ public class Graph{
     {
         Edge copiedEdge=this.edges.get(i);
         copiedEdge=copiedEdge.copyEdge(currentGraph);
+        System.out.println("copied edge = " + copiedEdge);
         edgeListCopy.add(copiedEdge);
     }
+    System.out.println("copied edge list is " + edgeListCopy);
 
     String nameCopy=this.name;
     String commentCopy=this.comment;
@@ -1401,4 +1403,4 @@ public class Graph{
   }
 }
 
-// [Last modified: 2018 08 31 at 15:15:11 GMT]
+// [Last modified: 2018 09 19 at 19:01:25 GMT]

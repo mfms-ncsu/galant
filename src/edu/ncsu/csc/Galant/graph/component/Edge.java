@@ -184,6 +184,7 @@ public class Edge extends GraphElement {
         Edge copy = new Edge();
         copy.source=this.source;
         copy.target=this.target;
+        copy.id = this.id;
         copy.dispatch=GraphDispatch.getInstance();
         copy.graph = currentGraph;
         ArrayList<GraphElementState> statesCopy=super.copyCurrentState();
@@ -207,4 +208,4 @@ public class Edge extends GraphElement {
 	}
 }
 
-//  [Last modified: 2017 01 21 at 21:25:22 GMT]
+//  [Last modified: 2018 09 19 at 18:56:17 GMT]

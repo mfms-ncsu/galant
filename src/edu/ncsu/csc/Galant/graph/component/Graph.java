@@ -197,6 +197,22 @@ public class Graph{
         copiedEdge=copiedEdge.copyEdge(currentGraph);
         edgeListCopy.add(copiedEdge);
     }
+    //update node list to add it's incident edges
+    for(Edge edge:edgeListCopy)
+    {
+        //get source and target nodes for each edge
+        Node sourceNode=edge.getSourceNode();
+        Node targetNode=edge.getTargetNode();
+        //identify these source and target nodes from the node list copy and then add incident edges to only those relevant nodes
+        for(Node node:nodeListCopy)
+        {
+            if(node.getId()==sourceNode.getId() && (node.getPosition()).equals(sourceNode.getPosition()))//using node.equals(sourceNode) returns false
+                node.addEdge(edge);
+            if(node.getId()==targetNode.getId() && (node.getPosition()).equals(targetNode.getPosition()))
+                node.addEdge(edge);
+        }
+    }
+    //at the end of this for loop, the nodes in nodeListCopy have their incident edges updated
     String nameCopy=this.name;
     String commentCopy=this.comment;
     boolean directedCopy=this.directed;

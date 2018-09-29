@@ -185,34 +185,26 @@ public class Graph{
     copyOfGraph.states = new ArrayList<GraphState>();
     EdgeList edgeListCopy=new EdgeList();
     NodeList nodeListCopy=new NodeList();
+    TreeMap<Integer, Node> nodeByIdMap = new TreeMap<Integer, Node>();
+    TreeMap<Integer, Node> copyOfNodeMap=new TreeMap<Integer, Node>(this.nodeById);
     for(int i=0;i<=this.nodes.size()-1;i++)
     {
-        Node copiedNode=this.nodes.get(i);
+        Node copiedNode= this.nodes.get(i);
         copiedNode=copiedNode.copyNode(currentGraph);
         nodeListCopy.add(copiedNode);
+        copyOfNodeMap.put(copiedNode.getId(), copiedNode);
+        nodeByIdMap.put(copiedNode.getId(), copiedNode);
     }
     for(int i=0;i<=this.edges.size()-1;i++)
     {
         Edge copiedEdge=this.edges.get(i);
-        copiedEdge=copiedEdge.copyEdge(currentGraph);
+        Integer sourceNodeId=copiedEdge.getSourceNode().getId();
+        Integer targetNodeId=copiedEdge.getTargetNode().getId();
+        Node source=copyOfNodeMap.get(sourceNodeId);
+        Node target=copyOfNodeMap.get(targetNodeId);
+        copiedEdge=copiedEdge.copyEdge(currentGraph,source,target);
         edgeListCopy.add(copiedEdge);
     }
-    //update node list to add it's incident edges
-    for(Edge edge:edgeListCopy)
-    {
-        //get source and target nodes for each edge
-        Node sourceNode=edge.getSourceNode();
-        Node targetNode=edge.getTargetNode();
-        //identify these source and target nodes from the node list copy and then add incident edges to only those relevant nodes
-        for(Node node:nodeListCopy)
-        {
-            if(node.getId()==sourceNode.getId() && (node.getPosition()).equals(sourceNode.getPosition()))//using node.equals(sourceNode) returns false
-                node.addEdge(edge);
-            if(node.getId()==targetNode.getId() && (node.getPosition()).equals(targetNode.getPosition()))
-                node.addEdge(edge);
-        }
-    }
-    //at the end of this for loop, the nodes in nodeListCopy have their incident edges updated
     String nameCopy=this.name;
     String commentCopy=this.comment;
     boolean directedCopy=this.directed;
@@ -234,7 +226,7 @@ public class Graph{
     copyOfGraph.directed=directedCopy;
     copyOfGraph.layered=layeredCopy;
     copyOfGraph.layerInformation=layerInformationCopy;
-    copyOfGraph.nodeById=nodeByIdCopy;
+    copyOfGraph.nodeById=nodeByIdMap;
     copyOfGraph.edgeById=edgeByIdCopy;
     copyOfGraph.banner=bannerCopy;
     copyOfGraph.selectedEdge=selectedEdgeCopy;

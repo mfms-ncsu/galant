@@ -198,11 +198,13 @@ public class Graph{
     for(int i=0;i<=this.edges.size()-1;i++)
     {
         Edge copiedEdge=this.edges.get(i);
-        Integer sourceNodeId=copiedEdge.getSourceNode().getId();
-        Integer targetNodeId=copiedEdge.getTargetNode().getId();
-        Node source=copyOfNodeMap.get(sourceNodeId);
-        Node target=copyOfNodeMap.get(targetNodeId);
-        copiedEdge=copiedEdge.copyEdge(currentGraph,source,target);
+        Integer sourceId=copiedEdge.getSourceNode().getId();
+        Integer targetId=copiedEdge.getTargetNode().getId();
+        Node newSource=copyOfNodeMap.get(sourceId);
+        Node newTarget=copyOfNodeMap.get(targetId);
+        newSource.addEdge(copiedEdge);
+        newTarget.addEdge(copiedEdge);
+        copiedEdge=copiedEdge.copyEdge(currentGraph,newSource,newTarget);
         edgeListCopy.add(copiedEdge);
     }
     String nameCopy=this.name;

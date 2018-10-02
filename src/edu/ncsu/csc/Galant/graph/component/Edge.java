@@ -182,13 +182,15 @@ public class Edge extends GraphElement {
         
         public Edge copyEdge(Graph currentGraph,Node newSource,Node newTarget) {
         Edge copy = new Edge();
-        copy.source=newSource;
-        copy.target=newTarget;
         copy.id = this.id;
         copy.dispatch=GraphDispatch.getInstance();
         copy.graph = currentGraph;
         ArrayList<GraphElementState> statesCopy=super.copyCurrentState();
         copy.states=statesCopy;
+        newSource.addEdge(copy);
+        newTarget.addEdge(copy);
+        copy.source=newSource;
+        copy.target=newTarget;
         return copy;
     }
 

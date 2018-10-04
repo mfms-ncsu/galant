@@ -440,7 +440,8 @@ public abstract class Algorithm implements Runnable {
   /** makes edge weights invisible */
   public void hideEdgeWeights() { graph.showEdgeWeights(false); }
   /** makes node weights visible */
-  public void showNodeWeights() { graph.showNodeWeights(true); }
+  public void showNodeWeights() { graph.showNodeWeights(true);
+  }
   /** makes edge weights visible */
   public void showEdgeWeights() { graph.showEdgeWeights(true); }
 
@@ -1493,4 +1494,4 @@ public abstract class Algorithm implements Runnable {
   public abstract void run();
 }
 
-//  [Last modified: 2017 05 20 at 19:16:59 GMT]
+//  [Last modified: 2018 09 19 at 19:09:33 GMT]

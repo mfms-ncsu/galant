@@ -7,10 +7,8 @@
  * synchronization added by Kai Pressler-Marshall and modified by Matthias
  * Stallmann
  */
-
-package edu.ncsu.csc.Galant.gui.window;
-
-import java.util.Random;
+ package edu.ncsu.csc.Galant.gui.window;
+ import java.util.Random;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -31,8 +29,7 @@ import java.awt.KeyboardFocusManager;
 import java.awt.KeyEventDispatcher;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-
-import javax.swing.BoxLayout;
+ import javax.swing.BoxLayout;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
@@ -48,8 +45,7 @@ import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 import javax.swing.JOptionPane;
-
-import edu.ncsu.csc.Galant.Galant;
+ import edu.ncsu.csc.Galant.Galant;
 import edu.ncsu.csc.Galant.GraphDispatch;
 import edu.ncsu.csc.Galant.graph.component.Edge;
 import edu.ncsu.csc.Galant.graph.component.Graph;
@@ -71,12 +67,19 @@ import edu.ncsu.csc.Galant.gui.editor.GEditorFrame; // for confirmation dialog
 import edu.ncsu.csc.Galant.algorithm.AlgorithmExecutor;
 import edu.ncsu.csc.Galant.algorithm.AlgorithmSynchronizer;
 import edu.ncsu.csc.Galant.algorithm.Terminate;
+import edu.ncsu.csc.Galant.graph.datastructure.EdgeList; //shall be removed when I figure out how to update GraphPanel
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class GraphWindow extends JPanel implements PropertyChangeListener, ComponentListener {
 
   public static final int DEFAULT_WIDTH = 700, DEFAULT_HEIGHT = 600;
   public static final int TOOLBAR_HEIGHT = 24;
   public static final int ANIMATION_BUTTON_SIZE = 40;
+  
+  ArrayList<Point> nodePositions=new ArrayList<Point>();
+  ArrayList<Integer> nodeIds=new ArrayList<Integer>();
 	   
   /** Refers to the singleton GraphDispatch to push global information */
   private final GraphDispatch dispatch;
@@ -94,6 +97,9 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
   /** A panel used to edit Graph element's properties **/ 
   public static ComponentEditPanel componentEditPanel;
 	
+  /** Denotes the current working graph **/
+  private static Graph graph;
+  
   /** A panel used to navigate through an animation **/
   private static JPanel animationButtons;
   private final JButton stepForward;
@@ -111,25 +117,25 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
   private JToggleButton addNode;
   private JToggleButton addEdge;
   private JToggleButton deleteBtn;
+  
+  private JButton undo;
+  private JButton redo;
 	
   private ButtonGroup directedGroup = new ButtonGroup();
   private JToggleButton directedBtn;
   private JToggleButton undirectedBtn;
-
-  private JToggleButton nodeLabels;
+   private JToggleButton nodeLabels;
   private JToggleButton edgeLabels;
   private JToggleButton nodeWeights;
   private JToggleButton edgeWeights;
-
-  private JToggleButton repositionBtn;
-
-  /**
+   private JToggleButton repositionBtn;
+  
+   /**
    * Another message text label, used primarily to show current algorithm
    * and display states
    */
   private JLabel statusLabel;
-
-  /**
+   /**
    * Updates the status message to display the current states
    */
   public void updateStatusLabel() {
@@ -153,28 +159,22 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
       statusLabel.setText(message);
     }
   }
-
-  /**
+   /**
    * @param message a String to display as status message
    */
   public void updateStatusLabel(String message) {
     statusLabel.setText(message);
   }
-
-  public String getStatusLabelAsAString(){
+   public String getStatusLabelAsAString(){
     return statusLabel.getText();
   }
-
-  private GraphMode mode = null;
-
-  private EdgeSpecificationDialog edgeSelectionDialog;
+   private GraphMode mode = null;
+   private EdgeSpecificationDialog edgeSelectionDialog;
   private NodeSpecificationDialog nodeDeletionDialog;
-
-  public ComponentEditPanel getComponentEditPanel() {
+   public ComponentEditPanel getComponentEditPanel() {
     return componentEditPanel;
   }
-
-  /**
+   /**
    * The Edit modes GraphWindow can assume. Used in the listener for the
    * GraphPanel instance to update the Graph appropriately when edited visually
    */
@@ -182,7 +182,9 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
     SELECT("select"),
     CREATE_NODE("newnode"),
     CREATE_EDGE("newedge"),
-    DELETE("close");
+    DELETE("close"),
+    UNDO("undo"),
+    REDO("redo");
 		
     private ImageIcon icon;
 		
@@ -206,7 +208,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
     EDGE_LABELS("edgelabel"),
     NODE_WEIGHTS("weightednode"),
     EDGE_WEIGHTS("weightededge");
-		
+    		
     private ImageIcon icon;
     private boolean isShown;
 		
@@ -262,23 +264,23 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
    */
   public GraphWindow(GraphDispatch _dispatch) {
     LogHelper.enterConstructor(getClass());
-
-    this.dispatch = _dispatch;
+     this.dispatch = _dispatch;
     // Register this object as a change listener. Allows GraphDispatch notifications to be pushed to this object
     _dispatch.getWorkingGraph().graphWindow = this;
     _dispatch.addChangeListener(this);
-
-    // Create the panel that renders the active Graph
+     // Create the panel that renders the active Graph
     graphPanel = new GraphPanel(dispatch, this);
-
-    // Add a listener to handle visual editing of the Graph
+     // Add a listener to handle visual editing of the Graph
     graphPanel.addMouseMotionListener( new MouseMotionListener() {
         @Override
         public void mouseDragged(MouseEvent arg0) {
           // If you start dragging, set dragging mode so you don't
           // perform any other operations on the Node until after
           // releasing it
+          
           Node sel = graphPanel.getSelectedNode();
+          nodePositions.add(sel.getFixedPosition());
+          nodeIds.add(sel.getId());
           if ( sel != null ) {
             graphPanel.setDragging(true);
             graphPanel.setEdgeTracker(null);
@@ -320,8 +322,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
           prevNode = graphPanel.getSelectedNode();
           Node n = graphPanel.selectTopClickedNode(location);
         }
-
-        @Override
+         @Override
         public void mouseReleased(MouseEvent arg0) {       
           Point location = arg0.getPoint();
           LogHelper.logDebug("RELEASE");
@@ -372,12 +373,10 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 				
               Graph g = dispatch.getWorkingGraph();
               Node n = g.addInitialNode(location.x, location.y);
-
-              // select the new node
+               // select the new node
               Node nNew = graphPanel.selectTopClickedNode(location);
               LogHelper.logDebug( " select: node = " + n );
-
-              componentEditPanel.setWorkingComponent(nNew);
+               componentEditPanel.setWorkingComponent(nNew);
               LogHelper.logDebug( " setWorking: node = " + n );
                                 
               dispatch.pushToTextEditor(); 
@@ -465,8 +464,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
     
     componentEditPanel = new ComponentEditPanel();
     componentEditPanel.setVisible(false);
-
-    statusLabel = new JLabel("No status");
+     statusLabel = new JLabel("No status");
 		
     this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
@@ -475,8 +473,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
     this.add(graphPanel);
     this.add(initAnimationPanel());
     this.add(componentEditPanel);
-
-    frame.setName("graph_window");
+     frame.setName("graph_window");
     WindowUtil.preserveWindowBounds(frame, 0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
     //frame.setPreferredSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
     frame.pack();
@@ -514,14 +511,21 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
     case DELETE:{
       deleteBtn.setSelected(true);
     }
+    case UNDO:{
+      undo.setSelected(true);
+      break;
+    }
+    case REDO:{
+      redo.setSelected(true);
+      break;
+    }
     }
 		
     frame.repaint();
 		
     LogHelper.exitMethod(getClass(), "changeMode");
   }
-
-  /**
+   /**
    * changes both the buttons and the status of the graph to reflect the
    * given directedness - true if directed, false if undirected
    */
@@ -565,13 +569,14 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
         animationButtons.setVisible(true);
         animationButtons.setFocusable(true);
         animationButtons.requestFocusInWindow();
-
-        directedBtn.setVisible(false);
+         directedBtn.setVisible(false);
         undirectedBtn.setVisible(false);
         select.setVisible(false);
         addNode.setVisible(false);
         addEdge.setVisible(false);
         deleteBtn.setVisible(false);
+        undo.setVisible(true);
+        redo.setVisible(true);
         repositionBtn.setVisible(false);
       }
       else {
@@ -582,6 +587,8 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
         addNode.setVisible(true);
         addEdge.setVisible(true);
         deleteBtn.setVisible(true);
+        undo.setVisible(true);
+        redo.setVisible(true);
         repositionBtn.setVisible(true);
       }
     } 
@@ -613,9 +620,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
     fileMenu.add(WindowUtil.QUIT_ACTION);
 		
     menuBar.add(fileMenu);
-
-
-    LogHelper.exitMethod(GraphWindow.class, "initMenu");
+     LogHelper.exitMethod(GraphWindow.class, "initMenu");
     return menuBar;
   }
 	
@@ -644,6 +649,12 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
     deleteBtn = createButton(GraphMode.DELETE);
     deleteBtn.setFocusable(false);
     deleteBtn.setToolTipText("Delete");
+    undo = createButtonWithoutToggle(GraphMode.UNDO);
+    undo.setFocusable(false);
+    undo.setToolTipText("Undo");
+    redo = createButtonWithoutToggle(GraphMode.REDO);
+    redo.setFocusable(false);
+    redo.setToolTipText("Redo");
     changeMode(GraphMode.SELECT);		
     
     toolBar.addSeparator();
@@ -670,8 +681,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
     edgeWeights = createButton(GraphDisplays.EDGE_WEIGHTS);
     edgeWeights.setFocusable(false);
     edgeWeights.setToolTipText("Display Edge Weights");
-
-    toolBar.addSeparator();
+     toolBar.addSeparator();
 		
     java.net.URL imageURL = GraphWindow.class.getResource("images/autoposition_24.png");
     repositionBtn = new JToggleButton(new ImageIcon(imageURL));
@@ -713,6 +723,22 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
     toolBar.add(button);
     return button;
   }
+  
+//  creates a clickable button for undo/redo
+  private JButton createButtonWithoutToggle(final GraphMode mode){
+    JButton button = new JButton();
+    button.addActionListener(new ActionListener(){
+        @Override
+        public void actionPerformed(ActionEvent e){
+          changeMode(mode);
+        }
+      });
+    button.setIcon(mode.getIcon());
+    modeGroup.add(button);
+    toolBar.add(button);
+    return button;
+  }
+  
 	
   /**
    * Creates a Directedness toggle button. The icon URL associated with each is retrieved from the enum
@@ -756,8 +782,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
     button.setSelected(displayType.isShown());
     return button;
   }
-
-  /**
+   /**
    * The following give Graph.java access to the label/weight visibility
    * buttons so that they will remain synchronized with the visibility
    * state when an algorithm is running.
@@ -778,7 +803,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
     GraphDisplays.EDGE_WEIGHTS.setShown(show);
     edgeWeights.setSelected(show);
   }
-
+  
   private synchronized void performStepBack() {
     AlgorithmExecutor executor = dispatch.getAlgorithmExecutor();
     if ( ! executor.hasPreviousState() ) return;
@@ -787,8 +812,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
     stepBack.setEnabled(executor.hasPreviousState());
     updateStatusLabel();
   }
-
-  private synchronized void performStepForward() {
+   private synchronized void performStepForward() {
     AlgorithmExecutor executor = dispatch.getAlgorithmExecutor();
     if ( ! executor.hasNextState() ) return;
     executor.incrementDisplayState();
@@ -796,8 +820,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
     stepBack.setEnabled(executor.hasPreviousState());
     updateStatusLabel();
   }
-
-  public synchronized void performDone() {
+   public synchronized void performDone() {
     AlgorithmExecutor executor = dispatch.getAlgorithmExecutor();
     // does not appear to help in case of infinite loop
     //executor.algorithmThread.interrupt();
@@ -806,10 +829,11 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
     // also does not appear to help in case of infinite loop
     //synchronizer.finishStep();
     executor.stopAlgorithm();
+    nodePositions.clear();
+    nodeIds.clear();
     updateStatusLabel();
   }
-
-  /**
+   /**
    * Initialize the animation panel controls
    * Steps through an Algorithm or exits the mode
    * @return
@@ -817,8 +841,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
   private JPanel initAnimationPanel() {
     LogHelper.enterMethod(getClass(), "initAnimationPanel");
     animationButtons = new JPanel();
-
-    stepBack.setEnabled(false);
+     stepBack.setEnabled(false);
     stepBack.addActionListener(new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent arg0) {
@@ -858,8 +881,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
           animationButtons.setVisible(false);
         }
       });
-
-    // add keyboard shortcuts
+     // add keyboard shortcuts
     KeyboardFocusManager keyManager
       = KeyboardFocusManager.getCurrentKeyboardFocusManager();
     keyManager.addKeyEventDispatcher(new KeyEventDispatcher() {
@@ -1013,23 +1035,21 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
               // "ctrl" already pressed, create new node
               if ( ctrlPressed ) {
                 LogHelper.logDebug("CREATE NODE");
-
-                // add a new default node to the working
+                 // add a new default node to the working
                 Graph g = dispatch.getWorkingGraph();
                 // choose a random position to place new node
                 Point p = Node.genRandomPosition();
                 Node n = g.addInitialNode(p.x, p.y);
-
-                // select the new node
+                 // select the new node
                 Node nNew = graphPanel.selectTopClickedNode(p);
                 componentEditPanel.setWorkingComponent(nNew);
                 LogHelper.logDebug( " select: node = " + n );
-
-                componentEditPanel.setWorkingComponent(nNew);
+                 componentEditPanel.setWorkingComponent(nNew);
                 LogHelper.logDebug( " setWorking: node = " + n );
-
-                dispatch.pushToTextEditor();
+                 dispatch.pushToTextEditor();
               } //Create new node
+              
+                           
               //delete already pressed, delete node
               if ( deletePressed ) {
                 LogHelper.logDebug("DELETE NODE");
@@ -1041,6 +1061,33 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
             LogHelper.exitMethod(getClass(), "'n' pressed");
             return true;
           }
+          //"Z" is pressed for undo
+        if ( e.getID()==KeyEvent.KEY_PRESSED
+               && e.getKeyCode()==KeyEvent.VK_Z && ctrlPressed) 
+            {
+              synchronized(this) {
+              LogHelper.logDebug("UNDO");
+                  try {
+                      undo();
+                  } catch (GalantException ex) {
+                      Logger.getLogger(GraphWindow.class.getName()).log(Level.SEVERE, null, ex);
+                  } catch (Terminate ex) {
+                      Logger.getLogger(GraphWindow.class.getName()).log(Level.SEVERE, null, ex);
+                  }
+              
+                              }
+              } //undo
+          
+          //"Y" is pressed for redo
+        if ( e.getID()==KeyEvent.KEY_PRESSED
+               && e.getKeyCode()==KeyEvent.VK_Y && ctrlPressed) 
+            {
+              synchronized(this) {
+              LogHelper.logDebug("REDO");
+              JOptionPane.showMessageDialog(null, "Redo for now, method yet to be called");
+                }
+              } //redo
+          
           //"ctrl + i" toggle intelligent rearrange
           if ( ! dispatch.isAnimationMode() && e.getID()==KeyEvent.KEY_PRESSED
                && e.getKeyCode()==KeyEvent.VK_I && ctrlPressed ) {
@@ -1114,34 +1161,46 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
           return false;
         }
       });
-
-    LogHelper.exitMethod(getClass(), "initAnimationPanel");
+     LogHelper.exitMethod(getClass(), "initAnimationPanel");
     return animationButtons;
   }
-
+public void undo() throws GalantException, Terminate
+{
+    if(!nodePositions.isEmpty() && dispatch.isAnimationMode())
+    {
+    //size -2 is done as we are doing an undo, size-1 will give the latest node position, we want to retrieve the position which is 1 before the latest.
+    Point lastCoordinates=nodePositions.get(nodePositions.size()-2); 
+    int lastNodeId=nodeIds.get(nodeIds.size()-2);
+    //The following code can be removed once I figure out how to update animation view with the new node positions, perhaps GraphPanel.java can read the positions of the nodes if I can convey to it that state has changed 
+    //For now, I have replaced the full node with a new node in current graph, but GraphPanel does not know how to read this yet
+    graph=dispatch.getWorkingGraph(); //Ideally must be done in constructor but this code shall be removed anyway
+    Node sel=graph.getNodeById(lastNodeId);
+    EdgeList incidentEdges=sel.getEdges();
+    graph.removeNode(sel); //Problem-causes edges to be removed too. Hopefully GraphPanel can simply replace nodes
+    sel.setFixedPosition(lastCoordinates);
+    graph.addNode(sel);
+    for(Edge edge:incidentEdges)
+    graph.addEdge(edge);
+    }
+}
   @Override
   public void componentHidden(ComponentEvent arg0) {
     // TODO Auto-generated method stub
 		
   }
-
-  @Override
+   @Override
   public void componentMoved(ComponentEvent arg0) {
     // TODO Auto-generated method stub
 		
   }
-
-  @Override
+   @Override
   public void componentResized(ComponentEvent e){
     dispatch.setWindowSize(graphPanel.getHeight(), graphPanel.getWidth());
     frame.repaint();
   }
-
-
-  @Override
+   @Override
   public void componentShown(ComponentEvent arg0) {
     // TODO Auto-generated method stub
   }
 }
-
-//  [Last modified: 2017 03 13 at 19:31:25 GMT]
+ //  [Last modified: 2017 03 13 at 19:31:25 GMT]

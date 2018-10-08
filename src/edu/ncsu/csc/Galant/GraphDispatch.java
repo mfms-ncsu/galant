@@ -102,6 +102,7 @@ public class GraphDispatch {
    */
   private Boolean booleanAnswer;
 
+  private int editState;
   /**
    * getters and setters for the query answers
    */
@@ -249,8 +250,11 @@ public class GraphDispatch {
    */
   public int getDisplayState() {
     if ( animationMode ) return algorithmExecutor.getDisplayState();
-    // will probably have to return the edit state once undo/redo is implemented
-    return 0;
+    else
+    {
+    return editState;
+    }
+    
   }
 
   /**
@@ -262,11 +266,15 @@ public class GraphDispatch {
     return 0;
   }
 
-  public void startStepIfRunning() throws Terminate {
+  public void startStepIfAnimationOrIncrementEditState() throws Terminate {
     if ( animationMode
          && ! algorithmSynchronizer.isLocked()
          ) {
       algorithmSynchronizer.startStep();
+    }
+    if(!animationMode)
+    {
+        editState=editState+1;
     }
   }
 

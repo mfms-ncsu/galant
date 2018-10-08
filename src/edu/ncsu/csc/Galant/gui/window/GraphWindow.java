@@ -415,6 +415,18 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                   g.smartReposition();
 								
               } // node deletion
+              //Undo
+              else if (mode == GraphMode.UNDO) {
+             
+              JOptionPane.showMessageDialog(frame, "This is undo");
+								
+              } // undo
+              //Redo
+              else if (mode == GraphMode.UNDO) {
+             
+              JOptionPane.showMessageDialog(null, "This is redo");
+								
+              } // redo
               else if (clickEdge != null) {
                 // If you didn't click on a node, look
                 // for an edge
@@ -1059,15 +1071,8 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                && e.getKeyCode()==KeyEvent.VK_Z && ctrlPressed) 
             {
               synchronized(this) {
-//              LogHelper.logDebug("UNDO");
-//                  try {
-//                      undo();
-//                  } catch (GalantException ex) {
-//                      Logger.getLogger(GraphWindow.class.getName()).log(Level.SEVERE, null, ex);
-//                  } catch (Terminate ex) {
-//                      Logger.getLogger(GraphWindow.class.getName()).log(Level.SEVERE, null, ex);
-//                  }
-//              
+               LogHelper.logDebug("UNDO");
+               JOptionPane.showMessageDialog(null, "Undo for now, method yet to be called");
                               }
               } //undo
           

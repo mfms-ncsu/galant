@@ -168,10 +168,20 @@ public class Graph{
    */
   private GraphState newState() throws Terminate {
     dispatch.startStepIfAnimationOrIncrementEditState();
+    if(dispatch.isAnimationMode())
+    {
     GraphState latest = latestState();
     GraphState state
       = new GraphState(latest);
     return state;
+    }
+    else //if in edit mode
+    {
+    GraphState latestValidState = getLatestValidState(dispatch.getEditState());
+    GraphState state
+      = new GraphState(latestValidState);
+    return state;
+    }
   }
   //The following method is for deep copy. It clones graph object completely and is used to store edit state of graph just before algo execution
   

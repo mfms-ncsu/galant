@@ -256,11 +256,17 @@ public class GraphDispatch {
     }
     
   }
+  
+  public int getEditState()
+  {
+      return editState;
+  }
 
   /**
    * @return the current algorithm state or 0 if not in animation mode; used
    * when the context does not know whether or not algorithm is running
    */
+  
   public int getAlgorithmState() {
     if ( animationMode ) return algorithmExecutor.getAlgorithmState();
     return 0;

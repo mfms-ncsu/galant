@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns 
+http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+ <graph  edgedefault="undirected">
+  <node id="0" x="445" y="41"  weight="2.0"  />
+  <node id="1" x="347" y="46"  weight="1.0"  />
+  <node id="2" x="533" y="59"  weight="1.0"  />
+  <node id="3" x="56" y="126"  weight="5.0"  />
+  <node id="4" x="368" y="112"  weight="1.0"  />
+  <node id="5" x="235" y="137"  weight="1.0"  />
+  <node id="6" x="154" y="92"  weight="1.0"  />
+  <node id="7" x="254" y="62"  weight="1.0"  />
+  <node id="9" x="620" y="127"  weight="2.0"  />
+  <node id="10" x="189" y="202"  weight="1.0"  />
+  <node id="11" x="279" y="201"  weight="1.0"  />
+  <node id="12" x="590" y="189"  weight="5.0"  />
+  <node id="13" x="675" y="194"  weight="9.0"  />
+  <node id="14" x="432" y="129"  weight="1.0"  />
+  <node id="20" x="137" y="254"  weight="1.0"  />
+  <node id="21" x="232" y="254"  weight="5.0"  />
+  <node id="22" x="390" y="192"  weight="2.0"  />
+  <node id="23" x="467" y="192"  weight="1.0"  />
+  <node id="24" x="514" y="123"  weight="1.0"  />
+  <edge  source="1" target="0" weight="4.0"  />
+  <edge  source="7" target="1" weight="3.0"  />
+  <edge  source="6" target="7" weight="2.0"  />
+  <edge  source="5" target="6" weight="4.0"  />
+  <edge  source="3" target="6" weight="6.0"  />
+  <edge  source="2" target="0" weight="1.0"  />
+  <edge  source="9" target="2" weight="2.0"  />
+  <edge  source="10" target="5" weight="3.0"  />
+  <edge  source="11" target="5" weight="5.0"  />
+  <edge  source="12" target="9" weight="4.0"  />
+  <edge  source="13" target="9" weight="3.0"  />
+  <edge  source="14" target="0" weight="8.0"  />
+  <edge  source="20" target="10" weight="4.0"  />
+  <edge  source="21" target="10" weight="2.0"  />
+  <edge  source="22" target="14" weight="5.0"  />
+  <edge  source="23" target="14" weight="2.0"  />
+  <edge  source="4" target="7" weight="4.0"  />
+  <edge  source="24" target="2" weight="3.0"  />
+ </graph></graphml>

@@ -102,11 +102,21 @@ public class GraphElement implements Comparable<GraphElement> {
      * which is not yet implemented
      */
     private GraphElementState newState() throws Terminate {
-		dispatch.startStepIfRunning();
+		dispatch.startStepIfAnimationOrIncrementEditState();
+                if(dispatch.isAnimationMode())
+                {
 		GraphElementState latest = latestState();
 		GraphElementState elementState
             = new GraphElementState(latest);
 		return elementState;
+                }
+                else //if in edit mode
+                {
+                    GraphElementState latestValidState = getLatestValidState(dispatch.getEditState());
+		GraphElementState elementState
+            = new GraphElementState(latestValidState);
+		return elementState;
+                }
     }
 
     /**

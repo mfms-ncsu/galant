@@ -167,11 +167,21 @@ public class Graph{
    * which is not yet implemented
    */
   private GraphState newState() throws Terminate {
-    dispatch.startStepIfRunning();
+    dispatch.startStepIfAnimationOrIncrementEditState();
+    if(dispatch.isAnimationMode())
+    {
     GraphState latest = latestState();
     GraphState state
       = new GraphState(latest);
     return state;
+    }
+    else //if in edit mode
+    {
+    GraphState latestValidState = getLatestValidState(dispatch.getEditState());
+    GraphState state
+      = new GraphState(latestValidState);
+    return state;
+    }
   }
   //The following method is for deep copy. It clones graph object completely and is used to store edit state of graph just before algo execution
   
@@ -1056,7 +1066,7 @@ public class Graph{
    */
   public Node addNode(Integer x, Integer y) throws Terminate {
     LogHelper.enterMethod(getClass(), "addNode(), x = " + x + ", y = " + y);
-    dispatch.startStepIfRunning();
+    dispatch.startStepIfAnimationOrIncrementEditState();
     Integer newId = nextNodeId();
     Node n = new Node(this, newId, x, y);
     nodes.add(n);
@@ -1129,7 +1139,7 @@ public class Graph{
    * are known.
    */
   public Edge addEdge(Node source, Node target) throws Terminate {
-    dispatch.startStepIfRunning();
+    dispatch.startStepIfAnimationOrIncrementEditState();
     Edge e = new Edge(this, source, target);
     addEdge(e);
     return e;

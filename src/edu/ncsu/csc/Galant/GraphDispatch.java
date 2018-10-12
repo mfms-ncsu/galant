@@ -262,6 +262,14 @@ public class GraphDispatch {
       return editState;
   }
 
+    public void incrementEditState() {
+        editState++;
+    }
+
+    public void decrementEditState() {
+        editState--;
+    }
+
   /**
    * @return the current algorithm state or 0 if not in animation mode; used
    * when the context does not know whether or not algorithm is running
@@ -384,4 +392,4 @@ public class GraphDispatch {
 
 }
 
-//  [Last modified: 2018 09 19 at 19:04:12 GMT]
+//  [Last modified: 2018 10 12 at 14:55:15 GMT]

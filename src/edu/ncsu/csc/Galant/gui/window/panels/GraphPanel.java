@@ -345,15 +345,9 @@ public class GraphPanel extends JPanel{
             }
 		
             if (graph != null) {
-                if ( dispatch.isAnimationMode() ) {
                   // Get the display state if algorithm is running
                   int state = dispatch.getDisplayState();
                   drawGraph(graph, g2d, state);
-                }
-                else {
-                  // otherwise, there is no valid state
-                  drawGraph(graph, g2d);
-                }
             }
         }
         catch (GalantException e) {
@@ -1058,4 +1052,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2017 11 03 at 01:00:34 GMT]
+//  [Last modified: 2018 10 12 at 15:27:15 GMT]

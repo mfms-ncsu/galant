@@ -1072,7 +1072,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
             {
               synchronized(this) {
                LogHelper.logDebug("UNDO");
-               JOptionPane.showMessageDialog(null, "Undo for now, method yet to be called");
+               dispatch.decrementEditState();
                               }
               } //undo
           
@@ -1082,7 +1082,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
             {
               synchronized(this) {
               LogHelper.logDebug("REDO");
-              JOptionPane.showMessageDialog(null, "Redo for now, method yet to be called");
+              dispatch.incrementEditState();
                 }
               } //redo
           
@@ -1201,4 +1201,4 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
     // TODO Auto-generated method stub
   }
 }
- //  [Last modified: 2017 03 13 at 19:31:25 GMT]
+ //  [Last modified: 2018 10 12 at 15:26:42 GMT]

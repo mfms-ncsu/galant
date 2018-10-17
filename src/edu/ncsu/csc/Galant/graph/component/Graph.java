@@ -50,6 +50,7 @@ public class Graph{
 
   private MessageBanner banner;
 
+  private int editState=0;
   /**
    * Keeps track of an edge selected during algorithm execution.
    */
@@ -113,7 +114,17 @@ public class Graph{
     
   }
   
+public int getEditState()
+  {
+      return editState;
+  }
+public void incrementEditState() {
+        editState++;
+    }
 
+    public void decrementEditState() {
+        editState--;
+    }
   /**
    * Resets the graph to its original state at the end of an
    * animation.
@@ -177,7 +188,7 @@ public class Graph{
     }
     else //if in edit mode
     {
-    GraphState latestValidState = getLatestValidState(dispatch.getEditState());
+    GraphState latestValidState = getLatestValidState(getEditState());
     GraphState state
       = new GraphState(latestValidState);
     return state;

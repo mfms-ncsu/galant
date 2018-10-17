@@ -102,7 +102,7 @@ public class GraphDispatch {
    */
   private Boolean booleanAnswer;
 
-  private int editState;
+  
   /**
    * getters and setters for the query answers
    */
@@ -252,24 +252,10 @@ public class GraphDispatch {
     if ( animationMode ) return algorithmExecutor.getDisplayState();
     else
     {
-    return editState;
+    return workingGraph.getEditState();
     }
-    
   }
   
-  public int getEditState()
-  {
-      return editState;
-  }
-
-    public void incrementEditState() {
-        editState++;
-    }
-
-    public void decrementEditState() {
-        editState--;
-    }
-
   /**
    * @return the current algorithm state or 0 if not in animation mode; used
    * when the context does not know whether or not algorithm is running
@@ -288,7 +274,7 @@ public class GraphDispatch {
     }
     if(!animationMode)
     {
-        editState=editState+1;
+        workingGraph.incrementEditState();
     }
   }
 

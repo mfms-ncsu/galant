@@ -112,7 +112,7 @@ public class GraphElement implements Comparable<GraphElement> {
                 }
                 else //if in edit mode
                 {
-                    GraphElementState latestValidState = getLatestValidState(dispatch.getEditState());
+                    GraphElementState latestValidState = getLatestValidState(graph.getEditState());
 		GraphElementState elementState
             = new GraphElementState(latestValidState);
 		return elementState;

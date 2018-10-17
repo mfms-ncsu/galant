@@ -1072,7 +1072,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
             {
               synchronized(this) {
                LogHelper.logDebug("UNDO");
-               dispatch.decrementEditState();
+               graph.decrementEditState();
                               }
               } //undo
           
@@ -1082,7 +1082,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
             {
               synchronized(this) {
               LogHelper.logDebug("REDO");
-              dispatch.incrementEditState();
+              graph.incrementEditState();
                 }
               } //redo
           

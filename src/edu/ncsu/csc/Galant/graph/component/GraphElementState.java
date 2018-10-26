@@ -60,7 +60,13 @@ public class GraphElementState {
      */
     public GraphElementState(GraphElementState elementState) {
         this.dispatch = GraphDispatch.getInstance();
-        this.state = dispatch.getAlgorithmState();
+        if ( dispatch.isAnimationMode() ) {
+            this.state = dispatch.getAlgorithmState();
+        }
+        else {
+            this.state = dispatch.getWorkingGraph().getEditState(); 
+        }
+            
         this.attributes = elementState.getAttributes().duplicate();
     }
 
@@ -180,4 +186,4 @@ public class GraphElementState {
     }
 }
 
-//  [Last modified: 2018 08 31 at 14:41:01 GMT]
+//  [Last modified: 2018 10 26 at 15:21:06 GMT]

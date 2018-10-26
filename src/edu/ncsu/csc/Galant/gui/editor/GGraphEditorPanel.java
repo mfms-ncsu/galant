@@ -29,7 +29,7 @@ public class GGraphEditorPanel extends GEditorPanel {
    * @param filename The name of the file to be edited, which may be an unsaved file with
    *a dummy name.
    * @param content The text which constitutes the content of the file to be edited. It is
-   *either the result of reading in the file, or the empty string.
+   * either the result of reading in the file, or the empty string.
    */
   public GGraphEditorPanel(GTabbedPane gTabbedPane, String filename, String content) {
     super(gTabbedPane, filename, content);
@@ -123,4 +123,4 @@ public class GGraphEditorPanel extends GEditorPanel {
 
 }
 
-// [Last modified: 2017 03 13 at 19:48:34 GMT]
+// [Last modified: 2018 10 26 at 16:00:15 GMT]

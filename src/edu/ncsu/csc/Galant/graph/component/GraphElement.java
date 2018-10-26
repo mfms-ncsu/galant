@@ -103,20 +103,11 @@ public class GraphElement implements Comparable<GraphElement> {
      */
     private GraphElementState newState() throws Terminate {
 		dispatch.startStepIfAnimationOrIncrementEditState();
-                if(dispatch.isAnimationMode())
-                {
 		GraphElementState latest = latestState();
 		GraphElementState elementState
             = new GraphElementState(latest);
+        System.out.println("newState returns " + elementState);
 		return elementState;
-                }
-                else //if in edit mode
-                {
-                    GraphElementState latestValidState = getLatestValidState(graph.getEditState());
-		GraphElementState elementState
-            = new GraphElementState(latestValidState);
-		return elementState;
-                }
     }
 
     /**
@@ -125,6 +116,8 @@ public class GraphElement implements Comparable<GraphElement> {
      * a "blank" one with all attributes = null is returned.
      */
     public GraphElementState latestState() {
+        System.out.println("-> getLatestState");
+        System.out.println("states = " + states);
         GraphElementState state = null;
         if ( states.size() != 0 ) {
             state = states.get(states.size() - 1);
@@ -132,6 +125,7 @@ public class GraphElement implements Comparable<GraphElement> {
         else {
             state = new GraphElementState();
         }
+        System.out.println("latestState returns " + state);
         return state;
     }
 
@@ -176,6 +170,10 @@ public class GraphElement implements Comparable<GraphElement> {
 	private void addState(GraphElementState stateToAdd) throws Terminate {
         int stateNumber = stateToAdd.getState();
         boolean found = false;
+        /**
+         * @todo the following loop is not appropriate; we will always add
+         * any new state to the end of the list
+         */
         for ( int i = states.size() - 1; i >= stateNumber; i-- ) {
             GraphElementState state = states.get(i);
             if ( state.getState() == stateNumber ) {
@@ -231,6 +229,7 @@ public class GraphElement implements Comparable<GraphElement> {
     /************** Double attributes ***************/
 	public boolean set(String key, Double value) throws Terminate {
         GraphElementState newState = newState();
+        System.out.println("set (double), newState = " + newState);
         boolean found = newState.set(key, value);
         addState(newState);
         return found;
@@ -241,6 +240,7 @@ public class GraphElement implements Comparable<GraphElement> {
 	}
 	public Double getDouble(int state, String key) {
         GraphElementState validState = getLatestValidState(state);
+        System.out.println("getDouble, state = " + validState);
 		return validState == null ? null : validState.getAttributes().getDouble(key);
 	}
 
@@ -761,4 +761,4 @@ public class GraphElement implements Comparable<GraphElement> {
 
 }
 
-//  [Last modified: 2018 08 31 at 15:11:53 GMT]
+//  [Last modified: 2018 10 26 at 15:29:09 GMT]

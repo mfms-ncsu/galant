@@ -258,6 +258,7 @@ public class GraphPanel extends JPanel{
   public void drawGraph(Graph graph, Graphics2D g2d, int state)
     throws GalantException
   {
+      System.out.println("drawGraph, state = " + state);
     Timer.drawingTime.start();
     List<Node> nodes = null;
     List<Edge> edges = null;
@@ -639,6 +640,7 @@ public class GraphPanel extends JPanel{
         throws GalantException
     {
         int stateNumber = dispatch.getDisplayState();
+        System.out.println("drawEdge, state = " + stateNumber + ", edge = " + e);
 		int thickness = defaultThickness;
 		
         Node target = e.getTargetNode();
@@ -1052,4 +1054,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2018 10 12 at 15:27:15 GMT]
+//  [Last modified: 2018 10 26 at 14:31:16 GMT]

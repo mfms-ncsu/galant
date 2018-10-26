@@ -107,6 +107,7 @@ public class ComponentEditPanel extends JPanel {
              */
 			public void stateChanged(ChangeEvent arg0) {
 				Double newWeight = (Double) weight.getValue();
+                System.out.println("stateChanged, newWeight = " + newWeight);
                 // avoid changing a null weight to 0.0 (usually not intended)
                 Double previousWeight = workingElement.getWeight();
                 if ( previousWeight != null || newWeight != 0.0 ) {
@@ -216,4 +217,4 @@ public class ComponentEditPanel extends JPanel {
 
 
 
-//  [Last modified: 2017 03 14 at 15:58:52 GMT]
+//  [Last modified: 2018 10 26 at 15:03:51 GMT]

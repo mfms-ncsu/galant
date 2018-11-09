@@ -53,6 +53,7 @@ public class GraphDispatch {
   /** 
    * true if editing a graph; false during parsing and when the
    * directedness of a graph is changing
+   * @todo figure out when to change this
    */
   private boolean editMode = false;
   
@@ -272,7 +273,7 @@ public class GraphDispatch {
          ) {
       algorithmSynchronizer.startStep();
     }
-    if(!animationMode)
+    if ( editMode )
     {
         workingGraph.incrementEditState();
     }
@@ -378,4 +379,4 @@ public class GraphDispatch {
 
 }
 
-//  [Last modified: 2018 10 12 at 14:55:15 GMT]
+//  [Last modified: 2018 11 09 at 16:12:13 GMT]

@@ -22,6 +22,7 @@ import edu.ncsu.csc.Galant.logging.LogHelper;
 public class GGraphEditorPanel extends GEditorPanel {
 
   private final UUID uuid = UUID.randomUUID();
+    private Graph myGraph;
 
   /**
    * Create a new edit session of a graph.
@@ -41,9 +42,9 @@ public class GGraphEditorPanel extends GEditorPanel {
     try {
       if ( ! content.equals("") ) {
         GraphMLParser parser = new GraphMLParser(content);
-        dispatch.setWorkingGraph(parser.getGraph(), uuid);
+        myGraph = parser.getGraph();
       } else {
-        dispatch.setWorkingGraph(new Graph(), uuid);
+          myGraph = new Graph();
       }
     }
     catch ( GalantException e ) {
@@ -55,6 +56,7 @@ public class GGraphEditorPanel extends GEditorPanel {
       ExceptionDialog.displayExceptionInDialog(e);
     }
 
+    dispatch.setWorkingGraph(myGraph, uuid);
     syntaxHighlighter = new GGraphSyntaxHighlighting(textPane);
     documentUpdated();
     LogHelper.exitConstructor( getClass() );
@@ -123,4 +125,4 @@ public class GGraphEditorPanel extends GEditorPanel {
 
 }
 
-// [Last modified: 2018 10 26 at 16:00:15 GMT]
+// [Last modified: 2018 11 09 at 15:54:16 GMT]

@@ -195,7 +195,7 @@ public class GraphDispatch {
   public void setEditMode(boolean mode) {
     LogHelper.disable();
     LogHelper.enterMethod(getClass(), "setEditMode " + mode);
-    this.editMode = mode;
+    this.editMode=mode;
     LogHelper.exitMethod(getClass(), "setEditMode");
     LogHelper.restoreState();
   }
@@ -205,6 +205,7 @@ public class GraphDispatch {
      */
     public void startAnimation(Algorithm algorithm) {
         this.animationMode = true;
+        this.editMode=false; 
         // save the current working graph so that changes made by algorithm
         // can be undone easily
         this.editGraph = this.workingGraph;
@@ -227,6 +228,7 @@ public class GraphDispatch {
     public void stopAlgorithm() {
          this.workingGraph = editGraph;
          this.animationMode=false;
+         this.editMode=true;
          notifyListeners(ANIMATION_MODE, ! this.animationMode, this.animationMode);
     }
 
@@ -272,6 +274,10 @@ public class GraphDispatch {
          && ! algorithmSynchronizer.isLocked()
          ) {
       algorithmSynchronizer.startStep();
+    }
+    if(!animationMode)
+    {
+        this.editMode=true;
     }
     if ( editMode )
     {

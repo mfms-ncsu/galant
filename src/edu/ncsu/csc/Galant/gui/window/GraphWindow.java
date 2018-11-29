@@ -1071,7 +1071,6 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                && e.getKeyCode()==KeyEvent.VK_Z && ctrlPressed) 
             {
               synchronized(this) {
-                  System.out.println("undo, state = " + dispatch.getDisplayState());
                LogHelper.logDebug("UNDO");
                dispatch.getWorkingGraph().decrementEditState();
                dispatch.pushToTextEditor();
@@ -1085,6 +1084,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
               synchronized(this) {
               LogHelper.logDebug("REDO");
               dispatch.getWorkingGraph().incrementEditState();
+              dispatch.pushToTextEditor();
                 }
               } //redo
           

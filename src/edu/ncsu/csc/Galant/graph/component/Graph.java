@@ -122,9 +122,18 @@ public void incrementEditState() {
         editState++;
     }
 
-    public void decrementEditState() {
-        editState--;
+    /**
+     * @return true if the edit state was actually decremented, i.e.,
+     * originally positive, false if it was already 0
+     */
+    public boolean decrementEditState() {
+        if ( editState > 0 ) {
+            editState--;
+            return true;
+        }
+        return false;
     }
+    
   /**
    * Resets the graph to its original state at the end of an
    * animation.
@@ -1429,4 +1438,4 @@ public void incrementEditState() {
   }
 }
 
-// [Last modified: 2018 09 19 at 19:01:25 GMT]
+// [Last modified: 2018 11 29 at 19:25:34 GMT]

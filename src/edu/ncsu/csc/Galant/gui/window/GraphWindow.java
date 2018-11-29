@@ -1072,10 +1072,15 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
             {
               synchronized(this) {
                LogHelper.logDebug("UNDO");
-               dispatch.getWorkingGraph().decrementEditState();
-               dispatch.pushToTextEditor();
-                              }
-              } //undo
+               if ( dispatch.getWorkingGraph().decrementEditState() ) {
+                   dispatch.pushToTextEditor();
+               }
+               else {
+                   // need to ring a bell or something here
+                   System.out.println("*** Can't decrement edit state, already 0 ***");
+               }
+              }
+            }//undo
           
           //"Y" is pressed for redo
         if ( e.getID()==KeyEvent.KEY_PRESSED
@@ -1203,4 +1208,4 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
     // TODO Auto-generated method stub
   }
 }
- //  [Last modified: 2018 10 26 at 14:25:42 GMT]
+ //  [Last modified: 2018 11 29 at 19:44:07 GMT]

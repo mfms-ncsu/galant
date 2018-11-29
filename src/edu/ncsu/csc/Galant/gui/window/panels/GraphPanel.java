@@ -510,6 +510,7 @@ public class GraphPanel extends JPanel{
         throws GalantException
     {
         int stateNumber = dispatch.getDisplayState();
+        System.out.println("drawNode, state = " + stateNumber + ", node = " + n);
         Point nodeCenter = getNodeCenter(n);
         g2d.setColor(Color.BLACK);
 		
@@ -543,6 +544,8 @@ public class GraphPanel extends JPanel{
         } // end, draw node label
 			
         if ( weightVisible(n) ) {
+            System.out.println("  ++ drawing node weight, state = " + stateNumber
+                               + ", weight = " + n.getWeight(stateNumber));
             String weight = doubleToString(n.getWeight(stateNumber));
             TextLayout layout = new TextLayout( weight, NODE_WEIGHT_FONT,
                                                 g2d.getFontRenderContext() );
@@ -1054,4 +1057,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2018 10 26 at 14:31:16 GMT]
+//  [Last modified: 2018 11 29 at 20:26:45 GMT]

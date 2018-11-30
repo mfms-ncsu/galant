@@ -170,10 +170,6 @@ public class GraphElement implements Comparable<GraphElement> {
 	private void addState(GraphElementState stateToAdd) throws Terminate {
         int stateNumber = stateToAdd.getState();
         boolean found = false;
-        /**
-         * @todo the following loop is not appropriate; we will always add
-         * any new state to the end of the list
-         */
         for ( int i = states.size() - 1; i >= stateNumber; i-- ) {
             GraphElementState state = states.get(i);
             if ( state.getState() == stateNumber ) {
@@ -199,6 +195,12 @@ public class GraphElement implements Comparable<GraphElement> {
 //        return graphElementCopy;
            GraphElementState currentState = new GraphElementState(this.states.get(0));
           ArrayList<GraphElementState> statesCopy  = new ArrayList<GraphElementState>();
+          /**
+           * @todo use a linked list and link current state after the
+           * latestValidState for current edit state of the graph
+           * the new current state will need a state number corresponding to
+           * the graph edit state + 1
+           */
            statesCopy.add(currentState);
            return statesCopy;
         }
@@ -761,4 +763,4 @@ public class GraphElement implements Comparable<GraphElement> {
 
 }
 
-//  [Last modified: 2018 10 26 at 15:29:09 GMT]
+//  [Last modified: 2018 11 30 at 17:04:42 GMT]

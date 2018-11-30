@@ -193,7 +193,7 @@ public class GraphDispatch {
    * @param mode true when user is editing the working graph, false otherwise
    */
   public void setEditMode(boolean mode) {
-    LogHelper.disable();
+    LogHelper.enable();
     LogHelper.enterMethod(getClass(), "setEditMode " + mode);
     this.editMode=mode;
     LogHelper.exitMethod(getClass(), "setEditMode");
@@ -228,7 +228,7 @@ public class GraphDispatch {
     public void stopAlgorithm() {
          this.workingGraph = editGraph;
          this.animationMode=false;
-         this.editMode=true;
+         setEditMode(true);
          notifyListeners(ANIMATION_MODE, ! this.animationMode, this.animationMode);
     }
 
@@ -274,10 +274,6 @@ public class GraphDispatch {
          && ! algorithmSynchronizer.isLocked()
          ) {
       algorithmSynchronizer.startStep();
-    }
-    if(!animationMode)
-    {
-        this.editMode=true;
     }
     if ( editMode )
     {
@@ -385,4 +381,4 @@ public class GraphDispatch {
 
 }
 
-//  [Last modified: 2018 11 09 at 16:12:13 GMT]
+//  [Last modified: 2018 11 30 at 17:14:46 GMT]

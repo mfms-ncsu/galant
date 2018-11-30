@@ -60,6 +60,9 @@ public class GraphElementState {
      */
     public GraphElementState(GraphElementState elementState) {
         this.dispatch = GraphDispatch.getInstance();
+        System.out.println("-> new GraphElementState, editMode = " + dispatch.isEditMode()
+                           + ", editState = "
+                           + dispatch.getWorkingGraph().getEditState());
         if ( dispatch.isAnimationMode() ) {
             this.state = dispatch.getAlgorithmState();
         }
@@ -186,4 +189,4 @@ public class GraphElementState {
     }
 }
 
-//  [Last modified: 2018 10 26 at 15:21:06 GMT]
+//  [Last modified: 2018 11 30 at 17:10:22 GMT]

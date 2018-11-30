@@ -376,8 +376,12 @@ public class GraphPanel extends JPanel{
      * algorithm otherwise.
      */
     private boolean weightVisible(Node node) {
+        
         int state = dispatch.getDisplayState(); 
         boolean visible = node.hasWeight(state);
+        System.out.println(" !!! visible ??? " + visible
+                           + ", state = " + state
+                           + ", node = " + node);
         visible = visible
             && GraphDisplays.NODE_WEIGHTS.isShown()
             && ! node.weightIsHidden(state);
@@ -510,7 +514,7 @@ public class GraphPanel extends JPanel{
         throws GalantException
     {
         int stateNumber = dispatch.getDisplayState();
-        System.out.println("drawNode, state = " + stateNumber + ", node = " + n);
+        System.out.println("%%%% drawNode, state = " + stateNumber + ", node = " + n);
         Point nodeCenter = getNodeCenter(n);
         g2d.setColor(Color.BLACK);
 		
@@ -1057,4 +1061,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2018 11 29 at 20:26:45 GMT]
+//  [Last modified: 2018 11 30 at 16:32:41 GMT]

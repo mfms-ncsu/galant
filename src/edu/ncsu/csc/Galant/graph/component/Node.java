@@ -35,7 +35,7 @@ public class Node extends GraphElement {
     private int xCoordinate;
     private int yCoordinate;
 	private EdgeList incidentEdges;
-
+AttributeList parsedAttributeList=new AttributeList();
     /**
      * create a blank instance for use when copying state at start of
      * algorithm execution
@@ -81,7 +81,39 @@ public class Node extends GraphElement {
         }
    }
 
-
+public Node(Graph g, AttributeList L)
+{
+    for ( int i = 0; i < L.attributes.size(); i++ ) {
+     Attribute attributeOfNode=L.attributes.get(i);
+     if(attributeOfNode.key.equals("weight"))
+     {
+         String attributeValue=attributeOfNode.getStringValue();
+         Double attributeValueDouble=Double.parseDouble(attributeValue);
+         parsedAttributeList.set(attributeOfNode.key,attributeValueDouble);
+     }
+     else if(attributeOfNode.key.equals("x") || attributeOfNode.key.equals("y") || attributeOfNode.key.equals("id") || attributeOfNode.key.equals("positionInLayer") || attributeOfNode.key.equals("layer"))
+     {
+         String attributeValue=attributeOfNode.getStringValue();
+         Integer attributeValueInteger=Integer.parseInt(attributeValue);
+         parsedAttributeList.set(attributeOfNode.key,attributeValueInteger);
+     }
+     else if(attributeOfNode.key.equals("deleted") || attributeOfNode.key.equals("highlighted")|| attributeOfNode.key.equals("hidden") || attributeOfNode.key.equals("marked"))
+     {
+         String attributeValue=attributeOfNode.getStringValue();
+         Boolean attributeValueBoolean=Boolean.parseBoolean(attributeValue);
+         parsedAttributeList.set(attributeOfNode.key,attributeValueBoolean);
+     }
+     else if(attributeOfNode.key.equals("color") || attributeOfNode.key.equals("label"))
+     {
+         String attributeValue=attributeOfNode.getStringValue();
+         parsedAttributeList.set(attributeOfNode.key,attributeValue);
+     }
+     }
+     GraphElementState elementState=new GraphElementState();
+     elementState.attributes=parsedAttributeList;
+     this.states = new ArrayList<GraphElementState>();
+     this.states.add(0, elementState);
+}
     public Node copyNode(Graph currentGraph) {
         Node copy = new Node();
         copy.dispatch=GraphDispatch.getInstance();
@@ -674,6 +706,7 @@ public class Node extends GraphElement {
         s += "]";
 		return s;
 	}
-}
+
+        }
 
 //  [Last modified: 2018 08 31 at 15:32:17 GMT]

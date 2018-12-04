@@ -176,6 +176,7 @@ public class GraphMLParser {
 
     LogHelper.disable();
     LogHelper.beginIndent();
+    AttributeList L=new AttributeList();
     for ( int nodeIndex = 0; nodeIndex < nodes.getLength(); nodeIndex++ ) {
       LogHelper.logDebug( " processing " + nodeIndex + "th node." );
       org.w3c.dom.Node xmlNode = nodes.item(nodeIndex);
@@ -184,15 +185,18 @@ public class GraphMLParser {
       if ( attributes != null ) {
         for ( int i = 0; i < nodeAttributes.getLength(); i++ ) {
           org.w3c.dom.Node attribute = nodeAttributes.item(i);
-          processAttribute(graphNode, attribute);
+          L.set(attribute.getNodeName(), attribute.getNodeValue());
           LogHelper.logDebug("Node attribute " + attribute.getNodeName()
                              + ", value = " + attribute.getTextContent());
         }
       }
-      graphNode.initializeAfterParsing();
-      LogHelper.logDebug( "adding node " + graphNode );
-      graphUnderConstruction.addNode(graphNode);
+      Node parsedNode=new Node(graphUnderConstruction,L);
+      LogHelper.logDebug( "adding node " + parsedNode );
+      
+      graphUnderConstruction.addNode(parsedNode);
     }
+
+
     LogHelper.endIndent();
 
     LogHelper.disable();

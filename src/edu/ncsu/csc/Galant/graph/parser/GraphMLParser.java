@@ -176,7 +176,7 @@ public class GraphMLParser {
 
     LogHelper.disable();
     LogHelper.beginIndent();
-    AttributeList L=new AttributeList();
+    AttributeList LNodes=new AttributeList();
     for ( int nodeIndex = 0; nodeIndex < nodes.getLength(); nodeIndex++ ) {
       LogHelper.logDebug( " processing " + nodeIndex + "th node." );
       org.w3c.dom.Node xmlNode = nodes.item(nodeIndex);
@@ -185,12 +185,12 @@ public class GraphMLParser {
       if ( attributes != null ) {
         for ( int i = 0; i < nodeAttributes.getLength(); i++ ) {
           org.w3c.dom.Node attribute = nodeAttributes.item(i);
-          L.set(attribute.getNodeName(), attribute.getNodeValue());
+          LNodes.set(attribute.getNodeName(), attribute.getNodeValue());
           LogHelper.logDebug("Node attribute " + attribute.getNodeName()
                              + ", value = " + attribute.getTextContent());
         }
       }
-      Node parsedNode=new Node(graphUnderConstruction,L);
+      Node parsedNode=new Node(graphUnderConstruction,LNodes);
       LogHelper.logDebug( "adding node " + parsedNode );
       
       graphUnderConstruction.addNode(parsedNode);
@@ -201,6 +201,7 @@ public class GraphMLParser {
 
     LogHelper.disable();
     LogHelper.beginIndent();
+    AttributeList LEdges=new AttributeList();
     for ( int nodeIndex = 0; nodeIndex < edges.getLength(); nodeIndex++ ) {
       LogHelper.logDebug( " processing " + nodeIndex + "th edge." );
       org.w3c.dom.Node xmlNode = edges.item(nodeIndex);
@@ -209,14 +210,14 @@ public class GraphMLParser {
       if ( attributes != null ) {
         for ( int i = 0; i < edgeAttributes.getLength(); i++ ) {
           org.w3c.dom.Node attribute = edgeAttributes.item(i);
-          processAttribute(graphEdge, attribute);
+          LEdges.set(attribute.getNodeName(), attribute.getNodeValue());
           LogHelper.logDebug("Edge attribute " + attribute.getNodeName()
                              + ", value = " + attribute.getTextContent());
         }
       }
-      graphEdge.initializeAfterParsing();
-      LogHelper.logDebug( "adding edge " + graphEdge );
-      graphUnderConstruction.addEdge(graphEdge);
+      Edge parsedEdge=new Edge(graphUnderConstruction,LEdges);
+      LogHelper.logDebug( "adding edge " + parsedEdge );
+      graphUnderConstruction.addEdge(parsedEdge);
     }
     LogHelper.endIndent();
     LogHelper.restoreState();

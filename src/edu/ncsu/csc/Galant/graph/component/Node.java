@@ -16,6 +16,8 @@ import edu.ncsu.csc.Galant.graph.datastructure.NodeList;
 import edu.ncsu.csc.Galant.graph.datastructure.EdgeList;
 import edu.ncsu.csc.Galant.graph.datastructure.NodeSet;
 import edu.ncsu.csc.Galant.graph.datastructure.EdgeSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Represents node entities as elements of a graph. Encapsulates attributes
@@ -35,7 +37,6 @@ public class Node extends GraphElement {
     private int xCoordinate;
     private int yCoordinate;
 	private EdgeList incidentEdges;
-AttributeList parsedAttributeList=new AttributeList();
     /**
      * create a blank instance for use when copying state at start of
      * algorithm execution
@@ -82,38 +83,15 @@ AttributeList parsedAttributeList=new AttributeList();
    }
 
 public Node(Graph g, AttributeList L)
-{
-    for ( int i = 0; i < L.attributes.size(); i++ ) {
-     Attribute attributeOfNode=L.attributes.get(i);
-     if(attributeOfNode.key.equals("weight"))
-     {
-         String attributeValue=attributeOfNode.getStringValue();
-         Double attributeValueDouble=Double.parseDouble(attributeValue);
-         parsedAttributeList.set(attributeOfNode.key,attributeValueDouble);
-     }
-     else if(attributeOfNode.key.equals("x") || attributeOfNode.key.equals("y") || attributeOfNode.key.equals("id") || attributeOfNode.key.equals("positionInLayer") || attributeOfNode.key.equals("layer"))
-     {
-         String attributeValue=attributeOfNode.getStringValue();
-         Integer attributeValueInteger=Integer.parseInt(attributeValue);
-         parsedAttributeList.set(attributeOfNode.key,attributeValueInteger);
-     }
-     else if(attributeOfNode.key.equals("deleted") || attributeOfNode.key.equals("highlighted")|| attributeOfNode.key.equals("hidden") || attributeOfNode.key.equals("marked"))
-     {
-         String attributeValue=attributeOfNode.getStringValue();
-         Boolean attributeValueBoolean=Boolean.parseBoolean(attributeValue);
-         parsedAttributeList.set(attributeOfNode.key,attributeValueBoolean);
-     }
-     else if(attributeOfNode.key.equals("color") || attributeOfNode.key.equals("label"))
-     {
-         String attributeValue=attributeOfNode.getStringValue();
-         parsedAttributeList.set(attributeOfNode.key,attributeValue);
-     }
-     }
-     GraphElementState elementState=new GraphElementState();
-     elementState.attributes=parsedAttributeList;
-     this.states = new ArrayList<GraphElementState>();
-     this.states.add(0, elementState);
+{           super(L);
+        try {
+            initializeAfterParsing(L);
+        } catch (GalantException ex) {
+            Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
+        }
+     
 }
+
     public Node copyNode(Graph currentGraph) {
         Node copy = new Node();
         copy.dispatch=GraphDispatch.getInstance();
@@ -228,10 +206,31 @@ public Node(Graph g, AttributeList L)
      * handling integer attributes
      * @todo still need to make LayeredGraphNode a subclass of Node.
      */
-    public void initializeAfterParsing()
-        throws GalantException {
-        super.initializeAfterParsing();
+    public void initializeAfterParsing(AttributeList L) throws GalantException{
+        
         Integer idAttribute = super.getInteger("id");
+        String xString = null;
+        String yString = null;
+       for ( int i = 0; i < L.attributes.size(); i++ ) {
+     Attribute attributeOfNode=L.attributes.get(i);
+     if(attributeOfNode.key.equals("id"))
+     {
+         String attributeValue=attributeOfNode.getStringValue();
+         Integer attributeValueInteger=Integer.parseInt(attributeValue);
+         idAttribute=attributeValueInteger;
+     }
+     else if(attributeOfNode.key.equals("x"))
+     {
+         String attributeValue=attributeOfNode.getStringValue();
+         xString=attributeValue;
+     }
+     else if(attributeOfNode.key.equals("y"))
+     {
+         String attributeValue=attributeOfNode.getStringValue();
+         yString=attributeValue;
+     }
+     
+       }
         if ( idAttribute == null ) {
             throw new GalantException("Missing id for node " + this);
         }
@@ -273,8 +272,7 @@ public Node(Graph g, AttributeList L)
                 set("positionInLayer", positionInLayer);
             } // layered graph
             else { // not a layered graph
-                String xString = super.getString("x");
-                String yString = super.getString("y");
+                
                 Integer x = Integer.MIN_VALUE;
                 Integer y = Integer.MIN_VALUE;
                 if ( xString == null || yString == null ) {

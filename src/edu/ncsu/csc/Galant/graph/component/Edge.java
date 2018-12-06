@@ -10,6 +10,8 @@ import edu.ncsu.csc.Galant.GraphDispatch;
 import edu.ncsu.csc.Galant.algorithm.Terminate;
 import edu.ncsu.csc.Galant.logging.LogHelper;
 import edu.ncsu.csc.Galant.graph.datastructure.EdgeSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Edge graph object. Connects two <code>Node<code>s, and can be directored or undirected.
@@ -53,7 +55,15 @@ public class Edge extends GraphElement {
         this.source = source;
         this.target = target;
     }
-
+public Edge(Graph g, AttributeList L)
+{           super(L);
+        try {
+            initializeAfterParsing(L);
+        } catch (GalantException ex) {
+            Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
+        }
+     
+}
     public Node getSourceNode() {
         return source;
     }
@@ -86,15 +96,28 @@ public class Edge extends GraphElement {
      * initialized. The relevant ones are ...
      * - source, target: integer (id's of nodes)
      */
-    public void initializeAfterParsing()
+    public void initializeAfterParsing(AttributeList L)
         throws GalantException {
         LogHelper.disable();
         LogHelper.logDebug("-> initializeAfterParsing " + this);
-        super.initializeAfterParsing();
         // id has already been parsed by GraphElement.initializeAfterParsing()
         Integer graphElementId = getInteger(super.ID);
-        String sourceString = getString("source");
-        String targetString = getString("target");
+        String sourceString = null;
+        String targetString = null;
+         for ( int i = 0; i < L.attributes.size(); i++ ) {
+     Attribute attributeOfNode=L.attributes.get(i);
+     if(attributeOfNode.key.equals("source"))
+     {
+         String attributeValue=attributeOfNode.getStringValue();
+         sourceString=attributeValue;
+     }
+     else if(attributeOfNode.key.equals("target"))
+     {
+         String attributeValue=attributeOfNode.getStringValue();
+         targetString=attributeValue;
+     }
+         }
+         
         Integer sourceId = Integer.MIN_VALUE;
         Integer targetId = Integer.MIN_VALUE;
         if ( graphElementId != null ) {

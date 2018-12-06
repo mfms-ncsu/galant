@@ -9,6 +9,8 @@ import edu.ncsu.csc.Galant.GraphDispatch;
 import edu.ncsu.csc.Galant.logging.LogHelper;
 import edu.ncsu.csc.Galant.algorithm.Terminate;
 import edu.ncsu.csc.Galant.graph.datastructure.GraphElementComparator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Abstract class containing graph element manipulation methods
@@ -77,6 +79,13 @@ public class GraphElement implements Comparable<GraphElement> {
         }
     }
 
+    public GraphElement(AttributeList L) {
+        try {
+            initializeAfterParsing(L);
+        } catch (GalantException ex) {
+            Logger.getLogger(GraphElement.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     /**
      * Resets this element to its original state at the end of an animation.
      * @param graphState the initial state of the graph containing this element
@@ -540,9 +549,35 @@ public class GraphElement implements Comparable<GraphElement> {
    *     and then default to String
    *   attributes particular to Node or Edge may need to be dealt with first.
    */
-  public void initializeAfterParsing() throws GalantException {
+  public void initializeAfterParsing(AttributeList L) throws GalantException {
         try { // need to catch Terminate exception -- should not happen
-            String idString = getString(ID);
+            String idString = null;
+            String weightString=null;
+            String highlightString =null;
+            String hiddenString =null;
+            for ( int i = 0; i < L.attributes.size(); i++ ) {
+     Attribute attributeOfNode=L.attributes.get(i);
+     if(attributeOfNode.key.equals("id"))
+     {
+         String attributeValue=attributeOfNode.getStringValue();
+         idString=attributeValue;
+     }
+     else if(attributeOfNode.key.equals("weight"))
+     {
+         String attributeValue=attributeOfNode.getStringValue();
+         weightString=attributeValue;
+     }
+     else if(attributeOfNode.key.equals("highlighted"))
+     {
+         String attributeValue=attributeOfNode.getStringValue();
+         highlightString=attributeValue;
+     }
+     else if(attributeOfNode.key.equals("hidden"))
+     {
+         String attributeValue=attributeOfNode.getStringValue();
+         hiddenString=attributeValue;
+     }
+       } 
             if ( idString != null ) {
                 Integer id = Integer.MIN_VALUE;
                 try {
@@ -554,7 +589,6 @@ public class GraphElement implements Comparable<GraphElement> {
                 remove(ID);
                 set(ID, id);
             }
-            String weightString = getString(WEIGHT);
             if ( weightString != null ) {
                 Double weight = Double.NaN;
                 try {
@@ -566,7 +600,7 @@ public class GraphElement implements Comparable<GraphElement> {
                 remove(WEIGHT);
                 set(WEIGHT, weight);
             }
-            String highlightString = getString(HIGHLIGHTED);
+            
             if ( highlightString != null ) {
                 Boolean highlighted = Boolean.parseBoolean(highlightString);
                 remove(HIGHLIGHTED);
@@ -579,7 +613,7 @@ public class GraphElement implements Comparable<GraphElement> {
              * order to avoid errors when reading files exported during
              * animations.
              */
-            String hiddenString = getString(HIDDEN);
+            
             if ( hiddenString != null ) {
                 Boolean hidden = Boolean.parseBoolean(hiddenString);
                 remove(HIDDEN);

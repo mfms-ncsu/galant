@@ -83,8 +83,8 @@ public class Node extends GraphElement {
         }
     }
 
-    public Node(Graph g, AttributeList L) {
-        super(g, L);
+    public Node(Graph graph, AttributeList L) {
+        super(graph, L);
         try {
             initializeAfterParsing(L);
         } catch (GalantException ex) {

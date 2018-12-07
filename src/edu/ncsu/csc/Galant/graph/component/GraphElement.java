@@ -75,7 +75,8 @@ public class GraphElement implements Comparable<GraphElement> {
         }
     }
 
-    public GraphElement(Graph g, AttributeList L) {
+    public GraphElement(Graph graph, AttributeList L) {
+        this.graph = graph;
         //create a new state with no. 0
     }
 

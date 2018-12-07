@@ -60,8 +60,8 @@ public class Edge extends GraphElement {
         this.target = target;
     }
 
-    public Edge(Graph g, AttributeList L) {
-        super(g, L);
+    public Edge(Graph graph, AttributeList L) {
+        super(graph, L);
         try {
             initializeAfterParsing(L);
         } catch (GalantException ex) {

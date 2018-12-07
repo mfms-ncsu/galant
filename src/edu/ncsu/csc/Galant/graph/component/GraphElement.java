@@ -75,9 +75,13 @@ public class GraphElement implements Comparable<GraphElement> {
         }
     }
 
-    public GraphElement(AttributeList L) {
+    public GraphElement(Graph g, AttributeList L) {
+        this.graph = g;
+        if (this.getClass() == Node.class || this.getClass() == Edge.class) {
+          //todo here: Cast node/edge object to GraphElement  
+        }
         try {
-            initializeAfterParsing(L);
+            initializeAfterParsing(g, L);
         } catch (GalantException ex) {
             Logger.getLogger(GraphElement.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -193,13 +197,6 @@ public class GraphElement implements Comparable<GraphElement> {
     }
 
     public ArrayList<GraphElementState> copyCurrentState() {
-//        GraphElementState currentState = new GraphElementState(this.states.get(0));
-//        GraphElement graphElementCopy = new GraphElement();
-//        graphElementCopy.dispatch = GraphDispatch.getInstance();
-//        graphElementCopy.states = new ArrayList<GraphElementState>();
-//        graphElementCopy.graph = currentGraph;
-//        graphElementCopy.states.add(currentState);
-//        return graphElementCopy;
         GraphElementState currentState = new GraphElementState(this.states.get(0));
         ArrayList<GraphElementState> statesCopy = new ArrayList<GraphElementState>();
         /**
@@ -598,7 +595,7 @@ public class GraphElement implements Comparable<GraphElement> {
      * order of attempts: Integer Double Boolean and then default to String
      * attributes particular to Node or Edge may need to be dealt with first.
      */
-    public void initializeAfterParsing(AttributeList L) throws GalantException {
+    public void initializeAfterParsing(Graph g, AttributeList L) throws GalantException {
         try { // need to catch Terminate exception -- should not happen
             String idString = null;
             String weightString = null;

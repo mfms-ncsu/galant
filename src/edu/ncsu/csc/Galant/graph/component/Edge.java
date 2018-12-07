@@ -61,9 +61,9 @@ public class Edge extends GraphElement {
     }
 
     public Edge(Graph g, AttributeList L) {
-        super(L);
+        super(g,L);
         try {
-            initializeAfterParsing(L);
+            initializeAfterParsing(g,L);
         } catch (GalantException ex) {
             Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -110,7 +110,7 @@ public class Edge extends GraphElement {
      * initialized. The relevant ones are ... - source, target: integer (id's of
      * nodes)
      */
-    public void initializeAfterParsing(AttributeList L)
+    public void initializeAfterParsing(Graph g,AttributeList L)
             throws GalantException {
         LogHelper.disable();
         LogHelper.logDebug("-> initializeAfterParsing " + this);

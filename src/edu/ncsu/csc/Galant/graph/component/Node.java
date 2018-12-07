@@ -84,9 +84,9 @@ public class Node extends GraphElement {
     }
 
     public Node(Graph g, AttributeList L) {
-        super(L);
+        super(g,L);
         try {
-            initializeAfterParsing(L);
+            initializeAfterParsing(g,L);
         } catch (GalantException ex) {
             Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -233,9 +233,9 @@ public class Node extends GraphElement {
      * handling integer attributes
      * @todo still need to make LayeredGraphNode a subclass of Node.
      */
-    public void initializeAfterParsing(AttributeList L) throws GalantException {
+    public void initializeAfterParsing(Graph g,AttributeList L) throws GalantException {
 
-        Integer idAttribute = super.getInteger("id");
+        Integer idAttribute = null;
         String xString = null;
         String yString = null;
         for (int i = 0; i < L.attributes.size(); i++) {

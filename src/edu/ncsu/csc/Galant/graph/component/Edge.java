@@ -16,14 +16,18 @@ import java.util.logging.Logger;
 /**
  * Edge graph object. Connects two <code>Node<code>s, and can be directored or undirected.
  * For undirected graphs, "source" and "target" (destination) are meaningless.
+ *
  * @author Jason Cockrell, Ty Devries, Alex McCabe, Michael Owoc, with major
  * modifications by Matthias Stallmann.
  */
 public class Edge extends GraphElement {
+
     Node source;
     Node target;
-    /** used internally only or for array indexing, unless edge has an explicit
-     * id */
+    /**
+     * used internally only or for array indexing, unless edge has an explicit
+     * id
+     */
     Integer id;
 
     /**
@@ -32,38 +36,40 @@ public class Edge extends GraphElement {
     boolean hasExplicitId = false;
 
     /**
-     * create a blank instance for use when copying state at start of
-     * algorithm execution
+     * create a blank instance for use when copying state at start of algorithm
+     * execution
      */
     public Edge() {
     }
-    
-    /**
-     * When an edge is created during parsing when source, target and id are
-     * not yet known.
-     */
-	public Edge(Graph graph) {
-        super(graph);
-	}
 
     /**
-     * To add an edge while editing or during algorithm execution: source
-     * and target are known at the time.
+     * When an edge is created during parsing when source, target and id are not
+     * yet known.
+     */
+    public Edge(Graph graph) {
+        super(graph);
+    }
+
+    /**
+     * To add an edge while editing or during algorithm execution: source and
+     * target are known at the time.
      */
     public Edge(Graph graph, Node source, Node target) {
         super(graph);
         this.source = source;
         this.target = target;
     }
-public Edge(Graph g, AttributeList L)
-{           super(L);
+
+    public Edge(Graph g, AttributeList L) {
+        super(L);
         try {
             initializeAfterParsing(L);
         } catch (GalantException ex) {
             Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
         }
-     
-}
+
+    }
+
     public Node getSourceNode() {
         return source;
     }
@@ -80,157 +86,163 @@ public Edge(Graph g, AttributeList L)
         return target;
     }
 
-    public void setId(int id) { this.id = id; }
+    public void setId(int id) {
+        this.id = id;
+    }
 
-    public Integer getId() { return this.id; }
+    public Integer getId() {
+        return this.id;
+    }
 
-    public boolean hasExplicitId() { return this.hasExplicitId; }
+    public boolean hasExplicitId() {
+        return this.hasExplicitId;
+    }
 
-  /**
-   * natural syntax for set containment
-   */
-  public Boolean in(EdgeSet S) { return S.contains(this); }
-  
+    /**
+     * natural syntax for set containment
+     */
+    public Boolean in(EdgeSet S) {
+        return S.contains(this);
+    }
+
     /**
      * Makes sure that all the attributes specific to edges are properly
-     * initialized. The relevant ones are ...
-     * - source, target: integer (id's of nodes)
+     * initialized. The relevant ones are ... - source, target: integer (id's of
+     * nodes)
      */
     public void initializeAfterParsing(AttributeList L)
-        throws GalantException {
+            throws GalantException {
         LogHelper.disable();
         LogHelper.logDebug("-> initializeAfterParsing " + this);
         // id has already been parsed by GraphElement.initializeAfterParsing()
         Integer graphElementId = getInteger(super.ID);
         String sourceString = null;
         String targetString = null;
-         for ( int i = 0; i < L.attributes.size(); i++ ) {
-     Attribute attributeOfNode=L.attributes.get(i);
-     if(attributeOfNode.key.equals("source"))
-     {
-         String attributeValue=attributeOfNode.getStringValue();
-         sourceString=attributeValue;
-     }
-     else if(attributeOfNode.key.equals("target"))
-     {
-         String attributeValue=attributeOfNode.getStringValue();
-         targetString=attributeValue;
-     }
-         }
-         
+        for (int i = 0; i < L.attributes.size(); i++) {
+            Attribute attributeOfNode = L.attributes.get(i);
+            if (attributeOfNode.key.equals("source")) {
+                String attributeValue = attributeOfNode.getStringValue();
+                sourceString = attributeValue;
+            } else if (attributeOfNode.key.equals("target")) {
+                String attributeValue = attributeOfNode.getStringValue();
+                targetString = attributeValue;
+            }
+        }
+
         Integer sourceId = Integer.MIN_VALUE;
         Integer targetId = Integer.MIN_VALUE;
-        if ( graphElementId != null ) {
+        if (graphElementId != null) {
             this.id = graphElementId;
             this.hasExplicitId = true;
         }
-        if ( sourceString == null )
+        if (sourceString == null) {
             throw new GalantException("Missing source for " + this);
-        if ( targetString == null )
+        }
+        if (targetString == null) {
             throw new GalantException("Missing target for " + this);
+        }
         try {
             sourceId = Integer.parseInt(sourceString);
-        }
-        catch ( NumberFormatException e ) {
+        } catch (NumberFormatException e) {
             throw new GalantException("Bad source id " + sourceString);
         }
         try {
             targetId = Integer.parseInt(targetString);
-        }
-        catch ( NumberFormatException e ) {
+        } catch (NumberFormatException e) {
             throw new GalantException("Bad target id " + targetString);
         }
         this.source = super.graph.getNodeById(sourceId);
-        if ( this.source == null ) {
+        if (this.source == null) {
             throw new GalantException("Source node missing when processing edge "
-                                      + this);
+                    + this);
         }
         this.target = super.graph.getNodeById(targetId);
-        if ( this.target == null ) {
+        if (this.target == null) {
             throw new GalantException("Target node missing when processing edge "
-                                      + this);
+                    + this);
         }
         try { // these attributes are fixed and stored as fields of the edge
-              // object
+            // object
             super.remove("source");
             super.remove("target");
-        }
-        catch ( Terminate t ) { // should not happen
+        } catch (Terminate t) { // should not happen
             t.printStackTrace();
         }
         LogHelper.logDebug(" id = " + id + " explicit = " + hasExplicitId);
         LogHelper.logDebug("<- initializeAfterParsing, edge = "
-                               + this);
+                + this);
         LogHelper.restoreState();
     }
 
-	public String xmlString() {
+    public String xmlString() {
         // id may not exist for an edge; not really essential;
         // inputHasEdgeIds() returns true if they appeared in the input, in
         // which case they should be rendered in the output as the first
         // attribute; edges with non-existent id's need to be given ones
         String idComponent = "";
-        if ( super.graph.hasExplicitEdgeIds() ) {
-          Integer edgeId = this.id;
-          if ( edgeId == null ) edgeId = super.graph.nextEdgeId();
-          idComponent = "id=\"" + edgeId + "\"";
+        if (super.graph.hasExplicitEdgeIds()) {
+            Integer edgeId = this.id;
+            if (edgeId == null) {
+                edgeId = super.graph.nextEdgeId();
+            }
+            idComponent = "id=\"" + edgeId + "\"";
         }
- 		String s = "<edge " + idComponent;
+        String s = "<edge " + idComponent;
         // need this to get past here when the edge is first created and this
         // function is used for debugging.
-        if ( this.source != null && this.target != null ) {
+        if (this.source != null && this.target != null) {
             s += " source=\"" + this.source.getId() + "\"";
             s += " target=\"" + this.target.getId() + "\"";
         }
         s += super.attributesWithoutId();
         s += " />";
-		return s;
-	}
+        return s;
+    }
 
     /**
      * This version is called when the current state of the animation is
      * exported.
      */
-	public String xmlString(int state) {
-        if ( ! inScope(state) ) {
+    public String xmlString(int state) {
+        if (!inScope(state)) {
             return "";
         }
-		String s = "<edge "
-            + " source=\"" + this.source.getId() + "\""
-            + " target=\"" + this.target.getId() + "\"";
+        String s = "<edge "
+                + " source=\"" + this.source.getId() + "\""
+                + " target=\"" + this.target.getId() + "\"";
         s += super.xmlString(state);
         s += " />";
-		return s;
-	}
-        
-        public Edge copyEdge(Graph currentGraph,Node newSource,Node newTarget) {
+        return s;
+    }
+
+    public Edge copyEdge(Graph currentGraph, Node newSource, Node newTarget) {
         Edge copy = new Edge();
         copy.id = this.id;
-        copy.dispatch=GraphDispatch.getInstance();
+        copy.dispatch = GraphDispatch.getInstance();
         copy.graph = currentGraph;
-        ArrayList<GraphElementState> statesCopy=super.copyCurrentState();
-        copy.states=statesCopy;
+        ArrayList<GraphElementState> statesCopy = super.copyCurrentState();
+        copy.states = statesCopy;
         newSource.addEdge(copy);
         newTarget.addEdge(copy);
-        copy.source=newSource;
-        copy.target=newTarget;
+        copy.source = newSource;
+        copy.target = newTarget;
         return copy;
     }
 
     /**
      * For debugging only
      */
-	@Override
-	public String toString() {
+    @Override
+    public String toString() {
         String s = "[Edge ";
         s += "(" + this.id + ") ";
-        if ( source != null && target != null ) {
+        if (source != null && target != null) {
             s += source.getId() + "," + target.getId() + " ";
         }
         s += super.attributesWithoutId();
         s += "]";
-		return s;
-	}
+        return s;
+    }
 }
 
 //  [Last modified: 2018 09 19 at 18:56:17 GMT]

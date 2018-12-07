@@ -14,6 +14,7 @@ public abstract class Attribute implements Cloneable {
     public String getStringValue() { return null; }
     public abstract Attribute clone();
     public abstract String toString();
+    public abstract String xmlString();
 }
 
-//  [Last modified: 2015 07 27 at 16:05:48 GMT]
+//  [Last modified: 2018 12 07 at 16:23:57 GMT]

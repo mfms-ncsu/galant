@@ -10,8 +10,11 @@ public class BooleanAttribute extends Attribute implements Cloneable {
     public void set(Boolean value) { this.value = value; }
     public Attribute clone() { return new BooleanAttribute(key, value); }
     public String toString() {
+        return key + "=" + value;
+    }
+    public String xmlString() {
         return key + "=\"" + value + "\"";
     }
 }
 
-//  [Last modified: 2015 12 05 at 18:07:28 GMT]
+//  [Last modified: 2018 12 07 at 16:16:39 GMT]

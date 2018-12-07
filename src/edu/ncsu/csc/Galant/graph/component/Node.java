@@ -83,13 +83,16 @@ public class Node extends GraphElement {
         }
     }
 
-    public Node(Graph graph, AttributeList L) {
+    /**
+     * This is called during parsing.
+     * @param L an AttributeList created by the GraphMLParser from attributes
+     * of the node as given in the input text
+     * @throw GalantException if there is a problem in the format of an id,
+     * x/y-coordinate, or, in case of layered graphs, layer information
+     */
+    public Node(Graph graph, AttributeList L) throws GalantException {
         super(graph, L);
-        try {
-            initializeAfterParsing(L);
-        } catch (GalantException ex) {
-            Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        this.initializeAfterParsing(L);
     }
 
     public Node copyNode(Graph currentGraph) {
@@ -234,13 +237,19 @@ public class Node extends GraphElement {
      */
     public void initializeAfterParsing(AttributeList L) throws GalantException {
         super.initializeAfterParsing(L);
+        System.err.println(" after super, L = " + L);
         Integer idAttribute = null;
         String xString = null;
         String yString = null;
         for (int i = 0; i < L.attributes.size(); i++) {
             Attribute attributeOfNode = L.attributes.get(i);
+            System.err.println("  attribute " + i + " is " + attributeOfNode);
             if (attributeOfNode.key.equals("id")) {
                 String attributeValue = attributeOfNode.getStringValue();
+                System.err.println("    id is " + attributeValue);
+                // we already know that the id is an integer at this point -
+                // if not super.initializeAfterParsing(L) would have thrown
+                // an exception
                 Integer attributeValueInteger = Integer.parseInt(attributeValue);
                 idAttribute = attributeValueInteger;
             } else if (attributeOfNode.key.equals("x")) {
@@ -250,89 +259,82 @@ public class Node extends GraphElement {
                 String attributeValue = attributeOfNode.getStringValue();
                 yString = attributeValue;
             }
-
-        }
+        } // end, for attribute in list
+        
         if (idAttribute == null) {
             throw new GalantException("Missing id for node " + this);
         } else if (super.graph.nodeIdExists(idAttribute)) {
             throw new GalantException("Duplicate id: " + idAttribute
                     + " when processing node " + this);
         }
-        try { // need to catch a Terminate exception - should not happen
-            // don't want or need to track the id -- it won't ever change
-            id = idAttribute;
-            super.remove("id");
-            if (super.graph.isLayered()) {
-                String layerString = getString("layer");
-                String positionString = getString("positionInLayer");
-                if (layerString == null) {
-                    throw new GalantException("Missing layer for"
-                            + " layered graph node " + this);
-                }
-                if (positionString == null) {
-                    throw new GalantException("Missing positionInLayer for"
-                            + " layered graph node " + this);
-                }
-                Integer layer = Integer.MIN_VALUE;
-                Integer positionInLayer = Integer.MIN_VALUE;
-                try {
-                    layer = Integer.parseInt(layerString);
-                } catch (NumberFormatException e) {
-                    throw new GalantException("Bad layer " + layerString);
-                }
-                try {
-                    positionInLayer = Integer.parseInt(positionString);
-                } catch (NumberFormatException e) {
-                    throw new GalantException("Bad positionInLayer "
-                            + positionString);
-                }
-                remove("layer");
-                remove("positionInLayer");
-                set("layer", layer);
-                set("positionInLayer", positionInLayer);
-            } // layered graph
-            else { // not a layered graph
-
-                Integer x = Integer.MIN_VALUE;
-                Integer y = Integer.MIN_VALUE;
-                if (xString == null || yString == null) {
-                    Random r = new Random();
-                    if (xString == null) {
-                        x = r.nextInt(GraphDispatch.getInstance().getWindowWidth());
-                    }
-                    if (yString == null) {
-                        y = r.nextInt(GraphDispatch.getInstance().getWindowHeight());
-                    }
-                } else {
-                    try {
-                        x = Integer.parseInt(xString);
-                    } catch (NumberFormatException e) {
-                        throw new GalantException("Bad x-coordinate " + xString);
-                    }
-                    try {
-                        y = Integer.parseInt(yString);
-                    } catch (NumberFormatException e) {
-                        throw new GalantException("Bad y-coordinate " + yString);
-                    }
-                } // x and y coordinates specified
-
-                remove("x");
-                remove("y");
-
-                // establish fixed positions
-                xCoordinate = x;
-                yCoordinate = y;
-            } // not a layered graph
-            String markedString = getString(MARKED);
-            if (markedString != null) {
-                Boolean marked = Boolean.parseBoolean(markedString);
-                remove(MARKED);
-                if (marked) {
-                    set(MARKED, marked);
-                }
+        id = idAttribute;
+        L.remove("id");
+        if (super.graph.isLayered()) {
+            String layerString = L.getString("layer");
+            String positionString = L.getString("positionInLayer");
+            if (layerString == null) {
+                throw new GalantException("Missing layer for"
+                                          + " layered graph node " + this);
             }
-        } catch (Terminate t) { // should not happen
-            t.printStackTrace();
+            if (positionString == null) {
+                throw new GalantException("Missing positionInLayer for"
+                                          + " layered graph node " + this);
+            }
+            Integer layer = Integer.MIN_VALUE;
+            Integer positionInLayer = Integer.MIN_VALUE;
+            try {
+                layer = Integer.parseInt(layerString);
+            } catch (NumberFormatException e) {
+                throw new GalantException("Bad layer " + layerString);
+            }
+            try {
+                positionInLayer = Integer.parseInt(positionString);
+            } catch (NumberFormatException e) {
+                throw new GalantException("Bad positionInLayer "
+                                          + positionString);
+            }
+            L.remove("layer");
+            L.remove("positionInLayer");
+            L.set("layer", layer);
+            L.set("positionInLayer", positionInLayer);
+        } // layered graph
+        else { // not a layered graph
+            Integer x = Integer.MIN_VALUE;
+            Integer y = Integer.MIN_VALUE;
+            if (xString == null || yString == null) {
+                Random r = new Random();
+                if (xString == null) {
+                    x = r.nextInt(GraphDispatch.getInstance().getWindowWidth());
+                }
+                if (yString == null) {
+                    y = r.nextInt(GraphDispatch.getInstance().getWindowHeight());
+                }
+            } else {
+                try {
+                    x = Integer.parseInt(xString);
+                } catch (NumberFormatException e) {
+                    throw new GalantException("Bad x-coordinate " + xString);
+                }
+                try {
+                    y = Integer.parseInt(yString);
+                } catch (NumberFormatException e) {
+                    throw new GalantException("Bad y-coordinate " + yString);
+                }
+            } // x and y coordinates specified
+            L.remove("x");
+            L.remove("y");
+
+            // establish fixed positions
+            xCoordinate = x;
+            yCoordinate = y;
+        } // not a layered graph
+        String markedString = L.getString(MARKED);
+        if (markedString != null) {
+            Boolean marked = Boolean.parseBoolean(markedString);
+            L.remove(MARKED);
+            if (marked) {
+                L.set(MARKED, marked);
+            }
         }
     } // end, intializeAfterParsing
 
@@ -740,4 +742,4 @@ public class Node extends GraphElement {
 
 }
 
-//  [Last modified: 2018 08 31 at 15:32:17 GMT]
+//  [Last modified: 2018 12 07 at 16:05:17 GMT]

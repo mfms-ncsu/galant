@@ -10,8 +10,11 @@ public class DoubleAttribute extends Attribute implements Cloneable {
     public void set(Double value) { this.value = value; }
     public Attribute clone() { return new DoubleAttribute(key, value); }
     public String toString() {
+        return key + "=" + value;
+    }
+    public String xmlString() {
         return key + "=\"" + value + "\"";
     }
 }
 
-//  [Last modified: 2015 07 27 at 15:55:50 GMT]
+//  [Last modified: 2018 12 07 at 16:16:29 GMT]

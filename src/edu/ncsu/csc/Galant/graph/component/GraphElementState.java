@@ -44,7 +44,16 @@ public class GraphElementState {
     private GraphDispatch dispatch;
 
     /**
-     * Constructor used during parsing and editing, when no attributes are
+     * Constructor used during parsing, when an attribute list is given
+     */
+    public GraphElementState(AttributeList L) {
+        this.dispatch = GraphDispatch.getInstance();
+        this.state = 0;
+        this.attributes = L;
+    }
+    
+    /**
+     * Constructor used during editing, when no attributes are
      * known yet.
      */
     public GraphElementState() {
@@ -145,7 +154,7 @@ public class GraphElementState {
     public String xmlString() {
         String s = " ";
         for ( Attribute attribute : attributes.getAttributes() ) {
-            s += attribute + " ";
+            s += attribute.xmlString() + " ";
         }
         return s;
     }
@@ -160,7 +169,7 @@ public class GraphElementState {
         for ( Attribute attribute : attributes.getAttributes() ) {
             if ( ! attribute.getKey().equals("x")
                  && ! attribute.getKey().equals("y") ) {
-                s += attribute + " ";
+                s += attribute.xmlString() + " ";
             }
         }
         return s;
@@ -174,7 +183,7 @@ public class GraphElementState {
         String s = " ";
         for ( Attribute attribute : attributes.getAttributes() ) {
             if ( ! attribute.getKey().equals("id") ) {
-                s += attribute + " ";
+                s += attribute.xmlString() + " ";
             }
         }
         return s;
@@ -189,4 +198,4 @@ public class GraphElementState {
     }
 }
 
-//  [Last modified: 2018 11 30 at 17:10:22 GMT]
+//  [Last modified: 2018 12 07 at 16:14:54 GMT]

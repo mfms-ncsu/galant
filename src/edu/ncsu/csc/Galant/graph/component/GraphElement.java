@@ -77,7 +77,8 @@ public class GraphElement implements Comparable<GraphElement> {
 
     public GraphElement(Graph graph, AttributeList L) {
         this.graph = graph;
-        //create a new state with no. 0
+        this.states = new ArrayList<GraphElementState>();
+        this.states.add(new GraphElementState(L));
     }
 
     /**
@@ -589,71 +590,73 @@ public class GraphElement implements Comparable<GraphElement> {
      * attributes particular to Node or Edge may need to be dealt with first.
      */
     public void initializeAfterParsing(AttributeList L) throws GalantException {
-        try { // need to catch Terminate exception -- should not happen
-            String idString = null;
-            String weightString = null;
-            String highlightString = null;
-            String hiddenString = null;
-            for (int i = 0; i < L.attributes.size(); i++) {
-                Attribute attributeOfNode = L.attributes.get(i);
-                if (attributeOfNode.key.equals("id")) {
-                    String attributeValue = attributeOfNode.getStringValue();
-                    idString = attributeValue;
-                } else if (attributeOfNode.key.equals("weight")) {
-                    String attributeValue = attributeOfNode.getStringValue();
-                    weightString = attributeValue;
-                } else if (attributeOfNode.key.equals("highlighted")) {
-                    String attributeValue = attributeOfNode.getStringValue();
-                    highlightString = attributeValue;
-                } else if (attributeOfNode.key.equals("hidden")) {
-                    String attributeValue = attributeOfNode.getStringValue();
-                    hiddenString = attributeValue;
-                }
+        System.err.println("-> ge.initAfterParsing, L = " + L);
+        String idString = null;
+        String weightString = null;
+        String highlightString = null;
+        String hiddenString = null;
+        for (int i = 0; i < L.attributes.size(); i++) {
+            Attribute attributeOfNode = L.attributes.get(i);
+            if (attributeOfNode.key.equals("id")) {
+                String attributeValue = attributeOfNode.getStringValue();
+                idString = attributeValue;
+            } else if (attributeOfNode.key.equals("weight")) {
+                String attributeValue = attributeOfNode.getStringValue();
+                weightString = attributeValue;
+            } else if (attributeOfNode.key.equals("highlighted")) {
+                String attributeValue = attributeOfNode.getStringValue();
+                highlightString = attributeValue;
+            } else if (attributeOfNode.key.equals("hidden")) {
+                String attributeValue = attributeOfNode.getStringValue();
+                hiddenString = attributeValue;
             }
-            if (idString != null) {
-                Integer id = Integer.MIN_VALUE;
-                try {
-                    id = Integer.parseInt(idString);
-                } catch (NumberFormatException e) {
-                    throw new GalantException("Bad id " + idString);
-                }
-                remove(ID);
-                set(ID, id);
-            }
-            if (weightString != null) {
-                Double weight = Double.NaN;
-                try {
-                    weight = Double.parseDouble(weightString);
-                } catch (NumberFormatException e) {
-                    throw new GalantException("Bad weight " + weightString);
-                }
-                remove(WEIGHT);
-                set(WEIGHT, weight);
-            }
-
-            if (highlightString != null) {
-                Boolean highlighted = Boolean.parseBoolean(highlightString);
-                remove(HIGHLIGHTED);
-                if (highlighted) {
-                    set(HIGHLIGHTED, highlighted);
-                }
-            }
-            /**
-             * @todo need to do something like this for other standard
-             * attributes such as HIDDEN_LABEL, HIDDEN_WEIGHT, DELETED in order
-             * to avoid errors when reading files exported during animations.
-             */
-
-            if (hiddenString != null) {
-                Boolean hidden = Boolean.parseBoolean(hiddenString);
-                remove(HIDDEN);
-                if (hidden) {
-                    set(HIDDEN, hidden);
-                }
-            }
-        } catch (Terminate t) { // should not happen
-            t.printStackTrace();
         }
+        if (idString != null) {
+            Integer id = Integer.MIN_VALUE;
+            try {
+                id = Integer.parseInt(idString);
+            } catch (NumberFormatException e) {
+                throw new GalantException("Bad id " + idString);
+            }
+            L.remove(ID);
+            L.set(ID, id);
+        }
+        System.err.println(" after id, L = " + L);
+        if (weightString != null) {
+            Double weight = Double.NaN;
+            try {
+                weight = Double.parseDouble(weightString);
+            } catch (NumberFormatException e) {
+                throw new GalantException("Bad weight " + weightString);
+            }
+            L.remove(WEIGHT);
+            L.set(WEIGHT, weight);
+        }
+        System.err.println(" after wt, L = " + L);
+
+        if (highlightString != null) {
+            Boolean highlighted = Boolean.parseBoolean(highlightString);
+            L.remove(HIGHLIGHTED);
+            if (highlighted) {
+                L.set(HIGHLIGHTED, highlighted);
+            }
+        }
+        System.err.println(" after hl, L = " + L);
+
+        /**
+         * @todo need to do something like this for other standard
+         * attributes such as HIDDEN_LABEL, HIDDEN_WEIGHT, DELETED in order
+         * to avoid errors when reading files exported during animations.
+         */
+
+        if (hiddenString != null) {
+            Boolean hidden = Boolean.parseBoolean(hiddenString);
+            L.remove(HIDDEN);
+            if (hidden) {
+                L.set(HIDDEN, hidden);
+            }
+        }
+        System.err.println(" after hd, L = " + L);
     }
 
     /**
@@ -847,4 +850,4 @@ public class GraphElement implements Comparable<GraphElement> {
 
 }
 
-//  [Last modified: 2018 11 30 at 17:04:42 GMT]
+//  [Last modified: 2018 12 07 at 15:59:27 GMT]

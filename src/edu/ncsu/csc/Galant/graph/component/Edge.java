@@ -60,14 +60,16 @@ public class Edge extends GraphElement {
         this.target = target;
     }
 
-    public Edge(Graph graph, AttributeList L) {
+    /**
+     * This is called during parsing.
+     * @param L an AttributeList created by the GraphMLParser from attributes
+     * of the node as given in the input text
+     * @throw GalantException if there is a problem in the format of the
+     * source or target
+     */
+    public Edge(Graph graph, AttributeList L) throws GalantException {
         super(graph, L);
-        try {
-            initializeAfterParsing(L);
-        } catch (GalantException ex) {
-            Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
+        initializeAfterParsing(L);
     }
 
     public Node getSourceNode() {
@@ -165,13 +167,10 @@ public class Edge extends GraphElement {
             throw new GalantException("Target node missing when processing edge "
                     + this);
         }
-        try { // these attributes are fixed and stored as fields of the edge
-            // object
-            super.remove("source");
-            super.remove("target");
-        } catch (Terminate t) { // should not happen
-            t.printStackTrace();
-        }
+        // these attributes are fixed and stored as fields of the edge
+        // object
+        L.remove("source");
+        L.remove("target");
         LogHelper.logDebug(" id = " + id + " explicit = " + hasExplicitId);
         LogHelper.logDebug("<- initializeAfterParsing, edge = "
                 + this);
@@ -249,4 +248,4 @@ public class Edge extends GraphElement {
     }
 }
 
-//  [Last modified: 2018 09 19 at 18:56:17 GMT]
+//  [Last modified: 2018 12 07 at 15:42:36 GMT]

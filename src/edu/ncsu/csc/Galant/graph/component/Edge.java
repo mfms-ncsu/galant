@@ -61,9 +61,9 @@ public class Edge extends GraphElement {
     }
 
     public Edge(Graph g, AttributeList L) {
-        super(g,L);
+        super(g, L);
         try {
-            initializeAfterParsing(g,L);
+            initializeAfterParsing(L);
         } catch (GalantException ex) {
             Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -110,12 +110,13 @@ public class Edge extends GraphElement {
      * initialized. The relevant ones are ... - source, target: integer (id's of
      * nodes)
      */
-    public void initializeAfterParsing(Graph g,AttributeList L)
+    public void initializeAfterParsing(AttributeList L)
             throws GalantException {
         LogHelper.disable();
         LogHelper.logDebug("-> initializeAfterParsing " + this);
         // id has already been parsed by GraphElement.initializeAfterParsing()
-        Integer graphElementId = getInteger(super.ID);
+        super.initializeAfterParsing(L);
+        Integer graphElementId = null;
         String sourceString = null;
         String targetString = null;
         for (int i = 0; i < L.attributes.size(); i++) {
@@ -126,6 +127,9 @@ public class Edge extends GraphElement {
             } else if (attributeOfNode.key.equals("target")) {
                 String attributeValue = attributeOfNode.getStringValue();
                 targetString = attributeValue;
+            } else if (attributeOfNode.key.equals("id")) {
+                String attributeValue = attributeOfNode.getStringValue();
+                graphElementId = Integer.parseInt(attributeValue);
             }
         }
 

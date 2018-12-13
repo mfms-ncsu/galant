@@ -246,12 +246,7 @@ public class Node extends GraphElement {
             System.err.println("  attribute " + i + " is " + attributeOfNode);
             if (attributeOfNode.key.equals("id")) {
                 String attributeValue = attributeOfNode.getStringValue();
-                System.err.println("    id is " + attributeValue);
-                // we already know that the id is an integer at this point -
-                // if not super.initializeAfterParsing(L) would have thrown
-                // an exception
-                Integer attributeValueInteger = Integer.parseInt(attributeValue);
-                idAttribute = attributeValueInteger;
+                idAttribute = super.getID(attributeValue);
             } else if (attributeOfNode.key.equals("x")) {
                 String attributeValue = attributeOfNode.getStringValue();
                 xString = attributeValue;
@@ -261,12 +256,7 @@ public class Node extends GraphElement {
             }
         } // end, for attribute in list
         
-        if (idAttribute == null) {
-            throw new GalantException("Missing id for node " + this);
-        } else if (super.graph.nodeIdExists(idAttribute)) {
-            throw new GalantException("Duplicate id: " + idAttribute
-                    + " when processing node " + this);
-        }
+        
         id = idAttribute;
         L.remove("id");
         if (super.graph.isLayered()) {

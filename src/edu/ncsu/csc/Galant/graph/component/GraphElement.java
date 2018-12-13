@@ -134,6 +134,37 @@ public class GraphElement implements Comparable<GraphElement> {
         System.out.println("latestState returns " + state);
         return state;
     }
+    /**
+     This method takes ID in a string format and processes it. 
+     * It returns the ID parsed as an integer or throws a GalantException for missing or duplicate ID.
+     * @param idAsString indicates the ID is string format.
+     * @return idAsInteger which is the ID parsed to an integer if there is no GalantException thrown
+     */
+    public Integer getID(String idAsString) throws GalantException
+    {
+        Integer idAsInteger=Integer.MIN_VALUE;
+        if (idAsInteger == null)
+        {
+            throw new GalantException("Missing id for graph element " + this);
+        } 
+        else if (graph.nodeIdExists(idAsInteger))
+        {
+            throw new GalantException("Duplicate id: " + idAsInteger
+                    + " when processing graph element " + this);
+        }
+        else if (idAsString != null)
+        {
+            try 
+            {
+                idAsInteger = Integer.parseInt(idAsString);
+            } 
+            catch (NumberFormatException e) 
+            {
+                throw new GalantException("Bad id " + idAsString);
+            }
+        }
+        return idAsInteger;
+    }
 
     /**
      * This method is vital for retrieving the most recent information about a
@@ -591,7 +622,7 @@ public class GraphElement implements Comparable<GraphElement> {
      */
     public void initializeAfterParsing(AttributeList L) throws GalantException {
         System.err.println("-> ge.initAfterParsing, L = " + L);
-        String idString = null;
+        Integer id = Integer.MIN_VALUE;
         String weightString = null;
         String highlightString = null;
         String hiddenString = null;
@@ -599,7 +630,7 @@ public class GraphElement implements Comparable<GraphElement> {
             Attribute attributeOfNode = L.attributes.get(i);
             if (attributeOfNode.key.equals("id")) {
                 String attributeValue = attributeOfNode.getStringValue();
-                idString = attributeValue;
+                id = getID(attributeValue);
             } else if (attributeOfNode.key.equals("weight")) {
                 String attributeValue = attributeOfNode.getStringValue();
                 weightString = attributeValue;
@@ -610,18 +641,9 @@ public class GraphElement implements Comparable<GraphElement> {
                 String attributeValue = attributeOfNode.getStringValue();
                 hiddenString = attributeValue;
             }
-        }
-        if (idString != null) {
-            Integer id = Integer.MIN_VALUE;
-            try {
-                id = Integer.parseInt(idString);
-            } catch (NumberFormatException e) {
-                throw new GalantException("Bad id " + idString);
-            }
+        } 
             L.remove(ID);
             L.set(ID, id);
-        }
-        System.err.println(" after id, L = " + L);
         if (weightString != null) {
             Double weight = Double.NaN;
             try {

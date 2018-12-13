@@ -131,7 +131,7 @@ public class Edge extends GraphElement {
                 targetString = attributeValue;
             } else if (attributeOfNode.key.equals("id")) {
                 String attributeValue = attributeOfNode.getStringValue();
-                graphElementId = Integer.parseInt(attributeValue);
+                graphElementId = super.getID(attributeValue);
             }
         }
 

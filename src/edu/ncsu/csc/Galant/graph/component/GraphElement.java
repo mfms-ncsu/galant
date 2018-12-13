@@ -143,16 +143,7 @@ public class GraphElement implements Comparable<GraphElement> {
     public Integer getID(String idAsString) throws GalantException
     {
         Integer idAsInteger=Integer.MIN_VALUE;
-        if (idAsInteger == null)
-        {
-            throw new GalantException("Missing id for graph element " + this);
-        } 
-        else if (graph.nodeIdExists(idAsInteger))
-        {
-            throw new GalantException("Duplicate id: " + idAsInteger
-                    + " when processing graph element " + this);
-        }
-        else if (idAsString != null)
+         if (idAsString != null)
         {
             try 
             {
@@ -163,6 +154,16 @@ public class GraphElement implements Comparable<GraphElement> {
                 throw new GalantException("Bad id " + idAsString);
             }
         }
+        if (idAsInteger == null)
+        {
+            throw new GalantException("Missing id for graph element " + this);
+        } 
+//        else if (graph.nodeIdExists(idAsInteger)) commented for now
+//        {
+//            throw new GalantException("Duplicate id: " + idAsInteger
+//                    + " when processing graph element " + this);
+//        }
+      
         return idAsInteger;
     }
 

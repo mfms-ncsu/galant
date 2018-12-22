@@ -93,6 +93,7 @@ public class Node extends GraphElement {
     public Node(Graph graph, AttributeList L) throws GalantException {
         super(graph, L);
         this.initializeAfterParsing(L);
+        incidentEdges = new EdgeList();
     }
 
     public Node copyNode(Graph currentGraph) {
@@ -224,7 +225,29 @@ public class Node extends GraphElement {
     public void setPositionInLayer(Integer positionInLayer) throws Terminate {
         super.set("positionInLayer", positionInLayer);
     }
-
+    
+/**
+     This method takes ID in a string format and processes it. 
+     * It returns the ID parsed as an integer or throws a GalantException for missing or duplicate ID.
+     * @param idAsString indicates the ID is string format.
+     * @return idAsInteger which is the ID parsed to an integer if there is no GalantException thrown
+     */
+    public Integer getID(String idAsString) throws GalantException
+    {
+        Integer idAsInteger=null;
+         if (idAsString != null)
+        {
+            try 
+            {
+                idAsInteger = Integer.parseInt(idAsString);
+            } 
+            catch (NumberFormatException e) 
+            {
+                throw new GalantException("Bad id " + idAsString);
+            }
+        }
+        return idAsInteger;
+    }
     /**
      * Makes sure that all the attributes specific to nodes are properly
      * initialized. The relevant one are ... - x, y: integer - layer,
@@ -236,7 +259,6 @@ public class Node extends GraphElement {
      * @todo still need to make LayeredGraphNode a subclass of Node.
      */
     public void initializeAfterParsing(AttributeList L) throws GalantException {
-        super.initializeAfterParsing(L);
         System.err.println(" after super, L = " + L);
         Integer idAttribute = null;
         String xString = null;
@@ -245,8 +267,9 @@ public class Node extends GraphElement {
             Attribute attributeOfNode = L.attributes.get(i);
             System.err.println("  attribute " + i + " is " + attributeOfNode);
             if (attributeOfNode.key.equals("id")) {
-                String attributeValue = attributeOfNode.getStringValue();
-                idAttribute = super.getID(attributeValue);
+               // String attributeValue = attributeOfNode.toString().split("=")[1];
+               String attributeValue = attributeOfNode.getStringValue();
+                idAttribute = getID(attributeValue);
             } else if (attributeOfNode.key.equals("x")) {
                 String attributeValue = attributeOfNode.getStringValue();
                 xString = attributeValue;
@@ -256,9 +279,16 @@ public class Node extends GraphElement {
             }
         } // end, for attribute in list
         
-        
+        if (idAttribute == null) {
+            throw new GalantException("Missing id for node " + this);
+        } else if (super.graph.nodeIdExists(idAttribute)) {
+            throw new GalantException("Duplicate id: " + idAttribute
+                    + " when processing node " + this);
+        }
         id = idAttribute;
         L.remove("id");
+        if(null!=idAttribute)
+            L.set(ID, id);
         if (super.graph.isLayered()) {
             String layerString = L.getString("layer");
             String positionString = L.getString("positionInLayer");
@@ -326,6 +356,7 @@ public class Node extends GraphElement {
                 L.set(MARKED, marked);
             }
         }
+        super.initializeAfterParsing(L);
     } // end, intializeAfterParsing
 
     /**

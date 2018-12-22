@@ -44,8 +44,6 @@ public class Graph{
 
   private TreeMap<Integer, Node> nodeById = new TreeMap<Integer, Node>();
 
-  private TreeMap<Integer, Edge> edgeById = new TreeMap<Integer, Edge>();
-
   private EdgeList edges;
 
   private MessageBanner banner;
@@ -241,7 +239,6 @@ public void incrementEditState() {
     boolean layeredCopy=this.layered;
     LayerInformation layerInformationCopy=this.layerInformation;
     TreeMap<Integer, Node> nodeByIdCopy=new TreeMap<Integer, Node>(this.nodeById);
-    TreeMap<Integer, Edge> edgeByIdCopy=new TreeMap<Integer, Edge>(this.edgeById);
     MessageBanner bannerCopy=this.banner;
     Edge selectedEdgeCopy=this.selectedEdge;
     Node selectedNodeCopy=this.selectedNode;
@@ -257,7 +254,6 @@ public void incrementEditState() {
     copyOfGraph.layered=layeredCopy;
     copyOfGraph.layerInformation=layerInformationCopy;
     copyOfGraph.nodeById=nodeByIdMap;
-    copyOfGraph.edgeById=edgeByIdCopy;
     copyOfGraph.banner=bannerCopy;
     copyOfGraph.selectedEdge=selectedEdgeCopy;
     copyOfGraph.selectedNode=selectedNodeCopy;
@@ -1023,33 +1019,6 @@ public void incrementEditState() {
     return this.nodes.get(0);
   }
 
-  /**
-   * Returns the Edge in the graph represented by the given unique ID.
-   *
-   * @param id
-   * @return the specified Edge if it exists, null otherwise
-   */
-  public Edge getEdgeById(int id)
-  throws GalantException
-  {
-    if ( this.edges.size() == 0 ) {
-      throw new GalantException("Graph has no edges"
-                                + "\n - in getEdgeById");
-    }
-    if ( ! edgeById.containsKey(id) ) {
-      throw new GalantException("No edge with id = "
-                                + id
-                                + " exists"
-                                + "\n - in getEdgeById");
-    }
-    Edge edge = edgeById.get(id);
-    if ( edge.isDeleted() ) {
-      throw new GalantException("Edge has been deleted, id = "
-                                + id
-                                + "\n - in getEdgeById");
-    }
-    return edge;
-  }
 
   /**
    * Adds a new <code>Node</code> to the <code>Graph</code>
@@ -1253,19 +1222,6 @@ public void incrementEditState() {
   }
 
   /**
-   * @return an integer ID for the next <code>Edge</code> to be
-   * added. This will always be the largest id so far + 1
-   */
-  public int nextEdgeId() {
-    LogHelper.enterMethod(getClass(), "nextEdgeId");
-    int id = 0;
-    if ( ! edgeById.isEmpty() )
-      id = edgeById.lastKey() + 1;
-    LogHelper.exitMethod(getClass(), "nextEdgeId, id = " + id);
-    return id;
-  }
-
-  /**
    * @return the number of layers if this is a layered graph
    */
   public int numberOfLayers() {
@@ -1335,24 +1291,24 @@ public void incrementEditState() {
    */
   public void initializeAfterParsing() throws GalantException {
     // first process the edges that have id's, so there's no conflict later
-    for ( Edge edge : this.edges ) {
-      if ( edge.hasExplicitId() ) {
-        if ( this.edgeById.containsKey( edge.getId() ) ) {
-          throw new GalantException("Duplicate id: "
-                                    + edge.getId()
-                                    + " when processing edge "
-                                    + edge);
-        }
-        this.hasExplicitEdgeIds = true;
-        this.edgeById.put(edge.getId(), edge);
-      }
-    }
+//    for ( Edge edge : this.edges ) {
+//      if ( edge.hasExplicitId() ) {
+//        if ( this.edgeById.containsKey( edge.getId() ) ) {
+//          throw new GalantException("Duplicate id: "
+//                                    + edge.getId()
+//                                    + " when processing edge "
+//                                    + edge);
+//        }
+//        this.hasExplicitEdgeIds = true;
+//        this.edgeById.put(edge.getId(), edge);
+//      }
+//    }
     // then those that don't
     for ( Edge edge : this.edges ) {
-      if ( ! edge.hasExplicitId() ) {
-        edge.setId( nextEdgeId() );
-        this.edgeById.put(edge.getId(), edge);
-      }
+//      if ( ! edge.hasExplicitId() ) {
+//        edge.setId( nextEdgeId() );
+//        this.edgeById.put(edge.getId(), edge);
+//      }
     }
     if ( layered ) layerInformation.initializeAfterParsing();
   }

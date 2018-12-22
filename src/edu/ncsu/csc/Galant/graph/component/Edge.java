@@ -117,8 +117,7 @@ public class Edge extends GraphElement {
         LogHelper.disable();
         LogHelper.logDebug("-> initializeAfterParsing " + this);
         // id has already been parsed by GraphElement.initializeAfterParsing()
-        super.initializeAfterParsing(L);
-        Integer graphElementId = null;
+        
         String sourceString = null;
         String targetString = null;
         for (int i = 0; i < L.attributes.size(); i++) {
@@ -129,18 +128,12 @@ public class Edge extends GraphElement {
             } else if (attributeOfNode.key.equals("target")) {
                 String attributeValue = attributeOfNode.getStringValue();
                 targetString = attributeValue;
-            } else if (attributeOfNode.key.equals("id")) {
-                String attributeValue = attributeOfNode.getStringValue();
-                graphElementId = super.getID(attributeValue);
-            }
+            } 
         }
-
+        
         Integer sourceId = Integer.MIN_VALUE;
         Integer targetId = Integer.MIN_VALUE;
-        if (graphElementId != null) {
-            this.id = graphElementId;
-            this.hasExplicitId = true;
-        }
+       
         if (sourceString == null) {
             throw new GalantException("Missing source for " + this);
         }
@@ -171,6 +164,7 @@ public class Edge extends GraphElement {
         // object
         L.remove("source");
         L.remove("target");
+        super.initializeAfterParsing(L);
         LogHelper.logDebug(" id = " + id + " explicit = " + hasExplicitId);
         LogHelper.logDebug("<- initializeAfterParsing, edge = "
                 + this);
@@ -185,9 +179,6 @@ public class Edge extends GraphElement {
         String idComponent = "";
         if (super.graph.hasExplicitEdgeIds()) {
             Integer edgeId = this.id;
-            if (edgeId == null) {
-                edgeId = super.graph.nextEdgeId();
-            }
             idComponent = "id=\"" + edgeId + "\"";
         }
         String s = "<edge " + idComponent;

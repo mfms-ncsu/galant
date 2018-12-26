@@ -1369,12 +1369,6 @@ public abstract class Algorithm implements Runnable {
     return graph.getNodeById(id);
   }
 
-  /** @see edu.ncsu.csc.Galant.graph.component.Graph#getEdgeById(int) */
-  public Edge getEdgeById(int id) throws GalantException
-  {
-    return graph.getEdgeById(id);
-  }
-
   /**
    * @return an Edge with the given source and target; if the graph is
    * undirected it doesn't matter which is which; returns null if no such
@@ -1494,4 +1488,4 @@ public abstract class Algorithm implements Runnable {
   public abstract void run();
 }
 
-//  [Last modified: 2018 09 19 at 19:09:33 GMT]
+//  [Last modified: 2018 12 26 at 16:12:15 GMT]

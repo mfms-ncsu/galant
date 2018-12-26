@@ -1148,7 +1148,7 @@ public void incrementEditState() {
    */
   public Edge addEdge(int sourceId, int targetId)
   throws Terminate, GalantException {
-    return addEdge( getNodeById(sourceId), getNodeById(targetId) );
+    return addEdge(getNodeById(sourceId), getNodeById(targetId));
   }
 
   /**
@@ -1394,4 +1394,4 @@ public void incrementEditState() {
   }
 }
 
-// [Last modified: 2018 11 29 at 19:25:34 GMT]
+// [Last modified: 2018 12 26 at 17:41:34 GMT]

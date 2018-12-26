@@ -58,24 +58,21 @@ public class GraphElement implements Comparable<GraphElement> {
     }
 
     /**
-     * If this constructor is used during parsing, all additional information is
-     * filled in by initializeAfterParsing().
-     *
-     * @todo let the Terminate exception propagate all the way to the top, where
-     * it can be caught based on whether or not you're running an algorithm
+     * Called (indirectly) in GraphMLParser before the attributes of the element
+     * have been processed (see the constructor with AttributeList below)
      */
     public GraphElement(Graph graph) {
         this.dispatch = GraphDispatch.getInstance();
-        this.states = new ArrayList<GraphElementState>();
+        this.states = null;
         this.graph = graph;
-        try {
-            this.addState(new GraphElementState());
-        } catch (Terminate t) { // should not happen
-            t.printStackTrace();
-        }
     }
 
+    /**
+     * This constructor is used during parsing. The element is initialized
+     * with a single state whose attributes come from the list L
+     */
     public GraphElement(Graph graph, AttributeList L) {
+        this.dispatch = GraphDispatch.getInstance();
         this.graph = graph;
         this.states = new ArrayList<GraphElementState>();
         this.states.add(new GraphElementState(L));
@@ -834,4 +831,4 @@ public class GraphElement implements Comparable<GraphElement> {
 
 }
 
-//  [Last modified: 2018 12 07 at 15:59:27 GMT]
+//  [Last modified: 2018 12 26 at 17:50:35 GMT]

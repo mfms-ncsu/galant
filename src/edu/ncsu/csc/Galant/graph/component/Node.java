@@ -259,13 +259,13 @@ public class Node extends GraphElement {
      * @todo still need to make LayeredGraphNode a subclass of Node.
      */
     public void initializeAfterParsing(AttributeList L) throws GalantException {
-        System.err.println(" after super, L = " + L);
+        System.out.println(" after super, L = " + L);
         Integer idAttribute = null;
         String xString = null;
         String yString = null;
         for (int i = 0; i < L.attributes.size(); i++) {
             Attribute attributeOfNode = L.attributes.get(i);
-            System.err.println("  attribute " + i + " is " + attributeOfNode);
+            System.out.println("  attribute " + i + " is " + attributeOfNode);
             if (attributeOfNode.key.equals("id")) {
                // String attributeValue = attributeOfNode.toString().split("=")[1];
                String attributeValue = attributeOfNode.getStringValue();
@@ -287,8 +287,6 @@ public class Node extends GraphElement {
         }
         id = idAttribute;
         L.remove("id");
-        if(null!=idAttribute)
-            L.set(ID, id);
         if (super.graph.isLayered()) {
             String layerString = L.getString("layer");
             String positionString = L.getString("positionInLayer");
@@ -763,4 +761,4 @@ public class Node extends GraphElement {
 
 }
 
-//  [Last modified: 2018 12 07 at 16:05:17 GMT]
+//  [Last modified: 2018 12 26 at 17:04:57 GMT]

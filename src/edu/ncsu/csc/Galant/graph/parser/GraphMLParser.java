@@ -87,7 +87,7 @@ public class GraphMLParser {
     }
 
     public void setDocument(DocumentBuilder db, String xml)
-            throws GalantException {
+        throws GalantException {
         InputSource is = new InputSource(new StringReader(xml));
         try {
             this.document = db.parse(is);
@@ -302,4 +302,4 @@ public class GraphMLParser {
 
 }
 
-//  [Last modified: 2018 11 30 at 17:19:38 GMT]
+//  [Last modified: 2018 12 26 at 17:26:36 GMT]

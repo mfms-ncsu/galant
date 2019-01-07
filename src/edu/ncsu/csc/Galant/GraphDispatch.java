@@ -275,7 +275,7 @@ public class GraphDispatch {
          ) {
       algorithmSynchronizer.startStep();
     }
-    if ( editMode )
+    if ( !animationMode )
     {
         workingGraph.incrementEditState();
     }

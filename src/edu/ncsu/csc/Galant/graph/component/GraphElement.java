@@ -63,8 +63,13 @@ public class GraphElement implements Comparable<GraphElement> {
      */
     public GraphElement(Graph graph) {
         this.dispatch = GraphDispatch.getInstance();
-        this.states = null;
+        this.states = new ArrayList<GraphElementState>();
         this.graph = graph;
+        try {
+            this.addState(new GraphElementState());
+        } catch (Terminate t) { // should not happen
+            t.printStackTrace();
+        }
     }
 
     /**

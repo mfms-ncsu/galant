@@ -170,21 +170,24 @@ public class GraphMLParser {
 
         LogHelper.disable();
         LogHelper.beginIndent();
-        AttributeList LNodes = new AttributeList();
         for (int nodeIndex = 0; nodeIndex < nodes.getLength(); nodeIndex++) {
             LogHelper.logDebug(" processing " + nodeIndex + "th node.");
             org.w3c.dom.Node xmlNode = nodes.item(nodeIndex);
-            Node graphNode = new Node(graphUnderConstruction);
+            // ??? why do you need to create a new node twice ???
+            // the next line serves no purpose
+            //            Node graphNode = new Node(graphUnderConstruction);
             NamedNodeMap nodeAttributes = xmlNode.getAttributes();
+            // !!! the attribute list needs to be distinct for each new node !!!
+            AttributeList attributesToAdd = new AttributeList();
             if (attributes != null) {
                 for (int i = 0; i < nodeAttributes.getLength(); i++) {
                     org.w3c.dom.Node attribute = nodeAttributes.item(i);
-                    LNodes.set(attribute.getNodeName(), attribute.getNodeValue());
+                    attributesToAdd.set(attribute.getNodeName(), attribute.getNodeValue());
                     LogHelper.logDebug("Node attribute " + attribute.getNodeName()
                             + ", value = " + attribute.getTextContent());
                 }
             }
-            Node parsedNode = new Node(graphUnderConstruction, LNodes);
+            Node parsedNode = new Node(graphUnderConstruction, attributesToAdd);
             LogHelper.logDebug("adding node " + parsedNode);
 
             graphUnderConstruction.addNode(parsedNode);
@@ -194,6 +197,7 @@ public class GraphMLParser {
 
         LogHelper.disable();
         LogHelper.beginIndent();
+        // Please fix the problem for edges as well
         AttributeList LEdges = new AttributeList();
         for (int nodeIndex = 0; nodeIndex < edges.getLength(); nodeIndex++) {
             LogHelper.logDebug(" processing " + nodeIndex + "th edge.");
@@ -302,4 +306,4 @@ public class GraphMLParser {
 
 }
 
-//  [Last modified: 2018 12 26 at 17:26:36 GMT]
+//  [Last modified: 2019 03 05 at 21:55:16 GMT]

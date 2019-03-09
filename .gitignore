@@ -25,3 +25,4 @@ Crossing_Graphs/
 # latex stuff
 *.blg
 *.aux
+*.synctex.gz

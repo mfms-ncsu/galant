@@ -71,6 +71,7 @@ public class CodeIntegrator	{
         "import edu.ncsu.csc.Galant.graph.component.Graph;" +
         "import edu.ncsu.csc.Galant.graph.component.Node;" +
         "import edu.ncsu.csc.Galant.graph.component.Edge;" +
+        "import edu.ncsu.csc.Galant.graph.component.GraphElement;" +
         "import edu.ncsu.csc.Galant.graph.datastructure.NodeSet;" +
         "import edu.ncsu.csc.Galant.graph.datastructure.EdgeSet;" +
         "import edu.ncsu.csc.Galant.graph.datastructure.NodeList;" +
@@ -370,4 +371,4 @@ public class CodeIntegrator	{
     }
 }
 
-//  [Last modified: 2017 08 05 at 21:53:59 GMT]
+//  [Last modified: 2019 03 09 at 00:46:08 GMT]

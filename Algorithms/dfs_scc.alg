@@ -21,8 +21,12 @@ String [] component_color =
 /**
  * functions to track components of vertices and edges and color them accordingly
  */
-function set_component(GraphElement ge, Integer c) {
-    set(ge, "component", c);
+function set_component(GraphElement ge, Integer component) {
+    set(ge, "component", component);
+    color_element(ge);
+    setWeight(ge, component);
+    showWeight(ge);
+    hideLabel(ge);
 }
 
 function Integer component(GraphElement ge) {
@@ -82,20 +86,14 @@ function visit(Node v) {
 function reverse_visit(Node v, int component) {
     beginStep();
     set_component(v, component);
-    color_element(v);
-    setWeight(v, component);
-    showWeight(v);
     mark(v);
-    hideLabel(v);
     for_incoming ( v, e, w ) {
          if ( ! marked(w) ) {
             set_component(e, component);
-            color_element(e);
             reverse_visit(w, component);
         }
-        else if ( component(v) == component(w) ) {
+        else if ( component == component(w) ) {
             set_component(e, component);
-            color_element(e);
         }
     }
 }
@@ -145,4 +143,4 @@ algorithm {
     }
 }
 
-//  [Last modified: 2019 03 09 at 00:41:02 GMT]
+//  [Last modified: 2019 03 11 at 14:26:17 GMT]

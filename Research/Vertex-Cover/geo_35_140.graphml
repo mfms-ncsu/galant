@@ -7,7 +7,7 @@ http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
   <node id="1" x="681" y="599"   />
   <node id="2" x="481" y="759"   />
   <node id="3" x="90" y="240"   />
-  <node id="4" x="548" y="701"   />
+  <node id="4" x="555" y="687"   />
   <node id="5" x="257" y="392"   />
   <node id="6" x="210" y="644"   />
   <node id="7" x="446" y="641"   />
@@ -18,7 +18,7 @@ http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
   <node id="12" x="416" y="368"   />
   <node id="13" x="368" y="715"   />
   <node id="14" x="844" y="499"   />
-  <node id="15" x="106" y="147"   />
+  <node id="15" x="230" y="335"   />
   <node id="16" x="375" y="839"   />
   <node id="17" x="643" y="751"   />
   <node id="18" x="116" y="742"   />
@@ -32,10 +32,10 @@ http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
   <node id="26" x="769" y="596"   />
   <node id="27" x="241" y="488"   />
   <node id="28" x="95" y="456"   />
-  <node id="29" x="360" y="117"   />
+  <node id="29" x="382" y="172"   />
   <node id="30" x="756" y="294"   />
   <node id="31" x="223" y="267"   />
-  <node id="32" x="877" y="133"   />
+  <node id="32" x="862" y="173"   />
   <node id="33" x="774" y="674"   />
   <node id="34" x="131" y="387"   />
   <node id="35" x="364" y="447"   />

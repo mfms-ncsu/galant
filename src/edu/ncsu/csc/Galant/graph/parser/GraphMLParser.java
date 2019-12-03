@@ -173,23 +173,20 @@ public class GraphMLParser {
         for (int nodeIndex = 0; nodeIndex < nodes.getLength(); nodeIndex++) {
             LogHelper.logDebug(" processing " + nodeIndex + "th node.");
             org.w3c.dom.Node xmlNode = nodes.item(nodeIndex);
-            // ??? why do you need to create a new node twice ???
-            // the next line serves no purpose
-            //            Node graphNode = new Node(graphUnderConstruction);
+           
             NamedNodeMap nodeAttributes = xmlNode.getAttributes();
-            // !!! the attribute list needs to be distinct for each new node !!!
-            AttributeList attributesToAdd = new AttributeList();
+           
+            AttributeList attributesToAddForNodes = new AttributeList();
             if (attributes != null) {
                 for (int i = 0; i < nodeAttributes.getLength(); i++) {
                     org.w3c.dom.Node attribute = nodeAttributes.item(i);
-                    attributesToAdd.set(attribute.getNodeName(), attribute.getNodeValue());
+                    attributesToAddForNodes.set(attribute.getNodeName(), attribute.getNodeValue());
                     LogHelper.logDebug("Node attribute " + attribute.getNodeName()
                             + ", value = " + attribute.getTextContent());
                 }
             }
-            Node parsedNode = new Node(graphUnderConstruction, attributesToAdd);
+            Node parsedNode = new Node(graphUnderConstruction, attributesToAddForNodes);
             LogHelper.logDebug("adding node " + parsedNode);
-
             graphUnderConstruction.addNode(parsedNode);
         }
 
@@ -197,22 +194,20 @@ public class GraphMLParser {
 
         LogHelper.disable();
         LogHelper.beginIndent();
-        // Please fix the problem for edges as well
-        AttributeList LEdges = new AttributeList();
         for (int nodeIndex = 0; nodeIndex < edges.getLength(); nodeIndex++) {
             LogHelper.logDebug(" processing " + nodeIndex + "th edge.");
             org.w3c.dom.Node xmlNode = edges.item(nodeIndex);
-            Edge graphEdge = new Edge(graphUnderConstruction);
             NamedNodeMap edgeAttributes = xmlNode.getAttributes();
+            AttributeList attributesToAddForEdges = new AttributeList();
             if (attributes != null) {
                 for (int i = 0; i < edgeAttributes.getLength(); i++) {
                     org.w3c.dom.Node attribute = edgeAttributes.item(i);
-                    LEdges.set(attribute.getNodeName(), attribute.getNodeValue());
+                    attributesToAddForEdges.set(attribute.getNodeName(), attribute.getNodeValue());
                     LogHelper.logDebug("Edge attribute " + attribute.getNodeName()
                             + ", value = " + attribute.getTextContent());
                 }
             }
-            Edge parsedEdge = new Edge(graphUnderConstruction, LEdges);
+            Edge parsedEdge = new Edge(graphUnderConstruction, attributesToAddForEdges);
             LogHelper.logDebug("adding edge " + parsedEdge);
             graphUnderConstruction.addEdge(parsedEdge);
         }

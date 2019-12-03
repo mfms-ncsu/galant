@@ -762,13 +762,8 @@ public void incrementEditState() {
   }
 
   /**
-   * @return all nodes in the graph; this version can only be used when
-   * there is no algorithm running; some nodes may not yet exist; inScope()
-   * without the 'state' argument only checks to see if a node has been
-   * deleted.
-   *
-   * @todo Just like the Algorithm provides NodeQueue, etc., it should also
-   * provide NodeList as a data structure to avoid the template.
+   * @return all nodes in the graph; inScope() without the 'state' argument
+   * only checks to see if a node has been deleted.
    */
   public NodeList getNodes() {
     NodeList retNodes = new NodeList();
@@ -794,6 +789,18 @@ public void incrementEditState() {
     return retNodes;
   }
 
+    /**
+     * @return a list of all nodes in the graph, even ones that have been deleted
+     * used when drawing, so that we can see the effect of undoing deletions
+     */
+    public NodeList getAllNodes() {
+        NodeList retNodes = new NodeList();
+        for ( Node v : this.nodes ) {
+            retNodes.add(v);
+        }
+        return retNodes;
+    }
+
   /**
    * @param nodes new set of nodes to be added to the graph
    */
@@ -803,7 +810,6 @@ public void incrementEditState() {
 
   /**
    * @return all edges as a list
-   * @todo get rid of the template
    */
   public EdgeList getEdges()
   {
@@ -815,6 +821,32 @@ public void incrementEditState() {
     }
     return retEdges;
   }
+
+  /**
+   * @return all edges at the current algorithm state
+   */
+  public EdgeList getEdges(int state)
+  {
+    EdgeList retEdges = new EdgeList();
+    for ( Edge e : this.edges ) {
+      if ( e.inScope(state) ) {
+        retEdges.add(e);
+      }
+    }
+    return retEdges;
+  }
+
+    /**
+     * @return a list of all edges in the graph, even ones that have been deleted
+     * used when drawing, so that we can see the effect of undoing deletions
+     */
+    public EdgeList getAllEdges() {
+        EdgeList retEdges = new EdgeList();
+        for ( Edge e : this.edges ) {
+            retEdges.add(e);
+        }
+        return retEdges;
+    }
 
   /**
    * @return the edges as a set
@@ -866,20 +898,6 @@ public void incrementEditState() {
       }
     }
     return retNodes;
-  }
-
-  /**
-   * @return all edges at the current algorithm state
-   */
-  public EdgeList getEdges(int state)
-  {
-    EdgeList retEdges = new EdgeList();
-    for ( Edge e : this.edges ) {
-      if ( e.inScope(state) ) {
-        retEdges.add(e);
-      }
-    }
-    return retEdges;
   }
 
   /**
@@ -1394,4 +1412,4 @@ public void incrementEditState() {
   }
 }
 
-// [Last modified: 2018 12 26 at 17:41:34 GMT]
+// [Last modified: 2019 12 03 at 21:28:42 GMT]

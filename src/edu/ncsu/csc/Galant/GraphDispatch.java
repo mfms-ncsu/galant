@@ -252,11 +252,14 @@ public class GraphDispatch {
    * when the context does not know whether or not algorithm is running
    */
   public int getDisplayState() {
-    if ( animationMode ) return algorithmExecutor.getDisplayState();
-    else
-    {
-    return workingGraph.getEditState();
-    }
+      System.out.printf("->  getDisplayState, animation mode = %b\n", animationMode);
+      int returnState = 0;
+      if ( animationMode )
+          returnState = algorithmExecutor.getDisplayState();
+      else
+          returnState = workingGraph.getEditState();
+      System.out.printf("<-  getDisplayState, state = %d\n", returnState);
+      return returnState;
   }
   
   /**
@@ -381,4 +384,4 @@ public class GraphDispatch {
 
 }
 
-//  [Last modified: 2018 11 30 at 17:14:46 GMT]
+//  [Last modified: 2019 12 03 at 20:44:40 GMT]

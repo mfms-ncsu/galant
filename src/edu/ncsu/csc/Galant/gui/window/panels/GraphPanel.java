@@ -267,8 +267,8 @@ public class GraphPanel extends JPanel{
     if ( message != null ) {
       drawMessageBanner(message, g2d);
     }
-    nodes = graph.getNodes(state);
-    edges = graph.getEdges(state);
+    nodes = graph.getAllNodes();
+    edges = graph.getAllEdges();
 		
     // Draw edges first to put them behind nodes
     for (Edge e : edges) {
@@ -647,7 +647,7 @@ public class GraphPanel extends JPanel{
         throws GalantException
     {
         int stateNumber = dispatch.getDisplayState();
-        System.out.println("drawEdge, state = " + stateNumber + ", edge = " + e);
+        System.out.println("___ drawEdge, state = " + stateNumber + ", edge = " + e);
 		int thickness = defaultThickness;
 		
         Node target = e.getTargetNode();
@@ -1061,4 +1061,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2018 11 30 at 16:32:41 GMT]
+//  [Last modified: 2019 12 03 at 21:29:03 GMT]

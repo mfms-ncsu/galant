@@ -452,10 +452,12 @@ public class Node extends GraphElement {
     }
 
     /**
-     * @return the edges incident on this node (as a templated list)
+     * @return all edges incident on this node, even deleted ones;
+     * Caution: returns a reference (for now), but is only called in one
+     * place - see deleteNode() in Graph.java
      */
     public EdgeList getEdges() {
-        return getIncidentEdges();
+        return incidentEdges;
     }
 
     /**
@@ -761,4 +763,4 @@ public class Node extends GraphElement {
 
 }
 
-//  [Last modified: 2018 12 26 at 17:04:57 GMT]
+//  [Last modified: 2019 12 04 at 17:26:53 GMT]

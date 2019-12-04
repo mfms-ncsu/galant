@@ -426,7 +426,12 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                         // Priority goes to nodes
                         if (clickNode != null) {
                             Graph g = dispatch.getWorkingGraph();
-                            g.removeNode(clickNode);
+                            try {
+                                g.deleteNode(clickNode);
+                            } catch(Terminate t) {
+                                System.out.println("Termination while deleting node during edit; should not happen");
+                                System.exit(1);
+                            }
                             graphPanel.setSelectedNode(null);
 
                             if (repositionBtn.isSelected()) {
@@ -438,9 +443,18 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                             // If you didn't click on a node, look
                             // for an edge
                             Graph g = dispatch.getWorkingGraph();
-                            g.removeEdge(clickEdge);
+                            try {
+                                g.deleteEdge(clickEdge);
+                            } catch(Terminate t) {
+                                System.out.println("Termination while deleting edge; should not happen");
+                                System.exit(1);
+                            }
                             graphPanel.setSelectedEdge(null);
 
+                            /**
+                             * @todo repositioning in response to edge
+                             * deletion is likely to confuse the user.
+                             */
                             if (repositionBtn.isSelected()) {
                                 g.smartReposition();
                             }
@@ -1241,4 +1255,4 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
         // TODO Auto-generated method stub
     }
 }
- //  [Last modified: 2019 12 03 at 21:02:48 GMT]
+ //  [Last modified: 2019 12 04 at 16:33:11 GMT]

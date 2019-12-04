@@ -75,6 +75,13 @@ public class GraphDispatch {
    */
   private GraphWindow graphWindow;
 
+    /**
+     * true during edit mode if several elements need to be changed
+     * simultaneously; for example, when a node is deleted all incident edges
+     * need to be deleted without a state change.
+     */
+    private boolean atomic = false;
+
   /**
    * Reference to an active query window during algorithm execution (so
    * that it can be properly closed and does not cause Galant to hang)
@@ -189,6 +196,14 @@ public class GraphDispatch {
     return this.editMode;
   }
   
+    public boolean isAtomic() {
+        return this.atomic;
+    }
+
+    public void setAtomic(boolean atomic) {
+        this.atomic = atomic;
+    }
+
   /**
    * @param mode true when user is editing the working graph, false otherwise
    */
@@ -266,23 +281,28 @@ public class GraphDispatch {
    * @return the current algorithm state or 0 if not in animation mode; used
    * when the context does not know whether or not algorithm is running
    */
-  
   public int getAlgorithmState() {
     if ( animationMode ) return algorithmExecutor.getAlgorithmState();
     return 0;
   }
 
-  public void startStepIfAnimationOrIncrementEditState() throws Terminate {
-    if ( animationMode
-         && ! algorithmSynchronizer.isLocked()
-         ) {
-      algorithmSynchronizer.startStep();
+    /**
+     * Does what the name suggests
+     * @return true if a new step/state occurs (not currently used)
+     */
+    public boolean startStepIfAnimationOrIncrementEditState() throws Terminate {
+        if ( animationMode
+             && ! algorithmSynchronizer.isLocked()
+             ) {
+            algorithmSynchronizer.startStep();
+            return true;
+        }
+        if ( ! animationMode && ! atomic ) {
+            workingGraph.incrementEditState();
+            return true;
+        }
+        return false;
     }
-    if ( !animationMode )
-    {
-        workingGraph.incrementEditState();
-    }
-  }
 
   /**
    * Differs from startStepIfRunning() in that it ignores a lock; this is
@@ -384,4 +404,4 @@ public class GraphDispatch {
 
 }
 
-//  [Last modified: 2019 12 03 at 20:44:40 GMT]
+//  [Last modified: 2019 12 04 at 21:05:20 GMT]

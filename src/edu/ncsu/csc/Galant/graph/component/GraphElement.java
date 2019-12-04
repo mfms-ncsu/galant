@@ -105,16 +105,12 @@ public class GraphElement implements Comparable<GraphElement> {
      * the current (latest one) except that it will be tagged with the current
      * algorithm state if the algorithm is running; subsequent changes to this
      * GraphElement will take place in the new state.
-     *
-     * @todo there is no reason to create new states when parsing and the only
-     * reason to do it when editing is for a possible "undo" mechanism, which is
-     * not yet implemented
      */
     private GraphElementState newState() throws Terminate {
         dispatch.startStepIfAnimationOrIncrementEditState();
         GraphElementState latest = latestState();
         GraphElementState elementState
-                = new GraphElementState(latest);
+            = new GraphElementState(latest);
         System.out.println("newState returns " + elementState);
         return elementState;
     }
@@ -364,11 +360,11 @@ public class GraphElement implements Comparable<GraphElement> {
      * @return true if the element has been created but has not been deleted.
      */
     public boolean inScope() {
-        return !isDeleted();
+        return ! isDeleted();
     }
 
     public boolean inScope(int state) {
-        return isCreated(state) && !isDeleted(state);
+        return isCreated(state) && ! isDeleted(state);
     }
 
     /**
@@ -836,4 +832,4 @@ public class GraphElement implements Comparable<GraphElement> {
 
 }
 
-//  [Last modified: 2018 12 26 at 17:50:35 GMT]
+//  [Last modified: 2019 12 04 at 20:58:39 GMT]

@@ -91,6 +91,8 @@ public class GGraphEditorPanel extends GEditorPanel {
   public void propertyChange(PropertyChangeEvent evt) {
     LogHelper.enable();
     LogHelper.enterMethod(getClass(), "propertyChange");
+    UUID graphSource = GraphDispatch.getInstance().getGraphSource();
+    Graph workingGraph = GraphDispatch.getInstance().getWorkingGraph();
     if ( evt.getPropertyName().equals(GraphDispatch.ANIMATION_MODE) ) {
       if ( (Boolean) evt.getNewValue() ) {
         // entering animation mode
@@ -101,9 +103,9 @@ public class GGraphEditorPanel extends GEditorPanel {
         // back to edit mode
         this.textPane.setEnabled(true);
         LogHelper.logDebug(" to edit mode ...");
-        if ( GraphDispatch.getInstance().getGraphSource().equals(uuid) ) {
+        if ( graphSource.equals(uuid) ) {
           LogHelper.logDebug("  the right graph, updating");
-          textPane.setText( GraphDispatch.getInstance().getWorkingGraph().xmlString() );
+          textPane.setText(workingGraph.xmlString(workingGraph.getEditState()));
         }
       }
     } // end, in animation mode
@@ -111,7 +113,7 @@ public class GGraphEditorPanel extends GEditorPanel {
       LogHelper.logDebug(" nothing to do with animation ...");
       if ( GraphDispatch.getInstance().getGraphSource().equals(uuid) ) {
         LogHelper.logDebug("  doing a text update in active panel");
-        textPane.setText( GraphDispatch.getInstance().getWorkingGraph().xmlString() );
+        textPane.setText(workingGraph.xmlString(workingGraph.getEditState()));
         GraphDispatch.getInstance().setEditMode(false);
       }
     } // end, not animation mode
@@ -125,4 +127,4 @@ public class GGraphEditorPanel extends GEditorPanel {
 
 }
 
-// [Last modified: 2018 11 30 at 16:09:23 GMT]
+// [Last modified: 2019 12 04 at 17:14:06 GMT]

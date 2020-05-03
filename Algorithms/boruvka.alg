@@ -54,36 +54,33 @@ function Edge lowestWeight(Node v) {
   for_adjacent( v, e, w ) {
     if ( label(v).equals(label(w)) ) {
       if ( ! marked(w) && e.is("inTree") ) {
+        // a tree edge within the same component is colored blue
+        // and we search for the lowest weight outgoing edge in the subtree
+        // below it
         color(e, BLUE);
         Edge bestBelow = lowestWeight(w);
         if ( bestBelow != null && weight(bestBelow) < bestWeight ) {
-          if ( best != null && ! best.is("inTree") )
-            unHighlight(best);
-          highlight(bestBelow);
+          // update the current lowest weight outgoing edge if a better one
+          // is found in the subtree below and change highlighting
           best = bestBelow;
           bestWeight = weight(bestBelow);
         }
-        else if ( bestBelow != null && ! best.is("inTree") )
-          unHighlight(bestBelow);
       }
       else if ( ! e.is("inTree") ) {
+        // edges within the component but not in tree should be hidden
         hide(e);
       }
     }
     else { //  label(w) != label(v)
       // in another tree
       if ( weight(e) < bestWeight ) {
-        if ( best != null && ! best.is("inTree") )
-          unHighlight(best);
-        highlight(e);
-        display("best edge = " + string(e));
         best = e;
         bestWeight = weight(e);
       }
     }
   }
-  if ( best != null )
-    unhighlight(best);          // let the algorithm highlight this later
+  if ( best != null ) {
+  }
   return best;
 }
 
@@ -139,7 +136,7 @@ algorithm {
     beginStep();
     for_nodes( v ) {
       if ( ! marked(v) ) {
-        labelComponent(v, "" + id(v));
+        labelComponent(v, "[" + id(v) + "]");
       }
     }
     hideExtraneousEdges();
@@ -160,8 +157,13 @@ algorithm {
                 + label(componentRepresentative));
         step();
         Edge bestEdge = lowestWeight(componentRepresentative);
-        step();
+        display("best edge = " + string(bestEdge));
         highlight(bestEdge);
+        highlight(source(bestEdge));
+        highlight(target(bestEdge));
+        step();
+        unhighlight(source(bestEdge));
+        unhighlight(target(bestEdge));
         if ( ! bestEdge.is("inTree") ) {
           set(bestEdge, "inTree");
           forestEdges++;
@@ -192,4 +194,4 @@ algorithm {
   endStep();
 }
 
-/*  [Last modified: 2017 10 12 at 14:23:48 GMT] */
+/*  [Last modified: 2018 08 28 at 01:35:12 GMT] */

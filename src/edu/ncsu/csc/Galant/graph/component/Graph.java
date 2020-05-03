@@ -29,7 +29,7 @@ import edu.ncsu.csc.Galant.logging.LogHelper;
  *
  * @author Michael Owoc, Ty Devries (major modifications by Matt Stallmann)
  */
-public class Graph {
+public class Graph{
   public GraphWindow graphWindow;
   private GraphDispatch dispatch;
 
@@ -112,6 +112,7 @@ public class Graph {
    * Resets the graph to its original state at the end of an
    * animation.
    */
+  //The following method can be deleted as cloning accomplishes the same task
   public void reset() {
     int initialStateNumber = GraphDispatch.getInstance().getAlgorithmState();
 
@@ -123,7 +124,7 @@ public class Graph {
       if ( state.getState() > 0 ) break;
       initialStates.add(state);
     }
-    this.states = initialStates;
+    this.states = initialStates;  
 
     // get rid of any nodes and edges created by the algorithm; better to
     // do this by gathering the ones that should not be removed and then
@@ -166,7 +167,60 @@ public class Graph {
       = new GraphState(latest);
     return state;
   }
+  //The following method is for deep copy. It clones graph object completely and is used to store edit state of graph just before algo execution
+  
+  public Graph copyCurrentState(Graph currentGraph){
+      
+   Graph copyOfGraph=this;
+    EdgeList edgeListCopy=new EdgeList();
+    NodeList nodeListCopy=new NodeList();
+    for(int i=0;i<=this.nodes.size()-1;i++)
+    {
+        Node copiedNode=this.nodes.get(i);
+        copiedNode=copiedNode.copyNode(currentGraph);
+        nodeListCopy.add(copiedNode);
+    }
+    for(int i=0;i<=this.edges.size()-1;i++)
+    {
+        Edge copiedEdge=this.edges.get(i);
+        copiedEdge=copiedEdge.copyEdge(currentGraph);
+        edgeListCopy.add(copiedEdge);
+    }
 
+    String nameCopy=this.name;
+    String commentCopy=this.comment;
+    boolean directedCopy=this.directed;
+    boolean layeredCopy=this.layered;
+    LayerInformation layerInformationCopy=this.layerInformation;
+    TreeMap<Integer, Node> nodeByIdCopy=new TreeMap<Integer, Node>(this.nodeById);
+    TreeMap<Integer, Edge> edgeByIdCopy=new TreeMap<Integer, Edge>(this.edgeById);
+    MessageBanner bannerCopy=this.banner;
+    Edge selectedEdgeCopy=this.selectedEdge;
+    Node selectedNodeCopy=this.selectedNode;
+    List<GraphState> statesCopy=this.states;
+    Node rootNodeCopy=this.rootNode;
+    int nextEdgeIdCopy=this.nextEdgeId;
+    boolean hasExplicitEdgeIdsCopy=this.hasExplicitEdgeIds;
+    copyOfGraph.edges=edgeListCopy;
+    copyOfGraph.nodes=nodeListCopy;
+    copyOfGraph.name=nameCopy;
+    copyOfGraph.comment=commentCopy;
+    copyOfGraph.directed=directedCopy;
+    copyOfGraph.layered=layeredCopy;
+    copyOfGraph.layerInformation=layerInformationCopy;
+    copyOfGraph.nodeById=nodeByIdCopy;
+    copyOfGraph.edgeById=edgeByIdCopy;
+    copyOfGraph.banner=bannerCopy;
+    copyOfGraph.selectedEdge=selectedEdgeCopy;
+    copyOfGraph.selectedNode=selectedNodeCopy;
+    copyOfGraph.states=statesCopy;
+    copyOfGraph.rootNode=rootNodeCopy;
+    copyOfGraph.nextEdgeId=nextEdgeIdCopy;
+    copyOfGraph.hasExplicitEdgeIds=hasExplicitEdgeIdsCopy;
+    return copyOfGraph;
+  }
+
+   
   /**
    * @return The last state on the list of states. This is the default for
    * retrieving information about any attribute.
@@ -1336,4 +1390,4 @@ public class Graph {
   }
 }
 
-// [Last modified: 2017 04 18 at 19:59:20 GMT]
+// [Last modified: 2018 08 31 at 15:15:11 GMT]

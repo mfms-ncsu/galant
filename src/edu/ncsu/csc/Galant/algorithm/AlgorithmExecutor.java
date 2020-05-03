@@ -14,6 +14,7 @@ package edu.ncsu.csc.Galant.algorithm;
 import java.lang.Thread;
 import edu.ncsu.csc.Galant.algorithm.Algorithm;
 import edu.ncsu.csc.Galant.GraphDispatch;
+import edu.ncsu.csc.Galant.graph.component.Graph;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow;
 import edu.ncsu.csc.Galant.logging.LogHelper;
 
@@ -91,7 +92,7 @@ public class AlgorithmExecutor {
       LogHelper.disable();
         LogHelper.enterMethod(getClass(), "stopAlgorithm");
         GraphDispatch dispatch = GraphDispatch.getInstance();
-        dispatch.setAnimationMode(false);
+        dispatch.stopAlgorithm();
         synchronized ( synchronizer ) {
             synchronizer.stop();
             synchronizer.notify();
@@ -232,4 +233,4 @@ public class AlgorithmExecutor {
     }
 }
 
-//  [Last modified: 2017 03 08 at 19:31:24 GMT]
+//  [Last modified: 2018 08 31 at 14:31:51 GMT]

@@ -52,9 +52,14 @@ public class GraphElement implements Comparable<GraphElement> {
 	protected List<GraphElementState> states;
 
     /**
-     * Constructor to be used during parsing; all additional information is
-     * filled in by initializeAfterParsing(). The algorithm state is
-     * initialized elsewhere, currently in Graph.
+     * Create a clean copy, to be used at the start of algorithm execution
+     */
+    public GraphElement() {
+    }
+    
+    /**
+     * If this constructor is  used during parsing, all additional information is
+     * filled in by initializeAfterParsing().
      *
      * @todo let the Terminate exception propagate all the way to the top,
      * where it can be caught based on whether or not you're running an
@@ -174,6 +179,23 @@ public class GraphElement implements Comparable<GraphElement> {
             dispatch.pauseExecutionIfRunning();
         }
 	}
+        
+        public ArrayList<GraphElementState> copyCurrentState()
+        {
+//        GraphElementState currentState = new GraphElementState(this.states.get(0));
+//        GraphElement graphElementCopy = new GraphElement();
+//        graphElementCopy.dispatch = GraphDispatch.getInstance();
+//        graphElementCopy.states = new ArrayList<GraphElementState>();
+//        graphElementCopy.graph = currentGraph;
+//        graphElementCopy.states.add(currentState);
+//        return graphElementCopy;
+           GraphElementState currentState = new GraphElementState(this.states.get(0));
+          ArrayList<GraphElementState> statesCopy  = new ArrayList<GraphElementState>();
+           statesCopy.add(currentState);
+           return statesCopy;
+        }
+        
+       
 
   /**
    * @todo Would be nice to have methods hasInteger(String key), etc., so
@@ -729,4 +751,4 @@ public class GraphElement implements Comparable<GraphElement> {
 
 }
 
-//  [Last modified: 2017 07 22 at 18:47:03 GMT]
+//  [Last modified: 2018 08 31 at 15:11:53 GMT]

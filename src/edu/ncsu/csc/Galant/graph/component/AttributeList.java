@@ -4,10 +4,10 @@ import java.util.ArrayList;
 
 /**
  * An AttributeList plays the role of a Map. A list is used so that
- * attributes will appeare in the order they were added rather than
+ * attributes will appear in the order they were added rather than
  * alphabetically by key.
  */
-public class AttributeList {
+public class AttributeList implements Cloneable{
 
     protected ArrayList<Attribute> attributes;
 
@@ -153,7 +153,7 @@ public class AttributeList {
 //         }
 //         return builder.toString();
 //     }
-
+    
 }
 
 //  [Last modified: 2018 08 27 at 20:44:20 GMT]

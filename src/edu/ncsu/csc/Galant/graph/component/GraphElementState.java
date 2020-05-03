@@ -2,6 +2,8 @@ package edu.ncsu.csc.Galant.graph.component;
 import java.awt.Point;
 import edu.ncsu.csc.Galant.GraphDispatch;
 import edu.ncsu.csc.Galant.logging.LogHelper;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The state of a GraphElement, used akin to a frame in an animation. As the
@@ -178,4 +180,4 @@ public class GraphElementState {
     }
 }
 
-//  [Last modified: 2017 07 22 at 18:41:38 GMT]
+//  [Last modified: 2018 08 31 at 14:41:01 GMT]

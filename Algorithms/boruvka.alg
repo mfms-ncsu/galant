@@ -136,7 +136,7 @@ algorithm {
     beginStep();
     for_nodes( v ) {
       if ( ! marked(v) ) {
-        labelComponent(v, "[" + id(v) + "]");
+        labelComponent(v, "c" + id(v));
       }
     }
     hideExtraneousEdges();
@@ -194,4 +194,4 @@ algorithm {
   endStep();
 }
 
-/*  [Last modified: 2018 08 28 at 01:35:12 GMT] */
+/*  [Last modified: 2018 09 08 at 13:19:51 GMT] */

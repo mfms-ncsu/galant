@@ -14,9 +14,28 @@ int [] finish;
  */
 String [] component_color =
 {
-  BLACK, RED, BLUE, BROWN, CYAN, ORANGE,
-  TEAL, YELLOW, MOSS, VIOLET, GREEN, MAGENTA, GRAY
+    BLACK, RED, BLUE, BROWN, CYAN, ORANGE,
+    TEAL, YELLOW, MOSS, VIOLET, GREEN, MAGENTA, GRAY
 };
+
+/**
+ * functions to track components of vertices and edges and color them accordingly
+ */
+function set_component(GraphElement ge, Integer component) {
+    set(ge, "component", component);
+    color_element(ge);
+    setWeight(ge, component);
+    showWeight(ge);
+    hideLabel(ge);
+}
+
+function Integer component(GraphElement ge) {
+    return getInteger(ge, "component");
+}
+
+function color_element(GraphElement ge) {
+    color(ge, component_color[component(ge) % component_color.length]); 
+}
 
 /**
  * set of nodes not yet visited during first dfs
@@ -29,7 +48,7 @@ NodeSet unvisited;
  */
 NodeList finished;
 
-function visit( Node v ) {
+function visit(Node v) {
     unvisited.remove(v);
     time = time + 1;
     discovery[id(v)] = time;
@@ -64,67 +83,64 @@ function visit( Node v ) {
     endStep();
 }
 
-function reverse_visit( Node v, int component ) {
-  beginStep();
-  color(v, component_color[component % component_color.length]);
-  setWeight(v, component);
-  showWeight(v);
-  //  label(v, component_label[component % component_label.length]);
-  mark(v);
-  for_incoming( v, e, w ) {
-    if ( ! marked(w) ) {
-      color(e, component_color[component % component_color.length]);
-      reverse_visit(w, component);
+function reverse_visit(Node v, int component) {
+    beginStep();
+    set_component(v, component);
+    mark(v);
+    for_incoming ( v, e, w ) {
+         if ( ! marked(w) ) {
+            set_component(e, component);
+            reverse_visit(w, component);
+        }
+        else if ( component == component(w) ) {
+            set_component(e, component);
+        }
     }
-    else if ( color(w).equals(color(v)) ) {
-      color(e, component_color[component % component_color.length]);
-    }
-  }
 }
 
 algorithm {
-  showNodeLabels();
-  showEdgeLabels();
-  showNodeWeights();
+    showNodeLabels();
+    showEdgeLabels();
+    showNodeWeights();
 
-  time = 0;
-  discovery = new int[nodeIds()];
-  finish = new int[nodeIds()];
+    time = 0;
+    discovery = new int[nodeIds()];
+    finish = new int[nodeIds()];
 
-  setDirected(true);
+    setDirected(true);
 
-  beginStep();
-  clearNodeLabels();
-  clearEdgeLabels();
-  hideAllNodeWeights();
-  endStep();
+    beginStep();
+    clearNodeLabels();
+    clearEdgeLabels();
+    hideAllNodeWeights();
+    endStep();
 
-  finished = new NodeList();
+    finished = new NodeList();
   
-  unvisited = getNodeSet();
-  while ( ! unvisited.isEmpty() ) {
-    Node u = getNode("node to visit",
-                      unvisited,
-                      "node already visited");
-    step();
-    visit(u);
-  }
-
-  beginStep();
-  clearEdgeLabels();
-  clearEdgeHighlighting();
-  clearNodeHighlighting();
-  clearNodeMarks();
-  endStep();
-
-  int component = 1;
-  while ( ! empty(finished) ) {
-    Node u = pop(finished);
-    if ( ! marked(u) ) {
-      reverse_visit(u, component);
-      component++;
+    unvisited = getNodeSet();
+    while ( ! unvisited.isEmpty() ) {
+        Node u = getNode("node to visit",
+                         unvisited,
+                         "node already visited");
+        step();
+        visit(u);
     }
-  }
+
+    beginStep();
+    clearEdgeLabels();
+    clearEdgeHighlighting();
+    clearNodeHighlighting();
+    clearNodeMarks();
+    endStep();
+
+    int component = 1;
+    while ( ! empty(finished) ) {
+        Node u = pop(finished);
+        if ( ! marked(u) ) {
+            reverse_visit(u, component);
+            component++;
+        }
+    }
 }
 
-//  [Last modified: 2017 03 16 at 17:50:21 GMT]
+//  [Last modified: 2019 03 11 at 14:26:17 GMT]

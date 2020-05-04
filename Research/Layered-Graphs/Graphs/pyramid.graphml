@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns
+http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+<comments>
+ a four-layer pyramid, designed to test stretching
+</comments>
+<graph edgedefault="directed" name="pyramid" type="layered">
+<node id="0" layer="0" positionInLayer="0"/>
+<node id="1" layer="0" positionInLayer="1"/>
+<node id="2" layer="0" positionInLayer="2"/>
+<node id="3" layer="0" positionInLayer="3"/>
+<node id="4" layer="1" positionInLayer="0"/>
+<node id="5" layer="1" positionInLayer="1"/>
+<node id="6" layer="1" positionInLayer="2"/>
+<node id="7" layer="2" positionInLayer="0"/>
+<node id="8" layer="2" positionInLayer="1"/>
+<node id="9" layer="3" positionInLayer="0"/>
+<edge source="0" target="4"/>
+<edge source="0" target="5"/>
+<edge source="1" target="4"/>
+<edge source="1" target="5"/>
+<edge source="1" target="6"/>
+<edge source="2" target="4"/>
+<edge source="2" target="5"/>
+<edge source="2" target="6"/>
+<edge source="3" target="5"/>
+<edge source="3" target="6"/>
+<edge source="4" target="7"/>
+<edge source="5" target="7"/>
+<edge source="5" target="8"/>
+<edge source="6" target="7"/>
+<edge source="6" target="8"/>
+<edge source="7" target="9"/>
+<edge source="8" target="9"/>
+</graph>
+</graphml>

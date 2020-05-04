@@ -33,12 +33,12 @@ Integer max_reduction;
 function initialize_degrees_and_weights() {
   // in case no edge/node weight has been set - default weight is 1
   for_edges ( e ) {
-    if ( hasNoWeight(e) || weight(e) == 0 ) {
+    if ( hasNoWeight(e) ) {
       setWeight(e, 1);
     }
   }
   for_nodes ( v ) {
-    if ( hasNoWeight(v) || weight(v) == 0 ) {
+    if ( hasNoWeight(v)  ) {
       setWeight(v, 1);
     }
   }

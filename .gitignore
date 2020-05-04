@@ -5,6 +5,8 @@
 # emacs backups and TAGS
 *.~*~
 TAGS
+# Mac files
+.DS_Store
 # stuff in the build directory is the result of compilation
 build/
 # stuff in the doc directory: created when building javadoc
@@ -13,13 +15,14 @@ doc
 *.graphml
 *.sgf
 # anything in the Sandbox -- used for trying things out
-Sandbox
+Sandbox/
 # Graph-Gallery is used for WTEiR experiments
-Graph-Gallery
+Graph-Gallery/
 # graphs used for research, mostly crossing minimization
-Research-Graphs
+Research-Graphs/
 # other graphs used in crossing minimization research
-Crossing_Graphs
+Crossing_Graphs/
 # latex stuff
 *.blg
 *.aux
+*.synctex.gz

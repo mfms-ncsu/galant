@@ -1,68 +1,70 @@
 <html> <head>
-<title>Algorithms for the Two-Median Problem</title>
+<title>p-median algorithms</title>
 </head>
 
-<body text=black bgcolor=white>
-<h2>Algorithms for the Two-Median Problem</h2>
-
+<body>
+<h2>p-median algorithms</h2>
 
 <ul>
 <br><hr>
-<li><b><a href=1-median.alg>1-median.alg</a></b> 
-
-Implementation of Goldman's algorithm for 1-median of trees<br>
+<li><b><a href= 1-median.alg>1-median.alg</a></b> 
 <br>
-<br><hr>
+implementation of Goldman's algorithm for 1-median of trees
+</li> <br><hr>
 <li><b><a href=brute_force-2-median.alg>brute_force-2-median.alg</a></b> 
 <br>
-@param parent the node from which this function was initiated; not a<br>
-candidate for a recursive call<br>
-@return the weight of the subtree rooted at root<br>
+tries out every possible cut edge in no particular order<br>
 <br>
-<code>function Double recursive_weight(Node root, Node parent)</code>
-<hr>
+</li> <br><hr>
+<li><b><a href=brute_force-3_median.alg>brute_force-3_median.alg</a></b> 
 <br>
+Computes and displays the 1-median, the two 2-medians and the three<br>
+3-medians of a tree. These are appropriately labeled and given colors.<br>
+Edges are assumed to be weighted. If not, they are automatically given<br>
+weights of 1.0<br>
 <br>
-sets the weight of each edge incident on the median to the total weight of<br>
-the corresponding subtree<br>
+</li> <br><hr>
+<li><b><a href=edge_weighted-1-median.alg>edge_weighted-1-median.alg</a></b> 
+1-median.alg<br>
+Implementation of Goldman's algorithm for 1-median of trees<br>
 <br>
-<code>function compute_subtree_weights(Node median)</code>
-<hr>
+</li> <br><hr>
+<li><b><a href=hamalainen-simple.alg>hamalainen-simple.alg</a></b> 
 <br>
+Quadratic implementation of Hamalainen's two-median algorithm<br>
 <br>
-visits nodes reachable from the root (one edge has been blocked at this<br>
-point) and sets the appropriate array values, queueing up leaves in the<br>
-process, as with the initialization for the one_median algorithm<br>
-<br>
-<code>function dfs(Node v)</code>
-<hr>
-<br>
-<br>
-Performs initialization for the one_median algorithm by visiting only the<br>
-nodes reachable from the root without traversing the edge.<br>
-<br>
-<code>function init_with_dfs(Node root, Edge edge)</code>
-<hr>
-<br>
-<br>
-@return the median of the subtree rooted at root assuming that the edge is<br>
-missing<br>
-<br>
-<code>function Node side_median(Node root, Edge edge)</code>
-<hr>
-<br>
-<br>
-Computes and displays (as label) the weight of each node times its<br>
-distance from the median. The breadth first search does not traverse<br>
-hidden edges.<br>
-<br>
-@return total cost of the tree with respect to the median<br>
-<br>
-<code>function Double compute_cost(Node median)</code>
-<br><hr>
+</li> <br><hr>
 <li><b><a href=interactive-2-median.alg>interactive-2-median.alg</a></b> 
-- allows interactive exploration of options for the two median<br>
-<br><hr>
+<br>
+- allows interactive exploration of options for
+the two median<br>
+<br>
+</li> <br><hr>
+<li><b><a href=loc_alloc.alg>loc_alloc.alg</a></b> 
+</li> <br><hr>
+<li><b><a href=loc_alloc_edge.alg>loc_alloc_edge.alg</a></b> 
+<br>
+This only works for unweighted edges - it uses BFS, not Dijkstra's algorithm<br>
+<br>
+</li> <br><hr>
+<li><b><a href=max-reduction.alg>max-reduction.alg</a></b> 
+<br>
+Algorithm for testing max-reduction conjecture. For now it's a minimal<br>
+modification of the Hamalainen implementation. Idea is as follows (for<br>
+each T-hat):<br>
+put leaves on queue<br>
+max_reduction_node = null with max_weighted_distance 0<br>
+while queue has more than one node do<br>
+current = remove(queue)<br>
+if weighted_distance(current) exceeds max_weighted_distance then<br>
+max_reduction_node = current<br>
+max_weighted_distance = weighted_distance(current)<br>
+endif<br>
+put parent of current on queue if all children have been processed<br>
+end while<br>
+now the path from max_reduction_node to the 1-median has the median in T-hat<br>
+<br>
+</li> <br><hr>
 <li><b><a href=my-2-median.alg>my-2-median.alg</a></b> 
 <br>
 Quadratic implementation of potentially linear two-median algorithm.<br>
@@ -70,51 +72,21 @@ Quadratic implementation of potentially linear two-median algorithm.<br>
 @todo the algorithm does not work on t-20-13, among perhaps others,<br>
 probably because one of the initial two-medians is the one_median; it may<br>
 be possible to still operate in linear time if we try out all edges<br>
-indcident on the one_median as cut edges.
-The algorithm relies on the<br>
+indcident on the one_median as cut edges. The algorithm relies on the<br>
 assumption that the optimum cut edge is in the max-weight subtree, false<br>
 in the case of t-20-13.<br>
 <br>
 @todo add ability to see the incremental costs of shifting cut edge<br>
 without changing the medians.<br>
-<hr>
-Side effects:<br>
-- the weight of parent_edge is set to total weight of the subtree<br>
-- the label of root (and cost[id(root)]) is set to the cost of the<br>
-subtree assuming that root is used as the median<br>
-- sets the parent of each adjacent node (except parent of root) to be the root<br>
-@return the weight of the subtree rooted at root<br>
 <br>
-<code>function Double recursive_weight(Node root)</code>
-<hr>
-<br>
-computes two medians using the given edge as a cut edge<br>
-@param root the root of the subtree in which the first median should be<br>
-located.<br>
-<br>Side effect: updates both first_median and second_median, which are
-<br>computed based on the cut edge.<br>
-<br>
-<code>function Double compute_two_medians(Edge cut_edge, Node root)</code>
-<hr>
-<br>
-cleans up the display after compute_two_medians<br>
-<br>
-<code>function cleanup(Edge edge)</code>
-<hr>
-<br>
-tries out all cut edges between start and the one_median; this version is<br>
-inefficient - no smart updates along the lines explained below<br>
-<br>
-<code>function explore_path(Node start)</code>
-<hr>
-<br><hr>
+</li> <br><hr>
 <li><b><a href=split-dfs.alg>split-dfs.alg</a></b> 
 <br>
 Systematically goes through all the edges (of a tree) and does two<br>
 depth-first searches, one from each endpoint. Each search assumes that the<br>
 relevant edge is missing.<br>
 <br>
-</ul>
+</li> </ul>
 
 <hr>
 <address>
@@ -123,5 +95,7 @@ Matthias F. (Matt) Stallmann
 </a>
 
 Created: 
-Fri Sep 9 16:03:47 EDT 2016
+Wed Oct 10 13:29:53 EDT 2018
 </address>
+</body> </html>
+

@@ -517,7 +517,8 @@ public class GraphPanel extends JPanel{
         throws GalantException
     {
         int stateNumber = dispatch.getDisplayState();
-        System.out.println("%%%% drawNode, state = " + stateNumber + ", node = " + n);
+        System.out.printf("^^^^ drawNode, state = %d, node = %s\n",
+                          stateNumber, n.toString());
         Point nodeCenter = getNodeCenter(n);
         g2d.setColor(Color.BLACK);
 		
@@ -1064,4 +1065,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2019 12 04 at 20:13:21 GMT]
+//  [Last modified: 2020 05 04 at 16:05:50 GMT]

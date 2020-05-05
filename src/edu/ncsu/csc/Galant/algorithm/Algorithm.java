@@ -306,6 +306,16 @@ public abstract class Algorithm implements Runnable {
       throw new GalantException("Uninitialized queue in removeBest() -- use 'new'");
     return Q.removeBest();
   }
+  public Node removeMin(NodePriorityQueue Q) throws GalantException {
+    if ( Q == null )
+      throw new GalantException("Uninitialized queue in removeBest() -- use 'new'");
+    return Q.removeMin();
+  }
+  public Node removeMax(NodePriorityQueue Q) throws GalantException {
+    if ( Q == null )
+      throw new GalantException("Uninitialized queue in removeBest() -- use 'new'");
+    return Q.removeMax();
+  }
   public Node best(NodePriorityQueue Q) throws GalantException {
     if ( Q == null )
       throw new GalantException("Uninitialized queue in best() -- use 'new'");
@@ -332,6 +342,16 @@ public abstract class Algorithm implements Runnable {
     if ( Q == null )
       throw new GalantException("Uninitialized queue in removeBest() -- use 'new'");
     return Q.removeBest();
+  }
+  public Edge removeMin(EdgePriorityQueue Q) throws GalantException {
+    if ( Q == null )
+      throw new GalantException("Uninitialized queue in removeBest() -- use 'new'");
+    return Q.removeMin();
+  }
+  public Edge removeMax(EdgePriorityQueue Q) throws GalantException {
+    if ( Q == null )
+      throw new GalantException("Uninitialized queue in removeBest() -- use 'new'");
+    return Q.removeMax();
   }
   public Edge best(EdgePriorityQueue Q) throws GalantException {
     if ( Q == null )
@@ -440,7 +460,8 @@ public abstract class Algorithm implements Runnable {
   /** makes edge weights invisible */
   public void hideEdgeWeights() { graph.showEdgeWeights(false); }
   /** makes node weights visible */
-  public void showNodeWeights() { graph.showNodeWeights(true); }
+  public void showNodeWeights() { graph.showNodeWeights(true);
+  }
   /** makes edge weights visible */
   public void showEdgeWeights() { graph.showEdgeWeights(true); }
 
@@ -829,6 +850,10 @@ public abstract class Algorithm implements Runnable {
     checkGraphElement(ge);
     return ge.getColor();
   }
+    public boolean hasColor(GraphElement ge) throws GalantException {
+        checkGraphElement(ge);
+        return ge.getColor() != null;
+    }
 
   /** hiding of nodes differs - all incident edges must be hidden as well */
   public void hide(Node v) throws Terminate, GalantException {
@@ -1368,12 +1393,6 @@ public abstract class Algorithm implements Runnable {
     return graph.getNodeById(id);
   }
 
-  /** @see edu.ncsu.csc.Galant.graph.component.Graph#getEdgeById(int) */
-  public Edge getEdgeById(int id) throws GalantException
-  {
-    return graph.getEdgeById(id);
-  }
-
   /**
    * @return an Edge with the given source and target; if the graph is
    * undirected it doesn't matter which is which; returns null if no such
@@ -1493,4 +1512,4 @@ public abstract class Algorithm implements Runnable {
   public abstract void run();
 }
 
-//  [Last modified: 2017 05 20 at 19:16:59 GMT]
+//  [Last modified: 2020 05 05 at 11:41:39 GMT]

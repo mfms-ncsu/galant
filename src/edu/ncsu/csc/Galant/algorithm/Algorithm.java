@@ -830,6 +830,10 @@ public abstract class Algorithm implements Runnable {
     checkGraphElement(ge);
     return ge.getColor();
   }
+    public boolean hasColor(GraphElement ge) throws GalantException {
+        checkGraphElement(ge);
+        return ge.getColor() != null;
+    }
 
   /** hiding of nodes differs - all incident edges must be hidden as well */
   public void hide(Node v) throws Terminate, GalantException {
@@ -1488,4 +1492,4 @@ public abstract class Algorithm implements Runnable {
   public abstract void run();
 }
 
-//  [Last modified: 2018 12 26 at 16:12:15 GMT]
+//  [Last modified: 2020 05 04 at 21:02:18 GMT]

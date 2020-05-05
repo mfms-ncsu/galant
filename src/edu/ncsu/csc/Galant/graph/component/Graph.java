@@ -738,7 +738,8 @@ public void incrementEditState() {
   public int edgeIds() {
     int maxId = 0;
     for ( Edge currentEdge : edges ) {
-      if ( currentEdge.inScope() && currentEdge.getId() > maxId )
+      if ( currentEdge.inScope()
+           && currentEdge.getId() > maxId )
         maxId = currentEdge.getId();
     }
     return maxId + 1;
@@ -1412,4 +1413,4 @@ public void incrementEditState() {
   }
 }
 
-// [Last modified: 2019 12 04 at 21:06:50 GMT]
+// [Last modified: 2020 05 04 at 20:13:04 GMT]

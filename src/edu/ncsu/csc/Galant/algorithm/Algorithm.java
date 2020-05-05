@@ -306,6 +306,16 @@ public abstract class Algorithm implements Runnable {
       throw new GalantException("Uninitialized queue in removeBest() -- use 'new'");
     return Q.removeBest();
   }
+  public Node removeMin(NodePriorityQueue Q) throws GalantException {
+    if ( Q == null )
+      throw new GalantException("Uninitialized queue in removeBest() -- use 'new'");
+    return Q.removeMin();
+  }
+  public Node removeMax(NodePriorityQueue Q) throws GalantException {
+    if ( Q == null )
+      throw new GalantException("Uninitialized queue in removeBest() -- use 'new'");
+    return Q.removeMax();
+  }
   public Node best(NodePriorityQueue Q) throws GalantException {
     if ( Q == null )
       throw new GalantException("Uninitialized queue in best() -- use 'new'");
@@ -332,6 +342,16 @@ public abstract class Algorithm implements Runnable {
     if ( Q == null )
       throw new GalantException("Uninitialized queue in removeBest() -- use 'new'");
     return Q.removeBest();
+  }
+  public Edge removeMin(EdgePriorityQueue Q) throws GalantException {
+    if ( Q == null )
+      throw new GalantException("Uninitialized queue in removeBest() -- use 'new'");
+    return Q.removeMin();
+  }
+  public Edge removeMax(EdgePriorityQueue Q) throws GalantException {
+    if ( Q == null )
+      throw new GalantException("Uninitialized queue in removeBest() -- use 'new'");
+    return Q.removeMax();
   }
   public Edge best(EdgePriorityQueue Q) throws GalantException {
     if ( Q == null )
@@ -1492,4 +1512,4 @@ public abstract class Algorithm implements Runnable {
   public abstract void run();
 }
 
-//  [Last modified: 2020 05 04 at 21:02:18 GMT]
+//  [Last modified: 2020 05 05 at 11:41:39 GMT]

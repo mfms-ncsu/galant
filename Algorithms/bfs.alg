@@ -9,6 +9,9 @@ algorithm {
   showNodeWeights();
   queue = new NodeQueue();
   beginStep();
+  for_edges( e ) {
+      print(e)
+          }
   for_nodes( v ) {
     setWeight(v, INFINITY);
   }
@@ -38,4 +41,4 @@ algorithm {
   }
 }
 
-//  [Last modified: 2018 03 01 at 13:22:30 GMT]
+//  [Last modified: 2018 09 19 at 18:50:57 GMT]

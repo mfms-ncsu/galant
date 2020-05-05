@@ -25,11 +25,11 @@ public class NodeDeletionDialog extends NodeSpecificationDialog {
         GraphDispatch dispatch = GraphDispatch.getInstance();
         Graph graph = dispatch.getWorkingGraph();
         GraphPanel panel = GraphWindow.getGraphPanel();
-        graph.removeNode(node);
+        graph.deleteNode(node);
         GraphWindow.componentEditPanel.setWorkingComponent(null);
         panel.repaint();
         dispatch.pushToTextEditor();
     }
 }
 
-//  [Last modified: 2016 07 03 at 15:42:23 GMT]
+//  [Last modified: 2019 12 04 at 16:16:08 GMT]

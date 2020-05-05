@@ -44,7 +44,16 @@ public class GraphElementState implements Cloneable{
     private GraphDispatch dispatch;
 
     /**
-     * Constructor used during parsing and editing, when no attributes are
+     * Constructor used during parsing, when an attribute list is given
+     */
+    public GraphElementState(AttributeList L) {
+        this.dispatch = GraphDispatch.getInstance();
+        this.state = 0;
+        this.attributes = L;
+    }
+    
+    /**
+     * Constructor used during editing, when no attributes are
      * known yet.
      */
     public GraphElementState() {
@@ -60,7 +69,16 @@ public class GraphElementState implements Cloneable{
      */
     public GraphElementState(GraphElementState elementState) {
         this.dispatch = GraphDispatch.getInstance();
-        this.state = dispatch.getAlgorithmState();
+        System.out.println("-> new GraphElementState, editMode = " + dispatch.isEditMode()
+                           + ", editState = "
+                           + dispatch.getWorkingGraph().getEditState());
+        if ( dispatch.isAnimationMode() ) {
+            this.state = dispatch.getAlgorithmState();
+        }
+        else {
+            this.state = dispatch.getWorkingGraph().getEditState(); 
+        }
+            
         this.attributes = elementState.getAttributes().duplicate();
     }
 
@@ -136,7 +154,7 @@ public class GraphElementState implements Cloneable{
     public String xmlString() {
         String s = " ";
         for ( Attribute attribute : attributes.getAttributes() ) {
-            s += attribute + " ";
+            s += attribute.xmlString() + " ";
         }
         return s;
     }
@@ -151,7 +169,7 @@ public class GraphElementState implements Cloneable{
         for ( Attribute attribute : attributes.getAttributes() ) {
             if ( ! attribute.getKey().equals("x")
                  && ! attribute.getKey().equals("y") ) {
-                s += attribute + " ";
+                s += attribute.xmlString() + " ";
             }
         }
         return s;
@@ -165,7 +183,7 @@ public class GraphElementState implements Cloneable{
         String s = " ";
         for ( Attribute attribute : attributes.getAttributes() ) {
             if ( ! attribute.getKey().equals("id") ) {
-                s += attribute + " ";
+                s += attribute.xmlString() + " ";
             }
         }
         return s;
@@ -180,4 +198,4 @@ public class GraphElementState implements Cloneable{
     }
 }
 
-//  [Last modified: 2017 07 22 at 18:41:38 GMT]
+//  [Last modified: 2018 12 07 at 16:14:54 GMT]

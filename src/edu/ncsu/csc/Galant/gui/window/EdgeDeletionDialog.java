@@ -26,11 +26,11 @@ public class EdgeDeletionDialog extends EdgeSpecificationDialog {
         GraphDispatch dispatch = GraphDispatch.getInstance();
         Graph graph = dispatch.getWorkingGraph();
         GraphPanel panel = GraphWindow.getGraphPanel();
-        graph.removeEdge(source, target);
+        graph.deleteEdge(source, target);
         GraphWindow.componentEditPanel.setWorkingComponent(null);
         panel.repaint();
         dispatch.pushToTextEditor();
     }
 }
 
-//  [Last modified: 2016 06 28 at 00:33:33 GMT]
+//  [Last modified: 2019 12 04 at 16:15:28 GMT]

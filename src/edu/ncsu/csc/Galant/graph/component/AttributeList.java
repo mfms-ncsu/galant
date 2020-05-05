@@ -143,17 +143,15 @@ public class AttributeList implements Cloneable{
       return newList;
     }
 
-    // The following does not work; the toString() method for ArrayList
-    // always takes over, but that's useful for debugging.
-//     public String toString() {
-//         StringBuilder builder = new StringBuilder();
-//         builder.append(" ");
-//         for ( Attribute attribute : attributes ) {
-//             builder.append( "" + attribute + " " );
-//         }
-//         return builder.toString();
-//     }
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append(" ");
+        for ( Attribute attribute : attributes ) {
+            builder.append( "" + attribute + " " );
+        }
+        return builder.toString();
+    }
     
 }
 
-//  [Last modified: 2018 08 27 at 20:44:20 GMT]
+//  [Last modified: 2020 05 05 at 15:44:25 GMT]

@@ -7,7 +7,6 @@
  * added by Kai Pressler-Marshall and modified by Matthias Stallmann
  */
 package edu.ncsu.csc.Galant.gui.window;
-
 import java.util.Random;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -1255,4 +1254,4 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
         // TODO Auto-generated method stub
     }
 }
- //  [Last modified: 2019 12 04 at 16:33:11 GMT]
+ //  [Last modified: 2020 05 05 at 15:37:46 GMT]

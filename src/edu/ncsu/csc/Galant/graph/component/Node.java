@@ -109,6 +109,7 @@ public class Node extends GraphElement {
         return copy;
     }
 
+
     /**
      * Setters and getters for node-specific information that does not change.
      */

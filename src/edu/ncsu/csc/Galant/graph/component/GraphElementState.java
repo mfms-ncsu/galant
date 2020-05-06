@@ -26,7 +26,7 @@ import java.util.List;
  * a simple test for Booleans (where it's about presence or absence
  * anyhow). The getters can do parsing.
  */
-public class GraphElementState {
+public class GraphElementState implements Cloneable{
 
     /**
      * The sequence number (algorithm state) of this state.

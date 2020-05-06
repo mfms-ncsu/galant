@@ -103,10 +103,10 @@ public class GGraphEditorPanel extends GEditorPanel {
         // back to edit mode
         this.textPane.setEnabled(true);
         LogHelper.logDebug(" to edit mode ...");
-        if ( graphSource.equals(uuid) ) {
-          LogHelper.logDebug("  the right graph, updating");
-          textPane.setText(workingGraph.xmlString(workingGraph.getEditState()));
-        }
+        // if ( graphSource.equals(uuid) ) {
+        //   LogHelper.logDebug("  the right graph, updating");
+        //   textPane.setText(workingGraph.xmlString(workingGraph.getEditState()));
+        // }
       }
     } // end, in animation mode
     else {
@@ -127,4 +127,4 @@ public class GGraphEditorPanel extends GEditorPanel {
 
 }
 
-// [Last modified: 2019 12 04 at 17:14:06 GMT]
+// [Last modified: 2020 05 06 at 18:03:08 GMT]

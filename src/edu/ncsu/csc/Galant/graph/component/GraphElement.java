@@ -188,7 +188,8 @@ public class GraphElement implements Comparable<GraphElement> {
     }
 
     public ArrayList<GraphElementState> copyCurrentState() {
-        GraphElementState currentState = new GraphElementState(this.states.get(0));
+        GraphElementState currentState
+            = new GraphElementState(this.getLatestValidState(this.graph.getEditState()));
         ArrayList<GraphElementState> statesCopy = new ArrayList<GraphElementState>();
         /**
          * @todo use a linked list and link current state after the
@@ -832,4 +833,4 @@ public class GraphElement implements Comparable<GraphElement> {
 
 }
 
-//  [Last modified: 2020 05 05 at 15:46:11 GMT]
+//  [Last modified: 2020 05 06 at 17:59:48 GMT]

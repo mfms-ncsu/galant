@@ -1094,6 +1094,13 @@ public abstract class Algorithm implements Runnable {
     v.setPosition(pt);
   }
 
+    /**
+     * @return the distance between two nodes
+     */
+    public double distance(Node nodeOne, Node nodeTwo) {
+        return nodeOne.getPosition().distance(nodeTwo.getPosition());
+    }
+
   /**
    * Displays a message during algorithm execution; the message could be
    * any object that has a toString() method
@@ -1441,6 +1448,16 @@ public abstract class Algorithm implements Runnable {
     return dispatch.getWindowHeight();
   }
 
+    /**
+     * @return the Euclidian distance between opposite corners of the window;
+     * useful for scaling distances
+     */
+    public double diagonalLength() {
+        Point topLeft = new Point(0, 0);
+        Point bottomRight = new Point(windowWidth(), windowHeight());
+        return topLeft.distance(bottomRight);
+    }
+
   /** @see edu.ncsu.csc.Galant.graph.component.Graph#smartReposition() */
   public void smartReposition(){
     graph.smartReposition();
@@ -1512,4 +1529,4 @@ public abstract class Algorithm implements Runnable {
   public abstract void run();
 }
 
-//  [Last modified: 2020 05 05 at 11:41:39 GMT]
+//  [Last modified: 2020 05 10 at 20:35:16 GMT]

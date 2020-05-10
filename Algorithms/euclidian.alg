@@ -12,8 +12,13 @@ import java.util.PriorityQueue;
 
 double INFINITY = Double.POSITIVE_INFINITY;
 
+/**
+ * @return the scaled Euclidian distance between v and w
+ */
 function double euclidian(Node v, Node w) {
-    return getPosition(v).distance(getPosition(w));
+    double MAX_DISTANCE = 10.0;
+    double SCALE_FACTOR = MAX_DISTANCE / diagonalLength();
+    return distance(v, w) * SCALE_FACTOR;
 }
 
 function init_edge_costs() {
@@ -90,4 +95,4 @@ algorithm {
   color(s, BLACK);
 }
 
-//  [Last modified: 2017 10 27 at 12:17:22 GMT]
+//  [Last modified: 2020 05 10 at 20:09:58 GMT]

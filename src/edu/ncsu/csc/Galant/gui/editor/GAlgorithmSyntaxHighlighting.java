@@ -200,11 +200,12 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
     "hideEdgeWeights", "showEdgeWeights",
     "hideEdgeLabels", "showEdgeLabels",
     "hideNodeWeights", "showNodeWeights",
-    "hideNodeLabels", "showNodeLabels"
+    "hideNodeLabels", "showNodeLabels",
+    "distance"
   };
 
   /**
-   * An immutable list of all Macroes predefined for the user's benefit.
+   * An immutable list of all Macros predefined for the user's benefit.
    * It gets initialized when this GAlgorithmSyntaxHighlighting was created. See
    *constructor.
    */
@@ -356,4 +357,4 @@ public class GAlgorithmSyntaxHighlighting implements Runnable {
   }   // applyStyleToCommentsAndStrings
 }
 
-// [Last modified: 2020 05 05 at 11:48:06 GMT]
+// [Last modified: 2020 05 10 at 20:16:29 GMT]

@@ -12,8 +12,13 @@
  *    uncolor()
  */
 
+/**
+ * @return the scaled Euclidian distance between v and w
+ */
 function double euclidian(Node v, Node w) {
-    return getPosition(v).distance(getPosition(w));
+    double MAX_DISTANCE = 10.0;
+    double SCALE_FACTOR = MAX_DISTANCE / diagonalLength();
+    return distance(v, w) * SCALE_FACTOR;
 }
 
 function init_edge_costs() {
@@ -125,7 +130,9 @@ algorithm {
   showEdgeWeights();
   showNodeLabels();             // for component labeling
 
+  beginStep();
   init_edge_costs();
+  endStep();
   
   // number of edges in current spanning forest
   int forestEdges = 0;
@@ -194,4 +201,4 @@ algorithm {
   endStep();
 }
 
-/*  [Last modified: 2018 09 08 at 13:19:51 GMT] */
+/*  [Last modified: 2020 05 10 at 20:22:28 GMT] */

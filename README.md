@@ -36,10 +36,22 @@ After that you can run Galant with
 Before you do a 'git pull' you should first either do 'ant clean' or remove
 the file build/jar/Galant.jar (build\jar\Galant.jar)
 
-*** Testing *** (see testingGalant.docx for more details)
+***Simple Instructions***
+
+* Use `File->Open` to open an algorithm or a graph
+* *algorithms are in the `Algorithms` folder, graphs in `Example-Graphs` or, for sorting algorithms, the `0-SortingGraphs` folder below that*
+* To run an algorithm on a graph, make sure the (drawing of the) graph is in the graph window and the (text of the) algorithm in the text window
+* Click `Compile and Run` or `Run` (if the algorithm is already compiled)
+* Click in the graph window
+* The left/right arrow keys are used to move forward/backward in the algorithm; holding them down allows you to control speed
+* The escape key stops the animation
+
+Use `File->Preferences->Open/Save` to set the default starting directory for file browsing.
+
+***Testing*** (see testingGalant.docx for more details)
 
 First set the home directory for opening and saving files
-      File -> Preferences -> Open/Save
+      `File -> Preferences -> Open/Save`
 to the top level directory of Galant so that all the relevant files
 are easy to get to.
 
@@ -48,20 +60,17 @@ files and first hit compile when the text window shows the algorithm and Run
 when the text window shows the algorithm and the graph window shows the
 graph.
 
-Algorithm                                     Graph
+***Algorithm***                                     ***Graph*** (in `Example-Graphs`)
 
-Algorithms/dfs_d.alg                        eight_node_graph.graphml
+`Algorithms/dfs_d.alg            eight_node_graph.graphml`
+`Algorithms/interactive_dfs            "`
+`Algorithms/dijkstra.alg         weighted_example.graphml`
+     - try both undirected and directed (use `Ctrl-d` to toggle)
+`Algorithms/insertion_sort.alg   0-SortingGraphs/sorting_test.graphml`
+`Algorithms/binary_tree.alg`        an empty graph
+                                                            *click on left arrow below `File` until `untitled graph` appears
 
-Algorithms/interactive_dfs                  "
-
-Algorithms/dijkstra.alg                     weighted_example.graphml
-     - try both undirected and directed
-
-Algorithms/insertion_sort.alg               0-SortingGraphs/sorting_test.graphml
-
-Algorithms/binary_tree.alg                      empty graph
-
-For more information and links to important resources, see 0-index.html.
+**For more information and links to important resources, see** `0-index.html.`
 
 
 

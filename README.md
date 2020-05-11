@@ -58,23 +58,19 @@ are easy to get to.
 Then do the following test runs. Each time, open the algorithm and the graph
 files and first hit compile when the text window shows the algorithm and Run
 when the text window shows the algorithm and the graph window shows the
-graph.
+graph. The algorithms are in the `Algorithms` folder and the graphs in `Example-Graphs`.
 
-***Algorithm***                                     ***Graph*** (in `Example-Graphs`)
+| Algorithm |   Graph |
+| :-- | :-- |
+| `dfs_d.alg` |          `eight_node_graph.graphml`|
+|`interactive_dfs`|   "|
+|`dijkstra.alg`|         `weighted_example.graphml`|
+|`insertion_sort.alg`|   `0-SortingGraphs/sorting_test.graphml`|
+|`binary_tree.alg`|        an empty graph|
 
-`Algorithms/dfs_d.alg            eight_node_graph.graphml`
-
-`Algorithms/interactive_dfs            "`
-
-`Algorithms/dijkstra.alg         weighted_example.graphml`
-
-- try both undirected and directed (use `Ctrl-d` to toggle)
-
-`Algorithms/insertion_sort.alg   0-SortingGraphs/sorting_test.graphml`
-
-`Algorithms/binary_tree.alg`        an empty graph
-
-                                  *click on left arrow below `File` until `untitled graph` appears*
+**Notes:**
+* for `dijkstra.alg` try both the directed and undirected version of the graph (use `Ctrl-d` to toggle)
+* to create an empty graph click on left arrow below `File` until `untitled graph` appears
 
 **For more information and links to important resources, see** `0-index.html.`
 

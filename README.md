@@ -63,12 +63,18 @@ graph.
 ***Algorithm***                                     ***Graph*** (in `Example-Graphs`)
 
 `Algorithms/dfs_d.alg            eight_node_graph.graphml`
+
 `Algorithms/interactive_dfs            "`
+
 `Algorithms/dijkstra.alg         weighted_example.graphml`
-     - try both undirected and directed (use `Ctrl-d` to toggle)
+
+- try both undirected and directed (use `Ctrl-d` to toggle)
+
 `Algorithms/insertion_sort.alg   0-SortingGraphs/sorting_test.graphml`
+
 `Algorithms/binary_tree.alg`        an empty graph
-                                                            *click on left arrow below `File` until `untitled graph` appears
+
+                                  *click on left arrow below `File` until `untitled graph` appears*
 
 **For more information and links to important resources, see** `0-index.html.`
 

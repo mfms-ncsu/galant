@@ -53,6 +53,12 @@ public class ComponentEditPanel extends JPanel {
 	private JSpinner weight;
 
 	private GraphElement workingElement;
+    /**
+     * @todo This is a hack to avoid a null element when changing text inside
+     * a spinner and neglecting to hit [return]; at some point, need to
+     * investigate features of editor in JSpinner 
+     */
+ 	private GraphElement previousElement;
 
 	GraphDispatch dispatch = GraphDispatch.getInstance();
 
@@ -180,18 +186,19 @@ public class ComponentEditPanel extends JPanel {
 	}
 
 	public void setWorkingComponent(GraphElement ge) {
-		this.workingElement = ge;
-
 		if (ge == null) {
+            this.workingElement = this.previousElement;
 			this.setVisible(false);
 			return;
-		} else {
-			this.setVisible(true);
-            // make sure the weight change spinner always gets the first
-            // focus so user can use up/down key to change the weights of
-            // nodes or edges
-            weight.requestFocusInWindow();
 		}
+
+        this.workingElement = ge;
+        this.previousElement = ge;
+        this.setVisible(true);
+        // make sure the weight change spinner always gets the first
+        // focus so user can use up/down key to change the weights of
+        // nodes or edges
+        weight.requestFocusInWindow();
 
 		this.remove(cp);
 		cp = new ColorPanel(ge);
@@ -216,4 +223,4 @@ public class ComponentEditPanel extends JPanel {
 
 
 
-//  [Last modified: 2017 03 14 at 15:58:52 GMT]
+//  [Last modified: 2020 05 12 at 19:10:03 GMT]

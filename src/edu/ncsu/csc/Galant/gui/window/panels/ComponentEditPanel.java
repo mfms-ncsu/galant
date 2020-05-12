@@ -53,6 +53,12 @@ public class ComponentEditPanel extends JPanel {
 	private JSpinner weight;
 
 	private GraphElement workingElement;
+    /**
+     * @todo This is a hack to avoid a null element when changing text inside
+     * a spinner and neglecting to hit [return]; at some point, need to
+     * investigate features of editor in JSpinner 
+     */
+	private GraphElement previousElement;
 
 	GraphDispatch dispatch = GraphDispatch.getInstance();
 
@@ -107,7 +113,9 @@ public class ComponentEditPanel extends JPanel {
              */
 			public void stateChanged(ChangeEvent arg0) {
 				Double newWeight = (Double) weight.getValue();
-                System.out.println("stateChanged, newWeight = " + newWeight);
+                System.err.println("stateChanged, newWeight = " + newWeight
+                                   + ", element = " + workingElement
+                                   + ", previous = " + previousElement);
                 // avoid changing a null weight to 0.0 (usually not intended)
                 Double previousWeight = workingElement.getWeight();
                 if ( previousWeight != null || newWeight != 0.0 ) {
@@ -167,7 +175,7 @@ public class ComponentEditPanel extends JPanel {
 				dispatch.pushToGraphEditor();
 			}
 			@Override
-			public void keyTyped(KeyEvent arg0) {}
+			public void keyTyped(KeyEvent arg0) { }
 		});
 
 		cp = new ColorPanel(workingElement);
@@ -181,13 +189,16 @@ public class ComponentEditPanel extends JPanel {
 	}
 
 	public void setWorkingComponent(GraphElement ge) {
-		this.workingElement = ge;
-
+        System.err.println("-> setWorkingComponent, ge = " + ge);
 		if (ge == null) {
 			this.setVisible(false);
+            this.workingElement = this.previousElement;
 			return;
 		} else {
 			this.setVisible(true);
+            this.workingElement = ge;
+            System.err.println("    $*$ saving previous element " + previousElement);
+            this.previousElement = ge;
             // make sure the weight change spinner always gets the first
             // focus so user can use up/down key to change the weights of
             // nodes or edges
@@ -212,9 +223,11 @@ public class ComponentEditPanel extends JPanel {
          */
         if ( newWeight == null ) newWeight = 0.0;
 		weight.setValue(newWeight);
+        System.err.println("<- setWorkingComponent: text, weight = "
+                           + text + ", " + newWeight);
 	}
 }
 
 
 
-//  [Last modified: 2018 10 26 at 15:03:51 GMT]
+//  [Last modified: 2020 05 12 at 18:58:16 GMT]

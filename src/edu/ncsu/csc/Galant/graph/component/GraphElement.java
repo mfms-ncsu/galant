@@ -129,7 +129,7 @@ public class GraphElement implements Comparable<GraphElement> {
         } else {
             state = new GraphElementState();
         }
-        System.out.println("latestState returns " + state);
+        System.out.println("<- latestState " + state);
         return state;
     }
     /**
@@ -833,4 +833,4 @@ public class GraphElement implements Comparable<GraphElement> {
 
 }
 
-//  [Last modified: 2020 05 06 at 17:59:48 GMT]
+//  [Last modified: 2020 05 12 at 19:35:09 GMT]

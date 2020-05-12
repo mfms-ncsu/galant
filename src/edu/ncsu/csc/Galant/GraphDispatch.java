@@ -238,10 +238,13 @@ public class GraphDispatch {
     }
     
     /**
-     * undoes effect of animation by returning to the edit graph
+     * undoes effect of animation by returning to the edit graph, but
+     * preserving any node position changes during algorithm execution
      */
     public void stopAlgorithm() {
-         this.workingGraph = editGraph;
+        Graph algorithmGraph = this.workingGraph;
+        this.workingGraph = this.editGraph;
+        this.workingGraph.setNodePositions(algorithmGraph);
          this.animationMode=false;
          setEditMode(true);
          notifyListeners(ANIMATION_MODE, ! this.animationMode, this.animationMode);
@@ -404,4 +407,4 @@ public class GraphDispatch {
 
 }
 
-//  [Last modified: 2020 05 05 at 15:31:06 GMT]
+//  [Last modified: 2020 05 12 at 20:26:16 GMT]

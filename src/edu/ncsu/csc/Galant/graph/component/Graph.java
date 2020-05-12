@@ -261,6 +261,24 @@ public void incrementEditState() {
         return copyOfGraph;
     }
 
+    /**
+     * Used to retrieve node positions from the graph copy created for
+     * algorithm execution.
+     * The user must be able to move nodes during execution unless the
+     * algorithm does so, and those moves must be preserved
+     */
+    public void setNodePositions(Graph algorithmGraph) {
+        for ( Node algorithmNode : algorithmGraph.getNodes() ) {
+            int nodeId = algorithmNode.getId();
+            try {
+                Node originalNode = this.getNodeById(nodeId);
+                originalNode.setFixedPosition(algorithmNode.getFixedPosition());
+            }
+            catch (GalantException e) {
+                // should not happen unless nodes got added by the algorithm
+            }
+        }
+    }
    
   /**
    * @return The last state on the list of states. This is the default for
@@ -1413,4 +1431,4 @@ public void incrementEditState() {
   }
 }
 
-// [Last modified: 2020 05 05 at 15:43:58 GMT]
+// [Last modified: 2020 05 12 at 20:28:33 GMT]

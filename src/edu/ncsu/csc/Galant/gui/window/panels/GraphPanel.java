@@ -942,8 +942,9 @@ public class GraphPanel extends JPanel{
 	public Node selectTopClickedNode(Point p) {
 		LogHelper.enterMethod(getClass(), "selectTopClickedNode");
 		Graph g = dispatch.getWorkingGraph();
+        int stateNumber = g.getEditState();
 		Node top = null;
-		for (Node n : g.getNodes()) {
+		for (Node n : g.getNodes(stateNumber)) {
 			if ( p.distance(n.getFixedPosition()) < NODE_SELECTION_RADIUS ) {
 				top = n;
 			}
@@ -985,6 +986,7 @@ public class GraphPanel extends JPanel{
 		LogHelper.enterMethod(getClass(), "selectTopClickedEdge");
 		
 		Graph g = dispatch.getWorkingGraph();
+        int stateNumber = g.getEditState();
 		
 		Edge top = null;
 		
@@ -994,7 +996,7 @@ public class GraphPanel extends JPanel{
             LogHelper.logDebug( "centerVal = " + centerVal );
 			Rectangle2D clickArea = new Rectangle2D.Double(p.getX() - centerVal, p.getY() - centerVal - 1, i, i);
 			
-            for (Edge e : g.getEdges()) {
+            for (Edge e : g.getEdges(stateNumber)) {
                 Point p1 = e.getSourceNode().getFixedPosition();
                 Point p2 = e.getTargetNode().getFixedPosition();
 
@@ -1065,4 +1067,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2020 05 04 at 16:05:50 GMT]
+//  [Last modified: 2020 05 12 at 19:47:44 GMT]

@@ -7,6 +7,15 @@
 // parent in the disjoint set forest
 Node [] parent;
 
+/**
+ * @return the scaled Euclidian distance between v and w
+ */
+function double euclidian(Node v, Node w) {
+    double MAX_DISTANCE = 10.0;
+    double SCALE_FACTOR = MAX_DISTANCE / diagonalLength();
+    return distance(v, w) * SCALE_FACTOR;
+}
+
 // standard disjoint set untilities; not doing union by rank or path
 // compression; efficiency is not an issue
 
@@ -28,8 +37,21 @@ function UNION(Node x, Node y) {
 	LINK(FIND_SET(x), FIND_SET(y));
 }
 
+function init_edge_costs() {
+  for_edges(edge) {
+    if ( ! hasWeight(edge) ) {
+      double distance = euclidian(source(edge), target(edge));
+      setWeight(edge, distance);
+    }
+  }
+}
+
 algorithm {
     showEdgeWeights();
+
+    beginStep();
+    init_edge_costs();
+    endStep();
 
     parent = new Node[nodeIds()];
     for_nodes(u) {
@@ -80,4 +102,4 @@ algorithm {
     display( "MST has total weight " + totalWeight );
 }
 
-/*  [Last modified: 2017 01 23 at 22:43:57 GMT] */
+/*  [Last modified: 2020 05 10 at 20:30:56 GMT] */

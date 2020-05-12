@@ -3,7 +3,16 @@
  * animation of Kruskal's MST algorithm
  */
 
-/** Required: edge weights defined and visible */
+/** If edge weights are not defined, they will be based on Euclidian distance */
+
+/**
+ * @return the scaled Euclidian distance between v and w
+ */
+function double euclidian(Node v, Node w) {
+    double MAX_DISTANCE = 10.0;
+    double SCALE_FACTOR = MAX_DISTANCE / diagonalLength();
+    return distance(v, w) * SCALE_FACTOR;
+}
 
 // parent in the disjoint set forest
 Node [] parent;
@@ -29,10 +38,6 @@ function UNION(Node x, Node y) {
 	LINK(FIND_SET(x), FIND_SET(y));
 }
 
-function double euclidian(Node v, Node w) {
-    return getPosition(v).distance(getPosition(w));
-}
-
 function init_edge_costs() {
   for_edges(edge) {
     if ( ! hasWeight(edge) ) {
@@ -50,7 +55,9 @@ algorithm {
         INIT_SET(u);
     }
 
+    beginStep();
     init_edge_costs();
+    endStep();
     
     EdgeList edgeList = getEdges();
     sort(edgeList);
@@ -92,4 +99,4 @@ algorithm {
     display( "MST has total weight " + totalWeight );
 }
 
-/*  [Last modified: 2017 10 12 at 14:22:51 GMT] */
+/*  [Last modified: 2020 05 10 at 20:24:46 GMT] */

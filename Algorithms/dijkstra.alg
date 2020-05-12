@@ -5,8 +5,13 @@
 
 /** Required: edge weights defined; otherwise they will be based on geometry */
 
+/**
+ * @return the scaled Euclidian distance between v and w
+ */
 function double euclidian(Node v, Node w) {
-    return getPosition(v).distance(getPosition(w));
+    double MAX_DISTANCE = 10.0;
+    double SCALE_FACTOR = MAX_DISTANCE / diagonalLength();
+    return distance(v, w) * SCALE_FACTOR;
 }
 
 function init_edge_costs() {
@@ -69,4 +74,4 @@ algorithm {
   } // stop when priority queue is empty
 } // end, algorithm
 
-//  [Last modified: 2017 11 14 at 20:48:38 GMT]
+//  [Last modified: 2020 05 10 at 20:09:23 GMT]

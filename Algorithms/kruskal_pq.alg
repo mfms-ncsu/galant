@@ -65,7 +65,7 @@ algorithm {
 
     int numNodes = numberOfNodes();
     int numTreeEdges = 0;
-    int totalWeight = 0;
+    float totalWeight = 0;
     while ( ! empty(pq) && numTreeEdges < numNodes - 1 ) {
       Edge e = removeBest(pq);
         beginStep();

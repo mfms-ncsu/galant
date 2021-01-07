@@ -266,8 +266,8 @@ public class GraphPanel extends JPanel{
     if ( message != null ) {
       drawMessageBanner(message, g2d);
     }
-    nodes = graph.getNodes(state);
-    edges = graph.getEdges(state);
+    nodes = graph.getAllNodes();
+    edges = graph.getAllEdges();
 		
     // Draw edges first to put them behind nodes
     for (Edge e : edges) {
@@ -345,15 +345,9 @@ public class GraphPanel extends JPanel{
             }
 		
             if (graph != null) {
-                if ( dispatch.isAnimationMode() ) {
                   // Get the display state if algorithm is running
                   int state = dispatch.getDisplayState();
                   drawGraph(graph, g2d, state);
-                }
-                else {
-                  // otherwise, there is no valid state
-                  drawGraph(graph, g2d);
-                }
             }
         }
         catch (GalantException e) {
@@ -381,6 +375,7 @@ public class GraphPanel extends JPanel{
      * algorithm otherwise.
      */
     private boolean weightVisible(Node node) {
+        
         int state = dispatch.getDisplayState(); 
         boolean visible = node.hasWeight(state);
         visible = visible
@@ -645,7 +640,7 @@ public class GraphPanel extends JPanel{
         throws GalantException
     {
         int stateNumber = dispatch.getDisplayState();
-		int thickness = defaultThickness;
+        int thickness = defaultThickness;
 		
         Node target = e.getTargetNode();
         Node source = e.getSourceNode();
@@ -935,8 +930,9 @@ public class GraphPanel extends JPanel{
 	public Node selectTopClickedNode(Point p) {
 		LogHelper.enterMethod(getClass(), "selectTopClickedNode");
 		Graph g = dispatch.getWorkingGraph();
+        int stateNumber = g.getEditState();
 		Node top = null;
-		for (Node n : g.getNodes()) {
+		for (Node n : g.getNodes(stateNumber)) {
 			if ( p.distance(n.getFixedPosition()) < NODE_SELECTION_RADIUS ) {
 				top = n;
 			}
@@ -978,6 +974,7 @@ public class GraphPanel extends JPanel{
 		LogHelper.enterMethod(getClass(), "selectTopClickedEdge");
 		
 		Graph g = dispatch.getWorkingGraph();
+        int stateNumber = g.getEditState();
 		
 		Edge top = null;
 		
@@ -987,7 +984,7 @@ public class GraphPanel extends JPanel{
             LogHelper.logDebug( "centerVal = " + centerVal );
 			Rectangle2D clickArea = new Rectangle2D.Double(p.getX() - centerVal, p.getY() - centerVal - 1, i, i);
 			
-            for (Edge e : g.getEdges()) {
+            for (Edge e : g.getEdges(stateNumber)) {
                 Point p1 = e.getSourceNode().getFixedPosition();
                 Point p2 = e.getTargetNode().getFixedPosition();
 
@@ -1058,4 +1055,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2017 11 03 at 01:00:34 GMT]
+//  [Last modified: 2021 01 07 at 16:56:56 GMT]

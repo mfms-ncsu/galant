@@ -91,9 +91,14 @@ all do the following -- see \Code{GraphElement}.
       state change triggers the end of a step --
       \Code{pauseExecutionIfRunning()} in \Code{GraphDispatch}
     \item if there is a state with the same time stamp as the current one,
-      simply replace it; this can happen during editing -- time stamp is 0,
+      simply replace it; this can happen during editing -- time stamp is
+      0,\footnote{There is now also an \emph{edit state} that allows undo and
+        redo operations during editing. So time stamp can depend on edit
+        state as well. See Section~\ref{sec:undo}.
+        }
       or if the element undergoes more than one state change during a single
-      algorithm step
+      algorithm step, i.e., as a result of \Code{beginStep()} and
+      \Code{endStep()} invocations in the algorithm code.
   \end{enumerate}
 \end{itemize}
 The list of states can be used to determine the attributes at any given time
@@ -552,6 +557,24 @@ erased if they are blank (equal to "") and colors are erased if they are black
 (equal to "\#000000"). The current implementation of \Code{strip\_attributes}
 erases all weights if and only if they are all 0.
 
+\section{Undo/Redo} \label{sec:undo}
+
+The editor allows the user to undo the effects of an editing operation that
+modifies an attribute of a node or edge (including deletion). This is
+accomplished using the same state-change mechanism as one used during
+algorithm execution. \Code{GraphDispatch} maintains an \Code{editState} that
+is decremented by an undo and incremented by a redo. The operations are
+activated by corresponding buttons or by \Code{Ctrl-Z} and \Code{Ctrl-Y},
+respectively: the relevant code is in \Code{GraphWindow}.
+A subtle point here is that deletion of a node requires deletion of all
+incident edges. If each deleted edge involves a state change the result is
+edit states with ``dangling edges''. To mitigate this problem, there is an
+\Code{atomic} property in \Code{GraphDispatch}. When set, all attribute
+changes take place without a state change. The only place where this property
+is set/reset is in \Code{deleteNode} in \Code{Graph}. The
+\Code{startStepIfAnimationOrIncrementEditState} in \Code{GraphDispatch}
+decides whether to increment the edit state or not when in edit mode.
+
 \section{Queries} \label{sec:queries}
 
 Galant offers the animator functions that query the user to select a node or
@@ -570,4 +593,4 @@ Adapting the technique to the other query types will take more work because
 they need to throw exceptions and repeat the request for input if the user's
 response is not satisfactory (a malformed number, a non-existent node or edge).
 
-% [Last modified: 2017 03 14 at 16:02:35 GMT]
+% [Last modified: 2019 12 05 at 17:01:43 GMT]

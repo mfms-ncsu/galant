@@ -411,6 +411,8 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
     if ( graphEditPanel != null
          && GGraphEditorPanel.class.isInstance(graphEditPanel) ) {
       GGraphEditorPanel geditorPanel = (GGraphEditorPanel) graphEditPanel;
+        // at this point you want to setWorkingGraph(gEditorPanel.getGraph())
+        // and not do the stuff below
       try {
         String panelText = geditorPanel.getText();
         if ( ! panelText.equals("") ) {
@@ -476,4 +478,4 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
   }
 }
 
-// [Last modified: 2017 03 07 at 21:42:40 GMT]
+// [Last modified: 2018 11 09 at 15:57:58 GMT]

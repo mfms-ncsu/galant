@@ -136,20 +136,8 @@ public class GAlgorithmEditorPanel extends GEditorPanel {
    */
   public void run() {
     GraphDispatch dispatch = GraphDispatch.getInstance();
-    dispatch.setAnimationMode(true);
-
     Algorithm algorithm = getCompiledAlgorithm();
-    Graph theGraph = dispatch.getWorkingGraph();
-    algorithm.setGraph(theGraph);
-
-    AlgorithmSynchronizer algorithmSynchronizer = new AlgorithmSynchronizer();
-    AlgorithmExecutor algorithmExecutor
-      = new AlgorithmExecutor(algorithm, algorithmSynchronizer);
-    dispatch.setAlgorithmSynchronizer(algorithmSynchronizer);
-    dispatch.setAlgorithmExecutor(algorithmExecutor);
-    dispatch.getGraphWindow().updateStatusLabel();
-    algorithmExecutor.startAlgorithm();
-    dispatch.getGraphWindow().updateStatusLabel();
+    dispatch.startAnimation(algorithm);
   }
 
   /**
@@ -213,4 +201,4 @@ public class GAlgorithmEditorPanel extends GEditorPanel {
 
 }
 
-// [Last modified: 2017 03 07 at 17:42:02 GMT]
+// [Last modified: 2020 05 05 at 15:40:41 GMT]

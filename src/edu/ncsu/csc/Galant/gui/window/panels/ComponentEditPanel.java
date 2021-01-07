@@ -113,6 +113,9 @@ public class ComponentEditPanel extends JPanel {
              */
 			public void stateChanged(ChangeEvent arg0) {
 				Double newWeight = (Double) weight.getValue();
+                System.err.println("stateChanged, newWeight = " + newWeight
+                                   + ", element = " + workingElement
+                                   + ", previous = " + previousElement);
                 // avoid changing a null weight to 0.0 (usually not intended)
                 Double previousWeight = workingElement.getWeight();
                 if ( previousWeight != null || newWeight != 0.0 ) {
@@ -172,7 +175,7 @@ public class ComponentEditPanel extends JPanel {
 				dispatch.pushToGraphEditor();
 			}
 			@Override
-			public void keyTyped(KeyEvent arg0) {}
+			public void keyTyped(KeyEvent arg0) { }
 		});
 
 		cp = new ColorPanel(workingElement);
@@ -186,41 +189,40 @@ public class ComponentEditPanel extends JPanel {
 	}
 
 	public void setWorkingComponent(GraphElement ge) {
-		if (ge == null) {
-            this.workingElement = this.previousElement;
-			this.setVisible(false);
-			return;
-		}
+            if (ge == null) {
+                this.workingElement = this.previousElement;
+                this.setVisible(false);
+                this.workingElement = this.previousElement;
+                return;
+            }
+            else {
+                this.setVisible(true);
+                this.workingElement = ge;
+                this.previousElement = ge;
+                // make sure the weight change spinner always gets the first
+                // focus so user can use up/down key to change the weights of
+                // nodes or edges
+                weight.requestFocusInWindow();
+            }
+            this.remove(cp);
+            cp = new ColorPanel(ge);
+            this.add(cp);
+            this.validate();
 
-        this.workingElement = ge;
-        this.previousElement = ge;
-        this.setVisible(true);
-        // make sure the weight change spinner always gets the first
-        // focus so user can use up/down key to change the weights of
-        // nodes or edges
-        weight.requestFocusInWindow();
+            String text = ge.getLabel();
+            if (text == null) {
+                text = "";
+            }
+            label.setText(text);
 
-		this.remove(cp);
-		cp = new ColorPanel(ge);
-		this.add(cp);
-		this.validate();
-
-		String text = ge.getLabel();
-		if (text == null) {
-			text = "";
-		}
-		label.setText(text);
-
-		Double newWeight = ge.getWeight();
-        /**
-         * @todo use NaN here and a text field in place of the spinner; NaN
-         * causes spinner to crash.
-         */
-        if ( newWeight == null ) newWeight = 0.0;
-		weight.setValue(newWeight);
+            Double newWeight = ge.getWeight();
+            /**
+             * @todo use NaN here and a text field in place of the spinner; NaN
+             * causes spinner to crash.
+             */
+            if ( newWeight == null ) newWeight = 0.0;
+            weight.setValue(newWeight);
 	}
 }
 
-
-
-//  [Last modified: 2020 05 12 at 19:10:03 GMT]
+//  [Last modified: 2021 01 07 at 15:58:39 GMT]

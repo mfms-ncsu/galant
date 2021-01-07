@@ -85,7 +85,7 @@ algorithm {
             UNION(h, t);
             totalWeight += weight(e);
             numTreeEdges++;
-            display( "Weight so far is " + totalWeight );
+            display( "Weight so far is ", totalWeight);
         }
         else {
             display( "Vertices are already in the same component." );

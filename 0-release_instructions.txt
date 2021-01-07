@@ -1,0 +1,4 @@
+The following must be done for each new release.
+  - change the VERSION string in Galant.java
+  - change the \VERSION command in Technical-Documentation/galant.sty
+  - add release notes to release-notes.txt

@@ -29,7 +29,7 @@ import edu.ncsu.csc.Galant.logging.LogHelper;
  *
  * @author Michael Owoc, Ty Devries (major modifications by Matt Stallmann)
  */
-public class Graph {
+public class Graph{
   public GraphWindow graphWindow;
   private GraphDispatch dispatch;
 
@@ -44,12 +44,11 @@ public class Graph {
 
   private TreeMap<Integer, Node> nodeById = new TreeMap<Integer, Node>();
 
-  private TreeMap<Integer, Edge> edgeById = new TreeMap<Integer, Edge>();
-
   private EdgeList edges;
 
   private MessageBanner banner;
 
+  private int editState=0;
   /**
    * Keeps track of an edge selected during algorithm execution.
    */
@@ -107,11 +106,37 @@ public class Graph {
     }
     banner = new MessageBanner(this);
   }
+  
+  public Graph(Graph newGraph)
+  {
+    
+  }
+  
+public int getEditState()
+  {
+      return editState;
+  }
+public void incrementEditState() {
+        editState++;
+    }
 
+    /**
+     * @return true if the edit state was actually decremented, i.e.,
+     * originally positive, false if it was already 0
+     */
+    public boolean decrementEditState() {
+        if ( editState > 0 ) {
+            editState--;
+            return true;
+        }
+        return false;
+    }
+    
   /**
    * Resets the graph to its original state at the end of an
    * animation.
    */
+  //The following method can be deleted as cloning accomplishes the same task
   public void reset() {
     int initialStateNumber = GraphDispatch.getInstance().getAlgorithmState();
 
@@ -123,7 +148,7 @@ public class Graph {
       if ( state.getState() > 0 ) break;
       initialStates.add(state);
     }
-    this.states = initialStates;
+    this.states = initialStates;  
 
     // get rid of any nodes and edges created by the algorithm; better to
     // do this by gathering the ones that should not be removed and then
@@ -150,23 +175,111 @@ public class Graph {
     banner = new MessageBanner(this);
   }
 
-  /**
-   * @return a new state for this graph; the new state will be identical
-   * to the current (latest one) except that it will be tagged with the
-   * current algorithm state.
-   *
-   * @todo there is no reason to create new states when parsing and the
-   * only reason to do it when editing is for a possible "undo" mechanism,
-   * which is not yet implemented
-   */
-  private GraphState newState() throws Terminate {
-    dispatch.startStepIfRunning();
-    GraphState latest = latestState();
-    GraphState state
-      = new GraphState(latest);
-    return state;
-  }
+    /**
+     * @return a new state for this graph; the new state will be identical
+     * to the current (latest one) except that it will be tagged with the
+     * current algorithm state
+     */
+    private GraphState newState() throws Terminate {
+        dispatch.startStepIfAnimationOrIncrementEditState();
+        if ( dispatch.isAnimationMode() ) {
+            GraphState latest = latestState();
+            GraphState state
+                = new GraphState(latest);
+            return state;
+        }
+        else { // in edit mode
+            GraphState latestValidState = getLatestValidState(getEditState());
+            GraphState state
+                = new GraphState(latestValidState);
+            return state;
+        }
+    }
 
+    /**
+     * creates a deep copy of the graph, i.e., clones graph object completely
+     * and is used to store edit state of graph just before algorithm execution
+     */
+    public Graph copyCurrentState(Graph currentGraph){
+      
+        Graph copyOfGraph=new Graph(currentGraph);
+        copyOfGraph.dispatch = GraphDispatch.getInstance();
+        copyOfGraph.graphWindow = dispatch.getGraphWindow();
+        copyOfGraph.nodes = new NodeList();
+        copyOfGraph.edges = new EdgeList();
+        copyOfGraph.states = new ArrayList<GraphState>();
+        EdgeList edgeListCopy=new EdgeList();
+        NodeList nodeListCopy=new NodeList();
+        TreeMap<Integer, Node> nodeByIdMap = new TreeMap<Integer, Node>();
+        TreeMap<Integer, Node> copyOfNodeMap=new TreeMap<Integer, Node>(this.nodeById);
+        for(int i=0;i<=this.nodes.size()-1;i++)
+            {
+                Node copiedNode= this.nodes.get(i);
+                copiedNode=copiedNode.copyNode(currentGraph);
+                nodeListCopy.add(copiedNode);
+                copyOfNodeMap.put(copiedNode.getId(), copiedNode);
+                nodeByIdMap.put(copiedNode.getId(), copiedNode);
+            }
+        for(int i=0;i<=this.edges.size()-1;i++)
+            {
+                Edge originalEdge=this.edges.get(i);
+                Integer sourceId=originalEdge.getSourceNode().getId();
+                Integer targetId=originalEdge.getTargetNode().getId();
+                Node newSource=copyOfNodeMap.get(sourceId);
+                Node newTarget=copyOfNodeMap.get(targetId);
+                Edge copiedEdge=originalEdge.copyEdge(currentGraph,newSource,newTarget);
+                edgeListCopy.add(copiedEdge);
+            }
+        String nameCopy=this.name;
+        String commentCopy=this.comment;
+        boolean directedCopy=this.directed;
+        boolean layeredCopy=this.layered;
+        LayerInformation layerInformationCopy=this.layerInformation;
+        TreeMap<Integer, Node> nodeByIdCopy=new TreeMap<Integer, Node>(this.nodeById);
+        MessageBanner bannerCopy=this.banner;
+        Edge selectedEdgeCopy=this.selectedEdge;
+        Node selectedNodeCopy=this.selectedNode;
+        List<GraphState> statesCopy=this.states;
+        Node rootNodeCopy=this.rootNode;
+        int nextEdgeIdCopy=this.nextEdgeId;
+        boolean hasExplicitEdgeIdsCopy=this.hasExplicitEdgeIds;
+        copyOfGraph.edges=edgeListCopy;
+        copyOfGraph.nodes=nodeListCopy;
+        copyOfGraph.name=nameCopy;
+        copyOfGraph.comment=commentCopy;
+        copyOfGraph.directed=directedCopy;
+        copyOfGraph.layered=layeredCopy;
+        copyOfGraph.layerInformation=layerInformationCopy;
+        copyOfGraph.nodeById=nodeByIdMap;
+        copyOfGraph.banner=bannerCopy;
+        copyOfGraph.selectedEdge=selectedEdgeCopy;
+        copyOfGraph.selectedNode=selectedNodeCopy;
+        copyOfGraph.states=statesCopy;
+        copyOfGraph.rootNode=rootNodeCopy;
+        copyOfGraph.nextEdgeId=nextEdgeIdCopy;
+        copyOfGraph.hasExplicitEdgeIds=hasExplicitEdgeIdsCopy;
+        return copyOfGraph;
+    }
+
+    /**
+     * Used to retrieve node positions from the graph copy created for
+     * algorithm execution.
+     * The user must be able to move nodes during execution unless the
+     * algorithm does so, and those moves must be preserved
+     */
+    public void setNodePositions(Graph algorithmGraph) {
+        for ( Node algorithmNode : algorithmGraph.getNodes() ) {
+            int nodeId = algorithmNode.getId();
+            try {
+                Node originalNode = this.getNodeById(nodeId);
+                originalNode.setFixedPosition(algorithmNode.getFixedPosition());
+            }
+            catch (GalantException e) {
+                // should not happen unless nodes got added by the algorithm
+            }
+        }
+    }
+   
   /**
    * @return The last state on the list of states. This is the default for
    * retrieving information about any attribute.
@@ -643,7 +756,8 @@ public class Graph {
   public int edgeIds() {
     int maxId = 0;
     for ( Edge currentEdge : edges ) {
-      if ( currentEdge.inScope() && currentEdge.getId() > maxId )
+      if ( currentEdge.inScope()
+           && currentEdge.getId() > maxId )
         maxId = currentEdge.getId();
     }
     return maxId + 1;
@@ -664,13 +778,8 @@ public class Graph {
   }
 
   /**
-   * @return all nodes in the graph; this version can only be used when
-   * there is no algorithm running; some nodes may not yet exist; inScope()
-   * without the 'state' argument only checks to see if a node has been
-   * deleted.
-   *
-   * @todo Just like the Algorithm provides NodeQueue, etc., it should also
-   * provide NodeList as a data structure to avoid the template.
+   * @return all nodes in the graph; inScope() without the 'state' argument
+   * only checks to see if a node has been deleted.
    */
   public NodeList getNodes() {
     NodeList retNodes = new NodeList();
@@ -696,6 +805,18 @@ public class Graph {
     return retNodes;
   }
 
+    /**
+     * @return a list of all nodes in the graph, even ones that have been deleted
+     * used when drawing, so that we can see the effect of undoing deletions
+     */
+    public NodeList getAllNodes() {
+        NodeList retNodes = new NodeList();
+        for ( Node v : this.nodes ) {
+            retNodes.add(v);
+        }
+        return retNodes;
+    }
+
   /**
    * @param nodes new set of nodes to be added to the graph
    */
@@ -705,7 +826,6 @@ public class Graph {
 
   /**
    * @return all edges as a list
-   * @todo get rid of the template
    */
   public EdgeList getEdges()
   {
@@ -717,6 +837,32 @@ public class Graph {
     }
     return retEdges;
   }
+
+  /**
+   * @return all edges at the current algorithm state
+   */
+  public EdgeList getEdges(int state)
+  {
+    EdgeList retEdges = new EdgeList();
+    for ( Edge e : this.edges ) {
+      if ( e.inScope(state) ) {
+        retEdges.add(e);
+      }
+    }
+    return retEdges;
+  }
+
+    /**
+     * @return a list of all edges in the graph, even ones that have been deleted
+     * used when drawing, so that we can see the effect of undoing deletions
+     */
+    public EdgeList getAllEdges() {
+        EdgeList retEdges = new EdgeList();
+        for ( Edge e : this.edges ) {
+            retEdges.add(e);
+        }
+        return retEdges;
+    }
 
   /**
    * @return the edges as a set
@@ -771,20 +917,6 @@ public class Graph {
   }
 
   /**
-   * @return all edges at the current algorithm state
-   */
-  public EdgeList getEdges(int state)
-  {
-    EdgeList retEdges = new EdgeList();
-    for ( Edge e : this.edges ) {
-      if ( e.inScope(state) ) {
-        retEdges.add(e);
-      }
-    }
-    return retEdges;
-  }
-
-  /**
    * Replaces the current <code>Edge</code>s.
    * @param edges new set of edges to be added to the graph
    */
@@ -827,20 +959,19 @@ public class Graph {
     deleteEdge(edge);
   }
 
-  /**
-   * Deletes (but does not permanently remove) the specified
-   * <code>Node</code> from the <code>Graph</code>; simply marks it and its
-   * incident edges deleted
-   */
-  public void deleteNode(Node n) throws Terminate {
-    n.setDeleted(true);
-    for ( Edge e : n.getIncidentEdges() ) {
-      e.setDeleted(true);
-      // the following would cause permanent removal of the edge rather
-      // than deletion that can be undone by a step backward.
-      // removeEdge(e);
+    /**
+     * Deletes (but does not permanently remove) the specified
+     * <code>Node</code> from the <code>Graph</code>; simply marks it and its
+     * incident edges deleted
+     */
+    public void deleteNode(Node n) throws Terminate {
+        n.setDeleted(true);
+        dispatch.setAtomic(true);
+        for ( Edge e : n.getEdges() ) {
+            e.setDeleted(true);
+        }
+        dispatch.setAtomic(false);
     }
-  }
 
   /**
    * @return the root node
@@ -921,33 +1052,6 @@ public class Graph {
     return this.nodes.get(0);
   }
 
-  /**
-   * Returns the Edge in the graph represented by the given unique ID.
-   *
-   * @param id
-   * @return the specified Edge if it exists, null otherwise
-   */
-  public Edge getEdgeById(int id)
-  throws GalantException
-  {
-    if ( this.edges.size() == 0 ) {
-      throw new GalantException("Graph has no edges"
-                                + "\n - in getEdgeById");
-    }
-    if ( ! edgeById.containsKey(id) ) {
-      throw new GalantException("No edge with id = "
-                                + id
-                                + " exists"
-                                + "\n - in getEdgeById");
-    }
-    Edge edge = edgeById.get(id);
-    if ( edge.isDeleted() ) {
-      throw new GalantException("Edge has been deleted, id = "
-                                + id
-                                + "\n - in getEdgeById");
-    }
-    return edge;
-  }
 
   /**
    * Adds a new <code>Node</code> to the <code>Graph</code>
@@ -984,7 +1088,7 @@ public class Graph {
    */
   public Node addNode(Integer x, Integer y) throws Terminate {
     LogHelper.enterMethod(getClass(), "addNode(), x = " + x + ", y = " + y);
-    dispatch.startStepIfRunning();
+    dispatch.startStepIfAnimationOrIncrementEditState();
     Integer newId = nextNodeId();
     Node n = new Node(this, newId, x, y);
     nodes.add(n);
@@ -1057,7 +1161,7 @@ public class Graph {
    * are known.
    */
   public Edge addEdge(Node source, Node target) throws Terminate {
-    dispatch.startStepIfRunning();
+    dispatch.startStepIfAnimationOrIncrementEditState();
     Edge e = new Edge(this, source, target);
     addEdge(e);
     return e;
@@ -1077,7 +1181,7 @@ public class Graph {
    */
   public Edge addEdge(int sourceId, int targetId)
   throws Terminate, GalantException {
-    return addEdge( getNodeById(sourceId), getNodeById(targetId) );
+    return addEdge(getNodeById(sourceId), getNodeById(targetId));
   }
 
   /**
@@ -1151,19 +1255,6 @@ public class Graph {
   }
 
   /**
-   * @return an integer ID for the next <code>Edge</code> to be
-   * added. This will always be the largest id so far + 1
-   */
-  public int nextEdgeId() {
-    LogHelper.enterMethod(getClass(), "nextEdgeId");
-    int id = 0;
-    if ( ! edgeById.isEmpty() )
-      id = edgeById.lastKey() + 1;
-    LogHelper.exitMethod(getClass(), "nextEdgeId, id = " + id);
-    return id;
-  }
-
-  /**
    * @return the number of layers if this is a layered graph
    */
   public int numberOfLayers() {
@@ -1233,24 +1324,24 @@ public class Graph {
    */
   public void initializeAfterParsing() throws GalantException {
     // first process the edges that have id's, so there's no conflict later
-    for ( Edge edge : this.edges ) {
-      if ( edge.hasExplicitId() ) {
-        if ( this.edgeById.containsKey( edge.getId() ) ) {
-          throw new GalantException("Duplicate id: "
-                                    + edge.getId()
-                                    + " when processing edge "
-                                    + edge);
-        }
-        this.hasExplicitEdgeIds = true;
-        this.edgeById.put(edge.getId(), edge);
-      }
-    }
+//    for ( Edge edge : this.edges ) {
+//      if ( edge.hasExplicitId() ) {
+//        if ( this.edgeById.containsKey( edge.getId() ) ) {
+//          throw new GalantException("Duplicate id: "
+//                                    + edge.getId()
+//                                    + " when processing edge "
+//                                    + edge);
+//        }
+//        this.hasExplicitEdgeIds = true;
+//        this.edgeById.put(edge.getId(), edge);
+//      }
+//    }
     // then those that don't
     for ( Edge edge : this.edges ) {
-      if ( ! edge.hasExplicitId() ) {
-        edge.setId( nextEdgeId() );
-        this.edgeById.put(edge.getId(), edge);
-      }
+//      if ( ! edge.hasExplicitId() ) {
+//        edge.setId( nextEdgeId() );
+//        this.edgeById.put(edge.getId(), edge);
+//      }
     }
     if ( layered ) layerInformation.initializeAfterParsing();
   }
@@ -1279,9 +1370,11 @@ public class Graph {
     s += " edgedefault=\"" + (this.isDirected() ? "directed" : "undirected") + "\"";
     s += ">\n";
     for ( Node n : this.nodes ) {
+      if ( ! n.inScope() ) continue;
       s += "  " + n.xmlString() + "\n";
     }
     for ( Edge e : this.edges ) {
+      if ( ! e.inScope() ) continue;
       s += "  " + e.xmlString() + "\n";
     }
     s += " </graph>";
@@ -1318,12 +1411,14 @@ public class Graph {
     for ( Node n : this.nodes ) {
       LogHelper.logDebug( "  writing xml string for node with id " + n.getId() );
       LogHelper.logDebug( "  writing xml string for node " + n);
+      if ( ! n.inScope(state) ) continue;
       String sN = n.xmlString(state);
       if ( ! sN.trim().isEmpty() )
         s += "  " + sN + "\n";
     }
     for ( Edge e : this.edges ) {
       LogHelper.logDebug("writing xml string for edge " + e);
+      if ( ! e.inScope(state) ) continue;
       String sE = e.xmlString(state);
       if ( ! sE.trim().isEmpty() )
         s += "  " + sE + "\n";
@@ -1336,4 +1431,4 @@ public class Graph {
   }
 }
 
-// [Last modified: 2017 04 18 at 19:59:20 GMT]
+// [Last modified: 2020 05 12 at 20:28:33 GMT]

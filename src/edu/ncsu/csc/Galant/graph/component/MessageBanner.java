@@ -8,7 +8,8 @@ import edu.ncsu.csc.Galant.algorithm.Terminate;
 
 public class MessageBanner extends GraphElement {
     public MessageBanner(Graph graph) {
-        super(graph);
+        // so that there will be an initial state (with no attributes)
+        super(graph, new AttributeList());
     }
 
     public boolean set(String message) throws Terminate {
@@ -29,4 +30,4 @@ public class MessageBanner extends GraphElement {
     }
 }
 
-//  [Last modified: 2015 12 08 at 14:17:12 GMT]
+//  [Last modified: 2018 12 26 at 17:59:50 GMT]

@@ -22,6 +22,7 @@ import edu.ncsu.csc.Galant.logging.LogHelper;
 public class GGraphEditorPanel extends GEditorPanel {
 
   private final UUID uuid = UUID.randomUUID();
+    private Graph myGraph;
 
   /**
    * Create a new edit session of a graph.
@@ -29,7 +30,7 @@ public class GGraphEditorPanel extends GEditorPanel {
    * @param filename The name of the file to be edited, which may be an unsaved file with
    *a dummy name.
    * @param content The text which constitutes the content of the file to be edited. It is
-   *either the result of reading in the file, or the empty string.
+   * either the result of reading in the file, or the empty string.
    */
   public GGraphEditorPanel(GTabbedPane gTabbedPane, String filename, String content) {
     super(gTabbedPane, filename, content);
@@ -41,9 +42,9 @@ public class GGraphEditorPanel extends GEditorPanel {
     try {
       if ( ! content.equals("") ) {
         GraphMLParser parser = new GraphMLParser(content);
-        dispatch.setWorkingGraph(parser.getGraph(), uuid);
+        myGraph = parser.getGraph();
       } else {
-        dispatch.setWorkingGraph(new Graph(), uuid);
+          myGraph = new Graph();
       }
     }
     catch ( GalantException e ) {
@@ -55,6 +56,7 @@ public class GGraphEditorPanel extends GEditorPanel {
       ExceptionDialog.displayExceptionInDialog(e);
     }
 
+    dispatch.setWorkingGraph(myGraph, uuid);
     syntaxHighlighter = new GGraphSyntaxHighlighting(textPane);
     documentUpdated();
     LogHelper.exitConstructor( getClass() );
@@ -87,8 +89,10 @@ public class GGraphEditorPanel extends GEditorPanel {
    */
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
-    LogHelper.disable();
+    // LogHelper.enable();
     LogHelper.enterMethod(getClass(), "propertyChange");
+    UUID graphSource = GraphDispatch.getInstance().getGraphSource();
+    Graph workingGraph = GraphDispatch.getInstance().getWorkingGraph();
     if ( evt.getPropertyName().equals(GraphDispatch.ANIMATION_MODE) ) {
       if ( (Boolean) evt.getNewValue() ) {
         // entering animation mode
@@ -99,22 +103,22 @@ public class GGraphEditorPanel extends GEditorPanel {
         // back to edit mode
         this.textPane.setEnabled(true);
         LogHelper.logDebug(" to edit mode ...");
-        if ( GraphDispatch.getInstance().getGraphSource().equals(uuid) ) {
-          LogHelper.logDebug("  the right graph, updating");
-          textPane.setText( GraphDispatch.getInstance().getWorkingGraph().xmlString() );
-        }
+        // if ( graphSource.equals(uuid) ) {
+        //   LogHelper.logDebug("  the right graph, updating");
+        //   textPane.setText(workingGraph.xmlString(workingGraph.getEditState()));
+        // }
       }
     } // end, in animation mode
     else {
       LogHelper.logDebug(" nothing to do with animation ...");
       if ( GraphDispatch.getInstance().getGraphSource().equals(uuid) ) {
         LogHelper.logDebug("  doing a text update in active panel");
-        textPane.setText( GraphDispatch.getInstance().getWorkingGraph().xmlString() );
+        textPane.setText(workingGraph.xmlString(workingGraph.getEditState()));
         GraphDispatch.getInstance().setEditMode(false);
       }
     } // end, not animation mode
     LogHelper.exitMethod(getClass(), "propertyChange");
-    LogHelper.restoreState();
+    // LogHelper.restoreState();
   }
 
   public UUID getUUID() {
@@ -123,4 +127,4 @@ public class GGraphEditorPanel extends GEditorPanel {
 
 }
 
-// [Last modified: 2017 03 13 at 19:48:34 GMT]
+// [Last modified: 2021 01 07 at 17:05:24 GMT]

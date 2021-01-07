@@ -10,9 +10,12 @@ import javax.swing.JDialog;
 import edu.ncsu.csc.Galant.graph.component.Graph;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow;
 import edu.ncsu.csc.Galant.logging.LogHelper;
+import edu.ncsu.csc.Galant.algorithm.Algorithm;
 import edu.ncsu.csc.Galant.algorithm.AlgorithmExecutor;
 import edu.ncsu.csc.Galant.algorithm.AlgorithmSynchronizer;
 import edu.ncsu.csc.Galant.algorithm.Terminate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Dispatch for managing working graphs in the editor; also used for passing
@@ -33,6 +36,8 @@ public class GraphDispatch {
 
   private static GraphDispatch instance;
   private Graph workingGraph;
+  
+  private Graph editGraph;
   /**
    * A unique identifier for a graph.
    * @todo not clear to me what the purpose is
@@ -48,6 +53,7 @@ public class GraphDispatch {
   /** 
    * true if editing a graph; false during parsing and when the
    * directedness of a graph is changing
+   * @todo figure out when to change this
    */
   private boolean editMode = false;
   
@@ -68,6 +74,13 @@ public class GraphDispatch {
    * The current graph window, whether in edit or animation mode
    */
   private GraphWindow graphWindow;
+
+    /**
+     * true during edit mode if several elements need to be changed
+     * simultaneously; for example, when a node is deleted all incident edges
+     * need to be deleted without a state change.
+     */
+    private boolean atomic = false;
 
   /**
    * Reference to an active query window during algorithm execution (so
@@ -97,6 +110,7 @@ public class GraphDispatch {
    */
   private Boolean booleanAnswer;
 
+  
   /**
    * getters and setters for the query answers
    */
@@ -165,7 +179,7 @@ public class GraphDispatch {
     this.graphSource = u;
     notifyListeners(GRAPH_UPDATE, null, null);
   }
-
+ 
   public UUID getGraphSource() {
     return graphSource;
   }
@@ -182,27 +196,57 @@ public class GraphDispatch {
     return this.editMode;
   }
   
+    public boolean isAtomic() {
+        return this.atomic;
+    }
+
+    public void setAtomic(boolean atomic) {
+        this.atomic = atomic;
+    }
+
   /**
    * @param mode true when user is editing the working graph, false otherwise
    */
   public void setEditMode(boolean mode) {
-    LogHelper.disable();
     LogHelper.enterMethod(getClass(), "setEditMode " + mode);
-    this.editMode = mode;
+    this.editMode=mode;
     LogHelper.exitMethod(getClass(), "setEditMode");
-    LogHelper.restoreState();
   }
   
-  public void setAnimationMode(boolean mode) {
-    Boolean old = this.animationMode;
-    this.animationMode = mode;
-    // if at the end of an animation, need to reset the graph and go back to
-    // edit mode
-    if ( ! mode && old ) {
-      this.workingGraph.reset();
+    /**
+     * Does everything that's required to initiate execution of the algorithm
+     */
+    public void startAnimation(Algorithm algorithm) {
+        this.animationMode = true;
+        this.editMode=false; 
+        // save the current working graph so that changes made by algorithm
+        // can be undone easily
+        this.editGraph = this.workingGraph;
+        this.algorithmSynchronizer = new AlgorithmSynchronizer();
+        this.algorithmExecutor
+            = new AlgorithmExecutor(algorithm, this.algorithmSynchronizer);
+        this.graphWindow.updateStatusLabel();
+        // start the animation with a clean copy of the edit graph, a copy
+        // without the edit states
+        this.workingGraph = this.editGraph.copyCurrentState(this.editGraph);
+        algorithm.setGraph(workingGraph);
+        this.algorithmExecutor.startAlgorithm();
+        this.graphWindow.updateStatusLabel();
+        notifyListeners(ANIMATION_MODE, ! this.animationMode, this.animationMode);
     }
-    notifyListeners(ANIMATION_MODE, old, this.animationMode);
-  }
+    
+    /**
+     * undoes effect of animation by returning to the edit graph, but
+     * preserving any node position changes during algorithm execution
+     */
+    public void stopAlgorithm() {
+        Graph algorithmGraph = this.workingGraph;
+        this.workingGraph = this.editGraph;
+        this.workingGraph.setNodePositions(algorithmGraph);
+         this.animationMode=false;
+         setEditMode(true);
+         notifyListeners(ANIMATION_MODE, ! this.animationMode, this.animationMode);
+    }
 
   public AlgorithmExecutor getAlgorithmExecutor() {
     return algorithmExecutor;
@@ -224,10 +268,14 @@ public class GraphDispatch {
    * when the context does not know whether or not algorithm is running
    */
   public int getDisplayState() {
-    if ( animationMode ) return algorithmExecutor.getDisplayState();
-    return 0;
+      int returnState = 0;
+      if ( animationMode )
+          returnState = algorithmExecutor.getDisplayState();
+      else
+          returnState = workingGraph.getEditState();
+      return returnState;
   }
-
+  
   /**
    * @return the current algorithm state or 0 if not in animation mode; used
    * when the context does not know whether or not algorithm is running
@@ -237,13 +285,23 @@ public class GraphDispatch {
     return 0;
   }
 
-  public void startStepIfRunning() throws Terminate {
-    if ( animationMode
-         && ! algorithmSynchronizer.isLocked()
-         ) {
-      algorithmSynchronizer.startStep();
+    /**
+     * Does what the name suggests
+     * @return true if a new step/state occurs (not currently used)
+     */
+    public boolean startStepIfAnimationOrIncrementEditState() throws Terminate {
+        if ( animationMode
+             && ! algorithmSynchronizer.isLocked()
+             ) {
+            algorithmSynchronizer.startStep();
+            return true;
+        }
+        if ( ! animationMode && ! atomic ) {
+            workingGraph.incrementEditState();
+            return true;
+        }
+        return false;
     }
-  }
 
   /**
    * Differs from startStepIfRunning() in that it ignores a lock; this is
@@ -345,4 +403,4 @@ public class GraphDispatch {
 
 }
 
-//  [Last modified: 2017 03 13 at 19:47:59 GMT]
+//  [Last modified: 2021 01 07 at 17:02:18 GMT]

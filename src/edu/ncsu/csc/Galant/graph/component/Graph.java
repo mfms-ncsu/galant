@@ -1321,29 +1321,26 @@ public void incrementEditState() {
   /**
    * Assigns edge ids if necessary; could be used for other housekeeping in
    * the future
+   * @todo this is now handled inside Edge.java with the assumption
+   * that either all edges have id's or (more typically) none of them do.
    */
   public void initializeAfterParsing() throws GalantException {
-    // first process the edges that have id's, so there's no conflict later
-//    for ( Edge edge : this.edges ) {
-//      if ( edge.hasExplicitId() ) {
-//        if ( this.edgeById.containsKey( edge.getId() ) ) {
-//          throw new GalantException("Duplicate id: "
-//                                    + edge.getId()
-//                                    + " when processing edge "
-//                                    + edge);
-//        }
-//        this.hasExplicitEdgeIds = true;
-//        this.edgeById.put(edge.getId(), edge);
-//      }
-//    }
-    // then those that don't
-    for ( Edge edge : this.edges ) {
-//      if ( ! edge.hasExplicitId() ) {
-//        edge.setId( nextEdgeId() );
-//        this.edgeById.put(edge.getId(), edge);
-//      }
-    }
-    if ( layered ) layerInformation.initializeAfterParsing();
+      // check if any edge has an explicit id and throw an exception
+      // if some do and others don't
+      this.hasExplicitEdgeIds = false;
+      for ( Edge edge : this.edges ) {
+          if ( edge.hasExplicitId() ) {
+              this.hasExplicitEdgeIds = true;
+          }
+          else {
+              if ( this.hasExplicitEdgeIds ) {
+                  throw new GalantException("missing id for edge " + edge);
+              }
+              edge.setId(nextEdgeId++);
+          }
+      }
+      
+      if ( layered ) layerInformation.initializeAfterParsing();
   }
 
   /**
@@ -1431,4 +1428,4 @@ public void incrementEditState() {
   }
 }
 
-// [Last modified: 2020 05 12 at 20:28:33 GMT]
+// [Last modified: 2021 01 08 at 20:57:12 GMT]

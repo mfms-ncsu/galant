@@ -28,7 +28,7 @@ public class Edge extends GraphElement {
      * used internally only or for array indexing, unless edge has an explicit
      * id
      */
-    Integer id;
+    int id;
 
     /**
      * true if the GraphML representation of this edge had an id
@@ -116,7 +116,6 @@ public class Edge extends GraphElement {
             throws GalantException {
         LogHelper.disable();
         LogHelper.logDebug("-> initializeAfterParsing " + this);
-        // id has already been parsed by GraphElement.initializeAfterParsing()
         
         String sourceString = null;
         String targetString = null;
@@ -125,10 +124,20 @@ public class Edge extends GraphElement {
             if (attributeOfNode.key.equals("source")) {
                 String attributeValue = attributeOfNode.getStringValue();
                 sourceString = attributeValue;
-            } else if (attributeOfNode.key.equals("target")) {
+            }
+            else if (attributeOfNode.key.equals("target")) {
                 String attributeValue = attributeOfNode.getStringValue();
                 targetString = attributeValue;
-            } 
+            }
+            else if ( attributeOfNode.key.equals("id") ) {
+                String attributeValue = attributeOfNode.getStringValue();
+                this.hasExplicitId = true;
+                try {
+                    this.id = Integer.parseInt(attributeValue);
+                } catch  (NumberFormatException e) {
+                    throw new GalantException("Bad edge id " + attributeValue);
+                }
+            }
         }
         
         Integer sourceId = Integer.MIN_VALUE;
@@ -177,7 +186,7 @@ public class Edge extends GraphElement {
         // which case they should be rendered in the output as the first
         // attribute; edges with non-existent id's need to be given ones
         String idComponent = "";
-        if (super.graph.hasExplicitEdgeIds()) {
+        if ( super.graph.hasExplicitEdgeIds() ) {
             Integer edgeId = this.id;
             idComponent = "id=\"" + edgeId + "\"";
         }
@@ -239,4 +248,4 @@ public class Edge extends GraphElement {
     }
 }
 
-//  [Last modified: 2018 12 07 at 15:42:36 GMT]
+//  [Last modified: 2021 01 08 at 20:58:14 GMT]

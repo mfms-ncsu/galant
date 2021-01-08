@@ -104,14 +104,6 @@ public class GraphDispatch {
   private Double doubleAnswer;
 
   /**
-   * boolean answer to latest boolean query
-   * @deprecated
-   * @see gui.util.Queries
-   */
-  private Boolean booleanAnswer;
-
-  
-  /**
    * getters and setters for the query answers
    */
   public void setActiveQuery(JDialog dialog) { this.activeQuery = dialog; }
@@ -122,8 +114,6 @@ public class GraphDispatch {
   public Integer getIntegerAnswer() { return this.integerAnswer; }
   public void setDoubleAnswer(Double answer) { this.doubleAnswer = answer; }
   public Double getDoubleAnswer() { return this.doubleAnswer; }
-  public void setBooleanAnswer(Boolean answer) { this.booleanAnswer = answer; }
-  public Boolean getBooleanAnswer() { return this.booleanAnswer; }
 
   /**
    * true if the algorithm moves nodes; an algorithm should set this if it
@@ -403,4 +393,4 @@ public class GraphDispatch {
 
 }
 
-//  [Last modified: 2021 01 07 at 17:02:18 GMT]
+//  [Last modified: 2021 01 08 at 19:37:21 GMT]

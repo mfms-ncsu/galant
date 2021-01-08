@@ -920,26 +920,6 @@ public class LayeredGraph {
     }
 
     /**
-     * assigns weights to the layer based on node positions
-     * @deprecated see setWeightsToPositions
-     */
-    public void assignWeights( int layer ) {
-        for ( Node v: layers.get( layer ).getNodes() ) {
-            weightOfNode[ v.getId() ] = positionOfNode[ v.getId() ];
-        }
-    }
-
-    /**
-     * Assigns weights to all of the nodes based on their positions
-     * @deprecated see setWeightsToPositions
-     */
-    public void assignWeights() {
-        for ( int layer = 0; layer < layers.size(); layer++ ) {
-            assignWeights( layer );
-        }
-    }
-
-    /**
      * Makes all node labels on layer i blank
      */
     public void clearNodeLabels( int i ) throws Terminate {
@@ -1590,4 +1570,4 @@ public class LayeredGraph {
 
 } // end, class LayeredGraph
 
-//  [Last modified: 2016 10 17 at 13:03:08 GMT]
+//  [Last modified: 2021 01 08 at 19:45:43 GMT]

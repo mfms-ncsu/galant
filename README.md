@@ -73,7 +73,3 @@ graph. The algorithms are in the `Algorithms` folder and the graphs in `Example-
 * to create an empty graph click on left arrow below `File` until `untitled graph` appears
 
 **For more information and links to important resources, see** `0-index.html.`
-
-
-
-

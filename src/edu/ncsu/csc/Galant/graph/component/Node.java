@@ -409,8 +409,8 @@ public class Node extends GraphElement {
         EdgeList currentEdges = new EdgeList();
         for (Edge e : incidentEdges) {
             if (e.inScope()) {
-                if (this.equals(e.getSourceNode())
-                        || !graph.isDirected()) {
+                if ( this.equals(e.getSourceNode() )
+                        || ! graph.isDirected() ) {
                     currentEdges.add(e);
                 }
             }
@@ -762,4 +762,4 @@ public class Node extends GraphElement {
 
 }
 
-//  [Last modified: 2021 01 07 at 17:00:58 GMT]
+//  [Last modified: 2021 01 09 at 18:24:00 GMT]

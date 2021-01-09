@@ -1346,7 +1346,8 @@ public abstract class Algorithm implements Runnable {
 
   /**  */
   public void setDirected(boolean directed) {
-    dispatch.getGraphWindow().setDirectedness(directed);
+      graph.setDirected(directed);
+      dispatch.getGraphWindow().setDirectedness(directed);
   }
 
   public NodeList getNodes() {
@@ -1529,4 +1530,4 @@ public abstract class Algorithm implements Runnable {
   public abstract void run();
 }
 
-//  [Last modified: 2020 05 10 at 20:35:16 GMT]
+//  [Last modified: 2021 01 09 at 18:21:34 GMT]

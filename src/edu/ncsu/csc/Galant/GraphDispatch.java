@@ -208,7 +208,7 @@ public class GraphDispatch {
      */
     public void startAnimation(Algorithm algorithm) {
         this.animationMode = true;
-        this.editMode=false; 
+        this.editMode = false; 
         // save the current working graph so that changes made by algorithm
         // can be undone easily
         this.editGraph = this.workingGraph;
@@ -219,7 +219,7 @@ public class GraphDispatch {
         // start the animation with a clean copy of the edit graph, a copy
         // without the edit states
         this.workingGraph = this.editGraph.copyCurrentState(this.editGraph);
-        algorithm.setGraph(workingGraph);
+        algorithm.setGraph(this.workingGraph);
         this.algorithmExecutor.startAlgorithm();
         this.graphWindow.updateStatusLabel();
         notifyListeners(ANIMATION_MODE, ! this.animationMode, this.animationMode);
@@ -393,4 +393,4 @@ public class GraphDispatch {
 
 }
 
-//  [Last modified: 2021 01 08 at 19:37:21 GMT]
+//  [Last modified: 2021 01 09 at 17:25:54 GMT]

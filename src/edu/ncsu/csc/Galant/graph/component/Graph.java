@@ -200,8 +200,7 @@ public void incrementEditState() {
      * creates a deep copy of the graph, i.e., clones graph object completely
      * and is used to store edit state of graph just before algorithm execution
      */
-    public Graph copyCurrentState(Graph currentGraph){
-      
+    public Graph copyCurrentState(Graph currentGraph) {
         Graph copyOfGraph=new Graph(currentGraph);
         copyOfGraph.dispatch = GraphDispatch.getInstance();
         copyOfGraph.graphWindow = dispatch.getGraphWindow();
@@ -212,24 +211,20 @@ public void incrementEditState() {
         NodeList nodeListCopy=new NodeList();
         TreeMap<Integer, Node> nodeByIdMap = new TreeMap<Integer, Node>();
         TreeMap<Integer, Node> copyOfNodeMap=new TreeMap<Integer, Node>(this.nodeById);
-        for(int i=0;i<=this.nodes.size()-1;i++)
-            {
-                Node copiedNode= this.nodes.get(i);
-                copiedNode=copiedNode.copyNode(currentGraph);
-                nodeListCopy.add(copiedNode);
-                copyOfNodeMap.put(copiedNode.getId(), copiedNode);
-                nodeByIdMap.put(copiedNode.getId(), copiedNode);
-            }
-        for(int i=0;i<=this.edges.size()-1;i++)
-            {
-                Edge originalEdge=this.edges.get(i);
-                Integer sourceId=originalEdge.getSourceNode().getId();
-                Integer targetId=originalEdge.getTargetNode().getId();
-                Node newSource=copyOfNodeMap.get(sourceId);
-                Node newTarget=copyOfNodeMap.get(targetId);
-                Edge copiedEdge=originalEdge.copyEdge(currentGraph,newSource,newTarget);
-                edgeListCopy.add(copiedEdge);
-            }
+        for( Node originalNode : this.getNodes() ) {
+            Node copiedNode = originalNode.copyNode(copyOfGraph);
+            nodeListCopy.add(copiedNode);
+            copyOfNodeMap.put(copiedNode.getId(), copiedNode);
+            nodeByIdMap.put(copiedNode.getId(), copiedNode);
+        }
+        for( Edge originalEdge : this.getEdges() ) {
+            Integer sourceId = originalEdge.getSourceNode().getId();
+            Integer targetId = originalEdge.getTargetNode().getId();
+            Node newSource = copyOfNodeMap.get(sourceId);
+            Node newTarget = copyOfNodeMap.get(targetId);
+            Edge copiedEdge = originalEdge.copyEdge(copyOfGraph,newSource,newTarget);
+            edgeListCopy.add(copiedEdge);
+        }
         String nameCopy=this.name;
         String commentCopy=this.comment;
         boolean directedCopy=this.directed;
@@ -774,7 +769,7 @@ public void incrementEditState() {
    * @param directed true if setting the graph to directed, false if undirected
    */
   public void setDirected(boolean directed) {
-    this.directed = directed;
+      this.directed = directed;
   }
 
   /**
@@ -1428,4 +1423,4 @@ public void incrementEditState() {
   }
 }
 
-// [Last modified: 2021 01 08 at 20:57:12 GMT]
+// [Last modified: 2021 01 09 at 18:22:50 GMT]

@@ -1,4 +1,3 @@
 Things to do before release:
 
-- add new functions to syntax highlighting
 - update the release number in Galant.java and galant.sty

@@ -1,16 +1,27 @@
 Release notes for Galant, most recent first.
 
 ================================================
+Since 6.1
+
+Bug fixes
+
+- layered graph algorithms now work again (edge id's were reintroduced)
+- setDirected() invoked during an algorithm now works as advertised for getOutgoingEdges() and getIncomingEdges() of a node
+
+================================================
 
 Since 6.0.2 (need to download latest commit)
 
 User
 
+- added ability to undo and redo while editing
 - added a script to produce random trees
 
 Animator
 
 - the functions for retrieving user-defined attribute values now throw exceptions if the value of the right type for the attribute does not exist; for example, if you do set(n,"a",3) and later getDouble(n,"a"), an exception will result because n has *Integer* attribute "a" but not Double attribute; this applies to user-defined attributes only, not built-in ones such as "id", "x", "y", "label", "weight", "color" (don't mess with those)
+
+- in connection with the above, there are methods of the form. e.g., hasDouble(n,"a")
 
 ==================================================
 

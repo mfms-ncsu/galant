@@ -14,7 +14,7 @@ import edu.ncsu.csc.Galant.Timer;
  * @author Michael Owoc, Jason Cockrell, Alex McCabe, Ty Devries
  */
 public class Galant {
-  public static final String VERSION = "v6.0.2";
+  public static final String VERSION = "v6.1.1";
   public static void main(String[] args) {
     ExceptionDialog.setDialogExceptionHandlerAsDefault();
     SwingUtilities.invokeLater(new Runnable() {
@@ -36,4 +36,4 @@ public class Galant {
   }
 }
 
-//  [Last modified: 2017 07 25 at 19:21:14 GMT]
+//  [Last modified: 2021 01 09 at 19:27:55 GMT]

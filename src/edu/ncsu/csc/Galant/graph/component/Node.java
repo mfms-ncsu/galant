@@ -34,6 +34,12 @@ public class Node extends GraphElement {
 
     private static final String MARKED = "marked";
 
+    /**
+     * The following attributes - id, xCoordinate, yCoordinate, and
+     * incidentEdges, are fixed, i.e., not able to be changed by an
+     * animation.
+     * The id attribute is unique and cannot be modified even by the editor.
+     */
     private int id;
     private int xCoordinate;
     private int yCoordinate;
@@ -96,6 +102,13 @@ public class Node extends GraphElement {
         incidentEdges = new EdgeList();
     }
 
+    /**
+     * This is called during the transition from edit mode to
+     * animation mode, so that the animation modifies a copy of the
+     * edit graph and will have no impact on it.
+     * @param currentGraph the graph accessed by the animation - see
+     * Algorithm.java
+     */
     public Node copyNode(Graph currentGraph) {
         Node copy = new Node();
         copy.dispatch = GraphDispatch.getInstance();
@@ -103,12 +116,13 @@ public class Node extends GraphElement {
         copy.xCoordinate = this.xCoordinate;
         copy.yCoordinate = this.yCoordinate;
         copy.graph = currentGraph;
+        // edges are added to this list when they are copied into the
+        // copied graph
         copy.incidentEdges = new EdgeList();
         ArrayList<GraphElementState> statesCopy = super.copyCurrentState();
         copy.states = statesCopy;
         return copy;
     }
-
 
     /**
      * Setters and getters for node-specific information that does not change.
@@ -762,4 +776,4 @@ public class Node extends GraphElement {
 
 }
 
-//  [Last modified: 2021 01 09 at 18:24:00 GMT]
+//  [Last modified: 2021 01 10 at 19:23:28 GMT]

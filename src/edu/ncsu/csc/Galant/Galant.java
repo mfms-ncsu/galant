@@ -22,18 +22,18 @@ public class Galant {
         public void run() {
           Timer.parsingTime = new Timer("parsing");
           Timer.drawingTime = new Timer("drawing");
-          GraphDispatch gd = GraphDispatch.getInstance();
+          GraphDispatch graphDispatch = GraphDispatch.getInstance();
           GalantPreferences.initPrefs();
-          GraphWindow g = new GraphWindow(gd);
-          gd.setGraphWindow(g);
-          g.updateStatusLabel("No algorithm running");
-          GEditorFrame gef = new GEditorFrame();
-          GraphWindow.getGraphFrame().addWindowListener(gef);
+          GraphWindow graphWindow = new GraphWindow(graphDispatch);
+          graphDispatch.setGraphWindow(graphWindow);
+          GEditorFrame editorFrame = new GEditorFrame();
+          GraphWindow.getGraphFrame().addWindowListener(editorFrame);
           WindowUtil.linkWindows();
           GraphDispatch.getInstance().pushToGraphEditor();
+          GraphDispatch.getInstance().setEditMode(true);
         }
       });
   }
 }
 
-//  [Last modified: 2021 01 09 at 19:27:55 GMT]
+//  [Last modified: 2021 01 10 at 20:51:36 GMT]

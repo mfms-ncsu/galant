@@ -233,9 +233,9 @@ public class GraphDispatch {
         Graph algorithmGraph = this.workingGraph;
         this.workingGraph = this.editGraph;
         this.workingGraph.setNodePositions(algorithmGraph);
-         this.animationMode=false;
-         setEditMode(true);
-         notifyListeners(ANIMATION_MODE, ! this.animationMode, this.animationMode);
+        this.animationMode = false;
+        this.editMode = true;
+        notifyListeners(ANIMATION_MODE, ! this.animationMode, this.animationMode);
     }
 
   public AlgorithmExecutor getAlgorithmExecutor() {
@@ -280,6 +280,8 @@ public class GraphDispatch {
      * @return true if a new step/state occurs (not currently used)
      */
     public boolean startStepIfAnimationOrIncrementEditState() throws Terminate {
+        System.out.println("-> startStep, editMode = " + editMode
+                           + ", editState = " + workingGraph.getEditState());
         if ( animationMode
              && ! algorithmSynchronizer.isLocked()
              ) {
@@ -393,4 +395,4 @@ public class GraphDispatch {
 
 }
 
-//  [Last modified: 2021 01 09 at 17:25:54 GMT]
+//  [Last modified: 2021 01 10 at 21:32:03 GMT]

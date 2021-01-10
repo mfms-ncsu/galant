@@ -57,6 +57,7 @@ public class GGraphEditorPanel extends GEditorPanel {
     }
 
     dispatch.setWorkingGraph(myGraph, uuid);
+    dispatch.setEditMode(true);
     syntaxHighlighter = new GGraphSyntaxHighlighting(textPane);
     documentUpdated();
     LogHelper.exitConstructor( getClass() );
@@ -114,7 +115,7 @@ public class GGraphEditorPanel extends GEditorPanel {
       if ( GraphDispatch.getInstance().getGraphSource().equals(uuid) ) {
         LogHelper.logDebug("  doing a text update in active panel");
         textPane.setText(workingGraph.xmlString(workingGraph.getEditState()));
-        GraphDispatch.getInstance().setEditMode(false);
+        //        GraphDispatch.getInstance().setEditMode(false);
       }
     } // end, not animation mode
     LogHelper.exitMethod(getClass(), "propertyChange");
@@ -127,4 +128,4 @@ public class GGraphEditorPanel extends GEditorPanel {
 
 }
 
-// [Last modified: 2021 01 07 at 17:05:24 GMT]
+// [Last modified: 2021 01 10 at 21:27:02 GMT]

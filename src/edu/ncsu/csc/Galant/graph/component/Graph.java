@@ -29,7 +29,7 @@ import edu.ncsu.csc.Galant.logging.LogHelper;
  *
  * @author Michael Owoc, Ty Devries (major modifications by Matt Stallmann)
  */
-public class Graph{
+public class Graph {
   public GraphWindow graphWindow;
   private GraphDispatch dispatch;
 
@@ -85,38 +85,41 @@ public class Graph{
    */
   private boolean hasExplicitEdgeIds = false;
 
-  /**
-   * Default constructor.
-   *
-   * @todo let the Terminate exception propagate all the way to the top,
-   * where it can be caught based on whether or not you're running an
-   * algorithm
-   */
-  public Graph() {
-    dispatch = GraphDispatch.getInstance();
-    graphWindow = dispatch.getGraphWindow();
-    nodes = new NodeList();
-    edges = new EdgeList();
-    states = new ArrayList<GraphState>();
-    try {
-      this.addState( new GraphState() );
+    /**
+     * Default constructor.
+     *
+     * @todo let the Terminate exception propagate all the way to the top,
+     * where it can be caught based on whether or not you're running an
+     * algorithm
+     */
+    public Graph() {
+        dispatch = GraphDispatch.getInstance();
+        graphWindow = dispatch.getGraphWindow();
+        nodes = new NodeList();
+        edges = new EdgeList();
+        states = new ArrayList<GraphState>();
+        try {
+            this.addState( new GraphState() );
+        }
+        catch ( Terminate t ) {     // should not happen
+            t.printStackTrace();
+        }
+        banner = new MessageBanner(this);
     }
-    catch ( Terminate t ) {     // should not happen
-      t.printStackTrace();
+
+    /**
+     * Used by copyCurrentState, which need to start with a completely
+     * clean slate, so that all relevant information can be copied
+     * from the current graph.
+     */
+    public Graph(boolean empty) {
     }
-    banner = new MessageBanner(this);
-  }
   
-  public Graph(Graph newGraph)
-  {
+    public int getEditState() {
+        return editState;
+    }
     
-  }
-  
-public int getEditState()
-  {
-      return editState;
-  }
-public void incrementEditState() {
+    public void incrementEditState() {
         editState++;
     }
 
@@ -132,49 +135,6 @@ public void incrementEditState() {
         return false;
     }
     
-  /**
-   * Resets the graph to its original state at the end of an
-   * animation.
-   */
-  //The following method can be deleted as cloning accomplishes the same task
-  public void reset() {
-    int initialStateNumber = GraphDispatch.getInstance().getAlgorithmState();
-
-    // first, reset any graph visibility attributes
-    // not currently used
-    ArrayList<GraphState> initialStates
-      = new ArrayList<GraphState>();
-    for ( GraphState state : this.states ) {
-      if ( state.getState() > 0 ) break;
-      initialStates.add(state);
-    }
-    this.states = initialStates;  
-
-    // get rid of any nodes and edges created by the algorithm; better to
-    // do this by gathering the ones that should not be removed and then
-    // resetting nodes/edges to be the gathered ones
-    NodeList validNodes = new NodeList();
-    for ( Node node : this.nodes ) {
-      if ( node.inScope(initialStateNumber) ) validNodes.add(node);
-    }
-    EdgeList validEdges = new EdgeList();
-    for ( Edge edge : this.edges ) {
-      if ( edge.inScope(initialStateNumber) ) validEdges.add(edge);
-    }
-    this.nodes = validNodes;
-    this.edges = validEdges;
-
-    // then reset the attributes of all nodes and edges
-    for ( Node node : this.nodes ) {
-      node.reset();
-    }
-    for ( Edge edge : this.edges ) {
-      edge.reset();
-    }
-    // then reinitialize the message banner
-    banner = new MessageBanner(this);
-  }
-
     /**
      * @return a new state for this graph; the new state will be identical
      * to the current (latest one) except that it will be tagged with the
@@ -197,62 +157,64 @@ public void incrementEditState() {
     }
 
     /**
-     * creates a deep copy of the graph, i.e., clones graph object completely
-     * and is used to store edit state of graph just before algorithm execution
+     * Creates a deep copy of the graph, i.e., clones graph object completely.
+     * The cloned graph is modified by an animation so that the
+     * current edit state remains unaffected.
+     * Nodes and edges of the current graph are reset to their current
+     * edit state.
+     * @param currentGraph the graph to be accessed by the animation
      */
     public Graph copyCurrentState(Graph currentGraph) {
-        Graph copyOfGraph=new Graph(currentGraph);
+        System.out.println("-> copyCurrentState of graph");
+        Graph copyOfGraph = new Graph(true);
         copyOfGraph.dispatch = GraphDispatch.getInstance();
         copyOfGraph.graphWindow = dispatch.getGraphWindow();
+
+        copyOfGraph.states = new ArrayList<GraphState>();
+        GraphState latestValidState = this.getLatestValidState(getEditState());
+        copyOfGraph.states.add(latestValidState);
+
         copyOfGraph.nodes = new NodeList();
         copyOfGraph.edges = new EdgeList();
-        copyOfGraph.states = new ArrayList<GraphState>();
-        EdgeList edgeListCopy=new EdgeList();
-        NodeList nodeListCopy=new NodeList();
-        TreeMap<Integer, Node> nodeByIdMap = new TreeMap<Integer, Node>();
-        TreeMap<Integer, Node> copyOfNodeMap=new TreeMap<Integer, Node>(this.nodeById);
+        EdgeList edgeListCopy = new EdgeList();
+        NodeList nodeListCopy = new NodeList();
+        TreeMap<Integer, Node> copyOfNodeById = new TreeMap<Integer, Node>();
+
         for( Node originalNode : this.getNodes() ) {
+            System.out.println("copy node " + originalNode);
+            if ( ! originalNode.inScope(this.editState) ) continue;
             Node copiedNode = originalNode.copyNode(copyOfGraph);
             nodeListCopy.add(copiedNode);
-            copyOfNodeMap.put(copiedNode.getId(), copiedNode);
-            nodeByIdMap.put(copiedNode.getId(), copiedNode);
+            copyOfNodeById.put(copiedNode.getId(), copiedNode);
         }
+        copyOfGraph.nodes = nodeListCopy;
+        copyOfGraph.nodeById = copyOfNodeById;
+
         for( Edge originalEdge : this.getEdges() ) {
+            if ( ! originalEdge.inScope(this.editState) ) continue;
             Integer sourceId = originalEdge.getSourceNode().getId();
             Integer targetId = originalEdge.getTargetNode().getId();
-            Node newSource = copyOfNodeMap.get(sourceId);
-            Node newTarget = copyOfNodeMap.get(targetId);
-            Edge copiedEdge = originalEdge.copyEdge(copyOfGraph,newSource,newTarget);
+            Node newSource = copyOfNodeById.get(sourceId);
+            Node newTarget = copyOfNodeById.get(targetId);
+            Edge copiedEdge = originalEdge.copyEdge(copyOfGraph, newSource, newTarget);
             edgeListCopy.add(copiedEdge);
         }
-        String nameCopy=this.name;
-        String commentCopy=this.comment;
-        boolean directedCopy=this.directed;
-        boolean layeredCopy=this.layered;
-        LayerInformation layerInformationCopy=this.layerInformation;
-        TreeMap<Integer, Node> nodeByIdCopy=new TreeMap<Integer, Node>(this.nodeById);
-        MessageBanner bannerCopy=this.banner;
-        Edge selectedEdgeCopy=this.selectedEdge;
-        Node selectedNodeCopy=this.selectedNode;
-        List<GraphState> statesCopy=this.states;
-        Node rootNodeCopy=this.rootNode;
-        int nextEdgeIdCopy=this.nextEdgeId;
-        boolean hasExplicitEdgeIdsCopy=this.hasExplicitEdgeIds;
-        copyOfGraph.edges=edgeListCopy;
-        copyOfGraph.nodes=nodeListCopy;
-        copyOfGraph.name=nameCopy;
-        copyOfGraph.comment=commentCopy;
-        copyOfGraph.directed=directedCopy;
-        copyOfGraph.layered=layeredCopy;
-        copyOfGraph.layerInformation=layerInformationCopy;
-        copyOfGraph.nodeById=nodeByIdMap;
-        copyOfGraph.banner=bannerCopy;
-        copyOfGraph.selectedEdge=selectedEdgeCopy;
-        copyOfGraph.selectedNode=selectedNodeCopy;
-        copyOfGraph.states=statesCopy;
-        copyOfGraph.rootNode=rootNodeCopy;
-        copyOfGraph.nextEdgeId=nextEdgeIdCopy;
-        copyOfGraph.hasExplicitEdgeIds=hasExplicitEdgeIdsCopy;
+        copyOfGraph.edges = edgeListCopy;
+        copyOfGraph.name = this.name;
+        copyOfGraph.comment = this.comment;
+        copyOfGraph.directed = this.directed;
+        copyOfGraph.layered = this.layered;
+        /**
+         * @todo copying the correct layer information may be a
+         * nontrivial process
+         */
+        copyOfGraph.layerInformation = this.layerInformation;
+        TreeMap<Integer, Node> nodeByIdCopy = new TreeMap<Integer, Node>(this.nodeById);
+        copyOfGraph.banner = this.banner;
+        copyOfGraph.rootNode = this.rootNode;
+        // the following two statements are probably not needed
+        copyOfGraph.nextEdgeId = this.nextEdgeId;
+        copyOfGraph.hasExplicitEdgeIds = this.hasExplicitEdgeIds;
         return copyOfGraph;
     }
 
@@ -1423,4 +1385,4 @@ public void incrementEditState() {
   }
 }
 
-// [Last modified: 2021 01 09 at 18:22:50 GMT]
+// [Last modified: 2021 01 10 at 21:08:23 GMT]

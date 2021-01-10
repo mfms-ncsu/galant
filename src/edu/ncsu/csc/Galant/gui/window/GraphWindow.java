@@ -151,17 +151,21 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
      */
     public void updateStatusLabel() {
         AlgorithmExecutor executor
-                = dispatch.getAlgorithmExecutor();
+                = this.dispatch.getAlgorithmExecutor();
         AlgorithmSynchronizer synchronizer
-                = dispatch.getAlgorithmSynchronizer();
-        if (executor == null
-                || synchronizer == null) {
-            updateStatusLabel("Algorithm no longer running");
-        } else if (synchronizer.exceptionThrown()) {
+                = this.dispatch.getAlgorithmSynchronizer();
+        if ( this.dispatch.isEditMode()
+             || executor == null || synchronizer == null ) {
+            int editState = this.dispatch.getWorkingGraph().getEditState();
+            updateStatusLabel("edit state is " + editState);
+        }
+        else if ( synchronizer.exceptionThrown() ) {
             updateStatusLabel("Terminated because of exception");
-        } else if (executor.infiniteLoop) {
+        }
+        else if ( executor.infiniteLoop ) {
             updateStatusLabel("Terminated because of possible infinite loop");
-        } else {
+        }
+        else {
             int algorithmState = executor.getAlgorithmState();
             int displayState = executor.getDisplayState();
             String message = "algorithm state is "
@@ -566,7 +570,8 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
      */
     private void changeDirectedness(Directedness mode) {
         LogHelper.enterMethod(getClass(), "changeDirectedness " + mode);
-        // avoid setting dirty based on directedness change
+        // prevent setting of dirty bit
+        boolean currentEditMode = dispatch.isEditMode();
         dispatch.setEditMode(false);
         switch (mode) {
             case DIRECTED: {
@@ -581,6 +586,12 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
             }
         } // switch
         frame.repaint();
+        // Because of the following line, the dirty bit gets set
+        // anyhow - not clear where this happens or how to prevent it.
+        // On the other hand, without this line, we get booted out of
+        // edit mode any time there is a change in directedness,
+        // ** even if returning from an animation that changed it **
+        dispatch.setEditMode(currentEditMode);
         LogHelper.exitMethod(getClass(), "changeDirectedNess");
     }
 
@@ -1079,6 +1090,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                     } // delete edge
                     //}
                     LogHelper.exitMethod(getClass(), "'e' pressed");
+                    updateStatusLabel();
                     return true;
                 }
                 // "N" pressed
@@ -1111,6 +1123,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                         } //delete node
                     }
                     LogHelper.exitMethod(getClass(), "'n' pressed");
+                    updateStatusLabel();
                     return true;
                 }
                 //"Z" is pressed for undo
@@ -1120,6 +1133,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                         LogHelper.logDebug("UNDO");
                         if (dispatch.getWorkingGraph().decrementEditState()) {
                             dispatch.pushToTextEditor();
+                            updateStatusLabel();
                         } else {
                             // need to ring a bell or something here
                             System.out.println("*** Can't decrement edit state, already 0 ***");
@@ -1134,6 +1148,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                         LogHelper.logDebug("REDO");
                         dispatch.getWorkingGraph().incrementEditState();
                         dispatch.pushToTextEditor();
+                        updateStatusLabel();
                     }
                 } //redo
 
@@ -1211,25 +1226,6 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
         LogHelper.exitMethod(getClass(), "initAnimationPanel");
         return animationButtons;
     }
-//public void undo() throws GalantException, Terminate
-//{
-//    if(!nodePositions.isEmpty() && dispatch.isAnimationMode())
-//    {
-//    //size -2 is done as we are doing an undo, size-1 will give the latest node position, we want to retrieve the position which is 1 before the latest.
-//    Point lastCoordinates=nodePositions.get(nodePositions.size()-2); 
-//    int lastNodeId=nodeIds.get(nodeIds.size()-2);
-//    //The following code can be removed once I figure out how to update animation view with the new node positions, perhaps GraphPanel.java can read the positions of the nodes if I can convey to it that state has changed 
-//    //For now, I have replaced the full node with a new node in current graph, but GraphPanel does not know how to read this yet
-//    graph=dispatch.getWorkingGraph(); //Ideally must be done in constructor but this code shall be removed anyway
-//    Node sel=graph.getNodeById(lastNodeId);
-//    EdgeList incidentEdges=sel.getEdges();
-//    graph.removeNode(sel); //Problem-causes edges to be removed too. Hopefully GraphPanel can simply replace nodes
-//    sel.setFixedPosition(lastCoordinates);
-//    graph.addNode(sel);
-//    for(Edge edge:incidentEdges)
-//    graph.addEdge(edge);
-//    }
-//}
 
     @Override
     public void componentHidden(ComponentEvent arg0) {
@@ -1254,4 +1250,4 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
         // TODO Auto-generated method stub
     }
 }
- //  [Last modified: 2021 01 09 at 17:36:43 GMT]
+ //  [Last modified: 2021 01 10 at 21:56:20 GMT]

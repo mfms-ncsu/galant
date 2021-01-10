@@ -183,24 +183,21 @@ public class GraphElement implements Comparable<GraphElement> {
         }
     }
 
+    /**
+     * Effectively removes all states except for a copy of the current
+     * one from the list of states.
+     * Invoked during the process of creating a copy of the graph
+     * element - Node or Edge when switching from edit mode to
+     * animation mode.
+     */
     public ArrayList<GraphElementState> copyCurrentState() {
         GraphElementState currentState
             = new GraphElementState(this.getLatestValidState(this.graph.getEditState()));
         ArrayList<GraphElementState> statesCopy = new ArrayList<GraphElementState>();
-        /**
-         * @todo use a linked list and link current state after the
-         * latestValidState for current edit state of the graph the new current
-         * state will need a state number corresponding to the graph edit state
-         * + 1
-         */
         statesCopy.add(currentState);
         return statesCopy;
     }
 
-    /**
-     * @todo Would be nice to have methods hasInteger(String key), etc., so that
-     * animator can say ge.hasInteger("attribute"), e.g.
-     */
     /**
      * ************ Integer attributes **************
      */
@@ -823,4 +820,4 @@ public class GraphElement implements Comparable<GraphElement> {
 
 }
 
-//  [Last modified: 2021 01 07 at 16:54:20 GMT]
+//  [Last modified: 2021 01 10 at 20:25:26 GMT]

@@ -15,7 +15,7 @@ public class GraphState {
     /**
      * The sequence number (algorithm state) of this state.
      */
-	private int state;
+    private int state;
 
     public int getState() { return state; }
 	
@@ -49,42 +49,42 @@ public class GraphState {
     }
 
     /************** Integer attributes ***************/
-	public boolean set(String key, Integer value) {
+    public boolean set(String key, Integer value) {
         return attributes.set(key, value);
-	}
-	public Integer getIntegerAttribute(String key) {
-		return attributes.getInteger(key);
-	}
+    }
+    public Integer getIntegerAttribute(String key) {
+        return attributes.getInteger(key);
+    }
 
     /************** Double attributes ***************/
-	public boolean set(String key, Double value) {
+    public boolean set(String key, Double value) {
         return attributes.set(key, value);
-	}
-	public Double getDoubleAttribute(String key) {
-		return attributes.getDouble(key);
-	}
+    }
+    public Double getDoubleAttribute(String key) {
+        return attributes.getDouble(key);
+    }
 
     /************** Boolean attributes ***************/
-	public boolean set(String key, Boolean value) {
+    public boolean set(String key, Boolean value) {
         return attributes.set(key, value);
-	}
+    }
     public boolean set(String key) {
         return attributes.set(key, true);
     }
-	public Boolean getBooleanAttribute(String key) {
-		return attributes.getBoolean(key);
-	}
+    public Boolean getBooleanAttribute(String key) {
+        return attributes.getBoolean(key);
+    }
     public Boolean is(String key) {
         return attributes.getBoolean(key);
     }
 
     /************** String attributes ***************/
-	public boolean set(String key, String value) {
+    public boolean set(String key, String value) {
         return attributes.set(key, value);
-	}
-	public String getStringAttribute(String key) {
-		return attributes.getString(key);
-	}
+    }
+    public String getStringAttribute(String key) {
+        return attributes.getString(key);
+    }
 
     /**
      * Removes the attribute with the given key from the list and updates
@@ -116,4 +116,4 @@ public class GraphState {
     }
 }
 
-//  [Last modified: 2016 10 17 at 12:52:59 GMT]
+//  [Last modified: 2021 01 10 at 18:46:39 GMT]

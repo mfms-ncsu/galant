@@ -218,17 +218,28 @@ public class Edge extends GraphElement {
         return s;
     }
 
-    public Edge copyEdge(Graph currentGraph, Node newSource, Node newTarget) {
+    /**
+     * This is called during the transition from edit mode to
+     * animation mode, so that the animation modifies a copy of the
+     * edit graph and will have no impact on it.
+     * @param currentGraph the graph accessed by the animation - see
+     * Algorithm.java
+     * @param sourceCopy the source node for the copy, a copy of the edit
+     * source node
+     * @param targetCopy the target node for the copy, a copy of the edit
+     * target node
+     */
+    public Edge copyEdge(Graph currentGraph, Node sourceCopy, Node targetCopy) {
         Edge copy = new Edge();
         copy.id = this.id;
         copy.dispatch = GraphDispatch.getInstance();
         copy.graph = currentGraph;
         ArrayList<GraphElementState> statesCopy = super.copyCurrentState();
         copy.states = statesCopy;
-        newSource.addEdge(copy);
-        newTarget.addEdge(copy);
-        copy.source = newSource;
-        copy.target = newTarget;
+        sourceCopy.addEdge(copy);
+        targetCopy.addEdge(copy);
+        copy.source = sourceCopy;
+        copy.target = targetCopy;
         return copy;
     }
 
@@ -248,4 +259,4 @@ public class Edge extends GraphElement {
     }
 }
 
-//  [Last modified: 2021 01 08 at 20:58:14 GMT]
+//  [Last modified: 2021 01 10 at 14:42:33 GMT]

@@ -280,8 +280,6 @@ public class GraphDispatch {
      * @return true if a new step/state occurs (not currently used)
      */
     public boolean startStepIfAnimationOrIncrementEditState() throws Terminate {
-        System.out.println("-> startStep, editMode = " + editMode
-                           + ", editState = " + workingGraph.getEditState());
         if ( animationMode
              && ! algorithmSynchronizer.isLocked()
              ) {
@@ -289,7 +287,7 @@ public class GraphDispatch {
             return true;
         }
         if ( ! animationMode && ! atomic ) {
-            this.workingGraph.incrementMaxEditState();
+            this.workingGraph.incrementEffectiveEditState();
             return true;
         }
         return false;
@@ -395,4 +393,4 @@ public class GraphDispatch {
 
 }
 
-//  [Last modified: 2021 01 12 at 16:15:25 GMT]
+//  [Last modified: 2021 01 12 at 20:42:24 GMT]

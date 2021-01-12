@@ -133,11 +133,12 @@ public class Graph {
     }
 
     /**
-     * called from startStepIfAnimationOrIncrementEditState() when an
-     * actual change in the graph or one of its elements takes place.
+     * Called when an actual change in the graph or one of its
+     * elements takes place during editing.
+     * Our starting point is the current edit state.
      */
-    public void incrementMaxEditState() {
-        this.maxEditState++;
+    public void incrementEffectiveEditState() {
+        this.maxEditState = this.editState + 1;
         incrementEditState();
     }
     
@@ -153,7 +154,7 @@ public class Graph {
         }
         else {
             message = "Max edit state " + maxEditState + " reached";
-        } 
+        }
         this.graphWindow.updateStatusLabel(message);
     }
 
@@ -733,8 +734,8 @@ public class Graph {
    */
   public int numberOfEdges() {
     int count = 0;
-    for ( Edge n : edges ) {
-      if ( n.inScope() )
+    for ( Edge edge : edges ) {
+      if ( edge.inScope() )
         count++;
     }
     return count;
@@ -1046,15 +1047,17 @@ public class Graph {
   }
 
 
-  /**
+    /**
    * Adds a new <code>Node</code> to the <code>Graph</code>
    * @param x the x coordinate of the new node
    * @param y the y coordinate of the new node
-   * @return the added <code>Node</code>; called only during editing
+   * @return the added <code>Node</code>; called only during edit mode
    */
   public Node addInitialNode(Integer x, Integer y) {
+      LogHelper.disable();
     LogHelper.enterMethod(getClass(), "addInitialNode(), x = " + x + ", y = " + y);
     Integer newId = nextNodeId();
+    incrementEffectiveEditState();
     Node n = new Node(this, newId, x, y);
     nodes.add(n);
     nodeById.put(newId, n);
@@ -1067,6 +1070,7 @@ public class Graph {
     // changes in GraphElement.java
 
     LogHelper.exitMethod(getClass(), "addInitialNode() " + n);
+    LogHelper.restoreState();
     return n;
   }
 
@@ -1092,12 +1096,6 @@ public class Graph {
     if ( this.rootNode == null ) {
       this.rootNode = n;
     }
-
-    /**
-     * @todo do we need a pauseExecution here? possibly not because a new
-     * state is added to the created node
-     */
-
     LogHelper.exitMethod(getClass(), "addNode() " + n);
     return n;
   }
@@ -1186,6 +1184,7 @@ public class Graph {
    * This variant is used only during editing.
    */
   public Edge addInitialEdge(Node source, Node target) {
+    incrementEffectiveEditState();
     Edge e = new Edge(this, source, target);
     addEdge(e);
     return e;
@@ -1399,9 +1398,9 @@ public class Graph {
                                                                                                  // directed/undirected
     s += ">\n";
     for ( Node n : this.nodes ) {
-      LogHelper.logDebug( "  writing xml string for node with id " + n.getId() );
       LogHelper.logDebug( "  writing xml string for node " + n);
       if ( ! n.inScope(state) ) continue;
+      LogHelper.logDebug("     node with id " + n.getId() + " is in scope");
       String sN = n.xmlString(state);
       if ( ! sN.trim().isEmpty() )
         s += "  " + sN + "\n";
@@ -1409,6 +1408,7 @@ public class Graph {
     for ( Edge e : this.edges ) {
       LogHelper.logDebug("writing xml string for edge " + e);
       if ( ! e.inScope(state) ) continue;
+      LogHelper.logDebug("     edge " + e + " is in scope");
       String sE = e.xmlString(state);
       if ( ! sE.trim().isEmpty() )
         s += "  " + sE + "\n";
@@ -1421,4 +1421,4 @@ public class Graph {
   }
 }
 
-// [Last modified: 2021 01 12 at 17:07:26 GMT]
+// [Last modified: 2021 01 12 at 20:39:35 GMT]

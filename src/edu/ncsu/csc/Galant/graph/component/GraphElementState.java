@@ -58,7 +58,12 @@ public class GraphElementState implements Cloneable{
      */
     public GraphElementState() {
         this.dispatch = GraphDispatch.getInstance();
-        this.state = dispatch.getAlgorithmState();
+        if ( this.dispatch.isAnimationMode() ) {
+            this.state = this.dispatch.getAlgorithmState();
+        }
+        else {
+            this.state = this.dispatch.getWorkingGraph().getEditState(); 
+        }
         this.attributes = new AttributeList();
     }
 
@@ -195,4 +200,4 @@ public class GraphElementState implements Cloneable{
     }
 }
 
-//  [Last modified: 2021 01 07 at 17:08:52 GMT]
+//  [Last modified: 2021 01 12 at 20:37:38 GMT]

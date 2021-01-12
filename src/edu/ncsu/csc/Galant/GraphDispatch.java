@@ -215,13 +215,12 @@ public class GraphDispatch {
         this.algorithmSynchronizer = new AlgorithmSynchronizer();
         this.algorithmExecutor
             = new AlgorithmExecutor(algorithm, this.algorithmSynchronizer);
-        this.graphWindow.updateStatusLabel();
+        this.graphWindow.updateStatusLabel("Starting animation");
         // start the animation with a clean copy of the edit graph, a copy
         // without the edit states
         this.workingGraph = this.editGraph.copyCurrentState(this.editGraph);
         algorithm.setGraph(this.workingGraph);
         this.algorithmExecutor.startAlgorithm();
-        this.graphWindow.updateStatusLabel();
         notifyListeners(ANIMATION_MODE, ! this.animationMode, this.animationMode);
     }
     
@@ -235,6 +234,7 @@ public class GraphDispatch {
         this.workingGraph.setNodePositions(algorithmGraph);
         this.animationMode = false;
         this.editMode = true;
+        this.graphWindow.updateStatusLabel("Animation stopped");
         notifyListeners(ANIMATION_MODE, ! this.animationMode, this.animationMode);
     }
 
@@ -285,11 +285,11 @@ public class GraphDispatch {
         if ( animationMode
              && ! algorithmSynchronizer.isLocked()
              ) {
-            algorithmSynchronizer.startStep();
+            this.algorithmSynchronizer.startStep();
             return true;
         }
         if ( ! animationMode && ! atomic ) {
-            workingGraph.incrementEditState();
+            this.workingGraph.incrementMaxEditState();
             return true;
         }
         return false;
@@ -395,4 +395,4 @@ public class GraphDispatch {
 
 }
 
-//  [Last modified: 2021 01 10 at 21:32:03 GMT]
+//  [Last modified: 2021 01 12 at 16:15:25 GMT]

@@ -147,30 +147,20 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
     private JLabel statusLabel;
 
     /**
-     * Updates the status message to display the current states
+     * Called to display exceptions in the status window.
+     * The client is not necessarily aware that an exception may
+     * occur; this is a safety mechanism
      */
     public void updateStatusLabel() {
         AlgorithmExecutor executor
-                = this.dispatch.getAlgorithmExecutor();
+                = dispatch.getAlgorithmExecutor();
         AlgorithmSynchronizer synchronizer
-                = this.dispatch.getAlgorithmSynchronizer();
-        if ( this.dispatch.isEditMode()
-             || executor == null || synchronizer == null ) {
-            int editState = this.dispatch.getWorkingGraph().getEditState();
-            updateStatusLabel("edit state is " + editState);
-        }
-        else if ( synchronizer.exceptionThrown() ) {
+                = dispatch.getAlgorithmSynchronizer();
+        if ( synchronizer != null && synchronizer.exceptionThrown() ) {
             updateStatusLabel("Terminated because of exception");
         }
-        else if ( executor.infiniteLoop ) {
+        else if ( executor != null && executor.infiniteLoop ) {
             updateStatusLabel("Terminated because of possible infinite loop");
-        }
-        else {
-            int algorithmState = executor.getAlgorithmState();
-            int displayState = executor.getDisplayState();
-            String message = "algorithm state is "
-                    + algorithmState + ", display state is " + displayState;
-            statusLabel.setText(message);
         }
     }
 
@@ -285,7 +275,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
      */
     public GraphWindow(GraphDispatch _dispatch) {
         LogHelper.enterConstructor(getClass());
-        this.dispatch = _dispatch;
+        dispatch = _dispatch;
         // Register this object as a change listener. Allows GraphDispatch notifications to be pushed to this object
         _dispatch.getWorkingGraph().graphWindow = this;
         _dispatch.addChangeListener(this);
@@ -694,12 +684,8 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
         undo.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                if (dispatch.getWorkingGraph().decrementEditState()) {
-                    dispatch.pushToTextEditor();
-                } else {
-                    // need to ring a bell or something here
-                    System.out.println("*** Can't decrement edit state, already 0 ***");
-                }
+                dispatch.getWorkingGraph().decrementEditState();
+                dispatch.pushToTextEditor();
             }
         });
         toolBar.add(undo);
@@ -1131,13 +1117,8 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                         && e.getKeyCode() == KeyEvent.VK_Z && ctrlPressed) {
                     synchronized (this) {
                         LogHelper.logDebug("UNDO");
-                        if (dispatch.getWorkingGraph().decrementEditState()) {
-                            dispatch.pushToTextEditor();
-                            updateStatusLabel();
-                        } else {
-                            // need to ring a bell or something here
-                            System.out.println("*** Can't decrement edit state, already 0 ***");
-                        }
+                        dispatch.getWorkingGraph().decrementEditState();
+                        dispatch.pushToTextEditor();
                     }
                 }//undo
 
@@ -1148,7 +1129,6 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                         LogHelper.logDebug("REDO");
                         dispatch.getWorkingGraph().incrementEditState();
                         dispatch.pushToTextEditor();
-                        updateStatusLabel();
                     }
                 } //redo
 
@@ -1250,4 +1230,4 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
         // TODO Auto-generated method stub
     }
 }
- //  [Last modified: 2021 01 10 at 21:56:20 GMT]
+ //  [Last modified: 2021 01 12 at 15:52:18 GMT]

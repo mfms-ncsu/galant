@@ -48,11 +48,24 @@ public class Graph {
 
   private MessageBanner banner;
 
-  private int editState=0;
-  /**
-   * Keeps track of an edge selected during algorithm execution.
-   */
-  private Edge selectedEdge;
+    /**
+     * Edit state of the graph: incremented when there is a
+     * modification during edit mode or there is a redo operation,
+     * decremented when there is an undo operation.
+     * This has to be a ** property of the graph **; it has to persist
+     * when the user edits other graphs or algorithms.
+     */
+    private int editState = 0;
+
+    /**
+     * Maximum edit state reached - not possible to redo beyond this
+     */
+    private int maxEditState = 0;
+    
+    /**
+     * Keeps track of an edge selected during algorithm execution.
+     */
+    private Edge selectedEdge;
 
   /**
    * Keeps track of a node selected during algorithm execution.
@@ -118,21 +131,47 @@ public class Graph {
     public int getEditState() {
         return editState;
     }
+
+    /**
+     * called from startStepIfAnimationOrIncrementEditState() when an
+     * actual change in the graph or one of its elements takes place.
+     */
+    public void incrementMaxEditState() {
+        this.maxEditState++;
+        incrementEditState();
+    }
     
+    /**
+     * called when user invokes a redo operation or when maxEditState increases
+     */
     public void incrementEditState() {
-        editState++;
+        String message = null;
+        if ( editState < maxEditState ) {
+            editState++;
+            message = "Edit state " + editState
+                + "    max " + maxEditState;
+        }
+        else {
+            message = "Max edit state " + maxEditState + " reached";
+        } 
+        this.graphWindow.updateStatusLabel(message);
     }
 
     /**
-     * @return true if the edit state was actually decremented, i.e.,
-     * originally positive, false if it was already 0
+     * called when user does an undo operation
      */
-    public boolean decrementEditState() {
+    public void decrementEditState() {
+        String message = null;
         if ( editState > 0 ) {
             editState--;
-            return true;
+            message = "Edit state " + editState
+                + "    max " + maxEditState;
         }
-        return false;
+        else {
+            message = "Edit state is 0, no undo possible, max edit state is "
+                + maxEditState;
+        }
+        this.graphWindow.updateStatusLabel(message);
     }
     
     /**
@@ -165,13 +204,13 @@ public class Graph {
      * @param currentGraph the graph to be accessed by the animation
      */
     public Graph copyCurrentState(Graph currentGraph) {
-        System.out.println("-> copyCurrentState of graph");
         Graph copyOfGraph = new Graph(true);
         copyOfGraph.dispatch = GraphDispatch.getInstance();
         copyOfGraph.graphWindow = dispatch.getGraphWindow();
+        copyOfGraph.editState = this.editState;
 
         copyOfGraph.states = new ArrayList<GraphState>();
-        GraphState latestValidState = this.getLatestValidState(getEditState());
+        GraphState latestValidState = this.getLatestValidState(this.editState);
         copyOfGraph.states.add(latestValidState);
 
         copyOfGraph.nodes = new NodeList();
@@ -180,9 +219,7 @@ public class Graph {
         NodeList nodeListCopy = new NodeList();
         TreeMap<Integer, Node> copyOfNodeById = new TreeMap<Integer, Node>();
 
-        for( Node originalNode : this.getNodes() ) {
-            System.out.println("copy node " + originalNode);
-            if ( ! originalNode.inScope(this.editState) ) continue;
+        for( Node originalNode : this.getNodes(this.editState) ) {
             Node copiedNode = originalNode.copyNode(copyOfGraph);
             nodeListCopy.add(copiedNode);
             copyOfNodeById.put(copiedNode.getId(), copiedNode);
@@ -190,8 +227,7 @@ public class Graph {
         copyOfGraph.nodes = nodeListCopy;
         copyOfGraph.nodeById = copyOfNodeById;
 
-        for( Edge originalEdge : this.getEdges() ) {
-            if ( ! originalEdge.inScope(this.editState) ) continue;
+        for( Edge originalEdge : this.getEdges(this.editState) ) {
             Integer sourceId = originalEdge.getSourceNode().getId();
             Integer targetId = originalEdge.getTargetNode().getId();
             Node newSource = copyOfNodeById.get(sourceId);
@@ -1385,4 +1421,4 @@ public class Graph {
   }
 }
 
-// [Last modified: 2021 01 10 at 21:08:23 GMT]
+// [Last modified: 2021 01 12 at 17:07:26 GMT]

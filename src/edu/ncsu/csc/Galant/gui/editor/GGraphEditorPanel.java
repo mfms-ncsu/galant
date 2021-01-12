@@ -75,7 +75,8 @@ public class GGraphEditorPanel extends GEditorPanel {
     if ( ! dirty ) super.setDirty(dirty);
     else {
       LogHelper.logDebug(" dirty is true");
-      if ( GraphDispatch.getInstance().isEditMode() ) {
+      if ( GraphDispatch.getInstance().isEditMode()
+           && GraphDispatch.getInstance().getWorkingGraph().getEditState() > 0 ) {
         super.setDirty(dirty);
         LogHelper.logDebug(" set dirty flag");
       }
@@ -128,4 +129,4 @@ public class GGraphEditorPanel extends GEditorPanel {
 
 }
 
-// [Last modified: 2021 01 10 at 21:27:02 GMT]
+// [Last modified: 2021 01 12 at 16:48:03 GMT]

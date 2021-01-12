@@ -135,10 +135,9 @@ public class AlgorithmExecutor {
     public int getDisplayState() { return displayState; }
 
     /**
-     * Called whenever user interaction requests a step forward; the
-     * algorithm is then responsible for calling incrementAlgorithmState() to
-     * put the algorithm in sync with the display; this is done in
-     * pauseExecution() in the AlgorithmSynchronizer.
+     * Called whenever user interaction requests a step forward.
+     * If the display state and algorithm state are the same, the
+     * requested step will also cause a the algorithm to take a step. 
      *
      * @todo needs to check if there's a query window open before releasing
      * control to the algorithm via synchronizer.notify(); ideally should
@@ -150,6 +149,10 @@ public class AlgorithmExecutor {
         LogHelper.logDebug("-> incrementDisplayState display = "
                            + displayState
                            + " algorithm = " + algorithmState);
+        // default message if all goes according to plan
+        String message
+            = "display state = " + this.displayState
+            + "  algorithm state = " + this.algorithmState;
         GraphDispatch dispatch = GraphDispatch.getInstance();
         if ( displayState == algorithmState
              && ! synchronizer.algorithmFinished()
@@ -158,6 +161,7 @@ public class AlgorithmExecutor {
              && dispatch.getActiveQuery() == null ) {
             displayState++;
             algorithmState++;
+            dispatch.getGraphWindow().updateStatusLabel(message);
 
             // wake up the algorithmThread, have it do something
             synchronized ( synchronizer ) {
@@ -169,12 +173,16 @@ public class AlgorithmExecutor {
                     Thread.sleep(WAIT_TIME);
                     timeInBusyWait += WAIT_TIME;
                     if ( timeInBusyWait % PRINT_INTERVAL == 0 ) {
-                        System.out.println("waiting "
-                                           + (timeInBusyWait / (double) 1000)
-                                           + " seconds");
+                        message = "waiting "
+                            + (timeInBusyWait / (double) 1000)
+                            + " seconds";
+                        dispatch.getGraphWindow().updateStatusLabel(message);
+                        System.out.println(message);
                     }
                 } catch (InterruptedException e) {
-                    System.out.printf("Error occured while trying to wait");
+                    message = "Terminated because of exception";
+                    System.out.printf(message);
+                    dispatch.getGraphWindow().updateStatusLabel(message);
                     e.printStackTrace(System.out);
                 }
             } while ( ! synchronizer.stepFinished()
@@ -184,12 +192,15 @@ public class AlgorithmExecutor {
                       && ! exceptionThrown
                       && timeInBusyWait < BUSY_WAIT_TIME_LIMIT );
             if ( timeInBusyWait >= BUSY_WAIT_TIME_LIMIT ) {
-                System.out.println("busy wait time limit exceeded");
+                message = "Busy wait time limit exceeded";
+                System.out.println(message);
+                dispatch.getGraphWindow().updateStatusLabel(message);
                 infiniteLoop = true;
             }
         }
         else if ( displayState < algorithmState ) {
             displayState++;
+            dispatch.getGraphWindow().updateStatusLabel(message);
         }
         if ( infiniteLoop || synchronizer.exceptionThrown() ) {
             // need to let window know that algorithm was terminated due
@@ -233,4 +244,4 @@ public class AlgorithmExecutor {
     }
 }
 
-//  [Last modified: 2018 08 31 at 14:31:51 GMT]
+//  [Last modified: 2021 01 12 at 16:18:10 GMT]

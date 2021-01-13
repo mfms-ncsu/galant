@@ -133,11 +133,32 @@ public class Graph {
     }
 
     /**
+     * Removes state history beyond the current state - used in edit
+     * mode when an edit takes place after undo's
+     */
+    private void rollBackToState(int currentState) {
+        List<GraphState> newStates = new ArrayList<GraphState>();
+        for ( int i = 0; i < this.states.size(); i++ ) {
+            GraphState theState = states.get(i);
+            if ( theState.getState() > currentState ) break;
+            newStates.add(theState);
+        }
+        this.states = newStates;
+        for ( Node node : this.nodes ) {
+            node.rollBackToState(currentState);
+        }
+        for ( Edge edge : this.edges ) {
+            edge.rollBackToState(currentState);
+        }
+    }
+    
+    /**
      * Called when an actual change in the graph or one of its
      * elements takes place during editing.
      * Our starting point is the current edit state.
      */
     public void incrementEffectiveEditState() {
+        rollBackToState(this.editState);
         this.maxEditState = this.editState + 1;
         incrementEditState();
     }
@@ -1421,4 +1442,4 @@ public class Graph {
   }
 }
 
-// [Last modified: 2021 01 12 at 20:39:35 GMT]
+// [Last modified: 2021 01 13 at 00:14:56 GMT]

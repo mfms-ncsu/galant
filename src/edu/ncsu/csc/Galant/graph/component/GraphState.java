@@ -38,14 +38,14 @@ public class GraphState {
     }
 
     /**
-     * This serves essentially as a copy constructor: creates the new object
-     * in a different algorithm state and copies all the information for the
-     * node (state) - except, of course, the state
+     * This serves essentially as a copy constructor: creates the new
+     * object in a given algorithm or edit state and copies all
+     * the information for the state
      */
-    public GraphState(GraphState State) {
+    public GraphState(GraphState graphState) {
         this.dispatch = GraphDispatch.getInstance();
-        this.state = dispatch.getAlgorithmState();
-        this.attributes = State.getAttributes().duplicate();
+        this.state = graphState.getState();
+        this.attributes = graphState.getAttributes().duplicate();
     }
 
     /************** Integer attributes ***************/
@@ -116,4 +116,4 @@ public class GraphState {
     }
 }
 
-//  [Last modified: 2021 01 10 at 18:46:39 GMT]
+//  [Last modified: 2021 01 12 at 22:49:11 GMT]

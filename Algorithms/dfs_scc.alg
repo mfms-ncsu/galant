@@ -133,6 +133,7 @@ algorithm {
     clearNodeMarks();
     endStep();
 
+    display("Start reverse dfs");
     int component = 1;
     while ( ! empty(finished) ) {
         Node u = pop(finished);

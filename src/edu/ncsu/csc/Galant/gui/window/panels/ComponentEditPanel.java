@@ -63,129 +63,126 @@ public class ComponentEditPanel extends JPanel {
 	GraphDispatch dispatch = GraphDispatch.getInstance();
 
 	public ComponentEditPanel() {
-		super();
+            super();
 
-		this.setMaximumSize(new Dimension(EDIT_PANEL_WIDTH, EDIT_PANEL_HEIGHT));
-		this.setLayout(new FlowLayout());
+            this.setMaximumSize(new Dimension(EDIT_PANEL_WIDTH, EDIT_PANEL_HEIGHT));
+            this.setLayout(new FlowLayout());
 
-		JLabel lLabel = new JLabel("Label: ");
-		JLabel lWeight = new JLabel("Weight: ");
-		JLabel lColor = new JLabel("Color: ");
+            JLabel lLabel = new JLabel("Label: ");
+            JLabel lWeight = new JLabel("Weight: ");
+            JLabel lColor = new JLabel("Color: ");
 
-		label = new JTextField(LABEL_FIELD_WIDTH);
-		label.addKeyListener(new KeyListener() {
-			@Override
-			public void keyPressed(KeyEvent arg0) {}
-			@Override
-			public void keyReleased(KeyEvent arg0) {
-				Graph g = dispatch.getWorkingGraph();
-                try {
-                    workingElement.setLabel(label.getText());
-                }
-                catch ( Exception e ) {
-                    e.printStackTrace();
-                }
-				dispatch.pushToTextEditor();
-				dispatch.pushToGraphEditor();
-			}
-			@Override
-			public void keyTyped(KeyEvent arg0) {}
+            label = new JTextField(LABEL_FIELD_WIDTH);
+            label.addKeyListener(new KeyListener() {
+                    @Override
+                    public void keyPressed(KeyEvent arg0) {}
+                    @Override
+                    public void keyReleased(KeyEvent arg0) {
+                        Graph g = dispatch.getWorkingGraph();
+                        try {
+                            workingElement.setLabel(label.getText());
+                        }
+                        catch ( Exception e ) {
+                            e.printStackTrace();
+                        }
+                        dispatch.pushToTextEditor();
+                        dispatch.pushToGraphEditor();
+                    }
+                    @Override
+                    public void keyTyped(KeyEvent arg0) {}
 		});
 
-		weight
-            = new JSpinner(new SpinnerNumberModel( DEFAULT_WEIGHT,
-                                                   MINIMUM_WEIGHT,
-                                                   MAXIMUM_WEIGHT,
-                                                   WEIGHT_INCREMENT ));
-		JSpinner.NumberEditor editor
-            = (JSpinner.NumberEditor) weight.getEditor();
-		Dimension d = editor.getPreferredSize();
-		d.width = WEIGHT_FIELD_WIDTH;
-		editor.setPreferredSize(d);
-		weight.addChangeListener(new ChangeListener() {
-			@Override
-            /**
-             * @todo the weight spinner is the first to receive focus and its
-             * default value is 0; for now, we avoid accidentally setting a 0
-             * weight in a way that prevents intentional setting of weight to
-             * 0; eventually need to avoid spinners - would also be better
-             * for keyboard shortcuts
-             */
-			public void stateChanged(ChangeEvent arg0) {
-				Double newWeight = (Double) weight.getValue();
-                System.err.println("stateChanged, newWeight = " + newWeight
-                                   + ", element = " + workingElement
-                                   + ", previous = " + previousElement);
-                // avoid changing a null weight to 0.0 (usually not intended)
-                Double previousWeight = workingElement.getWeight();
-                if ( previousWeight != null || newWeight != 0.0 ) {
-                  Graph g = dispatch.getWorkingGraph();
-                  try {
-                    workingElement.setWeight(newWeight);
-                  }
-                  catch ( Exception e ) {
-                    e.printStackTrace();
-                  }
-                  if ( ! newWeight.equals(previousWeight) ) { 
-                    dispatch.pushToTextEditor();
-                    dispatch.pushToGraphEditor();
-                  }
-                }
-            }
-          });
+            weight
+                = new JSpinner(new SpinnerNumberModel( DEFAULT_WEIGHT,
+                                                       MINIMUM_WEIGHT,
+                                                       MAXIMUM_WEIGHT,
+                                                       WEIGHT_INCREMENT ));
+            JSpinner.NumberEditor editor
+                = (JSpinner.NumberEditor) weight.getEditor();
+            Dimension d = editor.getPreferredSize();
+            d.width = WEIGHT_FIELD_WIDTH;
+            editor.setPreferredSize(d);
+            weight.addChangeListener(new ChangeListener() {
+                    @Override
+                    /**
+                     * @todo the weight spinner is the first to receive focus and its
+                     * default value is 0; for now, we avoid accidentally setting a 0
+                     * weight in a way that prevents intentional setting of weight to
+                     * 0; eventually need to avoid spinners - would also be better
+                     * for keyboard shortcuts
+                     */
+                    public void stateChanged(ChangeEvent arg0) {
+                        Double newWeight = (Double) weight.getValue();
+                        // avoid changing a null weight to 0.0 (usually not intended)
+                        Double previousWeight = workingElement.getWeight();
+                        if ( previousWeight != null || newWeight != 0.0 ) {
+                            Graph g = dispatch.getWorkingGraph();
+                            try {
+                                workingElement.setWeight(newWeight);
+                            }
+                            catch ( Exception e ) {
+                                e.printStackTrace();
+                            }
+                            if ( ! newWeight.equals(previousWeight) ) { 
+                                dispatch.pushToTextEditor();
+                                dispatch.pushToGraphEditor();
+                            }
+                        }
+                    }
+                });
 
-        // ensure that what the user types in the text field of the spinner
-        // is handled properly
-		editor.addKeyListener(new KeyListener() {
-			@Override
-			public void keyPressed(KeyEvent arg0) {}
-			@Override
-			public void keyReleased(KeyEvent arg0) {
-				Graph g = dispatch.getWorkingGraph();
-                String weightText = editor.getTextField().getText();
-                if ( ! weightText.equals("") ) {
-                    Double weightValue = null;
-                    try {
-                        weightValue = Double.parseDouble(weightText);
+            // ensure that what the user types in the text field of the spinner
+            // is handled properly
+            editor.addKeyListener(new KeyListener() {
+                    @Override
+                    public void keyPressed(KeyEvent arg0) {}
+                    @Override
+                    public void keyReleased(KeyEvent arg0) {
+                        Graph g = dispatch.getWorkingGraph();
+                        String weightText = editor.getTextField().getText();
+                        if ( ! weightText.equals("") ) {
+                            Double weightValue = null;
+                            try {
+                                weightValue = Double.parseDouble(weightText);
+                            }
+                            catch ( NumberFormatException e ) {
+                                ExceptionDialog.displayExceptionInDialog(e);
+                            }
+                            try {
+                                workingElement.setWeight(weightValue);
+                            }
+                            catch ( Terminate t ) {
+                                // should not happen
+                                t.printStackTrace();
+                            }
+                            catch ( Exception e ) {
+                                e.printStackTrace();
+                            }
+                        }
+                        else {
+                            try {
+                                workingElement.clearWeight();
+                            }
+                            catch ( Terminate t ) {
+                                // should not happen
+                                t.printStackTrace();
+                            }
+                        }
+                        dispatch.pushToTextEditor();
+                        dispatch.pushToGraphEditor();
                     }
-                    catch ( NumberFormatException e ) {
-                        ExceptionDialog.displayExceptionInDialog(e);
-                    }
-                    try {
-                        workingElement.setWeight(weightValue);
-                    }
-                    catch ( Terminate t ) {
-                        // should not happen
-                        t.printStackTrace();
-                    }
-                    catch ( Exception e ) {
-                        e.printStackTrace();
-                    }
-                }
-                else {
-                    try {
-                        workingElement.clearWeight();
-                    }
-                    catch ( Terminate t ) {
-                        // should not happen
-                        t.printStackTrace();
-                    }
-                }
-                dispatch.pushToTextEditor();
-				dispatch.pushToGraphEditor();
-			}
-			@Override
-			public void keyTyped(KeyEvent arg0) { }
+                    @Override
+                    public void keyTyped(KeyEvent arg0) { }
 		});
 
-		cp = new ColorPanel(workingElement);
-
-		this.add(lLabel);
-		this.add(label);
-		this.add(lWeight);
-		this.add(weight);
-		this.add(lColor);
-		this.add(cp);
+            cp = new ColorPanel(workingElement);
+            
+            this.add(lLabel);
+            this.add(label);
+            this.add(lWeight);
+            this.add(weight);
+            this.add(lColor);
+            this.add(cp);
 	}
 
 	public void setWorkingComponent(GraphElement ge) {
@@ -225,4 +222,4 @@ public class ComponentEditPanel extends JPanel {
 	}
 }
 
-//  [Last modified: 2021 01 07 at 15:58:39 GMT]
+//  [Last modified: 2021 01 13 at 00:25:24 GMT]

@@ -184,6 +184,20 @@ public class GraphElement implements Comparable<GraphElement> {
     }
 
     /**
+     * Removes state history beyond the current state - used in edit
+     * mode when an edit takes place after undo's
+     */
+    protected void rollBackToState(int currentState) {
+        List<GraphElementState> newStates = new ArrayList<GraphElementState>();
+        for ( int i = 0; i < this.states.size(); i++ ) {
+            GraphElementState theState = states.get(i);
+            if ( theState.getState() > currentState ) break;
+            newStates.add(theState);
+        }
+        this.states = newStates;
+    }
+    
+    /**
      * Effectively removes all states except for a copy of the current
      * one from the list of states.
      * Invoked during the process of creating a copy of the graph
@@ -820,4 +834,4 @@ public class GraphElement implements Comparable<GraphElement> {
 
 }
 
-//  [Last modified: 2021 01 12 at 20:40:24 GMT]
+//  [Last modified: 2021 01 13 at 00:16:04 GMT]

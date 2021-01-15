@@ -3,6 +3,11 @@ Release notes for Galant, most recent first.
 ===============================================
 Since 6.1.1
 
+- status bar now shows edit state to make it easier for user to track undo/redo operations
+- bug fix: addition and deletion of nodes/edges in context of undo/redo now works correctly
+- bug fix: edit state now restored correctly when animation terminates
+- toggling directed/undirected property of graph in graph window has no effect on text representation of graph: this allows user to easily run, e.g., shortest paths algorithms, both ways without altering graph; directedness can still be modified using the text editor
+
 ================================================
 Since 6.1
 

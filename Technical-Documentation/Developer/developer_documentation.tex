@@ -38,10 +38,13 @@ New edges are also appended to the incidence lists of their endpoints:
 \Code{incidentEdges} in \Code{Node}.
 A graph has attributes not directly derived from its nodes or edges. These
 are \Code{name} (specified by an external source), \Code{comment} (ditto),
-\Code{directed} (toggled by the user but not during algorithm execution),
-\Code{layered} (more details later) and \Code{banner} (message banner
+\Code{directed} (can be toggled by the user or during an animation --
+typically at the beginning),
+\Code{editState} (used to allow user to undo/redo edits),
+\Code{banner} (message banner
 displayed at the top of the graph window during algorithm execution -- see
-method \Code{display()} in \Code{Algorithm}).
+method \Code{display()} in \Code{Algorithm}),
+and \Code{layered} (more details later).
 
 A node has a unique \Code{id} so that it can be referred to as an endpoint of
 an edge in the GraphML representation. The map \Code{nodeById} in class
@@ -51,7 +54,7 @@ The \Code{id}, along with a position, \Code{x} and \Code{y} attributes in
 GraphML, are required for each \Code{Node}. All other attributes are
 optional.
 An \Code{Edge} object is required to have a \Code{source} and a
-\Code{target}. If the graph is undirected, the two are interchangeable.
+\Code{target}. If the graph is undirected, the two are effectively interchangeable.
 
 Both \Code{Node} and \Code{Edge} are subclasses of \Code{GraphElement} -- see
 Fig.~\ref{fig:graph_uml}.
@@ -59,14 +62,12 @@ At any point in time a \Code{GraphElement} is in a particular
 \Code{GraphElementState} and that state determines values of all attributes
 except for the fixed ones: \Code{id}, \Code{x} and \Code{y} for \Code{Node};
 \Code{source} and \Code{target} for \Code{Edge}.
-A \Code{GraphElement} has a list of states to keep track of changes during
-algorithm execution.
+A \Code{GraphElement} has a list of states that track changes during
+editing and algorithm execution.
 Each state is given a \emph{time stamp}\footnote{This terminology will be
   used hence to distinguish \Code{state} (as time stamp) from state as
   \Code{GraphElementState}} (the integer \Code{state}) to mark the point
-during algorithm execution at which the state is effective. Currently, the
-time stamp is 0 unless an algorithm is running, but could be used in a future
-implementation to allow undo operations during editing.
+during editing or algorithm execution at which the state is effective.
 
 \subsection{State changes}
 
@@ -75,29 +76,25 @@ either during editing or algorithm execution. Methods of the form\\
 \Code{set(String \emph{key}, \textbf{\emph{type}} \emph{value})}\\
 all do the following -- see \Code{GraphElement}.
 \begin{itemize}
-\item create a new state \Code{newState}
-\item set the attribute \emph{key} to \emph{value} in the attribute list for
-  \Code{newState}
-\item the setter returns \Code{true} if an attribute \emph{key} was already
+\item Create a new state \Code{newState}.
+\item Set the attribute \emph{key} to \emph{value} in the attribute list for
+  \Code{newState}.
+\item The setter returns \Code{true} if an attribute \emph{key} was already
   present, i.e., if an existing attribute was modified rather than a new one
   added, \Code{false} otherwise -- see \Code{AttributeList}; this Boolean
-  value is available for use throughout, including by the algorithm animator
+  value is available for use throughout, including by the algorithm animator.
 \item add the new state to the list of states in one of two ways -- see
-  \Code{addState()}
+  \Code{addState()}.
   \begin{enumerate}
-    \item if no state with the current time stamp exists, append the new
+    \item If no state with the current time stamp exists, append the new
       state to the list of states; it becomes the most recent one, the one
       returned by \Code{latestState()}; if there is an algorithm running, the
       state change triggers the end of a step --
-      \Code{pauseExecutionIfRunning()} in \Code{GraphDispatch}
-    \item if there is a state with the same time stamp as the current one,
-      simply replace it; this can happen during editing -- time stamp is
-      0,\footnote{There is now also an \emph{edit state} that allows undo and
-        redo operations during editing. So time stamp can depend on edit
-        state as well. See Section~\ref{sec:undo}.
-        }
+      \Code{pauseExecutionIfRunning()} in \Code{GraphDispatch}.
+    \item If there is a state with the same time stamp as the current one,
+      simply replace it;
       or if the element undergoes more than one state change during a single
-      algorithm step, i.e., as a result of \Code{beginStep()} and
+      algorithm step, i.e., as a result of \Code{step()}, \Code{beginStep()}, and
       \Code{endStep()} invocations in the algorithm code.
   \end{enumerate}
 \end{itemize}
@@ -124,14 +121,14 @@ method. The simpler part is \Code{isDeleted()}, the predefined attribute
 algorithm deletes the object.
 
 To determine whether the element has already been created (this makes a
-difference on in the context of algorithms that create new nodes and/or
+difference in the context of edits or algorithms that create new nodes and/or
 edges) -- method \Code{isCreated(int~state)}. Here the element exists at the
 given \Code{state} if there is a state on its list whose time stamp precedes
 \Code{state}, i.e., if \Code{getLatestState()} returns a non-\Code{null}
 value. Since an element is initialized with a single state on its list -- see
 the constructor, one
-whose time stamp \emph{stamp} is the time of creation, a \Code{null}
-indicates that \Code{state} $<$ \emph{stamp}.
+whose time stamp -- retrieved by \Code{getState()}, is the time of creation, a \Code{null}
+indicates that \Code{state} $<$ \Code{getState()}.
 
 There are three contexts for \Code{Node} creation, each requiring a different
 approach. All the relevant methods are in \Code{Graph}.
@@ -146,7 +143,10 @@ approach. All the relevant methods are in \Code{Graph}.
 \item[editing] -- in edit mode a call to
   \Code{addInitialNode(Integer,Integer)} specifies x- and y-coordinates of
   the node; a new node is created accordingly and assigned the smallest
-  available id; the new node becomes the \Code{rootNode} if one is needed
+  available id; the new node becomes the \Code{rootNode} if one is
+  needed; also, the \Code{editState} of the graph is
+  incremented via \Code{incrementEffectiveEditState()} -- see later
+  discussion in Section~\ref{sec:editing}.
 \item[algorithm execution] -- the algorithm has presumably calculated a
   desired position for the node; a call to \Code{addNode(Integer,Integer)}
   has the same effect as one to \Code{addInitialNode}, but it also initiates
@@ -213,16 +213,16 @@ returned by \Code{getWorkingGraph()} in \Code{GraphDispatch}.
 All of the three invocations are in package
 \Code{gui.editor}.
 \begin{enumerate}
-\item in \Code{GEditorFrame}, method \Code{updateWorkingGraph()}, called when
+\item In \Code{GEditorFrame}, method \Code{updateWorkingGraph()}, called when
   the user does a \Code{Save} or \Code{Save~As} on the current panel and it
   happens to be a graph; the text in the panel has to be parsed in order for
   the changes to be reflected in the graph window -- while any edit in the
   graph window is immediately pushed to the text window, the reverse is true
   only when the text is saved
-\item in the constructor for \Code{GGraphEditorPanel}, a subclass of
+\item In the constructor for \Code{GGraphEditorPanel}, a subclass of
   \Code{GEditorPanel}, when the user opens a GraphML file; the new panel is
   created in method \Code{addEditorTab()} in \Code{GTabbedPane}
-\item in \Code{GTabbedPane}, method \Code{stateChanged}, invoked when the
+\item In \Code{GTabbedPane}, method \Code{stateChanged}, invoked when the
   user clicks on a panel containing GraphML content (either associated with a file or with an empty, unnamed graph to
   be edited by the user)
 \end{enumerate}
@@ -253,32 +253,22 @@ appropriate type (if present): \Code{id} (\Code{Integer}), \Code{weight}
 also converts \Code{marked}, if present to \Code{Boolean}.
 
 There is also an \Code{initializeAfterParsing()} method for
-\Code{Graph}. Currently its only purpose is to assign ids to the edges.
+\Code{Graph}. Currently its only purpose is to assign ids to the edges
+when they are not present.
+If some id's are present and others are not, the parser throws an exception.
 The \Code{id} of an \Code{Edge} is not required except
-that it might be used as an array index by an algorithm. There are two cases.
-\begin{enumerate}
-\item At least one edge has an explicit \Code{id} in its GraphML
-  representation. In this case all edges will be given ids using the
-  \Code{getNextEdgeId()} method of \Code{Graph} and duplicates will be
-  avoided as they are with node ids, except that here it is more convenient
-  to do this at the graph level.
-\item None of the edges have explicit ids. In this case ids are assigned
-  sequentially. The \Code{getNextEdgeId()}
-  method does the right thing.
-\end{enumerate}
-In the first case the graph keeps track of the fact that explicit edge ids
-were present in its representation so that these will be written to the
-GraphML file when it is saved. In the second, the assigned ids will not
-appear in the GraphML. The distinction is made in the \Code{xmlString()}
-method of \Code{Edge}.
-The relevant attribute is \Code{hasExplicitEdgeIds}
+that it might be used as an array index by an algorithm, a practice
+that should be discouraged, given the plethora of available data
+structures for nodes and edges.
+The relevant graph attribute is \Code{hasExplicitEdgeIds}
 and each edge has an attribute \Code{hasExplicitId}, set in
 \Code{initializeAfterParsing}.
 
 \subsection{Layered graphs}
 
-The utilities in \Code{local.LayeredGraph} are used in the crossing
-minimization algorithms in \Code{Research/Layered-Graphs}.
+The crossing
+minimization algorithms in \Code{Research/Layered-Graphs} use
+utilities in \Code{local.LayeredGraph}.
 The GraphML representation of a layered graph specifies \Code{type="layered"}
 and, instead of the mandatory \Code{x} and \Code{y} attributes for each node,
 there are mandatory \Code{layer} and \Code{positionInLayer} attributes. In the
@@ -287,34 +277,51 @@ parts of the code. Among these are.
 
 \begin{itemize}
 \item \Code{layered} is an attribute of a graph; it might be more natural for
-  a layered graph to be a subclass
-\item when parsing node, a special case for layered graphs in method
+  a layered graph to be a subclass, \emph{or to handle positions of
+    nodes seamlessly for both regular and layered graphs}, obviating
+  the need for a separate category.
+\item when parsing a node, a special case for layered graphs in method
   \Code{initializeAfterParsing()}; a subclass \Code{LayeredGraphNode} could
-  override relevant parts of this processing
+  override relevant parts of this processing; again the main issue is
+  related to computing coordinates of nodes; \emph{these could be
+    relative to the dimensions of the window for all graphs, not just
+    layered ones.}
 \item in \Code{GraphPanel} the method \Code{getNodeCenter()} makes a special
   case for layered graphs, calculating the position of a node so that the
   layers are distributed equally in the vertical direction and the nodes on
   each layer in the horizontal direction; a subclass could override a method
-  that specifies the display position of a node appropriately
+  that specifies the display position of a node appropriately; here,
+  \emph{the physical positions of all nodes can be
+    calculated from logical ones in the same manner as for layered
+    graphs};
+  for the latter, the (logical) x-coordinate would be the position in
+  layer, and y-coordinate the layer;
+  
+  The only special case is a situation where drawing of a layered graph
+  requires nodes on a layer to be evenly distributed whether or not
+  all layers have the same number of nodes. This could be handled by
+  the layered graph algorithms -- there could even be a trivial one
+  that merely draws the graph in the desired configuration.
 \end{itemize}
 
 \section{Algorithm Execution} \label{sec:execution}
 
-Algorithm execution is initiated when the user presses the \Code{Run} or
-the \Code{Compile and Run} button when focused on an algorithm in the text
-window. The sequence of method calls is
+Algorithm execution is initiated when the current text window shows an
+algorithm and the user presses the \Code{Run} or
+the \Code{Compile and Run} button.
+The sequence of method calls is
 \begin{itemize}
 \item \Code{run()} in \Code{gui.editor.GAlgorithmEditorPanel}; this
   initializes the current algorithm, the graph on which it will be run and
   the \Code{AlgorithmSynchronizer} and \Code{AlgorithmExecutor} that will be
   used to coordinate the algorithm with the GUI, respectively.
 
-  The \Code{AlgorithmExecutor} manages the master thread, i.e., the one
+  The \Code{AlgorithmExecutor} manages the controlling thread, i.e., the one
   associated with the gui, and the \Code{AlgorithmSynchronizer} manages the
-  slave thread, the one executing the algorithm on behalf of the user.
+  subordinate thread, the one executing the algorithm on behalf of the user.
 
 \item Method \Code{startAlgorithm()} in \Code{algorithm.AlgorithmExecuter}
-  is called to fire up the algorithm (slave).
+  is called to fire up the algorithm (subordinate).
 
   At this point the gui and the algorithm behave as coroutines. The gui cedes
   control to the algorithm in
@@ -323,7 +330,7 @@ window. The sequence of method calls is
   below) or it is terminated.
 
   The algorithm cedes control to the gui in
-  \Code{algorithm.AlgorithmSynchronizer.pauseExecution}, where it either
+  \Code{algorithm.AlgorithmSynchronizer.pauseExecution()}, where it either
   indicates that a step is finished (resulting in an exit from the busy-wait
   loop) or responds to a gui request to terminate
   the algorithm -- the gui has set \Code{terminated} -- by throwing a
@@ -574,25 +581,25 @@ edit states with ``dangling edges''. To mitigate this problem, there is an
 \Code{atomic} property in \Code{GraphDispatch}. When set, all attribute
 changes take place without a state change. The only place where this property
 is set/reset is in \Code{deleteNode} in \Code{Graph}. The
-\Code{startStepIfAnimationOrIncrementEditState} in \Code{GraphDispatch}
+\Code{startStepIfAnimationOrIncrementEditState()} method in \Code{GraphDispatch}
 decides whether to increment the edit state or not when in edit mode.
 
 \section{Queries} \label{sec:queries}
 
 Galant offers the animator functions that query the user to select a node or
-edge or to provide an integer, double or string. In addition, most exceptions
-that arise result in a popup window that gives the user the option of either
+edge or to provide an integer, double, or string. In addition, most exceptions
+that arise result in a popup window give the user the option of either
 continuing Galant execution or exiting from Galant.
 Implementations of query windows are all in the \Code{gui.util} package.
 
 The current implementation of these queries is somewhat opaque and does not
 follow standard procedure for use of Java's \Code{JOptionPane}, but it's a
-case of "if it ain't broke \ldots".
-However, the class \Code{Queries} has an implementation of a simple
+case of `if it ain't broke \ldots'.
+The class \Code{Queries} has an implementation of a simple
 Boolean query that appears to work; it is invoked in \Code{Algorithm} to make
 it accessible to the animator.
 Adapting the technique to the other query types will take more work because
 they need to throw exceptions and repeat the request for input if the user's
 response is not satisfactory (a malformed number, a non-existent node or edge).
 
-% [Last modified: 2021 01 09 at 19:36:57 GMT]
+% [Last modified: 2021 01 15 at 21:37:43 GMT]

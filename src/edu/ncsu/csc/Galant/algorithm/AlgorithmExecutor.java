@@ -74,7 +74,6 @@ public class AlgorithmExecutor {
 
     /**
      * Starts the algorithm thread and causes it to execute the first step.
-     * @todo not clear if we want the first step to execute
      */
     public void startAlgorithm() {
         GraphDispatch dispatch = GraphDispatch.getInstance();
@@ -138,11 +137,6 @@ public class AlgorithmExecutor {
      * Called whenever user interaction requests a step forward.
      * If the display state and algorithm state are the same, the
      * requested step will also cause a the algorithm to take a step. 
-     *
-     * @todo needs to check if there's a query window open before releasing
-     * control to the algorithm via synchronizer.notify(); ideally should
-     * also display something on the status bar or throw an exception; the
-     * detection part is complicated, however
      */
     public synchronized void incrementDisplayState() {
         LogHelper.disable();
@@ -232,7 +226,6 @@ public class AlgorithmExecutor {
 
     /**
      * true if it's possible to step back
-     * @todo not clear whether the lower bound is 1 or 0
      */
     public boolean hasPreviousState() {
         return (displayState > 1);
@@ -244,4 +237,4 @@ public class AlgorithmExecutor {
     }
 }
 
-//  [Last modified: 2021 01 12 at 16:18:10 GMT]
+//  [Last modified: 2021 01 30 at 22:20:42 GMT]

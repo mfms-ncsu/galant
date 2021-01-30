@@ -23,9 +23,10 @@ public class AttributeList implements Cloneable{
     /**
      * The getters traverse the list until they find a matching key or return
      * null if they don't.
-     *
-     * @todo if the key matches, should check that the attribute has the
-     * right type and think about throwing an exception
+     * @note retrieving an attribute with the wrong type, e.g., if you
+     * do a getInteger() when there is a DoubleAttribute with that key
+     * will trigger an exception when this is done during algorithm
+     * execution, but not at other times, when we simply return null
      */
     public Integer getInteger(String key) {
         for ( Attribute attribute : attributes ) {
@@ -154,4 +155,4 @@ public class AttributeList implements Cloneable{
     
 }
 
-//  [Last modified: 2020 05 05 at 15:44:25 GMT]
+//  [Last modified: 2021 01 30 at 23:26:20 GMT]

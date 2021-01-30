@@ -248,11 +248,6 @@ public class CodeIntegrator	{
     private static String getCodeBlock(String code) throws IOException {
         /* Convert code string to a BufferReader */
         // http://www.coderanch.com/t/519147/java/java/ignore-remove-comments-java-file
-        /**
-         * @todo the code below could be significantly simplified if strings
-         * were used directly; it's not clear what the convolution buys you:
-         * thread safety? efficiency?
-         */
         InputStream codeInput = new ByteArrayInputStream(code.getBytes());
         BufferedReader reader = new BufferedReader(new InputStreamReader(codeInput));
         StringBuilder sb = new StringBuilder();
@@ -371,4 +366,4 @@ public class CodeIntegrator	{
     }
 }
 
-//  [Last modified: 2020 05 10 at 20:13:05 GMT]
+//  [Last modified: 2021 01 30 at 22:26:21 GMT]

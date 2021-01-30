@@ -1,7 +1,7 @@
 /**
  * Used to jump to the end of the run method -- not a real exception
  *
- * @todo lots of methods that change attributes of node and edges throw
+ * @todo lots of methods that change attributes of nodes and edges throw
  * Terminate; this is necessary when an animation is running, but forces
  * awkward catching of Terminate in methods invoked only during editing
  */
@@ -15,4 +15,4 @@ public class Terminate extends Exception {
     }
 }
 
-//  [Last modified: 2016 12 16 at 13:27:43 GMT]
+//  [Last modified: 2021 01 30 at 22:23:14 GMT]

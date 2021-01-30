@@ -293,8 +293,8 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                 if (sel != null) {
                     graphPanel.setDragging(true);
                     graphPanel.setEdgeTracker(null);
-                    if (!dispatch.isAnimationMode()
-                            || !dispatch.algorithmMovesNodes()) {
+                    if ( ! dispatch.isAnimationMode()
+                            || ! dispatch.algorithmMovesNodes() ) {
                         try {
                             sel.setFixedPosition(arg0.getPoint());
                         } catch (Exception e) {
@@ -352,7 +352,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                     dispatch.pushToTextEditor();
 
                 } // in animation mode, allow dragging only to move nodes (see mouseDragged)
-                else if (!dispatch.isAnimationMode()) {
+                else if ( ! dispatch.isAnimationMode() ) {
                     // release after click
                     // not in animation mode
                     Node clickNode = graphPanel.getSelectedNode();
@@ -1230,4 +1230,4 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
         // TODO Auto-generated method stub
     }
 }
- //  [Last modified: 2021 01 12 at 15:52:18 GMT]
+ //  [Last modified: 2021 01 28 at 22:59:05 GMT]

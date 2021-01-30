@@ -346,8 +346,11 @@ public class GraphDispatch {
    * has occurred; the text is updated to reflect the current state of the graph
    */
   public void pushToTextEditor() {
-    setEditMode(true);
-    notifyListeners(TEXT_UPDATE, null, null);
+      LogHelper.disable();
+      LogHelper.enterMethod(getClass(), "pushToTextEditor");
+      notifyListeners(TEXT_UPDATE, null, null);
+      LogHelper.exitMethod(getClass(), "pushToTextEditor");
+      LogHelper.restoreState();
   }
 
   private void notifyListeners(String property, Object oldValue, Object newValue) {
@@ -393,4 +396,4 @@ public class GraphDispatch {
 
 }
 
-//  [Last modified: 2021 01 12 at 20:42:24 GMT]
+//  [Last modified: 2021 01 30 at 21:12:56 GMT]

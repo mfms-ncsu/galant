@@ -31,6 +31,12 @@ import java.util.logging.Logger;
  * appropriate name for this class, given its current usage, would be
  * Globals. The original intent may have been to have multiple instances for
  * multiple communication channels between graphs, algorithms and editors.
+ *
+ * Or, in the world of design patterns, this is a "singleton"; but
+ * could have been handled like LogHelper.
+ * In any case, clients deal with it differently; often the instance
+ * of GraphDispatch is an instance variable of the client class or a
+ * local variable in a longer method.
  */
 public class GraphDispatch {
 
@@ -40,7 +46,10 @@ public class GraphDispatch {
   private Graph editGraph;
   /**
    * A unique identifier for a graph.
-   * @todo not clear to me what the purpose is
+   * @todo not clear to me what the purpose of UUID is; seems to be a
+   * way to uniquely identify a graph and tie together the working graph in
+   * the dispatch with its source text in GGraphEditorPanel
+   * and GTabbedPane.
    */
   private UUID graphSource;
 
@@ -51,9 +60,7 @@ public class GraphDispatch {
   private boolean animationMode = false;
 
   /** 
-   * true if editing a graph; false during parsing and when the
-   * directedness of a graph is changing
-   * @todo figure out when to change this
+   * true if editing a graph; false during parsing
    */
   private boolean editMode = false;
   
@@ -143,11 +150,6 @@ public class GraphDispatch {
    * for example, an instance of the Graph class does not have to be
    * associated with a GraphDispatch instance upon creation in order for it
    * to interact with the display, animation, etc.
-   *
-   * @todo this is a nonstandard use of getInstance(), which, in other
-   * contexts, always returns a new instance; this should probably have
-   * another name, such as getDispatch(), but that would require global
-   * changes.
    */
   public static GraphDispatch getInstance() {
     if (instance == null) {
@@ -330,8 +332,8 @@ public class GraphDispatch {
   }
 
   /**
-   * @todo may need to set positions of nodes using their fixed positions
-   * as starting points.
+   * sets an indicator that the algorithm will move nodes during
+   * execution and disables user movement of nodes
    */
   public void setAlgorithmMovesNodes(boolean algorithmMovesNodes) {
     this.algorithmMovesNodes = algorithmMovesNodes;
@@ -342,8 +344,20 @@ public class GraphDispatch {
   }
 
   /**
-   * notifies the text panel corresponding to the graph window that a change
-   * has occurred; the text is updated to reflect the current state of the graph
+   * Notifies the text panel corresponding to the graph window that a change
+   * has occurred; the text is updated to reflect the current state of
+   * the graph
+   *
+   * @todo This should be rethought. There is no need to reflect every
+   * change in the graph window immediately in the corresponding text
+   * window.
+   * A better way would be to postpone updates to the text window
+   * until the user opts to take action, e.g., by a saving the file as
+   * is currently done from the text window to push updates to the
+   * graph window.
+   * To make this work, there would have to be a dirty bit for the
+   * graph panel/window so that user is asked whether to really exit
+   * when there are unsaved graph window changes.
    */
   public void pushToTextEditor() {
       LogHelper.disable();
@@ -396,4 +410,4 @@ public class GraphDispatch {
 
 }
 
-//  [Last modified: 2021 01 30 at 21:12:56 GMT]
+//  [Last modified: 2021 01 30 at 22:08:19 GMT]

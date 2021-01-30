@@ -11,8 +11,6 @@ import edu.ncsu.csc.Galant.algorithm.AlgorithmExecutor;
  * A catch all for all exceptions occurring in Galant; this acts as the
  * end of any chain of exceptions and allows the program to report the
  * exception on the console and/or display it in a GUI window.
- *
- * $Id: GalantException.java 114 2015-05-08 15:21:55Z mfms $
  */
 public class GalantException extends Exception {
     public static final int STACK_PRINT_LIMIT = 10;
@@ -71,6 +69,7 @@ public class GalantException extends Exception {
      * trace
      * @todo eventually all exceptions, including those at compile time or
      * graph parsing should be extensions of GalantException
+     * [this may already be true]
      */
     public void displayStatic() {
         ExceptionDialog.displayExceptionInDialog(this, this.getMessage());
@@ -114,4 +113,4 @@ public class GalantException extends Exception {
     }
 }
 
-//  [Last modified: 2016 12 16 at 13:11:26 GMT]
+//  [Last modified: 2021 01 30 at 21:32:16 GMT]

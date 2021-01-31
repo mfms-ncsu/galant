@@ -83,10 +83,18 @@ public class GGraphEditorPanel extends GEditorPanel {
        * (b) user might move nodes during animation
        */
       if ( GraphDispatch.getInstance().isEditMode()
-           && GraphDispatch.getInstance().getWorkingGraph().getEditState() > 0 ) {
-              super.setDirty(dirty);
-              LogHelper.logDebug(" set dirty flag");
-          }
+           && GraphDispatch.getInstance().getWorkingGraph().getEditState() > 0 
+           ) {
+          super.setDirty(dirty);
+          LogHelper.logDebug(" set dirty flag");
+      }
+      // if user moves a node during algorithm (or even while editing
+      // - currently, edit state does not change when nodes are moved)
+      else if ( GraphDispatch.getInstance().getWorkingGraph().getUserMovedNode() ) {
+          super.setDirty(dirty);
+          LogHelper.logDebug(" set dirty flag");
+          GraphDispatch.getInstance().getWorkingGraph().resetUserNodeMove();
+      }
     }
     LogHelper.exitMethod(getClass(), "setDirty");
     LogHelper.restoreState();
@@ -135,4 +143,4 @@ public class GGraphEditorPanel extends GEditorPanel {
 
 }
 
-// [Last modified: 2021 01 30 at 21:19:52 GMT]
+// [Last modified: 2021 01 31 at 00:37:50 GMT]

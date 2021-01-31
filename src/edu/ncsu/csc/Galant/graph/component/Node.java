@@ -715,6 +715,7 @@ public class Node extends GraphElement {
     public void setFixedPosition(int x, int y) {
         xCoordinate = x;
         yCoordinate = y;
+        this.graph.setUserMovedNode(true);
     }
 
     public static Point genRandomPosition() {
@@ -776,4 +777,4 @@ public class Node extends GraphElement {
 
 }
 
-//  [Last modified: 2021 01 10 at 19:23:28 GMT]
+//  [Last modified: 2021 01 31 at 00:35:42 GMT]

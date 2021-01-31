@@ -63,6 +63,11 @@ public class Graph {
     private int maxEditState = 0;
     
     /**
+     * true if user has moved a node since last resetUserNodeMove()
+     */
+    private boolean userMovedNode;
+    
+    /**
      * Keeps track of an edge selected during algorithm execution.
      */
     private Edge selectedEdge;
@@ -127,6 +132,10 @@ public class Graph {
         return editState;
     }
 
+    public boolean getUserMovedNode() { return userMovedNode; }
+    void setUserMovedNode(boolean value) { userMovedNode = value; }
+    public void resetUserNodeMove() { userMovedNode = false; }
+    
     /**
      * Removes state history beyond the current state - used in edit
      * mode when an edit takes place after undo's
@@ -1413,4 +1422,4 @@ public class Graph {
   }
 }
 
-// [Last modified: 2021 01 30 at 23:23:42 GMT]
+// [Last modified: 2021 01 31 at 00:37:17 GMT]

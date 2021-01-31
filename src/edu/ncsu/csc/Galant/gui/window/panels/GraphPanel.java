@@ -285,7 +285,8 @@ public class GraphPanel extends JPanel{
   }
 
   /**
-   * @todo This should not need to be a special case.
+   * @todo This should not need to be a special case; a graph is
+   * always in some state
    */
   public void drawGraph(Graph graph, Graphics2D g2d)
     throws GalantException
@@ -417,13 +418,9 @@ public class GraphPanel extends JPanel{
      * @return the point at the center of node n, based on whether or not
      * you're in animation mode or whether the graph is layered.
      *
-     * @todo Once LayeredGraph becomes a subclass of Graph, and LayeredNode a
-     * subclass of Node, we can override getPosition(), getX(), and getY() in
-     * LayeredNode() so that they do the right thing.
-     * Or, better yet, make getNodeCenter() a Node method that is intended
-     * specifically for drawing, is independent of getPosition() and allows
-     * for a variety of interpretations based on graph type and window
-     * dimensions.
+     * @todo !!! [Senior Design Team] !!!
+     * This is *the* place where the distinction between logical and
+     * physical position needs to be handled
      */
     private Point getNodeCenter( Node n ) throws GalantException{
         int state = dispatch.getDisplayState();
@@ -439,12 +436,6 @@ public class GraphPanel extends JPanel{
 
         // if graph is layered and node has layer and position in layer
         // information, base its location on that
-        /**
-         * @todo should be done with inheritance: nodes should have their
-         * own draw methods and then call on appropriate methods to do
-         * the actual drawing of circles and labels after the center is
-         * calculated.
-         */
         if ( dispatch.getWorkingGraph().isLayered() ) {
             int x = 0;
             int y = 0;
@@ -500,11 +491,6 @@ public class GraphPanel extends JPanel{
 	 * 
 	 * @param n The node to be drawn (assumed to be non-null)
 	 * @param g2d The graphics object used to draw the elements
-     *
-     * @todo Because the class NodeState no longer exists, we have to use
-     * n.hasX(stateNumber) instead of currentState.hasX(), for example. The
-     * former adds a level of indirection. There's probably a way to avoid
-     * this.
 	 */
 	private void drawNode(Node n, Graphics2D g2d)
         throws GalantException
@@ -1055,4 +1041,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2021 01 07 at 16:56:56 GMT]
+//  [Last modified: 2021 01 31 at 14:49:55 GMT]

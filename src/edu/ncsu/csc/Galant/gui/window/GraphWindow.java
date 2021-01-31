@@ -446,7 +446,9 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 
                             /**
                              * @todo repositioning in response to edge
-                             * deletion is likely to confuse the user.
+                             * deletion is likely to confuse the user;
+                             * in fact, this is true of any kind of
+                             * dynamic repositioning.
                              */
                             if (repositionBtn.isSelected()) {
                                 g.smartReposition();
@@ -1230,4 +1232,4 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
         // TODO Auto-generated method stub
     }
 }
- //  [Last modified: 2021 01 28 at 22:59:05 GMT]
+ //  [Last modified: 2021 01 31 at 14:42:57 GMT]

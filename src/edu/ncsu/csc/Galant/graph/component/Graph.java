@@ -63,7 +63,7 @@ public class Graph {
     private int maxEditState = 0;
     
     /**
-     * true if user has moved a node since last resetUserNodeMove()
+     * true if user has moved a node since last reset
      */
     private boolean userMovedNode;
     
@@ -132,9 +132,26 @@ public class Graph {
         return editState;
     }
 
-    public boolean getUserMovedNode() { return userMovedNode; }
-    void setUserMovedNode(boolean value) { userMovedNode = value; }
+    /**
+     * @return true if user moved a node since last
+     * resetUserNodeMove(); called from setDirty() in
+     * GGraphEditorPanel to determine whether to set the dirty bit for real.
+     */
+    public boolean userHasMovedNode() {
+        return userMovedNode;
+    }
+
+    /**
+     * called from setDirty() in GGraphEditorPanel to ensure that
+     * dirty is not set again after the text for the graph is saved
+     */
     public void resetUserNodeMove() { userMovedNode = false; }
+
+    /**
+     * called from setFixedPosition() in Node, to indicate that a node
+     * move has taken place
+     */
+    void setUserNodeMove() { userMovedNode = true; }
     
     /**
      * Removes state history beyond the current state - used in edit
@@ -1422,4 +1439,4 @@ public class Graph {
   }
 }
 
-// [Last modified: 2021 01 31 at 00:37:17 GMT]
+// [Last modified: 2021 01 31 at 14:15:00 GMT]

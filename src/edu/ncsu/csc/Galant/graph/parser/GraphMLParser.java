@@ -2,11 +2,13 @@
  * @file GraphMLParser.java
  * @brief code for creating a graph from a GraphML file/string
  *
- * @todo Would probably be best to make the x and y attributes of nodes act as
- * surrogates for positionInLayer and layer, respectively, when a graph is
- * layered. The only part of the code that needs to know about these attributes
- * is the display in GraphPanel. The change would require changes in GraphPanel,
- * Node, NodeState, and possibly Graph.
+ * @todo !!! [Senior Design Team] !!!
+ * Would probably be best to make
+ * the x and y attributes of nodes act as surrogates for
+ * positionInLayer and layer, respectively, when a graph is
+ * layered. The only part of the code that needs to know about these
+ * attributes is the display in GraphPanel. The change would require
+ * changes in GraphPanel, Node, NodeState, and possibly Graph.
  */
 package edu.ncsu.csc.Galant.graph.parser;
 
@@ -73,7 +75,7 @@ public class GraphMLParser {
     }
 
     /**
-     * @todo Not clear the this is ever called
+     * @todo Not clear that this is ever called
      */
     public void setDocument(DocumentBuilder db, File file)
             throws GalantException {
@@ -220,9 +222,6 @@ public class GraphMLParser {
         return graphUnderConstruction;
     } // buildGraphFromInput
 
-    /**
-     * @todo the exception handling here needs to go at least one level up
-     */
     public Graph generateGraph(String xml) throws GalantException {
         // LogHelper.enable();
         LogHelper.enterMethod(getClass(), "generateGraph( String )");
@@ -273,4 +272,4 @@ public class GraphMLParser {
 
 }
 
-//  [Last modified: 2021 01 07 at 17:04:33 GMT]
+//  [Last modified: 2021 01 31 at 14:37:03 GMT]

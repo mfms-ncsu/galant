@@ -75,13 +75,6 @@ public class GGraphEditorPanel extends GEditorPanel {
     if ( ! dirty ) super.setDirty(dirty);
     else {
       LogHelper.logDebug(" dirty is true");
-      /**
-       * @todo The conditions below are both wrong: they don't work if
-       * the user moves a node.
-       * (a) this may happen when editState is 0 - change in
-       * fixedPosition does not warrant increase in edit state
-       * (b) user might move nodes during animation
-       */
       if ( GraphDispatch.getInstance().isEditMode()
            && GraphDispatch.getInstance().getWorkingGraph().getEditState() > 0 
            ) {
@@ -90,7 +83,7 @@ public class GGraphEditorPanel extends GEditorPanel {
       }
       // if user moves a node during algorithm (or even while editing
       // - currently, edit state does not change when nodes are moved)
-      else if ( GraphDispatch.getInstance().getWorkingGraph().getUserMovedNode() ) {
+      else if ( GraphDispatch.getInstance().getWorkingGraph().userHasMovedNode() ) {
           super.setDirty(dirty);
           LogHelper.logDebug(" set dirty flag");
           GraphDispatch.getInstance().getWorkingGraph().resetUserNodeMove();
@@ -143,4 +136,4 @@ public class GGraphEditorPanel extends GEditorPanel {
 
 }
 
-// [Last modified: 2021 01 31 at 00:37:50 GMT]
+// [Last modified: 2021 01 31 at 14:06:07 GMT]

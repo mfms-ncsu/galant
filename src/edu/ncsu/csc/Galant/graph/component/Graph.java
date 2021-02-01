@@ -245,6 +245,18 @@ public class Graph {
      * Nodes and edges of the current graph are reset to their current
      * edit state.
      * @param currentGraph the graph to be accessed by the animation
+     *
+     * @todo !!! [Senior Design] !!!
+     * This crude mechanism of copying the current edit state of
+     * everything to start an algorithm is fraught with peril. As far
+     * as I can tell, the algorithm works on the deep copy of the
+     * graph, while the graph panel (user interface) knows only about
+     * the original edit graph. Since each node and edge is
+     * deep-copied, there is danger of an edit operation manipulating
+     * the wrong copy.
+     * This does not appear to be a problem when user moves a node
+     * while an algorithm is running - the move persists after the
+     * algorithm is done. But I have no idea why it's not a problem.
      */
     public Graph copyCurrentState(Graph currentGraph) {
         Graph copyOfGraph = new Graph(true);
@@ -1439,4 +1451,4 @@ public class Graph {
   }
 }
 
-// [Last modified: 2021 01 31 at 14:15:00 GMT]
+// [Last modified: 2021 02 01 at 14:46:24 GMT]

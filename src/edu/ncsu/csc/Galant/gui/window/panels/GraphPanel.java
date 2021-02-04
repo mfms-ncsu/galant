@@ -482,6 +482,20 @@ public class GraphPanel extends JPanel{
         return nodeCenter;
     }
 
+    // temporary code
+    public double initialWidth = 800;
+    public double initialHeight = 500;
+    private Point ViewTransform(Point p)
+    {
+        double width = dispatch.getWindowWidth();
+        double height = dispatch.getWindowHeight();
+
+        double xScale = width/initialWidth;
+        double yScale = height/initialHeight;
+
+        return new Point((int)(p.x * xScale), (int) (p.y * yScale));
+    }
+
 	/**
 	 * Draws the specified node and its properties to the screen
      * the positions of nodes to be drawn are determined by their state
@@ -496,7 +510,7 @@ public class GraphPanel extends JPanel{
         throws GalantException
     {
         int stateNumber = dispatch.getDisplayState();
-        Point nodeCenter = getNodeCenter(n);
+        Point nodeCenter = ViewTransform(getNodeCenter(n));
         g2d.setColor(Color.BLACK);
 		
         if ( labelVisible(n) ) {

@@ -149,9 +149,11 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
     /**
      * Called to display exceptions in the status window.
      * The client is not necessarily aware that an exception may
-     * occur; this is a safety mechanism
+     * occur; this is a safety mechanism and is called from here only
+     * when the animation terminates, to display the relevant,
+     * important information.
      */
-    public void updateStatusLabel() {
+    private void updateStatusLabel() {
         AlgorithmExecutor executor
                 = dispatch.getAlgorithmExecutor();
         AlgorithmSynchronizer synchronizer
@@ -856,7 +858,6 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
         executor.decrementDisplayState();
         stepForward.setEnabled(executor.hasNextState());
         stepBack.setEnabled(executor.hasPreviousState());
-        updateStatusLabel();
     }
 
     private synchronized void performStepForward() {
@@ -867,7 +868,6 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
         executor.incrementDisplayState();
         stepForward.setEnabled(executor.hasNextState());
         stepBack.setEnabled(executor.hasPreviousState());
-        updateStatusLabel();
     }
 
     public synchronized void performDone() {
@@ -879,7 +879,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
         // also does not appear to help in case of infinite loop
         //synchronizer.finishStep();
         executor.stopAlgorithm();
-        updateStatusLabel();
+        this.updateStatusLabel();
     }
 
     /**
@@ -1078,7 +1078,6 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                     } // delete edge
                     //}
                     LogHelper.exitMethod(getClass(), "'e' pressed");
-                    updateStatusLabel();
                     return true;
                 }
                 // "N" pressed
@@ -1111,7 +1110,6 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                         } //delete node
                     }
                     LogHelper.exitMethod(getClass(), "'n' pressed");
-                    updateStatusLabel();
                     return true;
                 }
                 //"Z" is pressed for undo
@@ -1232,4 +1230,4 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
         // TODO Auto-generated method stub
     }
 }
- //  [Last modified: 2021 01 31 at 14:42:57 GMT]
+ //  [Last modified: 2021 02 05 at 22:49:43 GMT]

@@ -133,6 +133,13 @@ public class AlgorithmExecutor {
      */
     public int getDisplayState() { return displayState; }
 
+    private void showStates() {
+        String message
+            = "display state = " + this.displayState
+            + "  algorithm state = " + this.algorithmState;
+        GraphDispatch.getInstance().getGraphWindow().updateStatusLabel(message);
+    }
+
     /**
      * Called whenever user interaction requests a step forward.
      * If the display state and algorithm state are the same, the
@@ -143,10 +150,9 @@ public class AlgorithmExecutor {
         LogHelper.logDebug("-> incrementDisplayState display = "
                            + displayState
                            + " algorithm = " + algorithmState);
-        // default message if all goes according to plan
-        String message
-            = "display state = " + this.displayState
-            + "  algorithm state = " + this.algorithmState;
+        // initialization, but should end up being replaced by
+        // something before being displayed
+        String message = "default (should not happen)";
         GraphDispatch dispatch = GraphDispatch.getInstance();
         if ( displayState == algorithmState
              && ! synchronizer.algorithmFinished()
@@ -155,7 +161,7 @@ public class AlgorithmExecutor {
              && dispatch.getActiveQuery() == null ) {
             displayState++;
             algorithmState++;
-            dispatch.getGraphWindow().updateStatusLabel(message);
+            this.showStates();
 
             // wake up the algorithmThread, have it do something
             synchronized ( synchronizer ) {
@@ -194,7 +200,7 @@ public class AlgorithmExecutor {
         }
         else if ( displayState < algorithmState ) {
             displayState++;
-            dispatch.getGraphWindow().updateStatusLabel(message);
+            this.showStates();
         }
         if ( infiniteLoop || synchronizer.exceptionThrown() ) {
             // need to let window know that algorithm was terminated due
@@ -212,7 +218,10 @@ public class AlgorithmExecutor {
      * Called when user requests a step back
      */
     public void decrementDisplayState() {
-        if ( displayState >= 0 ) displayState--;
+        if ( displayState > 0 ) {
+            displayState--;
+            this.showStates();
+        }
     }
 
     /**
@@ -222,7 +231,7 @@ public class AlgorithmExecutor {
         if ( algorithmState > displayState ) return true;
 		if ( ! synchronizer.algorithmFinished() ) return true;
         return false;
-	}
+    }
 
     /**
      * true if it's possible to step back
@@ -237,4 +246,4 @@ public class AlgorithmExecutor {
     }
 }
 
-//  [Last modified: 2021 01 30 at 22:20:42 GMT]
+//  [Last modified: 2021 02 05 at 22:23:11 GMT]

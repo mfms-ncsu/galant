@@ -168,8 +168,10 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 
     /**
      * @param message a String to display as status message
+     * @todo synchronization does not work when the algorithm is in
+     * its busy-wait loop - see AlgorithmExecutor
      */
-    public void updateStatusLabel(String message) {
+    public synchronized void updateStatusLabel(String message) {
         statusLabel.setText(message);
     }
 
@@ -872,18 +874,6 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 
     public synchronized void performDone() {
         AlgorithmExecutor executor = dispatch.getAlgorithmExecutor();
-        /**
-         * @todo the two commented out statements below were intended
-         * to allow user to stop the animation during a suspected
-         * infinite loop, but they do not work; see
-         *    Testing/infinite_loop_test.alg
-         * currently, there is a busy wait limit of 5 seconds, after
-         * which the animation terminates and reports possible infinite loop.
-         */
-        // executor.algorithmThread.interrupt();
-        AlgorithmSynchronizer synchronizer
-                = dispatch.getAlgorithmSynchronizer();
-        // synchronizer.finishStep();
         executor.stopAlgorithm();
         this.updateStatusLabel();
     }
@@ -1236,4 +1226,4 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
         // TODO Auto-generated method stub
     }
 }
- //  [Last modified: 2021 02 06 at 16:57:32 GMT]
+ //  [Last modified: 2021 02 08 at 18:01:04 GMT]

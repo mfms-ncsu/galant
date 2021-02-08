@@ -35,7 +35,7 @@ public class AlgorithmExecutor {
      * amount of time to wait before concluding that the algorithm is in an
      * infinite loop
      */
-    final int BUSY_WAIT_TIME_LIMIT = 5000;
+    final int BUSY_WAIT_TIME_LIMIT = 10000;
 
     private Algorithm algorithm;
     private AlgorithmSynchronizer synchronizer;
@@ -88,7 +88,7 @@ public class AlgorithmExecutor {
      * thread.
      */
     public synchronized void stopAlgorithm() {
-      LogHelper.disable();
+        LogHelper.disable();
         LogHelper.enterMethod(getClass(), "stopAlgorithm");
         GraphDispatch dispatch = GraphDispatch.getInstance();
         dispatch.stopAlgorithm();
@@ -175,8 +175,16 @@ public class AlgorithmExecutor {
                     if ( timeInBusyWait % PRINT_INTERVAL == 0 ) {
                         message = "waiting "
                             + (timeInBusyWait / (double) 1000)
-                            + " seconds";
-                        dispatch.getGraphWindow().updateStatusLabel(message);
+                            + " seconds of "
+                            + BUSY_WAIT_TIME_LIMIT / ((double) 1000);
+                        GraphWindow window = dispatch.getGraphWindow();
+                        /**
+                         * @todo despite the synchronization, the
+                         * status label fails to get updated here
+                         */
+                        synchronized ( window ) {
+                            window.updateStatusLabel(message);
+                        }
                         System.out.println(message);
                     }
                 } catch (InterruptedException e) {
@@ -187,9 +195,17 @@ public class AlgorithmExecutor {
                 }
             } while ( ! synchronizer.stepFinished()
                       && ! synchronizer.stopped()
-                      //                      && ! algorithmThread.interrupted()
+                      /**
+                       * there two types of exception thrown here:
+                       * synchronizer when an exception is displayed
+                       * in a popup
+                       * this whenever a GalantException is thrown
+                       * during execution
+                       * not clear that both are needed, but the
+                       * synchronizer one is a backstop
+                       */
                       && ! synchronizer.exceptionThrown()
-                      && ! exceptionThrown
+                      && ! this.exceptionThrown
                       && timeInBusyWait < BUSY_WAIT_TIME_LIMIT );
             if ( timeInBusyWait >= BUSY_WAIT_TIME_LIMIT ) {
                 message = "Busy wait time limit exceeded";
@@ -246,4 +262,4 @@ public class AlgorithmExecutor {
     }
 }
 
-//  [Last modified: 2021 02 05 at 22:23:11 GMT]
+//  [Last modified: 2021 02 08 at 18:01:49 GMT]

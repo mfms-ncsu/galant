@@ -256,8 +256,8 @@ public class GraphDispatch {
   }
 
   /**
-   * @return the current display state or 0 if not in animation mode; used
-   * when the context does not know whether or not algorithm is running
+   * @return the current display state or the current edit state,
+   * depending on whether an animation is running or not
    */
   public int getDisplayState() {
       int returnState = 0;
@@ -410,4 +410,4 @@ public class GraphDispatch {
 
 }
 
-//  [Last modified: 2021 01 30 at 22:08:19 GMT]
+//  [Last modified: 2021 02 12 at 00:19:01 GMT]

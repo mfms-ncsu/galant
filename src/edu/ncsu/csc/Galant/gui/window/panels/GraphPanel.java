@@ -284,35 +284,7 @@ public class GraphPanel extends JPanel{
     Timer.drawingTime.stop();
   }
 
-  /**
-   * @todo This should not need to be a special case; a graph is
-   * always in some state
-   */
-  public void drawGraph(Graph graph, Graphics2D g2d)
-    throws GalantException
-  {
-    Timer.drawingTime.start();
-    List<Node> nodes = null;
-    List<Edge> edges = null;
-    nodes = graph.getNodes();
-    edges = graph.getEdges();
-
-    // Draw edges first to put them behind nodes
-    for (Edge e : edges) {
-      if ( e.inScope(0) && ! e.isHidden()
-           && ! e.getSource().isHidden()
-           && ! e.getTarget().isHidden() )
-        drawEdge(graph, e, g2d);
-    }
-
-    for (Node n : nodes) {
-      if ( n.inScope(0) && ! n.isHidden() )
-        drawNode(n, g2d);
-    }
-    Timer.drawingTime.stop();
-  }
-
-	@Override
+    @Override
 	public void paintComponent(Graphics g) {
         try {
             // Get the graph to draw
@@ -346,7 +318,7 @@ public class GraphPanel extends JPanel{
             }
 		
             if (graph != null) {
-                  // Get the display state if algorithm is running
+                  // Get the current display state or the edit state
                   int state = dispatch.getDisplayState();
                   drawGraph(graph, g2d, state);
             }
@@ -697,6 +669,8 @@ public class GraphPanel extends JPanel{
 	 * @param source The source point of the relevant edge
 	 * @param dest The destination point of the relevant edge
 	 * @param g2d The graphics object used to draw the elements
+         *
+         * @todo Too many magic numbers!
 	 */
 	private void drawDirectedArrow(Point source, Point dest, Graphics2D g2d) {
 		Graphics2D g = (Graphics2D) g2d.create();
@@ -722,6 +696,8 @@ public class GraphPanel extends JPanel{
 	 * 
 	 * @param p1 The location of the relevant node
 	 * @param g2d The graphics object used to draw the elements
+         *
+         * @todo Too many magic numbers!
 	 */
 	private void drawSelfLoopArrow(Point p1, Graphics2D g2d) {
 		int x = p1.x + 1;
@@ -740,7 +716,7 @@ public class GraphPanel extends JPanel{
 	 * @param dest The destination point of the relevant edge
 	 * @param g2d The graphics object used to draw the elements
 	 */
-	private void drawEdgeWeight( double weight, 
+	private void drawEdgeWeight( double weight,
                                  Point source,
                                  Point dest,
                                  Graphics2D g2d ) {
@@ -825,6 +801,8 @@ public class GraphPanel extends JPanel{
 	 * @param p2 An endpoint of the edge to transform the canvas
 	 * @param g2d The graphics object used to draw the elements
 	 * @return A transformed graphics object whose x axis is the edge between p1 and p2
+         *
+         * @todo not clear what this does - it is never called from anywhere
 	 */
 	private TransformData getEdgeTransform(Point p1, Point p2, Graphics2D g2d) {
 		Graphics2D g = (Graphics2D) g2d.create();
@@ -1041,4 +1019,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2021 01 31 at 14:49:55 GMT]
+//  [Last modified: 2021 02 12 at 00:38:50 GMT]

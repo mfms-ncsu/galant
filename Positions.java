@@ -4,6 +4,42 @@
  */
 
 /**
+ * In the original version of Galant, life was simple.
+ * (1) Algorithms did not change node positions.
+ * (2) There were no state changes during editing.
+ *
+ * I needed to rethink (1) because I wanted to animate sorting
+ * algorithms and layered graph algorithms. This led to the creation
+ * of two types of positions.
+ *  - fixed positions: modified by the user during editing only
+ *  - positions (state sensitive): able to be modified during an algorithm
+ * the non-fixed positions used the mechanism of the original
+ * positions; like other attributes, they were state sensitive, but,
+ * because of (1) and (2), they only resulted in one new state, the
+ * initial one.
+ *
+ * Because it was easy to accidentally create and delete nodes during
+ * editing, I introduced an undo/redo mechanism, which forced me to
+ * abandon (2). Now life is more complicated.
+ *
+ * In addition to scaling the desired behavior (functional
+ * requirement) with respect to positions is as follows.
+ * A node has both an edit position and an animation position.
+ * A user may move a node at any time by pointing to it and dragging
+ * the mouse.
+ * Ultimately, there should also be a keyboard shortcut for moving a
+ * node, but that gets complicated. The possible scenarios are
+ *
+ * + user moves a node during editing - its edit position changes
+ * + user moves a node during an animation that does not move nodes -
+ *     its edit position changes
+ * + user moves a node during an animation that moves nodes - its
+ *     animation position changes temporarily; the node snaps back
+ *     into place when the display state changes (user presses a
+ *     forward or backward arrow
+ */
+
+/**
  * getNodeCenter() is used for
  * drawing nodes, determining endpoints of edges, positions of labels
  * and weights for both nodes and edges.
@@ -259,4 +295,4 @@
     v.setPosition(pt);
   }
 
-//  [Last modified: 2021 02 12 at 15:44:14 GMT]
+//  [Last modified: 2021 02 12 at 19:58:25 GMT]

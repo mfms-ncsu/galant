@@ -892,22 +892,22 @@ public class GraphPanel extends JPanel{
    * @return the selected node, or null if no selected node 
    */
 	public Node selectTopClickedNode(Point p) {
-		LogHelper.enterMethod(getClass(), "selectTopClickedNode");
-		Graph g = dispatch.getWorkingGraph();
-        int stateNumber = g.getEditState();
-		Node top = null;
-		for (Node n : g.getNodes(stateNumber)) {
-			if ( p.distance(n.getFixedPosition()) < NODE_SELECTION_RADIUS ) {
-				top = n;
-			}
-		}
-		previousNode = selectedNode;
-		selectedNode = top;
-		selectedEdge = null;
-		LogHelper.exitMethod( getClass(), "selectTopClickedNode, node = "
-                              + (selectedNode == null ? "null"
-                                 : selectedNode.getId() ) );
-		return top;
+            LogHelper.enterMethod(getClass(), "selectTopClickedNode");
+            Graph g = dispatch.getWorkingGraph();
+            int stateNumber = g.getEditState();
+            Node top = null;
+            for (Node n : g.getNodes(stateNumber)) {
+                if ( p.distance(n.getFixedPosition()) < NODE_SELECTION_RADIUS ) {
+                    top = n;
+                }
+            }
+            previousNode = selectedNode;
+            selectedNode = top;
+            selectedEdge = null;
+            LogHelper.exitMethod( getClass(), "selectTopClickedNode, node = "
+                                  + (selectedNode == null ? "null"
+                                     : selectedNode.getId() ) );
+            return top;
 	}
 	
 	public void setSelectedNode(Node n) {
@@ -935,41 +935,43 @@ public class GraphPanel extends JPanel{
 	}
 	
 	public Edge selectTopClickedEdge(Point p) {
-		LogHelper.enterMethod(getClass(), "selectTopClickedEdge");
+            LogHelper.enterMethod(getClass(), "selectTopClickedEdge");
 		
-		Graph g = dispatch.getWorkingGraph();
-        int stateNumber = g.getEditState();
+            Graph g = dispatch.getWorkingGraph();
+            int stateNumber = g.getEditState();
 		
-		Edge top = null;
+            Edge top = null;
 		
-		for (int i=1; i <= EDGE_SELECTION_WIDTH; i++) {
-			double width = i;
-			double centerVal = width/2;
-            LogHelper.logDebug( "centerVal = " + centerVal );
-			Rectangle2D clickArea = new Rectangle2D.Double(p.getX() - centerVal, p.getY() - centerVal - 1, i, i);
+            for (int i=1; i <= EDGE_SELECTION_WIDTH; i++) {
+                double width = i;
+                double centerVal = width/2;
+                LogHelper.logDebug( "centerVal = " + centerVal );
+                Rectangle2D clickArea
+                    = new Rectangle2D.Double(p.getX() - centerVal,
+                                             p.getY() - centerVal - 1, i, i);
 			
-            for (Edge e : g.getEdges(stateNumber)) {
-                Point p1 = e.getSourceNode().getFixedPosition();
-                Point p2 = e.getTargetNode().getFixedPosition();
+                for (Edge e : g.getEdges(stateNumber)) {
+                    Point p1 = e.getSourceNode().getFixedPosition();
+                    Point p2 = e.getTargetNode().getFixedPosition();
 
-                Line2D l = new Line2D.Double(p1, p2);
+                    Line2D l = new Line2D.Double(p1, p2);
 				
-                if (l.intersects(clickArea)) {
-                    top = e;
+                    if (l.intersects(clickArea)) {
+                        top = e;
+                    }
                 }
+			
+                if (top != null) break;
+			
             }
 			
-			if (top != null) break;
-			
-		}
-			
-		this.selectedEdge = top;
+            this.selectedEdge = top;
 		
-		this.selectedNode = null;
-		this.previousNode = null;
+            this.selectedNode = null;
+            this.previousNode = null;
 		
-		LogHelper.exitMethod(getClass(), "selectTopClickedEdge");
-		return top;
+            LogHelper.exitMethod(getClass(), "selectTopClickedEdge");
+            return top;
 	}
 	
 	public void setSelectedEdge(Edge e) {
@@ -1019,4 +1021,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2021 02 12 at 00:38:50 GMT]
+//  [Last modified: 2021 02 12 at 15:10:14 GMT]

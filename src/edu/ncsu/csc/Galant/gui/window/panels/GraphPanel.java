@@ -408,7 +408,12 @@ public class GraphPanel extends JPanel{
 
         // if graph is layered and node has layer and position in layer
         // information, base its location on that
-        if ( dispatch.getWorkingGraph().isLayered() && n.getFixedPosition().x == 0 && n.getFixedPosition().y == 0) {
+        
+        // If the node is already dragged, don't reposition it. 
+        // This mainly for the scaling since I think this method is called constantly
+        // So I must stop it to allow us reposition the node. 
+        // I should reset the flag when scaling, but I don't know where is it.
+        if ( dispatch.getWorkingGraph().isLayered() && !n.drag) {
             int x = 0;
             int y = 0;
             int layer = n.getLayer(); // should not change during an
@@ -449,7 +454,7 @@ public class GraphPanel extends JPanel{
             }
             nodeCenter = new Point( x, y );
             n.setFixedPosition(nodeCenter);
-            System.out.println("S");
+            //System.out.println("S");
         }
         if ( nodeCenter == null )
             throw new GalantException("Unable to compute center for node " + n);

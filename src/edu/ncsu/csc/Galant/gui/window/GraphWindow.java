@@ -299,6 +299,8 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                 if (sel != null) {
                     graphPanel.setDragging(true);
                     graphPanel.setEdgeTracker(null);
+                    // this node is dragged.
+                    sel.drag = true;
                     if ( ! dispatch.isAnimationMode()
                             || ! dispatch.algorithmMovesNodes() ) {
                         try {

@@ -172,8 +172,9 @@ public class Node extends GraphElement {
     }
 
     /**
-     * @todo Checking for null in getPosition() is no longer necessary - it's
-     * done by getX() and getY()
+     * @return the point that represents the current position of this
+     * node; called during animation - defaults to fixed position if
+     * the algorithm did not move nodes
      */
     public Point getPosition() {
         Integer x = getX();
@@ -187,6 +188,10 @@ public class Node extends GraphElement {
         return p;
     }
 
+    /**
+     * @return the point that represents the current position of this
+     * node in the given display state
+     */
     public Point getPosition(int state) {
         Integer x = getX(state);
         Integer y = getY(state);
@@ -271,7 +276,6 @@ public class Node extends GraphElement {
      *
      * @todo this is too long; consider breaking out a method that deals with
      * handling integer attributes
-     * @todo still need to make LayeredGraphNode a subclass of Node.
      */
     public void initializeAfterParsing(AttributeList L) throws GalantException {
         Integer idAttribute = null;
@@ -715,6 +719,7 @@ public class Node extends GraphElement {
     public void setFixedPosition(int x, int y) {
         xCoordinate = x;
         yCoordinate = y;
+        this.graph.setUserNodeMove();
     }
 
     public static Point genRandomPosition() {
@@ -776,4 +781,4 @@ public class Node extends GraphElement {
 
 }
 
-//  [Last modified: 2021 01 10 at 19:23:28 GMT]
+//  [Last modified: 2021 01 31 at 14:33:33 GMT]

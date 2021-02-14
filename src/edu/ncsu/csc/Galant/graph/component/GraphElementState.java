@@ -14,17 +14,6 @@ import java.util.List;
  * @author Jason Cockrell, Ty Devries, Alex McCabe, Michael Owoc
  *
  * Adapted for a more general, flexible model by Matthias Stallmann
- *
- * @todo It did not occur to me at the time, but now that all of the standard
- * attributes are instances of classes (Integer, Double, Boolean) rather than
- * primitive types, the AttributeList can be reserved for user-defined
- * attributes. When a standard attribute is null, it can then simply not be
- * added to a saved graphml file.
- *
- * @todo Another idea: store all the user-defined attributes as String's. The
- * setters can do the automatic conversion using the ' "" + ' incantation, or
- * a simple test for Booleans (where it's about presence or absence
- * anyhow). The getters can do parsing.
  */
 public class GraphElementState implements Cloneable{
 
@@ -200,4 +189,4 @@ public class GraphElementState implements Cloneable{
     }
 }
 
-//  [Last modified: 2021 01 12 at 20:37:38 GMT]
+//  [Last modified: 2021 01 31 at 14:21:38 GMT]

@@ -63,6 +63,11 @@ public class Graph {
     private int maxEditState = 0;
     
     /**
+     * true if user has moved a node since last reset
+     */
+    private boolean userMovedNode;
+    
+    /**
      * Keeps track of an edge selected during algorithm execution.
      */
     private Edge selectedEdge;
@@ -74,18 +79,17 @@ public class Graph {
 
   /**
    * @todo should handle this in the same way that GraphElementState is
-   * handled; perhaps a graph can be another GraphElement with attributes
-   * such as a list of nodes, etc.
+   * handled; perhaps a graph can be another GraphElement; however, attributes
+   * such as a list of nodes should be fixed - the nodes themselves
+   * know whether they exist or not
    */
   protected List<GraphState> states;
 
   /**
-   * @todo Never clear what this meant. A better name might be startNode,
-   * but then there's getStartNode(), which has lots of side effects, and
-   * is apparently not used anywhere (probably intended for algorithms that
-   * have a start node such as dfs, bfs, and Dijkstra's).
+   * Can be used by an algorithm as a default starting node. Currently
+   * used by bfs.alg
    */
-  private Node rootNode;
+  private Node startNode;
 
   /**
    * An integer that can be used as the id of the next edge if id's are not
@@ -100,10 +104,6 @@ public class Graph {
 
     /**
      * Default constructor.
-     *
-     * @todo let the Terminate exception propagate all the way to the top,
-     * where it can be caught based on whether or not you're running an
-     * algorithm
      */
     public Graph() {
         dispatch = GraphDispatch.getInstance();
@@ -132,6 +132,27 @@ public class Graph {
         return editState;
     }
 
+    /**
+     * @return true if user moved a node since last
+     * resetUserNodeMove(); called from setDirty() in
+     * GGraphEditorPanel to determine whether to set the dirty bit for real.
+     */
+    public boolean userHasMovedNode() {
+        return userMovedNode;
+    }
+
+    /**
+     * called from setDirty() in GGraphEditorPanel to ensure that
+     * dirty is not set again after the text for the graph is saved
+     */
+    public void resetUserNodeMove() { userMovedNode = false; }
+
+    /**
+     * called from setFixedPosition() in Node, to indicate that a node
+     * move has taken place
+     */
+    void setUserNodeMove() { userMovedNode = true; }
+    
     /**
      * Removes state history beyond the current state - used in edit
      * mode when an edit takes place after undo's
@@ -224,6 +245,18 @@ public class Graph {
      * Nodes and edges of the current graph are reset to their current
      * edit state.
      * @param currentGraph the graph to be accessed by the animation
+     *
+     * @todo !!! [Senior Design] !!!
+     * This crude mechanism of copying the current edit state of
+     * everything to start an algorithm is fraught with peril. As far
+     * as I can tell, the algorithm works on the deep copy of the
+     * graph, while the graph panel (user interface) knows only about
+     * the original edit graph. Since each node and edge is
+     * deep-copied, there is danger of an edit operation manipulating
+     * the wrong copy.
+     * This does not appear to be a problem when user moves a node
+     * while an algorithm is running - the move persists after the
+     * algorithm is done. But I have no idea why it's not a problem.
      */
     public Graph copyCurrentState(Graph currentGraph) {
         Graph copyOfGraph = new Graph(true);
@@ -244,6 +277,9 @@ public class Graph {
         for( Node originalNode : this.getNodes(this.editState) ) {
             Node copiedNode = originalNode.copyNode(copyOfGraph);
             nodeListCopy.add(copiedNode);
+            if ( copyOfGraph.startNode == null ) {
+                copyOfGraph.startNode = copiedNode;
+            }
             copyOfNodeById.put(copiedNode.getId(), copiedNode);
         }
         copyOfGraph.nodes = nodeListCopy;
@@ -269,7 +305,6 @@ public class Graph {
         copyOfGraph.layerInformation = this.layerInformation;
         TreeMap<Integer, Node> nodeByIdCopy = new TreeMap<Integer, Node>(this.nodeById);
         copyOfGraph.banner = this.banner;
-        copyOfGraph.rootNode = this.rootNode;
         // the following two statements are probably not needed
         copyOfGraph.nextEdgeId = this.nextEdgeId;
         copyOfGraph.hasExplicitEdgeIds = this.hasExplicitEdgeIds;
@@ -366,12 +401,6 @@ public class Graph {
   public void setSelectedEdge(Edge edge) {
     selectedEdge = edge;
   }
-
-  /**
-   * @todo A dialog lingers if user terminates algorithm when the dialog
-   * window is up. Fixing this would involve some sort of coordination
-   * between the dialog (a child of the GraphWindow) and the algorithm.
-   */
 
   /**
    * @param prompt a message displayed in the edge selection dialog popup
@@ -989,26 +1018,6 @@ public class Graph {
     }
 
   /**
-   * @return the root node
-   */
-  public Node getRootNode()
-  throws GalantException
-  {
-    if ( rootNode == null ) {
-      throw new GalantException("no root node has been set"
-                                + "\n - in getRootNode");
-    }
-    return rootNode;
-  }
-
-  /**
-   * @param rootNode the new root node
-   */
-  public void setRootNode(Node rootNode) {
-    this.rootNode = rootNode;
-  }
-
-  /**
    * @returns true if a node with the given id exists
    */
   public boolean nodeIdExists(Integer id) {
@@ -1061,10 +1070,10 @@ public class Graph {
    * that requires it
    */
   public Node getStartNode() throws GalantException {
-    if ( this.nodes.size() == 0 ) {
-      throw new GalantException("Empty graph in getStartNode.");
+    if ( this.startNode == null ) {
+      throw new GalantException("getStartNode: no start node exists");
     }
-    return this.nodes.get(0);
+    return this.startNode;
   }
 
 
@@ -1083,8 +1092,8 @@ public class Graph {
     nodes.add(n);
     nodeById.put(newId, n);
 
-    if ( this.rootNode == null ) {
-      this.rootNode = n;
+    if ( this.startNode == null ) {
+      this.startNode = n;
     }
 
     // seems like we need an addState call as is the case with state
@@ -1114,8 +1123,8 @@ public class Graph {
 
     // probably not needed but couldn't hurt; maybe the algorithm
     // constructs a tree and then traverses it
-    if ( this.rootNode == null ) {
-      this.rootNode = n;
+    if ( this.startNode == null ) {
+      this.startNode = n;
     }
     LogHelper.exitMethod(getClass(), "addNode() " + n);
     return n;
@@ -1138,8 +1147,8 @@ public class Graph {
     nodes.add(n);
     nodeById.put(n.getId(), n);
 
-    if ( this.rootNode == null ) {
-      this.rootNode = n;
+    if ( this.startNode == null ) {
+      this.startNode = n;
     }
 
     LogHelper.exitMethod(getClass(), "addNode( Node )");
@@ -1442,4 +1451,4 @@ public class Graph {
   }
 }
 
-// [Last modified: 2021 01 13 at 00:14:56 GMT]
+// [Last modified: 2021 02 01 at 14:46:24 GMT]

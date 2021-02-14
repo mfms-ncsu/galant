@@ -59,7 +59,6 @@ public class AlgorithmSynchronizer {
 
     /**
      * The algorithm signals that it has reached the end of execution on its own.
-     * @todo not clear that this has to be synchronized
      */
     public synchronized void finishAlgorithm() {
         synchronized( this ) {
@@ -143,4 +142,4 @@ public class AlgorithmSynchronizer {
     }
 }
 
-//  [Last modified: 2016 12 22 at 18:38:31 GMT]
+//  [Last modified: 2021 01 30 at 22:21:41 GMT]

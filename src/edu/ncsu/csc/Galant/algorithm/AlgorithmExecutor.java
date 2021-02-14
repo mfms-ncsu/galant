@@ -35,7 +35,7 @@ public class AlgorithmExecutor {
      * amount of time to wait before concluding that the algorithm is in an
      * infinite loop
      */
-    final int BUSY_WAIT_TIME_LIMIT = 5000;
+    final int BUSY_WAIT_TIME_LIMIT = 10000;
 
     private Algorithm algorithm;
     private AlgorithmSynchronizer synchronizer;
@@ -74,7 +74,6 @@ public class AlgorithmExecutor {
 
     /**
      * Starts the algorithm thread and causes it to execute the first step.
-     * @todo not clear if we want the first step to execute
      */
     public void startAlgorithm() {
         GraphDispatch dispatch = GraphDispatch.getInstance();
@@ -89,7 +88,7 @@ public class AlgorithmExecutor {
      * thread.
      */
     public synchronized void stopAlgorithm() {
-      LogHelper.disable();
+        LogHelper.disable();
         LogHelper.enterMethod(getClass(), "stopAlgorithm");
         GraphDispatch dispatch = GraphDispatch.getInstance();
         dispatch.stopAlgorithm();
@@ -134,25 +133,26 @@ public class AlgorithmExecutor {
      */
     public int getDisplayState() { return displayState; }
 
+    private void showStates() {
+        String message
+            = "display state = " + this.displayState
+            + "  algorithm state = " + this.algorithmState;
+        GraphDispatch.getInstance().getGraphWindow().updateStatusLabel(message);
+    }
+
     /**
      * Called whenever user interaction requests a step forward.
      * If the display state and algorithm state are the same, the
      * requested step will also cause a the algorithm to take a step. 
-     *
-     * @todo needs to check if there's a query window open before releasing
-     * control to the algorithm via synchronizer.notify(); ideally should
-     * also display something on the status bar or throw an exception; the
-     * detection part is complicated, however
      */
     public synchronized void incrementDisplayState() {
         LogHelper.disable();
         LogHelper.logDebug("-> incrementDisplayState display = "
                            + displayState
                            + " algorithm = " + algorithmState);
-        // default message if all goes according to plan
-        String message
-            = "display state = " + this.displayState
-            + "  algorithm state = " + this.algorithmState;
+        // initialization, but should end up being replaced by
+        // something before being displayed
+        String message = "default (should not happen)";
         GraphDispatch dispatch = GraphDispatch.getInstance();
         if ( displayState == algorithmState
              && ! synchronizer.algorithmFinished()
@@ -161,7 +161,7 @@ public class AlgorithmExecutor {
              && dispatch.getActiveQuery() == null ) {
             displayState++;
             algorithmState++;
-            dispatch.getGraphWindow().updateStatusLabel(message);
+            this.showStates();
 
             // wake up the algorithmThread, have it do something
             synchronized ( synchronizer ) {
@@ -175,8 +175,16 @@ public class AlgorithmExecutor {
                     if ( timeInBusyWait % PRINT_INTERVAL == 0 ) {
                         message = "waiting "
                             + (timeInBusyWait / (double) 1000)
-                            + " seconds";
-                        dispatch.getGraphWindow().updateStatusLabel(message);
+                            + " seconds of "
+                            + BUSY_WAIT_TIME_LIMIT / ((double) 1000);
+                        GraphWindow window = dispatch.getGraphWindow();
+                        /**
+                         * @todo despite the synchronization, the
+                         * status label fails to get updated here
+                         */
+                        synchronized ( window ) {
+                            window.updateStatusLabel(message);
+                        }
                         System.out.println(message);
                     }
                 } catch (InterruptedException e) {
@@ -187,9 +195,17 @@ public class AlgorithmExecutor {
                 }
             } while ( ! synchronizer.stepFinished()
                       && ! synchronizer.stopped()
-                      //                      && ! algorithmThread.interrupted()
+                      /**
+                       * there two types of exception thrown here:
+                       * synchronizer when an exception is displayed
+                       * in a popup
+                       * this whenever a GalantException is thrown
+                       * during execution
+                       * not clear that both are needed, but the
+                       * synchronizer one is a backstop
+                       */
                       && ! synchronizer.exceptionThrown()
-                      && ! exceptionThrown
+                      && ! this.exceptionThrown
                       && timeInBusyWait < BUSY_WAIT_TIME_LIMIT );
             if ( timeInBusyWait >= BUSY_WAIT_TIME_LIMIT ) {
                 message = "Busy wait time limit exceeded";
@@ -200,7 +216,7 @@ public class AlgorithmExecutor {
         }
         else if ( displayState < algorithmState ) {
             displayState++;
-            dispatch.getGraphWindow().updateStatusLabel(message);
+            this.showStates();
         }
         if ( infiniteLoop || synchronizer.exceptionThrown() ) {
             // need to let window know that algorithm was terminated due
@@ -218,7 +234,10 @@ public class AlgorithmExecutor {
      * Called when user requests a step back
      */
     public void decrementDisplayState() {
-        if ( displayState >= 0 ) displayState--;
+        if ( displayState > 0 ) {
+            displayState--;
+            this.showStates();
+        }
     }
 
     /**
@@ -228,11 +247,10 @@ public class AlgorithmExecutor {
         if ( algorithmState > displayState ) return true;
 		if ( ! synchronizer.algorithmFinished() ) return true;
         return false;
-	}
+    }
 
     /**
      * true if it's possible to step back
-     * @todo not clear whether the lower bound is 1 or 0
      */
     public boolean hasPreviousState() {
         return (displayState > 1);
@@ -244,4 +262,4 @@ public class AlgorithmExecutor {
     }
 }
 
-//  [Last modified: 2021 01 12 at 16:18:10 GMT]
+//  [Last modified: 2021 02 08 at 18:01:49 GMT]

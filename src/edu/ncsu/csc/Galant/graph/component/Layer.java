@@ -4,6 +4,11 @@
  * ArrayList <code>nodes</code>, while the display order is determined by
  * setting the positionInLayer attribute of a node. These two are brought in
  * sync by displayPositions.
+ *
+ * @todo not clear that this class is currently in use; the layered
+ * graph algorithms appear to import the LayeredGraph class and use it
+ * independent of anything in core Galant functionality; this issue
+ * will be resolved once there's a new way of handling positions
  */
 
 package edu.ncsu.csc.Galant.graph.component;
@@ -353,4 +358,4 @@ class Layer extends GraphElement {
 
 } // end, class Layer
 
-//  [Last modified: 2016 06 16 at 15:13:58 GMT]
+//  [Last modified: 2021 01 31 at 14:28:34 GMT]

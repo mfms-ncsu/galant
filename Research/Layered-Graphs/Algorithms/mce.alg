@@ -46,12 +46,10 @@ function displayCrossings() {
     layeredGraph.displayMarks();
     String bestCrossingsString = "    ";
     String bestBottleneckString = "    ";
-    if ( crossings == minCrossings ) bestCrossingsString = " ** ";
-    if ( edgeCrossings == minEdgeCrossings ) bestBottleneckString = " ** ";
     display( "pass ", pass,
              ", iteration ", iteration,
-             ", crossings = ", crossings, bestCrossingsString,
-             ", bottleneck = ",  edgeCrossings, bestBottleneckString
+             ", crossings = ", crossings, ", min = ", minCrossings,
+             ", bottleneck = ", edgeCrossings, ", min = ", minEdgeCrossings
              );
 }
 
@@ -158,4 +156,4 @@ algorithm {
 
     print( "Minimum edge crossings = " + minEdgeCrossings );
 }
-//  [Last modified: 2017 11 15 at 16:02:52 GMT]
+//  [Last modified: 2021 02 08 at 21:21:00 GMT]

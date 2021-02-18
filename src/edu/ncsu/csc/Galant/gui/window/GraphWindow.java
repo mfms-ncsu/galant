@@ -300,7 +300,6 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                     graphPanel.setDragging(true);
                     graphPanel.setEdgeTracker(null);
                     // this node is dragged.
-                    sel.drag = true;
                     if ( ! dispatch.isAnimationMode()
                             || ! dispatch.algorithmMovesNodes() ) {
                         try {
@@ -1225,6 +1224,14 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
     @Override
     public void componentResized(ComponentEvent e) {
         dispatch.setWindowSize(graphPanel.getHeight(), graphPanel.getWidth());
+        
+        // Mark the flag as false, so the GraphPanel will recalculate
+        // a physical position for all the nodes. 
+        // that will reset the physical position if the node has been moved. 
+        for(Node n : dispatch.getWorkingGraph().getNodes()) {
+        	n.setpos = false;
+        }
+        
         frame.repaint();
     }
 

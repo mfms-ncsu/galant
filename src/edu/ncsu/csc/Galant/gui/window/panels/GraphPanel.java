@@ -413,7 +413,11 @@ public class GraphPanel extends JPanel{
         // This mainly for the scaling since I think this method is called constantly
         // So I must stop it to allow us reposition the node. 
         // I should reset the flag when scaling, but I don't know where is it.
-        if ( dispatch.getWorkingGraph().isLayered() && !n.drag) {
+        // ignore this paragraph, not applied anymore
+        
+        // Now my strategy is only call this part of node if the physical position 
+        // is not set. That means the Graph is just loaded or the window is just resized.
+        if ( dispatch.getWorkingGraph().isLayered() && !n.setpos) {
             int x = 0;
             int y = 0;
             int layer = n.getLayer(); // should not change during an
@@ -453,7 +457,12 @@ public class GraphPanel extends JPanel{
                     // + (numberOfLayers - n.getLayer() - 1) * layerGap;
             }
             nodeCenter = new Point( x, y );
+            
+            // I treat fixedposition as the physical position.
             n.setFixedPosition(nodeCenter);
+            
+            // the physical position is set
+            n.setpos = true;
             //System.out.println("S");
         }
         if ( nodeCenter == null )

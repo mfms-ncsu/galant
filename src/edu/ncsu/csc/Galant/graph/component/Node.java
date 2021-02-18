@@ -45,7 +45,10 @@ public class Node extends GraphElement {
     private int yCoordinate;
     private EdgeList incidentEdges;
     // a flag that marks some nodes are dragged or not.
+    // not used anymore
     public boolean drag = false;
+    // to decide if the physical position is already set
+    public boolean setpos = false;
 
     /**
      * create a blank instance for use when copying state at start of algorithm

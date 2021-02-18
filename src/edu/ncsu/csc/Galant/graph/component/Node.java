@@ -126,6 +126,9 @@ public class Node extends GraphElement {
         copy.incidentEdges = new EdgeList();
         ArrayList<GraphElementState> statesCopy = super.copyCurrentState();
         copy.states = statesCopy;
+        
+        // add a line for the new flag
+        copy.setpos = this.setpos;
         return copy;
     }
 

@@ -462,7 +462,10 @@ public class GraphPanel extends JPanel{
             n.setFixedPosition(nodeCenter);
             
             // the physical position is set
-            n.setpos = true;
+            if(!dispatch.running) {
+            	n.setpos = true;
+            }
+            
             //System.out.println("S");
         }
         if ( nodeCenter == null )

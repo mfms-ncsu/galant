@@ -109,6 +109,8 @@ public class GraphDispatch {
    * double value of answer to latest interactive query for a double
    */
   private Double doubleAnswer;
+  
+  public boolean running = false;
 
   /**
    * getters and setters for the query answers
@@ -231,6 +233,9 @@ public class GraphDispatch {
      * preserving any node position changes during algorithm execution
      */
     public void stopAlgorithm() {
+    	
+    	this.running = false;
+    	
         Graph algorithmGraph = this.workingGraph;
         this.workingGraph = this.editGraph;
         this.workingGraph.setNodePositions(algorithmGraph);

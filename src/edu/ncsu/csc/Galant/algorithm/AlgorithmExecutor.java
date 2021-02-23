@@ -15,6 +15,7 @@ import java.lang.Thread;
 import edu.ncsu.csc.Galant.algorithm.Algorithm;
 import edu.ncsu.csc.Galant.GraphDispatch;
 import edu.ncsu.csc.Galant.graph.component.Graph;
+import edu.ncsu.csc.Galant.graph.component.Node;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow;
 import edu.ncsu.csc.Galant.logging.LogHelper;
 
@@ -80,6 +81,11 @@ public class AlgorithmExecutor {
         dispatch.setActiveQuery(null);
         algorithmState = displayState = 0;
         algorithmThread.start();
+        
+        dispatch.running = true;
+        for(Node n : dispatch.getWorkingGraph().getNodes()) {
+        	n.setpos = false;
+        }
         incrementDisplayState();
     }
 

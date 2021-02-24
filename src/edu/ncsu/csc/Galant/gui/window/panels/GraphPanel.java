@@ -477,6 +477,10 @@ public class GraphPanel extends JPanel{
             }
             nodeCenter = new Point( x, y );
         }
+
+        // reposition nodes based on window size
+        nodeCenter = ViewTransform(nodeCenter);
+
         if ( nodeCenter == null )
             throw new GalantException("Unable to compute center for node " + n);
         return nodeCenter;
@@ -510,7 +514,7 @@ public class GraphPanel extends JPanel{
         throws GalantException
     {
         int stateNumber = dispatch.getDisplayState();
-        Point nodeCenter = ViewTransform(getNodeCenter(n));
+        Point nodeCenter = getNodeCenter(n);
         g2d.setColor(Color.BLACK);
 		
         if ( labelVisible(n) ) {

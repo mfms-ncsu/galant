@@ -36,7 +36,9 @@
  * + user moves a node during an animation that moves nodes - its
  *     animation position changes temporarily; the node snaps back
  *     into place when the display state changes (user presses a
- *     forward or backward arrow
+ *     forward or backward arrow)
+ * [note: movement of nodes by user in this last case should be
+ * related to screen position only, not related to logical position]
  */
 
 /**
@@ -211,7 +213,7 @@
         }
 
 /**
- * Some methods in Algorithm.java query the current position of a node.
+ * Some methods in Algorithm.java query the current (logical) position of a node.
  */
   public Integer getX(Node v) throws GalantException {
     checkGraphElement(v);
@@ -231,7 +233,7 @@
  * Also, there is a method that was incorporated into Algorithm.java
  * as a convenience for several algorithms that use distance between
  * nodes to make decisions, e.g., shortest paths and minimum spanning
- * trees. We should probably use physical position here.
+ * trees. We should probably use screen position here.
  */
 
     /**
@@ -247,7 +249,7 @@
 
 /**
  * One is during editing, in GraphWindow.java.
- * Here, the physical position is known but not the logical one. Some
+ * Here, the screen position is known but not the logical one. Some
  * "snapping into place" may need to happen here if logical positions
  * involve small integers.
  */
@@ -295,4 +297,4 @@
     v.setPosition(pt);
   }
 
-//  [Last modified: 2021 02 12 at 19:58:25 GMT]
+//  [Last modified: 2021 02 12 at 21:59:13 GMT]

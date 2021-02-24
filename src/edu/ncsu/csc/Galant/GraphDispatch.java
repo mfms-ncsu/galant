@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import javax.swing.JDialog;
+import java.awt.Point;
 
 import edu.ncsu.csc.Galant.graph.component.Graph;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow;
@@ -408,6 +409,29 @@ public class GraphDispatch {
     this.graphWindow = graphWindow;
   }
 
+  public double initialWidth = 800;
+  public double initialHeight = 500;
+  public Point ViewTransform(Point p)
+  {
+      double width = getWindowWidth();
+      double height = getWindowHeight();
+
+      double xScale = width/initialWidth;
+      double yScale = height/initialHeight;
+
+      return new Point((int)(p.x * xScale), (int) (p.y * yScale));
+  }
+
+  public Point InvViewTransform(Point p)
+  {
+      double width = getWindowWidth();
+      double height = getWindowHeight();
+
+      double xScale = width/initialWidth;
+      double yScale = height/initialHeight;
+
+      return new Point((int)(p.x / xScale), (int) (p.y / yScale));
+  }
 }
 
 //  [Last modified: 2021 01 30 at 22:08:19 GMT]

@@ -296,7 +296,8 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                     if ( ! dispatch.isAnimationMode()
                             || ! dispatch.algorithmMovesNodes() ) {
                         try {
-                            sel.setFixedPosition(arg0.getPoint());
+                            Point mouseLogical = dispatch.InvViewTransform(arg0.getPoint());
+                            sel.setFixedPosition(mouseLogical);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

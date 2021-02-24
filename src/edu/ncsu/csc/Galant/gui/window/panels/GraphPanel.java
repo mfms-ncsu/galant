@@ -478,26 +478,9 @@ public class GraphPanel extends JPanel{
             nodeCenter = new Point( x, y );
         }
 
-        // reposition nodes based on window size
-        nodeCenter = ViewTransform(nodeCenter);
-
         if ( nodeCenter == null )
             throw new GalantException("Unable to compute center for node " + n);
         return nodeCenter;
-    }
-
-    // temporary code
-    public double initialWidth = 800;
-    public double initialHeight = 500;
-    private Point ViewTransform(Point p)
-    {
-        double width = dispatch.getWindowWidth();
-        double height = dispatch.getWindowHeight();
-
-        double xScale = width/initialWidth;
-        double yScale = height/initialHeight;
-
-        return new Point((int)(p.x * xScale), (int) (p.y * yScale));
     }
 
 	/**

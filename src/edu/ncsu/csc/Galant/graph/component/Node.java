@@ -183,7 +183,7 @@ public class Node extends GraphElement {
         if (x == null || y == null) {
             p = getFixedPosition();
         } else {
-            p = new Point(x, y);
+            p = ViewTransform(new Point(x, y));
         }
         return p;
     }
@@ -708,8 +708,23 @@ public class Node extends GraphElement {
         return yCoordinate;
     }
 
+    // temporary code
+    public double initialWidth = 800;
+    public double initialHeight = 500;
+    private Point ViewTransform(Point p)
+    {
+        double width = dispatch.getWindowWidth();
+        double height = dispatch.getWindowHeight();
+
+        double xScale = width/initialWidth;
+        double yScale = height/initialHeight;
+
+        return new Point((int)(p.x * xScale), (int) (p.y * yScale));
+    }
+
     public Point getFixedPosition() {
-        return new Point(getFixedX(), getFixedY());
+        // EDITOR: reposition nodes with window resize
+        return ViewTransform(new Point(getFixedX(), getFixedY()));
     }
 
     public void setFixedPosition(Point position) {

@@ -89,9 +89,9 @@ public abstract class GEditorPanel extends JPanel implements DocumentListener,
       @Override
       public String getToolTipText(MouseEvent me) {
         String content = (getText() + "  ").replace("\r\n", "\n");
-        viewToModel( me.getPoint() );
+        viewToModel2D( me.getPoint() );
         try {
-          int loc = viewToModel( me.getPoint() );
+          int loc = viewToModel2D( me.getPoint() );
           AttributeSet as = getStyledDocument().getCharacterElement(loc).getAttributes();
           if ( as.containsAttribute(StyleConstants.Foreground,
                                     GAlgorithmSyntaxHighlighting.apiKeywordColor) ) {

@@ -110,7 +110,6 @@ public class GraphDispatch {
    */
   private Double doubleAnswer;
   
-  public boolean running = false;
 
   /**
    * getters and setters for the query answers
@@ -234,7 +233,6 @@ public class GraphDispatch {
      */
     public void stopAlgorithm() {
     	
-    	this.running = false;
     	
         Graph algorithmGraph = this.workingGraph;
         this.workingGraph = this.editGraph;

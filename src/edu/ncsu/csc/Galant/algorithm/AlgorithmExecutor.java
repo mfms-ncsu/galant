@@ -82,10 +82,6 @@ public class AlgorithmExecutor {
         algorithmState = displayState = 0;
         algorithmThread.start();
         
-        dispatch.running = true;
-        for(Node n : dispatch.getWorkingGraph().getNodes()) {
-        	n.setpos = false;
-        }
         incrementDisplayState();
     }
 
@@ -123,6 +119,10 @@ public class AlgorithmExecutor {
         if ( dispatch.getActiveQuery() != null )
             dispatch.getActiveQuery().dispose();
         algorithmState = displayState = 0;
+        // made by 2021 Galant Team
+        for(Node n : dispatch.getWorkingGraph().getNodes()) {
+        	n.setpos = false;
+        }
         LogHelper.exitMethod(getClass(), "stopAlgorithm");
         LogHelper.restoreState();
     }
@@ -230,10 +230,16 @@ public class AlgorithmExecutor {
             // appear on the status bar
             dispatch.getGraphWindow().performDone();
         }
+        
+        // made by 2021 Galant Team
+        for(Node n : dispatch.getWorkingGraph().getNodes()) {
+        	n.setpos = false;
+        }
         LogHelper.logDebug("<- incrementDisplayState display = "
                            + displayState
                            + " algorithm = " + algorithmState);
         LogHelper.restoreState();
+        
     }
 
     /**
@@ -243,6 +249,10 @@ public class AlgorithmExecutor {
         if ( displayState > 0 ) {
             displayState--;
             this.showStates();
+        }
+        // made by 2021 Galant Team
+        for(Node n : GraphDispatch.getInstance().getWorkingGraph().getNodes()) {
+        	n.setpos = false;
         }
     }
 

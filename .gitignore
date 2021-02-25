@@ -26,3 +26,4 @@ Crossing_Graphs/
 *.blg
 *.aux
 *.synctex.gz
+/bin/

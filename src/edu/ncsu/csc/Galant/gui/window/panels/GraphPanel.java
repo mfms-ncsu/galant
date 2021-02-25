@@ -389,7 +389,7 @@ public class GraphPanel extends JPanel{
     /**
      * @return the point at the center of node n, based on whether or not
      * you're in animation mode or whether the graph is layered.
-     *
+     * Edited by 2021 Galant Team
      * @todo !!! [Senior Design Team] !!!
      * This is *the* place where the distinction between logical and
      * physical position needs to be handled

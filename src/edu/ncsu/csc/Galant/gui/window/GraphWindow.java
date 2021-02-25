@@ -380,7 +380,8 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                         // add a new default node to the working
                         // graph at this position
                         Graph g = dispatch.getWorkingGraph();
-                        Node n = g.addInitialNode(location.x, location.y);
+                        Point placement = dispatch.InvViewTransform(location);
+                        Node n = g.addInitialNode(placement.x, placement.y);
                         // select the new node
                         Node nNew = graphPanel.selectTopClickedNode(location);
                         LogHelper.logDebug(" select: node = " + n);

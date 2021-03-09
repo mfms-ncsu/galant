@@ -217,6 +217,8 @@ public class AlgorithmExecutor {
         }
 
         // made by 2021 Galant Team
+        // if the algorithm is moving nodes, the nodes shall bounce back after
+        // forward, backward, scaling, or cancel algorithm.
         if ( dispatch.algorithmMovesNodes() ) {
             for ( Node n : dispatch.getWorkingGraph().getNodes() ) {
                 n.setpos = false;
@@ -238,6 +240,8 @@ public class AlgorithmExecutor {
             this.showStates();
         }
         // made by 2021 Galant Team
+        // if the algorithm is moving nodes, the nodes shall bounce back after
+        // forward, backward, scaling, or cancel algorithm.
         if ( dispatch.algorithmMovesNodes() ) {
             for ( Node n : dispatch.getWorkingGraph().getNodes() ) {
                 n.setpos = false;

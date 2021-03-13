@@ -11,8 +11,6 @@
  * each step is selected.
  */
 
-import edu.ncsu.csc.Galant.GraphDispatch;
-
 /**
  * Distances used when lining up nodes
  */
@@ -94,4 +92,4 @@ algorithm {
   deleteNode(toInsert);
 }
 
-//  [Last modified: 2017 01 23 at 22:35:03 GMT]
+//  [Last modified: 2021 03 05 at 12:56:56 GMT]

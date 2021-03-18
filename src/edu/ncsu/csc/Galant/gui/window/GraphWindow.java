@@ -465,6 +465,41 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                     } // delete mode
                 } // not in animation mode
                 frame.repaint();
+                
+                // check all nodes, reposition window if needed
+                int width = frame.getSize().width;
+                int height = frame.getSize().height;
+                int x = frame.getBounds().x;
+                int y = frame.getBounds().y;
+                Graph g = dispatch.getWorkingGraph();
+                if (g != null)
+                for ( Node v : g.getAllNodes() ) {
+
+                    if (v.getPosition().x < 50)
+                    {
+                        dispatch.virtualWindow.x -= 50;
+                        dispatch.virtualWindow.width += 50;
+                        frame.setBounds(x-50, y, width+50, height);
+                    }
+                    if (v.getPosition().x > width - 50)
+                    {
+                        dispatch.virtualWindow.width += 50;
+                        frame.setSize(width + 50, height);
+                    }
+                    if (v.getPosition().y < 150)
+                    {
+                        dispatch.virtualWindow.y -= 50;
+                        dispatch.virtualWindow.height += 50;
+                        frame.setBounds(x, y-50, width, height+50);
+                    }
+                    if (v.getPosition().y > height - 150)
+                    {
+                        dispatch.virtualWindow.height += 50;
+                        frame.setSize(width, height + 50);
+                    }
+                }
+                
+            
             }
         }
         ); // addMouseListener

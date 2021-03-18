@@ -199,7 +199,7 @@ public class Node extends GraphElement {
         if (x == null || y == null) {
             p = getFixedPosition();
         } else {
-            p = new Point(x, y);
+            p = dispatch.ViewTransform(new Point(x, y));
         }
         return p;
     }

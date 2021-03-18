@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.UUID;
 import javax.swing.JDialog;
 import java.awt.Point;
+import java.awt.Rectangle;
 
 import edu.ncsu.csc.Galant.graph.component.Graph;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow;
@@ -409,28 +410,38 @@ public class GraphDispatch {
     this.graphWindow = graphWindow;
   }
 
-  public double initialWidth = 800;
-  public double initialHeight = 500;
+  // represents the virtual window boundary that contains all nodes 
+  // and is scaled to the actual window boundary
+  //public double virtualWidth = 800;
+  //public double virtualHeight = 500;
+  //public double virtualX = 0;
+  //public double virtualY = 0;
+  public Rectangle virtualWindow = new Rectangle(0,0,800,500);
+
   public Point ViewTransform(Point p)
   {
       double width = getWindowWidth();
       double height = getWindowHeight();
 
-      double xScale = width/initialWidth;
-      double yScale = height/initialHeight;
+      // convert from logical position to virtual window viewport coordinates
+      double vPointX = (p.x-virtualWindow.x)/(double)virtualWindow.width;
+      double vPointY = (p.y-virtualWindow.y)/(double)virtualWindow.height;
 
-      return new Point((int)(p.x * xScale), (int) (p.y * yScale));
+      // convert from virtual viewport (0,1) to display coordinates 
+      return new Point((int)(vPointX*width), (int) (vPointY*height));
   }
 
   public Point InvViewTransform(Point p)
   {
       double width = getWindowWidth();
       double height = getWindowHeight();
+      
+      // convert from display coordinates to virtual viewport (0,1)
+      double vPointX = p.x/width;
+      double vPointY = p.y/height;
 
-      double xScale = width/initialWidth;
-      double yScale = height/initialHeight;
-
-      return new Point((int)(p.x / xScale), (int) (p.y / yScale));
+      // convert from virtual viewport to logical position
+      return new Point((int) (virtualWindow.x+vPointX*virtualWindow.width), (int) (virtualWindow.y+vPointY*virtualWindow.height));
   }
 }
 

@@ -1,4 +1,4 @@
-/** dijkstra.alg
+/**
  *  Implementation of Dijkstra's shortest path algorithm. Interprets
  *  undirected edges as going in both directions.
  *
@@ -13,7 +13,7 @@
  *  - a dummy edge from the start vertex to itself; it will be the first edge removed
  */
 
-/** If edge weights are not define, they will be based on geometry */
+/** If edge weights are not defined, they will be based on geometry */
 
 /**
  * @return the scaled Euclidian distance between v and w
@@ -98,4 +98,4 @@ algorithm {
     } // stop when priority queue is empty
 } // end, algorithm
 
-//  [Last modified: 2020 05 10 at 19:55:43 GMT]
+//  [Last modified: 2021 03 13 at 21:51:52 GMT]

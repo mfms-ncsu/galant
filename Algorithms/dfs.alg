@@ -1,6 +1,10 @@
 /**
  * Implements depth-first search of a graph, directed or undirected; in the
  * undirected case, it behaves as if edges were directed in both directions.
+ * @deprecated See interactive_dfs.alg. which ...
+ * - allows user to select a start node (for each component in an undirected graph)
+ * - uses integer attributes instead of arrays to store discovery and finish times
+ * - uses different colors for different kinds of non-tree edges
  */
 
 int time;

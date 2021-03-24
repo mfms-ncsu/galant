@@ -750,8 +750,10 @@ public class Node extends GraphElement {
      */
     public String xmlString() {
         String s = "<node" + " id=\"" + this.getId() + "\"";
-        s += " x=\"" + this.getFixedX() + "\"";
-        s += " y=\"" + this.getFixedY() + "\" ";
+        if ( ! GraphDispatch.getInstance().getWorkingGraph().isLayered() ) {
+	        s += " x=\"" + this.getFixedX() + "\"";
+	        s += " y=\"" + this.getFixedY() + "\" ";
+        }
         s += super.attributesWithoutPosition();
         s += " />";
         return s;
@@ -767,8 +769,10 @@ public class Node extends GraphElement {
         }
         String s = "<node" + " id=\"" + this.getId() + "\"";
         // if algorithm doesn't move nodes, only the fixed position is set
-        s += " x=\"" + this.getX(state) + "\"";
-        s += " y=\"" + this.getY(state) + "\" ";
+        if ( ! GraphDispatch.getInstance().getWorkingGraph().isLayered() ) {
+	        s += " x=\"" + this.getX(state) + "\"";
+	        s += " y=\"" + this.getY(state) + "\" ";
+        }
         s += super.attributesWithoutPosition(state);
         s += "/>";
         return s;

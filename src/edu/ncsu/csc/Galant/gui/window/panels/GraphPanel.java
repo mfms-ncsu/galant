@@ -346,7 +346,7 @@ public class GraphPanel extends JPanel{
             }
 		
             if (graph != null) {
-                  // Get the display state if algorithm is running
+                  // Get the current display state or the edit state
                   int state = dispatch.getDisplayState();
                   drawGraph(graph, g2d, state);
             }
@@ -417,7 +417,7 @@ public class GraphPanel extends JPanel{
     /**
      * @return the point at the center of node n, based on whether or not
      * you're in animation mode or whether the graph is layered.
-     *
+     * Edited by 2021 Galant Team
      * @todo !!! [Senior Design Team] !!!
      * This is *the* place where the distinction between logical and
      * physical position needs to be handled
@@ -436,7 +436,16 @@ public class GraphPanel extends JPanel{
 
         // if graph is layered and node has layer and position in layer
         // information, base its location on that
-        if ( dispatch.getWorkingGraph().isLayered() ) {
+        
+        // If the node is already dragged, don't reposition it. 
+        // This mainly for the scaling since I think this method is called constantly
+        // So I must stop it to allow us reposition the node. 
+        // I should reset the flag when scaling, but I don't know where is it.
+        // ignore this paragraph, not applied anymore
+        
+        // Now my strategy is only call this part of node if the physical position 
+        // is not set. That means the Graph is just loaded or the window is just resized.
+        if ( dispatch.getWorkingGraph().isLayered() && !n.setpos) {
             int x = 0;
             int y = 0;
             int layer = n.getLayer(); // should not change during an
@@ -476,6 +485,14 @@ public class GraphPanel extends JPanel{
                     // + (numberOfLayers - n.getLayer() - 1) * layerGap;
             }
             nodeCenter = new Point( x, y );
+            
+            // I treat fixedposition as the physical position.
+            n.setFixedPosition(nodeCenter);
+            
+            // the physical position is set
+            n.setpos = true;
+            
+            //System.out.println("S");
         }
 
         if ( nodeCenter == null )
@@ -698,6 +715,8 @@ public class GraphPanel extends JPanel{
 	 * @param source The source point of the relevant edge
 	 * @param dest The destination point of the relevant edge
 	 * @param g2d The graphics object used to draw the elements
+         *
+         * @todo Too many magic numbers!
 	 */
 	private void drawDirectedArrow(Point source, Point dest, Graphics2D g2d) {
 		Graphics2D g = (Graphics2D) g2d.create();
@@ -723,6 +742,8 @@ public class GraphPanel extends JPanel{
 	 * 
 	 * @param p1 The location of the relevant node
 	 * @param g2d The graphics object used to draw the elements
+         *
+         * @todo Too many magic numbers!
 	 */
 	private void drawSelfLoopArrow(Point p1, Graphics2D g2d) {
 		int x = p1.x + 1;
@@ -741,7 +762,7 @@ public class GraphPanel extends JPanel{
 	 * @param dest The destination point of the relevant edge
 	 * @param g2d The graphics object used to draw the elements
 	 */
-	private void drawEdgeWeight( double weight, 
+	private void drawEdgeWeight( double weight,
                                  Point source,
                                  Point dest,
                                  Graphics2D g2d ) {
@@ -826,6 +847,8 @@ public class GraphPanel extends JPanel{
 	 * @param p2 An endpoint of the edge to transform the canvas
 	 * @param g2d The graphics object used to draw the elements
 	 * @return A transformed graphics object whose x axis is the edge between p1 and p2
+         *
+         * @todo not clear what this does - it is never called from anywhere
 	 */
 	private TransformData getEdgeTransform(Point p1, Point p2, Graphics2D g2d) {
 		Graphics2D g = (Graphics2D) g2d.create();
@@ -915,22 +938,22 @@ public class GraphPanel extends JPanel{
    * @return the selected node, or null if no selected node 
    */
 	public Node selectTopClickedNode(Point p) {
-		LogHelper.enterMethod(getClass(), "selectTopClickedNode");
-		Graph g = dispatch.getWorkingGraph();
-        int stateNumber = g.getEditState();
-		Node top = null;
-		for (Node n : g.getNodes(stateNumber)) {
-			if ( p.distance(n.getFixedPosition()) < NODE_SELECTION_RADIUS ) {
-				top = n;
-			}
-		}
-		previousNode = selectedNode;
-		selectedNode = top;
-		selectedEdge = null;
-		LogHelper.exitMethod( getClass(), "selectTopClickedNode, node = "
-                              + (selectedNode == null ? "null"
-                                 : selectedNode.getId() ) );
-		return top;
+            LogHelper.enterMethod(getClass(), "selectTopClickedNode");
+            Graph g = dispatch.getWorkingGraph();
+            int stateNumber = g.getEditState();
+            Node top = null;
+            for (Node n : g.getNodes(stateNumber)) {
+                if ( p.distance(n.getFixedPosition()) < NODE_SELECTION_RADIUS ) {
+                    top = n;
+                }
+            }
+            previousNode = selectedNode;
+            selectedNode = top;
+            selectedEdge = null;
+            LogHelper.exitMethod( getClass(), "selectTopClickedNode, node = "
+                                  + (selectedNode == null ? "null"
+                                     : selectedNode.getId() ) );
+            return top;
 	}
 	
 	public void setSelectedNode(Node n) {
@@ -958,41 +981,43 @@ public class GraphPanel extends JPanel{
 	}
 	
 	public Edge selectTopClickedEdge(Point p) {
-		LogHelper.enterMethod(getClass(), "selectTopClickedEdge");
+            LogHelper.enterMethod(getClass(), "selectTopClickedEdge");
 		
-		Graph g = dispatch.getWorkingGraph();
-        int stateNumber = g.getEditState();
+            Graph g = dispatch.getWorkingGraph();
+            int stateNumber = g.getEditState();
 		
-		Edge top = null;
+            Edge top = null;
 		
-		for (int i=1; i <= EDGE_SELECTION_WIDTH; i++) {
-			double width = i;
-			double centerVal = width/2;
-            LogHelper.logDebug( "centerVal = " + centerVal );
-			Rectangle2D clickArea = new Rectangle2D.Double(p.getX() - centerVal, p.getY() - centerVal - 1, i, i);
+            for (int i=1; i <= EDGE_SELECTION_WIDTH; i++) {
+                double width = i;
+                double centerVal = width/2;
+                LogHelper.logDebug( "centerVal = " + centerVal );
+                Rectangle2D clickArea
+                    = new Rectangle2D.Double(p.getX() - centerVal,
+                                             p.getY() - centerVal - 1, i, i);
 			
-            for (Edge e : g.getEdges(stateNumber)) {
-                Point p1 = e.getSourceNode().getFixedPosition();
-                Point p2 = e.getTargetNode().getFixedPosition();
+                for (Edge e : g.getEdges(stateNumber)) {
+                    Point p1 = e.getSourceNode().getFixedPosition();
+                    Point p2 = e.getTargetNode().getFixedPosition();
 
-                Line2D l = new Line2D.Double(p1, p2);
+                    Line2D l = new Line2D.Double(p1, p2);
 				
-                if (l.intersects(clickArea)) {
-                    top = e;
+                    if (l.intersects(clickArea)) {
+                        top = e;
+                    }
                 }
+			
+                if (top != null) break;
+			
             }
 			
-			if (top != null) break;
-			
-		}
-			
-		this.selectedEdge = top;
+            this.selectedEdge = top;
 		
-		this.selectedNode = null;
-		this.previousNode = null;
+            this.selectedNode = null;
+            this.previousNode = null;
 		
-		LogHelper.exitMethod(getClass(), "selectTopClickedEdge");
-		return top;
+            LogHelper.exitMethod(getClass(), "selectTopClickedEdge");
+            return top;
 	}
 	
 	public void setSelectedEdge(Edge e) {
@@ -1042,4 +1067,4 @@ public class GraphPanel extends JPanel{
 	
 }
 
-//  [Last modified: 2021 01 31 at 14:49:55 GMT]
+//  [Last modified: 2021 02 12 at 15:10:14 GMT]

@@ -44,6 +44,11 @@ public class Node extends GraphElement {
     private int xCoordinate;
     private int yCoordinate;
     private EdgeList incidentEdges;
+    // a flag that marks some nodes are dragged or not.
+    // not used anymore
+    public boolean drag = false;
+    // to decide if the physical position is already set
+    public boolean setpos = false;
 
     /**
      * create a blank instance for use when copying state at start of algorithm
@@ -121,6 +126,9 @@ public class Node extends GraphElement {
         copy.incidentEdges = new EdgeList();
         ArrayList<GraphElementState> statesCopy = super.copyCurrentState();
         copy.states = statesCopy;
+        
+        // add a line for the new flag
+        copy.setpos = this.setpos;
         return copy;
     }
 
@@ -172,8 +180,9 @@ public class Node extends GraphElement {
     }
 
     /**
-     * @todo Checking for null in getPosition() is no longer necessary - it's
-     * done by getX() and getY()
+     * @return the point that represents the current position of this
+     * node; called during animation - defaults to fixed position if
+     * the algorithm did not move nodes
      */
     public Point getPosition() {
         Integer x = getX();
@@ -187,6 +196,10 @@ public class Node extends GraphElement {
         return p;
     }
 
+    /**
+     * @return the point that represents the current position of this
+     * node in the given display state
+     */
     public Point getPosition(int state) {
         Integer x = getX(state);
         Integer y = getY(state);
@@ -271,7 +284,6 @@ public class Node extends GraphElement {
      *
      * @todo this is too long; consider breaking out a method that deals with
      * handling integer attributes
-     * @todo still need to make LayeredGraphNode a subclass of Node.
      */
     public void initializeAfterParsing(AttributeList L) throws GalantException {
         Integer idAttribute = null;
@@ -715,6 +727,7 @@ public class Node extends GraphElement {
     public void setFixedPosition(int x, int y) {
         xCoordinate = x;
         yCoordinate = y;
+        this.graph.setUserNodeMove();
     }
 
     public static Point genRandomPosition() {
@@ -737,8 +750,10 @@ public class Node extends GraphElement {
      */
     public String xmlString() {
         String s = "<node" + " id=\"" + this.getId() + "\"";
-        s += " x=\"" + this.getFixedX() + "\"";
-        s += " y=\"" + this.getFixedY() + "\" ";
+        if ( ! GraphDispatch.getInstance().getWorkingGraph().isLayered() ) {
+	        s += " x=\"" + this.getFixedX() + "\"";
+	        s += " y=\"" + this.getFixedY() + "\" ";
+        }
         s += super.attributesWithoutPosition();
         s += " />";
         return s;
@@ -754,8 +769,10 @@ public class Node extends GraphElement {
         }
         String s = "<node" + " id=\"" + this.getId() + "\"";
         // if algorithm doesn't move nodes, only the fixed position is set
-        s += " x=\"" + this.getX(state) + "\"";
-        s += " y=\"" + this.getY(state) + "\" ";
+        if ( ! GraphDispatch.getInstance().getWorkingGraph().isLayered() ) {
+	        s += " x=\"" + this.getX(state) + "\"";
+	        s += " y=\"" + this.getY(state) + "\" ";
+        }
         s += super.attributesWithoutPosition(state);
         s += "/>";
         return s;
@@ -776,4 +793,4 @@ public class Node extends GraphElement {
 
 }
 
-//  [Last modified: 2021 01 10 at 19:23:28 GMT]
+//  [Last modified: 2021 01 31 at 14:33:33 GMT]

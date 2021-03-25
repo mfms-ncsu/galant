@@ -149,9 +149,11 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
     /**
      * Called to display exceptions in the status window.
      * The client is not necessarily aware that an exception may
-     * occur; this is a safety mechanism
+     * occur; this is a safety mechanism and is called from here only
+     * when the animation terminates, to display the relevant,
+     * important information.
      */
-    public void updateStatusLabel() {
+    private void updateStatusLabel() {
         AlgorithmExecutor executor
                 = dispatch.getAlgorithmExecutor();
         AlgorithmSynchronizer synchronizer
@@ -166,8 +168,10 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 
     /**
      * @param message a String to display as status message
+     * @todo synchronization does not work when the algorithm is in
+     * its busy-wait loop - see AlgorithmExecutor
      */
-    public void updateStatusLabel(String message) {
+    public synchronized void updateStatusLabel(String message) {
         statusLabel.setText(message);
     }
 
@@ -290,16 +294,17 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                 // releasing it
 
                 Node sel = graphPanel.getSelectedNode();
+            	//Point location = arg0.getPoint();
+            	//Node sel = graphPanel.selectTopClickedNode(location);
                 if (sel != null) {
                     graphPanel.setDragging(true);
                     graphPanel.setEdgeTracker(null);
-                    if (!dispatch.isAnimationMode()
-                            || !dispatch.algorithmMovesNodes()) {
-                        try {
-                            sel.setFixedPosition(arg0.getPoint());
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                    // this node is dragged.
+                    try {
+                        sel.setFixedPosition(arg0.getPoint());
+                        //System.out.println("s");
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
                 frame.repaint();
@@ -329,6 +334,8 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 
                 prevNode = graphPanel.getSelectedNode();
                 Node n = graphPanel.selectTopClickedNode(location);
+                //graphPanel.setSelectedNode(n);
+                //System.out.println(n.toString());
             }
 
             @Override
@@ -352,7 +359,7 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                     dispatch.pushToTextEditor();
 
                 } // in animation mode, allow dragging only to move nodes (see mouseDragged)
-                else if (!dispatch.isAnimationMode()) {
+                else if ( ! dispatch.isAnimationMode() ) {
                     // release after click
                     // not in animation mode
                     Node clickNode = graphPanel.getSelectedNode();
@@ -446,7 +453,9 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 
                             /**
                              * @todo repositioning in response to edge
-                             * deletion is likely to confuse the user.
+                             * deletion is likely to confuse the user;
+                             * in fact, this is true of any kind of
+                             * dynamic repositioning.
                              */
                             if (repositionBtn.isSelected()) {
                                 g.smartReposition();
@@ -854,7 +863,6 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
         executor.decrementDisplayState();
         stepForward.setEnabled(executor.hasNextState());
         stepBack.setEnabled(executor.hasPreviousState());
-        updateStatusLabel();
     }
 
     private synchronized void performStepForward() {
@@ -865,19 +873,12 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
         executor.incrementDisplayState();
         stepForward.setEnabled(executor.hasNextState());
         stepBack.setEnabled(executor.hasPreviousState());
-        updateStatusLabel();
     }
 
     public synchronized void performDone() {
         AlgorithmExecutor executor = dispatch.getAlgorithmExecutor();
-        // does not appear to help in case of infinite loop
-        //executor.algorithmThread.interrupt();
-        AlgorithmSynchronizer synchronizer
-                = dispatch.getAlgorithmSynchronizer();
-        // also does not appear to help in case of infinite loop
-        //synchronizer.finishStep();
         executor.stopAlgorithm();
-        updateStatusLabel();
+        this.updateStatusLabel();
     }
 
     /**
@@ -1076,7 +1077,6 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                     } // delete edge
                     //}
                     LogHelper.exitMethod(getClass(), "'e' pressed");
-                    updateStatusLabel();
                     return true;
                 }
                 // "N" pressed
@@ -1109,7 +1109,6 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                         } //delete node
                     }
                     LogHelper.exitMethod(getClass(), "'n' pressed");
-                    updateStatusLabel();
                     return true;
                 }
                 //"Z" is pressed for undo
@@ -1222,6 +1221,14 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
     @Override
     public void componentResized(ComponentEvent e) {
         dispatch.setWindowSize(graphPanel.getHeight(), graphPanel.getWidth());
+        
+        // Mark the flag as false, so the GraphPanel will recalculate
+        // a physical position for all the nodes. 
+        // that will reset the physical position if the node has been moved. 
+        for(Node n : dispatch.getWorkingGraph().getNodes()) {
+        	n.setpos = false;
+        }
+        
         frame.repaint();
     }
 
@@ -1230,4 +1237,4 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
         // TODO Auto-generated method stub
     }
 }
- //  [Last modified: 2021 01 12 at 15:52:18 GMT]
+ //  [Last modified: 2021 02 08 at 18:01:04 GMT]

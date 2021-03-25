@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
  */
 public class Macros {
     /**
-     * Defines macros and add it to an array list: MACROS<br>
+     * Defines macros and adds them to an array list: MACROS<br>
      * Current implementation includes:<br>
      * SimpleReplacementMacro "algorithm" (for syntax highlighting only)<br>
      * ParameterizedMacro "sort" <br>
@@ -31,18 +31,6 @@ public class Macros {
                     return "algorithm";
                 }
             });
-
-        /**
-         * @todo For some odd reason, a simple replacement does not work
-         * here; maybe it's the fact that when I tried it in an algorithm, I
-         * said 'sort(' - no space between 'sort' and the paren; in any case
-         * it made the macro preprocessor hang.
-         */
-        // Macro.MACROS.add(new SimpleReplacementMacro("sort", "Collections.sort") {
-        //         public String getName() {
-        //             return "sort";
-        //         }
-        //     });
 
         /**
          * Either sort(Collection L) or sort(Collection L, Comparator C)
@@ -344,4 +332,4 @@ public class Macros {
     }
 }
 
-//  [Last modified: 2021 01 09 at 16:38:40 GMT]
+//  [Last modified: 2021 01 30 at 22:30:37 GMT]

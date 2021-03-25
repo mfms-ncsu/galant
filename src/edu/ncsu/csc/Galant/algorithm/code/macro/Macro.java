@@ -1,4 +1,3 @@
-/** Package for macroes */
 package edu.ncsu.csc.Galant.algorithm.code.macro;
 
 import java.util.ArrayList;
@@ -17,7 +16,7 @@ import java.util.regex.Pattern;
  * For now, macros should not change the number of lines in the code, to keep
  * the line numbers in error diagnostics correct
  * @todo this does not appear to work in case of multi-line function
- * definitions
+ * headers
  * </p>
  * <p>
  * Each macro has a <code>Pattern</code> that is used to find relevant
@@ -87,7 +86,8 @@ public abstract class Macro {
     /**
      * @return a string to be prepended to the algorithm if this macro is
      * found in the code
-     * @todo no obvious example of this
+     * @note not currently used; may be a holdover from when the
+     * algorithm was global instead of contained in algorithm { ... }
      */
     protected abstract String includeInAlgorithm();
 
@@ -152,4 +152,4 @@ public abstract class Macro {
     }
 }
 
-//  [Last modified: 2017 01 03 at 16:01:30 GMT]
+//  [Last modified: 2021 01 30 at 22:35:18 GMT]

@@ -2,3 +2,5 @@ The following must be done for each new release.
   - change the VERSION string in Galant.java
   - change the \VERSION command in Technical-Documentation/galant.sty
   - add release notes to release-notes.txt; should do this in an ongoing fashion and add to the release comment when the new release is published.
+  - make sure the current commit has been pushed
+  - be sure to sign in!

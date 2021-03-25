@@ -17,4 +17,4 @@ public abstract class Attribute implements Cloneable {
     public abstract String xmlString();
 }
 
-//  [Last modified: 2018 12 07 at 16:23:57 GMT]
+//  [Last modified: 2021 01 30 at 22:45:41 GMT]

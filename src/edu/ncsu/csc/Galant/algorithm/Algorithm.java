@@ -8,7 +8,8 @@
  *
  * @todo Add method(s) to change the direction of an edge; this would involve
  * both swapping source and target and changing the lists of incoming and
- * outgoing edges of each endpoint.
+ * outgoing edges of each endpoint. May not be worth the trouble
+ * without an obvious application.
  */
 
 package edu.ncsu.csc.Galant.algorithm;
@@ -1382,16 +1383,11 @@ public abstract class Algorithm implements Runnable {
 
   /** @see edu.ncsu.csc.Galant.graph.component.Graph#getStartNode() */
   public Node getStartNode() throws GalantException {
-    return graph.getStartNode();
+      return graph.getStartNode();
   }
 
   public Node startNode() throws GalantException {
     return getStartNode();
-  }
-
-  /** @see edu.ncsu.csc.Galant.graph.component.Graph#setRootNode(edu.ncsu.csc.Galant.graph.component.Node) */
-  public void setRootNode(Node rootNode) {
-    graph.setRootNode(rootNode);
   }
 
   /** @see edu.ncsu.csc.Galant.graph.component.Graph#getNodeById(int) */
@@ -1529,4 +1525,4 @@ public abstract class Algorithm implements Runnable {
   public abstract void run();
 }
 
-//  [Last modified: 2021 01 09 at 19:53:27 GMT]
+//  [Last modified: 2021 01 30 at 23:24:54 GMT]

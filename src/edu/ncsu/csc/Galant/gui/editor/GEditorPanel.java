@@ -63,11 +63,8 @@ public abstract class GEditorPanel extends JPanel implements DocumentListener,
   protected Runnable syntaxHighlighter;
 
   /**
-   * Is the current edit session dirty?
-   *
-   * @todo currently this is set way too often (even when a file is
-   * initially loaded!); it needs to be set only when there is a real
-   * change in the algorithm or graph being edited
+   * Is the current edit session dirty, i.e., has there been a change
+   * since last save?
    */
   protected boolean isDirty;
 
@@ -165,7 +162,8 @@ public abstract class GEditorPanel extends JPanel implements DocumentListener,
   }
 
   @Override
-  public void changedUpdate(DocumentEvent arg0) { }
+  public void changedUpdate(DocumentEvent arg0) {
+  }
   @Override
   public void insertUpdate(DocumentEvent arg0) {
     LogHelper.disable();
@@ -251,4 +249,4 @@ public abstract class GEditorPanel extends JPanel implements DocumentListener,
   }
 }
 
-// [Last modified: 2017 02 09 at 15:29:56 GMT]
+// [Last modified: 2021 01 30 at 21:22:06 GMT]

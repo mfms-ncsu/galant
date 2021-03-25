@@ -21,9 +21,6 @@ import java.util.logging.Logger;
 public class GraphElement implements Comparable<GraphElement> {
 
     /**
-     * @todo Put all standard attributes here, even those relevant only to Nodes
-     * or only to Edges - they'll be simply ignored if they're not relevant.
-     *
      * @todo Add the following standard display attributes. - "fill": fill color
      * for Nodes - "dotted": use dotted lines for edges or node outlines -
      * "dashed": similar to dotted
@@ -582,16 +579,6 @@ public class GraphElement implements Comparable<GraphElement> {
      *
      * Attributes for edges are ... - source, target: integer (id's of nodes)
      */
-    /**
-     * @todo The "right" way to do this, if reading of exported files
-     * mid-animation is to be fully supported, is as follows.
-     *
-     * for each attribute (key, value) in the list of attributes do [note that
-     * value will be a string at this point] if key is a standard attribute,
-     * handle it appropriately otherwise, try to parse value using the following
-     * order of attempts: Integer Double Boolean and then default to String
-     * attributes particular to Node or Edge may need to be dealt with first.
-     */
     public void initializeAfterParsing(AttributeList L) throws GalantException {
         String weightString = null;
         String highlightString = null;
@@ -834,4 +821,4 @@ public class GraphElement implements Comparable<GraphElement> {
 
 }
 
-//  [Last modified: 2021 01 13 at 00:16:04 GMT]
+//  [Last modified: 2021 01 31 at 14:18:34 GMT]

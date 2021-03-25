@@ -423,6 +423,9 @@ public class GraphDispatch {
 
   public Point ViewTransform(Point p)
   {
+      // do not transform layered graph
+      if (workingGraph.isLayered()) return p;
+
       double width = getWindowWidth();
       double height = getWindowHeight();
 
@@ -436,6 +439,9 @@ public class GraphDispatch {
 
   public Point InvViewTransform(Point p)
   {
+      // do not transform layered graph interactions
+      if (workingGraph.isLayered()) return p;
+
       double width = getWindowWidth();
       double height = getWindowHeight();
       

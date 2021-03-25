@@ -299,12 +299,14 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                 if (sel != null) {
                     graphPanel.setDragging(true);
                     graphPanel.setEdgeTracker(null);
-                    // this node is dragged.
-                    try {
-                        sel.setFixedPosition(arg0.getPoint());
-                        //System.out.println("s");
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    if ( ! dispatch.isAnimationMode()
+                            || ! dispatch.algorithmMovesNodes() ) {
+                        try {
+                            Point mouseLogical = dispatch.InvViewTransform(arg0.getPoint());
+                            sel.setFixedPosition(mouseLogical);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
                 frame.repaint();
@@ -386,7 +388,8 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                         // add a new default node to the working
                         // graph at this position
                         Graph g = dispatch.getWorkingGraph();
-                        Node n = g.addInitialNode(location.x, location.y);
+                        Point placement = dispatch.InvViewTransform(location);
+                        Node n = g.addInitialNode(placement.x, placement.y);
                         // select the new node
                         Node nNew = graphPanel.selectTopClickedNode(location);
                         LogHelper.logDebug(" select: node = " + n);
@@ -470,6 +473,41 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                     } // delete mode
                 } // not in animation mode
                 frame.repaint();
+                
+                // check all nodes, reposition window if needed
+                int width = frame.getSize().width;
+                int height = frame.getSize().height;
+                int x = frame.getBounds().x;
+                int y = frame.getBounds().y;
+                Graph g = dispatch.getWorkingGraph();
+                if (g != null)
+                for ( Node v : g.getAllNodes() ) {
+
+                    if (v.getPosition().x < 50)
+                    {
+                        dispatch.virtualWindow.x -= 50;
+                        dispatch.virtualWindow.width += 50;
+                        frame.setBounds(x-50, y, width+50, height);
+                    }
+                    if (v.getPosition().x > width - 50)
+                    {
+                        dispatch.virtualWindow.width += 50;
+                        frame.setSize(width + 50, height);
+                    }
+                    if (v.getPosition().y < 150)
+                    {
+                        dispatch.virtualWindow.y -= 50;
+                        dispatch.virtualWindow.height += 50;
+                        frame.setBounds(x, y-50, width, height+50);
+                    }
+                    if (v.getPosition().y > height - 150)
+                    {
+                        dispatch.virtualWindow.height += 50;
+                        frame.setSize(width, height + 50);
+                    }
+                }
+                
+            
             }
         }
         ); // addMouseListener

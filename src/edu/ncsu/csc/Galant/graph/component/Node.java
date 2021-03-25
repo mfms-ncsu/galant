@@ -191,7 +191,7 @@ public class Node extends GraphElement {
         if (x == null || y == null) {
             p = getFixedPosition();
         } else {
-            p = new Point(x, y);
+            p = dispatch.ViewTransform(new Point(x, y));
         }
         return p;
     }
@@ -207,7 +207,7 @@ public class Node extends GraphElement {
         if (x == null || y == null) {
             p = getFixedPosition();
         } else {
-            p = new Point(x, y);
+            p = dispatch.ViewTransform(new Point(x, y));
         }
         return p;
     }
@@ -717,7 +717,8 @@ public class Node extends GraphElement {
     }
 
     public Point getFixedPosition() {
-        return new Point(getFixedX(), getFixedY());
+        // EDITOR: reposition nodes with window resize
+        return dispatch.ViewTransform(new Point(getFixedX(), getFixedY()));
     }
 
     public void setFixedPosition(Point position) {

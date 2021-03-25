@@ -142,9 +142,9 @@ public class AlgorithmExecutor {
     }
 
     /**
-     * Called whenever user interaction requests a step forward. If the display
-     * state and algorithm state are the same, the requested step will also
-     * cause a the algorithm to take a step.
+     * Called whenever user interaction requests a step forward.
+     * If the display state and algorithm state are the same, the
+     * requested step will also cause a the algorithm to take a step. 
      */
     public synchronized void incrementDisplayState () {
         LogHelper.disable();

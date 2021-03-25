@@ -284,7 +284,35 @@ public class GraphPanel extends JPanel{
     Timer.drawingTime.stop();
   }
 
-    @Override
+  /**
+   * @todo This should not need to be a special case; a graph is
+   * always in some state
+   */
+  public void drawGraph(Graph graph, Graphics2D g2d)
+    throws GalantException
+  {
+    Timer.drawingTime.start();
+    List<Node> nodes = null;
+    List<Edge> edges = null;
+    nodes = graph.getNodes();
+    edges = graph.getEdges();
+
+    // Draw edges first to put them behind nodes
+    for (Edge e : edges) {
+      if ( e.inScope(0) && ! e.isHidden()
+           && ! e.getSource().isHidden()
+           && ! e.getTarget().isHidden() )
+        drawEdge(graph, e, g2d);
+    }
+
+    for (Node n : nodes) {
+      if ( n.inScope(0) && ! n.isHidden() )
+        drawNode(n, g2d);
+    }
+    Timer.drawingTime.stop();
+  }
+
+	@Override
 	public void paintComponent(Graphics g) {
         try {
             // Get the graph to draw
@@ -466,6 +494,7 @@ public class GraphPanel extends JPanel{
             
             //System.out.println("S");
         }
+
         if ( nodeCenter == null )
             throw new GalantException("Unable to compute center for node " + n);
         return nodeCenter;

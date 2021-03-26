@@ -299,14 +299,11 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                 if (sel != null) {
                     graphPanel.setDragging(true);
                     graphPanel.setEdgeTracker(null);
-                    if ( ! dispatch.isAnimationMode()
-                            || ! dispatch.algorithmMovesNodes() ) {
-                        try {
-                            Point mouseLogical = dispatch.InvViewTransform(arg0.getPoint());
-                            sel.setFixedPosition(mouseLogical);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                    try {
+                        Point mouseLogical = dispatch.InvViewTransform(arg0.getPoint());
+                        sel.setFixedPosition(mouseLogical);
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
                 frame.repaint();
@@ -474,36 +471,38 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
                 } // not in animation mode
                 frame.repaint();
                 
-                // check all nodes, reposition window if needed
-                int width = frame.getSize().width;
-                int height = frame.getSize().height;
-                int x = frame.getBounds().x;
-                int y = frame.getBounds().y;
-                Graph g = dispatch.getWorkingGraph();
-                if (g != null)
-                for ( Node v : g.getAllNodes() ) {
+                if ( ! dispatch.getWorkingGraph().isLayered() ) {
+                    // check all nodes, reposition window if needed
+                    int width = frame.getSize().width;
+                    int height = frame.getSize().height;
+                    int x = frame.getBounds().x;
+                    int y = frame.getBounds().y;
+                    Graph g = dispatch.getWorkingGraph();
+                    if (g != null)
+                    for ( Node v : g.getAllNodes() ) {
 
-                    if (v.getPosition().x < 50)
-                    {
-                        dispatch.virtualWindow.x -= 50;
-                        dispatch.virtualWindow.width += 50;
-                        frame.setBounds(x-50, y, width+50, height);
-                    }
-                    if (v.getPosition().x > width - 50)
-                    {
-                        dispatch.virtualWindow.width += 50;
-                        frame.setSize(width + 50, height);
-                    }
-                    if (v.getPosition().y < 150)
-                    {
-                        dispatch.virtualWindow.y -= 50;
-                        dispatch.virtualWindow.height += 50;
-                        frame.setBounds(x, y-50, width, height+50);
-                    }
-                    if (v.getPosition().y > height - 150)
-                    {
-                        dispatch.virtualWindow.height += 50;
-                        frame.setSize(width, height + 50);
+                        if (v.getPosition().x < 50)
+                        {
+                            dispatch.virtualWindow.x -= 50;
+                            dispatch.virtualWindow.width += 50;
+                            frame.setBounds(x-50, y, width+50, height);
+                        }
+                        if (v.getPosition().x > width - 50)
+                        {
+                            dispatch.virtualWindow.width += 50;
+                            frame.setSize(width + 50, height);
+                        }
+                        if (v.getPosition().y < 150)
+                        {
+                            dispatch.virtualWindow.y -= 50;
+                            dispatch.virtualWindow.height += 50;
+                            frame.setBounds(x, y-50, width, height+50);
+                        }
+                        if (v.getPosition().y > height - 150)
+                        {
+                            dispatch.virtualWindow.height += 50;
+                            frame.setSize(width, height + 50);
+                        }
                     }
                 }
                 

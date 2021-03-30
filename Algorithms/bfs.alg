@@ -3,12 +3,12 @@
  * edges are regarded as being directed both ways.
  */
 
-NodeQueue queue;
-int sequence_number = 0;
-
 algorithm {
     showNodeWeights();
     showNodeLabels();
+
+    NodeQueue queue;
+    int sequence_number = 0;
     queue = new NodeQueue();
     beginStep();
     for_nodes( v ) {
@@ -44,4 +44,4 @@ algorithm {
     }
 }
 
-//  [Last modified: 2021 03 13 at 15:46:03 GMT]
+//  [Last modified: 2021 03 30 at 21:12:30 GMT]

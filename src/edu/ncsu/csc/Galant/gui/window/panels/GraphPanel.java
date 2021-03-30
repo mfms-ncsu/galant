@@ -415,14 +415,15 @@ public class GraphPanel extends JPanel {
 			nodeCenter = n.getFixedPosition();
 		}
 
+		// made by 2021 Galant Team
 		// if graph is layered and node has layer and position in layer
 		// information, base its location on that
 
+		// THIS PARAGRAPH IS NOT APPLIED ANYMORE, I left it here to track the previous version
 		// If the node is already dragged, don't reposition it.
 		// This mainly for the scaling since I think this method is called constantly
 		// So I must stop it to allow us reposition the node.
 		// I should reset the flag when scaling, but I don't know where is it.
-		// ignore this paragraph, not applied anymore
 
 		// Now my strategy is only call this part of node if the physical position
 		// is not set. That means the Graph is just loaded or the window is just
@@ -464,13 +465,12 @@ public class GraphPanel extends JPanel {
 			}
 			nodeCenter = new Point(x, y);
 
+			// made by 2021 Galant Team
 			// I treat fixedposition as the physical position.
 			n.setFixedPosition(nodeCenter);
 
 			// the physical position is set
 			n.setpos = true;
-
-			// System.out.println("S");
 		}
 
 		if ( nodeCenter == null ){

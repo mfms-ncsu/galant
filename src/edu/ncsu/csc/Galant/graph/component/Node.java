@@ -118,6 +118,7 @@ public class Node extends GraphElement {
 		ArrayList<GraphElementState> statesCopy = super.copyCurrentState();
 		copy.states = statesCopy;
 
+		// made by 2021 Galant Team
 		// add a line for the new flag
 		copy.setpos = this.setpos;
 		return copy;
@@ -733,6 +734,9 @@ public class Node extends GraphElement {
 	@Override
 	public String xmlString(){
 		String s = "<node" + " id=\"" + this.getId() + "\"";
+		// made by 2021 Galant Team
+		
+		// now only add x/y attribute for non-layered graph
 		if ( ! GraphDispatch.getInstance().getWorkingGraph().isLayered() ){
 			s += " x=\"" + this.getFixedX() + "\"";
 			s += " y=\"" + this.getFixedY() + "\" ";
@@ -752,6 +756,9 @@ public class Node extends GraphElement {
 		}
 		String s = "<node" + " id=\"" + this.getId() + "\"";
 		// if algorithm doesn't move nodes, only the fixed position is set
+		
+		// made by 2021 Galant Team
+		// now only add x/y attribute for non-layered graph
 		if ( ! GraphDispatch.getInstance().getWorkingGraph().isLayered() ){
 			s += " x=\"" + this.getX(state) + "\"";
 			s += " y=\"" + this.getY(state) + "\" ";

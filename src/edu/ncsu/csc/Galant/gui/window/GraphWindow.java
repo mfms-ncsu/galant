@@ -262,6 +262,8 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		graphPanel.addMouseMotionListener(new MouseMotionListener() {
 			@Override
 			public void mouseDragged(MouseEvent arg0){
+				// made by 2021 Galant Team
+				
 				// If you start dragging, set dragging mode so you don't
 				// perform any other operations on the Node until after
 				// releasing it

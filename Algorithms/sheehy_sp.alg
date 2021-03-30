@@ -52,7 +52,7 @@ algorithm {
     /** need to keep track of destination for any edge on the queue */
     beginStep();
     init_edge_costs();
-    Node s = getNode("Start vertex?");
+    Node s = getNode("Start node?");
     Edge dummy_edge = addEdge(s, s);
     setWeight(dummy_edge, 0);
     color(dummy_edge, RED);
@@ -98,4 +98,4 @@ algorithm {
     } // stop when priority queue is empty
 } // end, algorithm
 
-//  [Last modified: 2021 03 13 at 21:51:52 GMT]
+//  [Last modified: 2021 03 30 at 12:15:04 GMT]

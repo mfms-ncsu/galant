@@ -1,5 +1,4 @@
 /**
- * euclidian.alg
  *  Implementation of Dijkstra's shortest path algorithm. Interprets
  *  undirected edges as going in both directions if run in undirected
  *  mode. Unlike dijkstra.alg, the edge weights are set initially by the
@@ -7,10 +6,6 @@
  */
 
 /** Required: node and edge weights visible */
-
-import java.util.PriorityQueue;
-
-double INFINITY = Double.POSITIVE_INFINITY;
 
 /**
  * @return the scaled Euclidian distance between v and w
@@ -40,9 +35,9 @@ algorithm {
     setWeight(node, INFINITY);
     pq.add(node);
   }
-  Node s = getNode("Start vertex?");
+  Node s = getNode("Start node?");
   color(s, RED);
-  Node t = getNode("Terminal vertex?");
+  Node t = getNode("Terminal node?");
   color(t, BLUE);
   pq.decreaseKey(s, euclidian(s, t));
   endStep();
@@ -95,4 +90,4 @@ algorithm {
   color(s, BLACK);
 }
 
-//  [Last modified: 2020 05 10 at 20:09:58 GMT]
+//  [Last modified: 2021 03 30 at 12:14:41 GMT]

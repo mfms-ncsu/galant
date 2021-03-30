@@ -4,10 +4,9 @@
  */
 
 NodeQueue queue;
-int sequence_number;
+int sequence_number = 0;
 
 algorithm {
-    sequence_number = 0;
     showNodeWeights();
     showNodeLabels();
     queue = new NodeQueue();
@@ -45,4 +44,4 @@ algorithm {
     }
 }
 
-//  [Last modified: 2021 03 18 at 15:57:32 GMT]
+//  [Last modified: 2021 03 13 at 15:46:03 GMT]

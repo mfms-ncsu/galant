@@ -28,7 +28,6 @@ import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.gui.util.ExceptionDialog;
 import edu.ncsu.csc.Galant.GraphDispatch;
 import edu.ncsu.csc.Galant.graph.component.Graph;
-import edu.ncsu.csc.Galant.graph.component.LayeredGraph;
 import edu.ncsu.csc.Galant.graph.component.GraphElement;
 import edu.ncsu.csc.Galant.graph.component.Node;
 import edu.ncsu.csc.Galant.graph.component.Edge;
@@ -43,6 +42,7 @@ import edu.ncsu.csc.Galant.graph.datastructure.EdgePriorityQueue;
 import edu.ncsu.csc.Galant.graph.datastructure.GraphElementComparator;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow.GraphDisplays;
+import edu.ncsu.csc.Galant.local.LayeredGraph;
 import edu.ncsu.csc.Galant.gui.util.StringQuery;
 import edu.ncsu.csc.Galant.gui.util.IntegerQuery;
 import edu.ncsu.csc.Galant.gui.util.DoubleQuery;
@@ -62,7 +62,7 @@ public abstract class Algorithm implements Runnable {
    * If the graph is layered, it can be referenced as such using the
    * variable below
    */
-  public LayeredGraph layeredGraph;
+  public edu.ncsu.csc.Galant.local.LayeredGraph layeredGraph;
 
   /** The dispatch instance used to communicate among the algorithm, the
    * graph and the display */

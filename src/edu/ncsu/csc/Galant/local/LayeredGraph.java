@@ -434,7 +434,7 @@ class Layer {
  * of edges.
  */
 
-public class LayeredGraph {
+public class LayeredGraph extends Graph{
 
     /**
      * These constants are used to determine both highlighting and assignment

@@ -22,16 +22,12 @@
  * made via, for example, a second argument. 
  */
 
-package edu.ncsu.csc.Galant.local;
+package edu.ncsu.csc.Galant.graph.component;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import edu.ncsu.csc.Galant.graph.component.Edge;
-import edu.ncsu.csc.Galant.graph.component.Graph;
-import edu.ncsu.csc.Galant.graph.component.Node;
-import edu.ncsu.csc.Galant.graph.component.Layer;
 import edu.ncsu.csc.Galant.algorithm.Terminate;
 /**
  * The class LayeredGraph is used as a basis for Galant implementations of a

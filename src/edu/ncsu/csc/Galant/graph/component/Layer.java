@@ -19,7 +19,6 @@ import java.util.Comparator;
 import java.util.List;
 
 import edu.ncsu.csc.Galant.algorithm.Terminate;
-import edu.ncsu.csc.Galant.local.LayeredGraph;
 import edu.ncsu.csc.Galant.GraphDispatch;
 import edu.ncsu.csc.Galant.logging.LogHelper;
 

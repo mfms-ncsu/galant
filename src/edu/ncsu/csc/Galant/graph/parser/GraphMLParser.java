@@ -187,7 +187,15 @@ public class GraphMLParser {
                             + ", value = " + attribute.getTextContent());
                 }
             }
-            Node parsedNode = new Node(graphUnderConstruction, attributesToAddForNodes);
+            
+            Node parsedNode = null;
+            //Node parsedNode = new Node(graphUnderConstruction, attributesToAddForNodes);
+            
+            if(graphUnderConstruction.isLayered()) {
+            	parsedNode = new LayeredGraphNode(graphUnderConstruction, attributesToAddForNodes);
+            } else {
+            	parsedNode = new Node(graphUnderConstruction, attributesToAddForNodes);
+            }
             LogHelper.logDebug("adding node " + parsedNode);
             graphUnderConstruction.addNode(parsedNode);
         }

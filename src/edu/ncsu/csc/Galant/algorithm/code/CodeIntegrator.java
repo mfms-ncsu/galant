@@ -57,7 +57,9 @@ public class CodeIntegrator	{
      */
     private static final String REAL_ALGORITHM_HEAD = "initialize();";
     private static final String REAL_ALGORITHM_TAIL = "finishAlgorithm();";
-
+    //// ********************
+    //// //TODO: import proper class here to ensure algorithm still work properly
+    //// ********************
     /**
      * The basic class structure into which the user's code can be inserted
      * so it can be compiled.

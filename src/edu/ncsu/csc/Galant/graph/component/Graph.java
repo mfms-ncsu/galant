@@ -273,8 +273,10 @@ public class Graph {
         EdgeList edgeListCopy = new EdgeList();
         NodeList nodeListCopy = new NodeList();
         TreeMap<Integer, Node> copyOfNodeById = new TreeMap<Integer, Node>();
+        TreeMap<Integer, LayeredGraphNode> copyOfNodeByIdL = new TreeMap<Integer, LayeredGraphNode>();
 
         for( Node originalNode : this.getNodes(this.editState) ) {
+        	
             Node copiedNode = originalNode.copyNode(copyOfGraph);
             nodeListCopy.add(copiedNode);
             if ( copyOfGraph.startNode == null ) {
@@ -284,6 +286,8 @@ public class Graph {
         }
         copyOfGraph.nodes = nodeListCopy;
         copyOfGraph.nodeById = copyOfNodeById;
+        
+        
 
         for( Edge originalEdge : this.getEdges(this.editState) ) {
             Integer sourceId = originalEdge.getSourceNode().getId();

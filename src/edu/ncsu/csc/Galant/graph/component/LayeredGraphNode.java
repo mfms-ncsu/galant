@@ -10,9 +10,15 @@ public class LayeredGraphNode extends Node {
 	private final int HORIZONTAL_PADDING = 100;
 	private final int VERTICAL_PADDING = 100;
 	
+	
+	public LayeredGraphNode() {
+		this.layered = true;
+	}
 
 	public LayeredGraphNode(Graph graph, AttributeList L) throws GalantException {
 		super(graph, L);
+		
+		this.layered = true;
 	}
 
 
@@ -39,7 +45,6 @@ public class LayeredGraphNode extends Node {
 		// Now my strategy is only call this part of node if the physical position
 		// is not set. That means the Graph is just loaded or the window is just
 		// resized.
-		
 		
 		if ( ! this.setpos ){
 			int x = 0;
@@ -91,5 +96,7 @@ public class LayeredGraphNode extends Node {
 		}
 		return nodeCenter;
 	}
-
+	
+	
+	
 }

@@ -35,13 +35,14 @@ public class Node extends GraphElement {
 	 * are fixed, i.e., not able to be changed by an animation. The id attribute is
 	 * unique and cannot be modified even by the editor.
 	 */
-	private int id;
-	private int xCoordinate;
-	private int yCoordinate;
-	private EdgeList incidentEdges;
+	public int id;
+	public int xCoordinate;
+	public int yCoordinate;
+	public EdgeList incidentEdges;
 	// to decide if the physical position is already set
 	// made by 2021 Galant team
 	public boolean setpos = false;
+	public boolean layered = false;
 
 	/**
 	 * create a blank instance for use when copying state at start of algorithm
@@ -109,24 +110,44 @@ public class Node extends GraphElement {
 	 * @param currentGraph the graph accessed by the animation - see Algorithm.java
 	 */
 	public Node copyNode(Graph currentGraph){
-		Node copy = new Node();
-		copy.dispatch = GraphDispatch.getInstance();
-		copy.id = this.id;
-		copy.xCoordinate = this.xCoordinate;
-		copy.yCoordinate = this.yCoordinate;
-		copy.graph = currentGraph;
-		// edges are added to this list when they are copied into the
-		// copied graph
-		copy.incidentEdges = new EdgeList();
-		ArrayList<GraphElementState> statesCopy = super.copyCurrentState();
-		copy.states = statesCopy;
+		
+		
+		if(this.layered) {
+			LayeredGraphNode copy = new LayeredGraphNode();
+			copy.dispatch = GraphDispatch.getInstance();
+			copy.id = this.id;
+			copy.xCoordinate = this.xCoordinate;
+			copy.yCoordinate = this.yCoordinate;
+			copy.graph = currentGraph;
+			// edges are added to this list when they are copied into the
+			// copied graph
+			copy.incidentEdges = new EdgeList();
+			ArrayList<GraphElementState> statesCopy = super.copyCurrentState();
+			copy.states = statesCopy;
 
-		// made by 2021 Galant Team
-		// add a line for the new flag
-		copy.setpos = this.setpos;
-		return copy;
+			// made by 2021 Galant Team
+			// add a line for the new flag
+			copy.setpos = this.setpos;
+			return copy;
+		} else {
+			Node copy = new Node();
+			copy.dispatch = GraphDispatch.getInstance();
+			copy.id = this.id;
+			copy.xCoordinate = this.xCoordinate;
+			copy.yCoordinate = this.yCoordinate;
+			copy.graph = currentGraph;
+			// edges are added to this list when they are copied into the
+			// copied graph
+			copy.incidentEdges = new EdgeList();
+			ArrayList<GraphElementState> statesCopy = super.copyCurrentState();
+			copy.states = statesCopy;
+
+			// made by 2021 Galant Team
+			// add a line for the new flag
+			copy.setpos = this.setpos;
+			return copy;
+		}
 	}
-
 	
 	
 	public Point getNodeCenter() throws GalantException{
@@ -152,50 +173,50 @@ public class Node extends GraphElement {
 		// Now my strategy is only call this part of node if the physical position
 		// is not set. That means the Graph is just loaded or the window is just
 		// resized.
-		if ( dispatch.getWorkingGraph().isLayered() && ! this.setpos ){
-			int x = 0;
-			int y = 0;
-			int layer = this.getLayer(); // should not change during an
-										// animation of a layered graph algorithm
-			int position = this.getPositionInLayer(state);
-			int layerSize = 1;
-			// vertical layered graphs have gaps in positions on some layers,
-			// i.e., positions on some layers are not contiguous; in that
-			// case, positions should be taken "literally", i.e., position p
-			// means the same thing on every layer
-			if ( dispatch.getWorkingGraph().isVertical() ){
-				layerSize = dispatch.getWorkingGraph().maxPositionInAnyLayer() + 1;
-			} else{
-				layerSize = dispatch.getWorkingGraph().numberOfNodesOnLayer(layer);
-			}
-			int width = dispatch.getWindowWidth();
-			// center node in layer if it's unique; else do the usual
-			if ( layerSize == 1 ){
-				x = width / 2;
-			} else{
-				int positionGap = (width - 2 * HORIZONTAL_PADDING) / (layerSize - 1);
-				x = HORIZONTAL_PADDING + position * positionGap;
-			}
-
-			int numberOfLayers = dispatch.getWorkingGraph().numberOfLayers();
-			int height = dispatch.getWindowHeight();
-			// center layer in window if it's unique; else do the usual
-			if ( numberOfLayers == 1 ){
-				y = height / 2;
-			} else{
-				int layerGap = (height - 2 * VERTICAL_PADDING) / (numberOfLayers - 1);
-				y = VERTICAL_PADDING + this.getLayer() * layerGap;
-				// + (numberOfLayers - n.getLayer() - 1) * layerGap;
-			}
-			nodeCenter = new Point(x, y);
-
-			// made by 2021 Galant Team
-			// I treat fixedposition as the physical position.
-			this.setFixedPosition(nodeCenter);
-
-			// the physical position is set
-			this.setpos = true;
-		}
+//		if ( dispatch.getWorkingGraph().isLayered() && ! this.setpos ){
+//			int x = 0;
+//			int y = 0;
+//			int layer = this.getLayer(); // should not change during an
+//										// animation of a layered graph algorithm
+//			int position = this.getPositionInLayer(state);
+//			int layerSize = 1;
+//			// vertical layered graphs have gaps in positions on some layers,
+//			// i.e., positions on some layers are not contiguous; in that
+//			// case, positions should be taken "literally", i.e., position p
+//			// means the same thing on every layer
+//			if ( dispatch.getWorkingGraph().isVertical() ){
+//				layerSize = dispatch.getWorkingGraph().maxPositionInAnyLayer() + 1;
+//			} else{
+//				layerSize = dispatch.getWorkingGraph().numberOfNodesOnLayer(layer);
+//			}
+//			int width = dispatch.getWindowWidth();
+//			// center node in layer if it's unique; else do the usual
+//			if ( layerSize == 1 ){
+//				x = width / 2;
+//			} else{
+//				int positionGap = (width - 2 * HORIZONTAL_PADDING) / (layerSize - 1);
+//				x = HORIZONTAL_PADDING + position * positionGap;
+//			}
+//
+//			int numberOfLayers = dispatch.getWorkingGraph().numberOfLayers();
+//			int height = dispatch.getWindowHeight();
+//			// center layer in window if it's unique; else do the usual
+//			if ( numberOfLayers == 1 ){
+//				y = height / 2;
+//			} else{
+//				int layerGap = (height - 2 * VERTICAL_PADDING) / (numberOfLayers - 1);
+//				y = VERTICAL_PADDING + this.getLayer() * layerGap;
+//				// + (numberOfLayers - n.getLayer() - 1) * layerGap;
+//			}
+//			nodeCenter = new Point(x, y);
+//
+//			// made by 2021 Galant Team
+//			// I treat fixedposition as the physical position.
+//			this.setFixedPosition(nodeCenter);
+//
+//			// the physical position is set
+//			this.setpos = true;
+//		}
 		
 
 		if ( nodeCenter == null ){

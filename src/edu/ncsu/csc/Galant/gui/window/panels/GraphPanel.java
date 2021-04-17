@@ -479,11 +479,7 @@ public class GraphPanel extends JPanel {
 //		}
 //		return nodeCenter;
 		
-		if(n instanceof LayeredGraphNode) {
-			return ((LayeredGraphNode) n).getlayeredNodeCenter();
-		} else {
-			return n.getNodeCenter();
-		}
+		return n.getNodeCenter();
 		
 	}
 

@@ -46,6 +46,7 @@ import edu.ncsu.csc.Galant.algorithm.AlgorithmSynchronizer;
 import edu.ncsu.csc.Galant.algorithm.Terminate;
 import edu.ncsu.csc.Galant.graph.component.Edge;
 import edu.ncsu.csc.Galant.graph.component.Graph;
+import edu.ncsu.csc.Galant.graph.component.LayeredGraphNode;
 import edu.ncsu.csc.Galant.graph.component.Node;
 import edu.ncsu.csc.Galant.gui.prefs.PreferencesPanel;
 import edu.ncsu.csc.Galant.gui.util.EdgeSpecificationDialog;
@@ -1214,8 +1215,11 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		// Mark the flag as false, so the GraphPanel will recalculate
 		// a physical position for all the nodes.
 		// that will reset the physical position if the node has been moved.
-		for (Node n : dispatch.getWorkingGraph().getNodes()){
-			n.setpos = false;
+		if(dispatch.getWorkingGraph().isLayered()) {
+			for (Node n : dispatch.getWorkingGraph().getNodes()){
+				LayeredGraphNode temp = (LayeredGraphNode) n;
+				temp.setpos = false;
+			}
 		}
 
 		frame.repaint();

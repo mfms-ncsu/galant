@@ -1092,7 +1092,7 @@ public class Graph {
     LogHelper.enterMethod(getClass(), "addInitialNode(), x = " + x + ", y = " + y);
     Integer newId = nextNodeId();
     incrementEffectiveEditState();
-    Node n = new Node(this, newId, x, y);
+    Node n = new NonLayeredNode(this, newId, x, y);
     nodes.add(n);
     nodeById.put(newId, n);
 
@@ -1121,7 +1121,7 @@ public class Graph {
     LogHelper.enterMethod(getClass(), "addNode(), x = " + x + ", y = " + y);
     dispatch.startStepIfAnimationOrIncrementEditState();
     Integer newId = nextNodeId();
-    Node n = new Node(this, newId, x, y);
+    Node n = new NonLayeredNode(this, newId, x, y);
     nodes.add(n);
     nodeById.put(newId, n);
 

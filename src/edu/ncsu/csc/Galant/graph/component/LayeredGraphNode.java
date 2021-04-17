@@ -12,9 +12,20 @@ import java.util.ArrayList;
 import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.GraphDispatch;
 import edu.ncsu.csc.Galant.graph.datastructure.EdgeList;
-
+/**
+ * Subclass of node made by 2021 Galant Team. This layered graph node will keep every thing in its
+ * parent but with additional field: layer, padding and temporary x,y
+ * And it override the abstract methods getNodeCenter() and copyNode() 
+ * @author Tianxin Jia, Ji Li
+ *
+ */
 public class LayeredGraphNode extends Node {
-	
+	// made by 2021 Galant team
+	// to decide if the physical position is already set
+	public boolean setpos = false;
+	// made by 2021 Galant team
+	// to check if the node is for layeredGraph
+	public boolean layered = false;
 	private final int HORIZONTAL_PADDING = 100;
 	private final int VERTICAL_PADDING = 100;
 	
@@ -54,12 +65,12 @@ public class LayeredGraphNode extends Node {
 		copy.setpos = this.setpos;
 		System.out.println("LGHere");
 		return copy;
-}
+	}
 	/**'
 	 * 
 	 * @return the point at the center of node n, Only for LayeredGraphNode.
 	 */
-	public Point getlayeredNodeCenter() throws GalantException{
+	public Point getNodeCenter() throws GalantException{
 		int state = dispatch.getDisplayState();
 		Point nodeCenter = null;
 

@@ -13,19 +13,30 @@ import edu.ncsu.csc.Galant.graph.datastructure.NodeList;
 import edu.ncsu.csc.Galant.graph.datastructure.NodeSet;
 
 /**
- * Nodes that are used for Non-LayeredGraph
+ * Subclass of node made by 2021 Galant Team. This non-layered graph node will keep every thing in its
+ * parent but with override method getNodeCenter() and copyNode()
  *
- * @author Tianxin Jia
+ * @author Tianxin Jia, Ji Li
  *
  */
 public class NonLayeredNode extends Node {
 
+	
 	/**
 	 * create a blank instance for use when copying state at start of algorithm
 	 * execution
 	 */
-	public NonLayeredNode(){
-		
+	public NonLayeredNode() {
+	}
+	/**
+	 * Basic constructor for nonLayeredNode
+	 * @param y the y coordinate
+	 * @param x the x coordinate
+	 * @param newId the id of node
+	 * @param graph which graph this node should go
+	 */
+	public NonLayeredNode(Graph graph, Integer newId, Integer x, Integer y){
+		super(graph, newId, x, y);
 	}
 
 
@@ -63,14 +74,13 @@ public class NonLayeredNode extends Node {
 
 		// made by 2021 Galant Team
 		// add a line for the new flag
-		System.out.println("NLGHere");
-		copy.setpos = this.setpos;
+		System.out.println("Normal Node");
 		return copy;
 	}
 	
 	// made by 2021 Galant Team
-	// this used to be in GraphPanel class
-	// Now we move it to Node class and LayeredGraphNode class. 
+	// this used to be in GraphPanel class but now it's a abstract method in Node class
+	// here we override the abstract method to give it actual functionality
 	public Point getNodeCenter() throws GalantException{
 		int state = dispatch.getDisplayState();
 		Point nodeCenter = null;

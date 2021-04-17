@@ -23,12 +23,9 @@ import edu.ncsu.csc.Galant.graph.datastructure.NodeSet;
  *         a major refactoring by Matthias Stallmann, based on a more extended
  *         version of the GraphElement class.
  */
-public class Node extends GraphElement {
-
+public abstract class Node extends GraphElement {
+	/** common field used to determine if a node is marked */
 	private static final String MARKED = "marked";
-	
-	private final int HORIZONTAL_PADDING = 100;
-	private final int VERTICAL_PADDING = 100;
 
 	/**
 	 * The following attributes - id, xCoordinate, yCoordinate, and incidentEdges,
@@ -39,12 +36,7 @@ public class Node extends GraphElement {
 	public int xCoordinate;
 	public int yCoordinate;
 	public EdgeList incidentEdges;
-	// made by 2021 Galant team
-	// to decide if the physical position is already set
-	public boolean setpos = false;
-	// made by 2021 Galant team
-	// to check if the node is for layeredgraph
-	public boolean layered = false;
+	
 
 	/**
 	 * create a blank instance for use when copying state at start of algorithm
@@ -111,112 +103,12 @@ public class Node extends GraphElement {
 	 *
 	 * @param currentGraph the graph accessed by the animation - see Algorithm.java
 	 */
-	public Node copyNode(Graph currentGraph){
-		return this.copyNode(currentGraph);
-		
-//		
-//		if(this.layered) {
-//			// made by 2021 Galant Team
-//			// If the node is layeredgraphnode, we should return layeredgraphnode as well
-//			LayeredGraphNode copy = new LayeredGraphNode();
-//			copy.dispatch = GraphDispatch.getInstance();
-//			copy.id = this.id;
-//			copy.xCoordinate = this.xCoordinate;
-//			copy.yCoordinate = this.yCoordinate;
-//			copy.graph = currentGraph;
-//			// edges are added to this list when they are copied into the
-//			// copied graph
-//			copy.incidentEdges = new EdgeList();
-//			ArrayList<GraphElementState> statesCopy = super.copyCurrentState();
-//			copy.states = statesCopy;
-//			copy.setpos = this.setpos;
-//			return copy;
-//		} else {
-//			
-//			Node copy = new Node();
-//			copy.dispatch = GraphDispatch.getInstance();
-//			copy.id = this.id;
-//			copy.xCoordinate = this.xCoordinate;
-//			copy.yCoordinate = this.yCoordinate;
-//			copy.graph = currentGraph;
-//			// edges are added to this list when they are copied into the
-//			// copied graph
-//			copy.incidentEdges = new EdgeList();
-//			ArrayList<GraphElementState> statesCopy = super.copyCurrentState();
-//			copy.states = statesCopy;
-//
-//			// made by 2021 Galant Team
-//			// add a line for the new flag
-//			copy.setpos = this.setpos;
-//			return copy;
-//		}
-	}
+	public abstract Node copyNode(Graph currentGraph);
 	
 	// made by 2021 Galant Team
 	// this used to be in GraphPanel class
 	// Now we move it to Node class and LayeredGraphNode class. 
-	public Point getNodeCenter() throws GalantException{
-		int state = dispatch.getDisplayState();
-		Point nodeCenter = null;
-
-		if ( dispatch.isAnimationMode() && GraphDispatch.getInstance().algorithmMovesNodes() ){
-			nodeCenter = this.getPosition(state);
-		} else{
-			nodeCenter = this.getFixedPosition();
-		}
-
-		// since LayeredGraphNode and node use separate method, this part is not used anymore 
-//		if ( dispatch.getWorkingGraph().isLayered() && ! this.setpos ){
-//			int x = 0;
-//			int y = 0;
-//			int layer = this.getLayer(); // should not change during an
-//										// animation of a layered graph algorithm
-//			int position = this.getPositionInLayer(state);
-//			int layerSize = 1;
-//			// vertical layered graphs have gaps in positions on some layers,
-//			// i.e., positions on some layers are not contiguous; in that
-//			// case, positions should be taken "literally", i.e., position p
-//			// means the same thing on every layer
-//			if ( dispatch.getWorkingGraph().isVertical() ){
-//				layerSize = dispatch.getWorkingGraph().maxPositionInAnyLayer() + 1;
-//			} else{
-//				layerSize = dispatch.getWorkingGraph().numberOfNodesOnLayer(layer);
-//			}
-//			int width = dispatch.getWindowWidth();
-//			// center node in layer if it's unique; else do the usual
-//			if ( layerSize == 1 ){
-//				x = width / 2;
-//			} else{
-//				int positionGap = (width - 2 * HORIZONTAL_PADDING) / (layerSize - 1);
-//				x = HORIZONTAL_PADDING + position * positionGap;
-//			}
-//
-//			int numberOfLayers = dispatch.getWorkingGraph().numberOfLayers();
-//			int height = dispatch.getWindowHeight();
-//			// center layer in window if it's unique; else do the usual
-//			if ( numberOfLayers == 1 ){
-//				y = height / 2;
-//			} else{
-//				int layerGap = (height - 2 * VERTICAL_PADDING) / (numberOfLayers - 1);
-//				y = VERTICAL_PADDING + this.getLayer() * layerGap;
-//				// + (numberOfLayers - n.getLayer() - 1) * layerGap;
-//			}
-//			nodeCenter = new Point(x, y);
-//
-//			// made by 2021 Galant Team
-//			// I treat fixedposition as the physical position.
-//			this.setFixedPosition(nodeCenter);
-//
-//			// the physical position is set
-//			this.setpos = true;
-//		}
-		
-
-		if ( nodeCenter == null ){
-			throw new GalantException("Unable to compute center for node " + this);
-		}
-		return nodeCenter;
-	}
+	public abstract Point getNodeCenter() throws GalantException;
 	
 	
 	/**

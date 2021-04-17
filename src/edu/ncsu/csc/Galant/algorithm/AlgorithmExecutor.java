@@ -13,6 +13,7 @@
 package edu.ncsu.csc.Galant.algorithm;
 
 import edu.ncsu.csc.Galant.GraphDispatch;
+import edu.ncsu.csc.Galant.graph.component.LayeredGraphNode;
 import edu.ncsu.csc.Galant.graph.component.Node;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow;
 import edu.ncsu.csc.Galant.logging.LogHelper;
@@ -111,8 +112,11 @@ public class AlgorithmExecutor {
 		}
 		algorithmState = displayState = 0;
 		// made by 2021 Galant Team
-		for (Node n : dispatch.getWorkingGraph().getNodes()){
-			n.setpos = false;
+		if(dispatch.getWorkingGraph().isLayered()) {
+			for (Node n : dispatch.getWorkingGraph().getNodes()){
+				LayeredGraphNode temp = (LayeredGraphNode) n;
+				temp.setpos = false;
+			}
 		}
 		LogHelper.exitMethod(getClass(), "stopAlgorithm");
 		LogHelper.restoreState();
@@ -212,9 +216,10 @@ public class AlgorithmExecutor {
 		// made by 2021 Galant Team
 		// if the algorithm is moving nodes, the nodes shall bounce back after
 		// forward, backward, scaling, or cancel algorithm.
-		if ( dispatch.algorithmMovesNodes() ){
+		if(dispatch.getWorkingGraph().isLayered()) {
 			for (Node n : dispatch.getWorkingGraph().getNodes()){
-				n.setpos = false;
+				LayeredGraphNode temp = (LayeredGraphNode) n;
+				temp.setpos = false;
 			}
 		}
 
@@ -235,9 +240,10 @@ public class AlgorithmExecutor {
 		// made by 2021 Galant Team
 		// if the algorithm is moving nodes, the nodes shall bounce back after
 		// forward, backward, scaling, or cancel algorithm.
-		if ( dispatch.algorithmMovesNodes() ){
+		if(dispatch.getWorkingGraph().isLayered()) {
 			for (Node n : dispatch.getWorkingGraph().getNodes()){
-				n.setpos = false;
+				LayeredGraphNode temp = (LayeredGraphNode) n;
+				temp.setpos = false;
 			}
 		}
 	}

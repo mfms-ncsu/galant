@@ -189,12 +189,12 @@ public class GraphMLParser {
             }
             
             Node parsedNode = null;
-            //Node parsedNode = new Node(graphUnderConstruction, attributesToAddForNodes);
-            
+            // made by 2021 Galant Team
+            // Now file parser will create different nodes based on the graph type.
             if(graphUnderConstruction.isLayered()) {
             	parsedNode = new LayeredGraphNode(graphUnderConstruction, attributesToAddForNodes);
             } else {
-            	parsedNode = new Node(graphUnderConstruction, attributesToAddForNodes);
+            	parsedNode = new NonLayeredNode(graphUnderConstruction, attributesToAddForNodes);
             }
             LogHelper.logDebug("adding node " + parsedNode);
             graphUnderConstruction.addNode(parsedNode);

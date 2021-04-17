@@ -60,6 +60,8 @@ public class CodeIntegrator	{
     //// ********************
     //// //TODO: import proper class here to ensure algorithm still work properly
     //// ********************
+    // made by 2021 Galant Team
+    // Add ""import edu.ncsu.csc.Galant.graph.component.LayeredGraph;"" for structure change.
     /**
      * The basic class structure into which the user's code can be inserted
      * so it can be compiled.

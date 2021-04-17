@@ -39,9 +39,11 @@ public class Node extends GraphElement {
 	public int xCoordinate;
 	public int yCoordinate;
 	public EdgeList incidentEdges;
-	// to decide if the physical position is already set
 	// made by 2021 Galant team
+	// to decide if the physical position is already set
 	public boolean setpos = false;
+	// made by 2021 Galant team
+	// to check if the node is for layeredgraph
 	public boolean layered = false;
 
 	/**
@@ -110,46 +112,49 @@ public class Node extends GraphElement {
 	 * @param currentGraph the graph accessed by the animation - see Algorithm.java
 	 */
 	public Node copyNode(Graph currentGraph){
+		return this.copyNode(currentGraph);
 		
-		
-		if(this.layered) {
-			LayeredGraphNode copy = new LayeredGraphNode();
-			copy.dispatch = GraphDispatch.getInstance();
-			copy.id = this.id;
-			copy.xCoordinate = this.xCoordinate;
-			copy.yCoordinate = this.yCoordinate;
-			copy.graph = currentGraph;
-			// edges are added to this list when they are copied into the
-			// copied graph
-			copy.incidentEdges = new EdgeList();
-			ArrayList<GraphElementState> statesCopy = super.copyCurrentState();
-			copy.states = statesCopy;
-
-			// made by 2021 Galant Team
-			// add a line for the new flag
-			copy.setpos = this.setpos;
-			return copy;
-		} else {
-			Node copy = new Node();
-			copy.dispatch = GraphDispatch.getInstance();
-			copy.id = this.id;
-			copy.xCoordinate = this.xCoordinate;
-			copy.yCoordinate = this.yCoordinate;
-			copy.graph = currentGraph;
-			// edges are added to this list when they are copied into the
-			// copied graph
-			copy.incidentEdges = new EdgeList();
-			ArrayList<GraphElementState> statesCopy = super.copyCurrentState();
-			copy.states = statesCopy;
-
-			// made by 2021 Galant Team
-			// add a line for the new flag
-			copy.setpos = this.setpos;
-			return copy;
-		}
+//		
+//		if(this.layered) {
+//			// made by 2021 Galant Team
+//			// If the node is layeredgraphnode, we should return layeredgraphnode as well
+//			LayeredGraphNode copy = new LayeredGraphNode();
+//			copy.dispatch = GraphDispatch.getInstance();
+//			copy.id = this.id;
+//			copy.xCoordinate = this.xCoordinate;
+//			copy.yCoordinate = this.yCoordinate;
+//			copy.graph = currentGraph;
+//			// edges are added to this list when they are copied into the
+//			// copied graph
+//			copy.incidentEdges = new EdgeList();
+//			ArrayList<GraphElementState> statesCopy = super.copyCurrentState();
+//			copy.states = statesCopy;
+//			copy.setpos = this.setpos;
+//			return copy;
+//		} else {
+//			
+//			Node copy = new Node();
+//			copy.dispatch = GraphDispatch.getInstance();
+//			copy.id = this.id;
+//			copy.xCoordinate = this.xCoordinate;
+//			copy.yCoordinate = this.yCoordinate;
+//			copy.graph = currentGraph;
+//			// edges are added to this list when they are copied into the
+//			// copied graph
+//			copy.incidentEdges = new EdgeList();
+//			ArrayList<GraphElementState> statesCopy = super.copyCurrentState();
+//			copy.states = statesCopy;
+//
+//			// made by 2021 Galant Team
+//			// add a line for the new flag
+//			copy.setpos = this.setpos;
+//			return copy;
+//		}
 	}
 	
-	
+	// made by 2021 Galant Team
+	// this used to be in GraphPanel class
+	// Now we move it to Node class and LayeredGraphNode class. 
 	public Point getNodeCenter() throws GalantException{
 		int state = dispatch.getDisplayState();
 		Point nodeCenter = null;
@@ -160,19 +165,7 @@ public class Node extends GraphElement {
 			nodeCenter = this.getFixedPosition();
 		}
 
-		// made by 2021 Galant Team
-		// if graph is layered and node has layer and position in layer
-		// information, base its location on that
-
-		// THIS PARAGRAPH IS NOT APPLIED ANYMORE, I left it here to track the previous version
-		// If the node is already dragged, don't reposition it.
-		// This mainly for the scaling since I think this method is called constantly
-		// So I must stop it to allow us reposition the node.
-		// I should reset the flag when scaling, but I don't know where is it.
-
-		// Now my strategy is only call this part of node if the physical position
-		// is not set. That means the Graph is just loaded or the window is just
-		// resized.
+		// since LayeredGraphNode and node use separate method, this part is not used anymore 
 //		if ( dispatch.getWorkingGraph().isLayered() && ! this.setpos ){
 //			int x = 0;
 //			int y = 0;

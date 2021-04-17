@@ -1,20 +1,34 @@
+/**
+ * Nodes that are used for LayeredGraph
+ *
+ * @author Tianxin Jia
+ *
+ */
 package edu.ncsu.csc.Galant.graph.component;
 
 import java.awt.Point;
+import java.util.ArrayList;
 
 import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.GraphDispatch;
+import edu.ncsu.csc.Galant.graph.datastructure.EdgeList;
 
 public class LayeredGraphNode extends Node {
 	
 	private final int HORIZONTAL_PADDING = 100;
 	private final int VERTICAL_PADDING = 100;
 	
-	
+	/**
+	 * Default constructor that only change the flag
+	 */
 	public LayeredGraphNode() {
 		this.layered = true;
 	}
 
+	/**
+	 * This is called during parsing like the one in Node class
+	 * See the constructor in Node.java for more detail.
+	 */
 	public LayeredGraphNode(Graph graph, AttributeList L) throws GalantException {
 		super(graph, L);
 		
@@ -22,6 +36,29 @@ public class LayeredGraphNode extends Node {
 	}
 
 
+	public Node copyNode(Graph currentGraph){			
+		LayeredGraphNode copy = new LayeredGraphNode();
+		copy.dispatch = GraphDispatch.getInstance();
+		copy.id = this.id;
+		copy.xCoordinate = this.xCoordinate;
+		copy.yCoordinate = this.yCoordinate;
+		copy.graph = currentGraph;
+		// edges are added to this list when they are copied into the
+		// copied graph
+		copy.incidentEdges = new EdgeList();
+		ArrayList<GraphElementState> statesCopy = super.copyCurrentState();
+		copy.states = statesCopy;
+
+		// made by 2021 Galant Team
+		// add a line for the new flag
+		copy.setpos = this.setpos;
+		System.out.println("LGHere");
+		return copy;
+}
+	/**'
+	 * 
+	 * @return the point at the center of node n, Only for LayeredGraphNode.
+	 */
 	public Point getlayeredNodeCenter() throws GalantException{
 		int state = dispatch.getDisplayState();
 		Point nodeCenter = null;

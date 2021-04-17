@@ -63,7 +63,6 @@ public class LayeredGraphNode extends Node {
 		// made by 2021 Galant Team
 		// add a line for the new flag
 		copy.setpos = this.setpos;
-		System.out.println("LGHere");
 		return copy;
 	}
 	/**'

@@ -72,9 +72,6 @@ public class NonLayeredNode extends Node {
 		ArrayList<GraphElementState> statesCopy = super.copyCurrentState();
 		copy.states = statesCopy;
 
-		// made by 2021 Galant Team
-		// add a line for the new flag
-		System.out.println("Normal Node");
 		return copy;
 	}
 	

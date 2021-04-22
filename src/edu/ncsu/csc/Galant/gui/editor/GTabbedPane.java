@@ -51,6 +51,8 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
   public static final String EMPTY_GRAPH_CONTENT
     = "<graphml><graph></graph></graphml>";
 
+  public final GraphDispatch dispatch = GraphDispatch.getInstance();
+
   /**
    * The icons for creating empty algorithms and graphs, respectively, will
    * be in indexes 0 and 1; the panel for an empty graph, if one exists
@@ -402,6 +404,7 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
    */
   @Override
   public void stateChanged(ChangeEvent arg0) {
+
     int selectionIndex = getModel().getSelectedIndex();
     if ( selectionIndex == algorithmCreationIndex() )
       addEmptyAlgorithm();
@@ -424,6 +427,9 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
           GraphDispatch.getInstance().setWorkingGraph( new Graph(),
                                                        geditorPanel.getUUID() );
         }
+        
+        // when switching tabs, intialize vwin
+        dispatch.initializeVirtualWindow();
       }
       catch ( GalantException e ) {
         e.report("");

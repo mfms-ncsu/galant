@@ -244,6 +244,73 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		return graphPanel;
 	}
 
+	public void fitWindowToNodes(){
+		// RESIZE WINDOW
+
+		// do not resize window for layered graph
+		if ( dispatch.getWorkingGraph().isLayered() ){
+			return;
+		}
+
+		// check all nodes, reposition window if needed
+		int width = frame.getSize().width;
+		int height = frame.getSize().height;
+		int x = frame.getBounds().x;
+		int y = frame.getBounds().y;
+		Graph g = dispatch.getWorkingGraph();
+		boolean violation = true;
+		if ( g != null ){
+			while ( violation ) {
+				violation = false;
+				for (Node v : g.getAllNodes()){
+					// if node position is at edge of window, expand the window
+					if ( v.getPosition().x < 50 ){
+						dispatch.virtualWindow.x -= 50;
+						dispatch.virtualWindow.width += 50;
+						frame.setBounds(x - 50, y, width + 50, height);
+	
+						// if node's position is very extreme, kick it back into window
+						if ( v.getPosition().x < 10 ){
+							v.getPosition().x = 10;
+						}
+						violation = true;
+					}
+					if ( v.getPosition().x > width - 50 ){
+						dispatch.virtualWindow.width += 50;
+						frame.setSize(width + 50, height);
+	
+						// if node's position is very extreme, kick it back into window
+						if ( v.getPosition().x > width - 10 ){
+							v.getPosition().x = width - 10;
+						}
+						violation = true;
+					}
+					if ( v.getPosition().y < 50 ){
+						dispatch.virtualWindow.y -= 50;
+						dispatch.virtualWindow.height += 50;
+						frame.setBounds(x, y - 50, width, height + 50);
+	
+						// if node's position is very extreme, kick it back into window
+						if ( v.getPosition().y < 110 ){
+							v.getPosition().y = 110;
+						}
+						violation = true;
+					}
+					if ( v.getPosition().y > height - 150 ){
+						dispatch.virtualWindow.height += 50;
+						frame.setSize(width, height + 50);
+	
+						// if node's position is very extreme, kick it back into window
+						if ( v.getPosition().y > height - 110 ){
+							v.getPosition().y = height - 110;
+						}
+						violation = true;
+					}
+				}
+					// END RESIZE WINDOW
+			}
+		}
+	}
 	/**
 	 * Create a new GraphWindow and all of its associated components
 	 *
@@ -259,12 +326,15 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		_dispatch.addChangeListener(this);
 		// Create the panel that renders the active Graph
 		graphPanel = new GraphPanel(dispatch, this);
+
 		// Add a listener to handle visual editing of the Graph
 		graphPanel.addMouseMotionListener(new MouseMotionListener() {
 			@Override
 			public void mouseDragged(MouseEvent arg0){
-				// made by 2021 Galant Team
+
+		// made by 2021 Galant Team
 				
+
 				// If you start dragging, set dragging mode so you don't
 				// perform any other operations on the Node until after
 				// releasing it
@@ -275,13 +345,16 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 				if ( sel != null ){
 					graphPanel.setDragging(true);
 					graphPanel.setEdgeTracker(null);
-					try{
-						Point mouseLogical = dispatch.InvViewTransform(arg0.getPoint());
-						sel.setFixedPosition(mouseLogical);
-					} catch (Exception e){
-						e.printStackTrace();
+					if ( ! dispatch.isAnimationMode() || ! dispatch.algorithmMovesNodes() ){
+						try{
+							Point mouseLogical = dispatch.InvViewTransform(arg0.getPoint());
+							sel.setFixedPosition(mouseLogical);
+						} catch (Exception e){
+							e.printStackTrace();
+						}
 					}
 				}
+				fitWindowToNodes();
 				frame.repaint();
 			}
 
@@ -442,39 +515,6 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 					} // delete mode
 				} // not in animation mode
 				frame.repaint();
-
-				if ( ! dispatch.getWorkingGraph().isLayered() ){
-					// check all nodes, reposition window if needed
-					int width = frame.getSize().width;
-					int height = frame.getSize().height;
-					int x = frame.getBounds().x;
-					int y = frame.getBounds().y;
-					Graph g = dispatch.getWorkingGraph();
-					if ( g != null ){
-						for (Node v : g.getAllNodes()){
-
-							if ( v.getPosition().x < 50 ){
-								dispatch.virtualWindow.x -= 50;
-								dispatch.virtualWindow.width += 50;
-								frame.setBounds(x - 50, y, width + 50, height);
-							}
-							if ( v.getPosition().x > width - 50 ){
-								dispatch.virtualWindow.width += 50;
-								frame.setSize(width + 50, height);
-							}
-							if ( v.getPosition().y < 150 ){
-								dispatch.virtualWindow.y -= 50;
-								dispatch.virtualWindow.height += 50;
-								frame.setBounds(x, y - 50, width, height + 50);
-							}
-							if ( v.getPosition().y > height - 150 ){
-								dispatch.virtualWindow.height += 50;
-								frame.setSize(width, height + 50);
-							}
-						}
-					}
-				}
-
 			}
 		}); // addMouseListener
 
@@ -1230,4 +1270,5 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 		// TODO Auto-generated method stub
 	}
 }
-// [Last modified: 2021 02 08 at 18:01:04 GMT]
+
+// [Last modified: 2021 04 22 at 14:13:46 GMT]

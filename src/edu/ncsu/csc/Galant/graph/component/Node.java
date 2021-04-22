@@ -209,29 +209,6 @@ public abstract class Node extends GraphElement {
 		setY(point.y);
 	}
 
-	public Integer getLayer(){
-		return super.getInteger("layer");
-	}
-
-	public Integer getPositionInLayer(){
-		return super.getInteger("positionInLayer");
-	}
-
-	public Integer getLayer(int state){
-		return super.getInteger(state, "layer");
-	}
-
-	public Integer getPositionInLayer(int state){
-		return super.getInteger(state, "positionInLayer");
-	}
-
-	public void setLayer(Integer layer) throws Terminate{
-		super.set("layer", layer);
-	}
-
-	public void setPositionInLayer(Integer positionInLayer) throws Terminate{
-		super.set("positionInLayer", positionInLayer);
-	}
 
 	/**
 	 * This method takes ID in a string format and processes it. It returns the ID
@@ -685,6 +662,9 @@ public abstract class Node extends GraphElement {
 		return yCoordinate;
 	}
 
+	//edited by 2021 Galant Team
+	//Although the xCoordinate and yCoordinate stores fix position in non-layered case,
+	//once it goes through the transform function, it will become the screen position.
 	public Point getFixedPosition(){
 		// EDITOR: reposition nodes with window resize
 		return dispatch.ViewTransform(new Point(getFixedX(), getFixedY()));
@@ -722,7 +702,6 @@ public abstract class Node extends GraphElement {
 	public String xmlString(){
 		String s = "<node" + " id=\"" + this.getId() + "\"";
 		// made by 2021 Galant Team
-		
 		// now only add x/y attribute for non-layered graph
 		if ( ! GraphDispatch.getInstance().getWorkingGraph().isLayered() ){
 			s += " x=\"" + this.getFixedX() + "\"";

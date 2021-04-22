@@ -118,11 +118,14 @@ public class LayeredGraph extends Graph{
 
         // record layer and position information for all the nodes
         for ( Node u: graph.getNodes() ) {
-            int layer = u.getLayer();
-            int position = u.getPositionInLayer();
-            addNode( u, layer, position );
-            layerOfNode[ u.getId() ] = layer;
-            positionOfNode[ u.getId() ] = position;
+            //edited by 2021 Galant Team
+            //add a cast to tell program this is really a LayeredGraphNode
+        	LayeredGraphNode temp = (LayeredGraphNode) u;
+        	int layer = temp.getLayer();
+            int position = temp.getPositionInLayer();
+            addNode( temp, layer, position );
+            layerOfNode[ temp.getId() ] = layer;
+            positionOfNode[ temp.getId() ] = position;
         }
 
         // sort the nodes on each layer by their position and then set the

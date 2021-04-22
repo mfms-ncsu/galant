@@ -233,7 +233,9 @@ public class Layer extends GraphElement {
     final Comparator<Node> POSITION_COMPARATOR = new Comparator<Node>() {
         public int compare(Node x, Node y) {
             int state = GraphDispatch.getInstance().getDisplayState();
-            return x.getPositionInLayer(state) - y.getPositionInLayer(state);
+            //edited by 2021 Galant Team
+            //add a cast to ensure x and y here are layeredGraphNode
+            return ((LayeredGraphNode) x).getPositionInLayer(state) - ((LayeredGraphNode) y).getPositionInLayer(state);
         }
     };
 
@@ -315,8 +317,11 @@ public class Layer extends GraphElement {
     public void displayPositions() throws Terminate {
         int i = 0;
         for ( Node v: nodes ) {
-            if ( v.getPositionInLayer() != i ) {
-                v.setPositionInLayer( i );
+        	//edited by 2021 Galant Team
+            //add a cast to tell program this is really a LayeredGraphNode
+        	LayeredGraphNode temp = (LayeredGraphNode) v;
+            if ( temp.getPositionInLayer() != i ) {
+                temp.setPositionInLayer( i );
             }
             i++;
         }
@@ -325,8 +330,11 @@ public class Layer extends GraphElement {
     public void markPositionChanges() {
         int i = 0;
         for ( Node v: nodes ) {
-            if ( v.getPositionInLayer() != i ) {
-                graph.mark( v );
+        	//edited by 2021 Galant Team
+            //add a cast to tell program this is really a LayeredGraphNode
+        	LayeredGraphNode temp = (LayeredGraphNode) v;
+            if ( temp.getPositionInLayer() != i ) {
+                graph.mark( temp );
             }
             i++;
         }
@@ -356,8 +364,11 @@ public class Layer extends GraphElement {
     public void displaySavedPositions() throws Terminate {
         for ( Node v: nodes ) {
             int position = graph.getSavedPosition( v );
-            if ( v.getPositionInLayer() != position ) {
-                v.setPositionInLayer( position );
+            //edited by 2021 Galant Team
+            //add a cast to tell program this is really a LayeredGraphNode
+        	LayeredGraphNode temp = (LayeredGraphNode) v;
+            if ( temp.getPositionInLayer() != position ) {
+                temp.setPositionInLayer( position );
             }
         }
     }
@@ -367,8 +378,11 @@ public class Layer extends GraphElement {
      * position)
      */
     public void displayPosition( Node v, int i ) throws Terminate {
-        if ( v.getPositionInLayer() != i ) {
-            v.setPositionInLayer( i );
+    	//edited by 2021 Galant Team
+        //add a cast to tell program this is really a LayeredGraphNode
+    	LayeredGraphNode temp = (LayeredGraphNode) v;
+        if ( temp.getPositionInLayer() != i ) {
+            temp.setPositionInLayer( i );
         }
     }
 
@@ -376,8 +390,11 @@ public class Layer extends GraphElement {
         String s = "";
         s += "[";
         for ( Node node : nodes ) {
-            s += " " + node.getId() + " " +
-                "(" + node.getLayer() + "," + node.getPositionInLayer() + "),";
+        	//edited by 2021 Galant Team
+            //add a cast to tell program this is really a LayeredGraphNode
+        	LayeredGraphNode temp = (LayeredGraphNode) node;
+            s += " " + temp.getId() + " " +
+                "(" + temp.getLayer() + "," + temp.getPositionInLayer() + "),";
         }
         s += " ]";
         return s;

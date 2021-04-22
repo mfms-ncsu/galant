@@ -1138,7 +1138,10 @@ public class Graph {
         LogHelper.enterMethod( getClass(), "addInitialNode(), x = " + x + ", y = " + y );
         final Integer newId = nextNodeId();
         incrementEffectiveEditState();
-        final Node n = new Node( this, newId, x, y );
+        //edited by 2021 Galant Team
+        //since layered graph is currently based user created graphml,
+        //the node created here would be nonLayeredNode by default
+        final Node n = new NonLayeredNode( this, newId, x, y );
         nodes.add( n );
         nodeById.put( newId, n );
 
@@ -1171,7 +1174,10 @@ public class Graph {
         LogHelper.enterMethod( getClass(), "addNode(), x = " + x + ", y = " + y );
         dispatch.startStepIfAnimationOrIncrementEditState();
         final Integer newId = nextNodeId();
-        final Node n = new Node( this, newId, x, y );
+        //edited by 2021 Galant Team
+        //since layered graph is currently based user created graphml,
+        //the node created here would be nonLayeredNode by default
+        final Node n = new NonLayeredNode( this, newId, x, y );
         nodes.add( n );
         nodeById.put( newId, n );
 

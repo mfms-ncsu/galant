@@ -51,8 +51,11 @@ class LayerInformation {
     LogHelper.enterMethod(getClass(),
                           "addNode: node = " + v
                           + ", numberOfLayers = " + numberOfLayers);
-    int layer = v.getLayer();
-    int position = v.getPositionInLayer();
+    //edited by 2021 Galant Team
+    //add a cast to tell program this is really a LayeredGraphNode
+	LayeredGraphNode temp = (LayeredGraphNode) v;
+    int layer = temp.getLayer();
+    int position = temp.getPositionInLayer();
     maxPosition = (position > maxPosition) ? position : maxPosition;
     if ( layer >= numberOfLayers ) {
       numberOfLayers = layer + 1;

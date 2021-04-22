@@ -345,13 +345,11 @@ public class GraphWindow extends JPanel implements PropertyChangeListener, Compo
 				if ( sel != null ){
 					graphPanel.setDragging(true);
 					graphPanel.setEdgeTracker(null);
-					if ( ! dispatch.isAnimationMode() || ! dispatch.algorithmMovesNodes() ){
-						try{
-							Point mouseLogical = dispatch.InvViewTransform(arg0.getPoint());
-							sel.setFixedPosition(mouseLogical);
-						} catch (Exception e){
-							e.printStackTrace();
-						}
+					try{
+						Point mouseLogical = dispatch.InvViewTransform(arg0.getPoint());
+						sel.setFixedPosition(mouseLogical);
+					} catch (Exception e){
+						e.printStackTrace();
 					}
 				}
 				fitWindowToNodes();

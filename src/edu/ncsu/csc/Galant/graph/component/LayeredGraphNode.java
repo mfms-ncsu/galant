@@ -24,9 +24,6 @@ public class LayeredGraphNode extends Node {
 	// made by 2021 Galant team
 	// to decide if the physical position is already set
 	public boolean setpos = false;
-	// made by 2021 Galant team
-	// to check if the node is for layeredGraph
-	public boolean layered = false;
 	private final int HORIZONTAL_PADDING = 100;
 	private final int VERTICAL_PADDING = 100;
 	
@@ -34,7 +31,6 @@ public class LayeredGraphNode extends Node {
 	 * Default constructor that only change the flag
 	 */
 	public LayeredGraphNode() {
-		this.layered = true;
 	}
 
 	/**
@@ -44,7 +40,6 @@ public class LayeredGraphNode extends Node {
 	public LayeredGraphNode(Graph graph, AttributeList L) throws GalantException {
 		super(graph, L);
 		
-		this.layered = true;
 	}
 
 

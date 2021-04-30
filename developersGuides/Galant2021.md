@@ -1,6 +1,11 @@
 # Galant 2021 Developer's Guide
 
-- [About this Document](Galant2021.md#About-this-Document)
+## About this Document
+
+Since Galant is such a large project, we figured it would be useful to create documentation specifically about the parts of Galant we learned about during our semester developing upon it. Generally, this document contains information we learned throughout that would have been useful at the beginning. Additionally, we will try to include some insights about future plans for Galant and some very general advice about the codebase.
+
+## Table of Contents
+
 - [Introduction](Galant2021.md#Introduction)
 - [Getting Started](Galant2021.md#Getting-Started)
 - [Our Work](Galant2021.md#Our-Work)
@@ -13,10 +18,6 @@
 - Known Bugs
 - Branches
 - [Futures](Galant2021.md#Futures)
-
-## About this Document
-
-Since Galant is such a large project, we figured it would be useful to create documentation specifically about the parts of Galant we learned about during our semester developing upon it. Generally, this document contains information we learned throughout that would have been useful at the beginning. Additionally, we will try to include some insights about future plans for Galant and some very general advice about the codebase.
 
 ## Introduction
 

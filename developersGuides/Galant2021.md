@@ -1,6 +1,6 @@
 # Galant 2021 Developer's Guide
 
-- [Introduction](Introduction)
+- [Introduction](Galant2021.md#Introduction)
 - Getting Started
 - Our Work
   - Auto-Scale Node Positions

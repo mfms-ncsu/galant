@@ -12,7 +12,7 @@
 - Rendering
 - Known Bugs
 - Branches
-- Futures
+- [Futures](Galant2021.md#Futures)
 
 ## About this Document
 
@@ -38,7 +38,21 @@ I was the only person on my team who used a custom IDE (except for Dr. Stallmann
 
 - Auto-Scale Node Positions
 
-This feature makes sure that the graph still fills the window whenever it is resized.
+This feature makes sure that the graph still fills the window whenever it is resized. We introduced the ViewTransform to the project. Right before rendering each node, it computes where the node should appear on screen. This computation is done using (1) the node's position, (2) the VirtualWindow bounds, and (3) the window size.
+
+We also introduced the VirtualWindow to the project during this iteration. This structure is represented in the nodes' coordinate space (known as logical position). The VirtualWindow is roughly equivalent to the bounding box of (nodes_min_x, nodes_min_y) and (nodes_max_x, nodes_max_y). It is used to determine the right transformation to use in order to show all nodes within the window.
 
 - Allow Moving Layered Node during Animation/Edit Mode
 - Combining Layered Graph into existing Graph
+
+## Futures
+
+It is likely that Dr. Stallmann will be thinking about some of these features in the future.
+
+### Panning
+
+Panning is when the user is able to move the entire view of graph. This is helpful when viewing and editing.
+
+Luckily this feature will be much easier to implement using the VirtualWindow. Simply adjusting the x and y coordinates of VirtualWindow will causing panning. The next consideration is user input. For that we recommend using JPanel mouse events...
+
+### Zoom

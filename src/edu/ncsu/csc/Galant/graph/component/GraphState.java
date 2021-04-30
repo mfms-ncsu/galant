@@ -97,7 +97,9 @@ public class GraphState {
     /**
      * Creates a string that can be used to form the GraphML representation
      * of the graph as it exists in this state (relevant during animation only)
-     * @todo needs to be implemented properly
+     *
+     * @todo needs to be implemented properly (experiment with export
+     * during animation?)
      */
     public String xmlString() {
         String s = " ";
@@ -116,4 +118,4 @@ public class GraphState {
     }
 }
 
-//  [Last modified: 2021 01 12 at 22:49:11 GMT]
+//  [Last modified: 2021 01 31 at 14:24:05 GMT]

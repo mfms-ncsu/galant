@@ -1,6 +1,14 @@
 Release notes for Galant, most recent first.
 
 ===============================================
+Since 6.1.3
+
+===============================================
+Since 6.1.2
+
+- bug fix: dirty bit now correctly reflects movement of nodes by user
+
+===============================================
 Since 6.1.1
 
 - status bar now shows edit state to make it easier for user to track undo/redo operations

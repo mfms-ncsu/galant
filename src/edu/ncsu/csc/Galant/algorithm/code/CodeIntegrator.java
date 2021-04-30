@@ -57,7 +57,11 @@ public class CodeIntegrator	{
      */
     private static final String REAL_ALGORITHM_HEAD = "initialize();";
     private static final String REAL_ALGORITHM_TAIL = "finishAlgorithm();";
-
+    //// ********************
+    //// //TODO: import proper class here to ensure algorithm still work properly
+    //// ********************
+    // made by 2021 Galant Team
+    // Add ""import edu.ncsu.csc.Galant.graph.component.LayeredGraph;"" for structure change.
     /**
      * The basic class structure into which the user's code can be inserted
      * so it can be compiled.
@@ -72,6 +76,7 @@ public class CodeIntegrator	{
         "import edu.ncsu.csc.Galant.graph.component.Node;" +
         "import edu.ncsu.csc.Galant.graph.component.Edge;" +
         "import edu.ncsu.csc.Galant.graph.component.GraphElement;" +
+        "import edu.ncsu.csc.Galant.graph.component.LayeredGraph;" +
         "import edu.ncsu.csc.Galant.graph.datastructure.NodeSet;" +
         "import edu.ncsu.csc.Galant.graph.datastructure.EdgeSet;" +
         "import edu.ncsu.csc.Galant.graph.datastructure.NodeList;" +
@@ -248,11 +253,6 @@ public class CodeIntegrator	{
     private static String getCodeBlock(String code) throws IOException {
         /* Convert code string to a BufferReader */
         // http://www.coderanch.com/t/519147/java/java/ignore-remove-comments-java-file
-        /**
-         * @todo the code below could be significantly simplified if strings
-         * were used directly; it's not clear what the convolution buys you:
-         * thread safety? efficiency?
-         */
         InputStream codeInput = new ByteArrayInputStream(code.getBytes());
         BufferedReader reader = new BufferedReader(new InputStreamReader(codeInput));
         StringBuilder sb = new StringBuilder();
@@ -371,4 +371,4 @@ public class CodeIntegrator	{
     }
 }
 
-//  [Last modified: 2020 05 10 at 20:13:05 GMT]
+//  [Last modified: 2021 01 30 at 22:26:21 GMT]

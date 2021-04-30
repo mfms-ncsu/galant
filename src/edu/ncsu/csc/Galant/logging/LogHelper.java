@@ -35,8 +35,12 @@ public class LogHelper {
         loggingEnabled = enabled;
     }
 
-    public static void enable() { setEnabled(true); }
-    public static void disable() { setEnabled(false); }
+    public static void enable() {
+        setEnabled(true);
+    }
+    public static void disable() {
+        setEnabled(false);
+    }
 
     public static boolean isEnabled() {
         return loggingEnabled;
@@ -153,4 +157,4 @@ public class LogHelper {
 	}
 }
 
-//  [Last modified: 2018 10 26 at 14:21:21 GMT]
+//  [Last modified: 2021 01 30 at 21:04:29 GMT]

@@ -35,7 +35,8 @@ import edu.ncsu.csc.Galant.prefs.Preference;
  * always be one for an empty graph.
  *
  * @todo The dialog for closing a dirty tab should also be invoked when
- * quitting Galant. It works with the menu but not with Command/Alt-Q.
+ * quitting Galant. It works with the menu but not with Command/Alt-Q,
+ * at least not on a Mac.
  *
  * @author Michael Owoc, radically simplified by Matthias Stallmann
  */
@@ -49,6 +50,8 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
     = "untitled." + AlgorithmOrGraph.Graph.getDefaultFileExtension();
   public static final String EMPTY_GRAPH_CONTENT
     = "<graphml><graph></graph></graphml>";
+
+  public final GraphDispatch dispatch = GraphDispatch.getInstance();
 
   /**
    * The icons for creating empty algorithms and graphs, respectively, will
@@ -401,6 +404,7 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
    */
   @Override
   public void stateChanged(ChangeEvent arg0) {
+
     int selectionIndex = getModel().getSelectedIndex();
     if ( selectionIndex == algorithmCreationIndex() )
       addEmptyAlgorithm();
@@ -423,6 +427,9 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
           GraphDispatch.getInstance().setWorkingGraph( new Graph(),
                                                        geditorPanel.getUUID() );
         }
+        
+        // when switching tabs, intialize vwin
+        dispatch.initializeVirtualWindow();
       }
       catch ( GalantException e ) {
         e.report("");
@@ -478,4 +485,4 @@ public class GTabbedPane extends JTabbedPane implements ChangeListener {
   }
 }
 
-// [Last modified: 2018 11 09 at 15:57:58 GMT]
+// [Last modified: 2021 01 31 at 14:40:45 GMT]

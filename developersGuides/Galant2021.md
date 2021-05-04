@@ -15,7 +15,7 @@ Since Galant is such a large project, we figured it would be useful to create do
 - Java Resources
 - I/O
 - Rendering
-- [Known Bugs](Galant2021.md#Known Bugs)
+- [Known Bugs](Galant2021.md#Known-Bugs)
 - Branches
 - [Futures](Galant2021.md#Futures)
 

@@ -15,7 +15,7 @@ Since Galant is such a large project, we figured it would be useful to create do
 - Java Resources
 - I/O
 - Rendering
-- Known Bugs
+- [Known Bugs](Galant2021.md#Known Bugs)
 - Branches
 - [Futures](Galant2021.md#Futures)
 
@@ -34,6 +34,10 @@ If you are willing to use Eclipse IDE it contains everything needed to build and
 This section is completely optional. If you really do not want to use Eclipse, this section will inform you how to develop Galant without it. The program [Apache Ant](https://ant.apache.org/manual/install.html) is the only program actually required to build Galant. It can be installed on Mac easily using HomeBrew. For text editing, your choice of editor will work. However, Visual Studio Code is recommended due to its Java language support (plug-in) and exceptional project searching feature. The searching feature in particular was very useful for me when learning this codebase.
 
 I was the only person on my team who used a custom IDE (except for Dr. Stallmann) but neither of us were involved in JUnit Testing, so no one is sure how to do this without Eclipse. If you find out please include it your team's Developer's Guide.
+
+## Known Bugs
+
+When the user creates a new graph and creates new node on the edge of the graph window, the node will not display on the window, and if the user try multiple times or scale the window, Galant will crash. This issue may comes from the virtual window we used in feature 1, and only happens when creating new nodes in a new graph. This issue is not happening on any pre-created graph.
 
 ## Our Work
 

@@ -18,7 +18,7 @@ Since Galant is such a large project, we figured it would be useful to create do
 - [Branches](Galant2021.md#Branches)
 - [Futures](Galant2021.md#Futures)
 - [Planning Your Implementation & Java Resources](Galant2021.md#planning-your-implementation--java-resources)
-- [Subsytems](Galant2021.md#subsytems)
+- [Subsystems](Galant2021.md#subsystems)
 
 ## Introduction
 

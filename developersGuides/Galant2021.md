@@ -17,8 +17,8 @@ Since Galant is such a large project, we figured it would be useful to create do
 - [Known Bugs](Galant2021.md#Known-Bugs)
 - [Branches](Galant2021.md#Branches)
 - [Futures](Galant2021.md#Futures)
-- [Planning Your Implementation & Java Resources](Galant2021.md#planning-your-implementation--java-resources)
-- [Subsystems](Galant2021.md#subsystems)
+  - [Planning Your Implementation & Java Resources](Galant2021.md#planning-your-implementation--java-resources)
+  - [Subsystems](Galant2021.md#subsystems)
 
 ## Introduction
 
@@ -64,23 +64,27 @@ This is likely because we often performed our manual tests on precreated graphs 
 
 If the virtual window is a source of problems in the future, but you would still like to leverage some of our team's work in your revision, please take note that vwin (virtual window) is only one part of the scalable-nonlayered iteration. The other component is called viewTransform. Whenever it is time to draw a node on screen the render location is the node's logical position with the viewTransform applied. You can use the viewTransform to displace or "scale" all nodes at the same time. The virtual window is used to determine what extent these transformations should be made in order to match the resized window. In the next section we will talk about ways you can phase out virtual window or use it your own implementations.
 
+## Branches
+
+This repository has a handful of branches--this is partially a result of how we are encouraged to work within SDC. Now, especially considering that Dr. Stallmann has his own git repository where he keeps official versions of Gallant, at the time of writing none of the extra branches are still needed in the student repository. Please make sure you are in a student repository and delete all branches except for `master` and `development`. Please note that `master` has more commits than development in 2021, because we never used the development branch. Instead we created our own branch that we used for development called "Iteartion_III_LayeredGraph_Intergration". This branch was merged directly to `master`. Please merge `master` into `development` before you proceed and do all of your semester work in `development` or branches that you create.
+
 ## Futures
 
 It is likely that Dr. Stallmann will be thinking about some of these features in the future.
 
-### Panning
+#### 1. Panning
 
-Panning is when the user is able to move the entire view of graph. This is helpful when viewing and editing.
+  Panning is when the user is able to move the entire view of graph. This is helpful when viewing and editing.
 
-Luckily this feature will be much easier to implement using the VirtualWindow. Simply adjusting the x and y coordinates of VirtualWindow will causing panning. The next consideration is user input. For that we recommend using JPanel mouse events.
+  Luckily this feature will be much easier to implement using the VirtualWindow. Simply adjusting the x and y coordinates of VirtualWindow will causing panning. The next consideration is user input. For that we recommend using JPanel mouse events.
 
-### Zoom
+#### 2. Zoom
 
-There are two sides to this feature. Firstly, zoom allows the user to focus on a specific region of a graph or show the entire graph at once. With this feature implemented we no longer need to ensure all nodes are always on screen--which is the source of some of our known bugs. Instead, the user can intuitively manage which nodes need to be on screen. Together with panning, this feature will make Galant's editor have similar navigation to Google Maps or Photoshop.
+  There are two sides to this feature. Firstly, zoom allows the user to focus on a specific region of a graph or show the entire graph at once. With this feature implemented we no longer need to ensure all nodes are always on screen--which is the source of some of our known bugs. Instead, the user can intuitively manage which nodes need to be on screen. Together with panning, this feature will make Galant's editor have similar navigation to Google Maps or Photoshop.
 
-This feature can also leverage the virtual window, in this case the width and height values should be either decreased to zoom in or increased to zoom out. To keep the view centered you will also want to adjust x and y values.
+  This feature can also leverage the virtual window, in this case the width and height values should be either decreased to zoom in or increased to zoom out. To keep the view centered you will also want to adjust x and y values.
 
-## Planning Your Implementation & Java Resources
+### Planning Your Implementation & Java Resources
 
 Some of the contents of the Galant codebase are specific to the codebase such as GraphWindow and GEditorPane, but even those structures are usually build off of Java content. To understand Galant as best you can, you will need a mixture of searching around the code & docs, talking to Dr. Stallman, and using Java resources. 
 
@@ -88,7 +92,7 @@ Galant is not really organized into subsystems, but at this scale your implement
 
 Keep in mind, Galant is entirely built off of standard Java objects. The UI uses [JPanel](https://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.html). So the Javadocs will give you all the relevant information concerning mouse movement, rendering, concurrency, filesystem access, or anything else you might need.
 
-## Subsystems
+### Subsystems
 
 Like I said in the previous section, Galant is not really organized in subsystems, but if I had to name some anyway, here they are. There is definitely some overlap, but these categories roughly describe the different parts of the program. Likely each of your iterations will touch on about two of these subsystem (and maybe become one in the future).
 

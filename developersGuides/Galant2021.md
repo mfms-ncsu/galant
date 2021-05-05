@@ -17,8 +17,8 @@ Since Galant is such a large project, we figured it would be useful to create do
 - [Known Bugs](Galant2021.md#Known-Bugs)
 - [Branches](Galant2021.md#Branches)
 - [Futures](Galant2021.md#Futures)
-- [Planning Your Implementation & Java Resources]()
-- [Subsytems](Galant2021.md#Subsytems)
+- [Planning Your Implementation & Java Resources](Galant2021.md#planning-your-implementation--java-resources)
+- [Subsytems](Galant2021.md#subsytems)
 
 ## Introduction
 

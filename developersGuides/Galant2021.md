@@ -14,12 +14,11 @@ Since Galant is such a large project, we figured it would be useful to create do
   - [Allow Moving Layered Node during Animation/Edit Mode](Galant2021.md#allow-moving-layered-node-during-animationedit-mode)
   - [Virtual Window](Galant2021.md#Virtual-Window)
   - [Combining Layered Graph into existing Graph](Galant2021.md#Combining-Layered-Graph-into-existing-Graph)
-- Java Resources
-- I/O
-- Rendering
 - [Known Bugs](Galant2021.md#Known-Bugs)
 - [Branches](Galant2021.md#Branches)
 - [Futures](Galant2021.md#Futures)
+- [Planning Your Implementation & Java Resources]()
+- [Subsytems](Galant2021.md#Subsytems)
 
 ## Introduction
 
@@ -80,3 +79,28 @@ Luckily this feature will be much easier to implement using the VirtualWindow. S
 There are two sides to this feature. Firstly, zoom allows the user to focus on a specific region of a graph or show the entire graph at once. With this feature implemented we no longer need to ensure all nodes are always on screen--which is the source of some of our known bugs. Instead, the user can intuitively manage which nodes need to be on screen. Together with panning, this feature will make Galant's editor have similar navigation to Google Maps or Photoshop.
 
 This feature can also leverage the virtual window, in this case the width and height values should be either decreased to zoom in or increased to zoom out. To keep the view centered you will also want to adjust x and y values.
+
+## Planning Your Implementation & Java Resources
+
+Some of the contents of the Galant codebase are specific to the codebase such as GraphWindow and GEditorPane, but even those structures are usually build off of Java content. To understand Galant as best you can, you will need a mixture of searching around the code & docs, talking to Dr. Stallman, and using Java resources. 
+
+Galant is not really organized into subsystems, but at this scale your implementations will likely only touch one or two. For example if you were tasked to implement a feature that allows you to drag images into the graph editor and have them display next to any active graph you would have interact with mouse input and rendering systems. Firstly, you should ask youself how Galant already works with mouse input and rendering. Once you have some clarity on the matter, you should consider whether or not there is a perfectly sensible and straightforward way to implement your feature using Galant's existing functionality. Make sure to look thoroughly as Galant has a lot of systems and features already. If you don't find a good match, you will need to consult the Java manual, and use it to extend Galant's base functionality in order to make sense for your implementation. 
+
+Keep in mind, Galant is entirely built off of standard Java objects. The UI uses [JPanel](https://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.html). So the Javadocs will give you all the relevant information concerning mouse movement, rendering, concurrency, filesystem access, or anything else you might need.
+
+## Subsystems
+
+Like I said in the previous section, Galant is not really organized in subsystems, but if I had to name some anyway, here they are. There is definitely some overlap, but these categories roughly describe the different parts of the program. Likely each of your iterations will touch on about two of these subsystem (and maybe become one in the future).
+
+- Code Execution
+- Animation Playback
+- Graph Editing
+- Text Editing
+- Mouse Events
+- Virtual Window / View Transform
+- UI Buttons
+- Graph Drawing
+- Intelligent Rearrange
+- Filesystem Access
+
+Remember this is not official terminology, yet. I am making it up right now, but I think it will help you to plan out your project. If you want to talk to Dr. Stallmann about subsystems, please clarify what you are talking about (unless your team is from 2023 or later).

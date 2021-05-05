@@ -25,39 +25,47 @@ Since Galant is such a large project, we figured it would be useful to create do
 
 Galant is an academic and research graph visualization tool. It features a GUI editor and code editors. The GUI editor is used to display and edit graphs as well as display animations (which can be paged through like a presentation). The code editors can be used to write animations in Java or directly modify graphs in GraphML format. The tool also supports LayeredGraphs. If you are familiar with Graphs (collection of nodes and edges) then the only thing you need to know about LayeredGraphs is that each node is a member of a layer. In Galant layers are represented by vertical position, which means two nodes will have the same y-position iff they are on the same layer. In general, it seems like the highest priority for new features in Galant are ones that simplify viewing/exploring graphs as well as refactoring and simplifying the code.
 
-## Getting Started [TOC](Galant2021.md#Table-of-Contents)
+## Getting Started
+[(back to table of contents)](Galant2021.md#Table-of-Contents)
 
 Galant can be made into a .jar file, which is a Java executable. 
 
 If you are willing to use Eclipse IDE it contains everything needed to build and run tests. Otherwise see the [Custom IDE](Custom-IDE) section.
 
-## Custom IDE [TOC](Galant2021.md#Table-of-Contents)
+## Custom IDE
+[(back to table of contents)](Galant2021.md#Table-of-Contents)
 
 This section is completely optional. If you really do not want to use Eclipse, this section will inform you how to develop Galant without it. The program [Apache Ant](https://ant.apache.org/manual/install.html) is the only program actually required to build Galant. It can be installed on Mac easily using HomeBrew. For text editing, your choice of editor will work. However, Visual Studio Code is recommended due to its Java language support (plug-in) and exceptional project searching feature. The searching feature in particular was very useful for me when learning this codebase.
 
 I was the only person on my team who used a custom IDE (except for Dr. Stallmann) but neither of us were involved in JUnit Testing, so no one is sure how to do this without Eclipse. If you find out please include it your team's Developer's Guide.
 
-## Our Work [TOC](Galant2021.md#Table-of-Contents)
+## Our Work
+[(back to table of contents)](Galant2021.md#Table-of-Contents)
 
-### Auto-Scale Node Positions [TOC](Galant2021.md#Table-of-Contents)
+### Auto-Scale Node Positions
+[(back to table of contents)](Galant2021.md#Table-of-Contents)
 
 This feature makes sure that the graph still fills the window whenever it is resized. We introduced the ViewTransform to the project. Right before rendering each node, it computes where the node should appear on screen. This computation is done using (1) the node's position, (2) the VirtualWindow bounds, and (3) the window size.
 
-### Virtual Window [TOC](Galant2021.md#Table-of-Contents)
+### Virtual Window
+[(back to table of contents)](Galant2021.md#Table-of-Contents)
 
 We also introduced the VirtualWindow to the project during this iteration. This structure is represented in the nodes' coordinate space (known as logical position). The VirtualWindow is roughly equivalent to the bounding box of (nodes_min_x, nodes_min_y) and (nodes_max_x, nodes_max_y). It is used to determine the right transformation to use in order to show all nodes within the window. Once we determine the virtual window bounds we can easily find the transformation that translate and scales it to the actual window. That same transform is then applied to each node at render time.
 
-### Allow Moving Layered Node during Animation/Edit Mode [TOC](Galant2021.md#Table-of-Contents)
+### Allow Moving Layered Node during Animation/Edit Mode
+[(back to table of contents)](Galant2021.md#Table-of-Contents)
 
 This change involved modifying the underlying data structure more than the previous ones did. It is important to allow movement of the layered node because it allows researchers and students to explore different possibilities while running algorithms. For example, some algorithms can move nodes around, and one common purpose is to minimize the number of times edges intersect each other. A researcher may want to move nodes in the middle of this algorithm to see if they can outperform the algorithm manually--or perhaps a student would move such a node in order to convince themselves this step is actually optimal.
 
 Just as important as allowing the change in the first place, is undoing it whenever the user steps forward. While it may be interesting to run the algorithm from whatever state the user left it in, this functionality does not currently exist. Plus it may prove to be nonsensical in some instances, or make the program harder to use. Instead, we keep track of the original positions and reset to those positions before applying another algorithm step.
 
-### Combining Layered Graph into existing Graph [TOC](Galant2021.md#Table-of-Contents)
+### Combining Layered Graph into existing Graph
+[(back to table of contents)](Galant2021.md#Table-of-Contents)
 
 This was our main refactoring task for our run. This was a great opportunity for automatic testing, since our objective is to not make any semantic changes. We completed this task by creating an abstract class called "Graph" and two subclasses LayeredGraph and NonLayeredGraph. Please understand that "Non-Layered Graph" is not a type of graph in any mathematical sense. That is simply our umbrella term for all types of graphs that are not Layered Graphs. It includes Directed Graphs, Weighted Graphs, etc. Simply our team and the ones before us, did not need to make a programmatic distinction for any type of graph except Layered.
 
-## Known Bugs [TOC](Galant2021.md#Table-of-Contents)
+## Known Bugs
+[(back to table of contents)](Galant2021.md#Table-of-Contents)
 
 When the user creates a new graph and creates new node on the edge of the graph window, the node will not display on the window, and if the user try multiple times or scale the window, Galant will crash. This issue may come from the virtual window we used in feature 1, and only happens when creating new nodes in a new graph. This issue is not happening on any pre-created graph.
 
@@ -65,17 +73,20 @@ This is likely because we often performed our manual tests on precreated graphs 
 
 If the virtual window is a source of problems in the future, but you would still like to leverage some of our team's work in your revision, please take note that vwin (virtual window) is only one part of the scalable-nonlayered iteration. The other component is called viewTransform. Whenever it is time to draw a node on screen the render location is the node's logical position with the viewTransform applied. You can use the viewTransform to displace or "scale" all nodes at the same time. The virtual window is used to determine what extent these transformations should be made in order to match the resized window. In the next section we will talk about ways you can phase out virtual window or use it your own implementations.
 
-## Futures [TOC](Galant2021.md#Table-of-Contents)
+## Futures
+[(back to table of contents)](Galant2021.md#Table-of-Contents)
 
 It is likely that Dr. Stallmann will be thinking about some of these features in the future.
 
-### Panning [TOC](Galant2021.md#Table-of-Contents)
+### Panning
+[(back to table of contents)](Galant2021.md#Table-of-Contents)
 
 Panning is when the user is able to move the entire view of graph. This is helpful when viewing and editing.
 
 Luckily this feature will be much easier to implement using the VirtualWindow. Simply adjusting the x and y coordinates of VirtualWindow will causing panning. The next consideration is user input. For that we recommend using JPanel mouse events.
 
-### Zoom [TOC](Galant2021.md#Table-of-Contents)
+### Zoom
+[(back to table of contents)](Galant2021.md#Table-of-Contents)
 
 There are two sides to this feature. Firstly, zoom allows the user to focus on a specific region of a graph or show the entire graph at once. With this feature implemented we no longer need to ensure all nodes are always on screen--which is the source of some of our known bugs. Instead, the user can intuitively manage which nodes need to be on screen. Together with panning, this feature will make Galant's editor have similar navigation to Google Maps or Photoshop.
 

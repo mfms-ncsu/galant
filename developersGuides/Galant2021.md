@@ -11,9 +11,9 @@ Since Galant is such a large project, we figured it would be useful to create do
   - [Custom IDE](Galant2021.md#Custom-IDE)
 - [Our Work](Galant2021.md#Our-Work)
   - [Auto-Scale Node Positions](Galant2021.md#Auto-Scale-Node-Positions)
-  - [Allow Moving Layered Node during Animation/Edit Mode](Galant2021.md#Allow-Moving-Layered-Node during-Animation/Edit-Mode)
+  - [Allow Moving Layered Node during Animation/Edit Mode](Galant2021.md#allow-moving-layered-node-during-animationedit-mode)
   - [Virtual Window](Galant2021.md#Virtual-Window)
-  - [Combining Layered Graph into existing Graph](Galant2021.md#Combining-Layered-Graph-into existing-Graph)
+  - [Combining Layered Graph into existing Graph](Galant2021.md#Combining-Layered-Graph-into-existing-Graph)
 - Java Resources
 - I/O
 - Rendering

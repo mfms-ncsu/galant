@@ -7,16 +7,18 @@ Since Galant is such a large project, we figured it would be useful to create do
 ## Table of Contents
 
 - [Introduction](Galant2021.md#Introduction)
-- [Getting Started](Galant2021.md#Getting-Started)
+  - [Getting Started](Galant2021.md#Getting-Started)
+  - [Custom IDE](Galant2021.md#Custom-IDE)
 - [Our Work](Galant2021.md#Our-Work)
-  - Auto-Scale Node Positions
-  - Allow Moving Layered Node during Animation/Edit Mode
-  - Combining Layered Graph into existing Graph
+  - [Auto-Scale Node Positions](Galant2021.md#Auto-Scale-Node-Positions)
+  - [Allow Moving Layered Node during Animation/Edit Mode](Galant2021.md#Allow-Moving-Layered-Node during-Animation/Edit-Mode)
+  - [Virtual Window](Galant2021.md#Virtual-Window)
+  - [Combining Layered Graph into existing Graph](Galant2021.md#Combining-Layered-Graph-into existing-Graph)
 - Java Resources
 - I/O
 - Rendering
 - [Known Bugs](Galant2021.md#Known-Bugs)
-- Branches
+- [Branches](Galant2021.md#Branches)
 - [Futures](Galant2021.md#Futures)
 
 ## Introduction
@@ -35,20 +37,33 @@ This section is completely optional. If you really do not want to use Eclipse, t
 
 I was the only person on my team who used a custom IDE (except for Dr. Stallmann) but neither of us were involved in JUnit Testing, so no one is sure how to do this without Eclipse. If you find out please include it your team's Developer's Guide.
 
-## Known Bugs
-
-When the user creates a new graph and creates new node on the edge of the graph window, the node will not display on the window, and if the user try multiple times or scale the window, Galant will crash. This issue may comes from the virtual window we used in feature 1, and only happens when creating new nodes in a new graph. This issue is not happening on any pre-created graph.
-
 ## Our Work
 
-- Auto-Scale Node Positions
+### Auto-Scale Node Positions
 
 This feature makes sure that the graph still fills the window whenever it is resized. We introduced the ViewTransform to the project. Right before rendering each node, it computes where the node should appear on screen. This computation is done using (1) the node's position, (2) the VirtualWindow bounds, and (3) the window size.
 
-We also introduced the VirtualWindow to the project during this iteration. This structure is represented in the nodes' coordinate space (known as logical position). The VirtualWindow is roughly equivalent to the bounding box of (nodes_min_x, nodes_min_y) and (nodes_max_x, nodes_max_y). It is used to determine the right transformation to use in order to show all nodes within the window.
+### Virtual Window
 
-- Allow Moving Layered Node during Animation/Edit Mode
-- Combining Layered Graph into existing Graph
+We also introduced the VirtualWindow to the project during this iteration. This structure is represented in the nodes' coordinate space (known as logical position). The VirtualWindow is roughly equivalent to the bounding box of (nodes_min_x, nodes_min_y) and (nodes_max_x, nodes_max_y). It is used to determine the right transformation to use in order to show all nodes within the window. Once we determine the virtual window bounds we can easily find the transformation that translate and scales it to the actual window. That same transform is then applied to each node at render time.
+
+### Allow Moving Layered Node during Animation/Edit Mode
+
+This change involved modifying the underlying data structure more than the previous ones did. It is important to allow movement of the layered node because it allows researchers and students to explore different possibilities while running algorithms. For example, some algorithms can move nodes around, and one common purpose is to minimize the number of times edges intersect each other. A researcher may want to move nodes in the middle of this algorithm to see if they can outperform the algorithm manually--or perhaps a student would move such a node in order to convince themselves this step is actually optimal.
+
+Just as important as allowing the change in the first place, is undoing it whenever the user steps forward. While it may be interesting to run the algorithm from whatever state the user left it in, this functionality does not currently exist. Plus it may prove to be nonsensical in some instances, or make the program harder to use. Instead, we keep track of the original positions and reset to those positions before applying another algorithm step.
+
+### Combining Layered Graph into existing Graph
+
+This was our main refactoring task for our run. This was a great opportunity for automatic testing, since our objective is to not make any semantic changes. We completed this task by creating an abstract class called "Graph" and two subclasses LayeredGraph and NonLayeredGraph. Please understand that "Non-Layered Graph" is not a type of graph in any mathematical sense. That is simply our umbrella term for all types of graphs that are not Layered Graphs. It includes Directed Graphs, Weighted Graphs, etc. Simply our team and the ones before us, did not need to make a programmatic distinction for any type of graph except Layered.
+
+## Known Bugs
+
+When the user creates a new graph and creates new node on the edge of the graph window, the node will not display on the window, and if the user try multiple times or scale the window, Galant will crash. This issue may come from the virtual window we used in feature 1, and only happens when creating new nodes in a new graph. This issue is not happening on any pre-created graph.
+
+This is likely because we often performed our manual tests on precreated graphs to save time. If you find yourselves doing the same thing, we advise you to test edge cases even if they do not seem relevent to your changes. You don't have to do it everytime, but you should do it sometimes (especially towards the end).
+
+If the virtual window is a source of problems in the future, but you would still like to leverage some of our team's work in your revision, please take note that vwin (virtual window) is only one part of the scalable-nonlayered iteration. The other component is called viewTransform. Whenever it is time to draw a node on screen the render location is the node's logical position with the viewTransform applied. You can use the viewTransform to displace or "scale" all nodes at the same time. The virtual window is used to determine what extent these transformations should be made in order to match the resized window. In the next section we will talk about ways you can phase out virtual window or use it your own implementations.
 
 ## Futures
 
@@ -58,6 +73,10 @@ It is likely that Dr. Stallmann will be thinking about some of these features in
 
 Panning is when the user is able to move the entire view of graph. This is helpful when viewing and editing.
 
-Luckily this feature will be much easier to implement using the VirtualWindow. Simply adjusting the x and y coordinates of VirtualWindow will causing panning. The next consideration is user input. For that we recommend using JPanel mouse events...
+Luckily this feature will be much easier to implement using the VirtualWindow. Simply adjusting the x and y coordinates of VirtualWindow will causing panning. The next consideration is user input. For that we recommend using JPanel mouse events.
 
 ### Zoom
+
+There are two sides to this feature. Firstly, zoom allows the user to focus on a specific region of a graph or show the entire graph at once. With this feature implemented we no longer need to ensure all nodes are always on screen--which is the source of some of our known bugs. Instead, the user can intuitively manage which nodes need to be on screen. Together with panning, this feature will make Galant's editor have similar navigation to Google Maps or Photoshop.
+
+This feature can also leverage the virtual window, in this case the width and height values should be either decreased to zoom in or increased to zoom out. To keep the view centered you will also want to adjust x and y values.

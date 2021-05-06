@@ -58,11 +58,17 @@ This was our main refactoring task for our run. This was a great opportunity for
 
 ## Known Bugs
 
+(1) Creating nodes
+
 When the user creates a new graph and creates new node on the edge of the graph window, the node will not display on the window, and if the user try multiple times or scale the window, Galant will crash. This issue may come from the virtual window we used in feature 1, and only happens when creating new nodes in a new graph. This issue is not happening on any pre-created graph.
 
 This is likely because we often performed our manual tests on precreated graphs to save time. If you find yourselves doing the same thing, we advise you to test edge cases even if they do not seem relevent to your changes. You don't have to do it everytime, but you should do it sometimes (especially towards the end).
 
 If the virtual window is a source of problems in the future, but you would still like to leverage some of our team's work in your revision, please take note that vwin (virtual window) is only one part of the scalable-nonlayered iteration. The other component is called viewTransform. Whenever it is time to draw a node on screen the render location is the node's logical position with the viewTransform applied. You can use the viewTransform to displace or "scale" all nodes at the same time. The virtual window is used to determine what extent these transformations should be made in order to match the resized window. In the next section we will talk about ways you can phase out virtual window or use it your own implementations.
+
+(2) Import field in all layered graph
+
+Since we have integrated the layered graph with the graph class, we do not have to import layeredgraph class in every layered graph algorithm. Thus, each time before we run layered graph algorithm, we have to delete the import field in the algorithm.
 
 ## Branches
 

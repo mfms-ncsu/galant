@@ -12,8 +12,6 @@
  * $Id: mce.alg 104 2015-03-27 16:23:25Z mfms $
  */
 
-import edu.ncsu.csc.Galant.local.LayeredGraph;
-
 int MAX_ITERATIONS = 200;
 int crossings = 0;
 int minCrossings = Integer.MAX_VALUE;

@@ -32,9 +32,11 @@ If you are willing to use Eclipse IDE it contains everything needed to build and
 
 ## Custom IDE
 
-This section is completely optional. If you really do not want to use Eclipse, this section will inform you how to develop Galant without it. The program [Apache Ant](https://ant.apache.org/manual/install.html) is the only program actually required to build Galant. It can be installed on Mac easily using HomeBrew. For text editing, your choice of editor will work. However, Visual Studio Code is recommended due to its Java language support (plug-in) and exceptional project searching feature. The searching feature in particular was very useful for me when learning this codebase.
+This section is completely optional. If you really do not want to use Eclipse, this section will inform you how to develop Galant without it. The program [Apache Ant](https://ant.apache.org/manual/install.html) is the only program actually required to build Galant. It can be installed on Mac easily using HomeBrew. On Linux and Windows simply follow the link and extract the program into a location in your PATH. For text editing, your choice of editor will work. However, Visual Studio Code is recommended due to its Java language support (plug-in) and exceptional project searching feature. The searching feature in particular was very useful for me when learning this codebase.
 
 I was the only person on my team who used a custom IDE (except for Dr. Stallmann) but neither of us were involved in JUnit Testing, so no one is sure how to do this without Eclipse. If you find out please include it your team's Developer's Guide.
+
+Once you have download the program Ant and copied into /usr/local/bin (linux) or a location in your PATH env variable (windows), simply run the command `ant` from the folder containing Galant to build and run. You can run it again without building by running the jar directly.
 
 ## Our Work
 

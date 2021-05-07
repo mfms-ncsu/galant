@@ -1,4 +1,4 @@
-Current Galant bugs and features (v5.2.1):
+Current Galant bugs and features (v5.2.1): *** outdated ***
 
 Features:
 —————————-

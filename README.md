@@ -73,3 +73,6 @@ graph. The algorithms are in the `Algorithms` folder and the graphs in `Example-
 * to create an empty graph click on left arrow below `File` until `untitled graph` appears
 
 **For more information and links to important resources, see** `0-index.html.`
+
+**Note about the name.**
+Aside from being an acronym for **g**raph **al**gorithm **an**imation **t**ool, Galant (pronounced gahlahnt -accent on second syllable) is a term for a musical style that featured a return to classical simplicity after the complexity of the late Baroque era. We hope to achieve the same in our approach to algorithm animation.

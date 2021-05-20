@@ -1,0 +1,135 @@
+<h1 id="galant-user-documentation-for-version-6.0">Galant User Documentation for Version 6.0</h1>
+<p>What follows are instructions for interacting with the Galant graphical user interface, primarily for creating, editing, saving and loading graphs and animations and for executing animations.</p>
+<h2 id="overview">Overview</h2>
+<p>Galant provides three major components across two windows:</p>
+<ol>
+<li><p>a text window that can serve two distinct purposes –</p>
+<ol>
+<li><p>as an editor of algorithms</p></li>
+<li><p>as an editor of GraphML representations of graphs</p></li>
+</ol></li>
+<li><p>a graph window that displays the current graph (independent of whether the text window shows an algorithm or the GraphML representation of the graph)</p></li>
+</ol>
+<p>It is usually more convenient to edit algorithms offline using a program editor such as Emacs or Notepad++, setting preferences so that files with the .alg extension are treated as if they were Java source files. The primary use of the text editor is to correct minor errors and to see the syntax highlighting related to Galant API functions and macros. The graph window is the primary mechanism for editing graphs. One exception is when precise adjustments node positions are desired. Weights and labels are sometimes also easier to edit in the text window.</p>
+<div class="figure*">
+<p><img src="X-graph_window-annotated.png" alt="image" /></p>
+<p>Graph window: add/delete nodes and edges, move nodes, etc.</p>
+<p><img src="X-dfs_midstream_modified-text.png" alt="image" /></p>
+<p>Text window: GraphML representation.</p>
+</div>
+<p>These components operate in two modes: edit mode and animation mode. Edit mode allows the user to modify graphs – see Sec. <a href="#sec:graph_editing" data-reference-type="ref" data-reference="sec:graph_editing">1.3</a>, or algorithms – see Sec. <a href="#sec:algorithm_editing" data-reference-type="ref" data-reference="sec:algorithm_editing">1.4</a>. Animation mode disables all forms of modification, allowing the user to progress through an animation by stepping forward or backward, as described in Sec. <a href="#sec:animating_algorithms" data-reference-type="ref" data-reference="sec:animating_algorithms">1.5</a>.</p>
+<h2 id="workspace">Workspace</h2>
+<p>Opened graph and algorithm files are displayed in the text window, which has tabs that allow the user to switch among different algorithms/graphs. New algorithms are created using the icon that looks like a page of text at the top left of the window; new graphs are created using the graph/tree icon to the left of that. More commonly, algorithm and graph files are loaded via the <span class="sans-serif">File<span class="math inline">→</span>Open</span> browser dialog. The <span class="sans-serif">File</span> drop-down menu also allows saving of files and editing of preferences. Algorithm files have the extension <span class="sans-serif">.alg</span> and graph files the extension <span class="sans-serif">.graphml</span>.</p>
+<p>Fig. <a href="#fig:user_interface" data-reference-type="ref" data-reference="fig:user_interface">[fig:user_interface]</a> shows both the graph window (top) and the text window (bottom). Annotations on the graph window describe the components of the window that can be used to edit a graph visually.</p>
+<h2 id="sec:graph_editing">Graph editing</h2>
+<p>Graphs can be edited in their GraphML representation using the text window or visually using the graph window. These editors are linked: any change in the visual representation is immediately reflected in the text representation (and will overwrite what was originally there); a change in the GraphML representation will take effect in the visual representation only when the file is saved.</p>
+<p>An improperly formatted GraphML file loaded from an external source will result in an error. Galant reports errors of all kinds (during reading of files, compilation of animation programs or execution of animations) by displaying a pop up window that allows the user to choose whether to continue (and usually return to a stable state) or quit the program. Error information, including a stack trace, is also displayed on the console.</p>
+<p>The graph window, as illustrated at the top of Fig. <a href="#fig:user_interface" data-reference-type="ref" data-reference="fig:user_interface">[fig:user_interface]</a>, has a toolbar with four sections:</p>
+<ol>
+<li><p><strong>Graph edit mode –</strong> this includes the <em>select</em>, <em>create node</em>, <em>create edge</em>, and <em>delete</em> buttons. Only one button is active at any time; it determines the effect of a user’s interaction (mouse clicking, dragging, etc.) with the window. If there are conflicts in selection of objects, nodes with higher id numbers have precedence (are above those with lower id numbers) and nodes have precedence over edges (are above edges – so that the lines corresponding to edges are hidden below the filled circles corresponding to nodes).</p>
+<ul>
+<li><p><em>Select.</em> A mouse click selects the graph component with highest precedence. If the component is a node, it is shaded light blue; if it’s an edge, it becomes dashed. The in-line editor at the bottom of the graph window allows editing of the component’s label, weight, and color. This is the default mode. The square should be outlined in gray unless the user wants to alter the graph in some way. If any other mode is active, e.g., delete, the consequences can be unpleasant (there is currently no "undo" mechanism). A future release will have "modeless" editing.</p></li>
+<li><p><em>Create node.</em> A node is created at the location of a mouse click if there is not already a node there. If another node is present it is simply selected.</p></li>
+<li><p><em>Create edge.</em> Two clicks are required to create an edge. The first falls on the desired source node and the second on the target node. The line representing the edge is shown after the first click. If the first click does not land on a node, no edge is created. If the second click does not land on a node, creation of the edge is canceled.</p></li>
+<li><p><em>Delete.</em> A mouse click deletes the highest-precedence component at the mouse location. If a node is deleted, all of its incident edges are deleted as well.</p></li>
+</ul></li>
+<li><p><strong>Directedness toggles –</strong> These change both the interpretation and the display of the graph between directed and undirected. Pressing the undirected (line without arrows) button causes all edges to be interpreted as undirected: this means that, when the code calls for all incoming/outgoing edges, all incident edges are used. Undirected edges are displayed as simple lines.</p>
+<p>Pressing the directed (line with arrow) button causes the macros <span class="sans-serif">for_incoming</span>, <span class="sans-serif">for_outgoing</span>, and <span class="sans-serif">for_adjacent</span> to have three distinct meanings (they are all the same for undirected graphs): Incoming edges have the given node as target, outgoing as source, and adjacent applies to all incident edges.</p></li>
+<li><p><strong>Display toggles –</strong> The four display toggles turn on/off the display of node/edge labels and node/edge weights. A shaded toggle indicates that the corresponding display is <em>on</em>. When Galant is executed for the first time, all of these are <em>on</em>, but their setting persists from session to session. Labels and weights are also all displayed at the beginning of execution of an animation. The animation program can choose to hide labels and/or weights with simple directives. Hiding is often unnecessary – the graphs that are subjects of the animations typically have only the desired attributes set.</p></li>
+<li><p><strong>Force directed drawing button –</strong> Applies Hu’s force directed algorithm <span class="citation" data-cites="2006-Mathematica-Hu"></span> to the graph. Pushing the button a second time causes the drawing to revert to its previous state. Fig. <a href="#fig:force_directed" data-reference-type="ref" data-reference="fig:force_directed">[fig:force_directed]</a> illustrates the use of force directed drawing to massage a randomly generated graph for convenient use in animations. The graph was generated randomly as a list of edges with weights and converted to graphml using a simple script. Galant, when reading the graph initially, assigned random positions to the nodes.</p></li>
+</ol>
+<div id="tab:keyboard_shortcuts">
+<table>
+<caption>Keyboard shortcuts for editing operations.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;"><span class="sans-serif">Ctrl-n</span></th>
+<th style="text-align: left;">create a new node in a random position</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">Ctrl-e</span></td>
+<td style="text-align: left;">create a new edge; user is prompted for id’s of the nodes to be connected</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">Ctrl-i</span></td>
+<td style="text-align: left;">do a smart repositioning (force-directed) of nodes of the graph, useful when positions were chosen randomly</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">Del-n</span></td>
+<td style="text-align: left;">(hold delete key when typing <span class="sans-serif">n</span>) delete a node; user is prompted for id</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">Del-e</span></td>
+<td style="text-align: left;">delete an edge; user is prompted for id’s of the endpoints</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">Ctrl-<span class="math inline">ℓ</span></span></td>
+<td style="text-align: left;">toggle display of node labels</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">Ctrl-L</span></td>
+<td style="text-align: left;">toggle display of edge labels</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">Ctrl-w</span></td>
+<td style="text-align: left;">toggle display of node weights</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">Ctrl-W</span></td>
+<td style="text-align: left;">toggle display of edge weights</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">Ctrl-d</span></td>
+<td style="text-align: left;">toggle graph directedness</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="figure*">
+<div class="center">
+<p><img src="X-r_25_40_1.png" style="width:37.5%" alt="image" /> <img src="X-r_25_40_1-fd.png" style="width:37.5%" alt="image" /> <img src="X-r_25_40_1-edited.png" style="width:37.5%" alt="image" /></p>
+<p>(a) A graph from an external random generator.</p>
+<p>(b) Force directed layout applied.</p>
+<p>(c) User moved nodes for an even better layout.</p>
+</div>
+</div>
+<p>Table <a href="#tab:keyboard_shortcuts" data-reference-type="ref" data-reference="tab:keyboard_shortcuts">1</a> lists keyboard shortcuts for various editing operations.</p>
+<h2 id="sec:algorithm_editing">Algorithm editing</h2>
+<p>Algorithms can be edited in the text window. The editor uses Java keyword highlighting (default blue) and highlighting of Galant API fields and methods (default green). Since the current algorithm editor is fairly primitive (no search and replace, for example), it is more efficient to edit animation code offline using a program editor – for example <span class="sans-serif">emacs</span> with Java mode turned on. The Galant editor is, however, useful for locating and correcting minor errors. For more details on how to compose animation code, see the programmer guide (Section <a href="#sec:programmer_guide" data-reference-type="ref" data-reference="sec:programmer_guide">2</a>).</p>
+<h2 id="sec:animating_algorithms">Animating algorithms</h2>
+<div class="center">
+<figure>
+<img src="X-dijkstra_text.png" id="fig:dijkstra_running" alt="The text and graph windows when an algorithm is running. The text window is at the top – it has buttons for the user to select whether to compile the algorithm, run it (if already compiled) or do both. The graph window in the middle of algorithm execution is at the bottom." /><figcaption aria-hidden="true">The text and graph windows when an algorithm is running. The text window is at the top – it has buttons for the user to select whether to compile the algorithm, run it (if already compiled) or do both. The graph window in the middle of algorithm execution is at the bottom.</figcaption>
+</figure>
+<figure>
+<img src="X-dijkstra_running.png" id="fig:dijkstra_running" alt="The text and graph windows when an algorithm is running. The text window is at the top – it has buttons for the user to select whether to compile the algorithm, run it (if already compiled) or do both. The graph window in the middle of algorithm execution is at the bottom." /><figcaption aria-hidden="true">The text and graph windows when an algorithm is running. The text window is at the top – it has buttons for the user to select whether to compile the algorithm, run it (if already compiled) or do both. The graph window in the middle of algorithm execution is at the bottom.</figcaption>
+</figure>
+</div>
+<p>To animate an algorithm the code for it must be compiled and then run via the algorithm controls – the bottom tabs on the text window shown in Fig. <a href="#fig:dijkstra_running" data-reference-type="ref" data-reference="fig:dijkstra_running">2</a>. The algorithm runs on the <em>active graph</em>, the one currently displayed on the graph window, also shown in Fig. <a href="#fig:dijkstra_running" data-reference-type="ref" data-reference="fig:dijkstra_running">2</a>. While the algorithm is running, its text is grayed out to indicated that it cannot be edited. If there are errors in compilation these will show up on the console (terminal from which Galant was run) and in a dialog box that allows the user to ask for more details and decide whether to exit Galant or not. The console also displays the what the code looks like after macro replacement in case obscure errors were the result of unexpected macro expansion. Line numbers in the macro-expanded code match those of the original so that all errors reported by the Java compiler will refer to the correct line number in the original Galant code. Runtime errors also open the above mentioned dialog box.</p>
+<p>When the user initiates execution of an animation by pushing the <span class="sans-serif">Run</span> button the animation program steps forward until displays the next animation event or, if a <span class="sans-serif">beginStep()</span> call has marked the start of a sequence of events, until it reaches the next <span class="sans-serif">endStep()</span> call. It then pauses execution and waits for the user to decide whether to step forward, step backward, or exit. A step forward resumes execution while a step backward returns the display to a previous state. The algorithm resumes execution only when the <em>display state</em> indicated by the user’s sequence of forward and backward steps (<span class="math inline"><em>f</em> − <em>b</em></span>, where <span class="math inline"><em>f</em></span> is the number of forward and <span class="math inline"><em>b</em></span> the number of backward steps) exceeds the <em>algorithm state</em>, the number of animation steps the algorithm has executed. The user controls forward and backward steps using either the buttons at the bottom of the graph window (shown in Fig. <a href="#fig:dijkstra_running" data-reference-type="ref" data-reference="fig:dijkstra_running">2</a>) or the right/left arrow keys. During the execution of the animation, all graph editing functions are disabled. These are re-enabled when the user exits the animation by pressing the red <strong>X</strong> button or the <span class="sans-serif">Esc</span> (escape) key on the terminal.</p>
+<h2 id="sec:preferences">Preferences</h2>
+<p>Galant preferences can be accessed via the <span class="sans-serif">File<span class="math inline">→</span>Preferences</span> menu item or by using the keyboard shortcut <span class="sans-serif">Ctrl-P</span> (<span class="sans-serif">Cmd-P</span> for Mac). Preferences that can be edited are:</p>
+<ul>
+<li><p>Default directories for opening and saving files (<span class="sans-serif">Open/Save</span>).</p></li>
+<li><p>Directory where compiled animation code is stored (<span class="sans-serif">Compilation</span>).</p></li>
+<li><p>Font size and tab size for text window editing (<span class="sans-serif">Editors</span>).</p></li>
+<li><p>Colors for keyword and Galant API highlighting (<span class="sans-serif">Algorithm Editor</span>).</p></li>
+<li><p>Color for GraphML highlighting (<span class="sans-serif">Textual Graph Editor</span>).</p></li>
+<li><p>Node radius (<span class="sans-serif">Graph Display</span>); when the radius is below a threshold (9 pixels), node id’s are not displayed; this is useful when running animations on large graphs.</p></li>
+<li><p>Edge width and node boundary width, both normal and highlighted/colored (<span class="sans-serif">Graph Display</span>).</p></li>
+</ul>
+<figure>
+<img src="X-syntax_highlight_preference.png" id="fig:preference_panels" alt="The four most important preference panels." /><figcaption aria-hidden="true">The four most important preference panels.</figcaption>
+</figure>
+<p>(a) syntax highlight colors – same color chooser as for editing node/edge colors</p>
+<p><img src="X-text_preference.png" title="fig:" id="fig:preference_panels" alt="The four most important preference panels." /> <img src="X-graph_display_preference.png" title="fig:" id="fig:preference_panels" alt="The four most important preference panels." /></p>
+<p>(b) text font size and tab spaces (c) line widths and node radius</p>
+<figure>
+<img src="X-directory_preference.png" id="fig:preference_panels" alt="The four most important preference panels." /><figcaption aria-hidden="true">The four most important preference panels.</figcaption>
+</figure>
+<p>(d) default directory for opening and saving files</p>
+<p>Fig. <a href="#fig:preference_panels" data-reference-type="ref" data-reference="fig:preference_panels">6</a> shows the four preference panels of most interest to the user.</p>
+<h1 id="sec:programmer_guide">Programmer guide</h1>
+<p>This is an external document. It appears both as an appendix in the technical report and as a separate document.</p>

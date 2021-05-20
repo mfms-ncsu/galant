@@ -1,0 +1,51 @@
+<h1 class="unnumbered" id="bugs-and-annoyances-version-6.1.2">Bugs and annoyances, Version 6.1.2</h1>
+<p>The following are known bugs/problems with Galant. Some of them, marked <strong>*</strong> have been observed only on a Mac (on my Mac specifically).</p>
+<h3 class="unnumbered" id="inputoutput">Input/output</h3>
+<ul>
+<li><p>If a graph has been saved via a <span class="sans-serif">File<span class="math inline">→</span>Export</span> in the graph window, runtime attributes such as <span class="sans-serif">hidden</span> may cause problems when the graph is read and displayed. The issue has been fixed for the particular case of <span class="sans-serif">hidden</span>, but not related ones such as <span class="sans-serif">hiddenLabel</span> and <span class="sans-serif">hiddenWeight</span>. Nonstandard attributes are saved as strings only even if the algorithm treated them as numbers or Booleans.</p>
+<p><strong><em>The best workaround when an exception occurs during reading of a <span class="sans-serif">graphml</span> file is to move the file to another location. Otherwise the exception will occur each time you open Galant.</em></strong></p></li>
+<li><p><strong>*</strong> Occasionally there is an exception involving the user interface with a stack entry that says something about <span class="sans-serif">GlyphView</span>. This can happen at any time. Just hit <span class="sans-serif">Continue</span> when the error window pops up (usually a good policy if you’re not sure what the error is about and it appears not to be affecting your session).</p></li>
+</ul>
+<h3 class="unnumbered" id="text-editing-of-programs-or-graphs">Text editing (of programs or graphs)<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></h3>
+<ul>
+<li><p><strong>*</strong> Tabs for graphs and algorithms are often hard to deal with: (a) if you reread a graph or algorithm, it appears twice; (b) you can only run an algorithm on a graph if the tabs for the two appear at the top of the window at the same time – this may be impossible if there are other intervening graphs and algorithms and the window is not wide enough.</p></li>
+<li><p><strong>*</strong> Occasionally Galant simply hangs; it appears that you can exit (quit) from the file menu of the graph window or from the the <span class="sans-serif">Galant</span> menu on the task bar. Oddly, when Galant hangs, you can bring it back to life by executing a command in a separate terminal window.</p></li>
+<li><p>Some preferences, such as syntax highlight colors, require the user to exit Galant before they take effect.</p></li>
+<li><p><strong>*</strong> The <span class="sans-serif">Open/Save</span> preference that specifies the default directory for files does not persist from one session to the next (unlike all other preferences).</p></li>
+<li><p>When saving a file, Galant complains if the extension is not correct (<span class="sans-serif">.graphml</span> or <span class="sans-serif">.alg</span>) but does not fill it in automatically.</p></li>
+</ul>
+<h3 class="unnumbered" id="graph-editing-in-graph-panel-or-via-keyboard-shortcuts">Graph editing (in graph panel or via keyboard shortcuts)</h3>
+<ul>
+<li><p>Editing is mode-driven: the effect of a mouse action is determined by which of the four modes (select, create node, create edge, delete) is selected on the toolbar. This has unpleasant consequences if, for example, the user forgets that she is in delete mode.</p></li>
+<li><p>Nodes have to be moved individually. In a large graph there is no way to select a collection of nodes and move them all at once.</p></li>
+<li><p>The force directed layout algorithm clusters nodes too close to each other when there are cliques or near cliques.</p></li>
+<li><p>Semantics of force directed layout when combined with adding edges is not intuitive (force directed layout takes over if the button is pressed, so adding nodes/edges is dependent on the state of the button). It’s generally a bad idea to change the graph when the smart reposition button is pressed. <em>If you delete nodes or edges when the smart reposition button is highlighted, an “unexpected exception” is likely to occur.</em></p></li>
+<li><p>It is not possible to change the thickness of an edge or node boundary directly from the editor or an algorithm nor is it possible to change the fill color of a node. The only way to change these properties is via highlighting, selecting, and marking nodes/edges during the animation.</p></li>
+<li><p>Once you choose a color for a node in the editor, you can’t uncolor it in the editor. The best you can do is set it to black, but then it appears thicker. However, the algorithm <span class="sans-serif">strip_attributes.alg</span> can be run to reset colors and other nonessential attributes. You can save the cleaned up graph using <span class="sans-serif">File<span class="math inline">→</span>Export</span> in the graph window.</p></li>
+<li><p>It is not possible to change a weight from nothing to 0. You need to set it to 1 first and then back to 0.</p></li>
+<li><p>When user creates a new node/edge via keyboard shortcut, there is no obvious way to enter the weight and label (except to click in the appropriate text field).</p></li>
+</ul>
+<h3 class="unnumbered" id="compilation-and-execution">Compilation and execution</h3>
+<ul>
+<li><p>When there are compilation errors the user cannot scroll the text window (or make modifications in it) while the popup window showing the errors is displayed. There are two possible workarounds: (i) open the algorithm in an external editor, or (ii) view the error messages in the console.</p></li>
+<li><p>If user edits the graph and runs an animation without saving the graph file first, the animation runs on the previous version of the graph.</p></li>
+<li><p>Every once in a while an exception occurs when an error-free algorithm is executed or when Galant initially fires up, but it is possible to step through the animation normally after hitting the <span class="sans-serif">Continue</span> button.</p></li>
+<li><p>When an algorithm controls visibility of node/edge labels or weights and the user overrides in the middle of execution, Galant sometimes freezes when user terminates the algorithm. This appears to happen more frequently if user does a lot of fast forward/reverse between visibility changes. The problem does not seem to occur if user toggles visibility via keyboard shortcuts.</p></li>
+<li><p>Compiler error messages can be cryptic (but at least they refer to the correct line numbers). Because of the macro preprocessing, it may be necessary to look at the console to get an idea of what is causing a particular error. If the parentheses/brackets/braces inside a function definition or body of one of the <span class="sans-serif">for_…</span> macros are unbalanced, the macro preprocessor will simply report the fact with no indication of the location of the error except for an excerpt from the beginning of the body.</p></li>
+<li><p>Line numbers do, however, get out of sync if the header of a function declaration takes up more than one line. For example, in</p>
+<pre><code>     function foo(Node v,
+                  Node w,
+                  Edge e) {
+     }</code></pre>
+<p>The first three lines are treated as one.</p></li>
+<li><p>If a macro is used incorrectly, the preprocessor does not report a line number.</p></li>
+<li><p>After hitting <span class="sans-serif">Enter</span> or <span class="sans-serif">Return</span> at the end of a query, user still needs to step forward to do the next step of the algorithm.</p></li>
+<li><p>There is no way to execute the animation in a continuous fashion with a controllable speed. The current workaround is the use of arrow keys as keyboard shortcuts for stepping forward or backward – these can be held down to generate multiple steps in rapid succession, but finer grained control is difficult.</p></li>
+<li><p><strong>*</strong> If you try to manipulate anything in the text window (e.g., click on <span class="sans-serif">File</span>) when an algorithm is running, Galant hangs. You must quit Galant completely without saving anything.</p></li>
+</ul>
+<section class="footnotes" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1" role="doc-endnote"><p>Galant’s editor is primitive, but programs can easily be edited externally. Text representations of graphs can either be edited or generated externally.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>

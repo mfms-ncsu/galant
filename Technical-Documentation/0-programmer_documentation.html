@@ -1,0 +1,1267 @@
+<h1 id="galant-programmer-documentation-for-version-6.1.2">Galant Programmer Documentation (for version 6.1.2)</h1>
+<p>What follows is self-contained documentation for Galant animators (animation programmers). There are many examples included with this distribution, both in the <span class="sans-serif">Algorithms</span> directory and in the subdirectories under <span class="sans-serif">Research</span>. Some basic examples are in an Appendix in the technical report, <span class="sans-serif">2016-Galant-Stallmann.pdf</span>.</p>
+<p>Animation programmers can write algorithms in notation that resembles textbook pseudocode in files that have a <span class="sans-serif">.alg</span> extension. The animation examples have used procedural syntax for function calls, as in, for example, <span class="sans-serif">setWeight(v, 0)</span>. Java (object oriented) syntax can also be used: <span class="sans-serif">v.setWeight(0)</span>. A key advantage of Galant is that a seasoned Java programmer can not only use the Java syntax but can also augment Galant algorithms with arbitrary Java classes defined externally, using <span class="sans-serif">import</span> statements. All Galant code is effectively Java, either natively, or via macro preprocessing.</p>
+<p>Some Java constructs have no equivalent procedural syntax. Most notably <span class="sans-serif"><em>sOne</em>.equals(<em>sTwo</em>)</span>, where <em>sOne</em> and <em>sTwo</em> are strings (of type <span class="sans-serif">String</span>) is the only means of equality comparison for strings. Equality of numbers is tested using the <span class="sans-serif">==</span> operator. To compare strings lexicographically you have to use <span class="sans-serif"><em>sOne</em>.compareTo(<em>sTwo</em>)</span>, which returns a positive number, negative number, or 0 depending on whether <em>sOne</em> lexicographically follows, precedes or is equal to <em>sTwo</em>, respectively.</p>
+<p>Descriptions in this document give the most natural and most common constructs for procedures and functions, usually procedural rather than object-oriented. A perusal of the file <span class="sans-serif">Algorithm.java</span> in directory<br />
+<span class="sans-serif">src/edu/ncsu/csc/Galant/algorithm</span><br />
+shows the animator the variety of synonyms for these constructs as well as functions not described here. For the interested Java programmer, object-oriented syntax appears as a call in the body of the corresponding function/procedure. For example,</p>
+<pre><code>  public void mark(Node n) throws Terminate, GalantException {
+    checkGraphElement(n);
+    n.mark();
+  }</code></pre>
+<p>shows how the procedural version of <span class="sans-serif">mark</span> translates to the corresponding <span class="sans-serif">Node</span> method. Here, <span class="sans-serif">checkGraphElement(n)</span> throws an exception with a meaningful error message if <span class="sans-serif">n</span> is <span class="sans-serif">null</span>. The <span class="sans-serif">Terminate</span> exception results when the user chooses to exit the animation (not really an exception so much as an alert to the animation program).</p>
+<p>We encourage an animator to browse the example animations in subdirectories <span class="sans-serif">Algorithm</span>, <span class="sans-serif">Test</span> and in the subdirectories of <span class="sans-serif">Research</span>.</p>
+<p>The text panel provides a crude editor for algorithms (as well as GraphML descriptions of graphs); its limited capabilities make it useful primarily for fine tuning and error correction. The animator should use a program editor such as <span class="sans-serif">Emacs</span> or <span class="sans-serif">Notepad++</span> (in Java mode) to edit algorithms offline, not a major inconvenience – it is easy to reload algorithms when they are modified without exiting Galant. The Galant editor is, however, useful in that it provides syntax highlighting of Galant functions and macros.</p>
+<p>The source code for an algorithm begins with any number (including none) of global variable declarations and function definitions. The animator can import code from other sources using appropriate <span class="sans-serif">import</span> statements; these must occur at the very beginning. The code for the algorithm itself follows, starting with the keyword <span class="sans-serif">algorithm</span>. A <em>code block</em> is a sequence of statements, each terminated by a semicolon, just as in Java. An animation program has the form</p>
+<blockquote>
+<p><em>global variable declarations</em><br />
+<br />
+<em>function definitions</em><br />
+<br />
+<span class="sans-serif">algorithm {</span><br />
+<em>code block</em><br />
+<span class="sans-serif">}</span></p>
+</blockquote>
+<p>Declarations of global variables are also like those of Java:<br />
+<span class="sans-serif"><em>type</em> <em>variable_name</em>;</span><br />
+to declare a variable or<br />
+<span class="sans-serif"><em>type</em> [] <em>variable_name</em>;</span><br />
+to declare an array of the given type. All variables must be initialized either within a function definition or in the algorithm. Unlike Java variables, they cannot be initialized in the statement that declares them.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> The Java incantation<br />
+<span class="sans-serif"><em>type</em> <em>variable_name</em> = new <em>type</em>[<em>size</em>]</span><br />
+is used to initialize an array with <em>size</em> elements initialized to <span class="sans-serif">null</span> or 0. Arrays use 0-based indexing: the largest index is <span class="math inline"><em>s</em><em>i</em><em>z</em><em>e</em> − 1</span>. The <em>type</em> prefix is omitted if the array has been declared globally. For example, you could have a global declaration<br />
+<span class="sans-serif">String [] alpha;</span><br />
+and then, within a function or the algorithm body,<br />
+<span class="sans-serif">alpha = new String[10]</span>. The array <span class="sans-serif">alpha</span> would then contain 10 null strings (not to be confused with <span class="sans-serif">""</span>)<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> indexed from 0 through 9. <span id="page:arrays" label="page:arrays">[page:arrays]</span></p>
+<p>Detailed information about function declarations is in Section <a href="#sec:functions" data-reference-type="ref" data-reference="sec:functions">1.2</a> below.</p>
+<p>Central to the Galant API is the <span class="sans-serif">Graph</span> object: currently all other parts of the API refer to it. The components of a graph are declared to be of type <span class="sans-serif">Node</span> or <span class="sans-serif">Edge</span> and can be accessed/modified via a variety of functions/methods. When an observer or explorer interacts with the animation they move either forward or backward one step at a time. All aspects of the graph API therefore refer to the current <em>state of the graph</em>, the set of states behaving as a stack. API calls that change the state of a node or an edge automatically generate a next step, but the programmer can override this using a <span class="sans-serif">beginStep()</span> and <span class="sans-serif">endStep()</span> pair. For example, the beginning of our implementation of Dijkstra’s algorithm looks like</p>
+<div class="center">
+<pre><code>beginStep();
+for_nodes(node) {
+    setWeight(node, INFINITY);
+    insert(node, pq);
+}
+endStep();</code></pre>
+</div>
+<p>Without the <span class="sans-serif">beginStep</span>/<span class="sans-serif">endStep</span> override, this initialization would require the observer to click through multiple steps (one for each node) before getting to the interesting part of the animation. For convenience the function <span class="sans-serif">step()</span> is a synonym for <span class="sans-serif">endStep(); beginStep()</span>. If a step takes longer than 5 seconds, the program is terminated under the presumption that there may be an infinite loop.</p>
+<div id="tab:graph_functions">
+<table>
+<caption>Functions and macros that apply to the structure of a graph.</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">NodeSet getNodeSet()</span></td>
+<td style="text-align: left;">returns a list or set of the nodes of the graph; see Section <a href="#sec:datastructures" data-reference-type="ref" data-reference="sec:datastructures">1.3</a> for more information about the return types</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">EdgeSet getEdgeSet()</span></td>
+<td style="text-align: left;">returns a list of edges of the graph; return types are analogous to those for nodes</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">for_nodes(v) { <em>code block</em> }</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">the statements in <em>code block</em> are executed for each node <span class="sans-serif">v</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">for_edges(e) { <em>code block</em> }</span></td>
+<td style="text-align: left;">analogous to <span class="sans-serif">for_nodes</span> with <span class="sans-serif">getEdges()</span> in place of <span class="sans-serif">getNodes()</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">Integer numberOfNodes()</span></td>
+<td style="text-align: left;">returns the number of nodes</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">Integer numberOfEdges()</span></td>
+<td style="text-align: left;">returns the number of edges</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">int id(Node v)</span>, <span class="sans-serif">int id(Edge e)</span></td>
+<td style="text-align: left;">returns the unique identifier of <span class="sans-serif">v</span> or <span class="sans-serif">e</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">int nodeIds()</span>, <span class="sans-serif">int edgeIds()</span></td>
+<td style="text-align: left;">returns the largest node/edge identifier plus one; useful when an array is to be indexed using node/edge identifiers, since these are not necessarily contiguous</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">source(Edge e)</span>, <span class="sans-serif">target(Edge e)</span></td>
+<td style="text-align: left;">returns the source/target of edge <span class="sans-serif">e</span>, sometimes called the (arrow) tail/head or source/destination</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">edge(Node source, Node target)</span></td>
+<td style="text-align: left;">returns the edge with the given source and target</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">Integer indegree(Node v)</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">Integer outdegree(Node v)</span></td>
+<td style="text-align: left;">the number of edges incident on <span class="sans-serif">v</span>, total, incoming and outgoing; if the graph is undirected, the outdegree is the same as the degree</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">EdgeList inEdges(Node v)</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">EdgeList outEdges(Node v)</span></td>
+<td style="text-align: left;">returns a list of <span class="sans-serif">v</span>’s incident, incoming or outgoing edges, respectively; outgoing edges are the same as incident edges if the graph is undirected</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">NodeList neighbors(Node v)</span><a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a></td>
+<td style="text-align: left;">returns a list of nodes adjacent to <span class="sans-serif">v</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">Node otherEnd(Node v, Edge e)</span></td>
+<td style="text-align: left;">returns the node opposite <span class="sans-serif">v</span> on edge <span class="sans-serif">e</span>; if <span class="sans-serif">v</span> is the source <span class="sans-serif">otherEnd</span> returns the target and vice-versa</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">for_incoming(v, e, w) { <em>code block</em> }</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">for_outgoing(v, e, w) { <em>code block</em> }</span></td>
+<td style="text-align: left;"><span class="sans-serif">for_adjacent</span> executes the code block for each edge <span class="sans-serif">e</span> incident on <span class="sans-serif">v</span>, where <span class="sans-serif">w</span> is <span class="sans-serif">otherEnd(e,v)</span>; <span class="sans-serif">v</span> must already be declared but <span class="sans-serif">e</span> and <span class="sans-serif">w</span> are declared by the macro; the other two are analogous for incoming and outgoing edges</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">getStartNode()</span></td>
+<td style="text-align: left;">returns the first node in the list of nodes, typically the one with smallest id; used by algorithms that require a start node</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">EdgeList visbleEdges(Node v)</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">EdgeList visbleInEdges(Node v)</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">EdgeList visbleOutEdges(Node v)</span></td>
+<td style="text-align: left;">return lists of neighbors and edges like the corresponding functions (without the visible modifier) defined above; here only the visible nodes/edges are returned – see Table <a href="#tab:graph_element_functions" data-reference-type="ref" data-reference="tab:graph_element_functions">3</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">isDirected()</span></td>
+<td style="text-align: left;">returns <span class="sans-serif">true</span> if the graph is directed</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">setDirected(boolean directed)</span></td>
+<td style="text-align: left;">makes the graph directed or undirected depending on whether <code>directed</code> is true or false, respectively</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">Node addNode(Integer x, Integer y)</span></td>
+<td style="text-align: left;">returns a new node and adds it to the list of nodes; the id is the smallest integer not currently in use as an id; attributes such as weight, label and position are absent and must be set explicitly by appropriate method calls; the second version puts the node at position <span class="sans-serif">(x,y)</span>, where <span class="sans-serif">x</span> and <span class="sans-serif">y</span> are pixel coordinates.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">addEdge(int sourceId, int targetId)</span></td>
+<td style="text-align: left;">adds an edge from the source to the target (source and target are interchangeable when graph is undirected); the second variation specifies id’s of the nodes to be connected; as in the case of adding a node, the edge is added to the list of edges and its weight and label are absent</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">deleteNode(Node v)</span></td>
+<td style="text-align: left;">removes node <span class="sans-serif">v</span> and its incident edges from the graph</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">deleteEdge(Edge e)</span></td>
+<td style="text-align: left;">removes edge <span class="sans-serif">e</span> from the graph</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="tab:utility_functions">
+<table>
+<caption>Utility functions.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;"><span class="sans-serif">print(Object o1, Object o2, ...)</span></th>
+<th style="text-align: left;">prints the list of objects as strings on the console; useful for debugging</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">display(Object o1, Object o2, ...)</span></td>
+<td style="text-align: left;">writes a message composed of the list of objects as a banner at the top of the window</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">String getMessage()</span></td>
+<td style="text-align: left;">returns the message currently displayed on the message banner</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">error(String s)</span></td>
+<td style="text-align: left;">prints <span class="sans-serif">s</span> on the console with a stack trace; also displays <span class="sans-serif">s</span> in popup window with an option to view the stack trace; the algorithm terminates and the user can choose whether to terminate Galant entirely or continue interacting</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">beginStep()</span>, <span class="sans-serif">endStep()</span>, <span class="sans-serif">step()</span></td>
+<td style="text-align: left;">any actions between a <span class="sans-serif">beginStep()</span> and an <span class="sans-serif">endStep()</span> take place atomically, i.e., all in a single “step forward” action by the user; <span class="sans-serif">step()</span> is a synonym for <span class="sans-serif">endStep(); beginStep()</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">Node getNode(String message)</span></td>
+<td style="text-align: left;">pops up a window with the given message and prompts the user to enter the identifier of a node, which is returned; if no node with that id exists, an error popup is displayed and the user is prompted again</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">Edge getEdge(String message)</span></td>
+<td style="text-align: left;">pops up a window with the given message and prompts the user to enter the identifiers of two nodes, the endpoints of an edge, which is returned; if either id has no corresponding node or the the two nodes are not connect by an edge (in the right direction if the graph is directed), an error popup is displayed and the user is prompted again</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">Node getNode(String p,</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">                   NodeSet s,</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">                   String e)</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">Edge getEdge(String p,</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">                   EdgeSet s,</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">                   String e)</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">variations of <span class="sans-serif">getNode</span> and <span class="sans-serif">getEdge</span>; here <span class="sans-serif">p</span> is the prompt, <span class="sans-serif">s</span> is the set from which the node or edge must be chosen and <span class="sans-serif">e</span> an error message if the node/edge does not belong to <span class="sans-serif">s</span>; useful when wanting user to specify an adjacent node or an outgoing edge</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">String getString(String message)</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">Integer getInteger(String message)</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">Double getReal(String message)</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">analogous to <span class="sans-serif">getNode</span> and <span class="sans-serif">getEdge</span>; allows algorithm to engage in dialog with the user to obtain values of various types; <span class="sans-serif">getDouble</span> is synonymous with <span class="sans-serif">getReal</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">Boolean getBoolean(String message)</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">Boolean getBoolean(String message,</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">              String yes, String no</span>)</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">similar to <span class="sans-serif">getString</span>, etc., but differs in that the only user input is a mouse click or the <span class="sans-serif">Enter</span> key and the algorithm steps forward immediately after the query is answered; the second variation specifies the text for each of the two buttons – default is <span class="sans-serif">"yes"</span> and <span class="sans-serif">"no"</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">Integer integer(String s)</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">Double real(String s)</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">performs conversion from a string to an integer/double; useful when parsing labels that represent numbers</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">windowWidth()</span>, <span class="sans-serif">windowHeight()</span></td>
+<td style="text-align: left;">current width and height of the window, in case the algorithm wants to re-scale the graph</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Functions and macros for the graph as a whole are shown in Table <a href="#tab:graph_functions" data-reference-type="ref" data-reference="tab:graph_functions">1</a>, while Table <a href="#tab:utility_functions" data-reference-type="ref" data-reference="tab:utility_functions">2</a> lists some algorithm functions not related to any aspect of a graph.</p>
+<p><em><strong>Note:</strong> The functions/methods provided by Galant may have multiple synonyms for convenience and backward compatibility. A full list of methods and functions is given in <span class="sans-serif">Algorithm.java</span> in the subdirectory <span class="sans-serif">src/edu/ncsu/csc/Galant/algorithm</span>.</em></p>
+<p>The nodes and edges, of type <span class="sans-serif">Node</span> and <span class="sans-serif">Edge</span>, respectively, are subtypes/extensions of <span class="sans-serif">GraphElement</span>. Arbitrary attributes can be assigned to each graph element. In the GraphML file these show up as, for example,<br />
+ <span class="sans-serif"><span class="math inline">&lt;</span>node <em>attribute_1</em>="<em>value_1</em>" ... <em>attribute_k</em>="<em>value_k</em>" /<span class="math inline">&gt;</span></span> </p>
+<p>Each node and edge has a unique integer id. The id’s are assigned consecutively as nodes/edges are created; they may not be altered. The id of a node or edge <span class="math inline"><em>x</em></span> can be accessed via the function call <span class="sans-serif">id(<span class="math inline"><em>x</em></span>)</span>. Often, as is the case with the depth-first search algorithm, it makes sense to use arrays indexed by node or edge id’s. Since graphs may be generated externally and/or have undergone deletions of nodes or edges, the id’s are not always contiguous.<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> The functions <span class="sans-serif">nodeIds()</span> and <span class="sans-serif">edgeIds()</span> return the size of an array large enough to accommodate the appropriate id’s as indexes. So code such as</p>
+<pre><code>        Integer myArray[] = new Integer[nodeIds()];
+        for_nodes(v) { myArray[id(v)] = 1; }</code></pre>
+<p>is immune to array out of bounds errors.</p>
+<h2 id="sec:nodes_and_edges">Node and edge attributes and methods</h2>
+<p>Nodes and edges have ‘getters’ and ‘setters’ for a variety of attributes, i.e.,<br />
+<span class="sans-serif">set</span><span class="math inline"><em>a</em></span><span class="sans-serif">(<span class="math inline">⟨<em>a</em>′<em>s</em></span> type<span class="math inline">⟩</span> x)</span><br />
+and<br />
+<span class="math inline">⟨<em>a</em>′<em>s</em></span> type<span class="math inline">⟩</span> <span class="sans-serif">get</span><span class="math inline"><em>a</em></span><span class="sans-serif">()</span>, where <span class="math inline"><em>a</em></span> is the name of an attribute such as <span class="sans-serif">Color</span>, <span class="sans-serif">Label</span> or <span class="sans-serif">Weight</span>. A more convenient way to access these standard attributes omits the prefix <span class="sans-serif">get</span> and uses procedural syntax: <span class="sans-serif">color(</span><span class="math inline"><em>x</em></span><span class="sans-serif">)</span> is a synonym for <span class="math inline"><em>x</em></span><span class="sans-serif">.getColor()</span>, for example. Procedural syntax for the setters is also available: <span class="sans-serif">setColor(</span><span class="math inline"><em>x</em></span>,<span class="math inline"><em>c</em></span><span class="sans-serif">)</span> is a synonym for <span class="math inline"><em>x</em></span>.<span class="sans-serif">setColor(</span><span class="math inline"><em>c</em></span><span class="sans-serif">)</span>. In the special cases of color and label it is possible to omit the <span class="sans-serif">set</span> (since it reads naturally): <span class="sans-serif">color(<span class="math inline"><em>x</em></span>,<span class="math inline"><em>c</em></span>)</span> instead of <span class="sans-serif">setColor(<span class="math inline"><em>x</em></span>,<span class="math inline"><em>c</em></span>)</span>; and <span class="sans-serif">label(<span class="math inline"><em>x</em></span>,<span class="math inline"><em>c</em></span>)</span> instead of <span class="sans-serif">setLabel(<span class="math inline"><em>x</em></span>,<span class="math inline"><em>c</em></span>)</span>.</p>
+<p>In the subsections below we discuss attributes in more detail, using the categories articulated in the GDR paper – (earlier) citation in the technical report.</p>
+<h3 id="logical-attributes-functions-and-macros">Logical attributes: functions and macros</h3>
+<p><strong>Nodes.</strong> From a node’s point of view we would like information about the adjacent nodes and incident edges. Macros that hide some Java syntax and extra function calls are provided for that purpose. The macros (which are borrowed from their equivalents in GDR) are:</p>
+<ul>
+<li><p><span class="sans-serif">for_adjacent(<span class="math inline"><em>v</em>, <em>e</em>, <em>w</em></span>) { <em>code block</em> }</span><br />
+executes the statements in the code block for each edge incident on node <span class="math inline"><em>v</em></span>. The statements can refer to <span class="math inline"><em>v</em></span>, or <span class="math inline"><em>e</em></span>, the current incident edge, or <span class="math inline"><em>w</em></span>, the other endpoint of <span class="math inline"><em>e</em></span>. The macro assumes that <span class="math inline"><em>v</em></span> has already been declared as <span class="sans-serif">Node</span> but it declares <span class="math inline"><em>e</em></span> as <span class="sans-serif">Edge</span> and <span class="math inline"><em>w</em></span> as <span class="sans-serif">Node</span> automatically.</p></li>
+<li><p><span class="sans-serif">for_outgoing(<span class="math inline"><em>v</em>, <em>e</em>, <em>w</em></span>) { <em>code block</em> }</span><br />
+behaves like <span class="sans-serif">for_adjacent</span> except that, when the graph is directed, it iterates only over the edges whose source is <span class="math inline"><em>v</em></span> (it still iterates over all the edges when the graph is undirected).</p></li>
+<li><p><span class="sans-serif">for_incoming(<span class="math inline"><em>v</em>, <em>e</em>, <em>w</em></span>) { <em>code block</em> }</span><br />
+behaves like <span class="sans-serif">for_adjacent</span> except that, when the graph is directed, it iterates only over the edges whose target (destination) is <span class="math inline"><em>v</em></span> (it still iterates over all the edges when the graph is undirected).</p></li>
+</ul>
+<p>The actual API methods hiding behind these macros are (these are Node methods):</p>
+<ul>
+<li><p><span class="sans-serif">EdgeList edges(<span class="math inline"><em>v</em></span>)</span> returns a list of all edges incident to <span class="math inline"><em>v</em></span>, both incoming and outgoing.</p></li>
+<li><p><span class="sans-serif">EdgeList outgoingEdges(<span class="math inline"><em>v</em></span>)</span> returns a list of edges directed away from <span class="math inline"><em>v</em></span> (all incident edges if the graph is undirected).</p></li>
+<li><p><span class="sans-serif">EdgeList incomingEdges(<span class="math inline"><em>v</em></span>)</span> returns a list of edges directed toward <span class="math inline"><em>v</em></span> (all incident edges if the graph is undirected).</p></li>
+<li><p><span class="sans-serif">Node otherEnd(<span class="math inline"><em>e</em></span>, <span class="math inline"><em>v</em></span>)</span> returns the endpoint, other than <span class="math inline"><em>v</em></span>, of <span class="math inline"><em>e</em></span>.</p></li>
+</ul>
+<p>The following are node functions with procedural syntax.</p>
+<ul>
+<li><p><span class="sans-serif">degree(v)</span>, <span class="sans-serif">indegree(v)</span> and <span class="sans-serif">outdegree(v)</span> return the appropriate integers.</p></li>
+<li><p><span class="sans-serif">otherEnd(v, e)</span>, where <span class="sans-serif">v</span> is a node and <span class="sans-serif">e</span> is an edge returns node <span class="sans-serif">w</span> such that <span class="sans-serif">e</span> connects <span class="sans-serif">v</span> and <span class="sans-serif">w</span>; the programmer can also say <span class="sans-serif">otherEnd(e, v)</span> in case she forgets the order of the arguments.</p></li>
+<li><p><span class="sans-serif">neighbors(v)</span> returns a list of the nodes adjacent to node <span class="sans-serif">v</span>.</p></li>
+</ul>
+<p><strong>Edges.</strong> The logical attributes of an edge <span class="math inline"><em>e</em></span> are its source and target (destination) accessed using <span class="sans-serif">source(<span class="math inline"><em>e</em></span>)</span> and <span class="sans-serif">target(<span class="math inline"><em>e</em></span>)</span>, respectively.</p>
+<p><strong>Graph Elements.</strong> Nodes and edges both have a mechanism for setting (and getting) arbitrary attributes of type Integer, String, and Double. the relevant functions are listed below. Note that the type can be implicit for the setters – the compiler can figure that out, but needs to be explicit for the getters – in Java, two methods that differ only in their return type are indistinguishable. In each case <span class="math inline"><em>g</em></span> stands for a graph element (node or edge).</p>
+<ul>
+<li><p><span class="sans-serif">set(<span class="math inline"><em>g</em></span>, String <em>attribute</em>, <span class="math inline">⟨<em>t</em><em>y</em><em>p</em><em>e</em>⟩</span> <em>value</em>)</span>, where <em>type</em> can be <span class="sans-serif">String</span>, <span class="sans-serif">Boolean</span>, <span class="sans-serif">Integer</span>, or <span class="sans-serif">Double</span>.</p></li>
+<li><p><span class="sans-serif">set(<span class="math inline"><em>g</em></span>, String <em>attribute</em>)</span>; the attribute is assumed to be Boolean, the value is set to <span class="sans-serif">true</span>.</p></li>
+<li><p><span class="sans-serif">String getString(<span class="math inline"><em>g</em></span>, String <em>attribute</em>)</span></p></li>
+<li><p><span class="sans-serif">Boolean getBoolean(<span class="math inline"><em>g</em></span>, String <em>attribute</em>)</span></p></li>
+<li><p><span class="sans-serif">Boolean is(<span class="math inline"><em>g</em></span>, String <em>attribute</em>)</span>, a synonym for <span class="sans-serif">getBoolean</span></p></li>
+<li><p><span class="sans-serif">Integer getInteger(<span class="math inline"><em>g</em></span>, String <em>attribute</em>)</span></p></li>
+<li><p><span class="sans-serif">Double getDouble(<span class="math inline"><em>g</em></span>, String <em>attribute</em>)</span></p></li>
+</ul>
+<p>An object oriented syntax can also be used – this is especially natural in case of <span class="sans-serif">is</span>, as in <span class="sans-serif">v.is("inTree")</span> – see <span class="sans-serif">boruvka.alg</span> in the <span class="sans-serif">Algorithms</span> directory.</p>
+<p>Arbitrary attributes are useful when an algorithm requires additional information to be associated with nodes and/or edges. The user-defined attributes may differ from one node or edge to the next. For example, some nodes may have a <span class="sans-serif">depth</span> attribute while others do not.</p>
+<p><strong>Note:</strong> <em>Attributes retain their types throughout algorithm execution but Galant does not attempt to guess the type of an attribute when reading a graph from a file.</em> For example, suppose an algorithm does <span class="sans-serif">set(v, "pre", 5)</span>. To read the value of attribute <span class="sans-serif">pre</span> for node <span class="sans-serif">v</span> the algorithm will have to use <span class="sans-serif">getInteger(v, "pre")</span> (or one of its synonyms) – <span class="sans-serif">getDouble(v, "pre")</span> or <span class="sans-serif">getString(v, "pre")</span> will return <span class="sans-serif">null</span>. However, suppose the user exports the graph to a file <span class="sans-serif">mine.graphml</span> after setting the attribute. The GraphML representation for node <span class="sans-serif">v</span> will have <span class="sans-serif">pre="5"</span>, but when Galant reads <span class="sans-serif">mine.graphml</span>, the attribute <span class="sans-serif">pre</span>, and any other user-defined attribute, will be treated as a string attribute. So <span class="sans-serif">getInteger(v, "pre")</span> will return <span class="sans-serif">null</span> whereas <span class="sans-serif">getString(v, "pre")</span> will return the string <span class="sans-serif">"5"</span>. This is not a problem unless the user wants to save the state of an algorithm execution midstream <em>and then use it as a starting point</em>. The only workaround is for an animation program to do its own parsing, using the utility functions <span class="sans-serif">integer</span> and <span class="sans-serif">real</span> – see Table <a href="#tab:utility_functions" data-reference-type="ref" data-reference="tab:utility_functions">2</a>.</p>
+<h3 id="geometric-attributes">Geometric attributes</h3>
+<p>Currently, the only geometric attributes are the positions of the nodes. Unlike GDR, the edges in Galant are all straight lines and the positions of their labels are fixed. The relevant functions are <span class="sans-serif">int getX(Node <span class="math inline"><em>v</em></span>)</span>, <span class="sans-serif">int getY(Node <span class="math inline"><em>v</em></span>)</span> and <span class="sans-serif">Point getPosition(Node <span class="math inline"><em>v</em></span>)</span> for the getters. The Java type/class <span class="sans-serif">Point</span> has fields <span class="sans-serif">x</span> and <span class="sans-serif">y</span> that can be retrieved using <span class="sans-serif"><span class="math inline"><em>p</em></span>.x</span> and <span class="sans-serif"><span class="math inline"><em>p</em></span>.y</span>, where <span class="math inline"><em>p</em></span> is a <span class="sans-serif">Point</span>. To set a position, use<br />
+<span class="sans-serif">setPosition(Node <span class="math inline"><em>v</em></span>, Point <span class="math inline"><em>p</em></span>)</span><br />
+or<br />
+<span class="sans-serif">setPosition(Node <span class="math inline"><em>v</em></span>, int <span class="math inline"><em>x</em></span>, int <span class="math inline"><em>y</em></span>)</span>.<br />
+Once a node has an established position, it is possible to change one coordinate at a time using <span class="sans-serif">setX(Node <span class="math inline"><em>v</em></span>, int <span class="math inline"><em>x</em></span>)</span> or <span class="sans-serif">setY(Node <span class="math inline"><em>v</em></span>, int <span class="math inline"><em>y</em></span>)</span>.</p>
+<p>The user is allowed to move nodes during algorithm execution and the resulting positions persist after execution terminates (other attributes do not). Node position is the only attribute that can be "edited" by the user at runtime. For some animations, however, such as sorting, the animation itself needs to move nodes. To avoid potential conflicts between position changes inflicted by the user and those desired by the animation, the function <span class="sans-serif">movesNodes()</span>, called at the beginning of an algorithm, will keep the user from moving nodes (mouse actions on the graph panel have no effect).</p>
+<h3 id="sec:display_attributes">Display attributes</h3>
+<p>Each node and edge has both a (double) weight and a label. The weight is also a logical attribute in that it is used implicitly as a key for sorting and priority queues. The label is simply text and may be interpreted however the programmer chooses. The conversion functions <span class="sans-serif">integer(String)</span> and <span class="sans-serif">real(String)</span> – see Table <a href="#tab:utility_functions" data-reference-type="ref" data-reference="tab:utility_functions">2</a> – provide a convenient mechanism for treating labels as objects of class <span class="sans-serif">Integer</span> or <span class="sans-serif">Double</span>, respectively. The second argument of <span class="sans-serif">label</span> is not the expected <span class="sans-serif">String</span> but <span class="sans-serif">Object</span>; any type of object that has a Java <span class="sans-serif">toString</span> method will work – numbers have to be of type <span class="sans-serif">Integer</span> or <span class="sans-serif">Double</span> rather than <span class="sans-serif">int</span> or <span class="sans-serif">double</span> since the latter are not objects in Java.<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> Thus, conversion between string labels and numbers works both ways.</p>
+<p>The <span class="sans-serif">display</span> and <span class="sans-serif">print</span> functions also take arbitrarily many objects as arguments. So <span class="sans-serif">display(<span class="math inline"><em>g</em></span>)</span> and <span class="sans-serif">print(<span class="math inline"><em>g</em></span>)</span>, where <span class="math inline"><em>g</em></span> is a node or edge will print information about the attributes of <span class="math inline"><em>g</em></span> (as a list in square brackets). Often, you only want to display/print the id of a node or the source and target of an edge. The appropriate incantations for <span class="sans-serif">display</span> are <span class="sans-serif">display(id(<span class="math inline"><em>g</em></span>))</span> and <span class="sans-serif">display(string(<span class="math inline"><em>g</em></span>))</span>, respectively. The <span class="sans-serif">string</span> function is designed specifically for this purpose and applies only to edges. Because these functions allow more than one argument, you can say, for example,<br />
+<span class="sans-serif">display("node = ", id(node), " edge = ", edge)</span><br />
+instead of the more awkward<br />
+<span class="sans-serif">display("node = " + id(node) + " edge = " + edge)</span><br />
+demanded by Java string syntax.</p>
+<p>In order to make the display of weights more attractive, weights that happen to be integers are shown without the decimal point and at most two positions to the right of the decimal point are shown.</p>
+<p>Aside from the setters and getters: <span class="sans-serif">setWeight(GraphElement <span class="math inline"><em>g</em></span>, double <span class="math inline"><em>w</em><em>t</em></span>)</span>, <span class="sans-serif">Double getWeight(<span class="math inline"><em>g</em></span>)</span>, <span class="sans-serif">label(<span class="math inline"><em>g</em></span>, Object <span class="math inline"><em>o</em></span>)</span> and <span class="sans-serif">String label(<span class="math inline"><em>g</em></span>)</span>, the programmer can also manipulate and test for the absence of weights/labels using <span class="sans-serif">clearWeight(<span class="math inline"><em>g</em></span>)</span> and <span class="sans-serif">Boolean hasWeight(<span class="math inline"><em>g</em></span>)</span>, and the corresponding methods for labels. It is also possible to remove an arbitrary attribute <span class="math inline"><em>a</em></span> using <span class="sans-serif">clear(<span class="math inline"><em>g</em></span>, String <span class="math inline"><em>a</em></span>)</span>, but there is not yet a <span class="sans-serif">has</span> function for arbitrary attributes.<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a> You have to test whether the getter returns <span class="sans-serif">null</span>.</p>
+<p>Nodes can either be plain, highlighted (selected), marked (visited) or both highlighted and marked. Being highlighted alters the the boundary (color and thickness) of a node (thickness is controlled by user preference), while being marked affects the fill color. Edges can be plain or selected, with thickness and color modified in the latter case.</p>
+<p>The relevant methods are (here <span class="math inline"><em>g</em></span> refers to an object of type <span class="sans-serif">GraphElement</span>, a <span class="sans-serif">Node</span> or an <span class="sans-serif">Edge</span>):</p>
+<ul>
+<li><p><span class="sans-serif">highlight(<span class="math inline"><em>g</em></span>)</span>, <span class="sans-serif">unhighlight(<span class="math inline"><em>g</em></span>)</span> and <span class="sans-serif">Boolean highlighted(<span class="math inline"><em>g</em></span>)</span></p></li>
+<li><p>correspondingly, <span class="sans-serif">select(<span class="math inline"><em>g</em></span>)</span>, <span class="sans-serif">deselect(<span class="math inline"><em>g</em></span>)</span>, and <span class="sans-serif">Boolean selected(<span class="math inline"><em>g</em></span>)</span></p></li>
+<li><p><span class="sans-serif">mark(Node <span class="math inline"><em>v</em></span>)</span>, <span class="sans-serif">unmark(Node <span class="math inline"><em>v</em></span>)</span> and <span class="sans-serif">Boolean marked(Node <span class="math inline"><em>v</em></span>)</span></p></li>
+</ul>
+<div class="tabular">
+<p><span>| l @<span> = </span> l |</span> <code>RED</code> &amp; <code>"#ff0000"</code><br />
+<code>BLUE</code> &amp; <code>"#00ff00"</code><br />
+<code>GREEN</code> &amp; <code>"#0000ff"</code><br />
+<code>YELLOW</code> &amp; <code>"#ffff00"</code><br />
+<code>MAGENTA</code> &amp; <code>"#ff00ff" </code><br />
+<code>CYAN</code> &amp; <code>"#00ffff"</code><br />
+<code>TEAL</code> &amp; <code>"#009999"</code><br />
+<code>VIOLET</code> &amp; <code>"#9900cc"</code><br />
+<code>ORANGE</code> &amp; <code>"#ff8000"</code><br />
+<code>GRAY</code> &amp; <code>"#808080"</code><br />
+<code>BLACK</code> &amp; <code>"#000000"</code><br />
+<code>WHITE</code> &amp; <code>"#ffffff"</code><br />
+</p>
+</div>
+<p>Although the specific colors for displaying the outlines of nodes or the lines representing edges are predetermined for plain and highlighted nodes/edges, the animation implementation can modify colors explicitly, thus allowing for many different kinds of highlighting. Use the <span class="sans-serif">color(<span class="math inline"><em>g</em></span>)</span> (getter), <span class="sans-serif">color(<span class="math inline"><em>g</em></span>, <span class="math inline"><em>c</em></span>)</span> (setter) and <span class="sans-serif">uncolor(<span class="math inline"><em>g</em></span>)</span> functions, where <span class="math inline"><em>g</em></span> is a node/edge and <span class="math inline"><em>c</em></span> a color string in the RGB format <code>#RRGGBB</code>; for example, the string <code>#0000ff</code> is blue. Galant defines several color constants for convenience – these are listed in Table <a href="#tab:colors" data-reference-type="ref" data-reference="tab:colors">[tab:colors]</a> – so one can say, e.g., <span class="sans-serif">color(<span class="math inline"><em>g</em></span>,TEAL)</span> instead of <span class="sans-serif">color(<span class="math inline"><em>g</em></span>,"#009999")</span>.</p>
+<p>Note: In the graph display <em>highlighting takes precedence over color</em>; if a node is highlighted, its color is ignored and the default highlight color is used.</p>
+<p>Special handling is required when one of the native Galant attributes is nonexistent or has a <span class="sans-serif">null</span> value – these two are equivalent. When displayed in the graph window, nonexistent labels and weights simply do not show up while nonexistent colors are rendered as thin black lines (thickness determined by user preference). In an animation program, however, nonexistent attributes are handled differently.</p>
+<ul>
+<li><p><span class="sans-serif">color(<span class="math inline"><em>g</em></span>)</span> returns null as expected</p></li>
+<li><p>all functions returning Boolean values, such as <span class="sans-serif">highlighted(<span class="math inline"><em>g</em></span>)</span>, <span class="sans-serif">marked(Node <span class="math inline"><em>v</em></span>)</span> and those for attributes defined by the animator, return <span class="sans-serif">false</span></p></li>
+<li><p><span class="sans-serif">label(<span class="math inline"><em>g</em></span>)</span> returns an empty string; this ensures that it is always safe to use a label in an expression calling for a string</p></li>
+<li><p><span class="sans-serif">weight(<span class="math inline"><em>g</em></span>)</span> throws an exception; there is no obvious default weight; a program can test for the presence/absence of a weight using the <span class="sans-serif">hasWeight(<span class="math inline"><em>g</em></span>)</span> or <span class="sans-serif">hasNoWeight(<span class="math inline"><em>g</em></span>)</span> methods</p></li>
+</ul>
+<p>Of the attributes listed above, weight, label, color and position can be accessed and modified by the user as well as the program. Except in case of node positions, as noted above, the user can do this only in edit mode. In all cases of display attributes modifications during runtime are ephemeral – the graph returns to its original, pre-execution, state after running the animation. The user can save the mid-execution state of the graph: select the <span class="sans-serif">Export</span> option on the file menu of the <em>graph</em> window.</p>
+<p>A final display attribute is visibility. An algorithm sometimes involves deletion of nodes or edges, or, as is the case with our implementation of Boruvka’s algorithm, some edges are no longer important. Graph elements can be hidden and made to reappear using the <span class="sans-serif">hide</span> and <span class="sans-serif">show</span> functions.</p>
+<p>To understand how showing and hiding of nodes and edges works, we need to distinguish between the logical state of a node/edge and what is displayed. Logically, for any graph element <span class="math inline"><em>g</em></span>, <span class="sans-serif">show(<span class="math inline"><em>g</em></span>)</span> makes <span class="math inline"><em>g</em></span> visible and <span class="sans-serif">hide(<span class="math inline"><em>g</em></span>)</span> makes it invisible. For nodes, the logical and display state are the same – a logically visible node will be drawn on the graph window. But an edge will be drawn only if it is logically visible <em>and both of its endpoints are also logically visible.</em></p>
+<p>Here, <em>element</em> refers to either a <span class="sans-serif">Node</span> or an <span class="sans-serif">Edge</span>, both as a type and as a formal parameter.</p>
+<div id="tab:graph_element_functions">
+<table>
+<caption>Functions that query and manipulate attributes of individual nodes and edges. </caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;"><span class="sans-serif">id(<em>element</em>)</span></th>
+<th style="text-align: left;">returns the unique identifier of the node or edge</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">source(Edge e)</span>, <span class="sans-serif">target(Edge e)</span></td>
+<td style="text-align: left;">returns the source/target of edge <span class="sans-serif">e</span>, sometimes called the (arrow) tail/head or source/destination</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">string(Edge e)</span></td>
+<td style="text-align: left;">returns a string of the form <span class="sans-serif">"(<span class="math inline"><em>s</em></span>,<span class="math inline"><em>t</em></span>)"</span>, where <span class="math inline"><em>s</em>=</span> <span class="sans-serif">source(e)</span> and <span class="math inline"><em>t</em>=</span> <span class="sans-serif">target(e)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">mark(Node v), unmark(Node v)</span></td>
+<td style="text-align: left;">shades the interior of a node or undoes that</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">Boolean marked(Node v)</span></td>
+<td style="text-align: left;">returns <span class="sans-serif">true</span> if the node is marked</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">NodeList unmarkedNeighbors(Node v)</span></td>
+<td style="text-align: left;">returns a list of the adjacent nodes that are not marked</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">highlight(<em>element</em>), unhighlight(<em>element</em>)</span></td>
+<td style="text-align: left;">makes the node or edge highlighted, i.e., thickens the border or line and makes it red / undoes the highlighting</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">Boolean highlighted(<em>element</em>)</span></td>
+<td style="text-align: left;">returns <span class="sans-serif">true</span> if the node or edge is highlighted</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">selected(<em>element</em>)</span></td>
+<td style="text-align: left;">synonyms for <span class="sans-serif">highlight</span>, <span class="sans-serif">unhighlight</span> and <span class="sans-serif">highlighted</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">setWeight(<em>element</em>, double weight)</span></td>
+<td style="text-align: left;">get/set the weight of the element</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">Boolean weightIsVisible(<em>element</em>)</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">Boolean weightIsHidden(<em>element</em>)</span></td>
+<td style="text-align: left;">make the weight of the element visible/invisible, query their visibility; weights of the element type have to be globally visible – see Table <a href="#tab:graph_attribute_functions" data-reference-type="ref" data-reference="tab:graph_attribute_functions">4</a> – for <span class="sans-serif">showWeight</span> to have an effect</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">label(<em>element</em>, Object obj)</span></td>
+<td style="text-align: left;">get/set the label of the element, the <span class="sans-serif">Object</span> argument allows an object of any other type to be converted to a (<span class="sans-serif">String</span>) label, as long as there is a <span class="sans-serif">toString</span> method, which is true of all major classes (you have to be careful, for example, to use <span class="sans-serif">Integer</span> instead of <span class="sans-serif">int</span>)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">Boolean labelIsVisible(<em>element</em>)</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">Boolean labelIsHidden(<em>element</em>)</span></td>
+<td style="text-align: left;">analogous to the corresponding weight functions</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">Boolean hidden(<em>element</em>)</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">Boolean visible(<em>element</em>)</span></td>
+<td style="text-align: left;">makes nodes/edges disappear/reappear and tests whether they are visible or hidden; useful when an algorithm (logically) deletes objects, but they need to be revealed again upon completion; if node is hidden, all its incident edges are hidden as well; <span class="sans-serif">show(<span class="math inline"><em>v</em></span>)</span>, where <span class="math inline"><em>v</em></span> is a node, will show only the incident edges that are not hidden</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">color(<em>element</em>, String c)</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">uncolor(<em>element</em>)</span></td>
+<td style="text-align: left;">get/set/remove the color of the border of a node or line representing an edge; colors are encoded as strings of the form <span class="sans-serif">"#RRBBGG"</span>, the RR, BB and GG being hexadecimal numbers representing the red, blue and green components of the color, respectively; see Table <a href="#tab:colors" data-reference-type="ref" data-reference="tab:colors">[tab:colors]</a> for a list of predefined colors; when an element has no color, the line is thinner and black</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">boolean set(<em>element</em>, String key, <span class="math inline">⟨</span><em>type</em><span class="math inline">⟩</span> value)</span></td>
+<td style="text-align: left;">sets an arbitrary attribute, <span class="sans-serif">key</span>, of the element to have a value of a given type, where the type is one of <span class="sans-serif">Integer</span>, <span class="sans-serif">Double</span>, <span class="sans-serif">Boolean</span> or <span class="sans-serif">String</span>; in the special case of <span class="sans-serif">Boolean</span> the third argument may be omitted and defaults to <span class="sans-serif">true</span>; so <span class="sans-serif">set(v,"attr")</span> is equivalent to <span class="sans-serif">set(v,"attr",true)</span>; returns <span class="sans-serif">true</span> if the element already has a value for the given attribute, <span class="sans-serif">false</span> otherwise</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">boolean clear(<em>element</em>, String key)</span></td>
+<td style="text-align: left;">removes the attribute <span class="sans-serif">key</span> from the element; if the <span class="sans-serif">key</span> refers to a Boolean attribute, this is logically equivalent to making it false</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">Boolean is(<em>element</em>, String key)</span></td>
+<td style="text-align: left;">returns the value associated with <span class="sans-serif">key</span> or <span class="sans-serif">null</span> if the graph has no value of the given type for <span class="sans-serif">key</span>, i.e., if no <span class="sans-serif">set(String key, <span class="math inline">⟨</span><em>type</em><span class="math inline">⟩</span> value)</span> has occurred; in the special case of a <span class="sans-serif">Boolean</span> attribute, the second formulation may be used; the object-oriented syntax, such as <span class="sans-serif">e.is("inTree")</span>, sometimes reads more naturally</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>A summary of functions relevant to node and edge attributes (their procedural versions) is given in Table <a href="#tab:graph_element_functions" data-reference-type="ref" data-reference="tab:graph_element_functions">3</a>. Some of the most important functions, those relevant to the structure of the graph, are listed in Table <a href="#tab:graph_functions" data-reference-type="ref" data-reference="tab:graph_functions">1</a>.</p>
+<h3 id="global-access-for-individual-nodeedge-attributes-and-graph-attributes">Global access for individual node/edge attributes and graph attributes</h3>
+<p>These functions are designed to access or manipulate attributes for all nodes or edges at once instead of individually. Also included are functions that deal with graph attributes.</p>
+<div id="tab:graph_attribute_functions">
+<table>
+<caption>Functions that query and manipulate graph node and edge attributes globally.</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">hideAllEdgeLabels()</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">hideAllNodeWeights()</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">hideAllEdgeWeights()</span></td>
+<td style="text-align: left;">hide all node/edge labels/weights these functions are typically used to hide information so that it can be revealed subsequently, one node or edge at a time</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">showAllEdgeLabels()</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">showAllNodeWeights()</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">showAllEdgeWeights()</span></td>
+<td style="text-align: left;">make all individual node/edge weights/labels visible this undoes the effect of <span class="sans-serif">hideAllNodeLabels()</span>, etc., and of any individual hiding of labels/weights</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">clearNodeWeights(), clearEdgeWeights()</span></td>
+<td style="text-align: left;">gets rid of all node/edge labels/weights; this not only makes them invisible, but also erases whatever values they have</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">showNodes(), showEdges(), showGraph()</span></td>
+<td style="text-align: left;">undo any hiding of nodes/edges that has taken place during the algorithm; <span class="sans-serif">showNodes()</span> only shows edges currently (logically) visible; <span class="sans-serif">showGraph()</span> restores visibility of both nodes and edges</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">EdgeSet visibleEdges()</span></td>
+<td style="text-align: left;">return the set of nodes/edges that are not hidden</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">clearNodeHighlighting()</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">clearEdgeHighlighting()</span></td>
+<td style="text-align: left;">unmarks all nodes, unhighlights all nodes/edges, respectively</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">clearNodeWeights()</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">clearEdgeLabels()</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">clearEdgeWeights()</span></td>
+<td style="text-align: left;">erases labels/weights of all nodes/edges; useful if an algorithm needs to start with a clean slate with respect to any of these attributes</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">clearAllEdge(String attribute)</span></td>
+<td style="text-align: left;">erases values of the given attribute from all nodes/edges, a generalization of <span class="sans-serif">clearNodeLabels</span>, etc.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">boolean set(String attribute, <span class="math inline">⟨</span><em>type</em><span class="math inline">⟩</span> value)</span></td>
+<td style="text-align: left;">sets an arbitrary attribute of the graph to have a value of a given type, where the type is one of <span class="sans-serif">Integer</span>, <span class="sans-serif">Double</span>, <span class="sans-serif">Boolean</span> or <span class="sans-serif">String</span>; in the special case of <span class="sans-serif">Boolean</span> the second argument may be omitted and defaults to <span class="sans-serif">true</span>; so <span class="sans-serif">set("attr")</span> is equivalent to <span class="sans-serif">set("attr",true)</span>; returns <span class="sans-serif">true</span> if the graph already has a value for the given attribute, <span class="sans-serif">false</span> otherwise</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">Boolean is(String attribute)</span></td>
+<td style="text-align: left;">returns the value associated with <span class="sans-serif">attribute</span> or <span class="sans-serif">null</span> if the graph has no value of the given type for <span class="sans-serif">attribute</span>, i.e., if no <span class="sans-serif">set(String attribute, <span class="math inline">⟨</span><em>type</em><span class="math inline">⟩</span> value)</span> has occurred; in the special case of a <span class="sans-serif">Boolean</span> attribute, the second formulation may be used</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">clearAllEdge(String attribute)</span></td>
+<td style="text-align: left;">erases the value of the given attribute for all nodes/edges</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>It is sometimes useful to access or manipulate attributes of nodes and edges globally. For example, an animation might want to hide node weights initially and reveal them for individual nodes as they become relevant. Or it may want to hide edges individually as it progresses to get the effect of deleting them and then reveal them again at the end. These functionalities can be accomplished by <span class="sans-serif">hideAllNodeWeights</span><a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a> or <span class="sans-serif">showEdges</span>, respectively. A summary of these capabilities is given in Table <a href="#tab:graph_attribute_functions" data-reference-type="ref" data-reference="tab:graph_attribute_functions">4</a>.</p>
+<ul>
+<li><p>An algorithm hides some edges individually and uses <span class="sans-serif">showEdges</span> to make all of them visible in one step later.</p></li>
+<li><p>An algorithm hides some nodes individually (along with their incident edges); it later makes all nodes visible and selectively makes some of their incident edges visible; nodes that were not hidden are unaffected; the visibility of any edges is not affected either.</p></li>
+<li><p>An algorithm hides individual nodes and edges and later restores visibility to the whole graph; the function to use in this case is <span class="sans-serif">showGraph</span>.</p></li>
+</ul>
+<div id="tab:declarations">
+<table>
+<caption>Functions that act as declarations.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;"><span class="sans-serif">movesNodes()</span></th>
+<th style="text-align: left;">keeps the <em>user</em> from moving nodes during animation execution</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">setDirected(boolean <span class="math inline"><em>d</em></span>)</span></td>
+<td style="text-align: left;">determine whether the animation will treat the graph as directed (<span class="sans-serif"><span class="math inline"><em>d</em></span> = true</span>) or undirected (<span class="sans-serif"><span class="math inline"><em>d</em></span> = false</span>)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">showNodeWeights(), showEdgeWeights()</span></td>
+<td style="text-align: left;">ensure that node/edge weights/labels will be visible throughout animation execution, unless explicitly hidden by the animation, or visibility is changed by the user using the toggle buttons</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">hideNodeWeights(), hideEdgeWeights()</span></td>
+<td style="text-align: left;">ensure that the specified attributes remain hidden throughout the animation unless visibility is changed using toggle buttons; the attributes are hidden <em>regardless of whether the animation shows or hides them</em></td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="sec:declarations">Functions that behave as declarations</h3>
+<p>Some Galant functions are independent of animation steps and are intended as declarations at the beginning of the algorithm code. These are listed in Table <a href="#tab:declarations" data-reference-type="ref" data-reference="tab:declarations">5</a>. We already mentioned <span class="sans-serif">movesNodes()</span> – it signals that the animation will control node movement and prevents the user from moving nodes.</p>
+<p>A second example is <span class="sans-serif">setDirected</span>. It has the same function as the toggle buttons at the top of the graph window. In some cases, such as shortest paths algorithms and breadth-first search, it makes sense for the user to decide whether or not the animation should treat the graph as a directed graph. Other animations, such as <span class="sans-serif">dfs_d</span>, are specifically designed for directed graphs. In those cases it makes sense for the animation to make the graph directed. When <span class="sans-serif">setDirected</span> is called, the toggle buttons (not visible during execution) are set as well, so that the state of the buttons is consistent with that of the graph.</p>
+<p>The remaining declarations involve visibility of weights and labels. As with directedness, these functions mimic the actions of the appropriate toggle buttons. The user may also change visibility of labels and weights during execution. The declarations allow the animation to make visible exactly those attributes that are relevant during its execution. For example, the weighted graph algorithms (shortest paths and minimum spanning trees) need the edge weights to be visible; a <span class="sans-serif">showEdgeWeights()</span> call at the beginning ensures that this happens regardless of whether the user made edge weights visible during editing (or execution of a previous algorithm).</p>
+<h2 id="sec:functions">Definition of Functions/Methods</h2>
+<p>A programmer can define arbitrary functions (methods) using the construct</p>
+<p><span class="sans-serif">function</span> <em>[return_type]</em> <em>name</em> <span class="sans-serif">(</span> <em>parameters</em> <span class="sans-serif">) {</span><br />
+<em>code block</em><br />
+<span class="sans-serif">}</span></p>
+<p>The behavior is like that of a Java method. So, for example,</p>
+<pre><code>function int plus( int a, int b ) {
+    return a + b;
+}</code></pre>
+<p>is equivalent to</p>
+<pre><code>static int plus( int a, int b ) {
+    return a + b;
+}</code></pre>
+<p>The <em>return_type</em> is optional. If it is missing, the function behaves like a <span class="sans-serif">void</span> method in Java. An example is the recursive function <span class="sans-serif">visit</span> in depth-first search.<br />
+<span class="sans-serif">function visit( Node v ) {</span> <em>code</em> <span class="sans-serif">}</span></p>
+<div id="tab:data_structure_summary">
+<table>
+<caption>Basic Galant data structures and initialization.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">data structure</th>
+<th style="text-align: left;">initializers</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">EdgeList</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">new EdgeList(<em>EdgeCollection</em>)</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">NodeList</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">new NodeList(<em>NodeCollection</em>)</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">EdgeSet</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">new EdgeSet(<em>EdgeCollection</em>)</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">NodeSet</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">new NodeSet(<em>NodeCollection</em>)</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">EdgeQueue</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">new EdgeQueue(<em>EdgeCollection</em>)</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">NodeQueue</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">new NodeQueue(<em>NodeCollection</em>)</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">EdgePriorityQueue</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">new EdgePriorityQueue(<em>EdgeCollection</em>)</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">NodePriorityQueue</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">new NodePriorityQueue(<em>NodeCollection</em>)</span></td>
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>NodeList and EdgeList:</strong> lists of nodes or edges, respectively. We use <em>list</em> as shorthand for either <span class="sans-serif">NodeList</span> or <span class="sans-serif">EdgeList</span>, <em>type</em> for either <span class="sans-serif">Node</span> or <span class="sans-serif">Edge</span> and <em>element</em> for <span class="sans-serif">Node v</span> or <span class="sans-serif">Edge e</span>.</p>
+<div id="tab:data_structures">
+<table>
+<caption>Operations on Galant data structures (procedural versions).</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;"><span class="sans-serif"><em>type</em> first(<em>list</em> <span class="math inline"><em>L</em></span>)</span></th>
+<th style="text-align: left;">returns the first element of <span class="math inline"><em>L</em></span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif"><em>type</em> top(<em>list</em> <span class="math inline"><em>L</em></span>)</span></td>
+<td style="text-align: left;">returns the first element of <span class="math inline"><em>L</em></span> (top of stack)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">add(<em>element</em> <span class="math inline"><em>g</em></span>, <em>list</em> <span class="math inline"><em>L</em></span>)</span></td>
+<td style="text-align: left;">adds the element <span class="math inline"><em>g</em></span> to the end of list <span class="math inline"><em>L</em></span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">push(<em>element</em>, <em>list</em> <span class="math inline"><em>L</em></span>)</span></td>
+<td style="text-align: left;">adds the element <span class="math inline"><em>g</em></span> to the front of list <span class="math inline"><em>L</em></span> (pushes on stack)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif"><em>type</em> pop(<em>list</em> <span class="math inline"><em>L</em></span>)</span></td>
+<td style="text-align: left;">removes and returns the first element of <span class="math inline"><em>L</em></span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">remove(<em>element</em>, <em>list</em> <span class="math inline"><em>L</em></span>)</span></td>
+<td style="text-align: left;">removes the first occurrence of <span class="math inline"><em>g</em></span> from <span class="math inline"><em>L</em></span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">size(<em>list</em> <span class="math inline"><em>L</em></span>)</span></td>
+<td style="text-align: left;">returns the number of elements in <span class="math inline"><em>L</em></span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">empty(<em>list</em> <span class="math inline"><em>L</em></span>)</span></td>
+<td style="text-align: left;">returns <span class="sans-serif">true</span> if <span class="math inline"><em>L</em></span> is empty</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>NodeQueue and EdgeQueue:</strong> queues of nodes or edges, respectively. Same conventions as for lists, except we use <em>queue</em> in place of <em>list</em>.</p>
+<div id="tab:data_structures">
+<table>
+<caption>Operations on Galant data structures (procedural versions).</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;"><span class="sans-serif">void put(<em>element</em>, <em>queue</em>)</span></th>
+<th style="text-align: left;">adds the element to the rear of the queue; throws an exception if the element is <span class="sans-serif">null</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif"><em>type</em> get(<em>queue</em>)</span></td>
+<td style="text-align: left;">returns and removes the element at the front of the queue; throws an exception if the queue is empty</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif"><em>type</em> front(<em>queue</em>)</span></td>
+<td style="text-align: left;">returns the element at the front of the queue without removing it; throws an exception if the queue is empty</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>NodeSet and EdgeSet:</strong> sets of nodes or edges, respectively; same conventions as for lists, except for the use of <em>set</em>. The first two table entries give natural syntax for set membership.</p>
+<div id="tab:data_structures">
+<table>
+<caption>Operations on Galant data structures (procedural versions).</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;"><span class="sans-serif">boolean <em>set</em>.contains(<span class="math inline"><em>g</em></span>)</span></th>
+<th style="text-align: left;">returns true if <span class="math inline"><em>g</em></span> is an element of the set, where <span class="math inline"><em>g</em></span> is a node or edge, as appropriate; if <span class="math inline"><em>g</em></span> has the wrong type, this method will simply return <span class="sans-serif">false</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">boolean <span class="math inline"><em>g</em></span>.in(<em>set</em>)</span></td>
+<td style="text-align: left;">returns true if <span class="math inline"><em>g</em></span> is an element of the set, where <span class="math inline"><em>g</em></span> is a node or edge, as appropriate; here, if <span class="math inline"><em>g</em></span> has the wrong type, the error will be caught by the compiler</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">union(<span class="math inline"><em>s</em><sub>1</sub></span>, <span class="math inline"><em>s</em><sub>2</sub></span>)</span></td>
+<td style="text-align: left;">returns the union of <span class="math inline"><em>s</em><sub>1</sub></span> and <span class="math inline"><em>s</em><sub>2</sub></span>; here <span class="math inline"><em>s</em><sub>1</sub></span>, <span class="math inline"><em>s</em><sub>2</sub></span> and the return value are all of type <span class="sans-serif">NodeSet</span> or <span class="sans-serif">EdgeSet</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">intersection(<span class="math inline"><em>s</em><sub>1</sub></span>, <span class="math inline"><em>s</em><sub>2</sub></span>)</span></td>
+<td style="text-align: left;">returns the intersection of <span class="math inline"><em>s</em><sub>1</sub></span> and <span class="math inline"><em>s</em><sub>2</sub></span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">difference(<span class="math inline"><em>s</em><sub>1</sub></span>, <span class="math inline"><em>s</em><sub>2</sub></span>)</span></td>
+<td style="text-align: left;">returns the set difference <span class="math inline"><em>s</em><sub>1</sub> − <em>s</em><sub>2</sub></span>, elements that are in <span class="math inline"><em>s</em><sub>1</sub></span> but not in <span class="math inline"><em>s</em><sub>2</sub></span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">symmetricDifference(<span class="math inline"><em>s</em><sub>1</sub></span>, <span class="math inline"><em>s</em><sub>2</sub></span>)</span></td>
+<td style="text-align: left;">returns the set symmetric difference of <span class="math inline"><em>s</em><sub>1</sub></span> and <span class="math inline"><em>s</em><sub>2</sub></span>, i.e., the union of <span class="math inline"><em>s</em><sub>1</sub> − <em>s</em><sub>2</sub></span> and <span class="math inline"><em>s</em><sub>2</sub> − <em>s</em><sub>1</sub></span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">subset(<span class="math inline"><em>s</em><sub>1</sub></span>, <span class="math inline"><em>s</em><sub>2</sub></span>)</span> or <span class="sans-serif"><span class="math inline"><em>s</em><sub>1</sub></span>.subset(<span class="math inline"><em>s</em><sub>2</sub></span>)</span></td>
+<td style="text-align: left;">returns <span class="sans-serif">true</span> if <span class="math inline"><em>s</em><sub>1</sub></span> is a subset of <span class="math inline"><em>s</em><sub>2</sub></span>, <span class="sans-serif">false</span> otherwise</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="sec:datastructures">Data Structures</h2>
+<p>Galant provides some standard data structures for nodes and edges. These are described in detail in Tables <a href="#tab:data_structure_summary" data-reference-type="ref" data-reference="tab:data_structure_summary">6</a> and <a href="#tab:data_structures" data-reference-type="ref" data-reference="tab:data_structures">9</a>. All Galant data structures are instances of the Java <span class="sans-serif">Collection</span> interface and therefore automatically have the methods required of a collection. For the interested Java programmer, they are also extensions of relevant concrete Java classes and inherit those methods as well. For details, see the Java source code in directory<br />
+<span class="sans-serif">src/edu/ncsu/csc/Galant/graph/datastructure</span>.</p>
+<p>Galant provides procedural versions of the required methods <span class="sans-serif">size</span>, <span class="sans-serif">isEmpty</span>, <span class="sans-serif">add</span> and <span class="sans-serif">remove</span> for all structures, i.e., if <span class="math inline"><em>C</em></span> is a collection (data structure) and <span class="math inline"><em>g</em></span> is a graph element of the appropriate type, the functions are <span class="sans-serif">size(<span class="math inline"><em>C</em></span>)</span>, <span class="sans-serif">empty(<span class="math inline"><em>C</em></span>)</span>, <span class="sans-serif">add(<span class="math inline"><em>e</em></span>, <span class="math inline"><em>C</em></span>)</span> and <span class="sans-serif">remove(<span class="math inline"><em>e</em></span>, <span class="math inline"><em>C</em></span>)</span>, respectively.</p>
+<p>Table <a href="#tab:data_structure_summary" data-reference-type="ref" data-reference="tab:data_structure_summary">6</a> shows how each data structure can be initialized in two different ways. One is to create a collection with no elements, the other creates one from another collection that has the same element type. For example, if <span class="sans-serif">S</span> is a previously declared and initialized <span class="sans-serif">EdgeSet</span> (with elements added initially or later) you can say<br />
+<span class="sans-serif">EdgeList L = new EdgeList(S)</span><br />
+This becomes especially useful for priority queues – see Section <a href="#sec:sorting" data-reference-type="ref" data-reference="sec:sorting">1.4</a> and Table <a href="#tab:priority_queues" data-reference-type="ref" data-reference="tab:priority_queues">12</a> below for more details on initializing and using these. To create a priority queue containing all edges you would simply say<br />
+<span class="sans-serif">EdgePriorityQueue PQ = new EdgePriorityQueue(getEdges())</span></p>
+<p>Java collections also have iterators. The syntax for accessing all elements of a data structure is<br />
+<span class="sans-serif">for ( <em>type</em> <span class="math inline"><em>g</em></span> : <em>collection</em> ) { <em>code body</em> }</span><br />
+where <em>type</em> is either <span class="sans-serif">Node</span> or <span class="sans-serif">Edge</span>, <span class="math inline"><em>g</em></span> is a variable, and <em>collection</em> is a data structure containing elements of the given type. The code body is executed for each element in the collection, referenced as <span class="math inline"><em>g</em></span>. For example, if <span class="sans-serif">S</span> is an <span class="sans-serif">EdgeSet</span> you could do</p>
+<pre><code>   for ( Edge e : S ) {
+      highlight(e);
+   }</code></pre>
+<p>to highlight all the edge in <span class="sans-serif">S</span>. The order of appearance of the elements depends on the structure. For lists and queues it is the order in which they were added, for sets it is random (the elements are hashed), and for priority queues it is based on the values of the keys.</p>
+<p>It is possible to create structures of type <span class="sans-serif">EdgeStack</span> and <span class="sans-serif">NodeStack</span> but if you want simple procedural syntax and friendlier error reporting we recommend using lists instead.</p>
+<p>Table <a href="#tab:data_structures" data-reference-type="ref" data-reference="tab:data_structures">9</a> summarizes the operations available on each of the data structures. The semantics of functions <span class="sans-serif">add</span>, <span class="sans-serif">remove</span>, <span class="sans-serif">size</span>, and <span class="sans-serif">empty</span> are shown in the table only for lists, but apply to the others as well.</p>
+<h2 id="sec:sorting">Sorting, Priority Queues, and Comparators</h2>
+<p><strong>Initialization</strong></p>
+<div id="tab:priority_queues">
+<table>
+<caption>Priority queue initialization and functions in Galant.</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">new EdgePriorityQueue()</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">new NodePriorityQueue()</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">creates an empty min-heap that uses weight as key</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">new EdgePriorityQueue(<span class="math inline"><em>C</em></span>)</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">new NodePriorityQueue(<span class="math inline"><em>C</em></span>)</span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">creates a min-heap that uses weight as key and contains all the elements of <span class="math inline"><em>C</em></span>, which can be a list, set, or queue</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">new NodePriorityQueue(boolean isMax)</span></td>
+<td style="text-align: left;">creates an empty priority queue that uses weight as key, if <span class="sans-serif">isMax</span> is true, the queue is a max-heap, otherwise it’s a min-heap</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">new NodePriorityQueue(Comparator C)</span></td>
+<td style="text-align: left;">creates an empty priority queue that uses <span class="sans-serif">C</span> to compare elements; if <span class="sans-serif">C</span> is a <span class="sans-serif">GraphElementComparator</span>, the attribute and whether it’s a min or max heap are extracted from the comparator</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Functions.</strong> Here <span class="math inline"><em>g</em></span> is a <span class="sans-serif">GraphElement</span>, i.e., an <span class="sans-serif">Edge</span> or <span class="sans-serif">Node</span> and <span class="math inline"><em>Q</em></span> is a priority queue of the appropriate type. The return type <em>element</em> is either <span class="sans-serif">Edge</span> or <span class="sans-serif">Node</span>.</p>
+<div id="tab:priority_queues">
+<table>
+<caption>Priority queue initialization and functions in Galant.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;"><span class="sans-serif">void add(<span class="math inline"><em>g</em></span>, <span class="math inline"><em>Q</em></span>)</span></th>
+<th style="text-align: left;">adds <span class="math inline"><em>g</em></span> to the priority queue; the priority is defined by the initialization method</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">void insert(<span class="math inline"><em>g</em></span>, <span class="math inline"><em>Q</em></span>)</span></td>
+<td style="text-align: left;">same as <span class="sans-serif">add</span> but does error checking</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif">void remove(<span class="math inline"><em>g</em></span>, <span class="math inline"><em>Q</em></span>)</span></td>
+<td style="text-align: left;">removes <span class="math inline"><em>g</em></span> from <span class="math inline"><em>Q</em></span>; used for any element; not efficient because it searches the whole queue</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif"><em>element</em> best(<span class="math inline"><em>Q</em></span>)</span></td>
+<td style="text-align: left;">returns the best element, min or max value as determined by initialization, in <span class="math inline"><em>Q</em></span>; runtime is constant</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif"><em>element</em> removeBest(<span class="math inline"><em>Q</em></span>)</span></td>
+<td style="text-align: left;">returns and removes the best element, min or max value as determined by initialization, in <span class="math inline"><em>Q</em></span>; runtime is O(<span class="math inline">lg |<em>Q</em>|</span>)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif">void changeKey(<span class="math inline"><em>g</em></span>, <span class="math inline"><em>Q</em></span></span></td>
+<td style="text-align: left;">reorganizes <span class="math inline"><em>Q</em></span> taking into account a change in value for <span class="math inline"><em>g</em></span> of the attribute specified at initialization; <em>the animation program must execute the actual change beforehand</em>; runtime is O(<span class="math inline">|<em>Q</em>|</span>) because this translates to a <span class="sans-serif">remove</span> followed by an <span class="sans-serif">insert</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Methods.</strong> These have not (yet) been made available in procedural syntax. Conventions same as for functions</p>
+<div id="tab:priority_queues">
+<table>
+<caption>Priority queue initialization and functions in Galant.</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif"><em>element</em> <span class="math inline"><em>Q</em></span>.max()</span></td>
+<td style="text-align: left;">equivalent to <span class="sans-serif"><em>element</em> best(<span class="math inline"><em>Q</em></span>)</span>, specific to min/max heap; an exception if heap is the wrong kind, based on initialization</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif"><em>element</em> <span class="math inline"><em>Q</em></span>.removeMax()</span></td>
+<td style="text-align: left;">equivalent to <span class="sans-serif"><em>element</em> removeBest(<span class="math inline"><em>Q</em></span>)</span>, specific to min/max heap; an exception if heap is the wrong kind, based on initialization</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif"><span class="math inline"><em>Q</em></span>.changeKey(<span class="math inline"><em>g</em></span>, <em>val</em>)</span></td>
+<td style="text-align: left;">equivalent to <span class="sans-serif">set(<em><span class="math inline"><em>g</em></span>, "a", val</em>)</span>, where <em>a</em> is an attribute, followed by <span class="sans-serif">changeKey(<span class="math inline"><em>g</em></span>, <span class="math inline"><em>Q</em></span>)</span>; here <em>a</em> must be an attribute with a <span class="sans-serif">Double</span> value – otherwise the method has no effect</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif"><span class="math inline"><em>Q</em></span>.changeIntegerKey(<span class="math inline"><em>g</em></span>, <em>val</em>)</span></td>
+<td style="text-align: left;">same as <span class="sans-serif"><span class="math inline"><em>Q</em></span>.changeKey(<span class="math inline"><em>g</em></span>, <em>val</em>)</span> except that <em>a</em> must be an attribute with an <span class="sans-serif">Integer</span> value</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="sans-serif"><span class="math inline"><em>Q</em></span>.changeStringKey(<span class="math inline"><em>g</em></span>, <em>val</em>)</span></td>
+<td style="text-align: left;">same as <span class="sans-serif"><span class="math inline"><em>Q</em></span>.changeKey(<span class="math inline"><em>g</em></span>, <em>val</em>)</span> except that <em>a</em> must be an attribute with a <span class="sans-serif">String</span> value</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="sans-serif"><span class="math inline"><em>Q</em></span>.decreaseKey(<span class="math inline"><em>g</em></span>, <em>val</em>)</span></td>
+<td style="text-align: left;">same as <span class="sans-serif"><span class="math inline"><em>Q</em></span>.changeKey(<span class="math inline"><em>g</em></span>, <em>val</em>)</span>; provided because it’s standard nomenclature in many algorithms</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Priority queues are a special case in that the order of appearance, which affects the semantics of the key functions, is dependent on the <em>comparator</em> that is used to determine their total order. Sorting also depends on a comparator, so we discuss sorting and priority queues in the same section. The default comparator for graph elements, nodes and edges, sorts them by increasing weight. If <span class="math inline"><em>L</em></span> is a list of nodes or edges<br />
+<span class="sans-serif">sort(<span class="math inline"><em>L</em></span>)</span><br />
+rearranges the elements of <span class="math inline"><em>L</em></span> so that they are in order of increasing weight (if any element has no weight there is a null pointer exception). Galant <span class="sans-serif">sort</span> is actually a Galant macro that expands to the Java <span class="sans-serif">Collections.sort</span>. A comparator as second argument to <span class="sans-serif">sort</span> can alter the default behavior. Galant makes available comparators that specify the attribute (instead of weight) and the ordering (increasing or decreasing) as follows.</p>
+<ul>
+<li><p><span class="sans-serif">getDoubleComparator(String attribute)</span> returns a comparator based on the values of the given attribute, in increasing order;<br />
+the default comparator is equivalent to <span class="sans-serif">getDoubleComparator("weight")</span></p></li>
+<li><p><span class="sans-serif">getDoubleComparator(String attribute, boolean reverse)</span> returns a comparator based on the values of the given attribute, in decreasing order if <span class="sans-serif">reverse</span> is <span class="sans-serif">true</span>, increasing if it is false;<br />
+the default comparator is equivalent to <span class="sans-serif">getDoubleComparator("weight", false)</span>.</p></li>
+<li><p><span class="sans-serif">getIntegerComparator(String attribute)</span> and <span class="sans-serif">getIntegerComparator(String attribute, boolean reverse)</span> behave like <span class="sans-serif">getDoubleComparator</span> except that the attribute has integer values;<br />
+for example, <span class="sans-serif">getIntegerComparator("id", true)</span> sorts nodes (or edges) by decreasing <span class="sans-serif">id</span>.</p></li>
+<li><p><span class="sans-serif">getStringComparator(String attribute)</span> and <span class="sans-serif">getStringComparator(String attribute, boolean reverse)</span> behave like their numerical counterparts; here the ordering is lexicographic;<br />
+for example, <span class="sans-serif">getStringComparator("label", true)</span> sorts nodes or edges based on their labels, in decreasing lexicographic order ("zebra" comes before "antelope").</p></li>
+</ul>
+<p>To do the sorting simply call <span class="sans-serif">sort</span> with the appropriate comparator as second argument. For example, after</p>
+<pre><code>   EdgeList edges = getEdges();
+   sort(edges, getStringComparator(&quot;label&quot;, true));</code></pre>
+<p>the list <span class="sans-serif">edges</span> consists of all edges of the graph, sorted in decreasing lexicographic order by their labels.</p>
+<p><strong>Caution:</strong> <em>The type of the attribute must match the type of the comparator.</em> The incantation <span class="sans-serif">getIntegerComparator("label")</span> does not work as expected. Because <span class="sans-serif">label</span> is not an integer attribute, the values being compared will all be <span class="sans-serif">null</span> and any sort or priority queue operation based on the comparator will result in a null pointer exception.</p>
+<p>Table <a href="#tab:priority_queues" data-reference-type="ref" data-reference="tab:priority_queues">12</a> shows the procedural versions of priority queue methods made available by Galant, along with the four ways to initialize priority queues. Also listed are object-oriented methods that yield additional functionality not yet implemented in procedural form.</p>
+<p>If the priority queue is initialized from an existing data structure <span class="math inline"><em>C</em></span> the only option is for it to be a min-heap (the element that can be accessed and removed efficiently is the one with smallest value) based on weight. An empty queue can be initialized as a max-heap (using weight) or as a heap that uses any valid comparator. A <span class="sans-serif">GraphElementComparator</span> is a special case that stores both the attribute used for comparison and whether the heap is to be min or max, obtained using the <span class="sans-serif">get<em>type</em>Comparator</span> functions described earlier. The additional information allows Galant to report errors if an element to be added has a null value for the given attribute or if the animation program attempts to <span class="sans-serif">removeMin</span> from a max-heap or vice-versa.</p>
+<p>Priority queue functions are usually as efficient as expected. A notable exception is <span class="sans-serif">changeKey</span>. The operation <span class="sans-serif">changeKey(<span class="math inline"><em>g</em></span>, <span class="math inline"><em>Q</em></span>)</span> does <span class="sans-serif">remove(<span class="math inline"><em>g</em></span>, <span class="math inline"><em>Q</em></span>)</span> followed by <span class="sans-serif">insert(<span class="math inline"><em>g</em></span>, <span class="math inline"><em>Q</em></span>)</span> and takes O(<span class="math inline">|<em>Q</em>|</span>) because of the <span class="sans-serif">remove</span>, which needs to search the whole queue.</p>
+<p>Unless you use object-oriented syntax you have to change the value of an attribute before calling <span class="sans-serif">changeKey</span>. For example, you can do</p>
+<pre><code>  NodePriorityQueue Q = new NodePriorityQueue();
+  ...
+  Node v = ...;</code></pre>
+<p>and later</p>
+<pre><code>  setWeight(v, 25);
+  changeKey(v, Q);</code></pre>
+<p>or</p>
+<pre><code>  Q.changeKey(v, 25);</code></pre>
+<h2 id="queries">Queries</h2>
+<p>An animation program can query the user for various kinds of input. For example, the <span class="sans-serif">interactive_dfs</span> algorithm asks the user to give a starting node for a (directed) depth-first search and to give another start node if the search terminates before all nodes are visited. The different query options are listed in Table <a href="#tab:utility_functions" data-reference-type="ref" data-reference="tab:utility_functions">2</a>.</p>
+<p>A query statement in an animation program initiates an algorithm step unconditionally, i.e., even if it occurs within a <span class="sans-serif">beginStep</span>-<span class="sans-serif">endStep</span> pair. After the user responds to the query she has to do another step forward before the animation proceeds (except in case of a Boolean query). If the user steps backward after responding to a query, the query is not invoked again. Subsequent forward steps use the same answer. Thus it is not possible to allow a user to explore multiple alternative executions in the same run (such a feature would require major enhancements to the existing implementation).</p>
+<p>Queries for nodes and edges ask for node id’s (two of them in case of an edge). Galant checks whether an id is that of a valid node and, in case of an edge, whether an edge between the two nodes exists. If the graph is currently directed, the direction of the edge also has to correspond. Any violation causes an exception to be thrown – a popup window reports the nature of the error and allows the user to choose (a) different id(s). The animator can impose additional restrictions by specifying a set of permissible nodes/edges (unvisited nodes in the case of <span class="sans-serif">interactive_dfs</span>). If so, the animator also specifies an error message in case the additional restriction is violated.</p>
+<p>Other queries allow an animation to get strings, Boolean values, or numbers from the user. Examples are in the <span class="sans-serif">binary_tree</span> and <span class="sans-serif">grid</span> algorithms which create complete binary trees or grid graphs based on tree height or grid dimensions, respectively, specified as integers by the user. These queries work the same way as those for vertices and edges. In case of numbers Galant checks whether the input string is a valid integer or floating point number and reports an error otherwise.</p>
+<p>Boolean queries are a special case. The user does not type a response. The only options are to press one of two buttons with the mouse or to press the <span class="sans-serif">Enter</span> key to specify the default answer (true). The animator can specify the text displayed on the buttons; defaults are <span class="sans-serif">"yes"</span> and <span class="sans-serif">"no"</span>. Another difference with Boolean queries is that the algorithm steps forward immediately when the user responds to the query.<a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a></p>
+<h2 id="exceptions-compile-and-runtime-errors">Exceptions: Compile and Runtime Errors</h2>
+<div id="tab:galant_exceptions">
+<table>
+<caption>Galant exceptions.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: center;"><strong>message</strong></th>
+<th style="text-align: center;"><strong>type/source</strong></th>
+<th style="text-align: center;"><strong>explanation</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">programmer message <span class="math inline"><em>m</em></span></td>
+<td style="text-align: center;">runtime</td>
+<td style="text-align: left;">animation program has encountered an <span class="sans-serif">error(<span class="math inline"><em>m</em></span>)</span> call</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">programmer message <span class="math inline"><em>m</em></span></td>
+<td style="text-align: center;">runtime</td>
+<td style="text-align: left;">user selected a node or edge not in the set specified by a query of the form <span class="sans-serif">getNode/getEdge(<span class="math inline"><em>p</em></span>, <span class="math inline"><em>S</em></span>, <span class="math inline"><em>m</em></span>)</span>, where <span class="math inline"><em>p</em></span> is the prompt, <span class="math inline"><em>S</em></span> the set, and <span class="math inline"><em>m</em></span> the error message</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Nonexistent node or edge</td>
+<td style="text-align: center;">runtime</td>
+<td style="text-align: left;">a node/edge is null or does not exist in current state</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Graph element has no weight</td>
+<td style="text-align: center;">runtime</td>
+<td style="text-align: left;">no weight was given, neither during editing nor earlier during execution</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">No edge with source <span class="math inline"><em>v</em></span> and target <span class="math inline"><em>w</em></span> exists</td>
+<td style="text-align: center;">runtime</td>
+<td style="text-align: left;">can occur when user responds to a query for an edge or the algorithm asks for a specific edge using <span class="sans-serif">getEdge(<span class="math inline"><em>v</em>, <em>w</em></span>)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Empty graph</td>
+<td style="text-align: center;">runtime</td>
+<td style="text-align: left;">animation attempts to get a node when there is none</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">No node with id <span class="math inline"><em>i</em></span> exists</td>
+<td style="text-align: center;">runtime</td>
+<td style="text-align: left;">called <span class="sans-serif">getNodeById(<span class="math inline"><em>i</em></span>)</span> when no node with id <span class="math inline"><em>i</em></span> exists</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Node has been deleted</td>
+<td style="text-align: center;">runtime</td>
+<td style="text-align: left;">called <span class="sans-serif">getNodeById(<span class="math inline"><em>i</em></span>)</span> when node has been deleted</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Attempt to removeMin from max heap (or vice versa)</td>
+<td style="text-align: center;">runtime</td>
+<td style="text-align: left;">priority queues can be initialized as either min heaps or max heaps; Galant checks to make sure the correct remove method is used</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Attempt to add null node/edge to (priority) queue</td>
+<td style="text-align: center;">runtime</td>
+<td style="text-align: left;">what it says, prevents later problem with null element</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Unable to compute center for node</td>
+<td style="text-align: center;">any time</td>
+<td style="text-align: left;">something got messed up with the x and y coordinates (or the layer information in case of a layered graph), e.g., with a <span class="sans-serif">setPosition</span> call</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Something went wrong when processing algorithm block</td>
+<td style="text-align: center;">macro processing</td>
+<td style="text-align: left;">probably some unbalanced parentheses, braces or brackets in the algorithm</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Missing <em>right parenthesis, bracket, brace</em> in <em>code</em> …</td>
+<td style="text-align: center;">macro processing</td>
+<td style="text-align: left;">what it says; the <em>code</em> shows only the beginning of the code block in which the error occurred</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><em>macro name</em>: Curly braces required</td>
+<td style="text-align: center;">macro processing</td>
+<td style="text-align: left;">missing curly braces after a function header</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">No compiler found, need a JDK</td>
+<td style="text-align: center;">compiler</td>
+<td style="text-align: left;">either no JDK is installed or <span class="sans-serif">JAVA_HOME</span> is not set up correctly</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Invalid tab - use untitled graph or untitled algorithm</td>
+<td style="text-align: center;">text editor</td>
+<td style="text-align: left;">attempt to save a file when there’s something wrong with the current tab/panel (should not happen)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">No text when invoking GraphMLParser</td>
+<td style="text-align: center;">GraphML parser</td>
+<td style="text-align: left;">attempting to parse empty file</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Missing id for node</td>
+<td style="text-align: center;">GraphML parser</td>
+<td style="text-align: left;">no id specified for the node; nodes are required to have id’s; they are optional for edges</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Bad id</td>
+<td style="text-align: center;">GraphML parser</td>
+<td style="text-align: left;">the id of a node or edge is not an integer</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Duplicate id <span class="math inline"><em>i</em></span></td>
+<td style="text-align: center;">GraphML parser</td>
+<td style="text-align: left;">there is more than node/edge with id <span class="math inline"><em>i</em></span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Missing source/target</td>
+<td style="text-align: center;">GraphML parser</td>
+<td style="text-align: left;">an edge has no source/target in its GraphML representation</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Bad source/target id</td>
+<td style="text-align: center;">GraphML parser</td>
+<td style="text-align: left;">the source/target specified in the GraphML file is not a legal integer</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Source/target node missing</td>
+<td style="text-align: center;">GraphML parser</td>
+<td style="text-align: left;">the integer id of the source/target does not correspond with any node</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Bad weight</td>
+<td style="text-align: center;">GraphML parser</td>
+<td style="text-align: left;">the weight of a node/edge is not a valid floating point number</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Bad x/y-coordinate</td>
+<td style="text-align: center;">GraphML parser</td>
+<td style="text-align: left;">the x or y coordinate of a node is not a legal integer</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Missing/bad layer/positionInLayer</td>
+<td style="text-align: center;">GraphML parser</td>
+<td style="text-align: left;">something is wrong with layer or positionInLayer of a node in a layered graph</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Errors can occur at compile time, either because a macro is malformed or because the Java code, after macro translation, has errors. The reporting of Java compiler errors is straightforward. They are reported, with line numbers, on the console. The line numbers correspond to those in the Java code listing that also appears on the console (even if there are no errors). In almost all cases the line numbers also correspond to those of the original algorithm (before macro translation) in the text window.<a href="#fn9" class="footnote-ref" id="fnref9" role="doc-noteref"><sup>9</sup></a></p>
+<p>Errors due to malformed macros are not, unfortunately, reported with line numbers. To make matters worse, unbalanced parentheses or braces inside a function definition or one of the <span class="sans-serif">for_…</span> macros result in a malformed macro exception. The best strategy is to use a program editor that does automatic indentation.</p>
+<p>Runtime errors are also reported with (almost always correct) line numbers. Galant makes every effort to catch errors before they result in, for example, null pointer exceptions in the Galant implementation. Every function with a graph element argument checks that the argument is not null and reports a <span class="sans-serif">GalantException</span> if it is. The second or third line in the stack trace refers to the point in the algorithm where the exception occurred. All exceptions, whether those caught as <span class="sans-serif">GalantException</span>’s with meaningful messages or those caught in the Galant implementation code, result in a stack trace on the console and a popup window. The latter allows to user to choose whether to continue, meaning that the algorithm is terminated and Galant returns to edit mode, or exit from Galant completely. Null pointer exceptions can almost always be tracked down by looking for the first reference to the algorithm in the stack trace, an item of the form<br />
+<span class="sans-serif">Galant.algorithm.code.compiled.<em>algorithm_name</em>.run(<em>algorithm_name</em>:<em>line_number</em>)</span></p>
+<p>Exceptions can also occur in edit mode: when reading a graph from a file, when specifying a node or edge after a keyboard shortcut, or when giving the weight of a node or edge. A list of the most common Galant exceptions is in Table <a href="#tab:galant_exceptions" data-reference-type="ref" data-reference="tab:galant_exceptions">13</a>.</p>
+<section class="footnotes" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1" role="doc-endnote"><p>This restriction applies to global variables only. Variables local to function definitions or to the algorithm can be initialized in-line, just as in Java.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2" role="doc-endnote"><p>For example, <span class="sans-serif">alpha[2].equals("")</span> would cause a null pointer exception but not if you did <span class="sans-serif">alpha[2] = "abc"</span> first – then it would simply return <span class="sans-serif">false</span>.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3" role="doc-endnote"><p>The functions <span class="sans-serif">edges</span>, <span class="sans-serif">inEdges</span>, <span class="sans-serif">outEdges</span>, and <span class="sans-serif">neighbors</span> have equivalents that return sets: <span class="sans-serif">edgeSet</span>, <span class="sans-serif">incomingSet</span>, <span class="sans-serif">outgoingSet</span> and <span class="sans-serif">neighborSet</span>, respectively.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4" role="doc-endnote"><p>The edges in GraphML files are not required to have id’s. If they have none, id’s are assigned as the file is parsed. These assigned id’s are not preserved when the graph (GraphML file) is saved.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5" role="doc-endnote"><p>Galant functions return objects, <span class="sans-serif">Integer</span> or <span class="sans-serif">Double</span>, when return values are numbers for this reason.<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6" role="doc-endnote"><p>Semantic details, such as whether to implement <span class="sans-serif">hasString(<span class="math inline"><em>g</em></span>, <span class="math inline"><em>a</em></span>)</span>, <span class="sans-serif">hasInteger(<span class="math inline"><em>g</em></span>, <span class="math inline"><em>a</em></span>)</span>, etc., and/or to use <span class="sans-serif">has(<span class="math inline"><em>g</em></span>, <span class="math inline"><em>a</em></span>)</span> to check whether the attribute exists in any form need to be worked out.<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn7" role="doc-endnote"><p>The modifier <span class="sans-serif">All</span> distinguishes <span class="sans-serif">show</span>/<span class="sans-serif">hide</span><span class="sans-serif">All</span><span class="sans-serif">Node</span>/<span class="sans-serif">Edge</span><span class="sans-serif">Labels</span>/<span class="sans-serif">Weights</span> from <span class="sans-serif">show</span>/<span class="sans-serif">hide</span><span class="sans-serif">Node</span>/<span class="sans-serif">Edge</span><span class="sans-serif">Labels</span>/<span class="sans-serif">Weights</span>. The latter are designed to mimic user toggle buttons – see Section <a href="#sec:declarations" data-reference-type="ref" data-reference="sec:declarations">1.1.5</a>.<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn8" role="doc-endnote"><p>The reason this is not the case with other queries is that errors may need to be handled before the algorithm can proceed. Synchronization between the query and the algorithm is not straightforward.<a href="#fnref8" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn9" role="doc-endnote"><p>The only known exception is a function definition where the parameters are placed on multiple lines.<a href="#fnref9" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>

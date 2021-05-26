@@ -13,8 +13,6 @@
  * $Id: sifting.alg 104 2015-03-27 16:23:25Z mfms $
  */
 
-import edu.ncsu.csc.Galant.local.LayeredGraph;
-
 int iteration = 1;
 int pass = 1;
 int minCrossings = Integer.MAX_VALUE;
@@ -209,4 +207,4 @@ algorithm {
 
 }
 
-//  [Last modified: 2017 11 15 at 16:19:43 GMT]
+//  [Last modified: 2021 05 26 at 16:00:13 GMT]

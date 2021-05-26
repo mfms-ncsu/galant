@@ -9,8 +9,6 @@
  * $Id: mod_bary.alg 104 2015-03-27 16:23:25Z mfms $
  */
 
-import edu.ncsu.csc.Galant.local.LayeredGraph;
-
 int NUMBER_OF_PASSES = 25;
 
 int numLayers = -1;
@@ -172,4 +170,4 @@ algorithm {
                       + " at iteration " + minIteration );
 }
 
-//  [Last modified: 2017 11 30 at 12:57:39 GMT]
+//  [Last modified: 2021 05 26 at 15:51:25 GMT]

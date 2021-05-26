@@ -3,6 +3,8 @@ maintained ones are:
 
 - barycenter.alg, see, e.g., DiBattista et al. (1991 text)
 
+- mod_bary.alg, as described in unpublished paper(s)
+
 - mce.alg, as described by Stallmann (JEA, 2012)
 
 - sifting.alg, as described by Matuszewski et al. (Graph Drawing 1999)

@@ -19,7 +19,8 @@ import edu.ncsu.csc.Galant.GalantException;
 import edu.ncsu.csc.Galant.algorithm.Terminate;
 
 public class NodePriorityQueue extends PriorityQueue<Node> {
-  // used only because a priority queue with a specific comparator needs this parameter
+  // used only because a priority queue with a specific comparator needs this
+  // parameter
   static final int INITIAL_SIZE = 16;
 
   /**
@@ -46,10 +47,12 @@ public class NodePriorityQueue extends PriorityQueue<Node> {
   public NodePriorityQueue(Collection<Node> C) {
     super(C);
   }
-  
+
   /**
-   * creates a max heap whose keys are based on node weight 
-   * @param isMax true if this will be a max-heap
+   * creates a max heap whose keys are based on node weight
+   *
+   * @param isMax
+   *          true if this will be a max-heap
    */
   public NodePriorityQueue(boolean isMax) {
     super(INITIAL_SIZE, Collections.reverseOrder());
@@ -65,11 +68,11 @@ public class NodePriorityQueue extends PriorityQueue<Node> {
     this.attribute = C.attribute;
     this.isMaxHeap = C.reverse;
   }
-  
+
   /**
    * @return the maximum or minimum item on the queue, depending on how the
-   * queue was initialized (isMax argument in the constructor); an
-   * exception occurs if the queue is empty; remove the item as well
+   *         queue was initialized (isMax argument in the constructor); an
+   *         exception occurs if the queue is empty; remove the item as well
    */
   public Node removeBest() throws GalantException {
     if ( this.isEmpty() )
@@ -79,18 +82,18 @@ public class NodePriorityQueue extends PriorityQueue<Node> {
 
   /**
    * @return the maximum or minimum item on the queue, depending on how the
-   * queue was initialized (isMax argument in the constructor); an
-   * exception occurs if the queue is empty; the item is not removed
+   *         queue was initialized (isMax argument in the constructor); an
+   *         exception occurs if the queue is empty; the item is not removed
    */
   public Node best() throws GalantException {
     if ( this.isEmpty() )
       throw new GalantException("Attempt to get item from empty queue");
     return this.peek();
   }
-  
+
   /**
    * @return the minimum item on the queue; an exception if this is a max
-   * heap; remove the item as well
+   *         heap; remove the item as well
    */
   public Node removeMin() throws GalantException {
     if ( isMaxHeap )
@@ -98,10 +101,9 @@ public class NodePriorityQueue extends PriorityQueue<Node> {
     return removeBest();
   }
 
-  
   /**
    * @return the minimum item on the queue; an exception if this is a max
-   * heap; don't remove the item
+   *         heap; don't remove the item
    */
   public Node min() throws GalantException {
     if ( isMaxHeap )
@@ -111,7 +113,7 @@ public class NodePriorityQueue extends PriorityQueue<Node> {
 
   /**
    * @return the maximum item on the queue; an exception if this is a min
-   * heap; remove the item as well
+   *         heap; remove the item as well
    */
   public Node removeMax() throws GalantException {
     if ( ! isMaxHeap )
@@ -121,7 +123,7 @@ public class NodePriorityQueue extends PriorityQueue<Node> {
 
   /**
    * @return the maximum item on the queue; an exception if this is a min
-   * heap; don't remove the item
+   *         heap; don't remove the item
    */
   public Node max() throws GalantException {
     if ( ! isMaxHeap )
@@ -132,6 +134,7 @@ public class NodePriorityQueue extends PriorityQueue<Node> {
   /**
    * adds an item, assumes it has a value for the desired attribute, throws
    * an exception if not
+   *
    * @return true if v was not already in the queue
    */
   public boolean insert(Node v) throws GalantException {
@@ -142,6 +145,7 @@ public class NodePriorityQueue extends PriorityQueue<Node> {
 
   /**
    * adds an item and gives it a key for the attribute
+   *
    * @return true if v was not already in the queue
    */
   public boolean insert(Node v, double key) throws GalantException, Terminate {
@@ -207,11 +211,11 @@ public class NodePriorityQueue extends PriorityQueue<Node> {
   public String toString() {
     String string = "[pq:";
     for ( Node v : this ) {
-      if ( v == null ) string += " null";
-      else string += " " + v.getId();
+      if ( v == null )
+        string += " null";
+      else
+        string += " " + v.getId();
     }
     return string + " ]";
   }
 }
-
-//  [Last modified: 2017 01 20 at 02:11:10 GMT]

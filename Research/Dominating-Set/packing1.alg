@@ -34,17 +34,23 @@ algorithm {
     while ( ! pq.isEmpty() ) {
         Node v = pq.removeMin();
         if ( isMarked(v) ) continue;
+        beginStep();
         color(v, BLUE);
         mark(v);
         hideWeight(v);
         packing.add(v);
+        packing_size++;
+        display("packing size = " + packing_size);
+        endStep();
         for_adjacent(v, e, neighbor) {
             // exclude all neighbors of v
-            highlight(e);
             if ( isMarked(neighbor) ) continue;
+            beginStep();
+            highlight(e);
             highlight(neighbor);
             hideWeight(neighbor);
             mark(neighbor);
+            endStep();
             for_adjacent(neighbor, ne, cousin) {
                 // exclude all distance 2 neighbors
                 if ( isMarked(cousin) ) continue;
@@ -73,11 +79,6 @@ algorithm {
                 endStep();
             }
         }
-//        endStep();
-//       beginStep();
-        packing.add(v);
-        packing_size++;
-        display("packing size = " + packing_size);
         endStep();
     } // while pq not empty
 }

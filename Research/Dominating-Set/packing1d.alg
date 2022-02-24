@@ -1,9 +1,11 @@
 /**
- * packing1.alg - implementation of a packing algorithm
+ * packing1d.alg - implementation of a packing algorithm
  *  (to get a lower bound for the dominating set problem)
  * this version chooses the lowest degree vertex at each iteration
  * and eliminates it, all neighbors and all cousins from consideration;
  * a cousin is a distance two neighbor
+ * it is dynamic in the sense that it updates degrees based on
+ * edges from cousins
  */
 
 NodePriorityQueue pq;

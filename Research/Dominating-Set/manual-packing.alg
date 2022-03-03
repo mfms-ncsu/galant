@@ -14,19 +14,19 @@
  * set up weights and labels
  */
 function initialize_packing() {
-    beginStep();
     for_nodes( v ) {
         setWeight(v, degree(v));
         setLabel(v, degree(v));
     }
-    endStep();
 }
 
 algorithm {
+    beginStep();
     hideEdgeWeights();
     showNodeWeights();
     showNodeLabels();
     initialize_packing();
+    endStep();
     int packing_size = 0;
     NodeSet available = getNodeSet();
     while ( ! empty(available) ) {
@@ -64,24 +64,22 @@ algorithm {
         }
         endStep();
 
+        beginStep();
         for ( Node cousin : cousins.difference(neighbors) ) {
             // mark cousins to show that they are not available
-            beginStep();
             mark(cousin);
             remove(cousin, available);
             hideLabel(cousin);
             hideWeight(cousin);
-            endStep();
             // need to be careful not to deal with second cousins
             // that are neighbors or cousins
-            beginStep();
             for_adjacent(cousin, sce, second_cousin) {
                 if ( isMarked(second_cousin) ) continue;
                 if ( neighbors.contains(second_cousin) ) continue;
                 if ( cousins.contains(second_cousin) ) continue;
                 setWeight(second_cousin, weight(second_cousin) - 1);
             }
-            endStep();
         }
-     } // while pq not empty
+        endStep();
+    } // while pq not empty
 }

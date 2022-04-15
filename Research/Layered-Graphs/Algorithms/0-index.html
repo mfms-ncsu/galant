@@ -1,0 +1,82 @@
+<html> <head>
+<title>layered graph heuristics</title>
+</head>
+
+<body>
+<h2 align="center">layered graph heuristics</h2>
+
+<pre>
+</pre>
+<h3>Files in lexicographic order</h3>
+<hr>
+<ul>
+<li>
+<strong><a href="barycenter.alg">barycenter.alg</a> --</strong><br>
+<pre>
+ barycenter.alg
+ An animation of barycenter algorithm for crossing minimization.
+
+ Caution: assumes that the graph is paritioned into layers, defined by
+ y-coordinates of the nodes and that all the edges are between nodes that
+ lie on adjacent layers. Edges are directed from lower numbered layers to
+ higher numbered ones. See LayeredGraph.java for more information
+
+ $Id: barycenter.alg 104 2015-03-27 16:23:25Z mfms $
+</pre>
+</li>
+<hr><br>
+<li>
+<strong><a href="mce.alg">mce.alg</a> --</strong><br>
+<pre>
+ @file mce.alg
+ @author Matthias Stallmann
+ @date 2014/3/13
+ An implementation of the mce algorithm for crossing minimization.
+
+ Caution: assumes that the graph is paritioned into layers, defined by
+ y-coordinates of the nodes and that all the edges are between nodes that
+ lie on adjacent layers. Edges are directed from lower numbered layers to
+ higher numbered ones. See LayeredGraph.java for more information
+
+ $Id: mce.alg 104 2015-03-27 16:23:25Z mfms $
+</pre>
+</li>
+<hr><br>
+<li>
+<strong><a href="mod_bary.alg">mod_bary.alg</a> --</strong><br>
+<pre>
+ mod_bary.alg
+ An animation of the modified barycenter algorithm for crossing minimization.
+
+ The algorithm finds the layer with the maximum number of crossings, sorts
+ its nodes based on positions of both neighboring layers and completes a
+ pass going in both directions from the max layer.
+
+ $Id: mod_bary.alg 104 2015-03-27 16:23:25Z mfms $
+</pre>
+</li>
+<hr><br>
+<li>
+<strong><a href="sifting.alg">sifting.alg</a> --</strong><br>
+<pre>
+ @file sifting.alg
+ @author Matthias Stallmann
+ @date 2014/3/16 An animation of the sifting algorithm for crossing
+ minimization. Code is taken directly from the C implementation in my
+ crossing minimization software.
+
+ Caution: assumes that the graph is paritioned into layers, defined by
+ y-coordinates of the nodes and that all the edges are between nodes that
+ lie on adjacent layers. Edges are directed from lower numbered layers to
+ higher numbered ones. See LayeredGraph.java for more information
+
+ $Id: sifting.alg 104 2015-03-27 16:23:25Z mfms $
+</pre>
+</li>
+<hr><br>
+</ul>
+<address>
+<a href="http://people.engr.ncsu.edu/mfms/">Matthias F. (Matt) Stallmann</a><br>
+Created: Fri Apr 15 15:43:41 EDT 2022
+</address>
+</body> </html>

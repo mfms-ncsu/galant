@@ -57,11 +57,7 @@ public class CodeIntegrator	{
      */
     private static final String REAL_ALGORITHM_HEAD = "initialize();";
     private static final String REAL_ALGORITHM_TAIL = "finishAlgorithm();";
-    //// ********************
-    //// //TODO: import proper class here to ensure algorithm still work properly
-    //// ********************
-    // made by 2021 Galant Team
-    // Add ""import edu.ncsu.csc.Galant.graph.component.LayeredGraph;"" for structure change.
+
     /**
      * The basic class structure into which the user's code can be inserted
      * so it can be compiled.
@@ -357,7 +353,7 @@ public class CodeIntegrator	{
             }
             else if ( state == State.IN_STRING ) {
                 if ( current == '\\' ) state = State.BACKSLASH;
-                if ( current == '"' ) state = state.DEFAULT;
+                if ( current == '"' ) state = State.DEFAULT;
                 withoutComments += current;
             }
             else if ( state == State.BACKSLASH ) {
@@ -370,5 +366,3 @@ public class CodeIntegrator	{
         return withoutComments;
     }
 }
-
-//  [Last modified: 2021 01 30 at 22:26:21 GMT]

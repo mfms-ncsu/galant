@@ -12,18 +12,19 @@ public class LogHelper {
 	private static LogHelper logHelper = null;
 	private static boolean loggingEnabled = false;
 
-  /**
-   * a stack is used in order to selectively enable/disable debug printing in
-   * a sequence of nested method calls.
-   */
-  private static Stack<Boolean> savedStates = new Stack<Boolean>();
+  	/**
+   	 * a stack is used in order to selectively enable/disable debug printing in
+   	 * a sequence of nested method calls.
+   	 */
+  	private static Stack<Boolean> savedStates = new Stack<Boolean>();
 
-  /**
-   * Logging related to the graph panel, i.e., mouse actions and drawing,
-   * clutter the loggin unnecessarily unless they are specifically
-   * desired. - mfms
-   */
-    private static boolean guiLoggingEnabled = false;
+  	/**
+   	 * Logging related to the graph panel, i.e., mouse actions and drawing,
+   	 * clutter the loggin unnecessarily unless they are specifically
+   	 * desired. - mfms
+   	 * Currently not used.
+   	 */
+	private static boolean guiLoggingEnabled = true;
 
   /**
    * degree of indentation, i.e., the number of occurrences of INDENT_STRING

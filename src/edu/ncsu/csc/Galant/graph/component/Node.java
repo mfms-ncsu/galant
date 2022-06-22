@@ -185,7 +185,11 @@ public abstract class Node extends GraphElement {
 		Point p = null;
 		if ( x == null || y == null ){
 			p = getFixedPosition();
-		} else{
+		}
+		else if ( dispatch.algorithmMovesNodes() ) {
+			p = new Point(x, y);
+		}
+		else {
 			p = dispatch.ViewTransform(new Point(x, y));
 		}
 		return p;

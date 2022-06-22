@@ -73,7 +73,7 @@ public class AlgorithmExecutor {
 	/**
 	 * Starts the algorithm thread and causes it to execute the first step.
 	 */
-	public void startAlgorithm(){
+	public void startAlgorithm() {
 		GraphDispatch dispatch = GraphDispatch.getInstance();
 		dispatch.setActiveQuery(null);
 		algorithmState = displayState = 0;
@@ -86,7 +86,7 @@ public class AlgorithmExecutor {
 	 * Informs the algorithm that it should terminate and then terminates the
 	 * thread.
 	 */
-	public synchronized void stopAlgorithm(){
+	public synchronized void stopAlgorithm() {
 		LogHelper.disable();
 		LogHelper.enterMethod(getClass(), "stopAlgorithm");
 		GraphDispatch dispatch = GraphDispatch.getInstance();
@@ -107,7 +107,7 @@ public class AlgorithmExecutor {
 		} catch (InterruptedException e){
 			System.out.println("Synchronization problem in stopAlgorithm()");
 		}
-		if ( dispatch.getActiveQuery() != null ){
+		if ( dispatch.getActiveQuery() != null ) {
 			dispatch.getActiveQuery().dispose();
 		}
 		algorithmState = displayState = 0;
@@ -133,7 +133,7 @@ public class AlgorithmExecutor {
 	/**
 	 * Needed for code that relies on knowing what the current display is showing
 	 */
-	public int getDisplayState(){
+	public int getDisplayState() {
 		return displayState;
 	}
 
@@ -147,21 +147,24 @@ public class AlgorithmExecutor {
 	 * state and algorithm state are the same, the requested step will also cause a
 	 * the algorithm to take a step.
 	 */
-	public synchronized void incrementDisplayState(){
+	public synchronized void incrementDisplayState() {
 		LogHelper.disable();
 		LogHelper.logDebug("-> incrementDisplayState display = " + displayState + " algorithm = " + algorithmState);
 		// initialization, but should end up being replaced by
 		// something before being displayed
 		String message = "default (should not happen)";
 		GraphDispatch dispatch = GraphDispatch.getInstance();
-		if ( displayState == algorithmState && ! synchronizer.algorithmFinished() && ! synchronizer.stopped()
-				&& ! synchronizer.exceptionThrown() && dispatch.getActiveQuery() == null ){
+		if ( displayState == algorithmState
+			 && ! synchronizer.algorithmFinished()
+			 && ! synchronizer.stopped()
+			 && ! synchronizer.exceptionThrown()
+			 && dispatch.getActiveQuery() == null ) {
 			displayState++;
 			algorithmState++;
 			this.showStates();
 
 			// wake up the algorithmThread, have it do something
-			synchronized (synchronizer){
+			synchronized (synchronizer) {
 				synchronizer.notify();
 			}
 			int timeInBusyWait = 0;
@@ -217,7 +220,7 @@ public class AlgorithmExecutor {
 		// if the algorithm is moving nodes, the nodes shall bounce back after
 		// forward, backward, scaling, or cancel algorithm.
 		if(dispatch.getWorkingGraph().isLayered()) {
-			for (Node n : dispatch.getWorkingGraph().getNodes()){
+			for (Node n : dispatch.getWorkingGraph().getNodes()) {
 				LayeredGraphNode temp = (LayeredGraphNode) n;
 				temp.setpos = false;
 			}
@@ -231,7 +234,7 @@ public class AlgorithmExecutor {
 	/**
 	 * Called when user requests a step back
 	 */
-	public void decrementDisplayState(){
+	public void decrementDisplayState() {
 		GraphDispatch dispatch = GraphDispatch.getInstance();
 		if ( displayState > 0 ){
 			displayState--;
@@ -252,10 +255,10 @@ public class AlgorithmExecutor {
 	 * True if it's possible to step forward
 	 */
 	public boolean hasNextState(){
-		if ( algorithmState > displayState ){
+		if ( algorithmState > displayState ) {
 			return true;
 		}
-		if ( ! synchronizer.algorithmFinished() ){
+		if ( ! synchronizer.algorithmFinished() ) {
 			return true;
 		}
 		return false;

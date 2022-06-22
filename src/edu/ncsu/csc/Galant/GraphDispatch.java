@@ -511,13 +511,16 @@ public class GraphDispatch {
         final double vPointY = ( p.y - virtualWindow.y ) / (double) virtualWindow.height;
 
         // convert from virtual viewport (0,1) to display coordinates
-        return new Point(
-                /*
-                 * these values correspond to outerNodeMargin and windowoff
-                 * TODO: change these magic numbers into constants
-                 */
-                (int) ( WINDOW_PADDING + vPointX * ( width - 2 * WINDOW_PADDING ) ), (int) ( WINDOW_PADDING
-                        + WINDOW_OFFSET + vPointY * ( height - 2 * ( WINDOW_PADDING + WINDOW_OFFSET ) ) ) );
+        Point transformedPoint = new Point(
+            /*
+             * these values correspond to outerNodeMargin and windowoff
+             * TODO: change these magic numbers into constants
+             */
+            (int) ( WINDOW_PADDING + vPointX * ( width - 2 * WINDOW_PADDING ) ),
+            (int) ( WINDOW_PADDING
+                    + WINDOW_OFFSET
+                    + vPointY * ( height - 2 * ( WINDOW_PADDING + WINDOW_OFFSET ) ) ) );
+        return transformedPoint;
     }
 
     public Point InvViewTransform ( final Point p ) {

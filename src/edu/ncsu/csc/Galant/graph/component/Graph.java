@@ -1134,7 +1134,7 @@ public class Graph {
      * @return the added <code>Node</code>; called only during edit mode
      */
     public Node addInitialNode ( final Integer x, final Integer y ) {
-        LogHelper.disable();
+    //    LogHelper.enable();
         LogHelper.enterMethod( getClass(), "addInitialNode(), x = " + x + ", y = " + y );
         final Integer newId = nextNodeId();
         incrementEffectiveEditState();

@@ -1,6 +1,8 @@
 galant
 ======
 
+**Note:** *The ncsu_final branch has some new features, but has not been thoroughly tested*
+
 This software is licensed by a Gnu Public License. See
 https://www.gnu.org/licenses/gpl.html
 for details.
@@ -29,9 +31,13 @@ Galant needs to be able to fire up a Java compiler while it is running.
 You may want to (re)compile everything, either because you edited and changed
 some of the details in the source files, or, if you use GitHub to keep up with
 the latest changes, you need Apache ant. Once that is installed, say
+```
     ant jar
+ ```
 After that you can run Galant with
+```
     ant run
+```
     
 Before you do a 'git pull' you should first either do 'ant clean' or remove
 the file build/jar/Galant.jar (build\jar\Galant.jar)

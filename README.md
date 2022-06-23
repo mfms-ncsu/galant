@@ -1,6 +1,10 @@
 galant
 ======
 
+**This branch is a beta test version with the following new features**
+- graphs are guaranteed to fit into the current window; relative positions are maintained while absolute positions are unchanged; this feature is disabled during execution of sorting algorithms and others that move/create nodes
+- a user is able to (temporarily) move a node in a layered graph during algorithm execution; the node snaps back into place when the algorithm is stepped forward or backward
+
 This software is licensed by a Gnu Public License. See
 https://www.gnu.org/licenses/gpl.html
 for details.

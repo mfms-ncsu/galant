@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns 
+http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+ <graph  edgedefault="undirected">
+  <node id="2" x="480" y="333"  />
+  <node id="3" x="57" y="432"  />
+  <node id="4" x="327" y="349"  />
+  <node id="5" x="36" y="555"  />
+  <node id="6" x="627" y="308"  />
+  <node id="7" x="404" y="565"  />
+  <node id="8" x="867" y="267"  />
+  <node id="9" x="253" y="238"  />
+  <node id="10" x="936" y="404"  />
+  <node id="12" x="781" y="72"  />
+  <node id="13" x="843" y="545"  />
+  <node id="15" x="438" y="154"  />
+  <node id="16" x="210" y="565"  />
+  <node id="17" x="661" y="136"  />
+  <node id="18" x="99" y="275"  />
+  <node id="19" x="318" y="31"  />
+  <node id="20" x="784" y="433"  />
+  <edge  source="8" target="12" weight="97.0"  />
+  <edge  source="8" target="17" weight="39.0"  />
+  <edge  source="12" target="17" weight="79.0"  />
+  <edge  source="6" target="8" weight="132.0"  />
+  <edge  source="6" target="12" weight="157.0"  />
+  <edge  source="6" target="17" weight="171.0"  />
+  <edge  source="7" target="8" weight="147.0"  />
+  <edge  source="7" target="17" weight="164.0"  />
+  <edge  source="2" target="4" weight="61.0"  />
+  <edge  source="2" target="9" weight="25.0"  />
+  <edge  source="2" target="18" weight="109.0"  />
+  <edge  source="4" target="9" weight="87.0"  />
+  <edge  source="4" target="18" weight="48.0"  />
+  <edge  source="9" target="18" weight="98.0"  />
+  <edge  source="9" target="15" weight="209.0"  />
+  <edge  source="2" target="7" weight="204.0"  />
+  <edge  source="2" target="16" weight="199.0"  />
+  <edge  source="4" target="7" weight="143.0"  />
+  <edge  source="4" target="16" weight="138.0"  />
+  <edge  source="9" target="16" weight="185.0"  />
+  <edge  source="7" target="18" weight="131.0"  />
+  <edge  source="16" target="18" weight="90.0"  />
+  <edge  source="3" target="4" weight="202.0"  />
+  <edge  source="3" target="18" weight="154.0"  />
+  <edge  source="12" target="15" weight="135.0"  />
+  <edge  source="15" target="17" weight="215.0"  />
+  <edge  source="6" target="15" weight="189.0"  />
+  <edge  source="6" target="7" weight="191.0"  />
+  <edge  source="6" target="20" weight="207.0"  />
+  <edge  source="7" target="16" weight="87.0"  />
+  <edge  source="3" target="16" weight="190.0"  />
+  <edge  source="3" target="5" weight="156.0"  />
+  <edge  source="10" target="13" weight="11.0"  />
+  <edge  source="10" target="20" weight="122.0"  />
+  <edge  source="13" target="20" weight="132.0"  />
+  <edge  source="2" target="19" weight="77.0"  />
+  <edge  source="4" target="19" weight="138.0"  />
+  <edge  source="9" target="19" weight="91.0"  />
+  <edge  source="18" target="19" weight="187.0"  />
+  <edge  source="15" target="19" weight="180.0"  />
+ </graph></graphml>

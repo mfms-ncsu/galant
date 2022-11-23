@@ -1,6 +1,5 @@
 /**
  * @file LayeredGraph.java
- * @version $Id: LayeredGraph.java 103 2015-03-26 20:46:06Z mfms $
  * Can be used as a basis for Galant implementations of a variety of crossing
  * minimization algorithms.
  *
@@ -12,6 +11,15 @@
  * performance can be evaluated before animations are undertaken. This may
  * also be useful for Galant in general.
  *
+ * @todo A lot of this code runs "in parallel" to the built-in implementation
+ *       of Layer, LayerInformation, and LayeredGraphNode.
+ *       The latter are created during parsing and accessed during display.
+ *       However the code in here appears to create a separate LayeredGraph entity,
+ *       with arrays to keep track of layers, nodes, and positions.
+ *       It would make far more sense to use the attributes of the nodes
+ *       directly and take advantage of recent sorting utilities.
+ *       This will be a slow transition process, fraught with peril.
+ * 
  * @todo There appears to be a bug in adjust_weights. The weight of a node
  * with no neighbors is based on an already assigned weight of the node to
  * the left. Consider iteration 7 with mod_bary on the graph
@@ -23,12 +31,14 @@
  */
 
 package edu.ncsu.csc.Galant.graph.component;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 import edu.ncsu.csc.Galant.algorithm.Terminate;
+
 /**
  * The class LayeredGraph is used as a basis for Galant implementations of a
  * variety of crossing minimization algorithms. It provides several
@@ -47,14 +57,14 @@ import edu.ncsu.csc.Galant.algorithm.Terminate;
  * such as numberOfCrossings, assignWeights and sortByWeight (for barycenter
  * and related heuristics).
  *
- * <li> Methods that separate logical attributes from display attributes. For
+ * <li>Methods that separate logical attributes from display attributes. For
  * example, dynamic versions of sifting and barycenter (logically) mark
  * nodes/layers to indicate that they will not be chosen again during the
  * current pass; at various points in the animation it is desirable to
  * display the logical marks in some way; methods such as mark(), unMark(),
  * and displayMarks() accomplish this functionality.
  *
- * <li> Methods that facilitate the highlighting of groups of nodes and edges
+ * <li>Methods that facilitate the highlighting of groups of nodes and edges
  * in the specific context of (layered) crossing minimization algorithms;
  * these include highlight() -- with arguments speficifying a layer and the
  * direction of the edges to be highlighted, unhighlight(),
@@ -69,7 +79,7 @@ import edu.ncsu.csc.Galant.algorithm.Terminate;
  * of edges.
  */
 
-public class LayeredGraph extends Graph{
+public class LayeredGraph extends Graph {
 
     /**
      * These constants are used to determine both highlighting and assignment
@@ -83,70 +93,78 @@ public class LayeredGraph extends Graph{
      * weights based on average position of incoming neighbors + average
      * position of outgoing neighbors.
      */
-    public enum Scope { LAYER, UP, DOWN, BOTH };
+    public enum Scope {
+        LAYER, UP, DOWN, BOTH
+    };
 
     private Graph graph;
     private ArrayList<Layer> layers;
-    private int [] positionOfNode;
-    private int [] layerOfNode;
-    private int [] savedPositionOfNode;
+    private int[] positionOfNode;
+    private int[] layerOfNode;
+    private int[] savedPositionOfNode;
 
     /**
      * weightOfNode and isMarked are designed to avoid graph state changes
      * during fast versions of barycenter and friends; the weight; default
      * value for weight is the position
      */
-    private double [] weightOfNode;
-    private boolean [] isMarked;
+    private double[] weightOfNode;
+    private boolean[] isMarked;
 
     /** typically displayed as edge weight */
-    private int [] crossingsOfEdge;
+    private int[] crossingsOfEdge;
 
     /**
      * Creates a new instance based on node positions in the graph.
      */
-    public LayeredGraph( Graph graph ) 
-    {
+    public LayeredGraph(Graph graph) {
         this.graph = graph;
         layers = new ArrayList<Layer>();
-        positionOfNode = new int[ graph.getNodes().size() ];
-        savedPositionOfNode = new int[ graph.getNodes().size() ];
-        layerOfNode = new int[ graph.getNodes().size() ];
-        weightOfNode = new double[ graph.getNodes().size() ];
-        isMarked = new boolean[ graph.getNodes().size() ];
-        crossingsOfEdge = new int[ graph.getEdges().size() ];
+        positionOfNode = new int[graph.nodeIds()];
+        savedPositionOfNode = new int[graph.nodeIds()];
+        layerOfNode = new int[graph.nodeIds()];
+        weightOfNode = new double[graph.nodeIds()];
+        isMarked = new boolean[graph.nodeIds()];
+        crossingsOfEdge = new int[graph.nodeIds()];
 
         // record layer and position information for all the nodes
-        for ( Node u: graph.getNodes() ) {
-            //edited by 2021 Galant Team
-            //add a cast to tell program this is really a LayeredGraphNode
-        	LayeredGraphNode temp = (LayeredGraphNode) u;
-        	int layer = temp.getLayer();
+        for ( Node u : graph.getNodes() ) {
+            // edited by 2021 Galant Team
+            // add a cast to tell program this is really a LayeredGraphNode
+            LayeredGraphNode temp = (LayeredGraphNode) u;
+            int layer = temp.getLayer();
             int position = temp.getPositionInLayer();
-            addNode( temp, layer, position );
-            layerOfNode[ temp.getId() ] = layer;
-            positionOfNode[ temp.getId() ] = position;
+            addNode(temp, layer, position);
+            layerOfNode[temp.getId()] = layer;
+            positionOfNode[temp.getId()] = position;
         }
 
-        // sort the nodes on each layer by their position and then set the
-        // horizontal gap between them based on window width
-        for ( Layer theLayer: layers ) {
-            theLayer.sortByPosition();
-        }
-
-        // initialize edge crossing counts
-        for ( int layer = 0; layer < layers.size() - 1; layer++ ) {
-            updateCrossingsInChannel( layer );
-        }
-    }
+        /*
+         * !!! the code below causes null pointer exceptions when
+         * nodes are not contiguous.
+         * Some of it may be needed by traditional crossing algorithms,
+         * but we can create a separate initialization method for them.
+         *
+         * // sort the nodes on each layer by their position and then set the
+         * // horizontal gap between them based on window width
+         * for ( Layer theLayer : layers ) {
+         * theLayer.sortByPosition();
+         * }
+         * 
+         * // initialize edge crossing counts
+         * for ( int layer = 0; layer < layers.size() - 1; layer++ ) {
+         * updateCrossingsInChannel(layer);
+         * }
+         */
+    } // constructor ends
 
     /**
      * adds new empty layers numbered layers.size(), ... , layer_number; can be
      * called even if not needed - it does nothing, safely, in that case
      */
-    void ensureLayer( int layerNumber ) {
+    void ensureLayer(int layerNumber) {
         for ( int layer = layers.size(); layer <= layerNumber; layer++ ) {
-            layers.add( new Layer( this ) );
+            layers.add(new Layer(this));
         }
     }
 
@@ -155,50 +173,52 @@ public class LayeredGraph extends Graph{
      * weight to be that position (so that nodes in the layer can be sorted
      * by position initially
      */
-    public void addNode( Node v, int layer, int position ) {
-        ensureLayer( layer );
-        layers.get( layer ).addNode( v, position );
-        this.positionOfNode[ v.getId() ] = position;
-        this.layerOfNode[ v.getId() ] = layer;
+    public void addNode(Node v, int layer, int position) {
+        ensureLayer(layer);
+        layers.get(layer).addNode(v, position);
+        this.positionOfNode[v.getId()] = position;
+        this.layerOfNode[v.getId()] = layer;
     }
 
     /**
      * @return a list containing the nodes on the i-th layer.
      */
-    public List<Node> getLayer( int layer ) {
-        return layers.get( layer ).getNodes();
+    public List<Node> getLayer(int layer) {
+        return layers.get(layer).getNodes();
     }
 
     /**
      * @return the number of nodes on the layer.
      */
-    public int getLayerSize( int layer ) {
-        return getLayer( layer ).size();
+    public int getLayerSize(int layer) {
+        return getLayer(layer).size();
     }
 
     /**
      * @return the number of layers
      */
-    public int numberOfLayers() { return layers.size(); } 
+    public int numberOfLayers() {
+        return layers.size();
+    }
 
     /**
      * @return the (number of the) layer on which node v appears.
      */
-    public int getLayer( Node v ) {
-        return layerOfNode[ v.getId() ];
+    public int getLayer(Node v) {
+        return layerOfNode[v.getId()];
     }
 
     /**
      * @return the position of v in its layer.
      */
-    public int getPosition( Node v ) {
-        return positionOfNode[ v.getId() ];
+    public int getPosition(Node v) {
+        return positionOfNode[v.getId()];
     }
 
     public String toString() {
         String s = "";
         for ( int layerNumber = 0; layerNumber < layers.size(); layerNumber++ ) {
-            s += "Layer " + layerNumber + " " + layers.get( layerNumber ) + "\n";
+            s += "Layer " + layerNumber + " " + layers.get(layerNumber) + "\n";
         }
         return s;
     }
@@ -211,16 +231,16 @@ public class LayeredGraph extends Graph{
      * Displays the node v (as if it were) at position i on its layer. The
      * logical position of node v is not changed.
      */
-    public void displayPosition( Node v, int i ) throws Terminate {
-        layers.get( layerOfNode[ v.getId() ] ).displayPosition( v, i );
+    public void displayPosition(Node v, int i) throws Terminate {
+        layers.get(layerOfNode[v.getId()]).displayPosition(v, i);
     }
 
     /**
      * Updates the display to reflect the logical position information of
      * nodes in layer i.
      */
-    public void displayPositions( int i ) throws Terminate {
-        layers.get( i ).displayPositions();
+    public void displayPositions(int i) throws Terminate {
+        layers.get(i).displayPositions();
     }
 
     /**
@@ -229,7 +249,7 @@ public class LayeredGraph extends Graph{
      */
     public void displayPositions() throws Terminate {
         for ( int layer = 0; layer < numberOfLayers(); layer++ ) {
-            displayPositions( layer );
+            displayPositions(layer);
         }
     }
 
@@ -237,47 +257,50 @@ public class LayeredGraph extends Graph{
      * Changes positions of nodes based on an insertion of a single node
      * either before or after another.
      *
-     * @param layer the layer on which the insertion takes place
-     * @param nodeLocation index of node to be inserted
-     * @param insertLocation index of the new position of the node
+     * @param layer
+     *            the layer on which the insertion takes place
+     * @param nodeLocation
+     *            index of node to be inserted
+     * @param insertLocation
+     *            index of the new position of the node
      */
-    public void insert( int layer, int nodeLocation, int insertLocation ) {
-        layers.get( layer ).insert( nodeLocation, insertLocation );
+    public void insert(int layer, int nodeLocation, int insertLocation) {
+        layers.get(layer).insert(nodeLocation, insertLocation);
         // need to update position information for the nodes on this layer
         int position = 0;
-        for ( Node v: getLayer( layer ) ) {
-            positionOfNode[ v.getId() ] = position++;
+        for ( Node v : getLayer(layer) ) {
+            positionOfNode[v.getId()] = position++;
         }
         // update edges crossings in the relevant channels - should probably
         // be done separately
         if ( layer > 0 ) {
-            updateCrossingsInChannel( layer - 1 );
+            updateCrossingsInChannel(layer - 1);
         }
         if ( layer < layers.size() - 1 ) {
-            updateCrossingsInChannel( layer );
+            updateCrossingsInChannel(layer);
         }
     }
 
     /**
      * marks nodes on layer i whose positions are about to change
      */
-    public void markPositionChanges( int i ) {
+    public void markPositionChanges(int i) {
         layers.get(i).markPositionChanges();
     }
 
     /**
      * sets the position of the given node in its layer.
      */
-    public void setPosition( Node v, int positionInLayer ) {
-        positionOfNode[ v.getId() ] = positionInLayer;
+    public void setPosition(Node v, int positionInLayer) {
+        positionOfNode[v.getId()] = positionInLayer;
     }
-    
+
     /**
      * Saves the current (logical) positions for later restoration; useful
      * for remembering positions that minimize crossings.
      */
     public void savePositions() {
-        for ( Layer layer: layers ) {
+        for ( Layer layer : layers ) {
             layer.savePositions();
         }
     }
@@ -286,7 +309,7 @@ public class LayeredGraph extends Graph{
      * Restores the previously saved positions.
      */
     public void restoreSavedPositions() {
-        for ( Layer layer: layers ) {
+        for ( Layer layer : layers ) {
             layer.restoreSavedPositions();
         }
     }
@@ -295,7 +318,7 @@ public class LayeredGraph extends Graph{
      * Displays the previously saved positions.
      */
     public void displaySavedPositions() throws Terminate {
-        for ( Layer layer: layers ) {
+        for ( Layer layer : layers ) {
             layer.displaySavedPositions();
         }
     }
@@ -303,33 +326,33 @@ public class LayeredGraph extends Graph{
     /**
      * @return the saved position of node v
      */
-    public int getSavedPosition( Node v ) {
-        return savedPositionOfNode[ v.getId() ];
+    public int getSavedPosition(Node v) {
+        return savedPositionOfNode[v.getId()];
     }
 
     /**
      * Sets the saved position of node v.
      */
-    public void setSavedPosition( Node v, int positionInLayer ) {
-        savedPositionOfNode[ v.getId() ] = positionInLayer;
+    public void setSavedPosition(Node v, int positionInLayer) {
+        savedPositionOfNode[v.getId()] = positionInLayer;
     }
 
     /**
      * @return the node on the given layer at the given position
      */
-    public Node getNodeAt( int layerNumber, int position ) {
-        Layer layer = layers.get( layerNumber );
-        return layer.getNodeAt( position ); 
+    public Node getNodeAt(int layerNumber, int position) {
+        Layer layer = layers.get(layerNumber);
+        return layer.getNodeAt(position);
     }
 
     /**
      * @return the node to the left of v on the same layer as v
      */
-    public Node getNodeToTheLeft( Node v ) {
-        int layer = getLayer( v );
-        int position = getPosition( v );
+    public Node getNodeToTheLeft(Node v) {
+        int layer = getLayer(v);
+        int position = getPosition(v);
         if ( position > 0 ) {
-            return getNodeAt( layer, position - 1 );
+            return getNodeAt(layer, position - 1);
         }
         return null;
     }
@@ -337,11 +360,11 @@ public class LayeredGraph extends Graph{
     /**
      * @return the node to the right of v on the same layer as v
      */
-    public Node getNodeToTheRight( Node v ) {
-        int layer = getLayer( v );
-        int position = getPosition( v );
-        if ( position < getLayerSize( layer ) - 1 ) {
-            return getNodeAt( layer, position + 1 );
+    public Node getNodeToTheRight(Node v) {
+        int layer = getLayer(v);
+        int position = getPosition(v);
+        if ( position < getLayerSize(layer) - 1 ) {
+            return getNodeAt(layer, position + 1);
         }
         return null;
     }
@@ -350,28 +373,27 @@ public class LayeredGraph extends Graph{
      * Sets the logical weight of node v to the given weight without changing
      * the display.
      */
-    public void setWeight( Node v, double weight ) {
-        weightOfNode[ v.getId() ] = weight;
+    public void setWeight(Node v, double weight) {
+        weightOfNode[v.getId()] = weight;
     }
 
- 
     /**
      * @return the logical weight of node v.
      */
-    public double getWeight( Node v ) {
-        return weightOfNode[ v.getId() ];
+    public double getWeight(Node v) {
+        return weightOfNode[v.getId()];
     }
 
-    private double getUpperAverage( Node v ) {
+    private double getUpperAverage(Node v) {
         // a -1 signals that there are no nodes on the layer above/below
         // on which to base a weight; in these cases, a final adjustment
         // bases the weights on those of the left and right neighbors
-        double upperAverage = -1;
+        double upperAverage = - 1;
         int outdegree = v.getOutdegree();
         int sumOfPositions = 0;
-        for ( Edge e: v.getOutgoingEdges() ) {
-            Node w = v.travel( e );
-            sumOfPositions += positionOfNode[ w.getId() ];
+        for ( Edge e : v.getOutgoingEdges() ) {
+            Node w = v.travel(e);
+            sumOfPositions += positionOfNode[w.getId()];
         }
         if ( outdegree > 0 ) {
             upperAverage = ((double) sumOfPositions) / outdegree;
@@ -379,18 +401,18 @@ public class LayeredGraph extends Graph{
         return upperAverage;
     }
 
-    private double getLowerAverage( Node v ) {
+    private double getLowerAverage(Node v) {
         // a -1 signals that there are no nodes on the layer above/below
         // on which to base a weight; in these cases, a final adjustment
         // bases the weights on those of the left and right neighbors
-        double lowerAverage = -1;
+        double lowerAverage = - 1;
         int indegree = v.getIndegree();
         int sumOfPositions = 0;
-        for ( Edge e: v.getIncomingEdges() ) {
-            Node w = v.travel( e );
-            sumOfPositions += positionOfNode[ w.getId() ];
+        for ( Edge e : v.getIncomingEdges() ) {
+            Node w = v.travel(e);
+            sumOfPositions += positionOfNode[w.getId()];
         }
-        if ( indegree > 0 )  {
+        if ( indegree > 0 ) {
             lowerAverage = ((double) sumOfPositions) / indegree;
         }
         return lowerAverage;
@@ -400,31 +422,31 @@ public class LayeredGraph extends Graph{
      * Assign a weight based on the two neighbors for each node that does
      * not have a well-defined weight (indegree or outdegree 0)
      *
-     * @param nodeList the list of nodes on this layer in the current left to
-     * right order
-     * @param weightArray the weights of the corresponding nodes (left to
-     * right) with a -1 for each node that has no weight
+     * @param nodeList
+     *            the list of nodes on this layer in the current left to
+     *            right order
+     * @param weightArray
+     *            the weights of the corresponding nodes (left to
+     *            right) with a -1 for each node that has no weight
      */
-    private void adjustWeights( List<Node> nodeList, double [] weightArray ) {
+    private void adjustWeights(List<Node> nodeList, double[] weightArray) {
         int length = nodeList.size();
         for ( int i = 0; i < length; i++ ) {
             // do nothing if this node already has a weight
-            if ( weightArray[i] >= 0 ) continue;
+            if ( weightArray[i] >= 0 )
+                continue;
             // if both neighbors are present and have weights, take the
             // average of their weights
             if ( i > 0 && i < length - 1
-                 && weightArray[i-1] != -1 && weightArray[i+1] != -1 ) {
-                weightArray[i] = (weightArray[i-1] + weightArray[i+1]) / 2;
-            }
-            else if ( i > 0 && weightArray[i-1] != -1 ) {
+                    && weightArray[i - 1] != - 1 && weightArray[i + 1] != - 1 ) {
+                weightArray[i] = (weightArray[i - 1] + weightArray[i + 1]) / 2;
+            } else if ( i > 0 && weightArray[i - 1] != - 1 ) {
                 // only the left neighbor has a weight
-                weightArray[i] = weightArray[i-1];
-            }
-            else if ( i < length - 1 && weightArray[i+1] != -1 ) {
+                weightArray[i] = weightArray[i - 1];
+            } else if ( i < length - 1 && weightArray[i + 1] != - 1 ) {
                 // only the right neighbor has a weight
-                weightArray[i] = weightArray[i+1];
-            }
-            else {
+                weightArray[i] = weightArray[i + 1];
+            } else {
                 // neither neighbor has a weight; occurs in sequential
                 // implementations only if the leftmost node has a right
                 // neighbor with no weight; should fix this if simulating
@@ -438,47 +460,46 @@ public class LayeredGraph extends Graph{
      * Assigns logical weights to nodes on the given layer based on average
      * position of adjacent nodes on neighboring layer(s).
      *
-     * @param scope If this is UP, sorting is based on the higher numbered
-     * layer, if it's DOWN it's based on the lower numbered layer, if it's
-     * BOTH it will be the average of the two.
+     * @param scope
+     *            If this is UP, sorting is based on the higher numbered
+     *            layer, if it's DOWN it's based on the lower numbered layer, if
+     *            it's
+     *            BOTH it will be the average of the two.
      */
-    public void assignWeights( int layer, Scope scope ) {
-        List<Node> nodeList = layers.get( layer ).getNodes();
-        double [] upperWeightArray = new double[ nodeList.size() ];
-        double [] lowerWeightArray = new double[ nodeList.size() ];
+    public void assignWeights(int layer, Scope scope) {
+        List<Node> nodeList = layers.get(layer).getNodes();
+        double[] upperWeightArray = new double[nodeList.size()];
+        double[] lowerWeightArray = new double[nodeList.size()];
         if ( scope == Scope.UP ) {
             int i = 0;
-            for ( Node v: nodeList ) {
-                upperWeightArray[ i++ ] = getUpperAverage( v );
+            for ( Node v : nodeList ) {
+                upperWeightArray[i++] = getUpperAverage(v);
             }
-            adjustWeights( nodeList, upperWeightArray );
-        }
-        else if ( scope == Scope.DOWN ) {
+            adjustWeights(nodeList, upperWeightArray);
+        } else if ( scope == Scope.DOWN ) {
             int i = 0;
-            for ( Node v: nodeList ) {
-                lowerWeightArray[ i++ ] = getLowerAverage( v );
+            for ( Node v : nodeList ) {
+                lowerWeightArray[i++] = getLowerAverage(v);
             }
-            adjustWeights( nodeList, lowerWeightArray );
-        }
-        else { // scope is BOTH
+            adjustWeights(nodeList, lowerWeightArray);
+        } else { // scope is BOTH
             int i = 0;
-            for ( Node v: nodeList ) {
-                double upper = getUpperAverage( v );
-                double lower = getLowerAverage( v );
-                upperWeightArray[ i ] = upper >= 0 ? upper : 0;
-                lowerWeightArray[ i ] = lower >= 0 ? lower : 0;
+            for ( Node v : nodeList ) {
+                double upper = getUpperAverage(v);
+                double lower = getLowerAverage(v);
+                upperWeightArray[i] = upper >= 0 ? upper : 0;
+                lowerWeightArray[i] = lower >= 0 ? lower : 0;
                 i++;
             }
         }
         int i = 0;
-        for ( Node v: nodeList ) {
+        for ( Node v : nodeList ) {
             if ( scope == Scope.DOWN )
-                weightOfNode[ v.getId() ] = lowerWeightArray[i];
+                weightOfNode[v.getId()] = lowerWeightArray[i];
             else if ( scope == Scope.UP )
-                weightOfNode[ v.getId() ] = upperWeightArray[i];
+                weightOfNode[v.getId()] = upperWeightArray[i];
             else {
-                weightOfNode[ v.getId() ]
-                    = (upperWeightArray[i] + lowerWeightArray[i]) / 2;
+                weightOfNode[v.getId()] = (upperWeightArray[i] + lowerWeightArray[i]) / 2;
             }
             i++;
         }
@@ -487,15 +508,15 @@ public class LayeredGraph extends Graph{
     /**
      * Sorts nodes on the given layer by their logical weights.
      */
-    public void sortByWeight( int layer ) {
-        layers.get( layer ).sortByWeight();
+    public void sortByWeight(int layer) {
+        layers.get(layer).sortByWeight();
     }
 
     /**
      * Sets weights of all nodes on layer i to 0
      */
-    public void resetNodeWeights( int i ) throws Terminate {
-        for ( Node v: getLayer( i ) ) {
+    public void resetNodeWeights(int i) throws Terminate {
+        for ( Node v : getLayer(i) ) {
             v.setWeight(0.0);
         }
     }
@@ -505,23 +526,23 @@ public class LayeredGraph extends Graph{
      */
     public void resetNodeWeights() throws Terminate {
         for ( int layer = 0; layer < numberOfLayers(); layer++ ) {
-            resetNodeWeights( layer );
+            resetNodeWeights(layer);
         }
     }
 
     /**
      * Gives nodes on layer i default weights that make them invisible
      */
-    public void clearNodeWeights( int i ) throws Terminate {
+    public void clearNodeWeights(int i) throws Terminate {
         layers.get(i).clearWeights();
     }
 
     /**
      * Sets weights of all nodes on layer i to their positions.
      */
-    public void setWeightsToPositions( int i ) {
-        for ( Node v: getLayer( i ) ) {
-            weightOfNode[ v.getId() ] = positionOfNode[ v.getId() ];
+    public void setWeightsToPositions(int i) {
+        for ( Node v : getLayer(i) ) {
+            weightOfNode[v.getId()] = positionOfNode[v.getId()];
         }
     }
 
@@ -530,15 +551,15 @@ public class LayeredGraph extends Graph{
      */
     public void setWeightsToPositions() {
         for ( int layer = 0; layer < numberOfLayers(); layer++ ) {
-            setWeightsToPositions( layer );
+            setWeightsToPositions(layer);
         }
     }
 
     /**
      * Displays the weights of nodes on the given layer.
      */
-    public void displayWeights( int layer ) throws Terminate {
-        layers.get( layer ).displayWeights();
+    public void displayWeights(int layer) throws Terminate {
+        layers.get(layer).displayWeights();
     }
 
     /**
@@ -546,49 +567,49 @@ public class LayeredGraph extends Graph{
      */
     public void displayWeights() throws Terminate {
         for ( int layer = 0; layer < numberOfLayers(); layer++ ) {
-            displayWeights( layer );
+            displayWeights(layer);
         }
     }
 
     /**
      * Sorts the list of nodes on layer i by their <em>displayed</em> weights.
      */
-    public void sort( int i ) {
-        layers.get( i ).sort();
+    public void sort(int i) {
+        layers.get(i).sort();
     }
 
     /**
      * Makes all node labels on layer i blank
      */
-    public void clearNodeLabels( int i ) throws Terminate {
-        layers.get( i ).clearLabels();
+    public void clearNodeLabels(int i) throws Terminate {
+        layers.get(i).clearLabels();
     }
 
     /**
      * Logically marks node v.
      */
-    public void mark( Node v ) {
-        isMarked[ v.getId() ] = true;
+    public void mark(Node v) {
+        isMarked[v.getId()] = true;
     }
 
     /**
      * Logically undoes any logical mark on node v.
      */
-    public void unMark( Node v ) {
-        isMarked[ v.getId() ] = false;
+    public void unMark(Node v) {
+        isMarked[v.getId()] = false;
     }
 
     /**
      * @return true if node v is marked.
      */
-    public boolean isMarked( Node v ) {
-        return isMarked[ v.getId() ];
+    public boolean isMarked(Node v) {
+        return isMarked[v.getId()];
     }
 
     /**
      * Removes the logical marks from all nodes on layer i.
      */
-    public void clearMarks( int i ) {
+    public void clearMarks(int i) {
         layers.get(i).clearMarks();
     }
 
@@ -596,15 +617,15 @@ public class LayeredGraph extends Graph{
      * Removes all logical marks from all nodes.
      */
     public void clearMarks() {
-        for ( Node v: graph.getNodes() ) {
-            isMarked[ v.getId() ] = false;
+        for ( Node v : graph.getNodes() ) {
+            isMarked[v.getId()] = false;
         }
     }
 
     /**
      * Displays all the current logical marks on layer i.
      */
-    public void displayMarks( int i ) throws Terminate {
+    public void displayMarks(int i) throws Terminate {
         layers.get(i).displayMarks();
     }
 
@@ -612,8 +633,8 @@ public class LayeredGraph extends Graph{
      * Displays the current logical marks of all nodes.
      */
     public void displayMarks() throws Terminate {
-        for ( Node v: graph.getNodes() ) {
-            v.setVisited( isMarked[ v.getId() ] );
+        for ( Node v : graph.getNodes() ) {
+            v.setVisited(isMarked[v.getId()]);
         }
     }
 
@@ -621,7 +642,7 @@ public class LayeredGraph extends Graph{
      * Removes all displayed marks from layer i without affecting their
      * logical status.
      */
-    public void removeMarks( int i ) throws Terminate {
+    public void removeMarks(int i) throws Terminate {
         layers.get(i).removeMarks();
     }
 
@@ -630,31 +651,31 @@ public class LayeredGraph extends Graph{
      * status.
      */
     public void removeMarks() throws Terminate {
-        for ( Node v: graph.getNodes() ) {
-            v.setVisited( false );
+        for ( Node v : graph.getNodes() ) {
+            v.setVisited(false);
         }
     }
 
-   /**
-    * Logically marks layer i: used in the animation of a dynamic version of
-    * the barycenter heuristic.
-    */
-    public void markLayer( int i ) {
+    /**
+     * Logically marks layer i: used in the animation of a dynamic version of
+     * the barycenter heuristic.
+     */
+    public void markLayer(int i) {
         layers.get(i).mark();
     }
 
-   /**
-    * Logically undoes the marking of layer i: used in the animation of a
-    * dynamic version of the barycenter heuristic.
-    */
-    public void unMarkLayer( int i ) {
+    /**
+     * Logically undoes the marking of layer i: used in the animation of a
+     * dynamic version of the barycenter heuristic.
+     */
+    public void unMarkLayer(int i) {
         layers.get(i).unMark();
     }
 
-   /**
-    * Logically undoes the marking of all layers: used in the animation of a
-    * dynamic version of the barycenter heuristic.
-    */
+    /**
+     * Logically undoes the marking of all layers: used in the animation of a
+     * dynamic version of the barycenter heuristic.
+     */
     public void clearLayerMarks() {
         for ( int i = 0; i < layers.size(); i++ ) {
             layers.get(i).unMark();
@@ -667,43 +688,47 @@ public class LayeredGraph extends Graph{
      */
     public void displayLayerMarks() throws Terminate {
         for ( int i = 0; i < layers.size(); i++ ) {
-            layers.get( i ).displayMarks();
+            layers.get(i).displayMarks();
         }
     }
 
     /**
      * highlights the edges incident on node v.
      */
-    public void highlightEdges( Node v ) throws Terminate {
-        for ( Edge e: v.getIncidentEdges() ) {
-            e.setSelected( true );
+    public void highlightEdges(Node v) throws Terminate {
+        for ( Edge e : v.getIncidentEdges() ) {
+            e.setSelected(true);
         }
     }
 
     /**
      * Undoes highlighting of the edges incident on node v.
      */
-    public void unHighlightEdges( Node v ) throws Terminate {
-        for ( Edge e: v.getIncidentEdges() ) {
-            e.setSelected( false );
+    public void unHighlightEdges(Node v) throws Terminate {
+        for ( Edge e : v.getIncidentEdges() ) {
+            e.setSelected(false);
         }
     }
 
     /**
      * Highlights nodes on layer i.
-     * @param scope determines which incident edges, if any, should be
-     * highlighted: if scope is UP, the edges pointing to the higher-numbered
-     * layers are highlighted; if DOWN, those to the lower-numbered layer; if
-     * both, all incident edges; if LAYER, the nodes only.
+     * 
+     * @param scope
+     *            determines which incident edges, if any, should be
+     *            highlighted: if scope is UP, the edges pointing to the
+     *            higher-numbered
+     *            layers are highlighted; if DOWN, those to the lower-numbered
+     *            layer; if
+     *            both, all incident edges; if LAYER, the nodes only.
      */
-    public void highlight( int i, Scope scope ) throws Terminate {
-        layers.get(i).highlight( scope );
+    public void highlight(int i, Scope scope) throws Terminate {
+        layers.get(i).highlight(scope);
     }
 
     /**
      * Undoes any highlighting of nodes on layer i and their incident edges.
      */
-    public void unHighlight( int i ) throws Terminate {
+    public void unHighlight(int i) throws Terminate {
         layers.get(i).unHighlight();
     }
 
@@ -712,7 +737,7 @@ public class LayeredGraph extends Graph{
      */
     public void unHighlight() throws Terminate {
         for ( int layer = 0; layer < numberOfLayers(); layer++ ) {
-            unHighlight( layer );
+            unHighlight(layer);
         }
     }
 
@@ -720,8 +745,9 @@ public class LayeredGraph extends Graph{
      * Highlights the nodes between the two given positions, inclusive; used,
      * for example, to highlight an insertion.
      */
-    public void highlightNodes( int layer, int positionOne, int positionTwo ) throws Terminate {
-        layers.get( layer ).highlightNodes( positionOne, positionTwo );
+    public void highlightNodes(int layer, int positionOne, int positionTwo)
+            throws Terminate {
+        layers.get(layer).highlightNodes(positionOne, positionTwo);
     }
 
     /**
@@ -730,75 +756,76 @@ public class LayeredGraph extends Graph{
     public int numberOfCrossings() {
         int crossings = 0;
         for ( int layer = 0; layer < numberOfLayers() - 1; layer++ ) {
-            crossings += crossingsBetweenLayers( layer );
+            crossings += crossingsBetweenLayers(layer);
         }
         return crossings;
     }
 
     /**
      * @return the number of edges that cross edge e, based on current
-     * logical positions.
+     *         logical positions.
      */
-    public int getCrossings( Edge e ) {
-        return crossingsOfEdge[ e.getId() ];
+    public int getCrossings(Edge e) {
+        return crossingsOfEdge[e.getId()];
     }
 
     /**
      * @return the number of crossings that arise among the edges incident to
-     * and y if x is to the left of y. Assumes that both are on the same layer.
+     *         and y if x is to the left of y. Assumes that both are on the same
+     *         layer.
      */
-    public int getCrossings( Node leftNode, Node rightNode ) {
-        int layer = getLayer( leftNode );
+    public int getCrossings(Node leftNode, Node rightNode) {
+        int layer = getLayer(leftNode);
         int crossings = 0;
         // compute crossings on upward edges (if any)
         if ( layer < numberOfLayers() - 1 ) {
-            List<Edge> upEdges = createUpEdgeArray( leftNode, rightNode );
-            List<Integer> destination_positions = getDestinationPositions( upEdges );
-            crossings += countInversions( destination_positions );
-         }
+            List<Edge> upEdges = createUpEdgeArray(leftNode, rightNode);
+            List<Integer> destination_positions = getDestinationPositions(upEdges);
+            crossings += countInversions(destination_positions);
+        }
 
         // compute crossings on downward edges (if any)
         if ( layer > 0 ) {
-            List<Edge> upEdges = createDownEdgeArray( leftNode, rightNode );
-            List<Integer> source_positions = getSourcePositions( upEdges );
-            crossings += countInversions( source_positions );
+            List<Edge> upEdges = createDownEdgeArray(leftNode, rightNode);
+            List<Integer> source_positions = getSourcePositions(upEdges);
+            crossings += countInversions(source_positions);
         }
         return crossings;
     }
 
     /**
      * @return number of crossings among edges between layer and layer + 1.
-     * Uses O(|E|+|C|) algorithm from "Simple and efficient bilayer cross
-     * counting," W. Barth, M. Juenger, P. Mutzel, in JGAA, 2004.
+     *         Uses O(|E|+|C|) algorithm from "Simple and efficient bilayer cross
+     *         counting," W. Barth, M. Juenger, P. Mutzel, in JGAA, 2004.
      */
-    public int crossingsBetweenLayers( int layer ) {
+    public int crossingsBetweenLayers(int layer) {
         List<Node> sourceNodes = layers.get(layer).getNodes();
         // create an array of the positions of nodes at the other ends of
         // outgoing edges from the source; for each source node, sort these
-        // by position 
+        // by position
         ArrayList<Integer> targetPositions = new ArrayList<Integer>();
-        for ( Node v: sourceNodes ) {
+        for ( Node v : sourceNodes ) {
             ArrayList<Integer> localTargetPositions = new ArrayList<Integer>();
-            for ( Edge e: v.getOutgoingEdges() ) {
+            for ( Edge e : v.getOutgoingEdges() ) {
                 Node w = v.travel(e);
-                localTargetPositions.add( positionOfNode[ w.getId() ] );
+                localTargetPositions.add(positionOfNode[w.getId()]);
             }
-            Collections.sort( localTargetPositions );
-            targetPositions.addAll( localTargetPositions );
+            Collections.sort(localTargetPositions);
+            targetPositions.addAll(localTargetPositions);
         }
-        int inversions = countInversions( targetPositions );
+        int inversions = countInversions(targetPositions);
         return inversions;
     }
 
     /**
      * @return the number of crossings for the edges incident on nodes of the
-     * given layer.
+     *         given layer.
      */
-    int getLayerCrossings( int layer ) {
+    int getLayerCrossings(int layer) {
         int crossings = 0;
-        for ( Node v: getLayer( layer ) ) {
-            for ( Edge e: v.getIncidentEdges() ) {
-                crossings += crossingsOfEdge[ e.getId() ];
+        for ( Node v : getLayer(layer) ) {
+            for ( Edge e : v.getIncidentEdges() ) {
+                crossings += crossingsOfEdge[e.getId()];
             }
         }
         return crossings;
@@ -806,15 +833,16 @@ public class LayeredGraph extends Graph{
 
     /**
      * @return the index of the (logically) unmarked layer with the maximum
-     * number of crossings or -1 if all layers are marked.
+     *         number of crossings or -1 if all layers are marked.
      */
     public int getMaxCrossingsLayer() {
         updateEdgeCrossings();
-        int maxCrossings = -1;
-        int maxLayer = -1;
+        int maxCrossings = - 1;
+        int maxLayer = - 1;
         for ( int i = 0; i < layers.size(); i++ ) {
-            if ( layers.get(i).isMarked() ) continue;
-            int currentCrossings = getLayerCrossings( i );
+            if ( layers.get(i).isMarked() )
+                continue;
+            int currentCrossings = getLayerCrossings(i);
             if ( currentCrossings > maxCrossings ) {
                 maxCrossings = currentCrossings;
                 maxLayer = i;
@@ -825,14 +853,13 @@ public class LayeredGraph extends Graph{
 
     /**
      * @return the maximum, over all edges e of the graph, of the number of
-     * edges crossing e
+     *         edges crossing e
      */
-    public int getMaxEdgeCrossings()
-    {
+    public int getMaxEdgeCrossings() {
         int maxCrossings = Integer.MIN_VALUE;
-        for ( Edge e: graph.getEdges() ) {
-            if ( crossingsOfEdge[ e.getId() ] > maxCrossings ) {
-                maxCrossings = crossingsOfEdge[ e.getId() ];
+        for ( Edge e : graph.getEdges() ) {
+            if ( crossingsOfEdge[e.getId()] > maxCrossings ) {
+                maxCrossings = crossingsOfEdge[e.getId()];
             }
         }
         return maxCrossings;
@@ -840,19 +867,18 @@ public class LayeredGraph extends Graph{
 
     /**
      * @return the edge with the most crossings among those that still have
-     * one (logically) unmarked endpoint or null if all edges have both
-     * endpoints marked.
+     *         one (logically) unmarked endpoint or null if all edges have both
+     *         endpoints marked.
      */
-    public Edge getMaxCrossingsEdge()
-    {
+    public Edge getMaxCrossingsEdge() {
         Edge maxEdge = null;
         int maxCrossings = Integer.MIN_VALUE;
-        for ( Edge e: graph.getEdges() ) {
-            if ( ( ! isMarked[ e.getSourceNode().getId() ]
-                   || ! isMarked[ e.getTargetNode().getId() ] )
-                 && crossingsOfEdge[ e.getId() ] > maxCrossings ) {
+        for ( Edge e : graph.getEdges() ) {
+            if ( (! isMarked[e.getSourceNode().getId()]
+                    || ! isMarked[e.getTargetNode().getId()])
+                    && crossingsOfEdge[e.getId()] > maxCrossings ) {
                 maxEdge = e;
-                maxCrossings = crossingsOfEdge[ e.getId() ];
+                maxCrossings = crossingsOfEdge[e.getId()];
             }
         }
         return maxEdge;
@@ -862,48 +888,49 @@ public class LayeredGraph extends Graph{
 
     /**
      * @return unmarked edge with the most crossings, as with
-     * getMaxCrossingsEdge().
-     * @param roundRobin if true, start the search one index beyond that of
-     * the last edge returned <em>by this method</em>
+     *         getMaxCrossingsEdge().
+     * @param roundRobin
+     *            if true, start the search one index beyond that of
+     *            the last edge returned <em>by this method</em>
      */
-    public Edge getMaxCrossingsEdge( boolean roundRobin )
-    {
-        if ( ! roundRobin ) return getMaxCrossingsEdge();
-        int maxEdgeIndex = -1;
+    public Edge getMaxCrossingsEdge(boolean roundRobin) {
+        if ( ! roundRobin )
+            return getMaxCrossingsEdge();
+        int maxEdgeIndex = - 1;
         Edge maxEdge = null;
         int maxCrossings = Integer.MIN_VALUE;
         List<Edge> edgeList = graph.getEdges();
         int i = indexOfLastReturned + 1;
         i = i % edgeList.size();
         while ( i != indexOfLastReturned ) {
-            Edge e = edgeList.get( i );
-            if ( ( ! isMarked[ e.getSourceNode().getId() ]
-                   || ! isMarked[ e.getTargetNode().getId() ] )
-                 && crossingsOfEdge[ e.getId() ] > maxCrossings ) {
+            Edge e = edgeList.get(i);
+            if ( (! isMarked[e.getSourceNode().getId()]
+                    || ! isMarked[e.getTargetNode().getId()])
+                    && crossingsOfEdge[e.getId()] > maxCrossings ) {
                 maxEdgeIndex = i;
                 maxEdge = e;
-                maxCrossings = crossingsOfEdge[ e.getId() ];
+                maxCrossings = crossingsOfEdge[e.getId()];
             }
             i = (i + 1) % edgeList.size();
         }
         if ( maxEdgeIndex >= 0 ) {
-            indexOfLastReturned = maxEdgeIndex; 
+            indexOfLastReturned = maxEdgeIndex;
         }
         return maxEdge;
     }
 
     public static final Comparator<Node> DEGREE_COMPARATOR = new Comparator<Node>() {
-        public int compare( Node x, Node y ) {
+        public int compare(Node x, Node y) {
             return x.getDegree()
-            - y.getDegree();
+                    - y.getDegree();
         }
     };
 
     /**
      * Sorts nodes by their degree (for use in sifting).
      */
-    public static void sortByIncreasingDegree( List<Node> nodes ) {
-        Collections.sort( nodes, DEGREE_COMPARATOR );
+    public static void sortByIncreasingDegree(List<Node> nodes) {
+        Collections.sort(nodes, DEGREE_COMPARATOR);
     }
 
     /**
@@ -911,7 +938,7 @@ public class LayeredGraph extends Graph{
      * middleDegreeSort() and its reversed version
      */
     public void sortLayersByIncreasingDegree() {
-        for ( Layer layer: layers ) {
+        for ( Layer layer : layers ) {
             layer.sortByIncreasingDegree();
         }
     }
@@ -920,12 +947,13 @@ public class LayeredGraph extends Graph{
      * On each layer: puts nodes with largest (smallest) degree in the middle
      * and puts subsequent nodes farther toward the outside.
      *
-     * @param largestInMiddle if true then the node with largest degree goes
-     * in the middle.
+     * @param largestInMiddle
+     *            if true then the node with largest degree goes
+     *            in the middle.
      */
-    public void middleDegreeSort( boolean largestInMiddle ) {
-        for ( Layer layer: layers ) {
-            layer.middleDegreeSort( largestInMiddle );
+    public void middleDegreeSort(boolean largestInMiddle) {
+        for ( Layer layer : layers ) {
+            layer.middleDegreeSort(largestInMiddle);
         }
     }
 
@@ -933,35 +961,37 @@ public class LayeredGraph extends Graph{
      * Updates crossings for edges when two edges form an inversion. Used by
      * the maximum crossings edge heuristic reported by Stallmann in JEA (2012).
      *
-     * @param diff indicates whether to increment the number of crossings for
-     * the edges (+1) or decrement them (-1)
+     * @param diff
+     *            indicates whether to increment the number of crossings for
+     *            the edges (+1) or decrement them (-1)
      */
-    void updateEdgeCrossings( Edge e, Edge f, int diff ) {
-        crossingsOfEdge[ e.getId() ] += diff;
-        crossingsOfEdge[ f.getId() ] += diff;
+    void updateEdgeCrossings(Edge e, Edge f, int diff) {
+        crossingsOfEdge[e.getId()] += diff;
+        crossingsOfEdge[f.getId()] += diff;
     }
-    
+
     /**
      * Updates the number of crossings for each edge in edgeList based on the
      * inversions in the positions of the heads of the edges. Used by
      * the maximum crossings edge heuristic reported by Stallmann in JEA (2012).
      *
-     * @param diff indicates whether to increment the crossing counts (+1) or
-     * decrement them (-1) each time there is an inversion
+     * @param diff
+     *            indicates whether to increment the crossing counts (+1) or
+     *            decrement them (-1) each time there is an inversion
      */
-    void updateUpperEdgeCrossings( List<Edge> edgeList, int diff ) {
+    void updateUpperEdgeCrossings(List<Edge> edgeList, int diff) {
         // use insertion sort
         for ( int i = 1; i < edgeList.size(); i++ ) {
             Edge toBeInserted = edgeList.get(i);
             int j = i - 1;
             while ( j >= 0
-                    && ( getPosition( edgeList.get(j).getTargetNode() )
-                         > getPosition( toBeInserted.getTargetNode() ) ) ) {
-                updateEdgeCrossings( edgeList.get(j), toBeInserted, diff );
-                edgeList.set( j + 1, edgeList.get(j) );
+                    && (getPosition(edgeList.get(j).getTargetNode()) > getPosition(
+                            toBeInserted.getTargetNode())) ) {
+                updateEdgeCrossings(edgeList.get(j), toBeInserted, diff);
+                edgeList.set(j + 1, edgeList.get(j));
                 j--;
             }
-            edgeList.set( j + 1, toBeInserted );
+            edgeList.set(j + 1, toBeInserted);
         }
     }
 
@@ -970,19 +1000,20 @@ public class LayeredGraph extends Graph{
      * inversions in the positions of the tails of the edges. Used by the
      * maximum crossings edge heuristic reported by Stallmann in JEA (2012).
      *
-     * @param diff indicates whether to increment the crossing counts (+1) or
-     * decrement them (-1) each time there is an inversion
+     * @param diff
+     *            indicates whether to increment the crossing counts (+1) or
+     *            decrement them (-1) each time there is an inversion
      */
-    void updateLowerEdgeCrossings( List<Edge> edgeList, int diff ) {
+    void updateLowerEdgeCrossings(List<Edge> edgeList, int diff) {
         // use insertion sort
         for ( int i = 1; i < edgeList.size(); i++ ) {
             Edge toBeInserted = edgeList.get(i);
             int j = i - 1;
             while ( j >= 0
-                    && ( getPosition( edgeList.get(j).getSourceNode() )
-                         > getPosition( toBeInserted.getSourceNode() ) ) ) {
-                updateEdgeCrossings( edgeList.get(j), toBeInserted, diff );
-                edgeList.set( j + 1, edgeList.get(j) );
+                    && (getPosition(edgeList.get(j).getSourceNode()) > getPosition(
+                            toBeInserted.getSourceNode())) ) {
+                updateEdgeCrossings(edgeList.get(j), toBeInserted, diff);
+                edgeList.set(j + 1, edgeList.get(j));
                 j--;
             }
             edgeList.set(j + 1, toBeInserted);
@@ -991,53 +1022,55 @@ public class LayeredGraph extends Graph{
 
     /**
      * @return an ArrayList of the outgoing edges of the two nodes with those
-     * from leftNode appearing before those from rightNode
+     *         from leftNode appearing before those from rightNode
      */
-    List<Edge> createUpEdgeArray( Node leftNode, Node rightNode ) {
+    List<Edge> createUpEdgeArray(Node leftNode, Node rightNode) {
         ArrayList<Edge> outgoingEdges = new ArrayList<Edge>();
         List<Edge> leftNodeEdges = leftNode.getOutgoingEdges();
         List<Edge> rightNodeEdges = rightNode.getOutgoingEdges();
-        sortByTargetPosition( leftNodeEdges );
-        sortByTargetPosition( rightNodeEdges );
-        outgoingEdges.addAll( leftNodeEdges );
-        outgoingEdges.addAll( rightNodeEdges );
+        sortByTargetPosition(leftNodeEdges);
+        sortByTargetPosition(rightNodeEdges);
+        outgoingEdges.addAll(leftNodeEdges);
+        outgoingEdges.addAll(rightNodeEdges);
         return outgoingEdges;
     }
 
     /**
      * @return an ArrayList of the outgoing edges of the two nodes with those
-     * from leftNode appearing before those from rightNode
+     *         from leftNode appearing before those from rightNode
      */
-    List<Edge> createDownEdgeArray( Node leftNode, Node rightNode ) {
+    List<Edge> createDownEdgeArray(Node leftNode, Node rightNode) {
         ArrayList<Edge> incomingEdges = new ArrayList<Edge>();
         List<Edge> leftNodeEdges = leftNode.getIncomingEdges();
         List<Edge> rightNodeEdges = rightNode.getIncomingEdges();
-        sortBySourcePosition( leftNodeEdges );
-        sortBySourcePosition( rightNodeEdges );
-        incomingEdges.addAll( leftNodeEdges );
-        incomingEdges.addAll( rightNodeEdges );
+        sortBySourcePosition(leftNodeEdges);
+        sortBySourcePosition(rightNodeEdges);
+        incomingEdges.addAll(leftNodeEdges);
+        incomingEdges.addAll(rightNodeEdges);
         return incomingEdges;
     }
 
     /**
      * Change counts based on crossings when left_node appears to the left and
      * right node to the right.
-     * @param diff +1 to increase crossing counts, -1 to decrease
-     * - used by mce heuristic only
+     * 
+     * @param diff
+     *            +1 to increase crossing counts, -1 to decrease
+     *            - used by mce heuristic only
      */
-    void change_crossings( Node leftNode, Node rightNode, int diff ) {
-        int layer = getLayer( leftNode );
+    void change_crossings(Node leftNode, Node rightNode, int diff) {
+        int layer = getLayer(leftNode);
         int numberOfLayers = layers.size();
         // update crossings on upward edges (if any)
         if ( layer < numberOfLayers - 1 ) {
-            List<Edge> upEdges = createUpEdgeArray( leftNode, rightNode );
-            updateUpperEdgeCrossings( upEdges, diff );
-         }
+            List<Edge> upEdges = createUpEdgeArray(leftNode, rightNode);
+            updateUpperEdgeCrossings(upEdges, diff);
+        }
 
         // update crossings on downward edges (if any)
         if ( layer > 0 ) {
-            List<Edge> downEdges = createDownEdgeArray( leftNode, rightNode );
-            updateLowerEdgeCrossings( downEdges, diff );
+            List<Edge> downEdges = createDownEdgeArray(leftNode, rightNode);
+            updateLowerEdgeCrossings(downEdges, diff);
         }
     }
 
@@ -1048,68 +1081,70 @@ public class LayeredGraph extends Graph{
      * the maximum crossings edge heuristic reported by Stallmann in JEA (2012).
      *
      * @return the number of crossings for the edge that has the most
-     * crossings after the swap (among those involved in the swap).
+     *         crossings after the swap (among those involved in the swap).
      */
-    public int bottleneckSwap( Node left_node, Node right_node ) {
-        change_crossings( left_node, right_node, -1 );
-        change_crossings( right_node, left_node, +1 );
+    public int bottleneckSwap(Node left_node, Node right_node) {
+        change_crossings(left_node, right_node, - 1);
+        change_crossings(right_node, left_node, + 1);
         // now find the maximum number of crossings among the edges
-        // incident on the two nodes. 
+        // incident on the two nodes.
         List<Edge> incidentEdges = left_node.getIncidentEdges();
-        incidentEdges.addAll( right_node.getIncidentEdges() );
+        incidentEdges.addAll(right_node.getIncidentEdges());
         int maxCrossings = Integer.MIN_VALUE;
-        for ( Edge e: incidentEdges ) {
+        for ( Edge e : incidentEdges ) {
             int id = e.getId();
-            if ( crossingsOfEdge[ id ] > maxCrossings ) {
-                maxCrossings = crossingsOfEdge[ id ];
+            if ( crossingsOfEdge[id] > maxCrossings ) {
+                maxCrossings = crossingsOfEdge[id];
             }
         }
-        incidentEdges = null;   // for gc
+        incidentEdges = null; // for gc
         return maxCrossings;
     }
 
     /**
      * Updates the crossings for each edge in a channel.
      *
-     * @param sourceLayer the layer containing the source nodes for all the
-     * edges whose number of crossings will be updated.
+     * @param sourceLayer
+     *            the layer containing the source nodes for all the
+     *            edges whose number of crossings will be updated.
      */
-    void updateCrossingsInChannel( int sourceLayer ) {
+    void updateCrossingsInChannel(int sourceLayer) {
         ArrayList<Edge> channelEdges = new ArrayList<Edge>();
-        for ( Node v: getLayer( sourceLayer ) ) {
+        for ( Node v : getLayer(sourceLayer) ) {
             List<Edge> outgoingEdges = v.getOutgoingEdges();
-            sortByTargetPosition( outgoingEdges );
-            for ( Edge e: outgoingEdges ) {
-                crossingsOfEdge[ e.getId() ] = 0;
-                insertAndUpdateCrossings( e, channelEdges );
+            sortByTargetPosition(outgoingEdges);
+            for ( Edge e : outgoingEdges ) {
+                crossingsOfEdge[e.getId()] = 0;
+                insertAndUpdateCrossings(e, channelEdges);
             }
             outgoingEdges = null; // for gc
         }
-        channelEdges = null;    // for gc
+        channelEdges = null; // for gc
     }
 
     /**
      * Updates all edge crossings
      */
-    private void updateEdgeCrossings() {
+    public void updateEdgeCrossings() {
         for ( int i = 0; i < layers.size() - 1; i++ ) {
-            updateCrossingsInChannel( i );
+            updateCrossingsInChannel(i);
         }
     }
 
     /**
      * Sorts the edges in the list by their destination positions
      */
-    void sortByTargetPosition( List<Edge> edgeList ) {
+    void sortByTargetPosition(List<Edge> edgeList) {
         for ( int i = 1; i < edgeList.size(); i++ ) {
-            Edge e = edgeList.remove( i );
+            Edge e = edgeList.remove(i);
             int j = i - 1;
-            int targetPosition = positionOfNode[ e.getTargetNode().getId() ];
+            int targetPosition = positionOfNode[e.getTargetNode().getId()];
             while ( j >= 0
-                    && targetPosition < positionOfNode[ edgeList.get( j ).getTargetNode().getId() ] ) {
+                    && targetPosition < positionOfNode[edgeList.get(j).getTargetNode()
+                            .getId()] ) {
                 j--;
             }
-            edgeList.add( j + 1, e );
+            edgeList.add(j + 1, e);
         }
     }
 
@@ -1118,16 +1153,17 @@ public class LayeredGraph extends Graph{
      *
      * @todo this should go away when focus is on channels
      */
-    void sortBySourcePosition( List<Edge> edgeList ) {
+    void sortBySourcePosition(List<Edge> edgeList) {
         for ( int i = 1; i < edgeList.size(); i++ ) {
-            Edge e = edgeList.remove( i );
+            Edge e = edgeList.remove(i);
             int j = i - 1;
-            int sourcePosition = positionOfNode[ e.getSourceNode().getId() ];
+            int sourcePosition = positionOfNode[e.getSourceNode().getId()];
             while ( j >= 0
-                    && sourcePosition < positionOfNode[ edgeList.get( j ).getSourceNode().getId() ] ) {
+                    && sourcePosition < positionOfNode[edgeList.get(j).getSourceNode()
+                            .getId()] ) {
                 j--;
             }
-            edgeList.add( j + 1, e );
+            edgeList.add(j + 1, e);
         }
     }
 
@@ -1135,20 +1171,24 @@ public class LayeredGraph extends Graph{
      * Inserts an edge into a list of edges, incrementing the crossing count
      * for every inversion
      *
-     * @param e the edge to be inserted, presumed to have crossing count of 0
-     * @param edgeList a list of edges sorted by the positions of their
-     * destination nodes; the sorted order is maintained after the insertion
+     * @param e
+     *            the edge to be inserted, presumed to have crossing count of 0
+     * @param edgeList
+     *            a list of edges sorted by the positions of their
+     *            destination nodes; the sorted order is maintained after the
+     *            insertion
      */
-    void insertAndUpdateCrossings( Edge e, List<Edge> edgeList ) {
+    void insertAndUpdateCrossings(Edge e, List<Edge> edgeList) {
         int index = edgeList.size() - 1;
-        int targetPosition = positionOfNode[ e.getTargetNode().getId() ];
+        int targetPosition = positionOfNode[e.getTargetNode().getId()];
         while ( index >= 0
-                && targetPosition < positionOfNode[ edgeList.get( index ).getTargetNode().getId() ] ) {
-            crossingsOfEdge[ e.getId() ]++;
-            crossingsOfEdge[ edgeList.get( index ).getId() ]++;
+                && targetPosition < positionOfNode[edgeList.get(index).getTargetNode()
+                        .getId()] ) {
+            crossingsOfEdge[e.getId()]++;
+            crossingsOfEdge[edgeList.get(index).getId()]++;
             index--;
         }
-        edgeList.add( index + 1, e );
+        edgeList.add(index + 1, e);
     }
 
     /**
@@ -1156,56 +1196,108 @@ public class LayeredGraph extends Graph{
      * the slow version of the maximum crossings edge heuristic, as reported
      * by Stallmann (JEA, 2012)
      */
-    public void setEdgeWeights() 
-    throws Terminate {
-        for ( Edge e: graph.getEdges() ) {
+    public void setEdgeWeights()
+            throws Terminate {
+        for ( Edge e : graph.getEdges() ) {
             e.setWeight((double) crossingsOfEdge[e.getId()]);
         }
     }
 
     /**
      * @return a list of the positions of all the sources of the edges;
-     * the list will be in the same order as the edges
+     *         the list will be in the same order as the edges
      */
-    List<Integer> getSourcePositions( List<Edge> edges ) {
+    List<Integer> getSourcePositions(List<Edge> edges) {
         List<Integer> positions = new ArrayList<Integer>();
-        for ( Edge e: edges ) {
-            positions.add( positionOfNode[ e.getSourceNode().getId() ] );
+        for ( Edge e : edges ) {
+            positions.add(positionOfNode[e.getSourceNode().getId()]);
         }
         return positions;
     }
 
     /**
      * @return a list of the positions of all the sources of the edges;
-     * the list will be in the same order as the edges
+     *         the list will be in the same order as the edges
      */
-    List<Integer> getDestinationPositions( List<Edge> edges ) {
+    List<Integer> getDestinationPositions(List<Edge> edges) {
         List<Integer> positions = new ArrayList<Integer>();
-        for ( Edge e: edges ) {
-            positions.add( positionOfNode[ e.getTargetNode().getId() ] );
+        for ( Edge e : edges ) {
+            positions.add(positionOfNode[e.getTargetNode().getId()]);
         }
         return positions;
     }
 
-
     /**
      * @return the number of inversions in 'integers'
      */
-    int countInversions( List<Integer> integers ) {
+    int countInversions(List<Integer> integers) {
         int inversions = 0;
         for ( int i = 1; i < integers.size(); i++ ) {
             int x = integers.get(i);
             int j = i - 1;
             while ( j >= 0 && x < integers.get(j) ) {
-                integers.set( j + 1, integers.get( j ) );
+                integers.set(j + 1, integers.get(j));
                 inversions++;
                 j--;
             }
-            integers.set( j + 1, x );
+            integers.set(j + 1, x);
         }
         return inversions;
     }
 
-} // end, class LayeredGraph
+    /**
+     * *** The methods below are related to verticality ***
+     */
 
-//  [Last modified: 2021 01 08 at 19:45:43 GMT]
+    /**
+     * 
+     * @param e
+     *            an edge
+     * @return the nonverticality of edge e
+     */
+    public Integer nonverticality(Edge e) {
+        int up_position = positionOfNode[e.getSourceNode().getId()];
+        int down_position = positionOfNode[e.getTargetNode().getId()];
+        int diff = up_position - down_position;
+        return diff * diff;
+    }
+
+    public Integer nonverticality() {
+        int total = 0;
+        for ( Edge e : graph.getEdges() ) {
+            total += nonverticality(e);
+        }
+        return total;
+    }
+
+    /**
+     * @param e
+     *            the edge whose nonverticality will be calculated
+     *            Computes the nonverticality of e and sets e's weight accordingly
+     */
+    public void setNonverticality(Edge e) throws Terminate {
+        e.setWeight(nonverticality(e));
+    }
+
+    /**
+     * @param v
+     *            the node whose edges will have their nonverticalities set as
+     *            weights
+     */
+    public void setNonverticalities(Node v) throws Terminate {
+        // !!! caution - getEdges returns even edges that have been deleted;
+        // not a problem for layered graphs since these are never edited.
+        for ( Edge e : v.getEdges() ) {
+            setNonverticality(e);
+        }
+    }
+
+    /**
+     * sets nonverticalities of all edges as weights
+     */
+    public void setNonverticalities() throws Terminate {
+        for ( Edge e : graph.getEdges() ) {
+            setNonverticality(e);
+        }
+    }
+} // end, class LayeredGraph

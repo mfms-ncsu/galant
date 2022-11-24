@@ -1,7 +1,7 @@
 LayeredGraph layeredGraph;
 algorithm {
     movesNodes();
-    setDirected( true );
+    showEdgeWeights();
 
     layeredGraph
         = new LayeredGraph( getGraph() );

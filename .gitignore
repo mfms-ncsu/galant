@@ -1,14 +1,11 @@
 # .gitignore for galant
-# java class and jar files
+# java class files
 *.class
-*.jar
 # emacs backups and TAGS
 *.~*~
 TAGS
 # Mac files
 .DS_Store
-# stuff in the build directory is the result of compilation
-build/
 # stuff in the doc directory: created when building javadoc
 doc
 # graphs created on the fly

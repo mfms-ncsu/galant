@@ -1,0 +1,86 @@
+Galant merge notes:
+
+There's an annoyance resulting from the new scaling/transformation feature: if you drag a node toward a boundary or add a node close to a boundary, the layout suddenly changes.
+
+Possible solution: let the user control when the graph should fill the window, e.g., via ctrl-b (bounding box), similar to the functionality for smart layout
+
+- barycenter.alg
+85c83
+<     layeredGraph.assignWeights( layer );
+---
+>     layeredGraph.resetNodeWeights( layer );
+
+- get rid of all imports of LayeredGraph class in development
+
+- AlgorithmExecutor handles some of the interactions with Node and LayeredGraph node; may not be the best palce to do this
+119a114,120
+>               // made by 2021 Galant Team
+>               if(dispatch.getWorkingGraph().isLayered()) {
+>                       for (Node n : dispatch.getWorkingGraph().getNodes()){
+>                               LayeredGraphNode temp = (LayeredGraphNode) n;
+>                               temp.setpos = false;
+>                       }
+>               }
+
+227,229c215,226
+>               // made by 2021 Galant Team
+>               // if the algorithm is moving nodes, the nodes shall bounce back after
+>               // forward, backward, scaling, or cancel algorithm.
+>               if(dispatch.getWorkingGraph().isLayered()) {
+>                       for (Node n : dispatch.getWorkingGraph().getNodes()){
+>                               LayeredGraphNode temp = (LayeredGraphNode) n;
+>                               temp.setpos = false;
+>                       }
+>               }
+
+240a240,248
+>               // made by 2021 Galant Team
+>               // if the algorithm is moving nodes, the nodes shall bounce back after
+>               // forward, backward, scaling, or cancel algorithm.
+>               if(dispatch.getWorkingGraph().isLayered()) {
+>                       for (Node n : dispatch.getWorkingGraph().getNodes()){
+>                               LayeredGraphNode temp = (LayeredGraphNode) n;
+>                               temp.setpos = false;
+>                       }
+>               }
+
+- Algorithm
+
+60c60,64
+< 
+---
+>     //// ********************
+>     //// //TODO: import proper class here to ensure algorithm still work properly
+>     //// ********************
+>     // made by 2021 Galant Team
+>     // Add ""import edu.ncsu.csc.Galant.graph.component.LayeredGraph;"" for structure change.
+74a79
+>         "import edu.ncsu.csc.Galant.graph.component.LayeredGraph;" +
+
+- Graph (not clear what the changer to 'final' are about)
+
+117c113
+<         catch ( Terminate t ) {     // should not happen
+---
+>         catch ( final Terminate t ) { // should not happen
+
+160,161c160,161
+<     private void rollBackToState(int currentState) {
+<         List<GraphState> newStates = new ArrayList<GraphState>();
+---
+>     private void rollBackToState ( final int currentState ) {
+>         final List<GraphState> newStates = new ArrayList<GraphState>();
+
+168c170
+<         for ( Node node : this.nodes ) {
+---
+>         for ( final Node node : this.nodes ) {
+171c173
+<         for ( Edge edge : this.edges ) {
+---
+>         for ( final Edge edge : this.edges ) {
+
+etc.
+Here, I'm guessing, 'final' is equivalent to C++ 'const'
+
+Also some cases of indentation after @param and @return, probably a good idea

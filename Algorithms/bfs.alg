@@ -42,6 +42,10 @@ algorithm {
         }
         endStep();
     }
-}
 
-//  [Last modified: 2021 03 30 at 21:12:30 GMT]
+    beginStep();
+    for_edges( e ) {
+      if ( ! highlighted(e) ) hide(e);
+    }
+    endStep();
+  }

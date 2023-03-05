@@ -7,7 +7,13 @@ int time;
 int [] discovery;
 int [] finish;
 
+/**
+ * set of nodes not yet visited
+ */
+NodeSet unvisited;
+
 function visit(Node v, Node parent) {
+    unvisited.remove(v);
     time = time + 1;
     discovery[id(v)] = time;
     beginStep();
@@ -57,11 +63,18 @@ algorithm {
   clearEdgeLabels();
   endStep();
 
-  for_nodes( u ) {
-    if ( ! marked(u) ) {
-      visit( u, null );
-    }
+  unvisited = getNodeSet();
+  while ( ! unvisited.isEmpty() ) {
+      Node u = getNode("node to visit",
+                       unvisited,
+                       "node already visited");
+      step();
+      visit(u, null);
   }
-}
 
-//  [Last modified: 2017 01 23 at 22:38:28 GMT]
+  beginStep();
+  for_edges( e ) {
+    if ( ! highlighted(e) ) hide(e);
+  }
+  endStep();
+}

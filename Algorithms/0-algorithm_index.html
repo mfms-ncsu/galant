@@ -22,14 +22,6 @@ Animates depth-first search of a graph, directed or undirected; in the
 undirected case, it behaves as if edges were directed in both directions.
 <br>
 <br><hr>
-<li><b><a href="dfs_d.alg">dfs_d.alg</a></b>
-<br>
-Animates depth-first search of a directed graph only; directedness is
-forced at the beginning of the algorithm.
-If the graph were undirected, tree edges would be relabeled as back edges and
-back edges relabeled as forward edges
-<br>
-<br><hr>
 <li><b><a href="interactive_dfs.alg">interactive_dfs.alg</a></b> 
 <br>
 Animates depth-first search of a directed graph
@@ -63,6 +55,24 @@ Unlike dijkstra.alg, the edge weights are set initially by the
 algorithm, based on Euclidian distances between nodes.
 <br>
 <br><hr>
+<li><b><a href="sheehy_sp.alg">sheehy_sp.alg</a></b>
+Implementation of Dijkstra's shortest path algorithm. Interprets
+undirected edges as going in both directions.
+
+This version, based on an idea by Don Sheehy, puts edges rather than
+vertices on a priority queue.
+Because the distance from start vertex to the other endpoint of the edge
+does not change, there is no need for a decreaseKey() operation.
+
+Two features of this implementation are
+<ul>
+<li>lazy deletion: edges to vertices already in the tree are ignored when
+removed from the queue</li>
+<li>a dummy edge from the start vertex to itself; it will be the first edge removed</li>
+</ul>
+<br>
+<br><hr>
+<br>
 <li><b><a href="kruskal.alg">kruskal.alg</a></b> 
 <br>
 animation of Kruskal's MST algorithm; edges are sorted at the beginning and

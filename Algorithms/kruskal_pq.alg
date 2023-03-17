@@ -10,10 +10,10 @@ Node [] parent;
 /**
  * @return the scaled Euclidian distance between v and w
  */
-function double euclidian(Node v, Node w) {
-    double MAX_DISTANCE = 10.0;
-    double SCALE_FACTOR = MAX_DISTANCE / diagonalLength();
-    return distance(v, w) * SCALE_FACTOR;
+function float euclidian(Node v, Node w) {
+    float MAX_DISTANCE = (float) 10.0;
+    float SCALE_FACTOR = (float) (MAX_DISTANCE / diagonalLength());
+    return (float) (distance(v, w) * SCALE_FACTOR);
 }
 
 // standard disjoint set untilities; not doing union by rank or path

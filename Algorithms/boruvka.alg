@@ -131,6 +131,7 @@ function reset() {
 }
 
 algorithm {
+    setDirected(false);
     showEdgeWeights();
     showNodeLabels();             // for component labeling
 
@@ -140,7 +141,7 @@ algorithm {
   
     // number of edges in current spanning forest
     int forestEdges = 0;
-    int totalWeight = 0;
+    float totalWeight = 0;
 
     while ( forestEdges < numberOfNodes() - 1 ) {
         // need to label components first

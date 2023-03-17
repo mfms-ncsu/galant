@@ -65,7 +65,7 @@ algorithm {
     // MST is only relevant for undirected graphs
     setDirected(false);
 
-    int totalWeight = 0;
+    float totalWeight = 0;
     for ( Edge e: edgeList ) {
         beginStep();
         Node h = source(e);

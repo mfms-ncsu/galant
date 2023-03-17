@@ -18,7 +18,7 @@ function double euclidian(Node v, Node w) {
 function init_edge_costs() {
     for_edges(edge) {
         if ( ! hasWeight(edge) ) {
-            double distance = euclidian(source(edge), target(edge));
+            float distance = euclidian(source(edge), target(edge));
             setWeight(edge, distance);
         }
     }
@@ -28,7 +28,7 @@ algorithm {
     setDirected(false);
     showNodeWeights();
     showEdgeWeights();
-    double total_weight = 0;
+    float total_weight = 0;
     NodePriorityQueue pq = new NodePriorityQueue();
     Edge [] chosenEdge = new Edge[nodeIds()]; 
     beginStep();
@@ -47,8 +47,8 @@ algorithm {
         Node v = removeBest(pq);
         if ( v != s )
             total_weight += weight(chosenEdge[id(v)]);
-        display("weight so far = ", total_weight);
         beginStep();
+        display("weight so far = ", total_weight);
         mark(v);        // nodes are marked when visited
         unhighlight(v); // and highlighted when on the frontier
         if ( chosenEdge[id(v)] != null )
@@ -80,5 +80,3 @@ algorithm {
     } // stop when priority queue is empty
     display("total weight of MST = ", total_weight);
 } // end, algorithm
-
-//  [Last modified: 2021 03 30 at 12:15:44 GMT]

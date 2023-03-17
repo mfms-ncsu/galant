@@ -4,44 +4,44 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns 
 http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
  <graph  edgedefault="undirected">
-  <node id="1" x="667" y="719"  />
-  <node id="2" x="397" y="710"  />
+  <node id="1" x="719" y="681"  />
+  <node id="2" x="407" y="668"  />
   <node id="3" x="50" y="229"  />
-  <node id="4" x="525" y="714"  />
-  <node id="5" x="255" y="381"  />
-  <node id="6" x="179" y="606"  />
-  <node id="7" x="243" y="516"  />
-  <node id="8" x="588" y="298"  />
-  <node id="9" x="622" y="621"  />
+  <node id="4" x="513" y="665"  />
+  <node id="5" x="242" y="355"  />
+  <node id="6" x="160" y="595"  />
+  <node id="7" x="249" y="518"  />
+  <node id="8" x="573" y="274"  />
+  <node id="9" x="617" y="598"  />
   <node id="10" x="104" y="535"  />
-  <node id="11" x="640" y="402"  />
+  <node id="11" x="725" y="383"  />
   <node id="12" x="309" y="84"  />
   <node id="13" x="434" y="445"  />
   <node id="14" x="580" y="372"  />
   <node id="15" x="194" y="94"  />
-  <node id="16" x="278" y="665"  />
-  <node id="17" x="721" y="657"  />
-  <node id="18" x="87" y="631"  />
-  <node id="19" x="167" y="717"  />
+  <node id="16" x="291" y="636"  />
+  <node id="17" x="720" y="602"  />
+  <node id="18" x="76" y="616"  />
+  <node id="19" x="172" y="686"  />
   <node id="20" x="287" y="237"  />
   <node id="21" x="471" y="352"  />
-  <node id="22" x="912" y="341"  />
+  <node id="22" x="862" y="300"  />
   <node id="23" x="518" y="148"  />
   <node id="24" x="429" y="101"  />
-  <node id="25" x="577" y="562"  />
-  <node id="26" x="964" y="533"  />
+  <node id="25" x="610" y="500"  />
+  <node id="26" x="858" y="421"  />
   <node id="27" x="169" y="512"  />
   <node id="28" x="104" y="433"  />
   <node id="29" x="292" y="174"  />
-  <node id="30" x="740" y="84"  />
+  <node id="30" x="723" y="121"  />
   <node id="31" x="187" y="180"  />
-  <node id="32" x="841" y="206"  />
-  <node id="33" x="963" y="603"  />
+  <node id="32" x="814" y="217"  />
+  <node id="33" x="826" y="521"  />
   <node id="34" x="96" y="327"  />
-  <node id="35" x="319" y="456"  />
+  <node id="35" x="316" y="416"  />
   <node id="36" x="492" y="249"  />
-  <node id="37" x="393" y="362"  />
-  <node id="38" x="488" y="587"  />
+  <node id="37" x="381" y="338"  />
+  <node id="38" x="514" y="559"  />
   <node id="39" x="58" y="95"  />
   <node id="40" x="395" y="207"  />
   <edge  source="15" target="39" weight="1.0"  />

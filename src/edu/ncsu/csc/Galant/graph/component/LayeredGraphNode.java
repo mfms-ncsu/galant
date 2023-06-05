@@ -156,10 +156,6 @@ public class LayeredGraphNode extends Node {
 		return super.getInteger(state, "positionInLayer");
 	}
 
-	public void setLayer(Integer layer) throws Terminate{
-		super.set("layer", layer);
-	}
-
 	public void setPositionInLayer(Integer positionInLayer) throws Terminate{
 		super.set("positionInLayer", positionInLayer);
 	}

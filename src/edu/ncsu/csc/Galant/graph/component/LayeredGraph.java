@@ -100,7 +100,6 @@ public class LayeredGraph extends Graph {
     private Graph graph;
     private ArrayList<Layer> layers;
     private int[] positionOfNode;
-    private int[] layerOfNode;
     private int[] savedPositionOfNode;
 
     /**
@@ -122,7 +121,6 @@ public class LayeredGraph extends Graph {
         layers = new ArrayList<Layer>();
         positionOfNode = new int[graph.nodeIds()];
         savedPositionOfNode = new int[graph.nodeIds()];
-        layerOfNode = new int[graph.nodeIds()];
         weightOfNode = new double[graph.nodeIds()];
         isMarked = new boolean[graph.nodeIds()];
         crossingsOfEdge = new int[graph.nodeIds()];
@@ -135,7 +133,6 @@ public class LayeredGraph extends Graph {
             int layer = temp.getLayer();
             int position = temp.getPositionInLayer();
             addNode(temp, layer, position);
-            layerOfNode[temp.getId()] = layer;
             positionOfNode[temp.getId()] = position;
         }
 
@@ -184,7 +181,6 @@ public class LayeredGraph extends Graph {
         ensureLayer(layer);
         layers.get(layer).addNode(v, position);
         this.positionOfNode[v.getId()] = position;
-        this.layerOfNode[v.getId()] = layer;
     }
 
     /**
@@ -206,13 +202,6 @@ public class LayeredGraph extends Graph {
      */
     public int numberOfLayers() {
         return layers.size();
-    }
-
-    /**
-     * @return the (number of the) layer on which node v appears.
-     */
-    public int getLayer(Node v) {
-        return layerOfNode[v.getId()];
     }
 
     /**
@@ -238,8 +227,8 @@ public class LayeredGraph extends Graph {
      * Displays the node v (as if it were) at position i on its layer. The
      * logical position of node v is not changed.
      */
-    public void displayPosition(Node v, int i) throws Terminate {
-        layers.get(layerOfNode[v.getId()]).displayPosition(v, i);
+    public void displayPosition(LayeredGraphNode v, int i) throws Terminate {
+        layers.get(v.getLayer()).displayPosition(v, i);
     }
 
     /**

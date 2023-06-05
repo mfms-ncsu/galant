@@ -140,11 +140,18 @@ public class LayeredGraph extends Graph {
         }
 
         /*
-         * !!! the code below causes null pointer exceptions when
-         * nodes are not contiguous.
-         * Some of it may be needed by traditional crossing algorithms,
-         * but we can create a separate initialization method for them.
-         *
+         * @todo
+         * !!! the code below causes null pointer exceptions when nodes are not contiguous. !!!
+         * Also true of any other code that sorts by position: for example, the reset method used
+         * in barycenter.alg
+         * 
+         * The source of the problem is ensurePosition() in Layer.java,
+         * which adds null nodes in gaps when nodes are not contiguous.
+         * As with the LG-Local code, we need to distinguish between the position of a node
+         * and its index within the layer.
+         */
+
+        /**
          * // sort the nodes on each layer by their position and then set the
          * // horizontal gap between them based on window width
          * for ( Layer theLayer : layers ) {

@@ -327,8 +327,8 @@ public class LayeredGraph extends Graph {
     /**
      * @return the node to the left of v on the same layer as v
      */
-    public Node getNodeToTheLeft(Node v) {
-        int layer = getLayer(v);
+    public Node getNodeToTheLeft(LayeredGraphNode v) {
+        int layer = v.getLayer();
         int position = getPosition(v);
         if ( position > 0 ) {
             return getNodeAt(layer, position - 1);
@@ -339,8 +339,8 @@ public class LayeredGraph extends Graph {
     /**
      * @return the node to the right of v on the same layer as v
      */
-    public Node getNodeToTheRight(Node v) {
-        int layer = getLayer(v);
+    public Node getNodeToTheRight(LayeredGraphNode v) {
+        int layer = v.getLayer();
         int position = getPosition(v);
         if ( position < getLayerSize(layer) - 1 ) {
             return getNodeAt(layer, position + 1);
@@ -753,8 +753,8 @@ public class LayeredGraph extends Graph {
      *         and y if x is to the left of y. Assumes that both are on the same
      *         layer.
      */
-    public int getCrossings(Node leftNode, Node rightNode) {
-        int layer = getLayer(leftNode);
+    public int getCrossings(LayeredGraphNode leftNode, LayeredGraphNode rightNode) {
+        int layer = leftNode.getLayer();
         int crossings = 0;
         // compute crossings on upward edges (if any)
         if ( layer < numberOfLayers() - 1 ) {
@@ -1037,8 +1037,8 @@ public class LayeredGraph extends Graph {
      *            +1 to increase crossing counts, -1 to decrease
      *            - used by mce heuristic only
      */
-    void change_crossings(Node leftNode, Node rightNode, int diff) {
-        int layer = getLayer(leftNode);
+    void change_crossings(LayeredGraphNode leftNode, LayeredGraphNode rightNode, int diff) {
+        int layer = leftNode.getLayer();
         int numberOfLayers = layers.size();
         // update crossings on upward edges (if any)
         if ( layer < numberOfLayers - 1 ) {
@@ -1062,7 +1062,7 @@ public class LayeredGraph extends Graph {
      * @return the number of crossings for the edge that has the most
      *         crossings after the swap (among those involved in the swap).
      */
-    public int bottleneckSwap(Node left_node, Node right_node) {
+    public int bottleneckSwap(LayeredGraphNode left_node, LayeredGraphNode right_node) {
         change_crossings(left_node, right_node, - 1);
         change_crossings(right_node, left_node, + 1);
         // now find the maximum number of crossings among the edges

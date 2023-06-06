@@ -148,6 +148,10 @@ public class LayeredGraphNode extends Node {
 		return super.getInteger("positionInLayer");
 	}
 
+	public Integer getIndexInLayer(){
+		return super.getInteger("indexInLayer");
+	}
+
 	public Integer getLayer(int state){
 		return super.getInteger(state, "layer");
 	}
@@ -156,8 +160,16 @@ public class LayeredGraphNode extends Node {
 		return super.getInteger(state, "positionInLayer");
 	}
 
+	public Integer getIndexInLayer(int state){
+		return super.getInteger(state, "indexInLayer");
+	}
+
 	public void setPositionInLayer(Integer positionInLayer) throws Terminate{
 		super.set("positionInLayer", positionInLayer);
+	}
+	
+	public void setIndexInLayer(Integer indexInLayer) throws Terminate{
+		super.set("indexInLayer", indexInLayer);
 	}
 	
 }

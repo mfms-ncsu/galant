@@ -99,7 +99,6 @@ public class LayeredGraph extends Graph {
 
     private Graph graph;
     private ArrayList<Layer> layers;
-    private int[] positionOfNode;
     private int[] savedPositionOfNode;
 
     /**
@@ -119,22 +118,21 @@ public class LayeredGraph extends Graph {
     public LayeredGraph(Graph graph) {
         this.graph = graph;
         layers = new ArrayList<Layer>();
-        positionOfNode = new int[graph.nodeIds()];
         savedPositionOfNode = new int[graph.nodeIds()];
         weightOfNode = new double[graph.nodeIds()];
         isMarked = new boolean[graph.nodeIds()];
         crossingsOfEdge = new int[graph.nodeIds()];
 
-        // record layer and position information for all the nodes
-        for ( Node u : graph.getNodes() ) {
-            // edited by 2021 Galant Team
-            // add a cast to tell program this is really a LayeredGraphNode
-            LayeredGraphNode temp = (LayeredGraphNode) u;
-            int layer = temp.getLayer();
-            int position = temp.getPositionInLayer();
-            addNode(temp, layer, position);
-            positionOfNode[temp.getId()] = position;
-        }
+        // // record layer and position information for all the nodes
+        // for ( Node u : graph.getNodes() ) {
+        //     // edited by 2021 Galant Team
+        //     // add a cast to tell program this is really a LayeredGraphNode
+        //     LayeredGraphNode temp = (LayeredGraphNode) u;
+        //     int layer = temp.getLayer();
+        //     int position = temp.getPositionInLayer();
+        //     addNode(temp, layer, position);
+        //     positionOfNode[temp.getId()] = position;
+        // }
 
         /*
          * @todo
@@ -179,8 +177,7 @@ public class LayeredGraph extends Graph {
      */
     public void addNode(Node v, int layer, int position) {
         ensureLayer(layer);
-        layers.get(layer).addNode(v, position);
-        this.positionOfNode[v.getId()] = position;
+        layers.get(layer).addNode(v);
     }
 
     /**
@@ -202,13 +199,6 @@ public class LayeredGraph extends Graph {
      */
     public int numberOfLayers() {
         return layers.size();
-    }
-
-    /**
-     * @return the position of v in its layer.
-     */
-    public int getPosition(Node v) {
-        return positionOfNode[v.getId()];
     }
 
     public String toString() {
@@ -282,13 +272,6 @@ public class LayeredGraph extends Graph {
      */
     public void markPositionChanges(int i) {
         layers.get(i).markPositionChanges();
-    }
-
-    /**
-     * sets the position of the given node in its layer.
-     */
-    public void setPosition(Node v, int positionInLayer) {
-        positionOfNode[v.getId()] = positionInLayer;
     }
 
     /**

@@ -39,7 +39,6 @@ public class LayeredGraphNode extends Node {
 	 */
 	public LayeredGraphNode(Graph graph, AttributeList L) throws GalantException {
 		super(graph, L);
-		
 	}
 
 

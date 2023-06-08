@@ -85,12 +85,15 @@ class LayerInformation {
 
   /**
    * sets the vertical flag properly now that all layers are filled in
+   * it should be true if positions are not contiguous, which is the case
+   * if there is a position that is greater than the largest possible index
    */
   void initializeAfterParsing() {
     vertical = false;
     for ( int layer = 0; layer < numberOfLayers; layer++ ) {
-      if ( maxPositionInLayer.get(layer)
-           > layerSize.get(layer) - 1 ) vertical = true;
+      if ( maxPositionInLayer.get(layer) > layerSize.get(layer) - 1 ) {
+        vertical = true;
+      }
     }
   }
 }

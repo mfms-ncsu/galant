@@ -121,7 +121,7 @@ public class LayeredGraph extends Graph {
         savedPositionOfNode = new int[graph.nodeIds()];
         weightOfNode = new double[graph.nodeIds()];
         isMarked = new boolean[graph.nodeIds()];
-        crossingsOfEdge = new int[graph.nodeIds()];
+        crossingsOfEdge = new int[graph.edgeIds()];
 
         // // record layer and position information for all the nodes
         // for ( LayeredGraphNode u : graph.getNodes() ) {

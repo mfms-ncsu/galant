@@ -137,7 +137,7 @@ algorithm {
     setDirected( true );
 
     layeredGraph
-        = new LayeredGraph( getGraph() );
+        = new LayeredGraph(getGraph());
 
     beginStep();
     layeredGraph.setWeightsToPositions();
@@ -146,8 +146,6 @@ algorithm {
 
     int numLayers = layeredGraph.numberOfLayers();
     
-    beginStep();
-
     checkCrossings();
     while ( iteration < MAX_ITERATIONS ) {
         /** what follows is a single pass */
@@ -155,6 +153,7 @@ algorithm {
         if ( pass % 1000 == 0 )
             print( "pass = " + pass );
         upSweep( numLayers );
+        if ( pass > 1 ) break;
         downSweep( numLayers );
     }
 

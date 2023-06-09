@@ -70,7 +70,9 @@ public class LayeredGraphNode extends Node {
 	 * 
 	 * @return the point at the center of node n, Only for LayeredGraphNode.
 	 */
-	public Point getNodeCenter() throws GalantException {
+	@Override
+	 public Point getNodeCenter() throws GalantException {
+		System.out.println("-> getNodeCenter, layered " + this + ", setpos = " + setpos);
 		int state = dispatch.getDisplayState();
 		Point nodeCenter = null;
 
@@ -102,7 +104,7 @@ public class LayeredGraphNode extends Node {
 			int layer = this.getLayer(); // should not change during an
 											// animation of a layered graph algorithm
 			int position = this.getPositionInLayer(state);
-			int layerSize = 1;
+			int layerSize;
 			// vertical layered graphs have gaps in positions on some layers,
 			// i.e., positions on some layers are not contiguous; in that
 			// case, positions should be taken "literally", i.e., position p
@@ -123,6 +125,7 @@ public class LayeredGraphNode extends Node {
 
 			int numberOfLayers = myGraph.numberOfLayers();
 			int height = dispatch.getWindowHeight();
+			System.out.println("height = " + height + ", # layers = " + numberOfLayers);
 			// center layer in window if it's unique; else do the usual
 			if ( numberOfLayers == 1 ) {
 				y = height / 2;
@@ -144,6 +147,8 @@ public class LayeredGraphNode extends Node {
 		if ( nodeCenter == null ) {
 			throw new GalantException("Unable to compute center for node " + this);
 		}
+		System.out.println("<- getNodeCenter, layered, center = "
+		+ nodeCenter.getX() + ", " + nodeCenter.getY());
 		return nodeCenter;
 	}
 
@@ -183,7 +188,6 @@ public class LayeredGraphNode extends Node {
 	@Override
 	public void initializeAfterParsing(AttributeList L) throws GalantException {
 		super.initializeAfterParsing(L);
-		System.out.println("-> initialize after parsing " + L);
 		String layerString = L.getString("layer");
 		String positionString = L.getString("positionInLayer");
 		if ( layerString == null ) {
@@ -211,10 +215,8 @@ public class LayeredGraphNode extends Node {
 		// remove the string versions and replace them with integer versions
 		L.remove("layer");
 		L.remove("positionInLayer");
-		System.out.println("After removing attributes, node is " + this);
 		L.set("layer", layer);
 		L.set("positionInLayer", positionInLayer);
-		System.out.println("<- initialize after parsing " + this);
 	}
 
 	/**

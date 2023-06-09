@@ -76,7 +76,6 @@ public abstract class Node extends GraphElement {
 	 */
 	public Node(Graph graph, AttributeList L) throws GalantException {
 		super(graph, L);
-		System.out.println("About to initialize node " + this);
 		this.initializeAfterParsing(L);
 		incidentEdges = new EdgeList();
 	}
@@ -229,7 +228,6 @@ public abstract class Node extends GraphElement {
 	@Override
 	public void initializeAfterParsing(AttributeList L) throws GalantException {
 		super.initializeAfterParsing(L);
-		System.out.println("init node after parsing " + L);
 		LogHelper.enterMethod(getClass(), "initializeAfterParsing " + L);
 		String idString = L.getString("id");
 		if ( idString == null ) {

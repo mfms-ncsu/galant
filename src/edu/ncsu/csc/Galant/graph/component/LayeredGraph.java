@@ -182,6 +182,9 @@ public class LayeredGraph extends Graph {
         LogHelper.enterMethod(getClass(), "addNode to layered graph: node = " + n);
 
         super.addNode(n);
+        int layer = n.getLayer();
+        ensureLayer(layer);
+        layers.get(layer).nodes.add(n);
         layerInformation.addNode(n);
 
         LogHelper.exitMethod(getClass(), "addNode to layered graph: node = " + n);
@@ -228,7 +231,6 @@ public class LayeredGraph extends Graph {
     }
 
     public void initializeAfterParsing() throws GalantException {
-        System.out.println("Layered graph initialization");
         super.initializeAfterParsing();
         savedPositionOfNode = new int[this.nodeIds()];
         weightOfNode = new double[this.nodeIds()];

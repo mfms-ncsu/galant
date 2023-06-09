@@ -107,7 +107,6 @@ public class NonLayeredNode extends Node {
 	@Override
 	public void initializeAfterParsing(AttributeList L) throws GalantException {
 		super.initializeAfterParsing(L);
-		System.out.println("Nonlayered init " + L);
 		String xString = L.getString("x");
 		String yString = L.getString("y");
 		Integer x = Integer.MIN_VALUE;

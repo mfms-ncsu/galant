@@ -128,6 +128,9 @@ public class GraphMLParser {
         // we don't want to create new states for changes during parsing
         dispatch.setEditMode(false);
 
+        /**
+         * @todo delay this until it's known whether or not the graph is layered 
+         */
         Graph graphUnderConstruction = new Graph();
         NodeList nodes;
         NodeList edges;
@@ -154,13 +157,10 @@ public class GraphMLParser {
                 ? attributes.getNamedItem("comment").getNodeValue()
                 : null;
         graphUnderConstruction.setComment(comment);
-        String type = (attributes.getNamedItem("type") != null)
+        String graphType = (attributes.getNamedItem("type") != null)
                 ? attributes.getNamedItem("type").getNodeValue()
                 : null;
-        String typename = (attributes.getNamedItem("type") != null)
-                ? attributes.getNamedItem("type").getNodeValue()
-                : null;
-        if (typename != null && typename.equalsIgnoreCase("layered")) {
+        if (graphType != null && graphType.equalsIgnoreCase("layered")) {
             graphUnderConstruction.setLayered(true);
         } else {
             graphUnderConstruction.setLayered(false);

@@ -53,7 +53,7 @@ class LayerInformation {
                           + ", numberOfLayers = " + numberOfLayers);
     //edited by 2021 Galant Team
     //add a cast to tell program this is really a LayeredGraphNode
-	LayeredGraphNode temp = (LayeredGraphNode) v;
+	  LayeredGraphNode temp = (LayeredGraphNode) v;
     int layer = temp.getLayer();
     int position = temp.getPositionInLayer();
     maxPosition = (position > maxPosition) ? position : maxPosition;
@@ -97,5 +97,3 @@ class LayerInformation {
     }
   }
 }
-
-//  [Last modified: 2017 04 18 at 20:07:28 GMT]

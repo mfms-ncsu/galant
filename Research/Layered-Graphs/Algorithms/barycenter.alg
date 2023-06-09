@@ -104,8 +104,10 @@ function checkCrossings() {
     }
 }
 
-function upSweep( int numLayers ) {
+function upSweep(int numLayers) {
+    print("-> upSweep, numLayer = ", numLayers);
     for ( int layer = 1; layer < numLayers; layer++ ) {
+        print("  sorting layer ", layer);
         layeredGraph.assignWeights( layer, LayeredGraph.Scope.DOWN );
         displayAfterWeightAssignment( layer, LayeredGraph.Scope.DOWN );
         layeredGraph.sortByWeight( layer );
@@ -149,9 +151,10 @@ algorithm {
     checkCrossings();
     while ( iteration < MAX_ITERATIONS ) {
         /** what follows is a single pass */
+        print("pass = ", pass);
         pass++;
-        if ( pass % 1000 == 0 )
-            print( "pass = " + pass );
+//        if ( pass % 1000 == 0 )
+            print("pass = ", pass);
         upSweep( numLayers );
         if ( pass > 1 ) break;
         downSweep( numLayers );
@@ -167,5 +170,3 @@ algorithm {
            + ", min crossings = " + minCrossings 
            );
 }
-
-//  [Last modified: 2021 05 26 at 15:49:41 GMT]

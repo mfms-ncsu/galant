@@ -183,7 +183,6 @@ public class GraphMLParser {
                 }
             }
 
-            Node parsedNode = null;
             /**
              * made by 2021 Galant Team
              * Now file parser will create different nodes based on the graph type.
@@ -192,14 +191,16 @@ public class GraphMLParser {
              *       method for the appropriate graph type
              */
             if ( graphUnderConstruction instanceof LayeredGraph ) {
-                parsedNode = new LayeredGraphNode(graphUnderConstruction,
+                LayeredGraphNode parsedNode = new LayeredGraphNode(graphUnderConstruction,
                         attributesToAddForNodes);
+                LogHelper.logDebug("adding node " + parsedNode);
+                ((LayeredGraph) graphUnderConstruction).addNode(parsedNode);
             } else {
-                parsedNode = new NonLayeredNode(graphUnderConstruction,
+                NonLayeredNode parsedNode = new NonLayeredNode(graphUnderConstruction,
                         attributesToAddForNodes);
+                LogHelper.logDebug("adding node " + parsedNode);
+                graphUnderConstruction.addNode(parsedNode);
             }
-            LogHelper.logDebug("adding node " + parsedNode);
-            graphUnderConstruction.addNode(parsedNode);
         }
 
         LogHelper.endIndent();

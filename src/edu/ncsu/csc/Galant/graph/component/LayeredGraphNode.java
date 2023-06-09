@@ -30,8 +30,6 @@ public class LayeredGraphNode extends Node {
 	private final int HORIZONTAL_PADDING = 100;
 	private final int VERTICAL_PADDING = 100;
 	private LayeredGraph myGraph;
-	int layer;
-	int positionInLayer;
 
 	/**
 	 * Default constructor that only change the flag
@@ -74,7 +72,6 @@ public class LayeredGraphNode extends Node {
 	 */
 	public Point getNodeCenter() throws GalantException {
 		int state = dispatch.getDisplayState();
-		LayeredGraph thisGraph = (LayeredGraph) dispatch.getWorkingGraph();
 		Point nodeCenter = null;
 
 		if ( dispatch.isAnimationMode()
@@ -152,7 +149,7 @@ public class LayeredGraphNode extends Node {
 
 	// other methods that apply only to layered :
 	public Integer getLayer() {
-		return super.getInteger("layer");
+		return this.getInteger("layer");
 	}
 
 	public Integer getPositionInLayer() {
@@ -183,9 +180,10 @@ public class LayeredGraphNode extends Node {
 		super.set("indexInLayer", indexInLayer);
 	}
 
-	public void intializeAfterParsing(AttributeList L) throws GalantException {
-		System.out.println("Initialize after parsing " + L);
-		super.initializeAfterParsing(null);
+	@Override
+	public void initializeAfterParsing(AttributeList L) throws GalantException {
+		super.initializeAfterParsing(L);
+		System.out.println("-> initialize after parsing " + L);
 		String layerString = L.getString("layer");
 		String positionString = L.getString("positionInLayer");
 		if ( layerString == null ) {
@@ -198,6 +196,8 @@ public class LayeredGraphNode extends Node {
 		}
 		Integer layer = Integer.MIN_VALUE;
 		Integer positionInLayer = Integer.MIN_VALUE;
+		System.out
+				.println("Getting ready to parse " + layerString + ", " + positionString);
 		try {
 			layer = Integer.parseInt(layerString);
 		} catch ( NumberFormatException e ) {
@@ -211,7 +211,20 @@ public class LayeredGraphNode extends Node {
 		// remove the string versions and replace them with integer versions
 		L.remove("layer");
 		L.remove("positionInLayer");
+		System.out.println("After removing attributes, node is " + this);
 		L.set("layer", layer);
 		L.set("positionInLayer", positionInLayer);
+		System.out.println("<- initialize after parsing " + this);
+	}
+
+	/**
+	 * For debugging only
+	 */
+	@Override
+	public String toString() {
+		String s = super.toString() + " <";
+		s += this.getLayer() + ", ";
+		s += this.getPositionInLayer() + ">";
+		return s;
 	}
 }

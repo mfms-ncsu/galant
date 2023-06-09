@@ -1188,7 +1188,8 @@ public class Graph {
             this.startNode = n;
         }
 
-        LogHelper.exitMethod(getClass(), "addNode( Node )");
+        LogHelper.exitMethod(getClass(),
+                "addNode, node by id = " + nodeById.get(n.getId()));
     }
 
     /**

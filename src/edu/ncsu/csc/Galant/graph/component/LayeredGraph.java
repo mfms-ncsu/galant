@@ -120,7 +120,9 @@ public class LayeredGraph extends Graph {
      */
     public LayeredGraph() {
         super();
+        layerInformation = new LayerInformation();
         layers = new ArrayList<Layer>();
+        savedPositionOfNode = new int[nodeIds()];
 
         // // record layer and position information for all the nodes
         // for ( LayeredGraphNode u : this.getNodes() ) {
@@ -177,12 +179,12 @@ public class LayeredGraph extends Graph {
      * created.
      */
     public void addNode(final LayeredGraphNode n) {
-        LogHelper.enterMethod(getClass(), "addNode: node = " + n);
+        LogHelper.enterMethod(getClass(), "addNode to layered graph: node = " + n);
 
         super.addNode(n);
         layerInformation.addNode(n);
 
-        LogHelper.exitMethod(getClass(), "addNode( Node )");
+        LogHelper.exitMethod(getClass(), "addNode to layered graph: node = " + n);
     }
 
     /**

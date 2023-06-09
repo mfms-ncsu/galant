@@ -104,7 +104,10 @@ public class NonLayeredNode extends Node {
 		return nodeCenter;
 	}
 
+	@Override
 	public void initializeAfterParsing(AttributeList L) throws GalantException {
+		super.initializeAfterParsing(L);
+		System.out.println("Nonlayered init " + L);
 		String xString = L.getString("x");
 		String yString = L.getString("y");
 		Integer x = Integer.MIN_VALUE;
@@ -137,6 +140,15 @@ public class NonLayeredNode extends Node {
 		xCoordinate = x;
 		yCoordinate = y;
 	}
-}
 
-// [Last modified: 2021 01 31 at 14:33:33 GMT]
+	/**
+	 * For debugging only
+	 */
+	@Override
+	public String toString() {
+		String s = super.toString() + " (";
+		s += xCoordinate + ", ";
+		s += yCoordinate + ")";
+		return s;
+	}
+}

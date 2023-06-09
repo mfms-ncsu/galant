@@ -1,4 +1,5 @@
 package edu.ncsu.csc.Galant.graph.component;
+
 import java.awt.Point;
 import edu.ncsu.csc.Galant.GraphDispatch;
 import edu.ncsu.csc.Galant.logging.LogHelper;
@@ -11,24 +12,30 @@ import java.util.List;
  * displayed in the animation window.
  *
  * Based on the NodeState and EdgeState classes:
+ * 
  * @author Jason Cockrell, Ty Devries, Alex McCabe, Michael Owoc
  *
- * Adapted for a more general, flexible model by Matthias Stallmann
+ *         Adapted for a more general, flexible model by Matthias Stallmann
  */
-public class GraphElementState implements Cloneable{
+public class GraphElementState implements Cloneable {
 
     /**
      * The sequence number (algorithm state) of this state.
      */
-	private int state;
+    private int state;
 
-    public int getState() { return state; }
+    public int getState() {
+        return state;
+    }
 
     /**
      * Attribute list for the snapshot representing this element state
      */
     protected AttributeList attributes;
-    public AttributeList getAttributes() { return attributes; }
+
+    public AttributeList getAttributes() {
+        return attributes;
+    }
 
     private GraphDispatch dispatch;
 
@@ -40,7 +47,7 @@ public class GraphElementState implements Cloneable{
         this.state = 0;
         this.attributes = L;
     }
-    
+
     /**
      * Constructor used during editing, when no attributes are
      * known yet.
@@ -49,9 +56,8 @@ public class GraphElementState implements Cloneable{
         this.dispatch = GraphDispatch.getInstance();
         if ( this.dispatch.isAnimationMode() ) {
             this.state = this.dispatch.getAlgorithmState();
-        }
-        else {
-            this.state = this.dispatch.getWorkingGraph().getEditState(); 
+        } else {
+            this.state = this.dispatch.getWorkingGraph().getEditState();
         }
         this.attributes = new AttributeList();
     }
@@ -65,73 +71,79 @@ public class GraphElementState implements Cloneable{
         this.dispatch = GraphDispatch.getInstance();
         if ( dispatch.isAnimationMode() ) {
             this.state = dispatch.getAlgorithmState();
+        } else {
+            this.state = dispatch.getWorkingGraph().getEditState();
         }
-        else {
-            this.state = dispatch.getWorkingGraph().getEditState(); 
-        }
-            
+
         this.attributes = elementState.getAttributes().duplicate();
     }
 
     /**
      * The setters below have two additional features:
-     *   - they remove an attribute from the list if the given value is null
-     *   - they return true if the attribute was present prior to the call
+     * - they remove an attribute from the list if the given value is null
+     * - they return true if the attribute was present prior to the call
      */
 
     /************** Integer attributes ***************/
-	public boolean set(String key, Integer value) {
+    public boolean set(String key, Integer value) {
         if ( value == null ) {
             return remove(key);
         }
         return attributes.set(key, value);
-	}
-	public Integer getIntegerAttribute(String key) {
-		return attributes.getInteger(key);
-	}
+    }
+
+    public Integer getIntegerAttribute(String key) {
+        return attributes.getInteger(key);
+    }
 
     /************** Double attributes ***************/
-	public boolean set(String key, Double value) {
+    public boolean set(String key, Double value) {
         if ( value == null ) {
             return remove(key);
         }
         return attributes.set(key, value);
-	}
-	public Double getDoubleAttribute(String key) {
-		return attributes.getDouble(key);
-	}
+    }
+
+    public Double getDoubleAttribute(String key) {
+        return attributes.getDouble(key);
+    }
 
     /************** Boolean attributes ***************/
-	public boolean set(String key, Boolean value) {
+    public boolean set(String key, Boolean value) {
         if ( value == null ) {
             return remove(key);
         }
         return attributes.set(key, value);
-	}
+    }
+
     public boolean set(String key) {
         return attributes.set(key, true);
     }
-	public Boolean getBooleanAttribute(String key) {
-		return attributes.getBoolean(key);
-	}
+
+    public Boolean getBooleanAttribute(String key) {
+        return attributes.getBoolean(key);
+    }
+
     public Boolean is(String key) {
         return attributes.getBoolean(key);
     }
 
     /************** String attributes ***************/
-	public boolean set(String key, String value) {
+    public boolean set(String key, String value) {
         if ( value == null ) {
             return remove(key);
         }
         return attributes.set(key, value);
-	}
-	public String getStringAttribute(String key) {
-		return attributes.getString(key);
-	}
+    }
+
+    public String getStringAttribute(String key) {
+        return attributes.getString(key);
+    }
 
     /**
      * Removes the attribute with the given key from the list and updates
      * state information appropriately.
+     * 
      * @return true if the attribute was present before the call
      */
     public boolean remove(String key) {
@@ -159,7 +171,7 @@ public class GraphElementState implements Cloneable{
         String s = " ";
         for ( Attribute attribute : attributes.getAttributes() ) {
             if ( ! attribute.getKey().equals("x")
-                 && ! attribute.getKey().equals("y") ) {
+                    && ! attribute.getKey().equals("y") ) {
                 s += attribute.xmlString() + " ";
             }
         }
@@ -188,5 +200,3 @@ public class GraphElementState implements Cloneable{
         return s;
     }
 }
-
-//  [Last modified: 2021 01 31 at 14:21:38 GMT]

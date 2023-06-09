@@ -46,25 +46,6 @@ public abstract class Node extends GraphElement {
 	}
 
 	/**
-	 * When a node is created during parsing and id is not known.
-	 */
-	public Node(Graph graph) {
-		super(graph);
-		incidentEdges = new EdgeList();
-	}
-
-	/**
-	 * @param id
-	 *            is the next available id as determined by the graph.
-	 * @todo not clear that this is used anywhere
-	 */
-	public Node(Graph graph, int id) {
-		super(graph);
-		this.id = id;
-		incidentEdges = new EdgeList();
-	}
-
-	/**
 	 * To add a node during editing or algorithm execution: - id is the next
 	 * available one as determined by the graph - the position of the node is known
 	 * to the algorithm, fixed unless the algorithm moves nodes
@@ -247,8 +228,9 @@ public abstract class Node extends GraphElement {
 	 */
 	@Override
 	public void initializeAfterParsing(AttributeList L) throws GalantException {
-		System.out.println("initialize after parsing " + L);
-		LogHelper.enterMethod(getClass(), "initializeAfterParsing");
+		super.initializeAfterParsing(L);
+		System.out.println("init node after parsing " + L);
+		LogHelper.enterMethod(getClass(), "initializeAfterParsing " + L);
 		String idString = L.getString("id");
 		if ( idString == null ) {
 			throw new GalantException("Missing id for node " + this);
@@ -272,8 +254,7 @@ public abstract class Node extends GraphElement {
 				L.set(MARKED, marked);
 			}
 		}
-		super.initializeAfterParsing(L);
-		LogHelper.exitMethod(getClass(), "initializeAfterParsing");
+		LogHelper.exitMethod(getClass(), "initializeAfterParsing " + this);
 	} // end, intializeAfterParsing
 
 	/**
@@ -684,9 +665,7 @@ public abstract class Node extends GraphElement {
 	 */
 	@Override
 	public String toString() {
-		String s = "[node " + this.getId() + " (";
-		s += this.xCoordinate + ",";
-		s += this.yCoordinate + ") ";
+		String s = "[node " + this.getId() + " ";
 		s += super.attributesWithoutId();
 		s += "]";
 		return s;

@@ -44,15 +44,14 @@ class LayerInformation {
   /**
    * Uses layer and position in layer information about node v to update
    * information about number of layers, layer size and max position
-   * INVARIANT: layerSize.size() == maxPositionInLayer.size()
+   * 
+   * @invariant layerSize.size() == maxPositionInLayer.size()
    */
   protected void addNode(LayeredGraphNode v) {
     LogHelper.disable();
     LogHelper.enterMethod(getClass(),
         "addNode: node = " + v
             + ", numberOfLayers = " + numberOfLayers);
-    // edited by 2021 Galant Team
-    // add a cast to tell program this is really a LayeredGraphNode
     int layer = v.getLayer();
     int position = v.getPositionInLayer();
     maxPosition = (position > maxPosition) ? position : maxPosition;

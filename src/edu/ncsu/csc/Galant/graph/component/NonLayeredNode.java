@@ -104,7 +104,7 @@ public class NonLayeredNode extends Node {
 		return nodeCenter;
 	}
 
-	public void initializeAfterParsing(AttributeList L) {
+	public void initializeAfterParsing(AttributeList L) throws GalantException {
 		String xString = L.getString("x");
 		String yString = L.getString("y");
 		Integer x = Integer.MIN_VALUE;

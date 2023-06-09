@@ -30,6 +30,8 @@ public class LayeredGraphNode extends Node {
 	private final int HORIZONTAL_PADDING = 100;
 	private final int VERTICAL_PADDING = 100;
 	private LayeredGraph myGraph;
+	int layer;
+	int positionInLayer;
 
 	/**
 	 * Default constructor that only change the flag
@@ -181,7 +183,8 @@ public class LayeredGraphNode extends Node {
 		super.set("indexInLayer", indexInLayer);
 	}
 
-	public void intializeAfterParsing(AttributeList L) {
+	public void intializeAfterParsing(AttributeList L) throws GalantException {
+		System.out.println("Initialize after parsing " + L);
 		super.initializeAfterParsing(null);
 		String layerString = L.getString("layer");
 		String positionString = L.getString("positionInLayer");
@@ -205,7 +208,7 @@ public class LayeredGraphNode extends Node {
 		} catch ( NumberFormatException e ) {
 			throw new GalantException("Bad positionInLayer " + positionString);
 		}
-		// remove the string versions and replace them with integers
+		// remove the string versions and replace them with integer versions
 		L.remove("layer");
 		L.remove("positionInLayer");
 		L.set("layer", layer);

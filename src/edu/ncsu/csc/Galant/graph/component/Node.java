@@ -11,6 +11,7 @@ import edu.ncsu.csc.Galant.algorithm.Terminate;
 import edu.ncsu.csc.Galant.graph.datastructure.EdgeList;
 import edu.ncsu.csc.Galant.graph.datastructure.NodeList;
 import edu.ncsu.csc.Galant.graph.datastructure.NodeSet;
+import edu.ncsu.csc.Galant.logging.LogHelper;
 
 /**
  * Represents node entities as elements of a graph. Encapsulates attributes that
@@ -94,6 +95,7 @@ public abstract class Node extends GraphElement {
 	 */
 	public Node(Graph graph, AttributeList L) throws GalantException {
 		super(graph, L);
+		System.out.println("About to initialize node " + this);
 		this.initializeAfterParsing(L);
 		incidentEdges = new EdgeList();
 	}
@@ -245,6 +247,8 @@ public abstract class Node extends GraphElement {
 	 */
 	@Override
 	public void initializeAfterParsing(AttributeList L) throws GalantException {
+		System.out.println("initialize after parsing " + L);
+		LogHelper.enterMethod(getClass(), "initializeAfterParsing");
 		String idString = L.getString("id");
 		if ( idString == null ) {
 			throw new GalantException("Missing id for node " + this);
@@ -269,6 +273,7 @@ public abstract class Node extends GraphElement {
 			}
 		}
 		super.initializeAfterParsing(L);
+		LogHelper.exitMethod(getClass(), "initializeAfterParsing");
 	} // end, intializeAfterParsing
 
 	/**

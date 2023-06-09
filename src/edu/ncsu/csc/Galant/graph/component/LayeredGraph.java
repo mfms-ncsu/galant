@@ -176,8 +176,7 @@ public class LayeredGraph extends Graph {
      * Adds a node to the graph during parsing. The node has already been
      * created.
      */
-    @Override
-    public void addNode(final Node n) {
+    public void addNode(final LayeredGraphNode n) {
         LogHelper.enterMethod(getClass(), "addNode: node = " + n);
 
         super.addNode(n);
@@ -205,6 +204,14 @@ public class LayeredGraph extends Graph {
      */
     public int numberOfLayers() {
         return layers.size();
+    }
+
+    public int numberOfNodesOnLayer(int layer) {
+        return layerInformation.maxPositionInLayer.get(layer);
+    }
+
+    public int maxPositionInAnyLayer() {
+        return layerInformation.maxPosition;
     }
 
     /**

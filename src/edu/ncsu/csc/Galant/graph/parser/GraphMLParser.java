@@ -114,7 +114,7 @@ public class GraphMLParser {
 
     public Graph buildGraphFromInput(DocumentBuilder db)
             throws GalantException {
-        LogHelper.disable();
+        LogHelper.enable();
         LogHelper.enterMethod(getClass(), "buildGraphFromInput");
         GraphDispatch dispatch = GraphDispatch.getInstance();
         // we don't want to create new states for changes during parsing
@@ -164,7 +164,7 @@ public class GraphMLParser {
         LogHelper.logDebug(" number of nodes = " + nodes.getLength());
         LogHelper.logDebug(" number of edges = " + edges.getLength());
 
-        LogHelper.disable();
+        LogHelper.enable();
         LogHelper.beginIndent();
         for ( int nodeIndex = 0; nodeIndex < nodes.getLength(); nodeIndex++ ) {
             LogHelper.logDebug(" processing " + nodeIndex + "th node.");
@@ -204,7 +204,7 @@ public class GraphMLParser {
 
         LogHelper.endIndent();
 
-        LogHelper.disable();
+        LogHelper.enable();
         LogHelper.beginIndent();
         for ( int nodeIndex = 0; nodeIndex < edges.getLength(); nodeIndex++ ) {
             LogHelper.logDebug(" processing " + nodeIndex + "th edge.");
@@ -283,5 +283,3 @@ public class GraphMLParser {
     }
 
 }
-
-// [Last modified: 2021 01 31 at 14:37:03 GMT]

@@ -15,6 +15,7 @@ import edu.ncsu.csc.Galant.algorithm.AlgorithmExecutor;
 import edu.ncsu.csc.Galant.algorithm.AlgorithmSynchronizer;
 import edu.ncsu.csc.Galant.algorithm.Terminate;
 import edu.ncsu.csc.Galant.graph.component.Graph;
+import edu.ncsu.csc.Galant.graph.component.LayeredGraph;
 import edu.ncsu.csc.Galant.graph.component.Node;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow;
 import edu.ncsu.csc.Galant.logging.LogHelper;
@@ -517,7 +518,6 @@ public class GraphDispatch {
         Point transformedPoint = new Point(
                 /*
                  * these values correspond to outerNodeMargin and windowoff
-                 * TODO: change these magic numbers into constants
                  */
                 (int) (WINDOW_PADDING + vPointX * (width - 2 * WINDOW_PADDING)),
                 (int) (WINDOW_PADDING

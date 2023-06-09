@@ -42,10 +42,10 @@ import edu.ncsu.csc.Galant.logging.LogHelper;
  */
 public class GraphDispatch {
 
-    private static GraphDispatch  instance;
-    private Graph                 workingGraph;
+    private static GraphDispatch instance;
+    private Graph workingGraph;
 
-    private Graph                 editGraph;
+    private Graph editGraph;
     /**
      * A unique identifier for a graph.
      *
@@ -53,25 +53,25 @@ public class GraphDispatch {
      *       uniquely identify a graph and tie together the working graph in the
      *       dispatch with its source text in GGraphEditorPanel and GTabbedPane.
      */
-    private UUID                  graphSource;
+    private UUID graphSource;
 
-    private int                   windowWidth;
-    private int                   windowHeight;
+    private int windowWidth;
+    private int windowHeight;
 
     /** true if animating an algorithm instead of editing */
-    private boolean               animationMode  = false;
+    private boolean animationMode = false;
 
     /**
      * true if editing a graph; false during parsing
      */
-    private boolean               editMode       = false;
+    private boolean editMode = false;
 
     /**
      * reference to controller of algorithm execution from the point of view of
      * the display, i.e., the object whose methods are called when user
      * starts/stops algorithm and steps forward or backward.
      */
-    private AlgorithmExecutor     algorithmExecutor;
+    private AlgorithmExecutor algorithmExecutor;
 
     /**
      * reference to the object whose methods are called when the algorithm
@@ -82,80 +82,80 @@ public class GraphDispatch {
     /**
      * The current graph window, whether in edit or animation mode
      */
-    private GraphWindow           graphWindow;
+    private GraphWindow graphWindow;
 
     /**
      * true during edit mode if several elements need to be changed
      * simultaneously; for example, when a node is deleted all incident edges
      * need to be deleted without a state change.
      */
-    private boolean               atomic         = false;
+    private boolean atomic = false;
 
     /**
      * Reference to an active query window during algorithm execution (so that
      * it can be properly closed and does not cause Galant to hang)
      */
-    private JDialog               activeQuery;
+    private JDialog activeQuery;
 
     /**
      * text of response to latest interactive query with text input
      */
-    private String                stringAnswer;
+    private String stringAnswer;
 
     /**
      * integer value of answer to latest interactive query for an integer
      */
-    private Integer               integerAnswer;
+    private Integer integerAnswer;
 
     /**
      * double value of answer to latest interactive query for a double
      */
-    private Double                doubleAnswer;
+    private Double doubleAnswer;
 
     /**
      * minimum distance from the edge of a window when fitting a graph to the
      * window
      */
-    final static int              WINDOW_PADDING = 50;
+    final static int WINDOW_PADDING = 50;
 
     /**
      * Offset to account for the fact that (0,0) is not a visible part of the
      * window.
      */
-    final static int              WINDOW_OFFSET  = 20;
+    final static int WINDOW_OFFSET = 20;
 
     /**
      * getters and setters for the query answers
      */
-    public void setActiveQuery ( final JDialog dialog ) {
+    public void setActiveQuery(final JDialog dialog) {
         this.activeQuery = dialog;
     }
 
-    public JDialog getActiveQuery () {
+    public JDialog getActiveQuery() {
         return this.activeQuery;
     }
 
-    public void setStringAnswer ( final String answer ) {
+    public void setStringAnswer(final String answer) {
         this.stringAnswer = answer;
     }
 
-    public String getStringAnswer () {
+    public String getStringAnswer() {
         return this.stringAnswer;
     }
 
-    public void setIntegerAnswer ( final Integer answer ) {
+    public void setIntegerAnswer(final Integer answer) {
         this.integerAnswer = answer;
     }
 
-    public Integer getIntegerAnswer () {
+    public Integer getIntegerAnswer() {
         return this.integerAnswer;
     }
 
-    public void setDoubleAnswer ( final Double answer ) {
+    public void setDoubleAnswer(final Double answer) {
         this.doubleAnswer = answer;
     }
 
-    public Double getDoubleAnswer () {
+    public Double getDoubleAnswer() {
         return this.doubleAnswer;
     }
 
@@ -163,21 +163,21 @@ public class GraphDispatch {
      * true if the algorithm moves nodes; an algorithm should set this if it
      * does not want the user to move nodes during execution.
      */
-    private boolean                            algorithmMovesNodes = false;
+    private boolean algorithmMovesNodes = false;
 
-    public static final String                 ANIMATION_MODE      = "animationMode";
-    public static final String                 GRAPH_UPDATE        = "graphUpdate";
-    public static final String                 TEXT_UPDATE         = "textUpdate";
+    public static final String ANIMATION_MODE = "animationMode";
+    public static final String GRAPH_UPDATE = "graphUpdate";
+    public static final String TEXT_UPDATE = "textUpdate";
 
-    public static final String                 ADD_NODE            = "addNode";
-    public static final String                 ADD_EDGE            = "addEdge";
-    public static final String                 DELETE_COMPONENT    = "deleteComponent";
+    public static final String ADD_NODE = "addNode";
+    public static final String ADD_EDGE = "addEdge";
+    public static final String DELETE_COMPONENT = "deleteComponent";
 
-    private final List<PropertyChangeListener> listener            = new ArrayList<PropertyChangeListener>();
+    private final List<PropertyChangeListener> listener = new ArrayList<PropertyChangeListener>();
 
-    private GraphDispatch () {
-        LogHelper.enterConstructor( getClass() );
-        LogHelper.exitConstructor( getClass() );
+    private GraphDispatch() {
+        LogHelper.enterConstructor(getClass());
+        LogHelper.exitConstructor(getClass());
     }
 
     /**
@@ -187,14 +187,14 @@ public class GraphDispatch {
      *         have to be associated with a GraphDispatch instance upon creation
      *         in order for it to interact with the display, animation, etc.
      */
-    public static GraphDispatch getInstance () {
+    public static GraphDispatch getInstance() {
         if ( instance == null ) {
             instance = new GraphDispatch();
         }
         return instance;
     }
 
-    public Graph getWorkingGraph () {
+    public Graph getWorkingGraph() {
         if ( workingGraph == null ) {
             workingGraph = new Graph();
             workingGraph.graphWindow = graphWindow;
@@ -202,33 +202,33 @@ public class GraphDispatch {
         return workingGraph;
     }
 
-    public void setWorkingGraph ( final Graph g, final UUID u ) {
+    public void setWorkingGraph(final Graph g, final UUID u) {
         this.workingGraph = g;
         this.graphSource = u;
-        notifyListeners( GRAPH_UPDATE, null, null );
+        notifyListeners(GRAPH_UPDATE, null, null);
     }
 
-    public UUID getGraphSource () {
+    public UUID getGraphSource() {
         return graphSource;
     }
 
-    public void setGraphSource ( final UUID graphSource ) {
+    public void setGraphSource(final UUID graphSource) {
         this.graphSource = graphSource;
     }
 
-    public boolean isAnimationMode () {
+    public boolean isAnimationMode() {
         return this.animationMode;
     }
 
-    public boolean isEditMode () {
+    public boolean isEditMode() {
         return this.editMode;
     }
 
-    public boolean isAtomic () {
+    public boolean isAtomic() {
         return this.atomic;
     }
 
-    public void setAtomic ( final boolean atomic ) {
+    public void setAtomic(final boolean atomic) {
         this.atomic = atomic;
     }
 
@@ -236,64 +236,66 @@ public class GraphDispatch {
      * @param mode
      *            true when user is editing the working graph, false otherwise
      */
-    public void setEditMode ( final boolean mode ) {
-        LogHelper.enterMethod( getClass(), "setEditMode " + mode );
+    public void setEditMode(final boolean mode) {
+        LogHelper.enterMethod(getClass(), "setEditMode " + mode);
         this.editMode = mode;
-        LogHelper.exitMethod( getClass(), "setEditMode" );
+        LogHelper.exitMethod(getClass(), "setEditMode");
     }
 
     /**
      * Does everything that's required to initiate execution of the algorithm
      */
-    public void startAnimation ( final Algorithm algorithm ) {
+    public void startAnimation(final Algorithm algorithm) {
         this.animationMode = true;
         this.editMode = false;
         // save the current working graph so that changes made by algorithm
         // can be undone easily
         this.editGraph = this.workingGraph;
         this.algorithmSynchronizer = new AlgorithmSynchronizer();
-        this.algorithmExecutor = new AlgorithmExecutor( algorithm, this.algorithmSynchronizer );
-        this.graphWindow.updateStatusLabel( "Starting animation" );
+        this.algorithmExecutor = new AlgorithmExecutor(algorithm,
+                this.algorithmSynchronizer);
+        this.graphWindow.updateStatusLabel("Starting animation");
         // start the animation with a clean copy of the edit graph, a copy
         // without the edit states
-        this.workingGraph = this.editGraph.copyCurrentState( this.editGraph );
-        algorithm.setGraph( this.workingGraph );
+        this.workingGraph = this.editGraph.copyCurrentState(this.editGraph);
+        algorithm.setGraph(this.workingGraph);
         this.algorithmExecutor.startAlgorithm();
-        notifyListeners( ANIMATION_MODE, !this.animationMode, this.animationMode );
+        notifyListeners(ANIMATION_MODE, ! this.animationMode, this.animationMode);
     }
 
     /**
      * undoes effect of animation by returning to the edit graph, but preserving
      * any node position changes during algorithm execution
      */
-    public void stopAlgorithm () {
+    public void stopAlgorithm() {
 
         final Graph algorithmGraph = this.workingGraph;
 
         if ( this.algorithmMovesNodes() ) {
             this.workingGraph = this.editGraph;
-            this.workingGraph.setNodePositions( algorithmGraph );
+            this.workingGraph.setNodePositions(algorithmGraph);
         }
         initializeVirtualWindow();
         this.animationMode = false;
         this.editMode = true;
-        this.graphWindow.updateStatusLabel( "Animation stopped" );
-        notifyListeners( ANIMATION_MODE, !this.animationMode, this.animationMode );
+        this.graphWindow.updateStatusLabel("Animation stopped");
+        notifyListeners(ANIMATION_MODE, ! this.animationMode, this.animationMode);
     }
 
-    public AlgorithmExecutor getAlgorithmExecutor () {
+    public AlgorithmExecutor getAlgorithmExecutor() {
         return algorithmExecutor;
     }
 
-    public void setAlgorithmExecutor ( final AlgorithmExecutor algorithmExecutor ) {
+    public void setAlgorithmExecutor(final AlgorithmExecutor algorithmExecutor) {
         this.algorithmExecutor = algorithmExecutor;
     }
 
-    public AlgorithmSynchronizer getAlgorithmSynchronizer () {
+    public AlgorithmSynchronizer getAlgorithmSynchronizer() {
         return algorithmSynchronizer;
     }
 
-    public void setAlgorithmSynchronizer ( final AlgorithmSynchronizer algorithmSynchronizer ) {
+    public void setAlgorithmSynchronizer(
+            final AlgorithmSynchronizer algorithmSynchronizer) {
         this.algorithmSynchronizer = algorithmSynchronizer;
     }
 
@@ -301,12 +303,11 @@ public class GraphDispatch {
      * @return the current display state or the current edit state, depending on
      *         whether an animation is running or not
      */
-    public int getDisplayState () {
+    public int getDisplayState() {
         int returnState = 0;
         if ( animationMode ) {
             returnState = algorithmExecutor.getDisplayState();
-        }
-        else {
+        } else {
             returnState = workingGraph.getEditState();
         }
         return returnState;
@@ -317,7 +318,7 @@ public class GraphDispatch {
      *         when the context does not know whether or not algorithm is
      *         running
      */
-    public int getAlgorithmState () {
+    public int getAlgorithmState() {
         if ( animationMode ) {
             return algorithmExecutor.getAlgorithmState();
         }
@@ -329,12 +330,12 @@ public class GraphDispatch {
      *
      * @return true if a new step/state occurs (not currently used)
      */
-    public boolean startStepIfAnimationOrIncrementEditState () throws Terminate {
-        if ( animationMode && !algorithmSynchronizer.isLocked() ) {
+    public boolean startStepIfAnimationOrIncrementEditState() throws Terminate {
+        if ( animationMode && ! algorithmSynchronizer.isLocked() ) {
             this.algorithmSynchronizer.startStep();
             return true;
         }
-        if ( !animationMode && !atomic ) {
+        if ( ! animationMode && ! atomic ) {
             this.workingGraph.incrementEffectiveEditState();
             return true;
         }
@@ -346,13 +347,13 @@ public class GraphDispatch {
      * needed when an algorithm happens to be in a locked state when a dialog is
      * initiated.
      */
-    public void initStepIfRunning () throws Terminate {
+    public void initStepIfRunning() throws Terminate {
         if ( animationMode ) {
             algorithmSynchronizer.startStep();
         }
     }
 
-    public void pauseExecutionIfRunning () throws Terminate {
+    public void pauseExecutionIfRunning() throws Terminate {
         if ( animationMode ) {
             algorithmSynchronizer.pauseExecution();
         }
@@ -361,7 +362,7 @@ public class GraphDispatch {
     /**
      * Locks the current algorithm state if algorithm is running
      */
-    public void lockIfRunning () {
+    public void lockIfRunning() {
         if ( animationMode ) {
             algorithmSynchronizer.lock();
         }
@@ -370,13 +371,13 @@ public class GraphDispatch {
     /**
      * Unlocks the current algorithm state if algorithm is running
      */
-    public void unlockIfRunning () {
+    public void unlockIfRunning() {
         if ( animationMode ) {
             algorithmSynchronizer.unlock();
         }
     }
 
-    public boolean algorithmMovesNodes () {
+    public boolean algorithmMovesNodes() {
         return this.algorithmMovesNodes;
     }
 
@@ -384,12 +385,12 @@ public class GraphDispatch {
      * sets an indicator that the algorithm will move nodes during execution and
      * disables user movement of nodes
      */
-    public void setAlgorithmMovesNodes ( final boolean algorithmMovesNodes ) {
+    public void setAlgorithmMovesNodes(final boolean algorithmMovesNodes) {
         this.algorithmMovesNodes = algorithmMovesNodes;
     }
 
-    public void pushToGraphEditor () {
-        notifyListeners( GRAPH_UPDATE, null, null );
+    public void pushToGraphEditor() {
+        notifyListeners(GRAPH_UPDATE, null, null);
     }
 
     /**
@@ -406,52 +407,54 @@ public class GraphDispatch {
      *       the graph panel/window so that user is asked whether to really exit
      *       when there are unsaved graph window changes.
      */
-    public void pushToTextEditor () {
+    public void pushToTextEditor() {
         LogHelper.disable();
-        LogHelper.enterMethod( getClass(), "pushToTextEditor" );
-        notifyListeners( TEXT_UPDATE, null, null );
-        LogHelper.exitMethod( getClass(), "pushToTextEditor" );
+        LogHelper.enterMethod(getClass(), "pushToTextEditor");
+        notifyListeners(TEXT_UPDATE, null, null);
+        LogHelper.exitMethod(getClass(), "pushToTextEditor");
         LogHelper.restoreState();
     }
 
-    private void notifyListeners ( final String property, final Object oldValue, final Object newValue ) {
+    private void notifyListeners(final String property, final Object oldValue,
+            final Object newValue) {
         for ( final PropertyChangeListener name : listener ) {
-            name.propertyChange( new PropertyChangeEvent( this, property, oldValue, newValue ) );
+            name.propertyChange(
+                    new PropertyChangeEvent(this, property, oldValue, newValue));
         }
     }
 
-    public void addChangeListener ( final PropertyChangeListener newListener ) {
-        listener.add( newListener );
+    public void addChangeListener(final PropertyChangeListener newListener) {
+        listener.add(newListener);
     }
 
-    public int getWindowWidth () {
+    public int getWindowWidth() {
         return windowWidth;
     }
 
-    public void setWindowWidth ( final int windowWidth ) {
+    public void setWindowWidth(final int windowWidth) {
         this.windowWidth = windowWidth;
     }
 
-    public int getWindowHeight () {
+    public int getWindowHeight() {
         return windowHeight;
     }
 
-    public void setWindowHeight ( final int windowHeight ) {
+    public void setWindowHeight(final int windowHeight) {
         this.windowHeight = windowHeight;
     }
 
-    public void setWindowSize ( final int height, final int width ) {
-        LogHelper.enterMethod( getClass(), "setWindowSize()" );
+    public void setWindowSize(final int height, final int width) {
+        LogHelper.enterMethod(getClass(), "setWindowSize()");
         this.windowHeight = height;
         this.windowWidth = width;
-        LogHelper.exitMethod( getClass(), "setWindowSize()" );
+        LogHelper.exitMethod(getClass(), "setWindowSize()");
     }
 
-    public GraphWindow getGraphWindow () {
+    public GraphWindow getGraphWindow() {
         return graphWindow;
     }
 
-    public void setGraphWindow ( final GraphWindow graphWindow ) {
+    public void setGraphWindow(final GraphWindow graphWindow) {
         this.graphWindow = graphWindow;
     }
 
@@ -461,9 +464,9 @@ public class GraphDispatch {
     // public double virtualHeight = 500;
     // public double virtualX = 0;
     // public double virtualY = 0;
-    public Rectangle virtualWindow = new Rectangle( 0, 0, 800, 500 );
+    public Rectangle virtualWindow = new Rectangle(0, 0, 800, 500);
 
-    public void initializeVirtualWindow () {
+    public void initializeVirtualWindow() {
 
         int minimalX = Integer.MAX_VALUE;
         int minimalY = Integer.MAX_VALUE;
@@ -497,9 +500,9 @@ public class GraphDispatch {
 
     }
 
-    public Point ViewTransform ( final Point p ) {
+    public Point ViewTransform(final Point p) {
         // do not transform layered graph
-        if ( workingGraph.isLayered() ) {
+        if ( workingGraph instanceof LayeredGraph ) {
             return p;
         }
 
@@ -507,25 +510,25 @@ public class GraphDispatch {
         final double height = getWindowHeight();
 
         // convert from logical position to virtual window viewport coordinates
-        final double vPointX = ( p.x - virtualWindow.x ) / (double) virtualWindow.width;
-        final double vPointY = ( p.y - virtualWindow.y ) / (double) virtualWindow.height;
+        final double vPointX = (p.x - virtualWindow.x) / (double) virtualWindow.width;
+        final double vPointY = (p.y - virtualWindow.y) / (double) virtualWindow.height;
 
         // convert from virtual viewport (0,1) to display coordinates
         Point transformedPoint = new Point(
-            /*
-             * these values correspond to outerNodeMargin and windowoff
-             * TODO: change these magic numbers into constants
-             */
-            (int) ( WINDOW_PADDING + vPointX * ( width - 2 * WINDOW_PADDING ) ),
-            (int) ( WINDOW_PADDING
-                    + WINDOW_OFFSET
-                    + vPointY * ( height - 2 * ( WINDOW_PADDING + WINDOW_OFFSET ) ) ) );
+                /*
+                 * these values correspond to outerNodeMargin and windowoff
+                 * TODO: change these magic numbers into constants
+                 */
+                (int) (WINDOW_PADDING + vPointX * (width - 2 * WINDOW_PADDING)),
+                (int) (WINDOW_PADDING
+                        + WINDOW_OFFSET
+                        + vPointY * (height - 2 * (WINDOW_PADDING + WINDOW_OFFSET))));
         return transformedPoint;
     }
 
-    public Point InvViewTransform ( final Point p ) {
+    public Point InvViewTransform(final Point p) {
         // do not transform layered graph interactions
-        if ( workingGraph.isLayered() ) {
+        if ( workingGraph instanceof LayeredGraph ) {
             return p;
         }
 
@@ -533,13 +536,13 @@ public class GraphDispatch {
         final double height = getWindowHeight();
 
         // convert from display coordinates to virtual viewport (0,1)
-        final double vPointX = ( p.x - WINDOW_PADDING ) / ( width - 2 * WINDOW_PADDING );
-        final double vPointY = ( p.y - WINDOW_PADDING - WINDOW_OFFSET )
-                / ( height - 2 * ( WINDOW_PADDING + WINDOW_OFFSET ) );
+        final double vPointX = (p.x - WINDOW_PADDING) / (width - 2 * WINDOW_PADDING);
+        final double vPointY = (p.y - WINDOW_PADDING - WINDOW_OFFSET)
+                / (height - 2 * (WINDOW_PADDING + WINDOW_OFFSET));
 
         // convert from virtual viewport to logical position
-        return new Point( (int) ( virtualWindow.x + vPointX * virtualWindow.width ),
-                (int) ( virtualWindow.y + vPointY * virtualWindow.height ) );
+        return new Point((int) (virtualWindow.x + vPointX * virtualWindow.width),
+                (int) (virtualWindow.y + vPointY * virtualWindow.height));
     }
 }
 

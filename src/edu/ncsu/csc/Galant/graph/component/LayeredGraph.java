@@ -38,6 +38,8 @@ import java.util.Comparator;
 import java.util.List;
 
 import edu.ncsu.csc.Galant.algorithm.Terminate;
+import edu.ncsu.csc.Galant.GalantException;
+import edu.ncsu.csc.Galant.logging.LogHelper;
 
 /**
  * The class LayeredGraph is used as a basis for Galant implementations of a
@@ -97,7 +99,8 @@ public class LayeredGraph extends Graph {
         LAYER, UP, DOWN, BOTH
     };
 
-    private Graph graph;
+    private LayerInformation layerInformation;
+
     private ArrayList<Layer> layers;
     private int[] savedPositionOfNode;
 
@@ -115,34 +118,33 @@ public class LayeredGraph extends Graph {
     /**
      * Creates a new instance based on node positions in the graph.
      */
-    public LayeredGraph(Graph graph) {
-        this.graph = graph;
+    public LayeredGraph() {
+        super();
         layers = new ArrayList<Layer>();
-        savedPositionOfNode = new int[graph.nodeIds()];
-        weightOfNode = new double[graph.nodeIds()];
-        isMarked = new boolean[graph.nodeIds()];
-        crossingsOfEdge = new int[graph.edgeIds()];
 
         // // record layer and position information for all the nodes
-        // for ( LayeredGraphNode u : graph.getNodes() ) {
-        //     // edited by 2021 Galant Team
-        //     // add a cast to tell program this is really a LayeredGraphNode
-        //     LayeredGraphNode temp = (LayeredGraphNode) u;
-        //     int layer = temp.getLayer();
-        //     int position = temp.getPositionInLayer();
-        //     addNode(temp, layer, position);
-        //     positionOfNode[temp.getId()] = position;
+        // for ( LayeredGraphNode u : this.getNodes() ) {
+        // // edited by 2021 Galant Team
+        // // add a cast to tell program this is really a LayeredGraphNode
+        // LayeredGraphNode temp = (LayeredGraphNode) u;
+        // int layer = temp.getLayer();
+        // int position = temp.getPositionInLayer();
+        // addNode(temp, layer, position);
+        // positionOfNode[temp.getId()] = position;
         // }
 
         /*
          * @todo
-         * !!! the code below causes null pointer exceptions when nodes are not contiguous. !!!
-         * Also true of any other code that sorts by position: for example, the reset method used
+         * !!! the code below causes null pointer exceptions when nodes are not
+         * contiguous. !!!
+         * Also true of any other code that sorts by position: for example, the reset
+         * method used
          * in barycenter.alg
          * 
          * The source of the problem is ensurePosition() in Layer.java,
          * which adds null nodes in gaps when nodes are not contiguous.
-         * As with the LG-Local code, we need to distinguish between the position of a node
+         * As with the LG-Local code, we need to distinguish between the position of a
+         * node
          * and its index within the layer.
          */
 
@@ -171,6 +173,20 @@ public class LayeredGraph extends Graph {
     }
 
     /**
+     * Adds a node to the graph during parsing. The node has already been
+     * created.
+     */
+    @Override
+    public void addNode(final Node n) {
+        LogHelper.enterMethod(getClass(), "addNode: node = " + n);
+
+        super.addNode(n);
+        layerInformation.addNode(n);
+
+        LogHelper.exitMethod(getClass(), "addNode( Node )");
+    }
+
+    /**
      * @return a list containing the nodes on the i-th layer.
      */
     public List<LayeredGraphNode> getLayer(int layer) {
@@ -189,6 +205,26 @@ public class LayeredGraph extends Graph {
      */
     public int numberOfLayers() {
         return layers.size();
+    }
+
+    /**
+     * @return true if verticality matters, i.e., there are layers whose number of
+     *         nodes
+     *         does not correspond to the maximum
+     *         in that case the graph is displayed by taking positions "literally"
+     *         instead of centering each layer
+     */
+    public boolean isVertical() {
+        return layerInformation.vertical;
+    }
+
+    public void initializeAfterParsing() throws GalantException {
+        System.out.println("Layered graph initialization");
+        super.initializeAfterParsing();
+        savedPositionOfNode = new int[this.nodeIds()];
+        weightOfNode = new double[this.nodeIds()];
+        isMarked = new boolean[this.nodeIds()];
+        crossingsOfEdge = new int[this.edgeIds()];
     }
 
     public String toString() {
@@ -228,7 +264,7 @@ public class LayeredGraph extends Graph {
             displayPositions(layer);
         }
     }
-    
+
     /**
      * Changes positions of nodes based on an insertion of a single node
      * either before or after another.
@@ -793,7 +829,7 @@ public class LayeredGraph extends Graph {
      */
     public int getMaxEdgeCrossings() {
         int maxCrossings = Integer.MIN_VALUE;
-        for ( Edge e : graph.getEdges() ) {
+        for ( Edge e : this.getEdges() ) {
             if ( crossingsOfEdge[e.getId()] > maxCrossings ) {
                 maxCrossings = crossingsOfEdge[e.getId()];
             }
@@ -809,7 +845,7 @@ public class LayeredGraph extends Graph {
     public Edge getMaxCrossingsEdge() {
         Edge maxEdge = null;
         int maxCrossings = Integer.MIN_VALUE;
-        for ( Edge e : graph.getEdges() ) {
+        for ( Edge e : this.getEdges() ) {
             if ( (! isMarked[e.getSourceNode().getId()]
                     || ! isMarked[e.getTargetNode().getId()])
                     && crossingsOfEdge[e.getId()] > maxCrossings ) {
@@ -835,7 +871,7 @@ public class LayeredGraph extends Graph {
         int maxEdgeIndex = - 1;
         Edge maxEdge = null;
         int maxCrossings = Integer.MIN_VALUE;
-        List<Edge> edgeList = graph.getEdges();
+        List<Edge> edgeList = this.getEdges();
         int i = indexOfLastReturned + 1;
         i = i % edgeList.size();
         while ( i != indexOfLastReturned ) {
@@ -922,8 +958,10 @@ public class LayeredGraph extends Graph {
             LayeredGraphNode thisTarget = (LayeredGraphNode) toBeInserted.getTargetNode();
             int j = i - 1;
             while ( j >= 0 ) {
-                LayeredGraphNode otherTarget = (LayeredGraphNode) edgeList.get(j).getTargetNode();
-                if ( otherTarget.getPositionInLayer() <= thisTarget.getPositionInLayer() ) break;
+                LayeredGraphNode otherTarget = (LayeredGraphNode) edgeList.get(j)
+                        .getTargetNode();
+                if ( otherTarget.getPositionInLayer() <= thisTarget.getPositionInLayer() )
+                    break;
                 updateEdgeCrossings(edgeList.get(j), toBeInserted, diff);
                 edgeList.set(j + 1, edgeList.get(j));
                 j--;
@@ -948,8 +986,10 @@ public class LayeredGraph extends Graph {
             LayeredGraphNode thisTarget = (LayeredGraphNode) toBeInserted.getSourceNode();
             int j = i - 1;
             while ( j >= 0 ) {
-                LayeredGraphNode otherTarget = (LayeredGraphNode) edgeList.get(j).getSourceNode();
-                if ( otherTarget.getPositionInLayer() <= thisTarget.getPositionInLayer() ) break;
+                LayeredGraphNode otherTarget = (LayeredGraphNode) edgeList.get(j)
+                        .getSourceNode();
+                if ( otherTarget.getPositionInLayer() <= thisTarget.getPositionInLayer() )
+                    break;
                 updateEdgeCrossings(edgeList.get(j), toBeInserted, diff);
                 edgeList.set(j + 1, edgeList.get(j));
                 j--;
@@ -977,7 +1017,8 @@ public class LayeredGraph extends Graph {
      * @return an ArrayList of the outgoing edges of the two nodes with those
      *         from leftNode appearing before those from rightNode
      */
-    List<Edge> createDownEdgeArray(LayeredGraphNode leftNode, LayeredGraphNode rightNode) {
+    List<Edge> createDownEdgeArray(LayeredGraphNode leftNode,
+            LayeredGraphNode rightNode) {
         ArrayList<Edge> incomingEdges = new ArrayList<Edge>();
         List<Edge> leftNodeEdges = leftNode.getIncomingEdges();
         List<Edge> rightNodeEdges = rightNode.getIncomingEdges();
@@ -996,7 +1037,8 @@ public class LayeredGraph extends Graph {
      *            +1 to increase crossing counts, -1 to decrease
      *            - used by mce heuristic only
      */
-    void change_crossings(LayeredGraphNode leftNode, LayeredGraphNode rightNode, int diff) {
+    void change_crossings(LayeredGraphNode leftNode, LayeredGraphNode rightNode,
+            int diff) {
         int layer = leftNode.getLayer();
         int numberOfLayers = layers.size();
         // update crossings on upward edges (if any)
@@ -1079,8 +1121,10 @@ public class LayeredGraph extends Graph {
             int j = i - 1;
             int targetPosition = thisTarget.getPositionInLayer();
             while ( j >= 0 ) {
-                LayeredGraphNode otherTarget = (LayeredGraphNode) edgeList.get(j).getTargetNode();
-                if ( targetPosition >= otherTarget.getPositionInLayer() ) break;
+                LayeredGraphNode otherTarget = (LayeredGraphNode) edgeList.get(j)
+                        .getTargetNode();
+                if ( targetPosition >= otherTarget.getPositionInLayer() )
+                    break;
                 j--;
             }
             edgeList.add(j + 1, e);
@@ -1099,8 +1143,10 @@ public class LayeredGraph extends Graph {
             int j = i - 1;
             int targetPosition = thisTarget.getPositionInLayer();
             while ( j >= 0 ) {
-                LayeredGraphNode otherTarget = (LayeredGraphNode) edgeList.get(j).getSourceNode();
-                if ( targetPosition >= otherTarget.getPositionInLayer() ) break;
+                LayeredGraphNode otherTarget = (LayeredGraphNode) edgeList.get(j)
+                        .getSourceNode();
+                if ( targetPosition >= otherTarget.getPositionInLayer() )
+                    break;
                 j--;
             }
             edgeList.add(j + 1, e);
@@ -1123,8 +1169,10 @@ public class LayeredGraph extends Graph {
         LayeredGraphNode thisTarget = (LayeredGraphNode) e.getTargetNode();
         int targetPosition = thisTarget.getPositionInLayer();
         while ( index >= 0 ) {
-            LayeredGraphNode otherTarget = (LayeredGraphNode) edgeList.get(index).getTargetNode();
-            if ( targetPosition >= otherTarget.getPositionInLayer() ) break;
+            LayeredGraphNode otherTarget = (LayeredGraphNode) edgeList.get(index)
+                    .getTargetNode();
+            if ( targetPosition >= otherTarget.getPositionInLayer() )
+                break;
             crossingsOfEdge[e.getId()]++;
             crossingsOfEdge[edgeList.get(index).getId()]++;
             index--;
@@ -1139,7 +1187,7 @@ public class LayeredGraph extends Graph {
      */
     public void setEdgeWeights()
             throws Terminate {
-        for ( Edge e : graph.getEdges() ) {
+        for ( Edge e : this.getEdges() ) {
             e.setWeight((double) crossingsOfEdge[e.getId()]);
         }
     }
@@ -1207,7 +1255,7 @@ public class LayeredGraph extends Graph {
 
     public Integer nonverticality() {
         int total = 0;
-        for ( Edge e : graph.getEdges() ) {
+        for ( Edge e : this.getEdges() ) {
             total += nonverticality(e);
         }
         return total;
@@ -1239,7 +1287,7 @@ public class LayeredGraph extends Graph {
      * sets nonverticalities of all edges as weights
      */
     public void setNonverticalities() throws Terminate {
-        for ( Edge e : graph.getEdges() ) {
+        for ( Edge e : this.getEdges() ) {
             setNonverticality(e);
         }
     }

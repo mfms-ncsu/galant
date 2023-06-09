@@ -27,23 +27,20 @@ import edu.ncsu.csc.Galant.logging.LogHelper;
  * @author Michael Owoc, Ty Devries (major modifications by Matt Stallmann)
  */
 public class Graph {
-    public GraphWindow             graphWindow;
-    private GraphDispatch          dispatch;
+    public GraphWindow graphWindow;
+    private GraphDispatch dispatch;
 
-    private String                 name;
-    private String                 comment;
-    private boolean                directed;
+    private String name;
+    private String comment;
+    private boolean directed;
 
-    private boolean                layered            = false;
-    private LayerInformation       layerInformation;
+    private NodeList nodes;
 
-    private NodeList               nodes;
+    private TreeMap<Integer, Node> nodeById = new TreeMap<Integer, Node>();
 
-    private TreeMap<Integer, Node> nodeById           = new TreeMap<Integer, Node>();
+    private EdgeList edges;
 
-    private EdgeList               edges;
-
-    private MessageBanner          banner;
+    private MessageBanner banner;
 
     /**
      * Edit state of the graph: incremented when there is a modification during
@@ -51,27 +48,27 @@ public class Graph {
      * operation. This has to be a ** property of the graph **; it has to
      * persist when the user edits other graphs or algorithms.
      */
-    private int                    editState          = 0;
+    private int editState = 0;
 
     /**
      * Maximum edit state reached - not possible to redo beyond this
      */
-    private int                    maxEditState       = 0;
+    private int maxEditState = 0;
 
     /**
      * true if user has moved a node since last reset
      */
-    private boolean                userMovedNode;
+    private boolean userMovedNode;
 
     /**
      * Keeps track of an edge selected during algorithm execution.
      */
-    private Edge                   selectedEdge;
+    private Edge selectedEdge;
 
     /**
      * Keeps track of a node selected during algorithm execution.
      */
-    private Node                   selectedNode;
+    private Node selectedNode;
 
     /**
      * @todo should handle this in the same way that GraphElementState is
@@ -79,52 +76,53 @@ public class Graph {
      *       attributes such as a list of nodes should be fixed - the nodes
      *       themselves know whether they exist or not
      */
-    protected List<GraphState>     states;
+    protected List<GraphState> states;
 
     /**
      * Can be used by an algorithm as a default starting node. Currently used by
      * bfs.alg
      */
-    private Node                   startNode;
+    private Node startNode;
 
     /**
      * An integer that can be used as the id of the next edge if id's are not
      * explicit in the input.
      */
-    private int                    nextEdgeId         = 0;
+    private int nextEdgeId = 0;
 
     /**
      * true of the graph has edge id's
      */
-    private boolean                hasExplicitEdgeIds = false;
+    private boolean hasExplicitEdgeIds = false;
 
     /**
      * Default constructor.
      */
-    public Graph () {
+    public Graph() {
         dispatch = GraphDispatch.getInstance();
         graphWindow = dispatch.getGraphWindow();
         nodes = new NodeList();
         edges = new EdgeList();
         states = new ArrayList<GraphState>();
         try {
-            this.addState( new GraphState() );
-        }
-        catch ( final Terminate t ) { // should not happen
+            this.addState(new GraphState());
+        } catch ( final Terminate t ) { // should not happen
             t.printStackTrace();
         }
-        banner = new MessageBanner( this );
+        banner = new MessageBanner(this);
     }
 
     /**
-     * Used by copyCurrentState, which need to start with a completely clean
+     * Used by copyCurrentState, which needs to start with a completely clean
      * slate, so that all relevant information can be copied from the current
      * graph.
+     * 
+     * @caution currently not used
      */
-    public Graph ( final boolean empty ) {
+    public Graph(final boolean empty) {
     }
 
-    public int getEditState () {
+    public int getEditState() {
         return editState;
     }
 
@@ -133,7 +131,7 @@ public class Graph {
      *         from setDirty() in GGraphEditorPanel to determine whether to set
      *         the dirty bit for real.
      */
-    public boolean userHasMovedNode () {
+    public boolean userHasMovedNode() {
         return userMovedNode;
     }
 
@@ -141,7 +139,7 @@ public class Graph {
      * called from setDirty() in GGraphEditorPanel to ensure that dirty is not
      * set again after the text for the graph is saved
      */
-    public void resetUserNodeMove () {
+    public void resetUserNodeMove() {
         userMovedNode = false;
     }
 
@@ -149,7 +147,7 @@ public class Graph {
      * called from setFixedPosition() in Node, to indicate that a node move has
      * taken place
      */
-    void setUserNodeMove () {
+    void setUserNodeMove() {
         userMovedNode = true;
     }
 
@@ -157,21 +155,21 @@ public class Graph {
      * Removes state history beyond the current state - used in edit mode when
      * an edit takes place after undo's
      */
-    private void rollBackToState ( final int currentState ) {
+    private void rollBackToState(final int currentState) {
         final List<GraphState> newStates = new ArrayList<GraphState>();
         for ( int i = 0; i < this.states.size(); i++ ) {
-            final GraphState theState = states.get( i );
+            final GraphState theState = states.get(i);
             if ( theState.getState() > currentState ) {
                 break;
             }
-            newStates.add( theState );
+            newStates.add(theState);
         }
         this.states = newStates;
         for ( final Node node : this.nodes ) {
-            node.rollBackToState( currentState );
+            node.rollBackToState(currentState);
         }
         for ( final Edge edge : this.edges ) {
-            edge.rollBackToState( currentState );
+            edge.rollBackToState(currentState);
         }
     }
 
@@ -179,8 +177,8 @@ public class Graph {
      * Called when an actual change in the graph or one of its elements takes
      * place during editing. Our starting point is the current edit state.
      */
-    public void incrementEffectiveEditState () {
-        rollBackToState( this.editState );
+    public void incrementEffectiveEditState() {
+        rollBackToState(this.editState);
         this.maxEditState = this.editState + 1;
         incrementEditState();
     }
@@ -188,31 +186,30 @@ public class Graph {
     /**
      * called when user invokes a redo operation or when maxEditState increases
      */
-    public void incrementEditState () {
+    public void incrementEditState() {
         String message = null;
         if ( editState < maxEditState ) {
             editState++;
             message = "Edit state " + editState + "    max " + maxEditState;
-        }
-        else {
+        } else {
             message = "Max edit state " + maxEditState + " reached";
         }
-        this.graphWindow.updateStatusLabel( message );
+        this.graphWindow.updateStatusLabel(message);
     }
 
     /**
      * called when user does an undo operation
      */
-    public void decrementEditState () {
+    public void decrementEditState() {
         String message = null;
         if ( editState > 0 ) {
             editState--;
             message = "Edit state " + editState + "    max " + maxEditState;
+        } else {
+            message = "Edit state is 0, no undo possible, max edit state is "
+                    + maxEditState;
         }
-        else {
-            message = "Edit state is 0, no undo possible, max edit state is " + maxEditState;
-        }
-        this.graphWindow.updateStatusLabel( message );
+        this.graphWindow.updateStatusLabel(message);
     }
 
     /**
@@ -220,16 +217,15 @@ public class Graph {
      *         the current (latest one) except that it will be tagged with the
      *         current algorithm state
      */
-    private GraphState newState () throws Terminate {
+    private GraphState newState() throws Terminate {
         dispatch.startStepIfAnimationOrIncrementEditState();
         if ( dispatch.isAnimationMode() ) {
             final GraphState latest = latestState();
-            final GraphState state = new GraphState( latest );
+            final GraphState state = new GraphState(latest);
             return state;
-        }
-        else { // in edit mode
-            final GraphState latestValidState = getLatestValidState( getEditState() );
-            final GraphState state = new GraphState( latestValidState );
+        } else { // in edit mode
+            final GraphState latestValidState = getLatestValidState(getEditState());
+            final GraphState state = new GraphState(latestValidState);
             return state;
         }
     }
@@ -253,15 +249,15 @@ public class Graph {
      *       node while an algorithm is running - the move persists after the
      *       algorithm is done. But I have no idea why it's not a problem.
      */
-    public Graph copyCurrentState ( final Graph currentGraph ) {
-        final Graph copyOfGraph = new Graph( true );
+    public Graph copyCurrentState(final Graph currentGraph) {
+        final Graph copyOfGraph = new Graph(true);
         copyOfGraph.dispatch = GraphDispatch.getInstance();
         copyOfGraph.graphWindow = dispatch.getGraphWindow();
         copyOfGraph.editState = this.editState;
 
         copyOfGraph.states = new ArrayList<GraphState>();
-        final GraphState latestValidState = this.getLatestValidState( this.editState );
-        copyOfGraph.states.add( latestValidState );
+        final GraphState latestValidState = this.getLatestValidState(this.editState);
+        copyOfGraph.states.add(latestValidState);
 
         copyOfGraph.nodes = new NodeList();
         copyOfGraph.edges = new EdgeList();
@@ -270,39 +266,33 @@ public class Graph {
         TreeMap<Integer, Node> copyOfNodeById = new TreeMap<Integer, Node>();
         TreeMap<Integer, LayeredGraphNode> copyOfNodeByIdL = new TreeMap<Integer, LayeredGraphNode>();
 
-        for( Node originalNode : this.getNodes(this.editState) ) {
-        	
+        for ( Node originalNode : this.getNodes(this.editState) ) {
+
             Node copiedNode = originalNode.copyNode(copyOfGraph);
             nodeListCopy.add(copiedNode);
             if ( copyOfGraph.startNode == null ) {
                 copyOfGraph.startNode = copiedNode;
             }
-            copyOfNodeById.put( copiedNode.getId(), copiedNode );
+            copyOfNodeById.put(copiedNode.getId(), copiedNode);
         }
         copyOfGraph.nodes = nodeListCopy;
         copyOfGraph.nodeById = copyOfNodeById;
-        
-        
 
-        for ( final Edge originalEdge : this.getEdges( this.editState ) ) {
+        for ( final Edge originalEdge : this.getEdges(this.editState) ) {
             final Integer sourceId = originalEdge.getSourceNode().getId();
             final Integer targetId = originalEdge.getTargetNode().getId();
-            final Node newSource = copyOfNodeById.get( sourceId );
-            final Node newTarget = copyOfNodeById.get( targetId );
-            final Edge copiedEdge = originalEdge.copyEdge( copyOfGraph, newSource, newTarget );
-            edgeListCopy.add( copiedEdge );
+            final Node newSource = copyOfNodeById.get(sourceId);
+            final Node newTarget = copyOfNodeById.get(targetId);
+            final Edge copiedEdge = originalEdge.copyEdge(copyOfGraph, newSource,
+                    newTarget);
+            edgeListCopy.add(copiedEdge);
         }
         copyOfGraph.edges = edgeListCopy;
         copyOfGraph.name = this.name;
         copyOfGraph.comment = this.comment;
         copyOfGraph.directed = this.directed;
-        copyOfGraph.layered = this.layered;
-        /**
-         * @todo copying the correct layer information may be a nontrivial
-         *       process
-         */
-        copyOfGraph.layerInformation = this.layerInformation;
-        final TreeMap<Integer, Node> nodeByIdCopy = new TreeMap<Integer, Node>( this.nodeById );
+        final TreeMap<Integer, Node> nodeByIdCopy = new TreeMap<Integer, Node>(
+                this.nodeById);
         copyOfGraph.banner = this.banner;
         // the following two statements are probably not needed
         copyOfGraph.nextEdgeId = this.nextEdgeId;
@@ -315,14 +305,13 @@ public class Graph {
      * execution. The user must be able to move nodes during execution unless
      * the algorithm does so, and those moves must be preserved
      */
-    public void setNodePositions ( final Graph algorithmGraph ) {
+    public void setNodePositions(final Graph algorithmGraph) {
         for ( final Node algorithmNode : algorithmGraph.getNodes() ) {
             final int nodeId = algorithmNode.getId();
             try {
-                final Node originalNode = this.getNodeById( nodeId );
-                originalNode.setFixedPosition( algorithmNode.getFixedPosition() );
-            }
-            catch ( final GalantException e ) {
+                final Node originalNode = this.getNodeById(nodeId);
+                originalNode.setFixedPosition(algorithmNode.getFixedPosition());
+            } catch ( final GalantException e ) {
                 // should not happen unless nodes got added by the algorithm
             }
         }
@@ -332,10 +321,10 @@ public class Graph {
      * @return The last state on the list of states. This is the default for
      *         retrieving information about any attribute.
      */
-    public GraphState latestState () {
+    public GraphState latestState() {
         GraphState state = null;
         if ( states.size() != 0 ) {
-            state = states.get( states.size() - 1 );
+            state = states.get(states.size() - 1);
         }
         return state;
     }
@@ -353,11 +342,11 @@ public class Graph {
      *         given time stamp, or null if the element did not exist before the
      *         time stamp.
      */
-    public GraphState getLatestValidState ( final int stateNumber ) {
+    public GraphState getLatestValidState(final int stateNumber) {
         GraphState toReturn = null;
         int stateIndex = states.size() - 1;
         while ( stateIndex >= 0 ) {
-            final GraphState state = states.get( stateIndex );
+            final GraphState state = states.get(stateIndex);
             if ( state.getState() <= stateNumber ) {
                 toReturn = state;
                 break;
@@ -378,27 +367,34 @@ public class Graph {
      *
      * @invariant states are always sorted by state number.
      */
-    private void addState ( final GraphState stateToAdd ) throws Terminate {
+    private void addState(final GraphState stateToAdd) throws Terminate {
         final int stateNumber = stateToAdd.getState();
         boolean found = false;
         for ( int i = states.size() - 1; i >= stateNumber; i-- ) {
-            final GraphState state = states.get( i );
+            final GraphState state = states.get(i);
             if ( state.getState() == stateNumber ) {
-                states.set( i, stateToAdd );
+                states.set(i, stateToAdd);
                 found = true;
                 break;
             }
         }
-        if ( !found ) {
-            states.add( stateToAdd );
+        if ( ! found ) {
+            states.add(stateToAdd);
             dispatch.pauseExecutionIfRunning();
         }
     }
 
     /**
+     * @return true if the graph is layered (useful externally)
+     */
+    public boolean isLayered() {
+        return this instanceof LayeredGraph;
+    }
+
+    /**
      * sets the selected edge; called from EdgeSelectionDialog
      */
-    public void setSelectedEdge ( final Edge edge ) {
+    public void setSelectedEdge(final Edge edge) {
         selectedEdge = edge;
     }
 
@@ -407,9 +403,9 @@ public class Graph {
      *            a message displayed in the edge selection dialog popup
      * @return an edge selected via a dialog during algorithm execution
      */
-    public Edge getEdge ( final String prompt ) throws Terminate {
+    public Edge getEdge(final String prompt) throws Terminate {
         dispatch.initStepIfRunning();
-        EdgeSelectionDialog dialog = new EdgeSelectionDialog( prompt );
+        EdgeSelectionDialog dialog = new EdgeSelectionDialog(prompt);
         dispatch.pauseExecutionIfRunning();
         dialog = null; // to keep window from lingering when
                        // execution is terminated
@@ -425,10 +421,12 @@ public class Graph {
      *            the message to be displayed if edge is not in restrictedSet
      * @return a edge selected via a dialog during algorithm execution
      */
-    public Edge getEdge ( final String prompt, final EdgeSet restrictedSet, final String errorMessage )
+    public Edge getEdge(final String prompt, final EdgeSet restrictedSet,
+            final String errorMessage)
             throws Terminate {
         dispatch.initStepIfRunning();
-        EdgeSelectionDialog dialog = new EdgeSelectionDialog( prompt, restrictedSet, errorMessage );
+        EdgeSelectionDialog dialog = new EdgeSelectionDialog(prompt, restrictedSet,
+                errorMessage);
         dispatch.pauseExecutionIfRunning();
         dialog = null; // to keep window from lingering when
                        // execution is terminated
@@ -438,7 +436,7 @@ public class Graph {
     /**
      * sets the selected node; called from NodeSelectionDialog
      */
-    public void setSelectedNode ( final Node node ) {
+    public void setSelectedNode(final Node node) {
         selectedNode = node;
     }
 
@@ -448,9 +446,9 @@ public class Graph {
      * @return a node selected via a dialog during algorithm execution
      *
      */
-    public Node getNode ( final String prompt ) throws Terminate {
+    public Node getNode(final String prompt) throws Terminate {
         dispatch.initStepIfRunning();
-        NodeSelectionDialog dialog = new NodeSelectionDialog( prompt );
+        NodeSelectionDialog dialog = new NodeSelectionDialog(prompt);
         dispatch.pauseExecutionIfRunning();
         dialog = null; // to keep window from lingering when
                        // execution is terminated
@@ -466,10 +464,12 @@ public class Graph {
      *            the message to be displayed if node is not in restrictedSet
      * @return a node selected via a dialog during algorithm execution
      */
-    public Node getNode ( final String prompt, final NodeSet restrictedSet, final String errorMessage )
+    public Node getNode(final String prompt, final NodeSet restrictedSet,
+            final String errorMessage)
             throws Terminate {
         dispatch.initStepIfRunning();
-        final NodeSelectionDialog dialog = new NodeSelectionDialog( prompt, restrictedSet, errorMessage );
+        final NodeSelectionDialog dialog = new NodeSelectionDialog(prompt, restrictedSet,
+                errorMessage);
         dispatch.pauseExecutionIfRunning();
         return selectedNode;
     }
@@ -478,79 +478,79 @@ public class Graph {
      * Removes the attribute with the given key from the list and updates state
      * information appropriately.
      */
-    public void remove ( final String key ) throws Terminate {
+    public void remove(final String key) throws Terminate {
         final GraphState newState = newState();
-        newState.remove( key );
-        addState( newState );
+        newState.remove(key);
+        addState(newState);
     }
 
     /************** Boolean attributes ***************/
 
-    public boolean set ( final String key, final Boolean value ) throws Terminate {
+    public boolean set(final String key, final Boolean value) throws Terminate {
         final GraphState newState = newState();
-        final boolean found = newState.set( key, value );
-        addState( newState );
+        final boolean found = newState.set(key, value);
+        addState(newState);
         return found;
     }
 
     /**
      * If value is not specified, assume it's boolean and set to true
      */
-    public boolean set ( final String key ) throws Terminate {
-        return this.set( key, true );
+    public boolean set(final String key) throws Terminate {
+        return this.set(key, true);
     }
 
-    public void clear ( final String key ) throws Terminate {
-        this.remove( key );
+    public void clear(final String key) throws Terminate {
+        this.remove(key);
     }
 
     /**
      * For boolean attributes, assume that the absense of an attribute means
      * that it's false.
      */
-    public Boolean getBoolean ( final String key ) {
+    public Boolean getBoolean(final String key) {
         final GraphState state = latestState();
         if ( state == null ) {
             return false;
         }
-        return state.getAttributes().getBoolean( key );
+        return state.getAttributes().getBoolean(key);
     }
 
-    public Boolean getBoolean ( final int state, final String key ) {
-        final GraphState validState = getLatestValidState( state );
-        return validState == null ? false : validState.getAttributes().getBoolean( key );
+    public Boolean getBoolean(final int state, final String key) {
+        final GraphState validState = getLatestValidState(state);
+        return validState == null ? false : validState.getAttributes().getBoolean(key);
     }
 
     /**
      * Synonyms (for readability in algorithms)
      */
-    public Boolean is ( final String key ) {
-        return getBoolean( key );
+    public Boolean is(final String key) {
+        return getBoolean(key);
     }
 
-    public Boolean is ( final int state, final String key ) {
-        return getBoolean( state, key );
+    public Boolean is(final int state, final String key) {
+        return getBoolean(state, key);
     }
 
     /************** String attributes ***************/
-    public boolean set ( final String key, final String value ) throws Terminate {
+    public boolean set(final String key, final String value) throws Terminate {
         final GraphState newState = newState();
-        final boolean found = newState.set( key, value );
-        addState( newState );
+        final boolean found = newState.set(key, value);
+        addState(newState);
         return found;
     }
 
-    public String getString ( final String key ) {
+    public String getString(final String key) {
         final GraphState state = latestState();
         if ( state == null ) {
             return null;
         }
-        return state.getAttributes().getString( key );
+        return state.getAttributes().getString(key);
     }
 
-    public String getString ( final int state, final String key ) {
-        final GraphState validState = getLatestValidState( state );
-        return validState == null ? null : validState.getAttributes().getString( key );
+    public String getString(final int state, final String key) {
+        final GraphState validState = getLatestValidState(state);
+        return validState == null ? null : validState.getAttributes().getString(key);
     }
 
     /**
@@ -563,57 +563,57 @@ public class Graph {
      * displays node labels if show is true, hides them if show is false also
      * toggles the button in the graph window if appropriate
      */
-    public void showNodeLabels ( final boolean show ) {
-        graphWindow.showNodeLabels( show );
+    public void showNodeLabels(final boolean show) {
+        graphWindow.showNodeLabels(show);
     }
 
     /**
      * displays node weights if show is true, hides them if show is false also
      * toggles the button in the graph window if appropriate
      */
-    public void showNodeWeights ( final Boolean show ) {
-        graphWindow.showNodeWeights( show );
+    public void showNodeWeights(final Boolean show) {
+        graphWindow.showNodeWeights(show);
     }
 
     /**
      * displays edge labels if show is true, hides them if show is false also
      * toggles the button in the graph window if appropriate
      */
-    public void showEdgeLabels ( final boolean show ) {
-        graphWindow.showEdgeLabels( show );
+    public void showEdgeLabels(final boolean show) {
+        graphWindow.showEdgeLabels(show);
     }
 
     /**
      * displays edge weights if show is true, hides them if show is false also
      * toggles the button in the graph window if appropriate
      */
-    public void showEdgeWeights ( final Boolean show ) {
-        graphWindow.showEdgeWeights( show );
+    public void showEdgeWeights(final Boolean show) {
+        graphWindow.showEdgeWeights(show);
     }
 
     /**
      * Individually hide Node/Edge labels or weights; has no effect if they are
      * already hidden via, e.g., hideNodeLabels()
      */
-    public void hideAllNodeLabels () throws Terminate {
+    public void hideAllNodeLabels() throws Terminate {
         for ( final Node node : nodes ) {
             node.hideLabel();
         }
     }
 
-    public void hideAllEdgeLabels () throws Terminate {
+    public void hideAllEdgeLabels() throws Terminate {
         for ( final Edge edge : edges ) {
             edge.hideLabel();
         }
     }
 
-    public void hideAllNodeWeights () throws Terminate {
+    public void hideAllNodeWeights() throws Terminate {
         for ( final Node node : nodes ) {
             node.hideWeight();
         }
     }
 
-    public void hideAllEdgeWeights () throws Terminate {
+    public void hideAllEdgeWeights() throws Terminate {
         for ( final Edge edge : edges ) {
             edge.hideWeight();
         }
@@ -623,25 +623,25 @@ public class Graph {
      * Undo hiding of individual Node/Edge labels or weights; has no effect if
      * they are already hidden via, e.g., hideNodeLabels()
      */
-    public void showAllNodeLabels () throws Terminate {
+    public void showAllNodeLabels() throws Terminate {
         for ( final Node node : nodes ) {
             node.showLabel();
         }
     }
 
-    public void showAllEdgeLabels () throws Terminate {
+    public void showAllEdgeLabels() throws Terminate {
         for ( final Edge edge : edges ) {
             edge.showLabel();
         }
     }
 
-    public void showAllNodeWeights () throws Terminate {
+    public void showAllNodeWeights() throws Terminate {
         for ( final Node node : nodes ) {
             node.showWeight();
         }
     }
 
-    public void showAllEdgeWeights () throws Terminate {
+    public void showAllEdgeWeights() throws Terminate {
         for ( final Edge edge : edges ) {
             edge.showWeight();
         }
@@ -650,11 +650,11 @@ public class Graph {
     /**
      * @return the set of visible nodes
      */
-    public NodeList visibleNodes () {
+    public NodeList visibleNodes() {
         final NodeList nodeList = new NodeList();
         for ( final Node node : nodes ) {
-            if ( !node.isHidden() ) {
-                nodeList.add( node );
+            if ( ! node.isHidden() ) {
+                nodeList.add(node);
             }
         }
         return nodeList;
@@ -663,11 +663,11 @@ public class Graph {
     /**
      * @return the set of visible edges
      */
-    public EdgeList visibleEdges () {
+    public EdgeList visibleEdges() {
         final EdgeList edgeList = new EdgeList();
         for ( final Edge edge : edges ) {
-            if ( !edge.isHidden() ) {
-                edgeList.add( edge );
+            if ( ! edge.isHidden() ) {
+                edgeList.add(edge);
             }
         }
         return edgeList;
@@ -676,7 +676,7 @@ public class Graph {
     /**
      * Shows all Nodes that have been hidden individually
      */
-    public void showNodes () throws Terminate {
+    public void showNodes() throws Terminate {
         for ( final Node node : nodes ) {
             node.show();
         }
@@ -685,7 +685,7 @@ public class Graph {
     /**
      * Shows all edges that have been hidden individually
      */
-    public void showEdges () throws Terminate {
+    public void showEdges() throws Terminate {
         for ( final Edge edge : edges ) {
             edge.show();
         }
@@ -694,103 +694,83 @@ public class Graph {
     /**
      * The following are used to do blanket clearing of attributes
      */
-    public void clearNodeMarks () throws Terminate {
+    public void clearNodeMarks() throws Terminate {
         for ( final Node node : nodes ) {
             node.unmark();
         }
     }
 
-    public void clearNodeHighlighting () throws Terminate {
+    public void clearNodeHighlighting() throws Terminate {
         for ( final Node node : nodes ) {
             node.unHighlight();
         }
     }
 
-    public void clearEdgeHighlighting () throws Terminate {
+    public void clearEdgeHighlighting() throws Terminate {
         for ( final Edge edge : edges ) {
             edge.unHighlight();
         }
     }
 
-    public void clearNodeLabels () throws Terminate {
+    public void clearNodeLabels() throws Terminate {
         for ( final Node node : nodes ) {
             node.clearLabel();
         }
     }
 
-    public void clearEdgeLabels () throws Terminate {
+    public void clearEdgeLabels() throws Terminate {
         for ( final Edge edge : edges ) {
             edge.clearLabel();
         }
     }
 
-    public void clearNodeWeights () throws Terminate {
+    public void clearNodeWeights() throws Terminate {
         for ( final Node node : nodes ) {
             node.clearWeight();
         }
     }
 
-    public void clearEdgeWeights () throws Terminate {
+    public void clearEdgeWeights() throws Terminate {
         for ( final Edge edge : edges ) {
             edge.clearWeight();
         }
     }
 
-    public void clearAllNode ( final String attribute ) throws Terminate {
+    public void clearAllNode(final String attribute) throws Terminate {
         for ( final Node node : nodes ) {
-            node.clear( attribute );
+            node.clear(attribute);
         }
     }
 
-    public void clearAllEdge ( final String attribute ) throws Terminate {
+    public void clearAllEdge(final String attribute) throws Terminate {
         for ( final Edge edge : edges ) {
-            edge.clear( attribute );
+            edge.clear(attribute);
         }
     }
 
     /** Graph methods that are independent of state */
 
-    public void setName ( final String name ) {
+    public void setName(final String name) {
         this.name = name;
     }
 
-    public String getName () {
+    public String getName() {
         return name;
     }
 
-    public void setComment ( final String comment ) {
+    public void setComment(final String comment) {
         this.comment = comment;
     }
 
-    public String getComment () {
+    public String getComment() {
         return comment;
-    }
-
-    public void setLayered ( final boolean layered ) {
-        this.layered = layered;
-        if ( layerInformation == null ) {
-            layerInformation = new LayerInformation();
-        }
-    }
-
-    public boolean isLayered () {
-        return layered;
-    }
-
-    public boolean isVertical () {
-        if ( layered ) {
-            return layerInformation.vertical;
-        }
-        else {
-            return false;
-        }
     }
 
     /**
      * Changes the contents of the current message banner
      */
-    public void writeMessage ( final String message ) throws Terminate {
-        banner.set( message );
+    public void writeMessage(final String message) throws Terminate {
+        banner.set(message);
     }
 
     /**
@@ -798,15 +778,15 @@ public class Graph {
      *            the algorithm state for the desired message
      * @return the current message banner
      */
-    public String getMessage ( final int state ) {
-        return banner.get( state );
+    public String getMessage(final int state) {
+        return banner.get(state);
     }
 
     /**
      * @return the number of <code>Node</code>s in the current
      *         <code>Graph</code>
      */
-    public int numberOfNodes () {
+    public int numberOfNodes() {
         int count = 0;
         for ( final Node n : nodes ) {
             if ( n.inScope() ) {
@@ -821,7 +801,7 @@ public class Graph {
      *         allocating an array of nodes, as there is no longer a guarantee
      *         that id's start at 0 and are contiguous.
      */
-    public int nodeIds () {
+    public int nodeIds() {
         int maxId = 0;
         for ( final Node currentNode : nodes ) {
             if ( currentNode.inScope() && currentNode.getId() > maxId ) {
@@ -835,7 +815,7 @@ public class Graph {
      * @return the number of <code>Edge</code>s in the current
      *         <code>Graph</code>
      */
-    public int numberOfEdges () {
+    public int numberOfEdges() {
         int count = 0;
         for ( final Edge edge : edges ) {
             if ( edge.inScope() ) {
@@ -851,7 +831,7 @@ public class Graph {
      *         not really be needed -- edge id's are assigned contiguously; we
      *         provide it to avoid confusion.
      */
-    public int edgeIds () {
+    public int edgeIds() {
         int maxId = 0;
         for ( final Edge currentEdge : edges ) {
             if ( currentEdge.inScope() && currentEdge.getId() > maxId ) {
@@ -864,7 +844,7 @@ public class Graph {
     /**
      * @return true if the graph is directed, false otherwise
      */
-    public boolean isDirected () {
+    public boolean isDirected() {
         return directed;
     }
 
@@ -872,7 +852,7 @@ public class Graph {
      * @param directed
      *            true if setting the graph to directed, false if undirected
      */
-    public void setDirected ( final boolean directed ) {
+    public void setDirected(final boolean directed) {
         this.directed = directed;
     }
 
@@ -880,11 +860,11 @@ public class Graph {
      * @return all nodes in the graph; inScope() without the 'state' argument
      *         only checks to see if a node has been deleted.
      */
-    public NodeList getNodes () {
+    public NodeList getNodes() {
         final NodeList retNodes = new NodeList();
         for ( final Node v : this.nodes ) {
             if ( v.inScope() ) {
-                retNodes.add( v );
+                retNodes.add(v);
             }
         }
         return retNodes;
@@ -893,11 +873,11 @@ public class Graph {
     /**
      * @return all nodes in the graph that exist in the given state.
      */
-    public NodeList getNodes ( final int state ) {
+    public NodeList getNodes(final int state) {
         final NodeList retNodes = new NodeList();
         for ( final Node n : this.nodes ) {
-            if ( n.inScope( state ) ) {
-                retNodes.add( n );
+            if ( n.inScope(state) ) {
+                retNodes.add(n);
             }
         }
         return retNodes;
@@ -908,10 +888,10 @@ public class Graph {
      *         deleted used when drawing, so that we can see the effect of
      *         undoing deletions
      */
-    public NodeList getAllNodes () {
+    public NodeList getAllNodes() {
         final NodeList retNodes = new NodeList();
         for ( final Node v : this.nodes ) {
-            retNodes.add( v );
+            retNodes.add(v);
         }
         return retNodes;
     }
@@ -920,18 +900,18 @@ public class Graph {
      * @param nodes
      *            new set of nodes to be added to the graph
      */
-    public void setNodes ( final Collection<Node> nodes ) {
-        this.nodes = new NodeList( nodes );
+    public void setNodes(final Collection<Node> nodes) {
+        this.nodes = new NodeList(nodes);
     }
 
     /**
      * @return all edges as a list
      */
-    public EdgeList getEdges () {
+    public EdgeList getEdges() {
         final EdgeList retEdges = new EdgeList();
         for ( final Edge e : this.edges ) {
             if ( e.inScope() ) {
-                retEdges.add( e );
+                retEdges.add(e);
             }
         }
         return retEdges;
@@ -940,11 +920,11 @@ public class Graph {
     /**
      * @return all edges at the current algorithm state
      */
-    public EdgeList getEdges ( final int state ) {
+    public EdgeList getEdges(final int state) {
         final EdgeList retEdges = new EdgeList();
         for ( final Edge e : this.edges ) {
-            if ( e.inScope( state ) ) {
-                retEdges.add( e );
+            if ( e.inScope(state) ) {
+                retEdges.add(e);
             }
         }
         return retEdges;
@@ -955,10 +935,10 @@ public class Graph {
      *         deleted used when drawing, so that we can see the effect of
      *         undoing deletions
      */
-    public EdgeList getAllEdges () {
+    public EdgeList getAllEdges() {
         final EdgeList retEdges = new EdgeList();
         for ( final Edge e : this.edges ) {
-            retEdges.add( e );
+            retEdges.add(e);
         }
         return retEdges;
     }
@@ -966,11 +946,11 @@ public class Graph {
     /**
      * @return the edges as a set
      */
-    public EdgeSet getEdgeSet () {
+    public EdgeSet getEdgeSet() {
         final EdgeSet retEdges = new EdgeSet();
         for ( final Edge e : this.edges ) {
             if ( e.inScope() ) {
-                retEdges.add( e );
+                retEdges.add(e);
             }
         }
         return retEdges;
@@ -979,11 +959,11 @@ public class Graph {
     /**
      * @return the nodes as a set
      */
-    public NodeSet getNodeSet () {
+    public NodeSet getNodeSet() {
         final NodeSet retNodes = new NodeSet();
         for ( final Node v : this.nodes ) {
             if ( v.inScope() ) {
-                retNodes.add( v );
+                retNodes.add(v);
             }
         }
         return retNodes;
@@ -992,11 +972,11 @@ public class Graph {
     /**
      * @return all edges at the current algorithm state as a set
      */
-    public EdgeSet getEdgeSet ( final int state ) {
+    public EdgeSet getEdgeSet(final int state) {
         final EdgeSet retEdges = new EdgeSet();
         for ( final Edge e : this.edges ) {
-            if ( e.inScope( state ) ) {
-                retEdges.add( e );
+            if ( e.inScope(state) ) {
+                retEdges.add(e);
             }
         }
         return retEdges;
@@ -1005,11 +985,11 @@ public class Graph {
     /**
      * @return all nodes at the current algorithm state as a set
      */
-    public NodeSet getNodeSet ( final int state ) {
+    public NodeSet getNodeSet(final int state) {
         final NodeSet retNodes = new NodeSet();
         for ( final Node v : this.nodes ) {
-            if ( v.inScope( state ) ) {
-                retNodes.add( v );
+            if ( v.inScope(state) ) {
+                retNodes.add(v);
             }
         }
         return retNodes;
@@ -1021,15 +1001,15 @@ public class Graph {
      * @param edges
      *            new set of edges to be added to the graph
      */
-    public void setEdges ( final Collection<Edge> edges ) {
-        this.edges = new EdgeList( edges );
+    public void setEdges(final Collection<Edge> edges) {
+        this.edges = new EdgeList(edges);
     }
 
     /**
      * marks the edge e as deleted without physically removing it.
      */
-    public void deleteEdge ( final Edge e ) throws Terminate {
-        e.setDeleted( true );
+    public void deleteEdge(final Edge e) throws Terminate {
+        e.setDeleted(true);
     }
 
     /**
@@ -1037,15 +1017,16 @@ public class Graph {
      *         exception otherwise; if the graph is directed, source and target
      *         must match.
      */
-    public Edge getEdge ( final Node source, final Node target ) throws GalantException {
+    public Edge getEdge(final Node source, final Node target) throws GalantException {
         final List<Edge> incidenceList = source.getOutgoingEdges();
         for ( final Edge e : incidenceList ) {
-            if ( source.travel( e ) == target ) {
+            if ( source.travel(e) == target ) {
                 return e;
             }
         }
         throw new GalantException(
-                "no edge with source " + source.getId() + " and target " + target.getId() + " exists" );
+                "no edge with source " + source.getId() + " and target " + target.getId()
+                        + " exists");
     }
 
     /**
@@ -1054,9 +1035,10 @@ public class Graph {
      * match. This is called only during algorithm execution. Not clear how it
      * would be used since we can hide edges.
      */
-    public void deleteEdge ( final Node source, final Node target ) throws Terminate, GalantException {
-        final Edge edge = getEdge( source, target );
-        deleteEdge( edge );
+    public void deleteEdge(final Node source, final Node target)
+            throws Terminate, GalantException {
+        final Edge edge = getEdge(source, target);
+        deleteEdge(edge);
     }
 
     /**
@@ -1064,20 +1046,20 @@ public class Graph {
      * from the <code>Graph</code>; simply marks it and its incident edges
      * deleted
      */
-    public void deleteNode ( final Node n ) throws Terminate {
-        n.setDeleted( true );
-        dispatch.setAtomic( true );
+    public void deleteNode(final Node n) throws Terminate {
+        n.setDeleted(true);
+        dispatch.setAtomic(true);
         for ( final Edge e : n.getEdges() ) {
-            e.setDeleted( true );
+            e.setDeleted(true);
         }
-        dispatch.setAtomic( false );
+        dispatch.setAtomic(false);
     }
 
     /**
      * @returns true if a node with the given id exists
      */
-    public boolean nodeIdExists ( final Integer id ) {
-        return nodeById.containsKey( id );
+    public boolean nodeIdExists(final Integer id) {
+        return nodeById.containsKey(id);
     }
 
     /**
@@ -1086,19 +1068,21 @@ public class Graph {
      * @param id
      * @return the specified Node if it exists, null otherwise
      */
-    public Node getNodeById ( final int id ) throws GalantException {
+    public Node getNodeById(final int id) throws GalantException {
         if ( this.nodes.size() == 0 ) {
-            throw new GalantException( "Empty graph" + "\n - in getNodeById" );
+            throw new GalantException("Empty graph" + "\n - in getNodeById");
         }
 
-        if ( !nodeById.containsKey( id ) ) {
-            throw new GalantException( "No node with id = " + id + " exists" + "\n - in getNodeById" );
+        if ( ! nodeById.containsKey(id) ) {
+            throw new GalantException(
+                    "No node with id = " + id + " exists" + "\n - in getNodeById");
         }
 
-        final Node n = nodeById.get( id );
+        final Node n = nodeById.get(id);
 
         if ( n.isDeleted() ) {
-            throw new GalantException( "Node has been deleted, id = " + id + "\n - in getNodeById" );
+            throw new GalantException(
+                    "Node has been deleted, id = " + id + "\n - in getNodeById");
         }
 
         return n;
@@ -1109,7 +1093,7 @@ public class Graph {
      *         fact that none had to be assigned internally -- the assumption
      *         being that either all or none of the edges have explicit id's.
      */
-    public boolean hasExplicitEdgeIds () {
+    public boolean hasExplicitEdgeIds() {
         return hasExplicitEdgeIds;
     }
 
@@ -1117,9 +1101,9 @@ public class Graph {
      * @return A node that can be used as a starting node by an algorithm that
      *         requires it
      */
-    public Node getStartNode () throws GalantException {
+    public Node getStartNode() throws GalantException {
         if ( this.startNode == null ) {
-            throw new GalantException( "getStartNode: no start node exists" );
+            throw new GalantException("getStartNode: no start node exists");
         }
         return this.startNode;
     }
@@ -1133,17 +1117,17 @@ public class Graph {
      *            the y coordinate of the new node
      * @return the added <code>Node</code>; called only during edit mode
      */
-    public Node addInitialNode ( final Integer x, final Integer y ) {
-    //    LogHelper.enable();
-        LogHelper.enterMethod( getClass(), "addInitialNode(), x = " + x + ", y = " + y );
+    public Node addInitialNode(final Integer x, final Integer y) {
+        // LogHelper.enable();
+        LogHelper.enterMethod(getClass(), "addInitialNode(), x = " + x + ", y = " + y);
         final Integer newId = nextNodeId();
         incrementEffectiveEditState();
-        //edited by 2021 Galant Team
-        //since layered graph is currently based user created graphml,
-        //the node created here would be nonLayeredNode by default
-        final Node n = new NonLayeredNode( this, newId, x, y );
-        nodes.add( n );
-        nodeById.put( newId, n );
+        // edited by 2021 Galant Team
+        // since layered graph is currently based user created graphml,
+        // the node created here would be nonLayeredNode by default
+        final Node n = new NonLayeredNode(this, newId, x, y);
+        nodes.add(n);
+        nodeById.put(newId, n);
 
         if ( this.startNode == null ) {
             this.startNode = n;
@@ -1152,7 +1136,7 @@ public class Graph {
         // seems like we need an addState call as is the case with state
         // changes in GraphElement.java
 
-        LogHelper.exitMethod( getClass(), "addInitialNode() " + n );
+        LogHelper.exitMethod(getClass(), "addInitialNode() " + n);
         LogHelper.restoreState();
         return n;
     }
@@ -1170,23 +1154,23 @@ public class Graph {
      *         from the above is that an algorithm step is initiated if
      *         appropriate
      */
-    public Node addNode ( final Integer x, final Integer y ) throws Terminate {
-        LogHelper.enterMethod( getClass(), "addNode(), x = " + x + ", y = " + y );
+    public Node addNode(final Integer x, final Integer y) throws Terminate {
+        LogHelper.enterMethod(getClass(), "addNode(), x = " + x + ", y = " + y);
         dispatch.startStepIfAnimationOrIncrementEditState();
         final Integer newId = nextNodeId();
-        //edited by 2021 Galant Team
-        //since layered graph is currently based user created graphml,
-        //the node created here would be nonLayeredNode by default
-        final Node n = new NonLayeredNode( this, newId, x, y );
-        nodes.add( n );
-        nodeById.put( newId, n );
+        // edited by 2021 Galant Team
+        // since layered graph is currently based user created graphml,
+        // the node created here would be nonLayeredNode by default
+        final Node n = new NonLayeredNode(this, newId, x, y);
+        nodes.add(n);
+        nodeById.put(newId, n);
 
         // probably not needed but couldn't hurt; maybe the algorithm
         // constructs a tree and then traverses it
         if ( this.startNode == null ) {
             this.startNode = n;
         }
-        LogHelper.exitMethod( getClass(), "addNode() " + n );
+        LogHelper.exitMethod(getClass(), "addNode() " + n);
         return n;
     }
 
@@ -1194,42 +1178,36 @@ public class Graph {
      * Adds a node to the graph during parsing. The node has already been
      * created.
      */
-    public void addNode ( final Node n ) {
-        LogHelper.enterMethod( getClass(), "addNode: node = " + n );
+    public void addNode(final Node n) {
+        LogHelper.enterMethod(getClass(), "addNode: node = " + n);
 
-        /**
-         * @todo subclass method for layered graphs
-         */
-        if ( layered ) {
-            layerInformation.addNode( n );
-        }
-
-        nodes.add( n );
-        nodeById.put( n.getId(), n );
+        nodes.add(n);
+        nodeById.put(n.getId(), n);
 
         if ( this.startNode == null ) {
             this.startNode = n;
         }
 
-        LogHelper.exitMethod( getClass(), "addNode( Node )" );
+        LogHelper.exitMethod(getClass(), "addNode( Node )");
     }
 
     /**
      * This variant is used any time new edge has been created. Its purpose is
      * integrate the edge into the graph.
      */
-    public void addEdge ( final Edge edge ) {
+    public void addEdge(final Edge edge) {
         LogHelper.disable();
-        LogHelper.enterMethod( getClass(), "addEdge " + edge );
+        LogHelper.enterMethod(getClass(), "addEdge " + edge);
         // during parsing we need to know if the edge had an explicit id in
         // its GraphML representation
         if ( edge.hasExplicitId() ) {
             this.hasExplicitEdgeIds = true;
         }
-        edge.getSourceNode().addEdge( edge );
-        edge.getTargetNode().addEdge( edge );
-        edges.add( edge );
-        LogHelper.exitMethod( getClass(), "addEdge, hasExplicitEdgeIds = " + hasExplicitEdgeIds );
+        edge.getSourceNode().addEdge(edge);
+        edge.getTargetNode().addEdge(edge);
+        edges.add(edge);
+        LogHelper.exitMethod(getClass(),
+                "addEdge, hasExplicitEdgeIds = " + hasExplicitEdgeIds);
         LogHelper.restoreState();
     }
 
@@ -1243,10 +1221,10 @@ public class Graph {
      *         This variant is used during algorithm execution if the actual
      *         nodes are known.
      */
-    public Edge addEdge ( final Node source, final Node target ) throws Terminate {
+    public Edge addEdge(final Node source, final Node target) throws Terminate {
         dispatch.startStepIfAnimationOrIncrementEditState();
-        final Edge e = new Edge( this, source, target );
-        addEdge( e );
+        final Edge e = new Edge(this, source, target);
+        addEdge(e);
         return e;
     }
 
@@ -1266,8 +1244,9 @@ public class Graph {
      *         This variant is used during algorithm execution when only the
      *         node id's are known.
      */
-    public Edge addEdge ( final int sourceId, final int targetId ) throws Terminate, GalantException {
-        return addEdge( getNodeById( sourceId ), getNodeById( targetId ) );
+    public Edge addEdge(final int sourceId, final int targetId)
+            throws Terminate, GalantException {
+        return addEdge(getNodeById(sourceId), getNodeById(targetId));
     }
 
     /**
@@ -1278,10 +1257,10 @@ public class Graph {
      *
      *         This variant is used only during editing.
      */
-    public Edge addInitialEdge ( final Node source, final Node target ) {
+    public Edge addInitialEdge(final Node source, final Node target) {
         incrementEffectiveEditState();
-        final Edge e = new Edge( this, source, target );
-        addEdge( e );
+        final Edge e = new Edge(this, source, target);
+        addEdge(e);
         return e;
     }
 
@@ -1292,15 +1271,15 @@ public class Graph {
      *            the <code>Edge</code> to remove; this version actually gets
      *            rid of the edge rather than marking it deleted
      */
-    public void removeEdge ( final Edge e ) {
-        LogHelper.enterMethod( getClass(), "removeEdge " + e );
-        edges.remove( e );
+    public void removeEdge(final Edge e) {
+        LogHelper.enterMethod(getClass(), "removeEdge " + e);
+        edges.remove(e);
 
         final Node source = e.getSourceNode();
-        source.getIncidentEdges().remove( e );
+        source.getIncidentEdges().remove(e);
         final Node target = e.getTargetNode();
-        target.getIncidentEdges().remove( e );
-        LogHelper.exitMethod( getClass(), "removeEdge" );
+        target.getIncidentEdges().remove(e);
+        LogHelper.exitMethod(getClass(), "removeEdge");
     }
 
     /**
@@ -1308,9 +1287,9 @@ public class Graph {
      * exception if none exists; source and target must match if the graph is
      * directed
      */
-    public void removeEdge ( final Node source, final Node target ) throws GalantException {
-        final Edge edge = getEdge( source, target );
-        removeEdge( edge );
+    public void removeEdge(final Node source, final Node target) throws GalantException {
+        final Edge edge = getEdge(source, target);
+        removeEdge(edge);
     }
 
     /**
@@ -1321,58 +1300,31 @@ public class Graph {
      *            node and its incident edges rather than just marking it
      *            deleted
      */
-    public void removeNode ( final Node n ) {
+    public void removeNode(final Node n) {
         final List<Edge> n_edges = n.getIncidentEdges();
-        LogHelper.enterMethod( getClass(), "removeNode " + n + ", deg = " + n_edges.size() );
+        LogHelper.enterMethod(getClass(),
+                "removeNode " + n + ", deg = " + n_edges.size());
 
         for ( final Edge e : n_edges ) {
-            removeEdge( e );
+            removeEdge(e);
         }
 
-        nodes.remove( n );
-        LogHelper.exitMethod( getClass(), "removeNode" );
+        nodes.remove(n);
+        LogHelper.exitMethod(getClass(), "removeNode");
     }
 
     /**
      * @return an integer ID for the next <code>Node</code> to be added. This
      *         will always be the largest id so far + 1
      */
-    private int nextNodeId () {
-        LogHelper.enterMethod( getClass(), "nextNodeId" );
+    private int nextNodeId() {
+        LogHelper.enterMethod(getClass(), "nextNodeId");
         int id = 0;
-        if ( !nodeById.isEmpty() ) {
+        if ( ! nodeById.isEmpty() ) {
             id = nodeById.lastKey() + 1;
         }
-        LogHelper.exitMethod( getClass(), "nextNodeId, id = " + id );
+        LogHelper.exitMethod(getClass(), "nextNodeId, id = " + id);
         return id;
-    }
-
-    /**
-     * @return the number of layers if this is a layered graph
-     */
-    public int numberOfLayers () {
-        return layerInformation.numberOfLayers;
-    }
-
-    /**
-     * @return the number of nodes on layer i
-     */
-    public int numberOfNodesOnLayer ( final int i ) {
-        return layerInformation.layerSize.get( i );
-    }
-
-    /**
-     * @return the maximum position of a node on layer i
-     */
-    public int maxPositionInLayer ( final int i ) {
-        return layerInformation.maxPositionInLayer.get( i );
-    }
-
-    /**
-     * @return the maximum position of any node
-     */
-    public int maxPositionInAnyLayer () {
-        return layerInformation.maxPosition;
     }
 
     private GraphLayout savedLayout;
@@ -1388,10 +1340,10 @@ public class Graph {
      *
      * @see edu.ncsu.csc.Galant.graph.component.GraphLayout#forceDirected()
      */
-    public void smartReposition ( final Double boost ) {
-        savedLayout = new GraphLayout( this );
-        final GraphLayout layoutToBeRepositioned = new GraphLayout( this );
-        layoutToBeRepositioned.forceDirected( boost );
+    public void smartReposition(final Double boost) {
+        savedLayout = new GraphLayout(this);
+        final GraphLayout layoutToBeRepositioned = new GraphLayout(this);
+        layoutToBeRepositioned.forceDirected(boost);
         layoutToBeRepositioned.usePositions();
     }
 
@@ -1399,8 +1351,8 @@ public class Graph {
      * same as smartReposition(boost) but uses the default boost, as built into
      * the force-directed algorithm.
      */
-    public void smartReposition () {
-        smartReposition( null );
+    public void smartReposition() {
+        smartReposition(null);
         dispatch.initializeVirtualWindow();
     }
 
@@ -1409,7 +1361,7 @@ public class Graph {
      *
      * @todo maintain an another instance of GraphLayout to do this
      */
-    public void undoReposition () {
+    public void undoReposition() {
         if ( savedLayout != null ) {
             savedLayout.usePositions();
             dispatch.initializeVirtualWindow();
@@ -1423,24 +1375,19 @@ public class Graph {
      * @todo this is now handled inside Edge.java with the assumption that
      *       either all edges have id's or (more typically) none of them do.
      */
-    public void initializeAfterParsing () throws GalantException {
+    public void initializeAfterParsing() throws GalantException {
         // check if any edge has an explicit id and throw an exception
         // if some do and others don't
         this.hasExplicitEdgeIds = false;
         for ( final Edge edge : this.edges ) {
             if ( edge.hasExplicitId() ) {
                 this.hasExplicitEdgeIds = true;
-            }
-            else {
+            } else {
                 if ( this.hasExplicitEdgeIds ) {
-                    throw new GalantException( "missing id for edge " + edge );
+                    throw new GalantException("missing id for edge " + edge);
                 }
-                edge.setId( nextEdgeId++ );
+                edge.setId(nextEdgeId++);
             }
-        }
-
-        if ( layered ) {
-            layerInformation.initializeAfterParsing();
         }
     }
 
@@ -1448,9 +1395,9 @@ public class Graph {
      * Returns a valid graphml representation of the graph; for use when no
      * algorithm is running
      */
-    public String xmlString () {
+    public String xmlString() {
         LogHelper.disable();
-        LogHelper.enterMethod( getClass(), "xmlString" );
+        LogHelper.enterMethod(getClass(), "xmlString");
         String s = "";
         s += "<?xml version=\"1.0\" encoding=\"UTF-8\"?> \n";
         s += "<graphml xmlns=\"http://graphml.graphdrawing.org/xmlns\" \n";
@@ -1464,26 +1411,26 @@ public class Graph {
         if ( comment != null ) {
             s += " comment=\"" + comment + "\"";
         }
-        if ( this.isLayered() ) {
+        if ( this instanceof LayeredGraph ) {
             s += " type=\"layered\"";
         }
-        s += " edgedefault=\"" + ( this.isDirected() ? "directed" : "undirected" ) + "\"";
+        s += " edgedefault=\"" + (this.isDirected() ? "directed" : "undirected") + "\"";
         s += ">\n";
         for ( final Node n : this.nodes ) {
-            if ( !n.inScope() ) {
+            if ( ! n.inScope() ) {
                 continue;
             }
             s += "  " + n.xmlString() + "\n";
         }
         for ( final Edge e : this.edges ) {
-            if ( !e.inScope() ) {
+            if ( ! e.inScope() ) {
                 continue;
             }
             s += "  " + e.xmlString() + "\n";
         }
         s += " </graph>";
         s += "</graphml>";
-        LogHelper.exitMethod( getClass(), "xmlString" );
+        LogHelper.exitMethod(getClass(), "xmlString");
         LogHelper.restoreState();
         return s;
     }
@@ -1492,9 +1439,9 @@ public class Graph {
      * Returns a valid graphml representation of the graph; for use when you
      * want to export the current state of a running algorithm.
      */
-    public String xmlString ( final int state ) {
+    public String xmlString(final int state) {
         LogHelper.disable();
-        LogHelper.enterMethod( getClass(), "xmlString(" + state + ")" );
+        LogHelper.enterMethod(getClass(), "xmlString(" + state + ")");
         String s = "";
         s += "<?xml version=\"1.0\" encoding=\"UTF-8\"?> \n";
         s += "<graphml xmlns=\"http://graphml.graphdrawing.org/xmlns\" \n";
@@ -1508,37 +1455,37 @@ public class Graph {
         if ( comment != null ) {
             s += " comment=\"" + comment + "\"";
         }
-        if ( this.isLayered() ) {
+        if ( this instanceof LayeredGraph ) {
             s += " type=\"layered\"";
         }
-        s += " edgedefault=\"" + ( this.isDirected() ? "directed" : "undirected" ) + "\""; //
-                                                                                           // directed/undirected
+        s += " edgedefault=\"" + (this.isDirected() ? "directed" : "undirected") + "\""; //
+                                                                                         // directed/undirected
         s += ">\n";
         for ( final Node n : this.nodes ) {
-            LogHelper.logDebug( "  writing xml string for node " + n );
-            if ( !n.inScope( state ) ) {
+            LogHelper.logDebug("  writing xml string for node " + n);
+            if ( ! n.inScope(state) ) {
                 continue;
             }
-            LogHelper.logDebug( "     node with id " + n.getId() + " is in scope" );
-            final String sN = n.xmlString( state );
-            if ( !sN.trim().isEmpty() ) {
+            LogHelper.logDebug("     node with id " + n.getId() + " is in scope");
+            final String sN = n.xmlString(state);
+            if ( ! sN.trim().isEmpty() ) {
                 s += "  " + sN + "\n";
             }
         }
         for ( final Edge e : this.edges ) {
-            LogHelper.logDebug( "writing xml string for edge " + e );
-            if ( !e.inScope( state ) ) {
+            LogHelper.logDebug("writing xml string for edge " + e);
+            if ( ! e.inScope(state) ) {
                 continue;
             }
-            LogHelper.logDebug( "     edge " + e + " is in scope" );
-            final String sE = e.xmlString( state );
-            if ( !sE.trim().isEmpty() ) {
+            LogHelper.logDebug("     edge " + e + " is in scope");
+            final String sE = e.xmlString(state);
+            if ( ! sE.trim().isEmpty() ) {
                 s += "  " + sE + "\n";
             }
         }
         s += " </graph>";
         s += "</graphml>";
-        LogHelper.exitMethod( getClass(), "xmlString(" + state + ")" );
+        LogHelper.exitMethod(getClass(), "xmlString(" + state + ")");
         LogHelper.restoreState();
         return s;
     }

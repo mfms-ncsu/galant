@@ -1579,15 +1579,15 @@ public class LayeredGraph {
      * @return the nonverticality of edge e
      */
     public Integer nonverticality(Edge e) {
-        int up_position = ((LayeredGraphNode) e.getSourceNode()).getPositionInLayer();
-        int down_position = ((LayeredGraphNode) e.getTargetNode()).getPositionInLayer();
+        int up_position = e.getSourceNode().getPositionInLayer();
+        int down_position = e.getTargetNode().getPositionInLayer();
         int diff = up_position - down_position;
         return diff * diff;
     }
 
     public Integer nonverticality() {
         int total = 0;
-        for ( Edge e : this.getEdges() ) {
+        for ( Edge e : graph.getEdges() ) {
             total += nonverticality(e);
         }
         return total;
@@ -1607,7 +1607,7 @@ public class LayeredGraph {
      *            the node whose edges will have their nonverticalities set as
      *            weights
      */
-    public void setNonverticalities(LayeredGraphNode v) throws Terminate {
+    public void setNonverticalities(Node v) throws Terminate {
         // !!! caution - getEdges returns even edges that have been deleted;
         // not a problem for layered graphs since these are never edited.
         for ( Edge e : v.getEdges() ) {
@@ -1619,7 +1619,7 @@ public class LayeredGraph {
      * sets nonverticalities of all edges as weights
      */
     public void setNonverticalities() throws Terminate {
-        for ( Edge e : this.getEdges() ) {
+        for ( Edge e : graph.getEdges() ) {
             setNonverticality(e);
         }
     }

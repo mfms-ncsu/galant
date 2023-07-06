@@ -1568,6 +1568,60 @@ public class LayeredGraph {
         return inversions;
     }
 
-} // end, class LayeredGraph
+    /**
+     * *** The methods below are related to verticality ***
+     */
 
-//  [Last modified: 2021 01 08 at 19:45:43 GMT]
+    /**
+     * 
+     * @param e
+     *            an edge
+     * @return the nonverticality of edge e
+     */
+    public Integer nonverticality(Edge e) {
+        int up_position = ((LayeredGraphNode) e.getSourceNode()).getPositionInLayer();
+        int down_position = ((LayeredGraphNode) e.getTargetNode()).getPositionInLayer();
+        int diff = up_position - down_position;
+        return diff * diff;
+    }
+
+    public Integer nonverticality() {
+        int total = 0;
+        for ( Edge e : this.getEdges() ) {
+            total += nonverticality(e);
+        }
+        return total;
+    }
+
+    /**
+     * @param e
+     *            the edge whose nonverticality will be calculated
+     *            Computes the nonverticality of e and sets e's weight accordingly
+     */
+    public void setNonverticality(Edge e) throws Terminate {
+        e.setWeight(nonverticality(e));
+    }
+
+    /**
+     * @param v
+     *            the node whose edges will have their nonverticalities set as
+     *            weights
+     */
+    public void setNonverticalities(LayeredGraphNode v) throws Terminate {
+        // !!! caution - getEdges returns even edges that have been deleted;
+        // not a problem for layered graphs since these are never edited.
+        for ( Edge e : v.getEdges() ) {
+            setNonverticality(e);
+        }
+    }
+
+    /**
+     * sets nonverticalities of all edges as weights
+     */
+    public void setNonverticalities() throws Terminate {
+        for ( Edge e : this.getEdges() ) {
+            setNonverticality(e);
+        }
+    }
+
+} // end, class LayeredGraph

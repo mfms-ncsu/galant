@@ -48,7 +48,7 @@ public class WindowUtil {
 		{
 			putValue(MNEMONIC_KEY, KeyEvent.VK_Q);
 			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_Q, Toolkit
-					.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
+					.getDefaultToolkit().getMenuShortcutKeyMask()));
 		}
 
 		@Override
@@ -63,7 +63,7 @@ public class WindowUtil {
 		{
 			putValue(MNEMONIC_KEY, KeyEvent.VK_E);
 			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_E,
-					Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
+					Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 		}
 
 		@Override

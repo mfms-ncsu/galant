@@ -1,10 +1,11 @@
+import edu.ncsu.csc.Galant.local.LayeredGraph;
 LayeredGraph layeredGraph;
 algorithm {
     movesNodes();
     showEdgeWeights();
 
     layeredGraph
-        = new LayeredGraph( getGraph() );
+        = new LayeredGraph(getGraph());
     for_edges(e) {
         layeredGraph.setNonverticality(e);
     }

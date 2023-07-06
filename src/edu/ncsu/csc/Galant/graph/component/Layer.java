@@ -17,21 +17,20 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
 import edu.ncsu.csc.Galant.algorithm.Terminate;
 import edu.ncsu.csc.Galant.GraphDispatch;
 import edu.ncsu.csc.Galant.logging.LogHelper;
 
 public class Layer extends GraphElement {
     LayeredGraph graph;
-    ArrayList<Node> nodes;
+    ArrayList<LayeredGraphNode> nodes;
     boolean marked;
 
     public Layer(LayeredGraph graph) {
         super(graph);
         this.marked = false;
         this.graph = graph;
-        nodes = new ArrayList<Node>();
+        nodes = new ArrayList<LayeredGraphNode>();
     }
 
 
@@ -42,7 +41,7 @@ public class Layer extends GraphElement {
      * @todo will need to be fixed; probably via a class Channel
      */
 //     public void highlight( LayeredGraph.Scope scope ) throws Terminate {
-//         for ( Node v: nodes ) {
+//         for ( LayeredGraphNode v: nodes ) {
 //             v.setSelected( true );
 //             if ( scope == LayeredGraph.Scope.UP
 //                  || scope == LayeredGraph.Scope.BOTH ) {
@@ -59,30 +58,26 @@ public class Layer extends GraphElement {
 //         }
 //    
     /**
-     * adds new positions numbered layer.nodes.size(), ... , position to the
-     * nodes list of the given layer; the new positions are filled with null
-     * nodes; can be called even if not needed - it does nothing, safely, in
-     * that case
+     * sets the indexInLayer property of a node
      */
-    void ensurePosition( int position ) {
-        for ( int i = nodes.size(); i <= position; i++ ) {
-            nodes.add( null );
-        }
+    public void setIndex(LayeredGraphNode v, int index) throws Terminate {
+        v.set("indexInLayer", index);
     }
 
     /**
-     * puts node v into the i-th position
+     * @return the indexInLayer property of a node
      */
-    public void addNode( Node v, int i ) {
-        ensurePosition( i );
-        nodes.set( i, v );
+    public int getIndex(LayeredGraphNode v) {
+        return v.getInteger("indexInLayer");
     }
 
+    
+
     /**
-     * @return the node at the given position on this layer
+     * @return the node at the given index on this layer
      */
-    public Node getNodeAt( int position ) {
-        return nodes.get( position );
+    public LayeredGraphNode getNodeAt(int index) {
+        return nodes.get(index);
     }
 
 
@@ -105,7 +100,7 @@ public class Layer extends GraphElement {
      * Displays the marked/unmarked state of all nodes on this layer
      */
     public void displayMarks() throws Terminate {
-        for ( Node v: nodes ) {
+        for ( LayeredGraphNode v: nodes ) {
             v.setVisited( graph.isMarked( v ) );
         }
     }
@@ -115,7 +110,7 @@ public class Layer extends GraphElement {
      * their logical status.
      */
     public void removeMarks() throws Terminate {
-        for ( Node v: nodes ) {
+        for ( LayeredGraphNode v: nodes ) {
             v.setVisited( false );
         }
     }
@@ -124,7 +119,7 @@ public class Layer extends GraphElement {
      * logically unmarks all nodes on this layer
      */
     public void clearMarks() {
-        for ( Node v: nodes ) {
+        for ( LayeredGraphNode v: nodes ) {
             graph.unMark( v );
         }
     }
@@ -133,7 +128,7 @@ public class Layer extends GraphElement {
      * Sets node labels to be blank
      */
     public void clearLabels() throws Terminate {
-        for ( Node v: nodes ) {
+        for ( LayeredGraphNode v: nodes ) {
             v.setLabel("");
         }
     }
@@ -143,7 +138,7 @@ public class Layer extends GraphElement {
      * see "enum Scope"
      */
     public void highlight( LayeredGraph.Scope scope ) throws Terminate {
-        for ( Node v: nodes ) {
+        for ( LayeredGraphNode v: nodes ) {
             v.setSelected( true );
             if ( scope == LayeredGraph.Scope.UP
                  || scope == LayeredGraph.Scope.BOTH ) {
@@ -174,7 +169,7 @@ public class Layer extends GraphElement {
      * undoes highlighting for the nodes and any edges incident on this layer
      */
     public void unHighlight() throws Terminate {
-        for ( Node v: nodes ) {
+        for ( LayeredGraphNode v: nodes ) {
             v.setSelected( false );
             for ( Edge e: v.getIncidentEdges() ) {
                 e.setSelected( false );
@@ -187,7 +182,7 @@ public class Layer extends GraphElement {
      * Displays logical weights assigned to the nodes
      */
     public void displayWeights() throws Terminate {
-        for ( Node v: nodes ) {
+        for ( LayeredGraphNode v: nodes ) {
             v.setWeight( graph.getWeight( v ) );
         }
     }
@@ -196,7 +191,7 @@ public class Layer extends GraphElement {
      * Gives node weights a default value that makes them invisible
      */
     public void clearWeights() throws Terminate {
-        for ( Node v: nodes ) {
+        for ( LayeredGraphNode v: nodes ) {
             v.clearWeight();
         }
     }
@@ -204,7 +199,7 @@ public class Layer extends GraphElement {
     /**
      * @return the list of nodes on this layer
      */
-    public List<Node> getNodes() {
+    public List<LayeredGraphNode> getNodesInLayer() {
         return nodes;
     }
 
@@ -213,43 +208,43 @@ public class Layer extends GraphElement {
      * node currently at newPosition, shifting the intervening nodes to the
      * right
      */
-    public void insert( int originalPosition, int newPosition ) {
-        Node toBeInserted = nodes.remove( originalPosition );
+    public void insert( int originalPosition, int newPosition ) throws Terminate {
+        LayeredGraphNode toBeInserted = nodes.remove( originalPosition );
         nodes.add( newPosition, toBeInserted );
-        updatePositions();
+        updateIndexes();
     }
 
     /**
      * sorts the nodes by their weight (as assigned by Galant code)
      */
-    public void sort() {
+    public void sort() throws Terminate {
         Collections.sort(nodes);
-        updatePositions();
+        updateIndexes();
     }
 
     /**
      * sorts node by positions in their layers (as assigned by Galant)
      */
-    final Comparator<Node> POSITION_COMPARATOR = new Comparator<Node>() {
-        public int compare(Node x, Node y) {
+    final Comparator<LayeredGraphNode> POSITION_COMPARATOR = new Comparator<LayeredGraphNode>() {
+        public int compare(LayeredGraphNode x, LayeredGraphNode y) {
             int state = GraphDispatch.getInstance().getDisplayState();
             //edited by 2021 Galant Team
             //add a cast to ensure x and y here are layeredGraphNode
-            return ((LayeredGraphNode) x).getPositionInLayer(state) - ((LayeredGraphNode) y).getPositionInLayer(state);
+            return x.getPositionInLayer(state) - y.getPositionInLayer(state);
         }
     };
 
-    public void sortByPosition() {
-        Collections.sort( nodes, POSITION_COMPARATOR );
-        updatePositions();
+    public void sortByPosition() throws Terminate {
+        Collections.sort(nodes, POSITION_COMPARATOR);
+        updateIndexes();
     }
 
     /**
      * sorts nodes by their logical weight (for use with 'fast' versions of
      * barycenter-related algorithms)
      */
-    final Comparator<Node> WEIGHT_COMPARATOR = new Comparator<Node>() {
-        public int compare( Node x, Node y ) {
+    final Comparator<LayeredGraphNode> WEIGHT_COMPARATOR = new Comparator<LayeredGraphNode>() {
+        public int compare( LayeredGraphNode x, LayeredGraphNode y ) {
             double wx = graph.getWeight( x );
             double wy = graph.getWeight( y );
             if ( wx > wy ) return 1;
@@ -258,17 +253,17 @@ public class Layer extends GraphElement {
         }
     };
 
-    public void sortByWeight() {
+    public void sortByWeight() throws Terminate {
         Collections.sort( nodes, WEIGHT_COMPARATOR );
-        updatePositions();
+        updateIndexes();
     }
 
     /**
      * sorts the nodes on this layer by increasing degree
      */
-    public void sortByIncreasingDegree() {
-        LayeredGraph.sortByIncreasingDegree( nodes );
-        updatePositions();
+    public void sortByIncreasingDegree() throws Terminate {
+        LayeredGraph.sortByIncreasingDegree(nodes);
+        updateIndexes();
     }
 
     /**
@@ -278,12 +273,12 @@ public class Layer extends GraphElement {
      * @param largestInMiddle if true then the node with largest degree goes
      * in the middle.
      */
-    public void middleDegreeSort( boolean largestMiddle ) {
+    public void middleDegreeSort( boolean largestMiddle ) throws Terminate {
        LayeredGraph.sortByIncreasingDegree( nodes );
        if ( largestMiddle ) Collections.reverse( nodes );
-       ArrayList<Node> tempNodeList = new ArrayList<Node>();
+       ArrayList<LayeredGraphNode> tempNodeList = new ArrayList<LayeredGraphNode>();
        boolean addToFront = true;
-       for ( Node node : nodes ) {
+       for ( LayeredGraphNode node : nodes ) {
            if ( addToFront ) {
                tempNodeList.add( 0, node );
            }
@@ -293,19 +288,17 @@ public class Layer extends GraphElement {
            addToFront = ! addToFront;
        }
        nodes = tempNodeList;
-       updatePositions();
+       updateIndexes();
     }
 
     /**
-     * Uses the order in the list 'nodes' to update the positions of the
-     * nodes in the graph.
+     * Uses the order in the list 'nodes' to update the indexes of the
+     * nodes in the graph, making them consistent
      */
-    public void updatePositions() {
-        int i = 0;
-        for ( Node v: nodes ) {
-            // sets the position information in the layered graph
-            graph.setPosition( v, i );
-            i++;
+    public void updateIndexes() throws Terminate {
+        int currentIndex = 0;
+        for ( LayeredGraphNode v: nodes ) {
+            v.setIndexInLayer(currentIndex++);
         }
     }
 
@@ -316,12 +309,9 @@ public class Layer extends GraphElement {
      */
     public void displayPositions() throws Terminate {
         int i = 0;
-        for ( Node v: nodes ) {
-        	//edited by 2021 Galant Team
-            //add a cast to tell program this is really a LayeredGraphNode
-        	LayeredGraphNode temp = (LayeredGraphNode) v;
-            if ( temp.getPositionInLayer() != i ) {
-                temp.setPositionInLayer( i );
+        for ( LayeredGraphNode node : nodes ) {
+            if ( node.getPositionInLayer() != i ) {
+                node.setPositionInLayer( i );
             }
             i++;
         }
@@ -329,12 +319,11 @@ public class Layer extends GraphElement {
 
     public void markPositionChanges() {
         int i = 0;
-        for ( Node v: nodes ) {
+        for ( LayeredGraphNode node : nodes ) {
         	//edited by 2021 Galant Team
             //add a cast to tell program this is really a LayeredGraphNode
-        	LayeredGraphNode temp = (LayeredGraphNode) v;
-            if ( temp.getPositionInLayer() != i ) {
-                graph.mark( temp );
+            if ( node.getPositionInLayer() != i ) {
+                graph.mark( node );
             }
             i++;
         }
@@ -344,17 +333,17 @@ public class Layer extends GraphElement {
      * Saves positions of all the nodes
      */
     public void savePositions() {
-        for ( Node v: nodes ) {
-            graph.setSavedPosition( v, graph.getPosition( v ) );
+        for ( LayeredGraphNode v: nodes ) {
+            graph.setSavedPosition(v, v.getPositionInLayer());
         }
     }
 
     /**
      * Restores saved positions of all the nodes
      */
-    public void restoreSavedPositions() {
-        for (Node v: nodes ) {
-            graph.setPosition( v, graph.getSavedPosition( v ) );
+    public void restoreSavedPositions() throws Terminate {
+        for ( LayeredGraphNode node : nodes ) {
+            node.setPositionInLayer( graph.getSavedPosition(node) );
         }
     }
 
@@ -362,44 +351,33 @@ public class Layer extends GraphElement {
      * Updates the display based on previously saved positions
      */
     public void displaySavedPositions() throws Terminate {
-        for ( Node v: nodes ) {
-            int position = graph.getSavedPosition( v );
-            //edited by 2021 Galant Team
-            //add a cast to tell program this is really a LayeredGraphNode
-        	LayeredGraphNode temp = (LayeredGraphNode) v;
-            if ( temp.getPositionInLayer() != position ) {
-                temp.setPositionInLayer( position );
+        for ( LayeredGraphNode node : nodes ) {
+            int position = graph.getSavedPosition(node);
+            if ( node.getPositionInLayer() != position ) {
+                node.setPositionInLayer( position );
             }
         }
     }
 
     /**
-     * Puts node v at position i on the display (does nothing to its logical
+     * Puts the node at ithe position on the display (does nothing to its logical
      * position)
      */
-    public void displayPosition( Node v, int i ) throws Terminate {
-    	//edited by 2021 Galant Team
-        //add a cast to tell program this is really a LayeredGraphNode
-    	LayeredGraphNode temp = (LayeredGraphNode) v;
-        if ( temp.getPositionInLayer() != i ) {
-            temp.setPositionInLayer( i );
+    public void displayPosition(LayeredGraphNode node, int position) throws Terminate {
+        if ( node.getPositionInLayer() != position ) {
+            node.setPositionInLayer(position);
         }
     }
 
     public String toString() {
         String s = "";
         s += "[";
-        for ( Node node : nodes ) {
-        	//edited by 2021 Galant Team
-            //add a cast to tell program this is really a LayeredGraphNode
-        	LayeredGraphNode temp = (LayeredGraphNode) node;
-            s += " " + temp.getId() + " " +
-                "(" + temp.getLayer() + "," + temp.getPositionInLayer() + "),";
+        for ( LayeredGraphNode node : nodes ) {
+            s += " " + node.getId() + " " +
+                "(" + node.getLayer() + "," + node.getPositionInLayer() + "),";
         }
         s += " ]";
         return s;
     }
 
 } // end, class Layer
-
-//  [Last modified: 2021 01 31 at 14:28:34 GMT]

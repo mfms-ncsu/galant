@@ -1,14 +1,6 @@
 /**
  * @file GraphMLParser.java
  * @brief code for creating a graph from a GraphML file/string
- *
- * @todo !!! [Senior Design Team] !!!
- * Would probably be best to make
- * the x and y attributes of nodes act as surrogates for
- * positionInLayer and layer, respectively, when a graph is
- * layered. The only part of the code that needs to know about these
- * attributes is the display in GraphPanel. The change would require
- * changes in GraphPanel, Node, NodeState, and possibly Graph.
  */
 package edu.ncsu.csc.Galant.graph.parser;
 
@@ -51,7 +43,7 @@ public class GraphMLParser {
     }
 
     public GraphMLParser(String xml) throws GalantException {
-        if (xml == null || xml.equals("")) {
+        if ( xml == null || xml.equals("") ) {
             throw new GalantException("No text when invoking GraphMLParser");
         }
         Timer.parsingTime.start();
@@ -65,7 +57,7 @@ public class GraphMLParser {
 
         try {
             db = dbf.newDocumentBuilder();
-        } catch (ParserConfigurationException e) {
+        } catch ( ParserConfigurationException e ) {
             throw new GalantException(e.getMessage()
                     + "\n - in getDocumentBuilder",
                     e);
@@ -81,7 +73,7 @@ public class GraphMLParser {
             throws GalantException {
         try {
             this.document = db.parse(file);
-        } catch (Exception e) {
+        } catch ( Exception e ) {
             throw new GalantException(e.getMessage()
                     + "\n - in setDocument(DocumentBuilder, File)",
                     e);
@@ -89,11 +81,11 @@ public class GraphMLParser {
     }
 
     public void setDocument(DocumentBuilder db, String xml)
-        throws GalantException {
+            throws GalantException {
         InputSource is = new InputSource(new StringReader(xml));
         try {
             this.document = db.parse(is);
-        } catch (Exception e) {
+        } catch ( Exception e ) {
             throw new GalantException(e.getMessage()
                     + "\n - in setDocument(DocumentBuilder,String)",
                     e);
@@ -114,7 +106,7 @@ public class GraphMLParser {
         String attributeValueString = xmlNode.getTextContent();
         try {
             graphElement.set(attributeName, attributeValueString);
-        } catch (Terminate t) { // should not happen
+        } catch ( Terminate t ) { // should not happen
             t.printStackTrace();
         }
         LogHelper.logDebug("<- processAttribute for " + graphElement);
@@ -122,13 +114,17 @@ public class GraphMLParser {
 
     public Graph buildGraphFromInput(DocumentBuilder db)
             throws GalantException {
-        LogHelper.disable();
+        LogHelper.enable();
         LogHelper.enterMethod(getClass(), "buildGraphFromInput");
         GraphDispatch dispatch = GraphDispatch.getInstance();
         // we don't want to create new states for changes during parsing
         dispatch.setEditMode(false);
 
-        Graph graphUnderConstruction = new Graph();
+        /**
+         * Here, Nodelist, getNodes, getEdges, and getGraphNode come from class NodeList
+         * in the org.w3c.dom.NodeList package for reading xml files.
+         * Admittedly confusing, as they suggest properties of the graph being created.
+         */
         NodeList nodes;
         NodeList edges;
         NodeList graph;
@@ -136,11 +132,21 @@ public class GraphMLParser {
         edges = getEdges();
         graph = getGraphNode();
 
-        //only one graph => hardcode 0th index
+        // only one graph => hardcode 0th index
         NamedNodeMap attributes = graph.item(0).getAttributes();
 
-        // the awkward ?: construction is needed because org.w3c.dom.Node
-        // conflicts with Galant Node
+        String graphType = (attributes.getNamedItem("type") != null)
+                ? attributes.getNamedItem("type").getNodeValue()
+                : null;
+
+        Graph graphUnderConstruction;
+
+        if ( graphType != null && graphType.equalsIgnoreCase("layered") ) {
+            graphUnderConstruction = new LayeredGraph();
+        } else {
+            graphUnderConstruction = new Graph();
+        }
+
         String directed = ((attributes.getNamedItem("edgedefault") != null)
                 ? attributes.getNamedItem("edgedefault").getNodeValue()
                 : "undirected");
@@ -154,65 +160,63 @@ public class GraphMLParser {
                 ? attributes.getNamedItem("comment").getNodeValue()
                 : null;
         graphUnderConstruction.setComment(comment);
-        String type = (attributes.getNamedItem("type") != null)
-                ? attributes.getNamedItem("type").getNodeValue()
-                : null;
-        String typename = (attributes.getNamedItem("type") != null)
-                ? attributes.getNamedItem("type").getNodeValue()
-                : null;
-        if (typename != null && typename.equalsIgnoreCase("layered")) {
-            graphUnderConstruction.setLayered(true);
-        } else {
-            graphUnderConstruction.setLayered(false);
-        }
-
         LogHelper.logDebug("Created new graph:\n" + graphUnderConstruction);
         LogHelper.logDebug(" number of nodes = " + nodes.getLength());
         LogHelper.logDebug(" number of edges = " + edges.getLength());
 
-        LogHelper.disable();
+        LogHelper.enable();
         LogHelper.beginIndent();
-        for (int nodeIndex = 0; nodeIndex < nodes.getLength(); nodeIndex++) {
+        for ( int nodeIndex = 0; nodeIndex < nodes.getLength(); nodeIndex++ ) {
             LogHelper.logDebug(" processing " + nodeIndex + "th node.");
             org.w3c.dom.Node xmlNode = nodes.item(nodeIndex);
-           
+
             NamedNodeMap nodeAttributes = xmlNode.getAttributes();
-           
+
             AttributeList attributesToAddForNodes = new AttributeList();
-            if (attributes != null) {
-                for (int i = 0; i < nodeAttributes.getLength(); i++) {
+            if ( attributes != null ) {
+                for ( int i = 0; i < nodeAttributes.getLength(); i++ ) {
                     org.w3c.dom.Node attribute = nodeAttributes.item(i);
-                    attributesToAddForNodes.set(attribute.getNodeName(), attribute.getNodeValue());
+                    attributesToAddForNodes.set(attribute.getNodeName(),
+                            attribute.getNodeValue());
                     LogHelper.logDebug("Node attribute " + attribute.getNodeName()
                             + ", value = " + attribute.getTextContent());
                 }
             }
-            
-            Node parsedNode = null;
-            // made by 2021 Galant Team
-            // Now file parser will create different nodes based on the graph type.
-            if(graphUnderConstruction.isLayered()) {
-            	parsedNode = new LayeredGraphNode(graphUnderConstruction, attributesToAddForNodes);
+
+            /**
+             * made by 2021 Galant Team
+             * Now file parser will create different nodes based on the graph type.
+             * 
+             * @todo This should be handled by burying creation of a node in an addNode()
+             *       method for the appropriate graph type
+             */
+            if ( graphUnderConstruction instanceof LayeredGraph ) {
+                LayeredGraphNode parsedNode = new LayeredGraphNode(graphUnderConstruction,
+                        attributesToAddForNodes);
+                LogHelper.logDebug("adding node " + parsedNode);
+                ((LayeredGraph) graphUnderConstruction).addNode(parsedNode);
             } else {
-            	parsedNode = new NonLayeredNode(graphUnderConstruction, attributesToAddForNodes);
+                NonLayeredNode parsedNode = new NonLayeredNode(graphUnderConstruction,
+                        attributesToAddForNodes);
+                LogHelper.logDebug("adding node " + parsedNode);
+                graphUnderConstruction.addNode(parsedNode);
             }
-            LogHelper.logDebug("adding node " + parsedNode);
-            graphUnderConstruction.addNode(parsedNode);
         }
 
         LogHelper.endIndent();
 
-        LogHelper.disable();
+        LogHelper.enable();
         LogHelper.beginIndent();
-        for (int nodeIndex = 0; nodeIndex < edges.getLength(); nodeIndex++) {
+        for ( int nodeIndex = 0; nodeIndex < edges.getLength(); nodeIndex++ ) {
             LogHelper.logDebug(" processing " + nodeIndex + "th edge.");
             org.w3c.dom.Node xmlNode = edges.item(nodeIndex);
             NamedNodeMap edgeAttributes = xmlNode.getAttributes();
             AttributeList attributesToAddForEdges = new AttributeList();
-            if (attributes != null) {
-                for (int i = 0; i < edgeAttributes.getLength(); i++) {
+            if ( attributes != null ) {
+                for ( int i = 0; i < edgeAttributes.getLength(); i++ ) {
                     org.w3c.dom.Node attribute = edgeAttributes.item(i);
-                    attributesToAddForEdges.set(attribute.getNodeName(), attribute.getNodeValue());
+                    attributesToAddForEdges.set(attribute.getNodeName(),
+                            attribute.getNodeValue());
                     LogHelper.logDebug("Edge attribute " + attribute.getNodeName()
                             + ", value = " + attribute.getTextContent());
                 }
@@ -224,7 +228,8 @@ public class GraphMLParser {
         LogHelper.endIndent();
         LogHelper.restoreState();
         graphUnderConstruction.initializeAfterParsing();
-        LogHelper.exitMethod(getClass(), "buildGraphFromInput:\n" + graphUnderConstruction);
+        LogHelper.exitMethod(getClass(),
+                "buildGraphFromInput:\n" + graphUnderConstruction);
         LogHelper.restoreState();
         dispatch.setEditMode(true);
         return graphUnderConstruction;
@@ -279,5 +284,3 @@ public class GraphMLParser {
     }
 
 }
-
-//  [Last modified: 2021 01 31 at 14:37:03 GMT]

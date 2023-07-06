@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns
+http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+<comments>
+  +++ cplex_ilp, release 1.5, 2019/7/20 +++
+  @(#)IBM ILOG Software: product Concert, library libconcert.a, version 20.1, date 2020-06-02, (C) Copyright IBM Corp. 1990, 2020 All Rights Reserved. US Government Users Restricted Rights - Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp. This product includes software developed by the University of California, Berkeley and its contributors.
+
+  CurrentTime	Wed 2023/02/22 21:25:21 GMT
+  00-Instance	north22.37_GKNV-total_1_vertical
+  runtime      	4.17628
+  TimedOut	0
+  ProvedOptimal	1
+  value      	119
+</comments>
+<graph edgedefault="directed" name="north22.37_GKNV-total_1_vertical" type="layered">
+<node id="0" layer="0" positionInLayer="7"/>
+<node id="1" layer="0" positionInLayer="4"/>
+<node id="2" layer="1" positionInLayer="10"/>
+<node id="3" layer="1" positionInLayer="5"/>
+<node id="4" layer="1" positionInLayer="9"/>
+<node id="5" layer="1" positionInLayer="8"/>
+<node id="6" layer="1" positionInLayer="6"/>
+<node id="7" layer="1" positionInLayer="7"/>
+<node id="8" layer="1" positionInLayer="4"/>
+<node id="9" layer="1" positionInLayer="3"/>
+<node id="10" layer="2" positionInLayer="10"/>
+<node id="11" layer="2" positionInLayer="9"/>
+<node id="12" layer="2" positionInLayer="8"/>
+<node id="13" layer="2" positionInLayer="5"/>
+<node id="14" layer="2" positionInLayer="2"/>
+<node id="15" layer="2" positionInLayer="4"/>
+<node id="16" layer="2" positionInLayer="7"/>
+<node id="17" layer="2" positionInLayer="6"/>
+<node id="18" layer="2" positionInLayer="3"/>
+<node id="19" layer="2" positionInLayer="1"/>
+<node id="20" layer="2" positionInLayer="0"/>
+<node id="21" layer="3" positionInLayer="5"/>
+<node id="22" layer="3" positionInLayer="1"/>
+<node id="23" layer="3" positionInLayer="4"/>
+<node id="24" layer="3" positionInLayer="0"/>
+<node id="25" layer="4" positionInLayer="4"/>
+<edge source="0" target="6"/>
+<edge source="0" target="5"/>
+<edge source="0" target="3"/>
+<edge source="0" target="4"/>
+<edge source="0" target="9"/>
+<edge source="0" target="2"/>
+<edge source="0" target="7"/>
+<edge source="1" target="8"/>
+<edge source="4" target="11"/>
+<edge source="9" target="19"/>
+<edge source="7" target="12"/>
+<edge source="5" target="11"/>
+<edge source="8" target="19"/>
+<edge source="8" target="12"/>
+<edge source="8" target="13"/>
+<edge source="8" target="16"/>
+<edge source="8" target="15"/>
+<edge source="8" target="17"/>
+<edge source="8" target="18"/>
+<edge source="8" target="14"/>
+<edge source="2" target="10"/>
+<edge source="11" target="21"/>
+<edge source="19" target="21"/>
+<edge source="19" target="24"/>
+<edge source="19" target="22"/>
+<edge source="20" target="24"/>
+<edge source="13" target="21"/>
+<edge source="21" target="25"/>
+<edge source="23" target="25"/>
+</graph>
+</graphml>

@@ -11,6 +11,7 @@ import edu.ncsu.csc.Galant.algorithm.Terminate;
 import edu.ncsu.csc.Galant.graph.datastructure.EdgeList;
 import edu.ncsu.csc.Galant.graph.datastructure.NodeList;
 import edu.ncsu.csc.Galant.graph.datastructure.NodeSet;
+import edu.ncsu.csc.Galant.logging.LogHelper;
 
 /**
  * Represents node entities as elements of a graph. Encapsulates attributes that
@@ -36,31 +37,12 @@ public abstract class Node extends GraphElement {
 	public int xCoordinate;
 	public int yCoordinate;
 	public EdgeList incidentEdges;
-	
 
 	/**
 	 * create a blank instance for use when copying state at start of algorithm
 	 * execution
 	 */
-	public Node(){
-	}
-
-	/**
-	 * When a node is created during parsing and id is not known.
-	 */
-	public Node(Graph graph){
-		super(graph);
-		incidentEdges = new EdgeList();
-	}
-
-	/**
-	 * @param id is the next available id as determined by the graph.
-	 * @todo not clear that this is used anywhere
-	 */
-	public Node(Graph graph, int id){
-		super(graph);
-		this.id = id;
-		incidentEdges = new EdgeList();
+	public Node() {
 	}
 
 	/**
@@ -68,14 +50,14 @@ public abstract class Node extends GraphElement {
 	 * available one as determined by the graph - the position of the node is known
 	 * to the algorithm, fixed unless the algorithm moves nodes
 	 */
-	public Node(Graph graph, int id, Integer x, Integer y){
+	public Node(Graph graph, int id, Integer x, Integer y) {
 		super(graph);
 		this.id = id;
 		incidentEdges = new EdgeList();
 		this.xCoordinate = x;
 		this.yCoordinate = y;
 		// set starting position based on the initial one
-		if ( GraphDispatch.getInstance().algorithmMovesNodes() ){
+		if ( GraphDispatch.getInstance().algorithmMovesNodes() ) {
 			GraphElementState startingState = latestState();
 			startingState.set("x", x);
 			startingState.set("y", y);
@@ -85,12 +67,14 @@ public abstract class Node extends GraphElement {
 	/**
 	 * This is called during parsing.
 	 *
-	 * @param L an AttributeList created by the GraphMLParser from attributes of the
-	 *          node as given in the input text
+	 * @param L
+	 *            an AttributeList created by the GraphMLParser from attributes of
+	 *            the
+	 *            node as given in the input text
 	 * @throw GalantException if there is a problem in the format of an id,
 	 *        x/y-coordinate, or, in case of layered graphs, layer information
 	 */
-	public Node(Graph graph, AttributeList L) throws GalantException{
+	public Node(Graph graph, AttributeList L) throws GalantException {
 		super(graph, L);
 		this.initializeAfterParsing(L);
 		incidentEdges = new EdgeList();
@@ -101,24 +85,24 @@ public abstract class Node extends GraphElement {
 	 * that the animation modifies a copy of the edit graph and will have no impact
 	 * on it.
 	 *
-	 * @param currentGraph the graph accessed by the animation - see Algorithm.java
+	 * @param currentGraph
+	 *            the graph accessed by the animation - see Algorithm.java
 	 */
 	public abstract Node copyNode(Graph currentGraph);
-	
+
 	// made by 2021 Galant Team
 	// this used to be in GraphPanel class
-	// Now we move it to Node class and LayeredGraphNode class. 
+	// Now we move it to Node class and LayeredGraphNode class.
 	public abstract Point getNodeCenter() throws GalantException;
-	
-	
+
 	/**
 	 * Setters and getters for node-specific information that does not change.
 	 */
-	public Integer getId(){
+	public Integer getId() {
 		return id;
 	}
 
-	public void setIncidentEdges(Collection<Edge> edges){
+	public void setIncidentEdges(Collection<Edge> edges) {
 		this.incidentEdges = new EdgeList(edges);
 	}
 
@@ -126,33 +110,33 @@ public abstract class Node extends GraphElement {
 	 * Setters and getters for node-specific information that may change during
 	 * algorithm execution.
 	 */
-	public Integer getX(){
+	public Integer getX() {
 		Integer x = super.getInteger("x");
-		if ( x == null ){
+		if ( x == null ) {
 			x = this.xCoordinate;
 		}
 		return x;
 	}
 
-	public Integer getY(){
+	public Integer getY() {
 		Integer y = super.getInteger("y");
-		if ( y == null ){
+		if ( y == null ) {
 			y = this.yCoordinate;
 		}
 		return y;
 	}
 
-	public Integer getX(int state){
+	public Integer getX(int state) {
 		Integer x = super.getInteger(state, "x");
-		if ( x == null ){
+		if ( x == null ) {
 			x = this.xCoordinate;
 		}
 		return x;
 	}
 
-	public Integer getY(int state){
+	public Integer getY(int state) {
 		Integer y = super.getInteger(state, "y");
-		if ( y == null ){
+		if ( y == null ) {
 			y = this.yCoordinate;
 		}
 		return y;
@@ -163,13 +147,13 @@ public abstract class Node extends GraphElement {
 	 *         during animation - defaults to fixed position if the algorithm did
 	 *         not move nodes
 	 */
-	public Point getPosition(){
+	public Point getPosition() {
 		Integer x = getX();
 		Integer y = getY();
 		Point p = null;
-		if ( x == null || y == null ){
+		if ( x == null || y == null ) {
 			p = getFixedPosition();
-		} else{
+		} else {
 			p = dispatch.ViewTransform(new Point(x, y));
 		}
 		return p;
@@ -179,55 +163,53 @@ public abstract class Node extends GraphElement {
 	 * @return the point that represents the current position of this node in the
 	 *         given display state
 	 */
-	public Point getPosition(int state){
+	public Point getPosition(int state) {
 		Integer x = getX(state);
 		Integer y = getY(state);
 		Point p = null;
-		if ( x == null || y == null ){
+		if ( x == null || y == null ) {
 			p = getFixedPosition();
-		}
-		else if ( dispatch.algorithmMovesNodes() ) {
+		} else if ( dispatch.algorithmMovesNodes() ) {
 			p = new Point(x, y);
-		}
-		else {
+		} else {
 			p = dispatch.ViewTransform(new Point(x, y));
 		}
 		return p;
 	}
 
-	public void setX(Integer x) throws Terminate{
+	public void setX(Integer x) throws Terminate {
 		super.set("x", x);
 	}
 
-	public void setY(Integer y) throws Terminate{
+	public void setY(Integer y) throws Terminate {
 		super.set("y", y);
 	}
 
-	public void setPosition(Integer x, Integer y) throws Terminate{
+	public void setPosition(Integer x, Integer y) throws Terminate {
 		setX(x);
 		setY(y);
 	}
 
-	public void setPosition(Point point) throws Terminate{
+	public void setPosition(Point point) throws Terminate {
 		setX(point.x);
 		setY(point.y);
 	}
-
 
 	/**
 	 * This method takes ID in a string format and processes it. It returns the ID
 	 * parsed as an integer or throws a GalantException for missing or duplicate ID.
 	 *
-	 * @param idAsString indicates the ID is string format.
+	 * @param idAsString
+	 *            indicates the ID is string format.
 	 * @return idAsInteger which is the ID parsed to an integer if there is no
 	 *         GalantException thrown
 	 */
-	public Integer getID(String idAsString) throws GalantException{
+	public Integer getIDFromString(String idAsString) throws GalantException {
 		Integer idAsInteger = null;
-		if ( idAsString != null ){
-			try{
+		if ( idAsString != null ) {
+			try {
 				idAsInteger = Integer.parseInt(idAsString);
-			} catch (NumberFormatException e){
+			} catch ( NumberFormatException e ) {
 				throw new GalantException("Bad id " + idAsString);
 			}
 		}
@@ -244,141 +226,77 @@ public abstract class Node extends GraphElement {
 	 *       handling integer attributes
 	 */
 	@Override
-	public void initializeAfterParsing(AttributeList L) throws GalantException{
-		Integer idAttribute = null;
-		String xString = null;
-		String yString = null;
-		for (int i = 0; i < L.attributes.size(); i++){
-			Attribute attributeOfNode = L.attributes.get(i);
-			if ( attributeOfNode.key.equals("id") ){
-				// String attributeValue = attributeOfNode.toString().split("=")[1];
-				String attributeValue = attributeOfNode.getStringValue();
-				idAttribute = getID(attributeValue);
-			} else if ( attributeOfNode.key.equals("x") ){
-				String attributeValue = attributeOfNode.getStringValue();
-				xString = attributeValue;
-			} else if ( attributeOfNode.key.equals("y") ){
-				String attributeValue = attributeOfNode.getStringValue();
-				yString = attributeValue;
-			}
-		} // end, for attribute in list
-
-		if ( idAttribute == null ){
+	public void initializeAfterParsing(AttributeList L) throws GalantException {
+		super.initializeAfterParsing(L);
+		LogHelper.enterMethod(getClass(), "initializeAfterParsing " + L);
+		String idString = L.getString("id");
+		if ( idString == null ) {
 			throw new GalantException("Missing id for node " + this);
-		} else if ( super.graph.nodeIdExists(idAttribute) ){
-			throw new GalantException("Duplicate id: " + idAttribute + " when processing node " + this);
 		}
-		id = idAttribute;
-		L.remove("id");
-		if ( super.graph.isLayered() ){
-			String layerString = L.getString("layer");
-			String positionString = L.getString("positionInLayer");
-			if ( layerString == null ){
-				throw new GalantException("Missing layer for" + " layered graph node " + this);
-			}
-			if ( positionString == null ){
-				throw new GalantException("Missing positionInLayer for" + " layered graph node " + this);
-			}
-			Integer layer = Integer.MIN_VALUE;
-			Integer positionInLayer = Integer.MIN_VALUE;
-			try{
-				layer = Integer.parseInt(layerString);
-			} catch (NumberFormatException e){
-				throw new GalantException("Bad layer " + layerString);
-			}
-			try{
-				positionInLayer = Integer.parseInt(positionString);
-			} catch (NumberFormatException e){
-				throw new GalantException("Bad positionInLayer " + positionString);
-			}
-			L.remove("layer");
-			L.remove("positionInLayer");
-			L.set("layer", layer);
-			L.set("positionInLayer", positionInLayer);
-		} // layered graph
-		else{ // not a layered graph
-			Integer x = Integer.MIN_VALUE;
-			Integer y = Integer.MIN_VALUE;
-			if ( xString == null || yString == null ){
-				Random r = new Random();
-				if ( xString == null ){
-					x = r.nextInt(GraphDispatch.getInstance().getWindowWidth());
-				}
-				if ( yString == null ){
-					y = r.nextInt(GraphDispatch.getInstance().getWindowHeight());
-				}
-			} else{
-				try{
-					x = Integer.parseInt(xString);
-				} catch (NumberFormatException e){
-					throw new GalantException("Bad x-coordinate " + xString);
-				}
-				try{
-					y = Integer.parseInt(yString);
-				} catch (NumberFormatException e){
-					throw new GalantException("Bad y-coordinate " + yString);
-				}
-			} // x and y coordinates specified
-			L.remove("x");
-			L.remove("y");
 
-			// establish fixed positions
-			xCoordinate = x;
-			yCoordinate = y;
-		} // not a layered graph
+		int idAttribute = getIDFromString(L.getString("id"));
+
+		if ( super.graph.nodeIdExists(idAttribute) ) {
+			throw new GalantException(
+					"Duplicate id: " + idAttribute + " when processing node " + this);
+		}
+
+		id = idAttribute;
+		// remove the string attribute; it now exists as a fixed attribute
+		L.remove("id");
 		String markedString = L.getString(MARKED);
-		if ( markedString != null ){
+		if ( markedString != null ) {
 			Boolean marked = Boolean.parseBoolean(markedString);
 			L.remove(MARKED);
-			if ( marked ){
+			if ( marked ) {
 				L.set(MARKED, marked);
 			}
 		}
-		super.initializeAfterParsing(L);
+		LogHelper.exitMethod(getClass(), "initializeAfterParsing " + this);
 	} // end, intializeAfterParsing
 
 	/**
 	 * ************** marking ******************
 	 */
-	public Boolean isVisited(){
+	public Boolean isVisited() {
 		return super.getBoolean(MARKED);
 	}
 
-	public Boolean isVisited(int state){
+	public Boolean isVisited(int state) {
 		return super.getBoolean(state, MARKED);
 	}
 
-	public boolean isMarked(){
+	public boolean isMarked() {
 		return isVisited();
 	}
 
-	public Boolean isMarked(int state){
+	public Boolean isMarked(int state) {
 		return isVisited(state);
 	}
 
-	public void setVisited(Boolean visited) throws Terminate{
+	public void setVisited(Boolean visited) throws Terminate {
 		super.set(MARKED, visited);
 	}
 
-	public void mark() throws Terminate{
+	public void mark() throws Terminate {
 		setVisited(true);
 	}
 
-	public void unmark() throws Terminate{
+	public void unmark() throws Terminate {
 		clear(MARKED);
 	}
 
 	/**
 	 * Some algorithms use this alternate "spelling"
 	 */
-	public void unMark() throws Terminate{
+	public void unMark() throws Terminate {
 		clear(MARKED);
 	}
 
 	/**
 	 * ******************** incident edges *********************
 	 */
-	public void addEdge(Edge edge){
+	public void addEdge(Edge edge) {
 		incidentEdges.add(edge);
 	}
 
@@ -386,11 +304,11 @@ public abstract class Node extends GraphElement {
 	 * @return the node's outgoing edges, based on source and target specs; if the
 	 *         graph is undirected, all incident edges are returned
 	 */
-	public EdgeList getOutgoingEdges(){
+	public EdgeList getOutgoingEdges() {
 		EdgeList currentEdges = new EdgeList();
-		for (Edge e : incidentEdges){
-			if ( e.inScope() ){
-				if ( this.equals(e.getSourceNode()) || ! graph.isDirected() ){
+		for ( Edge e : incidentEdges ) {
+			if ( e.inScope() ) {
+				if ( this.equals(e.getSourceNode()) || ! graph.isDirected() ) {
 					currentEdges.add(e);
 				}
 			}
@@ -402,11 +320,11 @@ public abstract class Node extends GraphElement {
 	 * @return the node's incoming edges, based on source and target specs; if the
 	 *         graph is undirected, all edges are incoming
 	 */
-	public EdgeList getIncomingEdges(){
+	public EdgeList getIncomingEdges() {
 		EdgeList currentEdges = new EdgeList();
-		for (Edge e : incidentEdges){
-			if ( e.inScope() ){
-				if ( this.equals(e.getTargetNode()) || ! graph.isDirected() ){
+		for ( Edge e : incidentEdges ) {
+			if ( e.inScope() ) {
+				if ( this.equals(e.getTargetNode()) || ! graph.isDirected() ) {
 					currentEdges.add(e);
 				}
 			}
@@ -418,11 +336,11 @@ public abstract class Node extends GraphElement {
 	 * @return a list of edges incident on this node regardless of whether they are
 	 *         incoming or outgoing.
 	 */
-	public EdgeList getIncidentEdges(){
+	public EdgeList getIncidentEdges() {
 		EdgeList currentEdges = new EdgeList();
 
-		for (Edge e : incidentEdges){
-			if ( e.inScope() ){
+		for ( Edge e : incidentEdges ) {
+			if ( e.inScope() ) {
 				currentEdges.add(e);
 			}
 		}
@@ -434,17 +352,17 @@ public abstract class Node extends GraphElement {
 	 *         a reference (for now), but is only called in one place - see
 	 *         deleteNode() in Graph.java
 	 */
-	public EdgeList getEdges(){
+	public EdgeList getEdges() {
 		return incidentEdges;
 	}
 
 	/**
 	 * @return the nodes adjacent to this node (as a templated list)
 	 */
-	public NodeList getAdjacentNodes(){
+	public NodeList getAdjacentNodes() {
 		EdgeList edges = getIncidentEdges();
 		NodeList nodes = new NodeList();
-		for (Edge e : edges){
+		for ( Edge e : edges ) {
 			nodes.add(travel(e));
 		}
 		return nodes;
@@ -453,12 +371,12 @@ public abstract class Node extends GraphElement {
 	/**
 	 * @return the visible neighbors of this node (as a NodeList)
 	 */
-	public NodeList visibleNeighbors(){
+	public NodeList visibleNeighbors() {
 		NodeList neighbors = new NodeList();
-		for (Edge e : incidentEdges){
-			if ( e.inScope() && ! e.isHidden() ){
+		for ( Edge e : incidentEdges ) {
+			if ( e.inScope() && ! e.isHidden() ) {
 				Node neighbor = travel(e);
-				if ( neighbor.inScope() && ! neighbor.isHidden() ){
+				if ( neighbor.inScope() && ! neighbor.isHidden() ) {
 					neighbors.add(neighbor);
 				}
 			}
@@ -469,10 +387,10 @@ public abstract class Node extends GraphElement {
 	/**
 	 * @return the visible incident edges of this node
 	 */
-	public EdgeList visibleEdges(){
+	public EdgeList visibleEdges() {
 		EdgeList visibleEdges = new EdgeList();
-		for (Edge e : incidentEdges){
-			if ( e.inScope() && ! e.isHidden() ){
+		for ( Edge e : incidentEdges ) {
+			if ( e.inScope() && ! e.isHidden() ) {
 				visibleEdges.add(e);
 			}
 		}
@@ -482,11 +400,11 @@ public abstract class Node extends GraphElement {
 	/**
 	 * @return the visible incoming edges of this node
 	 */
-	public EdgeList visibleIncomingEdges(){
+	public EdgeList visibleIncomingEdges() {
 		EdgeList visibleEdges = new EdgeList();
-		for (Edge e : incidentEdges){
-			if ( e.inScope() && ! e.isDeleted() && ! e.isHidden() ){
-				if ( this.equals(e.getTargetNode()) || ! graph.isDirected() ){
+		for ( Edge e : incidentEdges ) {
+			if ( e.inScope() && ! e.isDeleted() && ! e.isHidden() ) {
+				if ( this.equals(e.getTargetNode()) || ! graph.isDirected() ) {
 					visibleEdges.add(e);
 				}
 			}
@@ -497,11 +415,11 @@ public abstract class Node extends GraphElement {
 	/**
 	 * @return the visible outgoing edges of this node
 	 */
-	public EdgeList visibleOutgoingEdges(){
+	public EdgeList visibleOutgoingEdges() {
 		EdgeList visibleEdges = new EdgeList();
-		for (Edge e : incidentEdges){
-			if ( e.inScope() && ! e.isDeleted() && ! e.isHidden() ){
-				if ( this.equals(e.getSourceNode()) || ! graph.isDirected() ){
+		for ( Edge e : incidentEdges ) {
+			if ( e.inScope() && ! e.isDeleted() && ! e.isHidden() ) {
+				if ( this.equals(e.getSourceNode()) || ! graph.isDirected() ) {
 					visibleEdges.add(e);
 				}
 			}
@@ -512,15 +430,15 @@ public abstract class Node extends GraphElement {
 	/**
 	 * The following methods use the edge list getters to return degrees
 	 */
-	public int getOutdegree(){
+	public int getOutdegree() {
 		return getOutgoingEdges().size();
 	}
 
-	public int getIndegree(){
+	public int getIndegree() {
 		return getIncomingEdges().size();
 	}
 
-	public int getDegree(){
+	public int getDegree() {
 		return getIncidentEdges().size();
 	}
 
@@ -549,24 +467,24 @@ public abstract class Node extends GraphElement {
 	 * Gets a list of Edges incident to this node whose visited flag is set to
 	 * false.
 	 */
-	public EdgeList getUnvisitedPaths(){
+	public EdgeList getUnvisitedPaths() {
 		EdgeList unvisited = new EdgeList();
-		for (Edge e : incidentEdges){
-			if ( ! e.inScope() || e.isDeleted() ){
+		for ( Edge e : incidentEdges ) {
+			if ( ! e.inScope() || e.isDeleted() ) {
 				continue;
 			}
 			Node source = e.getSourceNode();
 			Node target = e.getTargetNode();
 			Node adjacent;
-			if ( source.getId() == this.getId() ){
+			if ( source.getId() == this.getId() ) {
 				adjacent = target;
-			} else{
-				if ( graph.isDirected() ){
+			} else {
+				if ( graph.isDirected() ) {
 					continue;
 				}
 				adjacent = source;
 			}
-			if ( ! adjacent.isVisited() ){
+			if ( ! adjacent.isVisited() ) {
 				unvisited.add(e);
 			}
 		}
@@ -576,48 +494,48 @@ public abstract class Node extends GraphElement {
 	/**
 	 * Gets a list of Edges incident to this node whose visited flag is set to true.
 	 */
-	public EdgeList getVisitedPaths(){
+	public EdgeList getVisitedPaths() {
 		EdgeList visited = new EdgeList();
-		for (Edge e : incidentEdges){
-			if ( ! e.inScope() || e.isDeleted() ){
+		for ( Edge e : incidentEdges ) {
+			if ( ! e.inScope() || e.isDeleted() ) {
 				continue;
 			}
 			Node source = e.getSourceNode();
 			Node target = e.getTargetNode();
 			Node adjacent;
-			if ( source.getId() == this.getId() ){
+			if ( source.getId() == this.getId() ) {
 				adjacent = target;
-			} else{
-				if ( graph.isDirected() ){
+			} else {
+				if ( graph.isDirected() ) {
 					continue;
 				}
 				adjacent = source;
 			}
-			if ( adjacent.isVisited() ){
+			if ( adjacent.isVisited() ) {
 				visited.add(e);
 			}
 		}
 		return visited;
 	}
 
-	public NodeList getUnvisitedAdjacentNodes(){
+	public NodeList getUnvisitedAdjacentNodes() {
 		NodeList nodes = new NodeList();
-		for (Edge e : incidentEdges){
-			if ( ! e.inScope() || e.isDeleted() ){
+		for ( Edge e : incidentEdges ) {
+			if ( ! e.inScope() || e.isDeleted() ) {
 				continue;
 			}
 			Node source = e.getSourceNode();
 			Node target = e.getTargetNode();
 			Node adjacent;
-			if ( source.getId() == this.getId() ){
+			if ( source.getId() == this.getId() ) {
 				adjacent = target;
-			} else{
-				if ( graph.isDirected() ){
+			} else {
+				if ( graph.isDirected() ) {
 					continue;
 				}
 				adjacent = source;
 			}
-			if ( ! adjacent.isVisited() ){
+			if ( ! adjacent.isVisited() ) {
 				nodes.add(adjacent);
 			}
 		}
@@ -634,10 +552,10 @@ public abstract class Node extends GraphElement {
 	 * No issue on a self loop: will find that the first Node is this and return the
 	 * other
 	 */
-	public Node travel(Edge e){
-		if ( e.getSourceNode().equals(this) ){
+	public Node travel(Edge e) {
+		if ( e.getSourceNode().equals(this) ) {
 			return e.getTargetNode();
-		} else if ( e.getTargetNode().equals(this) ){
+		} else if ( e.getTargetNode().equals(this) ) {
 			return e.getSourceNode();
 		}
 		return null;
@@ -658,33 +576,35 @@ public abstract class Node extends GraphElement {
 	 * execution *unless* the algorithm wants to make them. In the latter case, the
 	 * user is prevented from changing position.
 	 */
-	public Integer getFixedX(){
+	public Integer getFixedX() {
 		return xCoordinate;
 	}
 
-	public Integer getFixedY(){
+	public Integer getFixedY() {
 		return yCoordinate;
 	}
 
-	//edited by 2021 Galant Team
-	//Although the xCoordinate and yCoordinate stores fix position in non-layered case,
-	//once it goes through the transform function, it will become the screen position.
-	public Point getFixedPosition(){
+	// edited by 2021 Galant Team
+	// Although the xCoordinate and yCoordinate stores fix position in non-layered
+	// case,
+	// once it goes through the transform function, it will become the screen
+	// position.
+	public Point getFixedPosition() {
 		// EDITOR: reposition nodes with window resize
 		return dispatch.ViewTransform(new Point(getFixedX(), getFixedY()));
 	}
 
-	public void setFixedPosition(Point position){
+	public void setFixedPosition(Point position) {
 		setFixedPosition(position.x, position.y);
 	}
 
-	public void setFixedPosition(int x, int y){
+	public void setFixedPosition(int x, int y) {
 		xCoordinate = x;
 		yCoordinate = y;
 		this.graph.setUserNodeMove();
 	}
 
-	public static Point genRandomPosition(){
+	public static Point genRandomPosition() {
 		Random r = new Random();
 		int x = r.nextInt(GraphDispatch.getInstance().getWindowWidth());
 		int y = r.nextInt(GraphDispatch.getInstance().getWindowHeight());
@@ -694,7 +614,7 @@ public abstract class Node extends GraphElement {
 	/**
 	 * natural syntax for set containment
 	 */
-	public Boolean in(NodeSet S){
+	public Boolean in(NodeSet S) {
 		return S.contains(this);
 	}
 
@@ -703,11 +623,11 @@ public abstract class Node extends GraphElement {
 	 * refreshed during editing. Also when saved to a file.
 	 */
 	@Override
-	public String xmlString(){
+	public String xmlString() {
 		String s = "<node" + " id=\"" + this.getId() + "\"";
 		// made by 2021 Galant Team
 		// now only add x/y attribute for non-layered graph
-		if ( ! GraphDispatch.getInstance().getWorkingGraph().isLayered() ){
+		if ( ! (GraphDispatch.getInstance().getWorkingGraph() instanceof LayeredGraph) ) {
 			s += " x=\"" + this.getFixedX() + "\"";
 			s += " y=\"" + this.getFixedY() + "\" ";
 		}
@@ -720,16 +640,16 @@ public abstract class Node extends GraphElement {
 	 * This version is called when the current state of the animation is exported.
 	 */
 	@Override
-	public String xmlString(int state){
-		if ( ! inScope(state) ){
+	public String xmlString(int state) {
+		if ( ! inScope(state) ) {
 			return "";
 		}
 		String s = "<node" + " id=\"" + this.getId() + "\"";
 		// if algorithm doesn't move nodes, only the fixed position is set
-		
+
 		// made by 2021 Galant Team
 		// now only add x/y attribute for non-layered graph
-		if ( ! GraphDispatch.getInstance().getWorkingGraph().isLayered() ){
+		if ( ! (GraphDispatch.getInstance().getWorkingGraph() instanceof LayeredGraph) ) {
 			s += " x=\"" + this.getX(state) + "\"";
 			s += " y=\"" + this.getY(state) + "\" ";
 		}
@@ -742,10 +662,8 @@ public abstract class Node extends GraphElement {
 	 * For debugging only
 	 */
 	@Override
-	public String toString(){
-		String s = "[node " + this.getId() + " (";
-		s += this.xCoordinate + ",";
-		s += this.yCoordinate + ") ";
+	public String toString() {
+		String s = "[node " + this.getId() + " ";
 		s += super.attributesWithoutId();
 		s += "]";
 		return s;

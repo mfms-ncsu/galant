@@ -16,7 +16,7 @@ class LayerInformation {
    * Stores the number of nodes on each layer
    */
   ArrayList<Integer> layerSize;
-    
+
   /**
    * Stores the maximum position of a node on each layer
    */
@@ -44,18 +44,16 @@ class LayerInformation {
   /**
    * Uses layer and position in layer information about node v to update
    * information about number of layers, layer size and max position
-   * INVARIANT: layerSize.size() == maxPositionInLayer.size()
+   * 
+   * @invariant layerSize.size() == maxPositionInLayer.size()
    */
-  protected void addNode(Node v) {
+  protected void addNode(LayeredGraphNode v) {
     LogHelper.disable();
     LogHelper.enterMethod(getClass(),
-                          "addNode: node = " + v
-                          + ", numberOfLayers = " + numberOfLayers);
-    //edited by 2021 Galant Team
-    //add a cast to tell program this is really a LayeredGraphNode
-	LayeredGraphNode temp = (LayeredGraphNode) v;
-    int layer = temp.getLayer();
-    int position = temp.getPositionInLayer();
+        "addNode: node = " + v
+            + ", numberOfLayers = " + numberOfLayers);
+    int layer = v.getLayer();
+    int position = v.getPositionInLayer();
     maxPosition = (position > maxPosition) ? position : maxPosition;
     if ( layer >= numberOfLayers ) {
       numberOfLayers = layer + 1;
@@ -67,8 +65,7 @@ class LayerInformation {
       }
       layerSize.set(layer, 1);
       maxPositionInLayer.set(layer, position);
-    }
-    else {
+    } else {
       int sizeOfLayer = layerSize.get(layer);
       layerSize.set(layer, sizeOfLayer + 1);
       int currentMaxPosition = maxPositionInLayer.get(layer);
@@ -77,22 +74,23 @@ class LayerInformation {
       }
     }
     LogHelper.exitMethod(getClass(),
-                         "addNode: numberOfLayers = " + numberOfLayers
-                         + ", sizeOfLayer = " + layerSize.get(layer)
-                         + ", maxPositionInLayer = " + maxPositionInLayer.get(layer));
+        "addNode: numberOfLayers = " + numberOfLayers
+            + ", sizeOfLayer = " + layerSize.get(layer)
+            + ", maxPositionInLayer = " + maxPositionInLayer.get(layer));
     LogHelper.restoreState();
   }
 
   /**
    * sets the vertical flag properly now that all layers are filled in
+   * it should be true if positions are not contiguous, which is the case
+   * if there is a position that is greater than the largest possible index
    */
   void initializeAfterParsing() {
     vertical = false;
     for ( int layer = 0; layer < numberOfLayers; layer++ ) {
-      if ( maxPositionInLayer.get(layer)
-           > layerSize.get(layer) - 1 ) vertical = true;
+      if ( maxPositionInLayer.get(layer) > layerSize.get(layer) - 1 ) {
+        vertical = true;
+      }
     }
   }
 }
-
-//  [Last modified: 2017 04 18 at 20:07:28 GMT]

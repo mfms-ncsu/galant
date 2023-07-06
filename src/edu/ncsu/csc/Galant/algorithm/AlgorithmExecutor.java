@@ -13,6 +13,7 @@
 package edu.ncsu.csc.Galant.algorithm;
 
 import edu.ncsu.csc.Galant.GraphDispatch;
+import edu.ncsu.csc.Galant.graph.component.LayeredGraph;
 import edu.ncsu.csc.Galant.graph.component.LayeredGraphNode;
 import edu.ncsu.csc.Galant.graph.component.Node;
 import edu.ncsu.csc.Galant.gui.window.GraphWindow;
@@ -61,7 +62,7 @@ public class AlgorithmExecutor {
 	 * Makes a note of the algorithm and its synchronizer and creates a thread to
 	 * run the algorithm
 	 */
-	public AlgorithmExecutor(Algorithm algorithm, AlgorithmSynchronizer synchronizer){
+	public AlgorithmExecutor(Algorithm algorithm, AlgorithmSynchronizer synchronizer) {
 		this.algorithm = algorithm;
 		this.synchronizer = synchronizer;
 		this.algorithmThread = new Thread(algorithm);
@@ -91,31 +92,39 @@ public class AlgorithmExecutor {
 		LogHelper.enterMethod(getClass(), "stopAlgorithm");
 		GraphDispatch dispatch = GraphDispatch.getInstance();
 		dispatch.stopAlgorithm();
-		synchronized (synchronizer){
+		synchronized ( synchronizer ) {
 			synchronizer.stop();
 			synchronizer.notify();
 		}
-		LogHelper.logDebug("algorithm thread notified" + ", infiniteLoop = " + infiniteLoop + ", exceptionThrown = "
-				+ synchronizer.exceptionThrown() + ", activeQuery = " + dispatch.getActiveQuery());
-		try{
-			if ( ! infiniteLoop && ! synchronizer.exceptionThrown() && dispatch.getActiveQuery() == null ){
+		LogHelper.logDebug("algorithm thread notified" + ", infiniteLoop = "
+				+ infiniteLoop + ", exceptionThrown = "
+				+ synchronizer.exceptionThrown() + ", activeQuery = "
+				+ dispatch.getActiveQuery());
+		try {
+			if ( ! infiniteLoop && ! synchronizer.exceptionThrown()
+					&& dispatch.getActiveQuery() == null ) {
 				LogHelper.logDebug("stopAlgorithm(): about to join algorithm thread");
 				algorithmThread.join();
 				LogHelper.logDebug("stopAlgorithm(): joined algorithm thread");
 			}
-			LogHelper.logDebug("stopAlgorithm(): beyond (conditional) joining of algorithm thread");
-		} catch (InterruptedException e){
+			LogHelper.logDebug(
+					"stopAlgorithm(): beyond (conditional) joining of algorithm thread");
+		} catch ( InterruptedException e ) {
 			System.out.println("Synchronization problem in stopAlgorithm()");
 		}
 		if ( dispatch.getActiveQuery() != null ) {
 			dispatch.getActiveQuery().dispose();
 		}
 		algorithmState = displayState = 0;
-		// made by 2021 Galant Team
-		if(dispatch.getWorkingGraph().isLayered()) {
-			for (Node n : dispatch.getWorkingGraph().getNodes()){
-				LayeredGraphNode temp = (LayeredGraphNode) n;
-				temp.setpos = false;
+		/**
+		 * made by 2021 Galant Team
+		 * 
+		 * @todo not clear why this is needed
+		 */
+		if ( dispatch.getWorkingGraph() instanceof LayeredGraph ) {
+			for ( Node node : dispatch.getWorkingGraph().getNodes() ) {
+				LayeredGraphNode layeredNode = (LayeredGraphNode) node;
+				layeredNode.setpos = false;
 			}
 		}
 		LogHelper.exitMethod(getClass(), "stopAlgorithm");
@@ -126,7 +135,7 @@ public class AlgorithmExecutor {
 	 * Needed so that graph elements can record their modifications based on current
 	 * algorithm state.
 	 */
-	public int getAlgorithmState(){
+	public int getAlgorithmState() {
 		return algorithmState;
 	}
 
@@ -137,8 +146,9 @@ public class AlgorithmExecutor {
 		return displayState;
 	}
 
-	private void showStates(){
-		String message = "display state = " + this.displayState + "  algorithm state = " + this.algorithmState;
+	private void showStates() {
+		String message = "display state = " + this.displayState + "  algorithm state = "
+				+ this.algorithmState;
 		GraphDispatch.getInstance().getGraphWindow().updateStatusLabel(message);
 	}
 
@@ -149,48 +159,51 @@ public class AlgorithmExecutor {
 	 */
 	public synchronized void incrementDisplayState() {
 		LogHelper.disable();
-		LogHelper.logDebug("-> incrementDisplayState display = " + displayState + " algorithm = " + algorithmState);
+		LogHelper.logDebug("-> incrementDisplayState display = " + displayState
+				+ " algorithm = " + algorithmState);
 		// initialization, but should end up being replaced by
 		// something before being displayed
 		String message = "default (should not happen)";
 		GraphDispatch dispatch = GraphDispatch.getInstance();
 		if ( displayState == algorithmState
-			 && ! synchronizer.algorithmFinished()
-			 && ! synchronizer.stopped()
-			 && ! synchronizer.exceptionThrown()
-			 && dispatch.getActiveQuery() == null ) {
+				&& ! synchronizer.algorithmFinished()
+				&& ! synchronizer.stopped()
+				&& ! synchronizer.exceptionThrown()
+				&& dispatch.getActiveQuery() == null ) {
 			displayState++;
 			algorithmState++;
 			this.showStates();
 
 			// wake up the algorithmThread, have it do something
-			synchronized (synchronizer) {
+			synchronized ( synchronizer ) {
 				synchronizer.notify();
 			}
 			int timeInBusyWait = 0;
-			do{
-				try{
+			do {
+				try {
 					Thread.sleep(WAIT_TIME);
 					timeInBusyWait += WAIT_TIME;
-					if ( timeInBusyWait % PRINT_INTERVAL == 0 ){
-						message = "waiting " + (timeInBusyWait / (double) 1000) + " seconds of "
+					if ( timeInBusyWait % PRINT_INTERVAL == 0 ) {
+						message = "waiting " + (timeInBusyWait / (double) 1000)
+								+ " seconds of "
 								+ BUSY_WAIT_TIME_LIMIT / ((double) 1000);
 						GraphWindow window = dispatch.getGraphWindow();
 						/**
-						 * @todo despite the synchronization, the status label fails to get updated here
+						 * @todo despite the synchronization, the status label fails to
+						 *       get updated here
 						 */
-						synchronized (window){
+						synchronized ( window ) {
 							window.updateStatusLabel(message);
 						}
 						System.out.println(message);
 					}
-				} catch (InterruptedException e){
+				} catch ( InterruptedException e ) {
 					message = "Terminated because of exception";
 					System.out.printf(message);
 					dispatch.getGraphWindow().updateStatusLabel(message);
 					e.printStackTrace(System.out);
 				}
-			} while( ! synchronizer.stepFinished() && ! synchronizer.stopped()
+			} while ( ! synchronizer.stepFinished() && ! synchronizer.stopped()
 			/**
 			 * there two types of exception thrown here: synchronizer when an exception is
 			 * displayed in a popup this whenever a GalantException is thrown during
@@ -199,17 +212,17 @@ public class AlgorithmExecutor {
 			 */
 					&& ! synchronizer.exceptionThrown() && ! this.exceptionThrown
 					&& timeInBusyWait < BUSY_WAIT_TIME_LIMIT );
-			if ( timeInBusyWait >= BUSY_WAIT_TIME_LIMIT ){
+			if ( timeInBusyWait >= BUSY_WAIT_TIME_LIMIT ) {
 				message = "Busy wait time limit exceeded";
 				System.out.println(message);
 				dispatch.getGraphWindow().updateStatusLabel(message);
 				infiniteLoop = true;
 			}
-		} else if ( displayState < algorithmState ){
+		} else if ( displayState < algorithmState ) {
 			displayState++;
 			this.showStates();
 		}
-		if ( infiniteLoop || synchronizer.exceptionThrown() ){
+		if ( infiniteLoop || synchronizer.exceptionThrown() ) {
 			// need to let window know that algorithm was terminated due
 			// to unusual circumstances so that appropriate message will
 			// appear on the status bar
@@ -219,14 +232,15 @@ public class AlgorithmExecutor {
 		// made by 2021 Galant Team
 		// if the algorithm is moving nodes, the nodes shall bounce back after
 		// forward, backward, scaling, or cancel algorithm.
-		if(dispatch.getWorkingGraph().isLayered()) {
-			for (Node n : dispatch.getWorkingGraph().getNodes()) {
-				LayeredGraphNode temp = (LayeredGraphNode) n;
-				temp.setpos = false;
+		if ( dispatch.getWorkingGraph() instanceof LayeredGraph ) {
+			for ( Node node : dispatch.getWorkingGraph().getNodes() ) {
+				LayeredGraphNode layeredNode = (LayeredGraphNode) node;
+				layeredNode.setpos = false;
 			}
 		}
 
-		LogHelper.logDebug("<- incrementDisplayState display = " + displayState + " algorithm = " + algorithmState);
+		LogHelper.logDebug("<- incrementDisplayState display = " + displayState
+				+ " algorithm = " + algorithmState);
 		LogHelper.restoreState();
 
 	}
@@ -236,17 +250,17 @@ public class AlgorithmExecutor {
 	 */
 	public void decrementDisplayState() {
 		GraphDispatch dispatch = GraphDispatch.getInstance();
-		if ( displayState > 0 ){
+		if ( displayState > 0 ) {
 			displayState--;
 			this.showStates();
 		}
 		// made by 2021 Galant Team
 		// if the algorithm is moving nodes, the nodes shall bounce back after
 		// forward, backward, scaling, or cancel algorithm.
-		if(dispatch.getWorkingGraph().isLayered()) {
-			for (Node n : dispatch.getWorkingGraph().getNodes()){
-				LayeredGraphNode temp = (LayeredGraphNode) n;
-				temp.setpos = false;
+		if ( dispatch.getWorkingGraph() instanceof LayeredGraph ) {
+			for ( Node node : dispatch.getWorkingGraph().getNodes() ) {
+				LayeredGraphNode layeredNode = (LayeredGraphNode) node;
+				layeredNode.setpos = false;
 			}
 		}
 	}
@@ -254,7 +268,7 @@ public class AlgorithmExecutor {
 	/**
 	 * True if it's possible to step forward
 	 */
-	public boolean hasNextState(){
+	public boolean hasNextState() {
 		if ( algorithmState > displayState ) {
 			return true;
 		}
@@ -267,12 +281,13 @@ public class AlgorithmExecutor {
 	/**
 	 * true if it's possible to step back
 	 */
-	public boolean hasPreviousState(){
+	public boolean hasPreviousState() {
 		return (displayState > 1);
 	}
 
-	public void printStates(){
-		System.out.printf("displayState = %d, algorithmState = %d\n", displayState, algorithmState);
+	public void printStates() {
+		System.out.printf("displayState = %d, algorithmState = %d\n", displayState,
+				algorithmState);
 	}
 }
 

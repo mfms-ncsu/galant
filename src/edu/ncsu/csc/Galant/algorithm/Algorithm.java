@@ -64,8 +64,10 @@ public abstract class Algorithm implements Runnable {
    */
   public edu.ncsu.csc.Galant.graph.component.LayeredGraph layeredGraph;
 
-  /** The dispatch instance used to communicate among the algorithm, the
-   * graph and the display */
+  /**
+   * The dispatch instance used to communicate among the algorithm, the
+   * graph and the display
+   */
   public GraphDispatch dispatch;
 
   /**
@@ -81,7 +83,7 @@ public abstract class Algorithm implements Runnable {
    * and endMultiStep()
    */
   public boolean internalLock = false;
-    
+
   /**
    * Numerical constants
    */
@@ -95,32 +97,33 @@ public abstract class Algorithm implements Runnable {
    * Color constants: included for convenience since Galant represents
    * colors as hexidecimal strings.
    */
-  public static final String RED       = "#ff0000";
-  public static final String GREEN     = "#00ff00";
-  public static final String BLUE      = "#0000ff";
-  public static final String YELLOW    = "#fce700";
-  public static final String MAGENTA   = "#ff00ff";
-  public static final String CYAN      = "#00ffff";
-  public static final String TEAL      = "#009999";
-  public static final String VIOLET    = "#9900cc";
-  public static final String ORANGE    = "#ff8000";
-  public static final String MOSS      = "#99ff00";
-  public static final String BROWN     = "#AA7755";
-  public static final String GRAY      = "#808080";
-  public static final String BLACK     = "#000000";
-  public static final String WHITE     = "#ffffff";
+  public static final String RED = "#ff0000";
+  public static final String GREEN = "#00ff00";
+  public static final String BLUE = "#0000ff";
+  public static final String YELLOW = "#fce700";
+  public static final String MAGENTA = "#ff00ff";
+  public static final String CYAN = "#00ffff";
+  public static final String TEAL = "#009999";
+  public static final String VIOLET = "#9900cc";
+  public static final String ORANGE = "#ff8000";
+  public static final String MOSS = "#99ff00";
+  public static final String BROWN = "#AA7755";
+  public static final String GRAY = "#808080";
+  public static final String BLACK = "#000000";
+  public static final String WHITE = "#ffffff";
 
   /**
-   * @param graph the Graph object on which this algorithm will run; used
-   * when algorithm is started up in GAlgorithmEditorPanel
+   * @param graph
+   *          the Graph object on which this algorithm will run; used
+   *          when algorithm is started up in GAlgorithmEditorPanel
    */
   public void setGraph(Graph graph) {
     this.graph = graph;
-    if ( graph instanceof LayeredGraph )
-      this.layeredGraph = (LayeredGraph) graph;
   }
 
-  public Graph getGraph() { return this.graph; }
+  public Graph getGraph() {
+    return this.graph;
+  }
 
   /**
    * throws an exception if the element is null or not in the current
@@ -135,14 +138,25 @@ public abstract class Algorithm implements Runnable {
   /**
    * procedural syntax for methods common to all collections
    */
-  public Integer size(Collection C) { return C.size(); }
-  public Boolean empty(Collection C) { return C.isEmpty(); }
+  public Integer size(Collection C) {
+    return C.size();
+  }
+
+  public Boolean empty(Collection C) {
+    return C.isEmpty();
+  }
 
   /**
    * procedural versions of list methods
    */
-  public void add(Node v, NodeList L) { L.add(v); }
-  public void push(Node v, NodeList L) { L.add(0, v); }
+  public void add(Node v, NodeList L) {
+    L.add(v);
+  }
+
+  public void push(Node v, NodeList L) {
+    L.add(0, v);
+  }
+
   public Node pop(NodeList L) throws GalantException {
     if ( L == null )
       throw new GalantException("Uninitialized list when calling pop() -- use 'new'");
@@ -150,7 +164,11 @@ public abstract class Algorithm implements Runnable {
       throw new GalantException("Empty list when calling pop()");
     return L.remove(0);
   }
-  public void remove(Node v, NodeList L) { L.remove(v); }
+
+  public void remove(Node v, NodeList L) {
+    L.remove(v);
+  }
+
   public Node first(NodeList L) throws GalantException {
     if ( L == null )
       throw new GalantException("Uninitialized list when calling first() -- use 'new'");
@@ -158,6 +176,7 @@ public abstract class Algorithm implements Runnable {
       throw new GalantException("Empty list when calling first()");
     return L.get(0);
   }
+
   public Node top(NodeList L) throws GalantException {
     if ( L == null )
       throw new GalantException("Uninitialized list when calling top() -- use 'new'");
@@ -165,9 +184,16 @@ public abstract class Algorithm implements Runnable {
       throw new GalantException("Empty list when calling top()");
     return L.get(0);
   }
+
   // edge list/stack
-  public void add(Edge e, EdgeList L) { L.add(e); }
-  public void push(Edge e, EdgeList L) { L.add(0, e); }
+  public void add(Edge e, EdgeList L) {
+    L.add(e);
+  }
+
+  public void push(Edge e, EdgeList L) {
+    L.add(0, e);
+  }
+
   public Edge pop(EdgeList L) throws GalantException {
     if ( L == null )
       throw new GalantException("Uninitialized list when calling pop() -- use 'new'");
@@ -175,14 +201,19 @@ public abstract class Algorithm implements Runnable {
       throw new GalantException("Empty list when calling pop()");
     return L.remove(0);
   }
-  public void remove(Edge e, EdgeList L) { L.remove(e); }
-  public Edge first(EdgeList L) throws GalantException { 
+
+  public void remove(Edge e, EdgeList L) {
+    L.remove(e);
+  }
+
+  public Edge first(EdgeList L) throws GalantException {
     if ( L == null )
       throw new GalantException("Uninitialized list when calling first() -- use 'new'");
     if ( L.isEmpty() )
       throw new GalantException("Empty list when calling first()");
     return L.get(0);
   }
+
   public Edge top(EdgeList L) throws GalantException {
     if ( L == null )
       throw new GalantException("Uninitialized list when calling top() -- use 'new'");
@@ -194,103 +225,153 @@ public abstract class Algorithm implements Runnable {
   /**
    * procedural versions of set methods
    */
-  public void add(Edge edge, EdgeSet S) { S.add(edge); }
-  public void remove(Edge edge, EdgeSet S) { S.remove(edge); }
+  public void add(Edge edge, EdgeSet S) {
+    S.add(edge);
+  }
+
+  public void remove(Edge edge, EdgeSet S) {
+    S.remove(edge);
+  }
+
   /**
    * @see graph.component.Edge for natural syntax edge.in(S)
    */
   public EdgeSet union(EdgeSet S1, EdgeSet S2) {
-    if ( S1 == null ) return S2;
-    if ( S2 == null ) return S1;
+    if ( S1 == null )
+      return S2;
+    if ( S2 == null )
+      return S1;
     return S1.union(S2);
   }
+
   public EdgeSet intersection(EdgeSet S1, EdgeSet S2) {
-    if ( S1 == null || S2 == null ) return new EdgeSet();
+    if ( S1 == null || S2 == null )
+      return new EdgeSet();
     return S1.intersection(S2);
   }
+
   public EdgeSet difference(EdgeSet S1, EdgeSet S2) {
-    if ( S1 == null ) return new EdgeSet();
-    if ( S2 == null ) return S1;
+    if ( S1 == null )
+      return new EdgeSet();
+    if ( S2 == null )
+      return S1;
     return S1.difference(S2);
   }
+
   public EdgeSet symmetricDifference(EdgeSet S1, EdgeSet S2) {
-    if ( S1 == null ) return S2;
-    if ( S2 == null ) return S1;
+    if ( S1 == null )
+      return S2;
+    if ( S2 == null )
+      return S1;
     return S1.symmetricDifference(S2);
   }
+
   public Boolean subset(EdgeSet S1, EdgeSet S2) {
-    if ( S1 == null ) return true;
-    if ( S2 == null ) return false;
+    if ( S1 == null )
+      return true;
+    if ( S2 == null )
+      return false;
     return S1.subset(S2);
   }
-  
+
   public void add(Node node, NodeSet S) {
     S.add(node);
   }
+
   public void remove(Node node, NodeSet S) {
     S.remove(node);
   }
+
   /**
    * @see graph.component.Node for natural syntax node.in(S)
    */
   public NodeSet union(NodeSet S1, NodeSet S2) {
-    if ( S1 == null ) return S2;
-    if ( S2 == null ) return S1;
+    if ( S1 == null )
+      return S2;
+    if ( S2 == null )
+      return S1;
     return S1.union(S2);
   }
+
   public NodeSet intersection(NodeSet S1, NodeSet S2) {
-    if ( S1 == null || S2 == null ) return new NodeSet();
+    if ( S1 == null || S2 == null )
+      return new NodeSet();
     return S1.intersection(S2);
   }
+
   public NodeSet difference(NodeSet S1, NodeSet S2) {
-    if ( S1 == null ) return new NodeSet();
-    if ( S2 == null ) return S1;
+    if ( S1 == null )
+      return new NodeSet();
+    if ( S2 == null )
+      return S1;
     return S1.difference(S2);
   }
+
   public NodeSet symmetricDifference(NodeSet S1, NodeSet S2) {
-    if ( S1 == null ) return S2;
-    if ( S2 == null ) return S1;
+    if ( S1 == null )
+      return S2;
+    if ( S2 == null )
+      return S1;
     return S1.symmetricDifference(S2);
   }
+
   public Boolean subset(NodeSet S1, NodeSet S2) {
-    if ( S1 == null ) return true;
-    if ( S2 == null ) return false;
+    if ( S1 == null )
+      return true;
+    if ( S2 == null )
+      return false;
     return S1.subset(S2);
   }
-  
+
   /**
    * procedural (and simpler) versions of the most important queue methods
    */
-  public void add(Node node, NodeQueue Q) { Q.add(node); }
-  public void remove(Node node, NodeQueue Q) { Q.remove(node); }
+  public void add(Node node, NodeQueue Q) {
+    Q.add(node);
+  }
+
+  public void remove(Node node, NodeQueue Q) {
+    Q.remove(node);
+  }
+
   public Node front(NodeQueue Q) throws GalantException {
     if ( Q == null )
       throw new GalantException("Uninitialized queue in front() -- use 'new'");
     return Q.element();
   }
+
   public Node get(NodeQueue Q) throws GalantException {
     if ( Q == null )
       throw new GalantException("Uninitialized queue in get() -- use 'new'");
     return Q.dequeue();
   }
+
   public void put(Node v, NodeQueue Q) throws GalantException {
     if ( Q == null )
       throw new GalantException("Uninitialized queue in put() -- use 'new'");
     Q.enqueue(v);
   }
 
-  public void add(Edge edge, EdgeQueue Q) { Q.add(edge); }
-  public void remove(Edge edge, EdgeQueue Q) { Q.remove(edge); }
+  public void add(Edge edge, EdgeQueue Q) {
+    Q.add(edge);
+  }
+
+  public void remove(Edge edge, EdgeQueue Q) {
+    Q.remove(edge);
+  }
+
   public Edge front(EdgeQueue Q) throws GalantException {
     if ( Q == null )
       throw new GalantException("Uninitialized queue in front() -- use 'new'");
     return Q.element();
   }
+
   public Edge get(EdgeQueue Q) throws GalantException {
     if ( Q == null )
       throw new GalantException("Uninitialized queue in get() -- use 'new'");
     return Q.dequeue();
   }
+
   public void put(Edge e, EdgeQueue Q) throws GalantException {
     if ( Q == null )
       throw new GalantException("Uninitialized queue in put() -- use 'new'");
@@ -300,33 +381,44 @@ public abstract class Algorithm implements Runnable {
   /**
    * procedural versions of the most important priority queue methods
    */
-  public void add(Node node, NodePriorityQueue Q) { Q.add(node); }
-  public void remove(Node node, NodePriorityQueue Q) { Q.remove(node); }
+  public void add(Node node, NodePriorityQueue Q) {
+    Q.add(node);
+  }
+
+  public void remove(Node node, NodePriorityQueue Q) {
+    Q.remove(node);
+  }
+
   public Node removeBest(NodePriorityQueue Q) throws GalantException {
     if ( Q == null )
       throw new GalantException("Uninitialized queue in removeBest() -- use 'new'");
     return Q.removeBest();
   }
+
   public Node removeMin(NodePriorityQueue Q) throws GalantException {
     if ( Q == null )
       throw new GalantException("Uninitialized queue in removeBest() -- use 'new'");
     return Q.removeMin();
   }
+
   public Node removeMax(NodePriorityQueue Q) throws GalantException {
     if ( Q == null )
       throw new GalantException("Uninitialized queue in removeBest() -- use 'new'");
     return Q.removeMax();
   }
+
   public Node best(NodePriorityQueue Q) throws GalantException {
     if ( Q == null )
       throw new GalantException("Uninitialized queue in best() -- use 'new'");
     return Q.best();
   }
+
   public void insert(Node v, NodePriorityQueue Q) throws GalantException {
     if ( Q == null )
       throw new GalantException("Uninitialized queue in insert() -- use 'new'");
     Q.insert(v);
   }
+
   /**
    * Note: the actual change in value of the key must take place externally,
    * i.e., you have to do set(v, key, new_value) first
@@ -336,34 +428,45 @@ public abstract class Algorithm implements Runnable {
       throw new GalantException("Uninitialized queue in changeKey() -- use 'new'");
     Q.changeKey(v);
   }
-  
-  public void add(Edge edge, EdgePriorityQueue Q) { Q.add(edge); }
-  public void remove(Edge edge, EdgePriorityQueue Q) { Q.remove(edge); }
+
+  public void add(Edge edge, EdgePriorityQueue Q) {
+    Q.add(edge);
+  }
+
+  public void remove(Edge edge, EdgePriorityQueue Q) {
+    Q.remove(edge);
+  }
+
   public Edge removeBest(EdgePriorityQueue Q) throws GalantException {
     if ( Q == null )
       throw new GalantException("Uninitialized queue in removeBest() -- use 'new'");
     return Q.removeBest();
   }
+
   public Edge removeMin(EdgePriorityQueue Q) throws GalantException {
     if ( Q == null )
       throw new GalantException("Uninitialized queue in removeBest() -- use 'new'");
     return Q.removeMin();
   }
+
   public Edge removeMax(EdgePriorityQueue Q) throws GalantException {
     if ( Q == null )
       throw new GalantException("Uninitialized queue in removeBest() -- use 'new'");
     return Q.removeMax();
   }
+
   public Edge best(EdgePriorityQueue Q) throws GalantException {
     if ( Q == null )
       throw new GalantException("Uninitialized queue in best() -- use 'new'");
     return Q.best();
   }
+
   public void insert(Edge e, EdgePriorityQueue Q) throws GalantException {
     if ( Q == null )
       throw new GalantException("Uninitialized queue in insert() -- use 'new'");
     Q.insert(e);
   }
+
   /**
    * Note: the actual change in value of the key must take place externally,
    * i.e., you have to do set(v, key, new_value) first
@@ -373,13 +476,13 @@ public abstract class Algorithm implements Runnable {
       throw new GalantException("Uninitialized queue in changeKey() -- use 'new'");
     Q.changeKey(e);
   }
-  
-  
+
   // convenient access to Java stack API - easier to use lists
-  public class NodeStack extends Stack<Node>
-  {}
-  public class EdgeStack extends Stack<Edge>
-  {}
+  public class NodeStack extends Stack<Node> {
+  }
+
+  public class EdgeStack extends Stack<Edge> {
+  }
 
   // Pre-existing queue/stack/priority queue objects
   // (not used in any of the current algorithms)
@@ -410,8 +513,7 @@ public abstract class Algorithm implements Runnable {
     synchronizer = dispatch.getAlgorithmSynchronizer();
     try {
       synchronizer.pauseExecution();
-    }
-    catch ( Terminate t ) {
+    } catch ( Terminate t ) {
       System.out.println("Algorithm.initialize() threw Terminate");
     }
     LogHelper.exitMethod(getClass(), "initialize");
@@ -444,27 +546,49 @@ public abstract class Algorithm implements Runnable {
    * labels and weights are visible.
    *
    * @todo There's an unnecessary level of indirection here; we could call
-   * on a GraphWindow method directly instead of going through the graph
-   * first
+   *       on a GraphWindow method directly instead of going through the graph
+   *       first
    */
 
   /** makes node labels invisible */
-  public void hideNodeLabels() { graph.showNodeLabels(false); }
-  /** makes edge labels invisible */
-  public void hideEdgeLabels() { graph.showEdgeLabels(false); }
-  /** makes node labels visible */
-  public void showNodeLabels() { graph.showNodeLabels(true); }
-  /** makes edge labels visible */
-  public void showEdgeLabels() { graph.showEdgeLabels(true); }
-  /** makes node weights invisible */
-  public void hideNodeWeights() { graph.showNodeWeights(false); }
-  /** makes edge weights invisible */
-  public void hideEdgeWeights() { graph.showEdgeWeights(false); }
-  /** makes node weights visible */
-  public void showNodeWeights() { graph.showNodeWeights(true);
+  public void hideNodeLabels() {
+    graph.showNodeLabels(false);
   }
+
+  /** makes edge labels invisible */
+  public void hideEdgeLabels() {
+    graph.showEdgeLabels(false);
+  }
+
+  /** makes node labels visible */
+  public void showNodeLabels() {
+    graph.showNodeLabels(true);
+  }
+
+  /** makes edge labels visible */
+  public void showEdgeLabels() {
+    graph.showEdgeLabels(true);
+  }
+
+  /** makes node weights invisible */
+  public void hideNodeWeights() {
+    graph.showNodeWeights(false);
+  }
+
+  /** makes edge weights invisible */
+  public void hideEdgeWeights() {
+    graph.showEdgeWeights(false);
+  }
+
+  /** makes node weights visible */
+  public void showNodeWeights() {
+    graph.showNodeWeights(true);
+  }
+
   /** makes edge weights visible */
-  public void showEdgeWeights() { graph.showEdgeWeights(true); }
+  public void showEdgeWeights() {
+    graph.showEdgeWeights(true);
+  }
 
   /**
    * The following show or hide all Node/Edge labels or weights during
@@ -478,36 +602,43 @@ public abstract class Algorithm implements Runnable {
     graph.hideAllNodeLabels();
     endMultiStep();
   }
+
   public void hideAllEdgeLabels() throws Terminate {
     beginMultiStep();
     graph.hideAllEdgeLabels();
     endMultiStep();
   }
+
   public void hideAllNodeWeights() throws Terminate {
     beginMultiStep();
     graph.hideAllNodeWeights();
     endMultiStep();
   }
+
   public void hideAllEdgeWeights() throws Terminate {
     beginMultiStep();
     graph.hideAllEdgeWeights();
     endMultiStep();
   }
+
   public void showAllNodeLabels() throws Terminate {
     beginMultiStep();
     graph.showAllNodeLabels();
     endMultiStep();
   }
+
   public void showAllEdgeLabels() throws Terminate {
     beginMultiStep();
     graph.showAllEdgeLabels();
     endMultiStep();
   }
+
   public void showAllNodeWeights() throws Terminate {
     beginMultiStep();
     graph.showAllNodeWeights();
     endMultiStep();
   }
+
   public void showAllEdgeWeights() throws Terminate {
     beginMultiStep();
     graph.showAllEdgeWeights();
@@ -524,11 +655,13 @@ public abstract class Algorithm implements Runnable {
     graph.showNodes();
     endMultiStep();
   }
+
   public void showEdges() throws Terminate {
     beginMultiStep();
     graph.showEdges();
     endMultiStep();
   }
+
   public void showGraph() throws Terminate {
     beginMultiStep();
     graph.showNodes();
@@ -544,46 +677,55 @@ public abstract class Algorithm implements Runnable {
     graph.clearNodeMarks();
     endMultiStep();
   }
+
   public void clearMarks() throws Terminate {
     beginMultiStep();
     graph.clearNodeMarks();
     endMultiStep();
   }
+
   public void clearNodeHighlighting() throws Terminate {
     beginMultiStep();
     graph.clearNodeHighlighting();
     endMultiStep();
   }
+
   public void clearEdgeHighlighting() throws Terminate {
     beginMultiStep();
     graph.clearEdgeHighlighting();
     endMultiStep();
   }
+
   public void clearNodeLabels() throws Terminate {
     beginMultiStep();
     graph.clearNodeLabels();
     endMultiStep();
   }
+
   public void clearEdgeLabels() throws Terminate {
     beginMultiStep();
     graph.clearEdgeLabels();
     endMultiStep();
   }
+
   public void clearNodeWeights() throws Terminate {
     beginMultiStep();
     graph.clearNodeWeights();
     endMultiStep();
   }
+
   public void clearEdgeWeights() throws Terminate {
     beginMultiStep();
     graph.clearEdgeWeights();
     endMultiStep();
   }
+
   public void clearNodeColors() throws Terminate {
     beginMultiStep();
     graph.clearAllNode(GraphElement.COLOR);
     endMultiStep();
   }
+
   public void clearEdgeColors() throws Terminate {
     beginMultiStep();
     graph.clearAllEdge(GraphElement.COLOR);
@@ -595,6 +737,7 @@ public abstract class Algorithm implements Runnable {
     graph.clearAllNode(attribute);
     endMultiStep();
   }
+
   public void clearAllEdge(String attribute) throws Terminate {
     beginMultiStep();
     graph.clearAllEdge(attribute);
@@ -618,8 +761,8 @@ public abstract class Algorithm implements Runnable {
 
   /**
    * @return the largest id of any node + 1; this should be used when
-   * allocating an array of nodes, as there is no longer a guarantee that
-   * id's start at 0 and are contiguous.
+   *         allocating an array of nodes, as there is no longer a guarantee that
+   *         id's start at 0 and are contiguous.
    */
   public int nodeIds() {
     return graph.nodeIds();
@@ -627,8 +770,8 @@ public abstract class Algorithm implements Runnable {
 
   /**
    * @return the largest id of any edge + 1; this should be used when
-   * allocating an array of nodes, as there is no longer a guarantee that
-   * id's start at 0 and are contiguous.
+   *         allocating an array of nodes, as there is no longer a guarantee that
+   *         id's start at 0 and are contiguous.
    */
   public int edgeIds() {
     return graph.edgeIds();
@@ -641,35 +784,43 @@ public abstract class Algorithm implements Runnable {
     checkGraphElement(ge);
     ge.highlight();
   }
+
   public void unHighlight(GraphElement ge) throws Terminate, GalantException {
     checkGraphElement(ge);
     ge.unHighlight();
   }
+
   public void unhighlight(GraphElement ge) throws Terminate, GalantException {
     checkGraphElement(ge);
     ge.unHighlight();
   }
+
   public Boolean highlighted(GraphElement ge) throws GalantException {
     checkGraphElement(ge);
     return ge.isHighlighted();
   }
+
   public Boolean isHighlighted(GraphElement ge) throws GalantException {
     checkGraphElement(ge);
     return ge.isHighlighted();
   }
+
   /** selected is a synonym for highlighted */
   public void select(GraphElement ge) throws Terminate, GalantException {
     checkGraphElement(ge);
     ge.setSelected(true);
   }
+
   public void deselect(GraphElement ge) throws Terminate, GalantException {
     checkGraphElement(ge);
     ge.setSelected(false);
   }
+
   public Boolean selected(GraphElement ge) throws GalantException {
     checkGraphElement(ge);
     return ge.isSelected();
   }
+
   public Boolean isSelected(GraphElement ge) throws GalantException {
     checkGraphElement(ge);
     return ge.isSelected();
@@ -679,18 +830,22 @@ public abstract class Algorithm implements Runnable {
     checkGraphElement(n);
     n.mark();
   }
+
   public void unMark(Node n) throws Terminate, GalantException {
     checkGraphElement(n);
     n.unMark();
   }
+
   public void unmark(Node n) throws Terminate, GalantException {
     checkGraphElement(n);
     n.unMark();
   }
+
   public Boolean marked(Node n) throws GalantException {
     checkGraphElement(n);
     return n.isMarked();
   }
+
   public Boolean isMarked(Node n) throws GalantException {
     checkGraphElement(n);
     return n.isMarked();
@@ -703,24 +858,31 @@ public abstract class Algorithm implements Runnable {
       throw new GalantException("Graph element has no weight: " + ge);
     return returnWeight;
   }
-  public void setWeight(GraphElement ge, double weight) throws Terminate, GalantException {
+
+  public void setWeight(GraphElement ge, double weight)
+      throws Terminate, GalantException {
     checkGraphElement(ge);
     ge.setWeight(weight);
   }
+
   public String label(GraphElement ge) throws GalantException {
     checkGraphElement(ge);
     String returnLabel = ge.getLabel();
-    if ( returnLabel == null ) returnLabel = "";
+    if ( returnLabel == null )
+      returnLabel = "";
     return returnLabel;
   }
+
   public boolean hasLabel(GraphElement ge) throws GalantException {
     checkGraphElement(ge);
     return ge.hasLabel();
   }
+
   public boolean hasWeight(GraphElement ge) throws GalantException {
     checkGraphElement(ge);
     return ge.hasWeight();
   }
+
   public boolean hasNoWeight(GraphElement ge) throws GalantException {
     checkGraphElement(ge);
     return ! ge.hasWeight();
@@ -728,25 +890,32 @@ public abstract class Algorithm implements Runnable {
 
   /**
    * @todo It would be useful to have a class AttributeParser with a method
-   * parse(String) that returns an Integer, Double, Boolean or String,
-   * depending on whether the string can be successfully parse as one of
-   * these (attempted in the given order). The mechanism already exists in
-   * GraphMLParser. The new class should probably live in graph/component.
+   *       parse(String) that returns an Integer, Double, Boolean or String,
+   *       depending on whether the string can be successfully parse as one of
+   *       these (attempted in the given order). The mechanism already exists in
+   *       GraphMLParser. The new class should probably live in graph/component.
    */
   public void setLabel(GraphElement ge, Object s) throws Terminate, GalantException {
     checkGraphElement(ge);
-    if ( s == null ) ge.clearLabel();
-    else ge.setLabel("" + s);
+    if ( s == null )
+      ge.clearLabel();
+    else
+      ge.setLabel("" + s);
   }
+
   public void label(GraphElement ge, Object s) throws Terminate, GalantException {
     checkGraphElement(ge);
-    if ( s == null ) ge.clearLabel();
-    else ge.setLabel("" + s);
+    if ( s == null )
+      ge.clearLabel();
+    else
+      ge.setLabel("" + s);
   }
+
   public void clearLabel(GraphElement ge) throws Terminate, GalantException {
     checkGraphElement(ge);
     ge.clearLabel();
   }
+
   public void clearWeight(GraphElement ge) throws Terminate, GalantException {
     checkGraphElement(ge);
     ge.clearWeight();
@@ -756,6 +925,7 @@ public abstract class Algorithm implements Runnable {
     checkGraphElement(e);
     return e.getSource();
   }
+
   public Node target(Edge e) throws GalantException {
     checkGraphElement(e);
     return e.getTarget();
@@ -765,27 +935,34 @@ public abstract class Algorithm implements Runnable {
     checkGraphElement(ge);
     ge.set(s);
   }
+
   public void clear(GraphElement ge, String s) throws Terminate, GalantException {
     checkGraphElement(ge);
     ge.clear(s);
   }
+
   public Boolean is(GraphElement ge, String s) throws GalantException {
     checkGraphElement(ge);
     return ge.is(s);
   }
 
-  public void set(GraphElement ge, String s, Integer i) throws Terminate, GalantException {
+  public void set(GraphElement ge, String s, Integer i)
+      throws Terminate, GalantException {
     checkGraphElement(ge);
     ge.set(s, i);
   }
+
   public void set(GraphElement ge, String s, Double d) throws Terminate, GalantException {
     checkGraphElement(ge);
     ge.set(s, d);
   }
-  public void set(GraphElement ge, String key, String value) throws Terminate, GalantException {
+
+  public void set(GraphElement ge, String key, String value)
+      throws Terminate, GalantException {
     checkGraphElement(ge);
     ge.set(key, value);
   }
+
   public Integer getInteger(GraphElement ge, String s) throws GalantException {
     checkGraphElement(ge);
     Integer returnValue = ge.getInteger(s);
@@ -793,12 +970,15 @@ public abstract class Algorithm implements Runnable {
       throw new GalantException("Element " + ge + " has no integer attribute " + s);
     return returnValue;
   }
+
   public Boolean hasInteger(GraphElement ge, String s) throws GalantException {
     checkGraphElement(ge);
     Integer attributeValue = ge.getInteger(s);
-    if ( attributeValue == null ) return false;
+    if ( attributeValue == null )
+      return false;
     return true;
   }
+
   public Double getDouble(GraphElement ge, String s) throws GalantException {
     checkGraphElement(ge);
     Double returnValue = ge.getDouble(s);
@@ -806,12 +986,15 @@ public abstract class Algorithm implements Runnable {
       throw new GalantException("Element " + ge + " has no double attribute " + s);
     return returnValue;
   }
+
   public Boolean hasDouble(GraphElement ge, String s) throws GalantException {
     checkGraphElement(ge);
     Double attributeValue = ge.getDouble(s);
-    if ( attributeValue == null ) return false;
+    if ( attributeValue == null )
+      return false;
     return true;
   }
+
   public String getString(GraphElement ge, String s) throws GalantException {
     checkGraphElement(ge);
     String returnValue = ge.getString(s);
@@ -819,18 +1002,23 @@ public abstract class Algorithm implements Runnable {
       throw new GalantException("Element " + ge + " has no string attribute " + s);
     return returnValue;
   }
+
   public Boolean hasString(GraphElement ge, String s) throws GalantException {
     checkGraphElement(ge);
     String attributeValue = ge.getString(s);
-    if ( attributeValue == null ) return false;
+    if ( attributeValue == null )
+      return false;
     return true;
   }
+
   public Integer getInteger(String s, GraphElement ge) throws GalantException {
     return getInteger(ge, s);
   }
+
   public Double getDouble(String s, GraphElement ge) throws GalantException {
     return getDouble(ge, s);
   }
+
   public String getString(String s, GraphElement ge) throws GalantException {
     return getString(ge, s);
   }
@@ -839,22 +1027,26 @@ public abstract class Algorithm implements Runnable {
     checkGraphElement(ge);
     ge.setColor(color);
   }
+
   public void unColor(GraphElement ge) throws Terminate, GalantException {
     checkGraphElement(ge);
     ge.clearColor();
   }
+
   public void uncolor(GraphElement ge) throws Terminate, GalantException {
     checkGraphElement(ge);
     ge.clearColor();
   }
+
   public String color(GraphElement ge) throws GalantException {
     checkGraphElement(ge);
     return ge.getColor();
   }
-    public boolean hasColor(GraphElement ge) throws GalantException {
-        checkGraphElement(ge);
-        return ge.getColor() != null;
-    }
+
+  public boolean hasColor(GraphElement ge) throws GalantException {
+    checkGraphElement(ge);
+    return ge.getColor() != null;
+  }
 
   /** hiding of nodes differs - all incident edges must be hidden as well */
   public void hide(Node v) throws Terminate, GalantException {
@@ -863,16 +1055,19 @@ public abstract class Algorithm implements Runnable {
     v.hide();
     endMultiStep();
   }
+
   public void hide(Edge e) throws Terminate, GalantException {
     checkGraphElement(e);
     e.hide();
   }
+
   public void show(Node v) throws Terminate, GalantException {
     checkGraphElement(v);
     beginMultiStep();
     v.show();
     endMultiStep();
   }
+
   public void show(Edge e) throws Terminate, GalantException {
     checkGraphElement(e);
     e.show();
@@ -882,87 +1077,109 @@ public abstract class Algorithm implements Runnable {
     checkGraphElement(ge);
     return ge.isHidden();
   }
+
   public Boolean isVisible(GraphElement ge) throws GalantException {
     checkGraphElement(ge);
     return ! ge.isHidden();
   }
+
   public Boolean hidden(GraphElement ge) throws GalantException {
     checkGraphElement(ge);
     return ge.isHidden();
   }
+
   public Boolean visible(GraphElement ge) throws GalantException {
     checkGraphElement(ge);
     return ! ge.isHidden();
   }
+
   public void hideLabel(GraphElement ge) throws Terminate, GalantException {
     checkGraphElement(ge);
     ge.hideLabel();
   }
+
   public void showLabel(GraphElement ge) throws Terminate, GalantException {
     checkGraphElement(ge);
     ge.showLabel();
   }
+
   public Boolean labelIsHidden(GraphElement ge) throws GalantException {
     checkGraphElement(ge);
     return ge.labelIsHidden(getState());
   }
+
   public Boolean labelIsVisible(GraphElement ge) throws GalantException {
     checkGraphElement(ge);
     return ! labelIsHidden(ge);
   }
+
   public void setLabel(GraphElement ge, String label) throws Terminate, GalantException {
     checkGraphElement(ge);
     ge.setLabel(label);
   }
+
   public void hideWeight(GraphElement ge) throws Terminate, GalantException {
     checkGraphElement(ge);
     ge.hideWeight();
   }
+
   public void showWeight(GraphElement ge) throws Terminate, GalantException {
     checkGraphElement(ge);
     ge.showWeight();
   }
+
   public Boolean weightIsHidden(GraphElement ge) throws GalantException {
     checkGraphElement(ge);
     return ge.weightIsHidden(getState());
   }
+
   public Boolean weightIsVisible(GraphElement ge) throws GalantException {
     checkGraphElement(ge);
     return ! weightIsHidden(ge);
   }
+
   public Integer degree(Node v) throws GalantException {
     checkGraphElement(v);
     return v.getDegree();
   }
+
   public Integer indegree(Node v) throws GalantException {
     checkGraphElement(v);
     return v.getIndegree();
   }
+
   public Integer outdegree(Node v) throws GalantException {
     checkGraphElement(v);
     return v.getOutdegree();
   }
+
   public Node otherEnd(Node v, Edge e) throws GalantException {
     checkGraphElement(v);
     checkGraphElement(e);
-    return v.travel(e); }
+    return v.travel(e);
+  }
+
   public Node otherEnd(Edge e, Node v) throws GalantException {
     checkGraphElement(v);
     checkGraphElement(e);
     return v.travel(e);
   }
+
   public NodeList neighbors(Node v) throws GalantException {
     checkGraphElement(v);
     return v.getAdjacentNodes();
   }
+
   public EdgeList edges(Node v) throws GalantException {
     checkGraphElement(v);
     return v.getIncidentEdges();
   }
+
   public EdgeList inEdges(Node v) throws GalantException {
     checkGraphElement(v);
     return v.getIncomingEdges();
   }
+
   public EdgeList outEdges(Node v) throws GalantException {
     checkGraphElement(v);
     return v.getOutgoingEdges();
@@ -975,14 +1192,17 @@ public abstract class Algorithm implements Runnable {
     checkGraphElement(v);
     return new NodeSet(v.getAdjacentNodes());
   }
+
   public EdgeSet edgeSet(Node v) throws GalantException {
     checkGraphElement(v);
     return new EdgeSet(v.getIncidentEdges());
   }
+
   public EdgeSet incomingSet(Node v) throws GalantException {
     checkGraphElement(v);
     return new EdgeSet(v.getIncomingEdges());
   }
+
   public EdgeSet outgoingSet(Node v) throws GalantException {
     checkGraphElement(v);
     return new EdgeSet(v.getOutgoingEdges());
@@ -1000,6 +1220,7 @@ public abstract class Algorithm implements Runnable {
     checkGraphElement(v);
     return v.visibleNeighbors();
   }
+
   public Integer visibleDegree(Node v) throws GalantException {
     return v.visibleNeighbors().size();
   }
@@ -1008,17 +1229,21 @@ public abstract class Algorithm implements Runnable {
     checkGraphElement(v);
     return v.visibleEdges();
   }
+
   public EdgeList visibleInEdges(Node v) throws GalantException {
     checkGraphElement(v);
     return v.visibleIncomingEdges();
   }
+
   public Integer visibleIndegree(Node v) throws GalantException {
     return v.visibleIncomingEdges().size();
   }
+
   public EdgeList visibleOutEdges(Node v) throws GalantException {
     checkGraphElement(v);
     return v.visibleOutgoingEdges();
   }
+
   public Integer visibleOutdegree(Node v) throws GalantException {
     checkGraphElement(v);
     return v.visibleOutgoingEdges().size();
@@ -1028,23 +1253,24 @@ public abstract class Algorithm implements Runnable {
     checkGraphElement(v);
     return v.getUnvisitedAdjacentNodes();
   }
+
   public NodeList unmarkedNeighbors(Node v) throws GalantException {
     checkGraphElement(v);
     return v.getUnvisitedAdjacentNodes();
   }
+
   public Integer unmarkedDegree(Node v) throws GalantException {
     return unmarkedNeighbors(v).size();
   }
-  
+
   /**
    * @return true if (v,w) is an edge; direction important if the graph is
-   * directed
+   *         directed
    */
   public Boolean isEdge(Node v, Node w) throws GalantException {
     checkGraphElement(v);
     checkGraphElement(w);
-    EdgeList incidenceList
-      = v.getOutgoingEdges();
+    EdgeList incidenceList = v.getOutgoingEdges();
     for ( Edge e : incidenceList ) {
       if ( v.travel(e) == w ) {
         return true;
@@ -1070,37 +1296,43 @@ public abstract class Algorithm implements Runnable {
     checkGraphElement(v);
     return v.getX();
   }
+
   public Integer getY(Node v) throws GalantException {
     checkGraphElement(v);
     return v.getY();
   }
+
   public Point getPosition(Node v) throws GalantException {
     checkGraphElement(v);
     return v.getPosition();
   }
+
   public void setX(Node v, int x) throws Terminate, GalantException {
     checkGraphElement(v);
     v.setX(x);
   }
+
   public void setY(Node v, int y) throws Terminate, GalantException {
     checkGraphElement(v);
     v.setY(y);
   }
+
   public void setPosition(Node v, int x, int y) throws Terminate, GalantException {
     checkGraphElement(v);
     v.setPosition(x, y);
   }
+
   public void setPosition(Node v, Point pt) throws Terminate, GalantException {
     checkGraphElement(v);
     v.setPosition(pt);
   }
 
-    /**
-     * @return the distance between two nodes
-     */
-    public double distance(Node nodeOne, Node nodeTwo) {
-        return nodeOne.getPosition().distance(nodeTwo.getPosition());
-    }
+  /**
+   * @return the distance between two nodes
+   */
+  public double distance(Node nodeOne, Node nodeTwo) {
+    return nodeOne.getPosition().distance(nodeTwo.getPosition());
+  }
 
   /**
    * Displays a message during algorithm execution; the message could be
@@ -1121,22 +1353,22 @@ public abstract class Algorithm implements Runnable {
     synchronizer.startStep();
     StringQuery query = new StringQuery(prompt);
     synchronizer.pauseExecution();
-    query = null;           // to keep window from lingering when
+    query = null; // to keep window from lingering when
     // execution is terminated
     return dispatch.getStringAnswer();
   }
 
   /**
    * @return a comparator that uses string (lexicographic) comparisons on the
-   * given attribute of each graph element
+   *         given attribute of each graph element
    */
   public GraphElementComparator getStringComparator(String attribute) {
     return GraphElement.getStringComparator(attribute);
   }
-  
+
   /**
    * @return a comparator that uses integer (increasing order) comparisons on
-   * the given attribute of each graph element
+   *         the given attribute of each graph element
    */
   public GraphElementComparator getIntegerComparator(String attribute) {
     return GraphElement.getIntegerComparator(attribute);
@@ -1144,42 +1376,45 @@ public abstract class Algorithm implements Runnable {
 
   /**
    * @return a comparator that uses double (increasing) comparisons on the
-   * given attribute of each graph element
+   *         given attribute of each graph element
    */
   public GraphElementComparator getDoubleComparator(String attribute) {
     return GraphElement.getDoubleComparator(attribute);
   }
-  
+
   /**
    * @return a comparator that uses string (lexicographic) comparisons on the
-   * given attribute of each graph element
-   * @param reverse use the reverse of the natural order if true
+   *         given attribute of each graph element
+   * @param reverse
+   *          use the reverse of the natural order if true
    */
   public GraphElementComparator getStringComparator(String attribute,
-                                                    boolean reverse) {
+      boolean reverse) {
     return GraphElement.getStringComparator(attribute, reverse);
   }
-  
+
   /**
    * @return a comparator that uses integer (increasing order) comparisons on
-   * the given attribute of each graph element
-   * @param reverse use the reverse of the natural order if true
+   *         the given attribute of each graph element
+   * @param reverse
+   *          use the reverse of the natural order if true
    */
   public GraphElementComparator getIntegerComparator(String attribute,
-                                                     boolean reverse) {
+      boolean reverse) {
     return GraphElement.getIntegerComparator(attribute, reverse);
   }
 
   /**
    * @return a comparator that uses double (increasing) comparisons on the
-   * given attribute of each graph element
-   * @param reverse use the reverse of the natural order if true
+   *         given attribute of each graph element
+   * @param reverse
+   *          use the reverse of the natural order if true
    */
   public GraphElementComparator getDoubleComparator(String attribute,
-                                                    boolean reverse) {
+      boolean reverse) {
     return GraphElement.getDoubleComparator(attribute, reverse);
   }
-  
+
   /**
    * @return an integer typed by the user in a dialog
    */
@@ -1187,7 +1422,7 @@ public abstract class Algorithm implements Runnable {
     synchronizer.startStep();
     IntegerQuery query = new IntegerQuery(prompt);
     synchronizer.pauseExecution();
-    query = null;           // to keep window from lingering when
+    query = null; // to keep window from lingering when
     // execution is terminated
     return dispatch.getIntegerAnswer();
   }
@@ -1199,14 +1434,14 @@ public abstract class Algorithm implements Runnable {
     synchronizer.startStep();
     DoubleQuery query = new DoubleQuery(prompt);
     synchronizer.pauseExecution();
-    query = null;           // to keep window from lingering when
+    query = null; // to keep window from lingering when
     // execution is terminated
     return dispatch.getDoubleAnswer();
   }
 
   /**
    * @todo need a consistent convention for use of Real in place of Double,
-   * maybe even a new class
+   *       maybe even a new class
    */
   public Double getReal(String prompt) throws Terminate {
     return getDouble(prompt);
@@ -1214,12 +1449,15 @@ public abstract class Algorithm implements Runnable {
 
   /**
    * @return a boolean value indicated by the user via a button press
-   * @param question the yes/no question to ask
-   * @param yesText the text to display on the button for a yes answer
-   * @param noText the text to display on the button for a no answer
+   * @param question
+   *          the yes/no question to ask
+   * @param yesText
+   *          the text to display on the button for a yes answer
+   * @param noText
+   *          the text to display on the button for a no answer
    */
   public Boolean getBoolean(String question, String yesText, String noText)
-  //        throws Terminate
+  // throws Terminate
   {
     // synchronizer.startStep();
     // synchronizer.pauseExecution();
@@ -1227,7 +1465,7 @@ public abstract class Algorithm implements Runnable {
   }
 
   public Boolean getBoolean(String question)
-  //        throws Terminate
+  // throws Terminate
   {
     return getBoolean(question, "yes", "no");
   }
@@ -1240,14 +1478,17 @@ public abstract class Algorithm implements Runnable {
   }
 
   /**
-   * @param prompt a message displayed in the edge selection dialog popup
-   * @param restrictedSet the set from which the edge should be selected
-   * @param errorMessage the message to be displayed if edge is not in
-   * restrictedSet
+   * @param prompt
+   *          a message displayed in the edge selection dialog popup
+   * @param restrictedSet
+   *          the set from which the edge should be selected
+   * @param errorMessage
+   *          the message to be displayed if edge is not in
+   *          restrictedSet
    * @return a edge selected via a dialog during algorithm execution
    */
   public Edge getEdge(String prompt, EdgeSet restrictedSet, String errorMessage)
-    throws Terminate {
+      throws Terminate {
     return graph.getEdge(prompt, restrictedSet, errorMessage);
   }
 
@@ -1259,14 +1500,17 @@ public abstract class Algorithm implements Runnable {
   }
 
   /**
-   * @param prompt a message displayed in the node selection dialog popup
-   * @param restrictedSet the set from which the node should be selected
-   * @param errorMessage the message to be displayed if node is not in
-   * restrictedSet
+   * @param prompt
+   *          a message displayed in the node selection dialog popup
+   * @param restrictedSet
+   *          the set from which the node should be selected
+   * @param errorMessage
+   *          the message to be displayed if node is not in
+   *          restrictedSet
    * @return a node selected via a dialog during algorithm execution
    */
   public Node getNode(String prompt, NodeSet restrictedSet, String errorMessage)
-    throws Terminate {
+      throws Terminate {
     return graph.getNode(prompt, restrictedSet, errorMessage);
   }
 
@@ -1286,23 +1530,22 @@ public abstract class Algorithm implements Runnable {
     Integer i = null;
     try {
       i = Integer.parseInt(s);
-    }
-    catch ( NumberFormatException e ) {
+    } catch ( NumberFormatException e ) {
       throw new GalantException("\"" + s + "\""
-                                + " is not a legal integer");
+          + " is not a legal integer");
     }
-    return i; 
+    return i;
   }
+
   public Double real(String s) throws GalantException {
     Double x = null;
     try {
       x = Double.parseDouble(s);
-    }
-    catch ( NumberFormatException e ) {
+    } catch ( NumberFormatException e ) {
       throw new GalantException("\"" + s + "\""
-                                + " is not a legal floating point number");
+          + " is not a legal floating point number");
     }
-    return x; 
+    return x;
   }
 
   /**
@@ -1314,14 +1557,14 @@ public abstract class Algorithm implements Runnable {
 
   /**
    * @return a string of the form (source,target) for the edge; useful for
-   * printing and display; source and target refer to node id's
+   *         printing and display; source and target refer to node id's
    */
   public String string(Edge edge) throws GalantException {
     checkGraphElement(edge);
     return "(" + edge.getSource().getId()
-      + "," + edge.getTarget().getId() + ")";
+        + "," + edge.getTarget().getId() + ")";
   }
-  
+
   /**
    * Displays the exception in a dialog window
    */
@@ -1341,13 +1584,13 @@ public abstract class Algorithm implements Runnable {
   }
 
   /** @see edu.ncsu.csc.Galant.graph.component.Graph#isDirected() */
-  public boolean isDirected(){
+  public boolean isDirected() {
     return graph.isDirected();
   }
 
   /**  */
   public void setDirected(boolean directed) {
-      dispatch.getGraphWindow().setDirectedness(directed);
+    dispatch.getGraphWindow().setDirectedness(directed);
   }
 
   public NodeList getNodes() {
@@ -1362,10 +1605,12 @@ public abstract class Algorithm implements Runnable {
     return graph.getEdgeSet();
   }
 
-  /** this and the corresponding incantation for edges don't work; the
+  /**
+   * this and the corresponding incantation for edges don't work; the
    * type/class NodeList has to be created inside the Graph class or we
-   * need an additional copy constructor for NodeList */
-  //     public NodeList nodes() { return (NodeList) getNodes(); }
+   * need an additional copy constructor for NodeList
+   */
+  // public NodeList nodes() { return (NodeList) getNodes(); }
 
   public Integer numberOfNodes() {
     return graph.getNodes().size();
@@ -1375,7 +1620,7 @@ public abstract class Algorithm implements Runnable {
     return graph.getEdges();
   }
 
-  //     public EdgeList edges() { return (EdgeList) getEdges(); }
+  // public EdgeList edges() { return (EdgeList) getEdges(); }
 
   public Integer numberOfEdges() {
     return graph.getEdges().size();
@@ -1383,7 +1628,7 @@ public abstract class Algorithm implements Runnable {
 
   /** @see edu.ncsu.csc.Galant.graph.component.Graph#getStartNode() */
   public Node getStartNode() throws GalantException {
-      return graph.getStartNode();
+    return graph.getStartNode();
   }
 
   public Node startNode() throws GalantException {
@@ -1391,25 +1636,26 @@ public abstract class Algorithm implements Runnable {
   }
 
   /** @see edu.ncsu.csc.Galant.graph.component.Graph#getNodeById(int) */
-  public Node getNodeById(int id) throws GalantException
-  {
+  public Node getNodeById(int id) throws GalantException {
     return graph.getNodeById(id);
   }
 
   /**
    * @return an Edge with the given source and target; if the graph is
-   * undirected it doesn't matter which is which; returns null if no such
-   * edge exists
+   *         undirected it doesn't matter which is which; returns null if no such
+   *         edge exists
    */
   public Edge getEdge(Node source, Node target) throws GalantException {
     return graph.getEdge(source, target);
   }
+
   public Edge edge(Node source, Node target) throws GalantException {
     return graph.getEdge(source, target);
   }
 
   /**
    * adds an edge based on the integer id's of the two endpoints
+   * 
    * @see edu.ncsu.csc.Galant.graph.component.Graph#addEdge(int, int)
    */
   public Edge addEdge(int sourceId, int targetId) throws Terminate, GalantException {
@@ -1430,32 +1676,32 @@ public abstract class Algorithm implements Runnable {
   }
 
   /** @see edu.ncsu.csc.Galant.GraphDispatch#getAlgorithmState() */
-  public int getState(){
+  public int getState() {
     return dispatch.getAlgorithmState();
   }
 
   /** @see edu.ncsu.csc.Galant.GraphDispatch#getWindowWidth() */
-  public int windowWidth(){
+  public int windowWidth() {
     return dispatch.getWindowWidth();
   }
 
   /** @see edu.ncsu.csc.Galant.GraphDispatch#getWindowHeight() */
-  public int windowHeight(){
+  public int windowHeight() {
     return dispatch.getWindowHeight();
   }
 
-    /**
-     * @return the Euclidian distance between opposite corners of the window;
-     * useful for scaling distances
-     */
-    public double diagonalLength() {
-        Point topLeft = new Point(0, 0);
-        Point bottomRight = new Point(windowWidth(), windowHeight());
-        return topLeft.distance(bottomRight);
-    }
+  /**
+   * @return the Euclidian distance between opposite corners of the window;
+   *         useful for scaling distances
+   */
+  public double diagonalLength() {
+    Point topLeft = new Point(0, 0);
+    Point bottomRight = new Point(windowWidth(), windowHeight());
+    return topLeft.distance(bottomRight);
+  }
 
   /** @see edu.ncsu.csc.Galant.graph.component.Graph#smartReposition() */
-  public void smartReposition(){
+  public void smartReposition() {
     graph.smartReposition();
   }
 
@@ -1525,4 +1771,4 @@ public abstract class Algorithm implements Runnable {
   public abstract void run();
 }
 
-//  [Last modified: 2021 01 30 at 23:24:54 GMT]
+// [Last modified: 2021 01 30 at 23:24:54 GMT]

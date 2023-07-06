@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns
+http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+<comments>
+  created from a cplex_ilp solution
+  CurrentTime	Mon 2023/03/06 19:26:02 GMT
+  runtime      	1.03533
+  TimedOut	0
+  ProvedOptimal	1
+  value      	79
+</comments>
+<graph edgedefault="directed" name="north12.145_GKNV-total_7_vertical" type="layered">
+<node id="0" layer="0" positionInLayer="5"/>
+<node id="1" layer="1" positionInLayer="5"/>
+<node id="2" layer="1" positionInLayer="4"/>
+<node id="3" layer="2" positionInLayer="4"/>
+<node id="4" layer="2" positionInLayer="6"/>
+<node id="5" layer="2" positionInLayer="5"/>
+<node id="6" layer="3" positionInLayer="3"/>
+<node id="7" layer="3" positionInLayer="4"/>
+<node id="8" layer="3" positionInLayer="6"/>
+<node id="9" layer="4" positionInLayer="0"/>
+<node id="10" layer="4" positionInLayer="2"/>
+<node id="11" layer="4" positionInLayer="1"/>
+<node id="12" layer="4" positionInLayer="3"/>
+<node id="13" layer="4" positionInLayer="4"/>
+<node id="14" layer="4" positionInLayer="5"/>
+<node id="15" layer="4" positionInLayer="6"/>
+<node id="16" layer="4" positionInLayer="7"/>
+<node id="17" layer="5" positionInLayer="0"/>
+<node id="18" layer="5" positionInLayer="2"/>
+<node id="19" layer="5" positionInLayer="1"/>
+<node id="20" layer="5" positionInLayer="3"/>
+<node id="21" layer="5" positionInLayer="4"/>
+<node id="22" layer="5" positionInLayer="5"/>
+<node id="23" layer="5" positionInLayer="6"/>
+<node id="24" layer="5" positionInLayer="7"/>
+<node id="25" layer="5" positionInLayer="8"/>
+<node id="26" layer="6" positionInLayer="2"/>
+<node id="27" layer="6" positionInLayer="6"/>
+<edge source="0" target="1"/>
+<edge source="0" target="2"/>
+<edge source="1" target="3"/>
+<edge source="1" target="4"/>
+<edge source="2" target="3"/>
+<edge source="2" target="5"/>
+<edge source="3" target="8"/>
+<edge source="3" target="7"/>
+<edge source="3" target="6"/>
+<edge source="4" target="8"/>
+<edge source="5" target="8"/>
+<edge source="7" target="12"/>
+<edge source="8" target="16"/>
+<edge source="8" target="15"/>
+<edge source="6" target="12"/>
+<edge source="6" target="14"/>
+<edge source="6" target="9"/>
+<edge source="6" target="11"/>
+<edge source="6" target="13"/>
+<edge source="6" target="10"/>
+<edge source="16" target="25"/>
+<edge source="15" target="23"/>
+<edge source="12" target="21"/>
+<edge source="12" target="20"/>
+<edge source="12" target="19"/>
+<edge source="12" target="22"/>
+<edge source="12" target="18"/>
+<edge source="14" target="24"/>
+<edge source="9" target="17"/>
+<edge source="11" target="19"/>
+<edge source="13" target="22"/>
+<edge source="10" target="18"/>
+<edge source="25" target="27"/>
+<edge source="23" target="26"/>
+<edge source="21" target="27"/>
+<edge source="20" target="26"/>
+<edge source="24" target="27"/>
+<edge source="17" target="26"/>
+<edge source="19" target="26"/>
+<edge source="22" target="27"/>
+<edge source="18" target="26"/>
+</graph>
+</graphml>

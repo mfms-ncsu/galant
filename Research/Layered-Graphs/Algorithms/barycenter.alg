@@ -82,7 +82,7 @@ function displayAfterSort( int layer, String sweepDirection ) {
  * matched an endStep after weights are assigned to a new layer
  */
 function reset( int layer ) {
-    layeredGraph.assignWeights( layer );
+    layeredGraph.setWeightsToPositions( layer );
     layeredGraph.displayWeights( layer );
     layeredGraph.unHighlight( layer );
     layeredGraph.clearMarks( layer );

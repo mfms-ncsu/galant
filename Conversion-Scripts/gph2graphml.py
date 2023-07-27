@@ -370,5 +370,3 @@ if __name__ == '__main__':
     else:
         output_stream = sys.stdout
     print_graphml(output_stream, graph_tuple)
-
-#  [Last modified: 2019 08 22 at 16:09:41 GMT]

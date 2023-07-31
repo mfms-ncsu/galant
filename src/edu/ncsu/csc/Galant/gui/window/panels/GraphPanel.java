@@ -547,26 +547,27 @@ public class GraphPanel extends JPanel{
         }
         g2d.fill( nodeCircle );
 
-        /* draw node boundary */
-        if ( n.isSelected(stateNumber) ) {
-            g2d.setColor( HIGHLIGHT_COLOR );
-            g2d.setStroke( new BasicStroke( highlightThickness ) );
+        /* set up thickness and color for drawing node boundary */
+        int thickness = defaultThickness;
+        if ( n.hasThickness(stateNumber) ) {
+            thickness = n.getThickness(stateNumber);
         }
-        else if ( n.getColor(stateNumber) == null ) {
-            // no declared color, use default color with default line width 
-            g2d.setColor( DEFAULT_COLOR );
-            g2d.setStroke( new BasicStroke( defaultThickness ) );
-        }
-        else {
-            // color declared, use it and make stroke thicker
-            String nodeColor = n.getColor(stateNumber);
-            Color c = Color.decode( nodeColor );
-            g2d.setColor(c);
-            g2d.setStroke( new BasicStroke( highlightThickness ) );
+        else if ( n.isSelected(stateNumber) ) {
+            thickness = highlightThickness;
         }
 
-        // draw node boundary
-        g2d.draw( nodeCircle );
+        Color borderColor = DEFAULT_COLOR;
+        if ( n.hasColor(stateNumber) ) {
+            borderColor = Color.decode(n.getColor(stateNumber));
+        }
+        else if ( n.isSelected(stateNumber) ) {
+            borderColor = HIGHLIGHT_COLOR;
+        }
+
+        /* draw the actual boundary */
+        g2d.setColor(borderColor);
+        g2d.setStroke(new BasicStroke(thickness));
+        g2d.draw(nodeCircle);
 
         /* draw node id if desired */
         /** @todo get rid of magic numbers here */

@@ -23,7 +23,7 @@ public class GraphElement implements Comparable<GraphElement> {
     /**
      * @todo Add the following standard display attributes. - "fill": fill color
      * for Nodes - "dotted": use dotted lines for edges or node outlines -
-     * "dashed": similar to dotted
+     * "dashed": similar to dotted (or use "style")
      */
     public static final String ID = "id";
     public static final String WEIGHT = "weight";
@@ -34,6 +34,7 @@ public class GraphElement implements Comparable<GraphElement> {
     public static final String HIDDEN = "hidden";
     public static final String HIDDEN_LABEL = "hiddenLabel";
     public static final String HIDDEN_WEIGHT = "hiddenWeight";
+    public static final String THICKNESS = "thickness";
 
     /**
      * The graph with which this element is associated.
@@ -564,6 +565,29 @@ public class GraphElement implements Comparable<GraphElement> {
     }
 
     /**
+     * Thickness of line or outline
+     */
+    public void setThickness(Integer thickness) throws Terminate {
+        set(THICKNESS, thickness);
+    }
+
+    public Integer getThickness() {
+        return getInteger(THICKNESS);
+    }
+
+    public Integer getThickness(int state) {
+        return getInteger(state, THICKNESS);
+    }
+
+    public boolean hasThickness() {
+        return getThickness() != null;
+    }
+
+    public boolean hasThickness(int state) {
+        return getThickness(state) != null;
+    }
+
+    /**
      * Parses specific attributes that are not to be stored internally as
      * strings. This allows the GraphMLParser to create each element without
      * knowing its attributes, then collect them in order of appearance, and
@@ -583,19 +607,24 @@ public class GraphElement implements Comparable<GraphElement> {
         String weightString = null;
         String highlightString = null;
         String hiddenString = null;
+        String thicknessString = null;
         for (int i = 0; i < L.attributes.size(); i++) {
             Attribute attributeOfNode = L.attributes.get(i);
-            if (attributeOfNode.key.equals("weight")) {
+            if ( attributeOfNode.key.equals("weight") ) {
                 String attributeValue = attributeOfNode.getStringValue();
                 weightString = attributeValue;
-            } else if (attributeOfNode.key.equals("highlighted")) {
+            } else if ( attributeOfNode.key.equals("highlighted") ) {
                 String attributeValue = attributeOfNode.getStringValue();
                 highlightString = attributeValue;
-            } else if (attributeOfNode.key.equals("hidden")) {
+            } else if ( attributeOfNode.key.equals("hidden") ) {
                 String attributeValue = attributeOfNode.getStringValue();
                 hiddenString = attributeValue;
             }
-        } 
+            else if ( attributeOfNode.key.equals("thickness") ) {
+                String attributeValue = attributeOfNode.getStringValue();
+                thicknessString = attributeValue;
+            }
+        }
         if (weightString != null) {
             Double weight = Double.NaN;
             try {
@@ -613,6 +642,18 @@ public class GraphElement implements Comparable<GraphElement> {
             if (highlighted) {
                 L.set(HIGHLIGHTED, highlighted);
             }
+        }
+
+        if ( thicknessString != null ) {
+            Integer thickness = 0;
+            try {
+                thickness = Integer.parseInt(thicknessString);
+            }
+            catch (NumberFormatException e) {
+                throw new GalantException("Bad thickness " + thicknessString);
+            }
+            L.remove(THICKNESS);
+            L.set(THICKNESS, thickness);
         }
 
         /**

@@ -666,11 +666,12 @@ public class GraphPanel extends JPanel {
         } else {
             // Straight edge
             g2d.drawLine(p1.x, p1.y, p2.x, p2.y);
-            // g2d.setStroke(oldStroke);
 
             if ( g.isDirected() ) {
                 drawDirectedArrow(source, target, g2d, thickness);
             }
+            // so that boxes around labels are not governed by thickness
+            g2d.setStroke(oldStroke);
             if ( labelVisible(e) )
                 drawEdgeLabel(e.getLabel(this.displayState), p1, p2, g2d);
             if ( weightVisible(e) )
@@ -695,8 +696,8 @@ public class GraphPanel extends JPanel {
             int thickness) {
         Graphics2D g = (Graphics2D) g2d.create();
 
-        double dx = target.getX() - source.getX();
-        double dy = target.getY() - source.getY();
+        double dx = target.getX(this.displayState) - source.getX(this.displayState);
+        double dy = target.getY(this.displayState) - source.getY(this.displayState);
         double angle = Math.atan2(dy, dx);
 
         int radius = this.nodeRadius;
@@ -705,8 +706,8 @@ public class GraphPanel extends JPanel {
         }
         int len = (int) Math.sqrt(dx * dx + dy * dy) - radius;
 
-        AffineTransform at = AffineTransform.getTranslateInstance(source.getX(),
-                source.getY());
+        AffineTransform at = AffineTransform.getTranslateInstance(source.getX(this.displayState),
+                source.getY(this.displayState));
         at.concatenate(AffineTransform.getRotateInstance(angle));
         g.transform(at);
 
@@ -733,8 +734,8 @@ public class GraphPanel extends JPanel {
         if ( node.hasRadius(this.displayState) ) {
             radius = node.getRadius(this.displayState);
         }
-        int x = node.getX() + 1;
-        int y = node.getY() + radius;
+        int x = node.getX(this.displayState) + 1;
+        int y = node.getY(this.displayState) + radius;
 
         int arrowWidth = (int) ARROW_WIDTH_FACTOR * thickness;
         if ( arrowWidth < MIN_ARROW_WIDTH )

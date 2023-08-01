@@ -5,7 +5,7 @@ xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns
 http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
  <graph  edgedefault="directed">
   <node id="0" x="228" y="147"  color="#0000ff" thickness="7" />
-  <node id="1" x="419" y="191"  color="#00ff00" />
+  <node id="1" x="419" y="191"  color="#00ff00" radius="20" />
   <node id="2" x="309" y="311"  highlighted="true" />
   <node id="3" x="153" y="244"  />
   <edge  source="0" target="1" color="#0000ff" thickness="7"  />

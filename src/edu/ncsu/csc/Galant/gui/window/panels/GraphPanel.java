@@ -554,8 +554,8 @@ public class GraphPanel extends JPanel {
         if ( node.hasRadius(this.displayState) ) {
             radius = node.getRadius(this.displayState);
         }
-        Ellipse2D.Double nodeCircle = new Ellipse2D.Double(nodeCenter.x - this.nodeRadius,
-                nodeCenter.y - this.nodeRadius,
+        Ellipse2D.Double nodeCircle = new Ellipse2D.Double(nodeCenter.x - radius,
+                nodeCenter.y - radius,
                 2 * radius,
                 2 * radius);
 

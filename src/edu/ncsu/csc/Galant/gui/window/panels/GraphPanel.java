@@ -596,10 +596,8 @@ public class GraphPanel extends JPanel{
 	 * @param g2d The graphics object used to draw the elements
 	 */
 	private void drawEdge(Graph g, Edge e, Graphics2D g2d) 
-        throws GalantException
-    {
+        throws GalantException {
         int stateNumber = dispatch.getDisplayState();
-        int thickness = defaultThickness;
 		
         Node target = e.getTargetNode();
         Node source = e.getSourceNode();
@@ -607,43 +605,43 @@ public class GraphPanel extends JPanel{
         Point p2 = getNodeCenter(target);
                 
         // determine color and thickness of the edge
-        if ( e.isSelected(stateNumber) ) {
-            g2d.setColor(HIGHLIGHT_COLOR);
-            thickness = highlightThickness; 
+        int thickness = defaultThickness;
+        if ( e.hasThickness(stateNumber) ) {
+            thickness = e.getThickness(stateNumber);
         }
-        else {
-            String edgeColor = e.getColor(stateNumber);
-            if ( edgeColor != null ) {
-                Color c = Color.decode(e.getColor(stateNumber));
-                g2d.setColor(c);
-                thickness = highlightThickness;
-            }
-            else {
-                g2d.setColor(DEFAULT_COLOR);
-            }
+        else if ( e.isSelected(stateNumber) || e.hasColor() ) {
+            thickness = highlightThickness;
         }
 
-        // determine stroke
+        Color edgeColor = DEFAULT_COLOR;
+        if ( e.hasColor(stateNumber) ) {
+            edgeColor = Color.decode(e.getColor(stateNumber));
+        }
+        else if ( e.isSelected(stateNumber) ) {
+            edgeColor = HIGHLIGHT_COLOR;
+        }
+
+        // save current stroke
+        // @todo not clear why this is needed; current code restores after each setting
         Stroke oldStroke = g2d.getStroke();
-        // special case: selected edge (dashed)
+        Stroke currentStroke = new BasicStroke(thickness);
+        // special case: edge is selected during editing
         if ( selectedEdge != null
              && selectedEdge.equals(e)
              && ! dispatch.isAnimationMode() ) {
-            Stroke selectedStroke
+            currentStroke
                 = new BasicStroke(highlightThickness,
                                   BasicStroke.CAP_BUTT,
                                   BasicStroke.JOIN_BEVEL, 0,
                                   SELECTED_EDGE_DASH_PATTERN, 0);
-            g2d.setStroke(selectedStroke);
         }
-        else {
-            g2d.setStroke(new BasicStroke(thickness));
-        }
+        g2d.setColor(edgeColor);
+        g2d.setStroke(currentStroke);
 
         if ( target.equals(source) ) {
             // Self loop
             g2d.drawOval(p1.x, p1.y, SELF_LOOP_DIAMETER, SELF_LOOP_DIAMETER);
-            g2d.setStroke(oldStroke);
+        //    g2d.setStroke(oldStroke);
             if (g.isDirected()) {
                 drawSelfLoopArrow(p1, g2d);
             }
@@ -651,7 +649,7 @@ public class GraphPanel extends JPanel{
         else {
             // Straight edge
             g2d.drawLine(p1.x, p1.y, p2.x, p2.y);
-            g2d.setStroke(oldStroke);
+        //    g2d.setStroke(oldStroke);
 
             if (g.isDirected()) {
                 drawDirectedArrow(p1, p2, g2d);
@@ -661,7 +659,7 @@ public class GraphPanel extends JPanel{
             if ( weightVisible(e) )
                 drawEdgeWeight(e.getWeight(stateNumber), p1, p2, g2d);
         }
-        g2d.setColor(Color.BLACK);
+        // g2d.setColor(Color.BLACK);
     }
 	
 	/**

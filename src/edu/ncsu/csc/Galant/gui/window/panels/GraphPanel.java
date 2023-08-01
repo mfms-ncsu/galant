@@ -140,6 +140,15 @@ public class GraphPanel extends JPanel{
     private final int SELF_LOOP_DIAMETER = 24;
 
     /**
+     * width of an arrow is line thickness times this
+     */
+    private final double ARROW_WIDTH_FACTOR = 1.5;
+    /**
+     * width of an arrow must be at least this
+     */
+    private final int MIN_ARROW_WIDTH = 5;
+
+    /**
      * Node weights and labels are to the right of their nodes. Weights
      * appear above labels.
      *
@@ -643,7 +652,7 @@ public class GraphPanel extends JPanel{
             g2d.drawOval(p1.x, p1.y, SELF_LOOP_DIAMETER, SELF_LOOP_DIAMETER);
         //    g2d.setStroke(oldStroke);
             if (g.isDirected()) {
-                drawSelfLoopArrow(p1, g2d);
+                drawSelfLoopArrow(p1, g2d, thickness);
             }
         }
         else {
@@ -652,7 +661,7 @@ public class GraphPanel extends JPanel{
         //    g2d.setStroke(oldStroke);
 
             if (g.isDirected()) {
-                drawDirectedArrow(p1, p2, g2d);
+                drawDirectedArrow(p1, p2, g2d, thickness);
             }
             if ( labelVisible(e) )
                 drawEdgeLabel(e.getLabel(stateNumber), p1, p2, g2d);
@@ -668,13 +677,12 @@ public class GraphPanel extends JPanel{
 	 * @param source The source point of the relevant edge
 	 * @param dest The destination point of the relevant edge
 	 * @param g2d The graphics object used to draw the elements
-         *
-         * @todo Too many magic numbers!
+     * @param thickness The thickness of the line used for the edge
 	 */
-	private void drawDirectedArrow(Point source, Point dest, Graphics2D g2d) {
+	private void drawDirectedArrow(Point source, Point dest, Graphics2D g2d, int thickness) {
 		Graphics2D g = (Graphics2D) g2d.create();
 		
-        double dx = dest.getX() - source.getX(); 
+        double dx = dest.getX() - source.getX();
         double dy = dest.getY() - source.getY();
         double angle = Math.atan2(dy, dx);
         
@@ -685,9 +693,10 @@ public class GraphPanel extends JPanel{
         g.transform(at);
 
         Stroke oldStroke = g.getStroke();
-		
-        g.fillPolygon(new int[] {len, len-6, len-6, len},
-                      new int[] {0, -6, 6, 0}, 4);
+        int arrowWidth = (int) ARROW_WIDTH_FACTOR * thickness;
+        if ( arrowWidth < MIN_ARROW_WIDTH ) arrowWidth = MIN_ARROW_WIDTH;		
+        g.fillPolygon(new int[] {len, len - arrowWidth, len - arrowWidth, len},
+                      new int[] {0, -arrowWidth, arrowWidth, 0}, 4);
     }
 	
 	/**
@@ -695,15 +704,16 @@ public class GraphPanel extends JPanel{
 	 * 
 	 * @param p1 The location of the relevant node
 	 * @param g2d The graphics object used to draw the elements
-         *
-         * @todo Too many magic numbers!
-	 */
-	private void drawSelfLoopArrow(Point p1, Graphics2D g2d) {
+     * @param thickness The thickness of the line used for the edge
+     */
+	private void drawSelfLoopArrow(Point p1, Graphics2D g2d, int thickness) {
 		int x = p1.x + 1;
 		int y = p1.y + nodeRadius;
 		
-		g2d.fillPolygon(new int[] {x, x-6, x+6, x},
-                      new int[] {y, y+6, y+6, y}, 4);
+        int arrowWidth = (int) ARROW_WIDTH_FACTOR * thickness;
+        if ( arrowWidth < MIN_ARROW_WIDTH ) arrowWidth = MIN_ARROW_WIDTH;
+		g2d.fillPolygon(new int[] {x, x - arrowWidth, x + arrowWidth, x},
+                      new int[] {y, y + arrowWidth, y + arrowWidth, y}, 4);
 	}
 	
 	/**

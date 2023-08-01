@@ -287,7 +287,7 @@ public class GraphPanel extends JPanel {
 
         // Draw edges first to put them behind nodes
         for ( Edge e : edges ) {
-            if ( e.inScope(state) && ! e.isHidden(this.displayState)
+            if ( e.inScope(this.displayState) && ! e.isHidden(this.displayState)
                     && ! e.getSource().isHidden(this.displayState)
                     && ! e.getTarget().isHidden(this.displayState) )
                 drawEdge(graph, e, g2d);
@@ -408,21 +408,21 @@ public class GraphPanel extends JPanel {
     }
 
     /**
-     * @return the point at the center of node n, based on whether or not
+     * @return the point at the center of the node, based on whether or not
      *         you're in animation mode or whether the graph is layered.
      *
      * @todo !!! [Senior Design Team] !!!
      *       This is *the* place where the distinction between logical and
      *       physical position needs to be handled
      */
-    private Point getNodeCenter(Node n) throws GalantException {
+    private Point getNodeCenter(Node node) throws GalantException {
         Point nodeCenter = null;
 
         if ( dispatch.isAnimationMode()
                 && GraphDispatch.getInstance().algorithmMovesNodes() ) {
-            nodeCenter = n.getPosition(this.displayState);
+            nodeCenter = node.getPosition(this.displayState);
         } else {
-            nodeCenter = n.getFixedPosition();
+            nodeCenter = node.getFixedPosition();
         }
 
         // if graph is layered and node has layer and position in layer
@@ -430,9 +430,9 @@ public class GraphPanel extends JPanel {
         if ( dispatch.getWorkingGraph().isLayered() ) {
             int x = 0;
             int y = 0;
-            int layer = n.getLayer(); // should not change during an
+            int layer = node.getLayer(); // should not change during an
                                       // animation of a layered graph algorithm
-            int position = n.getPositionInLayer(this.displayState);
+            int position = node.getPositionInLayer(this.displayState);
             int layerSize = 1;
             // vertical layered graphs have gaps in positions on some layers,
             // i.e., positions on some layers are not contiguous; in that
@@ -459,13 +459,13 @@ public class GraphPanel extends JPanel {
             } else {
                 int layerGap = (height - 2 * VERTICAL_PADDING) / (numberOfLayers - 1);
                 y = VERTICAL_PADDING
-                        + n.getLayer() * layerGap;
+                        + node.getLayer() * layerGap;
                 // + (numberOfLayers - n.getLayer() - 1) * layerGap;
             }
             nodeCenter = new Point(x, y);
         }
         if ( nodeCenter == null )
-            throw new GalantException("Unable to compute center for node " + n);
+            throw new GalantException("Unable to compute center for node " + node);
         return nodeCenter;
     }
 
@@ -476,18 +476,18 @@ public class GraphPanel extends JPanel {
      * position that going through the algorithm is used if algorithm don't move
      * nodes in the middle of execution, which is the most usual case.
      * 
-     * @param n
+     * @param node
      *            The node to be drawn (assumed to be non-null)
      * @param g2d
      *            The graphics object used to draw the elements
      */
-    private void drawNode(Node n, Graphics2D g2d)
+    private void drawNode(Node node, Graphics2D g2d)
             throws GalantException {
-        Point nodeCenter = getNodeCenter(n);
+        Point nodeCenter = getNodeCenter(node);
         g2d.setColor(Color.BLACK);
 
-        if ( labelVisible(n) ) {
-            String label = n.getLabel(this.displayState);
+        if ( labelVisible(node) ) {
+            String label = node.getLabel(this.displayState);
             if ( ! label.trim().equals("") ) {
                 TextLayout layout = new TextLayout(label, NODE_LABEL_FONT,
                         g2d.getFontRenderContext());
@@ -497,7 +497,7 @@ public class GraphPanel extends JPanel {
                 // ditto with weight below
                 int radius = this.nodeRadius;
                 if ( node.hasRadius(this.displayState) ) {
-                    radius = node.getRadius(this.displayState)
+                    radius = node.getRadius(this.displayState);
                 }
                 Point labelPosition = new Point(nodeCenter.x
                         + radius
@@ -517,15 +517,15 @@ public class GraphPanel extends JPanel {
             }
         } // end, draw node label
 
-        if ( weightVisible(n) ) {
-            String weight = doubleToString(n.getWeight(this.displayState));
+        if ( weightVisible(node) ) {
+            String weight = doubleToString(node.getWeight(this.displayState));
             TextLayout layout = new TextLayout(weight, NODE_WEIGHT_FONT,
                     g2d.getFontRenderContext());
             Rectangle2D bounds = layout.getBounds();
             // padding is 'shared' with node label
             int radius = this.nodeRadius;
             if ( node.hasRadius(this.displayState) ) {
-                radius = node.getRadius(this.displayState)
+                radius = node.getRadius(this.displayState);
             }
             Point weightPosition = new Point(nodeCenter.x
                     + radius
@@ -552,7 +552,7 @@ public class GraphPanel extends JPanel {
          */
         int radius = this.nodeRadius;
         if ( node.hasRadius(this.displayState) ) {
-            radius = node.getRadius(this.displayState)
+            radius = node.getRadius(this.displayState);
         }
         Ellipse2D.Double nodeCircle = new Ellipse2D.Double(nodeCenter.x - this.nodeRadius,
                 nodeCenter.y - this.nodeRadius,
@@ -561,10 +561,10 @@ public class GraphPanel extends JPanel {
 
         /* draw node interior */
         if ( selectedNode != null
-                && selectedNode.equals(n)
+                && selectedNode.equals(node)
                 && ! dispatch.isAnimationMode() ) {
             g2d.setColor(SELECTED_NODE_COLOR);
-        } else if ( n.isMarked(this.displayState) ) {
+        } else if ( node.isMarked(this.displayState) ) {
             g2d.setColor(MARKED_NODE_COLOR);
         } else {
             g2d.setColor(Color.WHITE);
@@ -573,16 +573,16 @@ public class GraphPanel extends JPanel {
 
         /* set up thickness and color for drawing node boundary */
         int thickness = defaultThickness;
-        if ( n.hasThickness(this.displayState) ) {
-            thickness = n.getThickness(this.displayState);
-        } else if ( n.isSelected(this.displayState) || n.hasColor() ) {
+        if ( node.hasThickness(this.displayState) ) {
+            thickness = node.getThickness(this.displayState);
+        } else if ( node.isSelected(this.displayState) || node.hasColor(this.displayState) ) {
             thickness = highlightThickness;
         }
 
         Color borderColor = DEFAULT_COLOR;
-        if ( n.hasColor(this.displayState) ) {
-            borderColor = Color.decode(n.getColor(this.displayState));
-        } else if ( n.isSelected(this.displayState) ) {
+        if ( node.hasColor(this.displayState) ) {
+            borderColor = Color.decode(node.getColor(this.displayState));
+        } else if ( node.isSelected(this.displayState) ) {
             borderColor = HIGHLIGHT_COLOR;
         }
 
@@ -595,7 +595,7 @@ public class GraphPanel extends JPanel {
         /** @todo get rid of magic numbers here */
         if ( displayIds ) {
             g2d.setColor(Color.BLACK);
-            String idStr = "" + n.getId();
+            String idStr = "" + node.getId();
             if ( idStr.length() > 1 ) {
                 g2d.drawChars(idStr.toCharArray(), 0,
                         idStr.length(),
@@ -629,7 +629,7 @@ public class GraphPanel extends JPanel {
         int thickness = defaultThickness;
         if ( e.hasThickness(this.displayState) ) {
             thickness = e.getThickness(this.displayState);
-        } else if ( e.isSelected(this.displayState) || e.hasColor() ) {
+        } else if ( e.isSelected(this.displayState) || e.hasColor(this.displayState) ) {
             thickness = highlightThickness;
         }
 
@@ -661,7 +661,7 @@ public class GraphPanel extends JPanel {
             g2d.drawOval(p1.x, p1.y, SELF_LOOP_DIAMETER, SELF_LOOP_DIAMETER);
             // g2d.setStroke(oldStroke);
             if ( g.isDirected() ) {
-                drawSelfLoopArrow(p1, g2d, thickness);
+                drawSelfLoopArrow(target, g2d, thickness);
             }
         } else {
             // Straight edge
@@ -669,7 +669,7 @@ public class GraphPanel extends JPanel {
             // g2d.setStroke(oldStroke);
 
             if ( g.isDirected() ) {
-                drawDirectedArrow(p1, p2, g2d, thickness);
+                drawDirectedArrow(source, target, g2d, thickness);
             }
             if ( labelVisible(e) )
                 drawEdgeLabel(e.getLabel(this.displayState), p1, p2, g2d);
@@ -683,25 +683,25 @@ public class GraphPanel extends JPanel {
      * Draws a directed arrow on the end of an edge between the specified nodes
      * 
      * @param source
-     *            The source point of the relevant edge
-     * @param dest
-     *            The destination point of the relevant edge
+     *            The source node of the relevant edge
+     * @param target
+     *            The target node of the relevant edge
      * @param g2d
      *            The graphics object used to draw the elements
      * @param thickness
      *            The thickness of the line used for the edge
      */
-    private void drawDirectedArrow(Point source, Point dest, Graphics2D g2d,
+    private void drawDirectedArrow(Node source, Node target, Graphics2D g2d,
             int thickness) {
         Graphics2D g = (Graphics2D) g2d.create();
 
-        double dx = dest.getX() - source.getX();
-        double dy = dest.getY() - source.getY();
+        double dx = target.getX() - source.getX();
+        double dy = target.getY() - source.getY();
         double angle = Math.atan2(dy, dx);
 
         int radius = this.nodeRadius;
-        if ( node.hasRadius(this.displayState) ) {
-            radius = node.getRadius(this.displayState);
+        if ( target.hasRadius(this.displayState) ) {
+            radius = target.getRadius(this.displayState);
         }
         int len = (int) Math.sqrt(dx * dx + dy * dy) - radius;
 
@@ -877,10 +877,10 @@ public class GraphPanel extends JPanel {
         }
 
         int radius = this.nodeRadius;
-        if ( node.hasRadius(this.displayState) ) {
-            radius = node.getRadius(this.displayState)
+/*         if ( node.hasRadius(this.displayState) ) {
+            radius = node.getRadius(this.displayState);
         }
-        int len = (int) Math.sqrt(dx * dx + dy * dy) - radius;
+ */        int len = (int) Math.sqrt(dx * dx + dy * dy) - radius;
 
         AffineTransform at = AffineTransform.getTranslateInstance(p1.getX(), p1.getY());
         at.concatenate(AffineTransform.getRotateInstance(angle));

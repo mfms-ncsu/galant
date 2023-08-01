@@ -276,7 +276,7 @@ public class Node extends GraphElement {
         return getRadius(state) != null;
     }
 
-    public void clearRadius() {
+    public void clearRadius() throws Terminate {
         clear(RADIUS);
     }
 
@@ -416,7 +416,7 @@ public class Node extends GraphElement {
             } catch ( NumberFormatException e ) {
                 throw new GalantException("Bad radius " + radiusString);
             }
-            L.remove(radius);
+            L.remove(RADIUS);
             L.set(RADIUS, radius);
         }
         super.initializeAfterParsing(L);

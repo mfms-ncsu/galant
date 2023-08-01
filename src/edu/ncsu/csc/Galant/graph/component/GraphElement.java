@@ -594,7 +594,7 @@ public class GraphElement implements Comparable<GraphElement> {
         return getThickness(state) != null;
     }
 
-    public void clearThickness() {
+    public void clearThickness() throws Terminate {
         clear(THICKNESS);
     }
 

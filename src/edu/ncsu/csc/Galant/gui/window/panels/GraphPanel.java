@@ -45,22 +45,29 @@ import edu.ncsu.csc.Galant.algorithm.Terminate;
 import edu.ncsu.csc.Galant.algorithm.AlgorithmExecutor;
 import edu.ncsu.csc.Galant.Timer;
 
-public class GraphPanel extends JPanel{
+public class GraphPanel extends JPanel {
 
-  private GraphWindow gw;
-  public boolean setGraphWindow(GraphWindow a){
-    this.gw = a;
-    return false;
-  }
+    private GraphWindow gw;
 
-  /**
-   * preferred panel dimensions
-   */
-  public static final int PANEL_WIDTH = 600;
-  public static final int PANEL_HEIGHT = 600;
+    /**
+     * current display state - set each time the panel is repainted
+     */
+    private int displayState = 0;
+
+    public boolean setGraphWindow(GraphWindow a) {
+        this.gw = a;
+        return false;
+    }
+
+    /**
+     * preferred panel dimensions
+     */
+    public static final int PANEL_WIDTH = 600;
+    public static final int PANEL_HEIGHT = 600;
 
     /**
      * padding on sides and top/bottom for layered graph drawing
+     * 
      * @todo make this a preference
      */
     private final int HORIZONTAL_PADDING = 100;
@@ -79,9 +86,9 @@ public class GraphPanel extends JPanel{
     /**
      * dash pattern for selected edge (length of dash, non-dash, ...)
      */
-    private final float [] SELECTED_EDGE_DASH_PATTERN = {5};
+    private final float[] SELECTED_EDGE_DASH_PATTERN = { 5 };
 
-    /** 
+    /**
      * interior color of marked node during algorithm execution
      */
     private final Color MARKED_NODE_COLOR = Color.LIGHT_GRAY;
@@ -171,10 +178,10 @@ public class GraphPanel extends JPanel{
     /**
      * Fonts used for various labels/weights
      */
-    private final Font NODE_LABEL_FONT = new Font( Font.MONOSPACED, Font.PLAIN, 20 );
-    private final Font NODE_WEIGHT_FONT = new Font( Font.MONOSPACED, Font.BOLD, 20 );
-    private final Font EDGE_LABEL_FONT = new Font( Font.MONOSPACED, Font.PLAIN, 20 );
-    private final Font EDGE_WEIGHT_FONT = new Font( Font.MONOSPACED, Font.BOLD, 20 );
+    private final Font NODE_LABEL_FONT = new Font(Font.MONOSPACED, Font.PLAIN, 20);
+    private final Font NODE_WEIGHT_FONT = new Font(Font.MONOSPACED, Font.BOLD, 20);
+    private final Font EDGE_LABEL_FONT = new Font(Font.MONOSPACED, Font.PLAIN, 20);
+    private final Font EDGE_WEIGHT_FONT = new Font(Font.MONOSPACED, Font.BOLD, 20);
 
     /**
      * Padding used for *both* weights and labels
@@ -186,14 +193,14 @@ public class GraphPanel extends JPanel{
      */
     private final int NODE_LABEL_DISTANCE = 2;
 
-	/** Refers to the singleton GraphDispatch to push global information */
-	private final GraphDispatch dispatch;
-	
-	/**
-	 * Holds the width to draw edges and node boundaries. Pulled on each
-	 * repaint from the Galant Preferences 
-	 */
-	private int defaultThickness = DEFAULT_WIDTH;
+    /** Refers to the singleton GraphDispatch to push global information */
+    private final GraphDispatch dispatch;
+
+    /**
+     * Holds the width to draw edges and node boundaries. Pulled on each
+     * repaint from the Galant Preferences
+     */
+    private int defaultThickness = DEFAULT_WIDTH;
 
     /**
      * Holds the width to draw edges and node boundaries when these are
@@ -201,100 +208,100 @@ public class GraphPanel extends JPanel{
      */
     private int highlightThickness = DEFAULT_HIGHLIGHT_WIDTH;
 
-	/**
-	 * Holds the radius for drawing nodes. Pulled on each repaint
-	 * from the Galant Preferences
-	 */
-	private int nodeRadius = DEFAULT_NODE_RADIUS;
-	
+    /**
+     * Holds the radius for drawing nodes. Pulled on each repaint
+     * from the Galant Preferences
+     */
+    private int nodeRadius = DEFAULT_NODE_RADIUS;
+
     /**
      * whether or not to display the id's of nodes
      */
     private boolean displayIds = false;
 
-	private Node previousNode;
-	private Node selectedNode;
-	private Edge selectedEdge;
-	private Point edgeTracker;
+    private Node previousNode;
+    private Node selectedNode;
+    private Edge selectedEdge;
+    private Point edgeTracker;
 
-	private static final String EMPTY_STRING = "";
+    private static final String EMPTY_STRING = "";
 
     /**
      * @return a "nice" string version of a double: no decimal point if it's
-     * an integer, 'inf' if it's infinity, and only two decimal places
-     * otherwise
+     *         an integer, 'inf' if it's infinity, and only two decimal places
+     *         otherwise
      */
-    private String doubleToString( double number ) {
-       if ( (int) number == number ) {
-           // integer
-           return String.format("%d", (int) number);
-       }
-       // round to two decimal digits (and cut trailing 0's ?)
-       return new DecimalFormat("#.##").format(number);
+    private String doubleToString(double number) {
+        if ( (int) number == number ) {
+            // integer
+            return String.format("%d", (int) number);
+        }
+        // round to two decimal digits (and cut trailing 0's ?)
+        return new DecimalFormat("#.##").format(number);
     }
 
-	/** 
-	 * Sets whether the user has pressed the mouse button and is dragging the
-	 * mouse Used by GraphWindow to determine certain graph changes.
-	 */
-	private boolean isDragging;
+    /**
+     * Sets whether the user has pressed the mouse button and is dragging the
+     * mouse Used by GraphWindow to determine certain graph changes.
+     */
+    private boolean isDragging;
 
-	public boolean isDragging() {
-		return isDragging;
-	}
+    public boolean isDragging() {
+        return isDragging;
+    }
 
-	public void setDragging(boolean isDragging) {
-		this.isDragging = isDragging;
-	}
+    public void setDragging(boolean isDragging) {
+        this.isDragging = isDragging;
+    }
 
-	/**
-	 * Initializes the dispatch field and the size of this panel.
-	 * 
-	 * @param _dispatch A reference to the GraphDispatch
-	 */
-	public GraphPanel(GraphDispatch _dispatch, GraphWindow a) {
-		LogHelper.enterConstructor(getClass());
-		
-		this.dispatch = _dispatch;
-		this.gw = a;
-		
-        //		this.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
-		
+    /**
+     * Initializes the dispatch field and the size of this panel.
+     * 
+     * @param _dispatch
+     *            A reference to the GraphDispatch
+     */
+    public GraphPanel(GraphDispatch _dispatch, GraphWindow a) {
+        LogHelper.enterConstructor(getClass());
+
+        this.dispatch = _dispatch;
+        this.gw = a;
+
+        // this.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
+
         this.setBackground(Color.WHITE);
-		LogHelper.exitConstructor(getClass());
-	}
+        LogHelper.exitConstructor(getClass());
+    }
 
-  public void drawGraph(Graph graph, Graphics2D g2d, int state)
-    throws GalantException
-  {
-    Timer.drawingTime.start();
-    List<Node> nodes = null;
-    List<Edge> edges = null;
-    // If there is a message, draw it
-    String message = graph.getMessage(state);
-    if ( message != null ) {
-      drawMessageBanner(message, g2d);
+    public void drawGraph(Graph graph, Graphics2D g2d)
+            throws GalantException {
+        Timer.drawingTime.start();
+        List<Node> nodes = null;
+        List<Edge> edges = null;
+        // If there is a message, draw it
+        String message = graph.getMessage(this.displayState);
+        if ( message != null ) {
+            drawMessageBanner(message, g2d);
+        }
+        nodes = graph.getAllNodes();
+        edges = graph.getAllEdges();
+
+        // Draw edges first to put them behind nodes
+        for ( Edge e : edges ) {
+            if ( e.inScope(state) && ! e.isHidden(this.displayState)
+                    && ! e.getSource().isHidden(this.displayState)
+                    && ! e.getTarget().isHidden(this.displayState) )
+                drawEdge(graph, e, g2d);
+        }
+
+        for ( Node n : nodes ) {
+            if ( n.inScope(this.displayState) && ! n.isHidden(this.displayState) )
+                drawNode(n, g2d);
+        }
+        Timer.drawingTime.stop();
     }
-    nodes = graph.getAllNodes();
-    edges = graph.getAllEdges();
-		
-    // Draw edges first to put them behind nodes
-    for (Edge e : edges) {
-      if ( e.inScope(state) && ! e.isHidden(state)
-           && ! e.getSource().isHidden(state)
-           && ! e.getTarget().isHidden(state) )
-        drawEdge(graph, e, g2d);
-    }
-		
-    for (Node n : nodes) {
-      if ( n.inScope(state) && ! n.isHidden(state) )
-        drawNode(n, g2d);
-    }
-    Timer.drawingTime.stop();
-  }
 
     @Override
-	public void paintComponent(Graphics g) {
+    public void paintComponent(Graphics g) {
         try {
             // Get the graph to draw
             Graph graph = dispatch.getWorkingGraph();
@@ -307,111 +314,114 @@ public class GraphPanel extends JPanel{
 
             // Get node radius
             this.nodeRadius = GalantPreferences.NODE_RADIUS.get();
-	
+
             // display id's only if radius is large enough
-            displayIds = ( nodeRadius >= MINIMUM_ID_RADIUS );
+            /**
+             * @todo this will need to change if displaying id becomes a node attribute
+             */
+            displayIds = (this.nodeRadius >= MINIMUM_ID_RADIUS);
 
             super.paintComponent(g);
             Graphics2D g2d = (Graphics2D) g;
-            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                    RenderingHints.VALUE_ANTIALIAS_ON);
+            g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+                    RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
             // If you're drawing an edge, draw a line between the first node and
             // the cursor
             if ( ! dispatch.isAnimationMode()
-                 && this.selectedNode != null
-                 && this.edgeTracker != null ) {
+                    && this.selectedNode != null
+                    && this.edgeTracker != null ) {
                 Point p1 = edgeTracker;
                 Point p2 = selectedNode.getFixedPosition();
                 g2d.drawLine(p1.x, p1.y, p2.x, p2.y);
             }
-		
-            if (graph != null) {
-                  // Get the current display state or the edit state
-                  int state = dispatch.getDisplayState();
-                  drawGraph(graph, g2d, state);
+
+            this.displayState = dispatch.getDisplayState();
+            if ( graph != null ) {
+                // Get the current display state or the edit state
+                drawGraph(graph, g2d);
             }
-        }
-        catch (GalantException e) {
-            e.report( "error while redrawing" );
+        } catch ( GalantException e ) {
+            e.report("error while redrawing");
         }
     }
 
     /**
      * @return true if the label of the node should be visible; the answer
-     * is controlled by toggle switches when not in animation mode and by the
-     * algorithm otherwise.
+     *         is controlled by toggle switches when not in animation mode and by
+     *         the
+     *         algorithm otherwise.
      */
     private boolean labelVisible(Node node) {
-        if ( ! GraphDisplays.NODE_LABELS.isShown() ) return false;
-        int state = dispatch.getDisplayState();
-        boolean visible = node.hasLabel(state)
-            && ! (node.getLabel(state).length() == 0)
-            && ! node.labelIsHidden(state);
+        if ( ! GraphDisplays.NODE_LABELS.isShown() )
+            return false;
+        boolean visible = node.hasLabel(this.displayState)
+                && ! (node.getLabel(this.displayState).length() == 0)
+                && ! node.labelIsHidden(this.displayState);
         return visible;
     }
 
     /**
      * @return true if the weight of the node should be visible; the answer
-     * is controlled by toggle switches when not in animation mode and by the
-     * algorithm otherwise.
+     *         is controlled by toggle switches when not in animation mode and by
+     *         the
+     *         algorithm otherwise.
      */
     private boolean weightVisible(Node node) {
-        
-        int state = dispatch.getDisplayState(); 
-        boolean visible = node.hasWeight(state);
+
+        boolean visible = node.hasWeight(this.displayState);
         visible = visible
-            && GraphDisplays.NODE_WEIGHTS.isShown()
-            && ! node.weightIsHidden(state);
+                && GraphDisplays.NODE_WEIGHTS.isShown()
+                && ! node.weightIsHidden(this.displayState);
         return visible;
     }
 
     /**
      * @return true if the label of the edge should be visible; the answer
-     * is controlled by toggle switches when not in animation mode and by the
-     * algorithm otherwise.
+     *         is controlled by toggle switches when not in animation mode and by
+     *         the
+     *         algorithm otherwise.
      */
     private boolean labelVisible(Edge edge) {
-        int state = dispatch.getDisplayState();
-        boolean visible = edge.hasLabel(state)
-            && ! (edge.getLabel(state).length() == 0);
+        boolean visible = edge.hasLabel(this.displayState)
+                && ! (edge.getLabel(this.displayState).length() == 0);
         visible = visible
-            && GraphDisplays.EDGE_LABELS.isShown()
-            && ! edge.labelIsHidden(state);
+                && GraphDisplays.EDGE_LABELS.isShown()
+                && ! edge.labelIsHidden(this.displayState);
         return visible;
     }
 
     /**
      * @return true if the weight of the edge should be visible; the answer
-     * is controlled by toggle switches when not in animation mode and by the
-     * algorithm otherwise.
+     *         is controlled by toggle switches when not in animation mode and by
+     *         the
+     *         algorithm otherwise.
      */
     private boolean weightVisible(Edge edge) {
-        int state = dispatch.getDisplayState(); 
-        boolean visible = edge.hasWeight(state);
+        boolean visible = edge.hasWeight(this.displayState);
         visible = visible
-            && GraphDisplays.EDGE_WEIGHTS.isShown()
-            && ! edge.weightIsHidden(state);
+                && GraphDisplays.EDGE_WEIGHTS.isShown()
+                && ! edge.weightIsHidden(this.displayState);
         return visible;
     }
 
     /**
      * @return the point at the center of node n, based on whether or not
-     * you're in animation mode or whether the graph is layered.
+     *         you're in animation mode or whether the graph is layered.
      *
      * @todo !!! [Senior Design Team] !!!
-     * This is *the* place where the distinction between logical and
-     * physical position needs to be handled
+     *       This is *the* place where the distinction between logical and
+     *       physical position needs to be handled
      */
-    private Point getNodeCenter( Node n ) throws GalantException{
-        int state = dispatch.getDisplayState();
+    private Point getNodeCenter(Node n) throws GalantException {
         Point nodeCenter = null;
 
         if ( dispatch.isAnimationMode()
-             && GraphDispatch.getInstance().algorithmMovesNodes() ) {
-            nodeCenter = n.getPosition(state);
-        }
-        else {
+                && GraphDispatch.getInstance().algorithmMovesNodes() ) {
+            nodeCenter = n.getPosition(this.displayState);
+        } else {
             nodeCenter = n.getFixedPosition();
         }
 
@@ -422,154 +432,157 @@ public class GraphPanel extends JPanel{
             int y = 0;
             int layer = n.getLayer(); // should not change during an
                                       // animation of a layered graph algorithm
-            int position = n.getPositionInLayer(state);
+            int position = n.getPositionInLayer(this.displayState);
             int layerSize = 1;
             // vertical layered graphs have gaps in positions on some layers,
             // i.e., positions on some layers are not contiguous; in that
             // case, positions should be taken "literally", i.e., position p
             // means the same thing on every layer
             if ( dispatch.getWorkingGraph().isVertical() )
-              layerSize = dispatch.getWorkingGraph().maxPositionInAnyLayer() + 1;
+                layerSize = dispatch.getWorkingGraph().maxPositionInAnyLayer() + 1;
             else
-              layerSize = dispatch.getWorkingGraph().numberOfNodesOnLayer(layer);
+                layerSize = dispatch.getWorkingGraph().numberOfNodesOnLayer(layer);
             int width = dispatch.getWindowWidth();
             // center node in layer if it's unique; else do the usual
-            if (layerSize == 1) {
+            if ( layerSize == 1 ) {
                 x = width / 2;
-            }
-            else {
-                int positionGap
-                    = (width - 2 * HORIZONTAL_PADDING) / (layerSize - 1);
+            } else {
+                int positionGap = (width - 2 * HORIZONTAL_PADDING) / (layerSize - 1);
                 x = HORIZONTAL_PADDING + position * positionGap;
             }
 
             int numberOfLayers = dispatch.getWorkingGraph().numberOfLayers();
             int height = dispatch.getWindowHeight();
             // center layer in window if it's unique; else do the usual
-            if (numberOfLayers == 1) {
+            if ( numberOfLayers == 1 ) {
                 y = height / 2;
-            }
-            else {
-                int layerGap
-                    = (height - 2 * VERTICAL_PADDING) / (numberOfLayers - 1);
+            } else {
+                int layerGap = (height - 2 * VERTICAL_PADDING) / (numberOfLayers - 1);
                 y = VERTICAL_PADDING
-                  + n.getLayer() * layerGap;
-                    // + (numberOfLayers - n.getLayer() - 1) * layerGap;
+                        + n.getLayer() * layerGap;
+                // + (numberOfLayers - n.getLayer() - 1) * layerGap;
             }
-            nodeCenter = new Point( x, y );
+            nodeCenter = new Point(x, y);
         }
         if ( nodeCenter == null )
             throw new GalantException("Unable to compute center for node " + n);
         return nodeCenter;
     }
 
-	/**
-	 * Draws the specified node and its properties to the screen
+    /**
+     * Draws the specified node and its properties to the screen
      * the positions of nodes to be drawn are determined by their state
      * dependent position, which may not be the best solution since only one
      * position that going through the algorithm is used if algorithm don't move
      * nodes in the middle of execution, which is the most usual case.
-	 * 
-	 * @param n The node to be drawn (assumed to be non-null)
-	 * @param g2d The graphics object used to draw the elements
-	 */
-	private void drawNode(Node n, Graphics2D g2d)
-        throws GalantException
-    {
-        int stateNumber = dispatch.getDisplayState();
+     * 
+     * @param n
+     *            The node to be drawn (assumed to be non-null)
+     * @param g2d
+     *            The graphics object used to draw the elements
+     */
+    private void drawNode(Node n, Graphics2D g2d)
+            throws GalantException {
         Point nodeCenter = getNodeCenter(n);
         g2d.setColor(Color.BLACK);
-		
+
         if ( labelVisible(n) ) {
-            String label = n.getLabel(stateNumber);
+            String label = n.getLabel(this.displayState);
             if ( ! label.trim().equals("") ) {
-                TextLayout layout
-                    = new TextLayout( label, NODE_LABEL_FONT,
-                                      g2d.getFontRenderContext() );
+                TextLayout layout = new TextLayout(label, NODE_LABEL_FONT,
+                        g2d.getFontRenderContext());
                 Rectangle2D bounds = layout.getBounds();
                 // upper left corner of label: treats the bounding box of
                 // as that of the label text only, without any padding;
                 // ditto with weight below
-                Point labelPosition
-                    = new Point( nodeCenter.x
-                                 + nodeRadius
-                                 + NODE_LABEL_DISTANCE + LABEL_PADDING,
-                                 nodeCenter.y
-                                 + LABEL_PADDING );
+                int radius = this.nodeRadius;
+                if ( node.hasRadius(this.displayState) ) {
+                    radius = node.getRadius(this.displayState)
+                }
+                Point labelPosition = new Point(nodeCenter.x
+                        + radius
+                        + NODE_LABEL_DISTANCE + LABEL_PADDING,
+                        nodeCenter.y
+                                + LABEL_PADDING);
                 g2d.setColor(Color.WHITE);
-                g2d.fillRect( labelPosition.x - LABEL_PADDING,
-                              labelPosition.y - LABEL_PADDING,
-                              (int) (bounds.getWidth() + 2 * LABEL_PADDING),
-                              (int) (bounds.getHeight() + 2 * LABEL_PADDING) );
+                g2d.fillRect(labelPosition.x - LABEL_PADDING,
+                        labelPosition.y - LABEL_PADDING,
+                        (int) (bounds.getWidth() + 2 * LABEL_PADDING),
+                        (int) (bounds.getHeight() + 2 * LABEL_PADDING));
                 g2d.setColor(Color.BLACK);
                 // text is anchored at *lower* left corner
-                layout.draw( g2d, (float) labelPosition.getX(),
-                             (float) (labelPosition.getY() 
-                                      + bounds.getHeight()) );
+                layout.draw(g2d, (float) labelPosition.getX(),
+                        (float) (labelPosition.getY()
+                                + bounds.getHeight()));
             }
         } // end, draw node label
-			
+
         if ( weightVisible(n) ) {
-            String weight = doubleToString(n.getWeight(stateNumber));
-            TextLayout layout = new TextLayout( weight, NODE_WEIGHT_FONT,
-                                                g2d.getFontRenderContext() );
+            String weight = doubleToString(n.getWeight(this.displayState));
+            TextLayout layout = new TextLayout(weight, NODE_WEIGHT_FONT,
+                    g2d.getFontRenderContext());
             Rectangle2D bounds = layout.getBounds();
             // padding is 'shared' with node label
-            Point weightPosition = new Point( nodeCenter.x
-                                              + nodeRadius
-                                              + NODE_LABEL_DISTANCE
-                                              + LABEL_PADDING,
-                                              nodeCenter.y
-                                              - (int) (bounds.getHeight()) );
+            int radius = this.nodeRadius;
+            if ( node.hasRadius(this.displayState) ) {
+                radius = node.getRadius(this.displayState)
+            }
+            Point weightPosition = new Point(nodeCenter.x
+                    + radius
+                    + NODE_LABEL_DISTANCE
+                    + LABEL_PADDING,
+                    nodeCenter.y
+                            - (int) (bounds.getHeight()));
             g2d.setColor(Color.WHITE);
-            g2d.fillRect( weightPosition.x - LABEL_PADDING,
-                          weightPosition.y - LABEL_PADDING,
-                          (int) (bounds.getWidth()) + 2 * LABEL_PADDING,
-                          (int) (bounds.getHeight()) + 2 * LABEL_PADDING);
+            g2d.fillRect(weightPosition.x - LABEL_PADDING,
+                    weightPosition.y - LABEL_PADDING,
+                    (int) (bounds.getWidth()) + 2 * LABEL_PADDING,
+                    (int) (bounds.getHeight()) + 2 * LABEL_PADDING);
             g2d.setColor(Color.BLACK);
             // text is anchored at *lower* left corner
-            layout.draw( g2d, (float) weightPosition.getX(),
-                         (float) (weightPosition.getY()
-                                  + bounds.getHeight()) );
+            layout.draw(g2d, (float) weightPosition.getX(),
+                    (float) (weightPosition.getY()
+                            + bounds.getHeight()));
         } // end, draw node weight
 
-        /* Define node circle: used to create both outline and fill.
-           Circle is filled first so that outline can be drawn on top of
-           the filled circle */
-        Ellipse2D.Double nodeCircle
-            = new Ellipse2D.Double( nodeCenter.x - nodeRadius,
-                                    nodeCenter.y - nodeRadius,
-                                    2 * nodeRadius,
-                                    2 * nodeRadius );
+        /*
+         * Define node circle: used to create both outline and fill.
+         * Circle is filled first so that outline can be drawn on top of
+         * the filled circle
+         */
+        int radius = this.nodeRadius;
+        if ( node.hasRadius(this.displayState) ) {
+            radius = node.getRadius(this.displayState)
+        }
+        Ellipse2D.Double nodeCircle = new Ellipse2D.Double(nodeCenter.x - this.nodeRadius,
+                nodeCenter.y - this.nodeRadius,
+                2 * radius,
+                2 * radius);
 
         /* draw node interior */
         if ( selectedNode != null
-             && selectedNode.equals(n)
-             && ! dispatch.isAnimationMode() ) {
-            g2d.setColor( SELECTED_NODE_COLOR );
+                && selectedNode.equals(n)
+                && ! dispatch.isAnimationMode() ) {
+            g2d.setColor(SELECTED_NODE_COLOR);
+        } else if ( n.isMarked(this.displayState) ) {
+            g2d.setColor(MARKED_NODE_COLOR);
+        } else {
+            g2d.setColor(Color.WHITE);
         }
-        else if ( n.isMarked(stateNumber) ) {
-            g2d.setColor( MARKED_NODE_COLOR );
-        }
-        else {
-            g2d.setColor( Color.WHITE );
-        }
-        g2d.fill( nodeCircle );
+        g2d.fill(nodeCircle);
 
         /* set up thickness and color for drawing node boundary */
         int thickness = defaultThickness;
-        if ( n.hasThickness(stateNumber) ) {
-            thickness = n.getThickness(stateNumber);
-        }
-        else if ( n.isSelected(stateNumber) || n.hasColor() ) {
+        if ( n.hasThickness(this.displayState) ) {
+            thickness = n.getThickness(this.displayState);
+        } else if ( n.isSelected(this.displayState) || n.hasColor() ) {
             thickness = highlightThickness;
         }
 
         Color borderColor = DEFAULT_COLOR;
-        if ( n.hasColor(stateNumber) ) {
-            borderColor = Color.decode(n.getColor(stateNumber));
-        }
-        else if ( n.isSelected(stateNumber) ) {
+        if ( n.hasColor(this.displayState) ) {
+            borderColor = Color.decode(n.getColor(this.displayState));
+        } else if ( n.isSelected(this.displayState) ) {
             borderColor = HIGHLIGHT_COLOR;
         }
 
@@ -583,50 +596,47 @@ public class GraphPanel extends JPanel{
         if ( displayIds ) {
             g2d.setColor(Color.BLACK);
             String idStr = "" + n.getId();
-            if (idStr.length() > 1) {
-                g2d.drawChars( idStr.toCharArray(), 0,
-                               idStr.length(),
-                               nodeCenter.x-8, nodeCenter.y+4 );
-            }
-            else {
-                g2d.drawChars( idStr.toCharArray(), 0,
-                               idStr.length(),
-                               nodeCenter.x-5, nodeCenter.y+4 );
+            if ( idStr.length() > 1 ) {
+                g2d.drawChars(idStr.toCharArray(), 0,
+                        idStr.length(),
+                        nodeCenter.x - 8, nodeCenter.y + 4);
+            } else {
+                g2d.drawChars(idStr.toCharArray(), 0,
+                        idStr.length(),
+                        nodeCenter.x - 5, nodeCenter.y + 4);
             }
         }
     } // end, drawNode
 
-
-	/**
-	 * Draws the specified edge between its source and destination nodes
-	 * 
-	 * @param g The current graph, used to determine directedness
-	 * @param e The edge to be drawn
-	 * @param g2d The graphics object used to draw the elements
-	 */
-	private void drawEdge(Graph g, Edge e, Graphics2D g2d) 
-        throws GalantException {
-        int stateNumber = dispatch.getDisplayState();
-		
+    /**
+     * Draws the specified edge between its source and destination nodes
+     * 
+     * @param g
+     *            The current graph, used to determine directedness
+     * @param e
+     *            The edge to be drawn
+     * @param g2d
+     *            The graphics object used to draw the elements
+     */
+    private void drawEdge(Graph g, Edge e, Graphics2D g2d)
+            throws GalantException {
         Node target = e.getTargetNode();
         Node source = e.getSourceNode();
         Point p1 = getNodeCenter(source);
         Point p2 = getNodeCenter(target);
-                
+
         // determine color and thickness of the edge
         int thickness = defaultThickness;
-        if ( e.hasThickness(stateNumber) ) {
-            thickness = e.getThickness(stateNumber);
-        }
-        else if ( e.isSelected(stateNumber) || e.hasColor() ) {
+        if ( e.hasThickness(this.displayState) ) {
+            thickness = e.getThickness(this.displayState);
+        } else if ( e.isSelected(this.displayState) || e.hasColor() ) {
             thickness = highlightThickness;
         }
 
         Color edgeColor = DEFAULT_COLOR;
-        if ( e.hasColor(stateNumber) ) {
-            edgeColor = Color.decode(e.getColor(stateNumber));
-        }
-        else if ( e.isSelected(stateNumber) ) {
+        if ( e.hasColor(this.displayState) ) {
+            edgeColor = Color.decode(e.getColor(this.displayState));
+        } else if ( e.isSelected(this.displayState) ) {
             edgeColor = HIGHLIGHT_COLOR;
         }
 
@@ -636,13 +646,12 @@ public class GraphPanel extends JPanel{
         Stroke currentStroke = new BasicStroke(thickness);
         // special case: edge is selected during editing
         if ( selectedEdge != null
-             && selectedEdge.equals(e)
-             && ! dispatch.isAnimationMode() ) {
-            currentStroke
-                = new BasicStroke(highlightThickness,
-                                  BasicStroke.CAP_BUTT,
-                                  BasicStroke.JOIN_BEVEL, 0,
-                                  SELECTED_EDGE_DASH_PATTERN, 0);
+                && selectedEdge.equals(e)
+                && ! dispatch.isAnimationMode() ) {
+            currentStroke = new BasicStroke(highlightThickness,
+                    BasicStroke.CAP_BUTT,
+                    BasicStroke.JOIN_BEVEL, 0,
+                    SELECTED_EDGE_DASH_PATTERN, 0);
         }
         g2d.setColor(edgeColor);
         g2d.setStroke(currentStroke);
@@ -650,384 +659,438 @@ public class GraphPanel extends JPanel{
         if ( target.equals(source) ) {
             // Self loop
             g2d.drawOval(p1.x, p1.y, SELF_LOOP_DIAMETER, SELF_LOOP_DIAMETER);
-        //    g2d.setStroke(oldStroke);
-            if (g.isDirected()) {
+            // g2d.setStroke(oldStroke);
+            if ( g.isDirected() ) {
                 drawSelfLoopArrow(p1, g2d, thickness);
             }
-        }
-        else {
+        } else {
             // Straight edge
             g2d.drawLine(p1.x, p1.y, p2.x, p2.y);
-        //    g2d.setStroke(oldStroke);
+            // g2d.setStroke(oldStroke);
 
-            if (g.isDirected()) {
+            if ( g.isDirected() ) {
                 drawDirectedArrow(p1, p2, g2d, thickness);
             }
             if ( labelVisible(e) )
-                drawEdgeLabel(e.getLabel(stateNumber), p1, p2, g2d);
+                drawEdgeLabel(e.getLabel(this.displayState), p1, p2, g2d);
             if ( weightVisible(e) )
-                drawEdgeWeight(e.getWeight(stateNumber), p1, p2, g2d);
+                drawEdgeWeight(e.getWeight(this.displayState), p1, p2, g2d);
         }
         // g2d.setColor(Color.BLACK);
     }
-	
-	/**
-	 * Draws a directed arrow on the end of an edge between the specified nodes
-	 * 
-	 * @param source The source point of the relevant edge
-	 * @param dest The destination point of the relevant edge
-	 * @param g2d The graphics object used to draw the elements
-     * @param thickness The thickness of the line used for the edge
-	 */
-	private void drawDirectedArrow(Point source, Point dest, Graphics2D g2d, int thickness) {
-		Graphics2D g = (Graphics2D) g2d.create();
-		
+
+    /**
+     * Draws a directed arrow on the end of an edge between the specified nodes
+     * 
+     * @param source
+     *            The source point of the relevant edge
+     * @param dest
+     *            The destination point of the relevant edge
+     * @param g2d
+     *            The graphics object used to draw the elements
+     * @param thickness
+     *            The thickness of the line used for the edge
+     */
+    private void drawDirectedArrow(Point source, Point dest, Graphics2D g2d,
+            int thickness) {
+        Graphics2D g = (Graphics2D) g2d.create();
+
         double dx = dest.getX() - source.getX();
         double dy = dest.getY() - source.getY();
         double angle = Math.atan2(dy, dx);
-        
-        int len = (int) Math.sqrt(dx*dx + dy*dy) - nodeRadius;
-        
-        AffineTransform at = AffineTransform.getTranslateInstance(source.getX(), source.getY());
+
+        int radius = this.nodeRadius;
+        if ( node.hasRadius(this.displayState) ) {
+            radius = node.getRadius(this.displayState);
+        }
+        int len = (int) Math.sqrt(dx * dx + dy * dy) - radius;
+
+        AffineTransform at = AffineTransform.getTranslateInstance(source.getX(),
+                source.getY());
         at.concatenate(AffineTransform.getRotateInstance(angle));
         g.transform(at);
 
         Stroke oldStroke = g.getStroke();
         int arrowWidth = (int) ARROW_WIDTH_FACTOR * thickness;
-        if ( arrowWidth < MIN_ARROW_WIDTH ) arrowWidth = MIN_ARROW_WIDTH;		
-        g.fillPolygon(new int[] {len, len - arrowWidth, len - arrowWidth, len},
-                      new int[] {0, -arrowWidth, arrowWidth, 0}, 4);
+        if ( arrowWidth < MIN_ARROW_WIDTH )
+            arrowWidth = MIN_ARROW_WIDTH;
+        g.fillPolygon(new int[] { len, len - arrowWidth, len - arrowWidth, len },
+                new int[] { 0, - arrowWidth, arrowWidth, 0 }, 4);
     }
-	
-	/**
-	 * Draws a directed arrow on the end of a self edge at the specified point
-	 * 
-	 * @param p1 The location of the relevant node
-	 * @param g2d The graphics object used to draw the elements
-     * @param thickness The thickness of the line used for the edge
+
+    /**
+     * Draws a directed arrow on the end of a self edge at the specified point
+     * 
+     * @param node
+     *            The relevant node
+     * @param g2d
+     *            The graphics object used to draw the elements
+     * @param thickness
+     *            The thickness of the line used for the edge
      */
-	private void drawSelfLoopArrow(Point p1, Graphics2D g2d, int thickness) {
-		int x = p1.x + 1;
-		int y = p1.y + nodeRadius;
-		
+    private void drawSelfLoopArrow(Node node, Graphics2D g2d, int thickness) {
+        int radius = this.nodeRadius;
+        if ( node.hasRadius(this.displayState) ) {
+            radius = node.getRadius(this.displayState);
+        }
+        int x = node.getX() + 1;
+        int y = node.getY() + radius;
+
         int arrowWidth = (int) ARROW_WIDTH_FACTOR * thickness;
-        if ( arrowWidth < MIN_ARROW_WIDTH ) arrowWidth = MIN_ARROW_WIDTH;
-		g2d.fillPolygon(new int[] {x, x - arrowWidth, x + arrowWidth, x},
-                      new int[] {y, y + arrowWidth, y + arrowWidth, y}, 4);
-	}
-	
-	/**
-	 * Draws an edge weight to the screen positioned along the edge itself
-	 * 
-	 * @param weight The value of the weight
-	 * @param label The label associated with the same edge. This is used to align the weight with the label.
-	 * @param source The source point of the relevant edge
-	 * @param dest The destination point of the relevant edge
-	 * @param g2d The graphics object used to draw the elements
-	 */
-	private void drawEdgeWeight( double weight,
-                                 Point source,
-                                 Point dest,
-                                 Graphics2D g2d ) {
-        /** @todo need special handling for self loops, i.e., put label and
-         * weight at the bottom of loop */
-		
-		String weightString = doubleToString( weight );
+        if ( arrowWidth < MIN_ARROW_WIDTH )
+            arrowWidth = MIN_ARROW_WIDTH;
+        g2d.fillPolygon(new int[] { x, x - arrowWidth, x + arrowWidth, x },
+                new int[] { y, y + arrowWidth, y + arrowWidth, y }, 4);
+    }
 
-        Point2D edgeMiddle = new Point2D.Double( 0.5 * ( source.x + dest.x ),
-                                          0.5 * ( source.y + dest.y ) );
-        
-        TextLayout layout
-            = new TextLayout( weightString, EDGE_WEIGHT_FONT,
-                              g2d.getFontRenderContext() );
+    /**
+     * Draws an edge weight to the screen positioned along the edge itself
+     * 
+     * @param weight
+     *            The value of the weight
+     * @param label
+     *            The label associated with the same edge. This is used to align the
+     *            weight with the label.
+     * @param source
+     *            The source point of the relevant edge
+     * @param dest
+     *            The destination point of the relevant edge
+     * @param g2d
+     *            The graphics object used to draw the elements
+     */
+    private void drawEdgeWeight(double weight,
+            Point source,
+            Point dest,
+            Graphics2D g2d) {
+        /**
+         * @todo need special handling for self loops, i.e., put label and
+         *       weight at the bottom of loop
+         */
+
+        String weightString = doubleToString(weight);
+
+        Point2D edgeMiddle = new Point2D.Double(0.5 * (source.x + dest.x),
+                0.5 * (source.y + dest.y));
+
+        TextLayout layout = new TextLayout(weightString, EDGE_WEIGHT_FONT,
+                g2d.getFontRenderContext());
         Rectangle2D bounds = layout.getBounds();
 
-        Point2D weightPosition
-            = new Point2D.Double( edgeMiddle.getX() - LABEL_PADDING - bounds.getWidth(),
-                           edgeMiddle.getY() - 0.5 * bounds.getHeight() );
+        Point2D weightPosition = new Point2D.Double(
+                edgeMiddle.getX() - LABEL_PADDING - bounds.getWidth(),
+                edgeMiddle.getY() - 0.5 * bounds.getHeight());
         g2d.setColor(Color.WHITE);
-        g2d.fillRect( (int) (weightPosition.getX() - LABEL_PADDING),
-                      (int) (weightPosition.getY() - LABEL_PADDING),
-                      (int) (bounds.getWidth() + 2 * LABEL_PADDING),
-                      (int) (bounds.getHeight() + 2 * LABEL_PADDING) );
+        g2d.fillRect((int) (weightPosition.getX() - LABEL_PADDING),
+                (int) (weightPosition.getY() - LABEL_PADDING),
+                (int) (bounds.getWidth() + 2 * LABEL_PADDING),
+                (int) (bounds.getHeight() + 2 * LABEL_PADDING));
         g2d.setColor(Color.BLACK);
         // border
-        g2d.drawRect( (int) (weightPosition.getX() - LABEL_PADDING),
-                      (int) (weightPosition.getY() - LABEL_PADDING),
-                      (int) (bounds.getWidth() + 2 * LABEL_PADDING),
-                      (int) (bounds.getHeight() + 2 * LABEL_PADDING) );
+        g2d.drawRect((int) (weightPosition.getX() - LABEL_PADDING),
+                (int) (weightPosition.getY() - LABEL_PADDING),
+                (int) (bounds.getWidth() + 2 * LABEL_PADDING),
+                (int) (bounds.getHeight() + 2 * LABEL_PADDING));
         // text
-        layout.draw( g2d, (float) weightPosition.getX(),
-                     (float) (weightPosition.getY() 
-                              + bounds.getHeight()) );
-	}
+        layout.draw(g2d, (float) weightPosition.getX(),
+                (float) (weightPosition.getY()
+                        + bounds.getHeight()));
+    }
 
-	/**
-	 * Draws the specified label along the edge between the specified points, making sure it is always drawn upright.
-	 * 
-	 * @param label The label associated with the edge
-	 * @param source The source point of the relevant edge
-	 * @param dest The destination point of the relevant edge
-	 * @param g2d The graphics object used to draw the elements
-	 */
-	private void drawEdgeLabel( String label, Point source, Point dest, Graphics2D g2d ) {
-        /** @todo need special handling for self loops, i.e., put label and
-         * weight at the bottom of loop */
-		
-        Point2D edgeMiddle = new Point2D.Double( 0.5 * ( source.x + dest.x ),
-                                          0.5 * ( source.y + dest.y ) );
-        
-        TextLayout layout
-            = new TextLayout( label, EDGE_LABEL_FONT,
-                              g2d.getFontRenderContext() );
+    /**
+     * Draws the specified label along the edge between the specified points, making
+     * sure it is always drawn upright.
+     * 
+     * @param label
+     *            The label associated with the edge
+     * @param source
+     *            The source point of the relevant edge
+     * @param dest
+     *            The destination point of the relevant edge
+     * @param g2d
+     *            The graphics object used to draw the elements
+     */
+    private void drawEdgeLabel(String label, Point source, Point dest, Graphics2D g2d) {
+        /**
+         * @todo need special handling for self loops, i.e., put label and
+         *       weight at the bottom of loop
+         */
+
+        Point2D edgeMiddle = new Point2D.Double(0.5 * (source.x + dest.x),
+                0.5 * (source.y + dest.y));
+
+        TextLayout layout = new TextLayout(label, EDGE_LABEL_FONT,
+                g2d.getFontRenderContext());
         Rectangle2D bounds = layout.getBounds();
 
-        Point2D labelPosition
-            = new Point2D.Double( edgeMiddle.getX() + LABEL_PADDING,
-                           edgeMiddle.getY() - 0.5 * bounds.getHeight() );
+        Point2D labelPosition = new Point2D.Double(edgeMiddle.getX() + LABEL_PADDING,
+                edgeMiddle.getY() - 0.5 * bounds.getHeight());
         g2d.setColor(Color.WHITE);
-        g2d.fillRect( (int) (labelPosition.getX() - LABEL_PADDING),
-                      (int) (labelPosition.getY() - LABEL_PADDING),
-                      (int) (bounds.getWidth() + 2 * LABEL_PADDING),
-                      (int) (bounds.getHeight() + 2 * LABEL_PADDING) );
+        g2d.fillRect((int) (labelPosition.getX() - LABEL_PADDING),
+                (int) (labelPosition.getY() - LABEL_PADDING),
+                (int) (bounds.getWidth() + 2 * LABEL_PADDING),
+                (int) (bounds.getHeight() + 2 * LABEL_PADDING));
         g2d.setColor(Color.BLACK);
         // border
-        g2d.drawRect( (int) (labelPosition.getX() - LABEL_PADDING),
-                      (int) (labelPosition.getY() - LABEL_PADDING),
-                      (int) (bounds.getWidth() + 2 * LABEL_PADDING),
-                      (int) (bounds.getHeight() + 2 * LABEL_PADDING) );
+        g2d.drawRect((int) (labelPosition.getX() - LABEL_PADDING),
+                (int) (labelPosition.getY() - LABEL_PADDING),
+                (int) (bounds.getWidth() + 2 * LABEL_PADDING),
+                (int) (bounds.getHeight() + 2 * LABEL_PADDING));
         // text
-        layout.draw( g2d, (float) labelPosition.getX(),
-                     (float) (labelPosition.getY() 
-                              + bounds.getHeight()) );
-	}
-	
-	/**
-	 * Returns a graphics object transformed such that drawing horizontally from the origin will
-	 * line up with an edge between the specified points.
-	 * 
-	 * @param p1 An endpoint of the edge to transform the canvas
-	 * @param p2 An endpoint of the edge to transform the canvas
-	 * @param g2d The graphics object used to draw the elements
-	 * @return A transformed graphics object whose x axis is the edge between p1 and p2
-         *
-         * @todo not clear what this does - it is never called from anywhere
-	 */
-	private TransformData getEdgeTransform(Point p1, Point p2, Graphics2D g2d) {
-		Graphics2D g = (Graphics2D) g2d.create();
-		boolean flip = false;
-		
-        double dx = p2.getX() - p1.getX(); 
+        layout.draw(g2d, (float) labelPosition.getX(),
+                (float) (labelPosition.getY()
+                        + bounds.getHeight()));
+    }
+
+    /**
+     * Returns a graphics object transformed such that drawing horizontally from the
+     * origin will
+     * line up with an edge between the specified points.
+     * 
+     * @param p1
+     *            An endpoint of the edge to transform the canvas
+     * @param p2
+     *            An endpoint of the edge to transform the canvas
+     * @param g2d
+     *            The graphics object used to draw the elements
+     * @return A transformed graphics object whose x axis is the edge between p1 and
+     *         p2
+     *
+     * @todo not clear what this does - it is never called from anywhere
+     */
+    private TransformData getEdgeTransform(Point p1, Point p2, Graphics2D g2d) {
+        Graphics2D g = (Graphics2D) g2d.create();
+        boolean flip = false;
+
+        double dx = p2.getX() - p1.getX();
         double dy = p2.getY() - p1.getY();
         double angle = Math.atan2(dy, dx);
-        
-        if ( ! (angle > (-1*Math.PI/2.0) && angle < (Math.PI/2.0)) ) {
-        	 dx = p1.getX() - p2.getX(); 
-             dy = p1.getY() - p2.getY();
-             
-             Point hold = p1;
-             p1 = p2;
-             p2 = hold;
-             angle = Math.atan2(dy, dx);
-             flip = true;
+
+        if ( ! (angle > (- 1 * Math.PI / 2.0) && angle < (Math.PI / 2.0)) ) {
+            dx = p1.getX() - p2.getX();
+            dy = p1.getY() - p2.getY();
+
+            Point hold = p1;
+            p1 = p2;
+            p2 = hold;
+            angle = Math.atan2(dy, dx);
+            flip = true;
         }
-        
-        int len = (int) Math.sqrt(dx*dx + dy*dy) - nodeRadius;
-        
+
+        int radius = this.nodeRadius;
+        if ( node.hasRadius(this.displayState) ) {
+            radius = node.getRadius(this.displayState)
+        }
+        int len = (int) Math.sqrt(dx * dx + dy * dy) - radius;
+
         AffineTransform at = AffineTransform.getTranslateInstance(p1.getX(), p1.getY());
         at.concatenate(AffineTransform.getRotateInstance(angle));
         g.transform(at);
-        
+
         return new TransformData(len, flip, g);
-	}
-	
-	/**
-	 * Draw a text box big enough to contain the specified text.
-	 * 
-	 * @param topLeft The top left corner of the new text box
-	 * @param text The text that the textbox needs to be sized to contain
-	 * @param bordered Whether or not to draw a border around the textbox
-	 * @param g2d The graphics object used to draw the elements
-	 */
-	private void drawTextBox(Point topLeft, String text, boolean bordered, Graphics2D g2d) {
-		Color prevColor = g2d.getColor();
-		
-		FontMetrics metrics = g2d.getFontMetrics(g2d.getFont());
-		int h = metrics.getHeight();
-		int w = metrics.stringWidth(text) + 6; //6 pixels for padding
-		
-		Color color = new Color(1, 1, 1, .7f); 
-		g2d.setPaint(color);
-		Rectangle2D.Double r = new Rectangle2D.Double(topLeft.getX() + 1, topLeft.getY() + 1, w - 2, h - 2);
-		g2d.fill(r);
-		
-		if (bordered) {
-			g2d.setColor(Color.BLACK);
-			r = new Rectangle2D.Double(topLeft.getX(), topLeft.getY(), w, h);
-			g2d.draw(r);
-		}
-		
-		g2d.setColor(prevColor);
-	}
-	
-	private void drawMessageBanner(String text, Graphics2D g2d) {
-		Color prevColor = g2d.getColor();
-		
-		FontMetrics metrics = g2d.getFontMetrics(g2d.getFont());
-		int h = metrics.getHeight();
-		int w = dispatch.getWindowWidth();
-		
-		Color color = new Color(1, 1, 1, .5f); 
-		g2d.setPaint(color);
-		Rectangle2D.Double r = new Rectangle2D.Double(1, 1, w, h);
-		g2d.fill(r);
-		
-		g2d.setColor(Color.BLACK);
-		r = new Rectangle2D.Double(0, 0, w+2, h+2);
-		g2d.draw(r);
-		
-		g2d.drawChars(text.toCharArray(), 0, text.length(), 10, h-1);
-		
-		g2d.setColor(prevColor);
-	}
-	
-  /**
-   * This method is used for user to select node, then change the
-   * property or position of selected node. Since this method only used
-   * in the situation that users are allowed to move nodes, which no change of positions
-   * caused by algorithm will happen, and there is no need for state dependent positions
-   * to be concerned, only the position associated with node itself need to be compared.
-   * @param p the point user clicked
-   * @return the selected node, or null if no selected node 
-   */
-	public Node selectTopClickedNode(Point p) {
-            LogHelper.enterMethod(getClass(), "selectTopClickedNode");
-            Graph g = dispatch.getWorkingGraph();
-            int stateNumber = g.getEditState();
-            Node top = null;
-            for (Node n : g.getNodes(stateNumber)) {
-                if ( p.distance(n.getFixedPosition()) < NODE_SELECTION_RADIUS ) {
-                    top = n;
-                }
-            }
-            previousNode = selectedNode;
-            selectedNode = top;
-            selectedEdge = null;
-            LogHelper.exitMethod( getClass(), "selectTopClickedNode, node = "
-                                  + (selectedNode == null ? "null"
-                                     : selectedNode.getId() ) );
-            return top;
-	}
-	
-	public void setSelectedNode(Node n) {
-		LogHelper.enterMethod(getClass(), "setSelectedNode");
-		
-		this.previousNode = (n == null) ? null : this.selectedNode;
-		this.selectedNode = n;
-		
-		LogHelper.exitMethod(getClass(), "setSelectedNode");
-	}
-	
-	public Node getSelectedNode() {
-		LogHelper.enterMethod( getClass(), "getSelectedNode" );
-		LogHelper.exitMethod( getClass(), "getSelectedNode, node = "
-                              + selectedNode );
-		return this.selectedNode;
-	}
-		
-	public void setPrevSelectedNode(Node n) {
-		this.previousNode = n;
-	}
-	
-	public Node getPrevSelectedNode() {
-		return this.selectedNode;
-	}
-	
-	public Edge selectTopClickedEdge(Point p) {
-            LogHelper.enterMethod(getClass(), "selectTopClickedEdge");
-		
-            Graph g = dispatch.getWorkingGraph();
-            int stateNumber = g.getEditState();
-		
-            Edge top = null;
-		
-            for (int i=1; i <= EDGE_SELECTION_WIDTH; i++) {
-                double width = i;
-                double centerVal = width/2;
-                LogHelper.logDebug( "centerVal = " + centerVal );
-                Rectangle2D clickArea
-                    = new Rectangle2D.Double(p.getX() - centerVal,
-                                             p.getY() - centerVal - 1, i, i);
-			
-                for (Edge e : g.getEdges(stateNumber)) {
-                    Point p1 = e.getSourceNode().getFixedPosition();
-                    Point p2 = e.getTargetNode().getFixedPosition();
+    }
 
-                    Line2D l = new Line2D.Double(p1, p2);
-				
-                    if (l.intersects(clickArea)) {
-                        top = e;
-                    }
-                }
-			
-                if (top != null) break;
-			
+    /**
+     * Draw a text box big enough to contain the specified text.
+     * 
+     * @param topLeft
+     *            The top left corner of the new text box
+     * @param text
+     *            The text that the textbox needs to be sized to contain
+     * @param bordered
+     *            Whether or not to draw a border around the textbox
+     * @param g2d
+     *            The graphics object used to draw the elements
+     */
+    private void drawTextBox(Point topLeft, String text, boolean bordered,
+            Graphics2D g2d) {
+        Color prevColor = g2d.getColor();
+
+        FontMetrics metrics = g2d.getFontMetrics(g2d.getFont());
+        int h = metrics.getHeight();
+        int w = metrics.stringWidth(text) + 6; // 6 pixels for padding
+
+        Color color = new Color(1, 1, 1, .7f);
+        g2d.setPaint(color);
+        Rectangle2D.Double r = new Rectangle2D.Double(topLeft.getX() + 1,
+                topLeft.getY() + 1, w - 2, h - 2);
+        g2d.fill(r);
+
+        if ( bordered ) {
+            g2d.setColor(Color.BLACK);
+            r = new Rectangle2D.Double(topLeft.getX(), topLeft.getY(), w, h);
+            g2d.draw(r);
+        }
+
+        g2d.setColor(prevColor);
+    }
+
+    private void drawMessageBanner(String text, Graphics2D g2d) {
+        Color prevColor = g2d.getColor();
+
+        FontMetrics metrics = g2d.getFontMetrics(g2d.getFont());
+        int h = metrics.getHeight();
+        int w = dispatch.getWindowWidth();
+
+        Color color = new Color(1, 1, 1, .5f);
+        g2d.setPaint(color);
+        Rectangle2D.Double r = new Rectangle2D.Double(1, 1, w, h);
+        g2d.fill(r);
+
+        g2d.setColor(Color.BLACK);
+        r = new Rectangle2D.Double(0, 0, w + 2, h + 2);
+        g2d.draw(r);
+
+        g2d.drawChars(text.toCharArray(), 0, text.length(), 10, h - 1);
+
+        g2d.setColor(prevColor);
+    }
+
+    /**
+     * This method is used for user to select node, then change the
+     * property or position of selected node. Since this method only used
+     * in the situation that users are allowed to move nodes, which no change of
+     * positions
+     * caused by algorithm will happen, and there is no need for state dependent
+     * positions
+     * to be concerned, only the position associated with node itself need to be
+     * compared.
+     * 
+     * @param p
+     *            the point user clicked
+     * @return the selected node, or null if no selected node
+     */
+    public Node selectTopClickedNode(Point p) {
+        LogHelper.enterMethod(getClass(), "selectTopClickedNode");
+        Graph g = dispatch.getWorkingGraph();
+        int editState = g.getEditState();
+        Node top = null;
+        for ( Node n : g.getNodes(editState) ) {
+            if ( p.distance(n.getFixedPosition()) < NODE_SELECTION_RADIUS ) {
+                top = n;
             }
-			
-            this.selectedEdge = top;
-		
-            this.selectedNode = null;
-            this.previousNode = null;
-		
-            LogHelper.exitMethod(getClass(), "selectTopClickedEdge");
-            return top;
-	}
-	
-	public void setSelectedEdge(Edge e) {
-		LogHelper.enterMethod(getClass(), "setSelectedEdge");
-		this.selectedEdge = e;
-		LogHelper.exitMethod(getClass(), "setSelectedEdge");
-	}
-	
-	public void setEdgeTracker(Point p) {
-		this.edgeTracker = p;
-	}
-	
-	public Point getEdgeTracker() {
-		return this.edgeTracker;
-	}
-	
-	private class TransformData {
-		private int len;
-		private boolean flip;
-		private Graphics2D g;
-		public TransformData(int len, boolean flip, Graphics2D g) {
-			this.len = len;
-			this.flip = flip;
-			this.g = g;
-		}
-		
-		public int getLen() {
-			return len;
-		}
-		public void setLen(int len) {
-			this.len = len;
-		}
-		public boolean isFlip() {
-			return flip;
-		}
-		public void setFlip(boolean flip) {
-			this.flip = flip;
-		}
-		public Graphics2D getG() {
-			return g;
-		}
-		public void setG(Graphics2D g) {
-			this.g = g;
-		}
-		
-	}
-	
+        }
+        previousNode = selectedNode;
+        selectedNode = top;
+        selectedEdge = null;
+        LogHelper.exitMethod(getClass(), "selectTopClickedNode, node = "
+                + (selectedNode == null ? "null"
+                        : selectedNode.getId()));
+        return top;
+    }
+
+    public void setSelectedNode(Node n) {
+        LogHelper.enterMethod(getClass(), "setSelectedNode");
+
+        this.previousNode = (n == null) ? null : this.selectedNode;
+        this.selectedNode = n;
+
+        LogHelper.exitMethod(getClass(), "setSelectedNode");
+    }
+
+    public Node getSelectedNode() {
+        LogHelper.enterMethod(getClass(), "getSelectedNode");
+        LogHelper.exitMethod(getClass(), "getSelectedNode, node = "
+                + selectedNode);
+        return this.selectedNode;
+    }
+
+    public void setPrevSelectedNode(Node n) {
+        this.previousNode = n;
+    }
+
+    public Node getPrevSelectedNode() {
+        return this.selectedNode;
+    }
+
+    public Edge selectTopClickedEdge(Point p) {
+        LogHelper.enterMethod(getClass(), "selectTopClickedEdge");
+
+        Graph g = dispatch.getWorkingGraph();
+        int editState = g.getEditState();
+
+        Edge top = null;
+
+        for ( int i = 1; i <= EDGE_SELECTION_WIDTH; i++ ) {
+            double width = i;
+            double centerVal = width / 2;
+            LogHelper.logDebug("centerVal = " + centerVal);
+            Rectangle2D clickArea = new Rectangle2D.Double(p.getX() - centerVal,
+                    p.getY() - centerVal - 1, i, i);
+
+            for ( Edge e : g.getEdges(editState) ) {
+                Point p1 = e.getSourceNode().getFixedPosition();
+                Point p2 = e.getTargetNode().getFixedPosition();
+
+                Line2D l = new Line2D.Double(p1, p2);
+
+                if ( l.intersects(clickArea) ) {
+                    top = e;
+                }
+            }
+
+            if ( top != null )
+                break;
+
+        }
+
+        this.selectedEdge = top;
+
+        this.selectedNode = null;
+        this.previousNode = null;
+
+        LogHelper.exitMethod(getClass(), "selectTopClickedEdge");
+        return top;
+    }
+
+    public void setSelectedEdge(Edge e) {
+        LogHelper.enterMethod(getClass(), "setSelectedEdge");
+        this.selectedEdge = e;
+        LogHelper.exitMethod(getClass(), "setSelectedEdge");
+    }
+
+    public void setEdgeTracker(Point p) {
+        this.edgeTracker = p;
+    }
+
+    public Point getEdgeTracker() {
+        return this.edgeTracker;
+    }
+
+    private class TransformData {
+        private int len;
+        private boolean flip;
+        private Graphics2D g;
+
+        public TransformData(int len, boolean flip, Graphics2D g) {
+            this.len = len;
+            this.flip = flip;
+            this.g = g;
+        }
+
+        public int getLen() {
+            return len;
+        }
+
+        public void setLen(int len) {
+            this.len = len;
+        }
+
+        public boolean isFlip() {
+            return flip;
+        }
+
+        public void setFlip(boolean flip) {
+            this.flip = flip;
+        }
+
+        public Graphics2D getG() {
+            return g;
+        }
+
+        public void setG(Graphics2D g) {
+            this.g = g;
+        }
+
+    }
+
 }
-
-//  [Last modified: 2021 02 27 at 16:13:01 GMT]

@@ -16,14 +16,14 @@ import java.util.logging.Logger;
  * Abstract class containing graph element manipulation methods
  *
  * @author Jason Cockrell, Ty Devries, Alex McCabe, Michael Owoc, completely
- * rewritten by Matthias Stallmann
+ *         rewritten by Matthias Stallmann
  */
 public class GraphElement implements Comparable<GraphElement> {
 
     /**
      * @todo Add the following standard display attributes. - "fill": fill color
-     * for Nodes - "dotted": use dotted lines for edges or node outlines -
-     * "dashed": similar to dotted (or use "style")
+     *       for Nodes - "dotted": use dotted lines for edges or node outlines -
+     *       "dashed": similar to dotted (or use "style")
      */
     public static final String ID = "id";
     public static final String WEIGHT = "weight";
@@ -65,7 +65,7 @@ public class GraphElement implements Comparable<GraphElement> {
         this.graph = graph;
         try {
             this.addState(new GraphElementState());
-        } catch (Terminate t) { // should not happen
+        } catch ( Terminate t ) { // should not happen
             t.printStackTrace();
         }
     }
@@ -84,13 +84,13 @@ public class GraphElement implements Comparable<GraphElement> {
     /**
      * Resets this element to its original state at the end of an animation.
      *
-     * @param graphState the initial state of the graph containing this element
+     * @param graphState
+     *            the initial state of the graph containing this element
      */
     protected void reset() {
-        ArrayList<GraphElementState> initialStates
-                = new ArrayList<GraphElementState>();
-        for (GraphElementState state : this.states) {
-            if (state.getState() > 0) {
+        ArrayList<GraphElementState> initialStates = new ArrayList<GraphElementState>();
+        for ( GraphElementState state : this.states ) {
+            if ( state.getState() > 0 ) {
                 break;
             }
             initialStates.add(state);
@@ -100,32 +100,35 @@ public class GraphElement implements Comparable<GraphElement> {
 
     /**
      * @return a new state for this element; the new state will be identical to
-     * the current (latest one) except that it will be tagged with the current
-     * algorithm state if the algorithm is running; subsequent changes to this
-     * GraphElement will take place in the new state.
+     *         the current (latest one) except that it will be tagged with the
+     *         current
+     *         algorithm state if the algorithm is running; subsequent changes to
+     *         this
+     *         GraphElement will take place in the new state.
      */
     private GraphElementState newState() throws Terminate {
         dispatch.startStepIfAnimationOrIncrementEditState();
         GraphElementState latest = latestState();
-        GraphElementState elementState
-            = new GraphElementState(latest);
+        GraphElementState elementState = new GraphElementState(latest);
         return elementState;
     }
 
     /**
      * @return The last state on the list of states. This is the default for
-     * retrieving information about any attribute. If no latest state exists a
-     * "blank" one with all attributes = null is returned.
+     *         retrieving information about any attribute. If no latest state exists
+     *         a
+     *         "blank" one with all attributes = null is returned.
      */
     public GraphElementState latestState() {
         GraphElementState state = null;
-        if (states.size() != 0) {
+        if ( states.size() != 0 ) {
             state = states.get(states.size() - 1);
         } else {
             state = new GraphElementState();
         }
         return state;
     }
+
     /**
      * This method is vital for retrieving the most recent information about a
      * graph element (node or edge), where most recent is defined relative to a
@@ -133,18 +136,19 @@ public class GraphElement implements Comparable<GraphElement> {
      * animation.
      *
      * @see edu.ncsu.csc.Galant.algorithm.AlgorithmExecutor
-     * @param stateNumber the numerical indicator (timestamp) of a state,
-     * usually the current display state
+     * @param stateNumber
+     *            the numerical indicator (timestamp) of a state,
+     *            usually the current display state
      * @return the latest instance of GraphElementState that was created before
-     * the given time stamp, or null if the element did not exist before the
-     * time stamp.
+     *         the given time stamp, or null if the element did not exist before the
+     *         time stamp.
      */
     public GraphElementState getLatestValidState(int stateNumber) {
         GraphElementState toReturn = null;
         int stateIndex = states.size() - 1;
-        while (stateIndex >= 0) {
+        while ( stateIndex >= 0 ) {
             GraphElementState state = states.get(stateIndex);
-            if (state.getState() <= stateNumber) {
+            if ( state.getState() <= stateNumber ) {
                 toReturn = state;
                 break;
             }
@@ -167,15 +171,15 @@ public class GraphElement implements Comparable<GraphElement> {
     private void addState(GraphElementState stateToAdd) throws Terminate {
         int stateNumber = stateToAdd.getState();
         boolean found = false;
-        for (int i = states.size() - 1; i >= stateNumber; i--) {
+        for ( int i = states.size() - 1; i >= stateNumber; i-- ) {
             GraphElementState state = states.get(i);
-            if (state.getState() == stateNumber) {
+            if ( state.getState() == stateNumber ) {
                 states.set(i, stateToAdd);
                 found = true;
                 break;
             }
         }
-        if (!found) {
+        if ( ! found ) {
             states.add(stateToAdd);
             dispatch.pauseExecutionIfRunning();
         }
@@ -189,12 +193,13 @@ public class GraphElement implements Comparable<GraphElement> {
         List<GraphElementState> newStates = new ArrayList<GraphElementState>();
         for ( int i = 0; i < this.states.size(); i++ ) {
             GraphElementState theState = states.get(i);
-            if ( theState.getState() > currentState ) break;
+            if ( theState.getState() > currentState )
+                break;
             newStates.add(theState);
         }
         this.states = newStates;
     }
-    
+
     /**
      * Effectively removes all states except for a copy of the current
      * one from the list of states.
@@ -203,8 +208,8 @@ public class GraphElement implements Comparable<GraphElement> {
      * animation mode.
      */
     public ArrayList<GraphElementState> copyCurrentState() {
-        GraphElementState currentState
-            = new GraphElementState(this.getLatestValidState(this.graph.getEditState()));
+        GraphElementState currentState = new GraphElementState(
+                this.getLatestValidState(this.graph.getEditState()));
         ArrayList<GraphElementState> statesCopy = new ArrayList<GraphElementState>();
         statesCopy.add(currentState);
         return statesCopy;
@@ -282,10 +287,10 @@ public class GraphElement implements Comparable<GraphElement> {
 
     public Boolean getBoolean(int state, String key) {
         GraphElementState validState = getLatestValidState(state);
-        if (validState == null) {
+        if ( validState == null ) {
             return false;
         }
-        if (validState.getAttributes() == null) {
+        if ( validState.getAttributes() == null ) {
             return false;
         }
         return validState.getAttributes().getBoolean(key);
@@ -341,10 +346,11 @@ public class GraphElement implements Comparable<GraphElement> {
     }
 
     /**
-     * @param true iff this element is to be deleted in the current state.
+     * @param true
+     *            iff this element is to be deleted in the current state.
      */
     public void setDeleted(boolean deleted) throws Terminate {
-        if (deleted) {
+        if ( deleted ) {
             set(DELETED, true);
         } else {
             remove(DELETED);
@@ -353,7 +359,7 @@ public class GraphElement implements Comparable<GraphElement> {
 
     /**
      * @return true if this element existed in the latest state prior to the
-     * given one.
+     *         given one.
      */
     public boolean isCreated(int state) {
         GraphElementState creationState = getLatestValidState(state);
@@ -373,8 +379,9 @@ public class GraphElement implements Comparable<GraphElement> {
 
     /**
      * @return true if this element is (logically) hidden in the current
-     * algorithm state - useful for algorithm to "know" which nodes/edges are
-     * visible and which are not
+     *         algorithm state - useful for algorithm to "know" which nodes/edges
+     *         are
+     *         visible and which are not
      */
     public Boolean isHidden() {
         return getBoolean(HIDDEN);
@@ -382,7 +389,7 @@ public class GraphElement implements Comparable<GraphElement> {
 
     /**
      * @return true if this element is hidden, i.e., will not be drawn on the
-     * graph panel.
+     *         graph panel.
      */
     public Boolean isHidden(int state) {
         return getBoolean(state, HIDDEN);
@@ -432,7 +439,7 @@ public class GraphElement implements Comparable<GraphElement> {
 
     /**
      * @return true if the weight of this element is hidden, i.e., will not be
-     * drawn on the graph panel.
+     *         drawn on the graph panel.
      */
     public Boolean weightIsHidden(int state) {
         return getBoolean(state, HIDDEN_WEIGHT);
@@ -478,7 +485,7 @@ public class GraphElement implements Comparable<GraphElement> {
 
     /**
      * @return true if the label of this element is hidden, i.e., will not be
-     * drawn on the graph panel.
+     *         drawn on the graph panel.
      */
     public Boolean labelIsHidden(int state) {
         return getBoolean(state, HIDDEN_LABEL);
@@ -587,6 +594,10 @@ public class GraphElement implements Comparable<GraphElement> {
         return getThickness(state) != null;
     }
 
+    public void clearThickness() {
+        clear(THICKNESS);
+    }
+
     /**
      * Parses specific attributes that are not to be stored internally as
      * strings. This allows the GraphMLParser to create each element without
@@ -608,7 +619,7 @@ public class GraphElement implements Comparable<GraphElement> {
         String highlightString = null;
         String hiddenString = null;
         String thicknessString = null;
-        for (int i = 0; i < L.attributes.size(); i++) {
+        for ( int i = 0; i < L.attributes.size(); i++ ) {
             Attribute attributeOfNode = L.attributes.get(i);
             if ( attributeOfNode.key.equals("weight") ) {
                 String attributeValue = attributeOfNode.getStringValue();
@@ -619,27 +630,26 @@ public class GraphElement implements Comparable<GraphElement> {
             } else if ( attributeOfNode.key.equals("hidden") ) {
                 String attributeValue = attributeOfNode.getStringValue();
                 hiddenString = attributeValue;
-            }
-            else if ( attributeOfNode.key.equals("thickness") ) {
+            } else if ( attributeOfNode.key.equals("thickness") ) {
                 String attributeValue = attributeOfNode.getStringValue();
                 thicknessString = attributeValue;
             }
         }
-        if (weightString != null) {
+        if ( weightString != null ) {
             Double weight = Double.NaN;
             try {
                 weight = Double.parseDouble(weightString);
-            } catch (NumberFormatException e) {
+            } catch ( NumberFormatException e ) {
                 throw new GalantException("Bad weight " + weightString);
             }
             L.remove(WEIGHT);
             L.set(WEIGHT, weight);
         }
 
-        if (highlightString != null) {
+        if ( highlightString != null ) {
             Boolean highlighted = Boolean.parseBoolean(highlightString);
             L.remove(HIGHLIGHTED);
-            if (highlighted) {
+            if ( highlighted ) {
                 L.set(HIGHLIGHTED, highlighted);
             }
         }
@@ -648,8 +658,7 @@ public class GraphElement implements Comparable<GraphElement> {
             Integer thickness = 0;
             try {
                 thickness = Integer.parseInt(thicknessString);
-            }
-            catch (NumberFormatException e) {
+            } catch ( NumberFormatException e ) {
                 throw new GalantException("Bad thickness " + thicknessString);
             }
             L.remove(THICKNESS);
@@ -658,14 +667,14 @@ public class GraphElement implements Comparable<GraphElement> {
 
         /**
          * @todo need to do something like this for other standard
-         * attributes such as HIDDEN_LABEL, HIDDEN_WEIGHT, DELETED in order
-         * to avoid errors when reading files exported during animations.
+         *       attributes such as HIDDEN_LABEL, HIDDEN_WEIGHT, DELETED in order
+         *       to avoid errors when reading files exported during animations.
          */
 
-        if (hiddenString != null) {
+        if ( hiddenString != null ) {
             Boolean hidden = Boolean.parseBoolean(hiddenString);
             L.remove(HIDDEN);
-            if (hidden) {
+            if ( hidden ) {
                 L.set(HIDDEN, hidden);
             }
         }
@@ -706,7 +715,7 @@ public class GraphElement implements Comparable<GraphElement> {
      */
     public String xmlString(int state) {
         GraphElementState elementState = getLatestValidState(state);
-        if (elementState == null) {
+        if ( elementState == null ) {
             return "";
         }
         return elementState.xmlString();
@@ -719,7 +728,7 @@ public class GraphElement implements Comparable<GraphElement> {
      */
     public String attributesWithoutPosition(int state) {
         GraphElementState elementState = getLatestValidState(state);
-        if (elementState == null) {
+        if ( elementState == null ) {
             return "";
         }
         return elementState.attributesWithoutPosition();
@@ -732,7 +741,7 @@ public class GraphElement implements Comparable<GraphElement> {
      */
     public String attributesWithoutId(int state) {
         GraphElementState elementState = getLatestValidState(state);
-        if (elementState == null) {
+        if ( elementState == null ) {
             return "";
         }
         return elementState.attributesWithoutId();
@@ -746,17 +755,17 @@ public class GraphElement implements Comparable<GraphElement> {
 
     /**
      * @return a comparator that compares two graph elements based on the
-     * designated attribute; the attribute must have a Double value
+     *         designated attribute; the attribute must have a Double value
      */
     public static GraphElementComparator getDoubleComparator(String attribute) {
         return new GraphElementComparator(attribute, false) {
             public int compare(GraphElement ge_1, GraphElement ge_2) {
                 Double value_1 = ge_1.getDouble(attribute);
                 Double value_2 = ge_2.getDouble(attribute);
-                if (value_1 > value_2) {
+                if ( value_1 > value_2 ) {
                     return 1;
-                } else if (value_2 > value_1) {
-                    return -1;
+                } else if ( value_2 > value_1 ) {
+                    return - 1;
                 } else {
                     return 0;
                 }
@@ -766,7 +775,7 @@ public class GraphElement implements Comparable<GraphElement> {
 
     /**
      * @return a comparator that compares two graph elements based on the
-     * designated attribute; the attribute must have an Integer value
+     *         designated attribute; the attribute must have an Integer value
      */
     public static GraphElementComparator getIntegerComparator(String attribute) {
         return new GraphElementComparator(attribute, false) {
@@ -774,10 +783,10 @@ public class GraphElement implements Comparable<GraphElement> {
             public int compare(GraphElement ge_1, GraphElement ge_2) {
                 Integer value_1 = ge_1.getInteger(attribute);
                 Integer value_2 = ge_2.getInteger(attribute);
-                if (value_1 > value_2) {
+                if ( value_1 > value_2 ) {
                     return 1;
-                } else if (value_2 > value_1) {
-                    return -1;
+                } else if ( value_2 > value_1 ) {
+                    return - 1;
                 } else {
                     return 0;
                 }
@@ -787,7 +796,7 @@ public class GraphElement implements Comparable<GraphElement> {
 
     /**
      * @return a comparator that compares two graph elements based on the
-     * designated attribute; the attribute must have an Integer value
+     *         designated attribute; the attribute must have an Integer value
      */
     public static GraphElementComparator getStringComparator(String attribute) {
         return new GraphElementComparator(attribute, false) {
@@ -802,8 +811,9 @@ public class GraphElement implements Comparable<GraphElement> {
 
     /**
      * @return a comparator that compares two graph elements based on the
-     * designated attribute; the attribute must have a Double value
-     * @param reverse use the reverse of the natural order if true
+     *         designated attribute; the attribute must have a Double value
+     * @param reverse
+     *            use the reverse of the natural order if true
      */
     public static GraphElementComparator getDoubleComparator(String attribute,
             boolean reverse) {
@@ -811,7 +821,7 @@ public class GraphElement implements Comparable<GraphElement> {
             public int compare(GraphElement ge_1, GraphElement ge_2) {
                 Double value_1 = ge_1.getDouble(attribute);
                 Double value_2 = ge_2.getDouble(attribute);
-                if (reverse) {
+                if ( reverse ) {
                     return value_2.compareTo(value_1);
                 } else {
                     return value_1.compareTo(value_2);
@@ -822,8 +832,9 @@ public class GraphElement implements Comparable<GraphElement> {
 
     /**
      * @return a comparator that compares two graph elements based on the
-     * designated attribute; the attribute must have an Integer value
-     * @param reverse use the reverse of the natural order if true
+     *         designated attribute; the attribute must have an Integer value
+     * @param reverse
+     *            use the reverse of the natural order if true
      */
     public static GraphElementComparator getIntegerComparator(String attribute,
             boolean reverse) {
@@ -831,7 +842,7 @@ public class GraphElement implements Comparable<GraphElement> {
             public int compare(GraphElement ge_1, GraphElement ge_2) {
                 Integer value_1 = ge_1.getInteger(attribute);
                 Integer value_2 = ge_2.getInteger(attribute);
-                if (reverse) {
+                if ( reverse ) {
                     return value_2.compareTo(value_1);
                 } else {
                     return value_1.compareTo(value_2);
@@ -842,8 +853,9 @@ public class GraphElement implements Comparable<GraphElement> {
 
     /**
      * @return a comparator that compares two graph elements based on the
-     * designated attribute; the attribute must have a String value
-     * @param reverse use the reverse of the natural order if true
+     *         designated attribute; the attribute must have a String value
+     * @param reverse
+     *            use the reverse of the natural order if true
      */
     public static GraphElementComparator getStringComparator(String attribute,
             boolean reverse) {
@@ -851,7 +863,7 @@ public class GraphElement implements Comparable<GraphElement> {
             public int compare(GraphElement ge_1, GraphElement ge_2) {
                 String value_1 = ge_1.getString(attribute);
                 String value_2 = ge_2.getString(attribute);
-                if (reverse) {
+                if ( reverse ) {
                     return value_2.compareTo(value_1);
                 } else {
                     return value_1.compareTo(value_2);
@@ -862,4 +874,4 @@ public class GraphElement implements Comparable<GraphElement> {
 
 }
 
-//  [Last modified: 2021 01 31 at 14:18:34 GMT]
+// [Last modified: 2021 01 31 at 14:18:34 GMT]

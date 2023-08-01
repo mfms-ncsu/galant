@@ -552,7 +552,7 @@ public class GraphPanel extends JPanel{
         if ( n.hasThickness(stateNumber) ) {
             thickness = n.getThickness(stateNumber);
         }
-        else if ( n.isSelected(stateNumber) ) {
+        else if ( n.isSelected(stateNumber) || n.hasColor() ) {
             thickness = highlightThickness;
         }
 

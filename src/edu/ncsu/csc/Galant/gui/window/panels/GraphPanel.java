@@ -431,7 +431,7 @@ public class GraphPanel extends JPanel {
             int x = 0;
             int y = 0;
             int layer = node.getLayer(); // should not change during an
-                                      // animation of a layered graph algorithm
+                                         // animation of a layered graph algorithm
             int position = node.getPositionInLayer(this.displayState);
             int layerSize = 1;
             // vertical layered graphs have gaps in positions on some layers,
@@ -470,6 +470,18 @@ public class GraphPanel extends JPanel {
     }
 
     /**
+     * @return the display radius of the node
+     *         - if the node has a radius attribute, use that; else use the default
+     */
+    int getNodeRadius(Node node) {
+        int radius = this.nodeRadius;
+        if ( node.hasRadius(this.displayState) ) {
+            radius = node.getRadius(this.displayState);
+        }
+        return radius;
+    }
+
+    /**
      * Draws the specified node and its properties to the screen
      * the positions of nodes to be drawn are determined by their state
      * dependent position, which may not be the best solution since only one
@@ -495,10 +507,7 @@ public class GraphPanel extends JPanel {
                 // upper left corner of label: treats the bounding box of
                 // as that of the label text only, without any padding;
                 // ditto with weight below
-                int radius = this.nodeRadius;
-                if ( node.hasRadius(this.displayState) ) {
-                    radius = node.getRadius(this.displayState);
-                }
+                int radius = getRadius(node);
                 Point labelPosition = new Point(nodeCenter.x
                         + radius
                         + NODE_LABEL_DISTANCE + LABEL_PADDING,
@@ -523,10 +532,7 @@ public class GraphPanel extends JPanel {
                     g2d.getFontRenderContext());
             Rectangle2D bounds = layout.getBounds();
             // padding is 'shared' with node label
-            int radius = this.nodeRadius;
-            if ( node.hasRadius(this.displayState) ) {
-                radius = node.getRadius(this.displayState);
-            }
+            int radius = getRadius(node);
             Point weightPosition = new Point(nodeCenter.x
                     + radius
                     + NODE_LABEL_DISTANCE
@@ -550,10 +556,7 @@ public class GraphPanel extends JPanel {
          * Circle is filled first so that outline can be drawn on top of
          * the filled circle
          */
-        int radius = this.nodeRadius;
-        if ( node.hasRadius(this.displayState) ) {
-            radius = node.getRadius(this.displayState);
-        }
+        int radius = getRadius(node);
         Ellipse2D.Double nodeCircle = new Ellipse2D.Double(nodeCenter.x - this.nodeRadius,
                 nodeCenter.y - this.nodeRadius,
                 2 * radius,
@@ -575,7 +578,8 @@ public class GraphPanel extends JPanel {
         int thickness = defaultThickness;
         if ( node.hasThickness(this.displayState) ) {
             thickness = node.getThickness(this.displayState);
-        } else if ( node.isSelected(this.displayState) || node.hasColor(this.displayState) ) {
+        } else if ( node.isSelected(this.displayState)
+                || node.hasColor(this.displayState) ) {
             thickness = highlightThickness;
         }
 
@@ -706,7 +710,8 @@ public class GraphPanel extends JPanel {
         }
         int len = (int) Math.sqrt(dx * dx + dy * dy) - radius;
 
-        AffineTransform at = AffineTransform.getTranslateInstance(source.getX(this.displayState),
+        AffineTransform at = AffineTransform.getTranslateInstance(
+                source.getX(this.displayState),
                 source.getY(this.displayState));
         at.concatenate(AffineTransform.getRotateInstance(angle));
         g.transform(at);
@@ -730,10 +735,7 @@ public class GraphPanel extends JPanel {
      *            The thickness of the line used for the edge
      */
     private void drawSelfLoopArrow(Node node, Graphics2D g2d, int thickness) {
-        int radius = this.nodeRadius;
-        if ( node.hasRadius(this.displayState) ) {
-            radius = node.getRadius(this.displayState);
-        }
+        int radius = getRadius(node);
         int x = node.getX(this.displayState) + 1;
         int y = node.getY(this.displayState) + radius;
 
@@ -877,11 +879,7 @@ public class GraphPanel extends JPanel {
             flip = true;
         }
 
-        int radius = this.nodeRadius;
-/*         if ( node.hasRadius(this.displayState) ) {
-            radius = node.getRadius(this.displayState);
-        }
- */        int len = (int) Math.sqrt(dx * dx + dy * dy) - radius;
+        int len = (int) Math.sqrt(dx * dx + dy * dy) - radius;
 
         AffineTransform at = AffineTransform.getTranslateInstance(p1.getX(), p1.getY());
         at.concatenate(AffineTransform.getRotateInstance(angle));

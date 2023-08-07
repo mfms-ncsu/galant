@@ -673,7 +673,7 @@ public class GraphPanel extends JPanel {
             }
         } else {
             // draw line representing the edge
-            g2d.drawLine(source, target, g2d, thickness);
+            g2d.drawLine(source, target, g2d);
 
             if ( g.isDirected() ) {
                 drawDirectedArrow(source, target, g2d, thickness);
@@ -689,43 +689,6 @@ public class GraphPanel extends JPanel {
     }
 
     /**
-     * Draws a directed arrow on the end of an edge between the specified nodes
-     * 
-     * @param source
-     *            The source node of the relevant edge
-     * @param target
-     *            The target node of the relevant edge
-     * @param g2d
-     *            The graphics object used to draw the elements
-     * @param thickness
-     *            The thickness of the line used for the edge
-     */
-    private void drawDirectedArrow(Node source, Node target, Graphics2D g2d,
-            int thickness) {
-        Graphics2D g = (Graphics2D) g2d.create();
-
-        double dx = target.getX(this.displayState) - source.getX(this.displayState);
-        double dy = target.getY(this.displayState) - source.getY(this.displayState);
-        double angle = Math.atan2(dy, dx);
-
-        int radius = this.getNodeRadius(target);
-        int len = (int) Math.sqrt(dx * dx + dy * dy) - radius - ARROW_OFFSET;
-
-        AffineTransform at = AffineTransform.getTranslateInstance(
-                source.getX(this.displayState),
-                source.getY(this.displayState));
-        at.concatenate(AffineTransform.getRotateInstance(angle));
-        g.transform(at);
-
-        Stroke oldStroke = g.getStroke();
-        int arrowWidth = (int) ARROW_WIDTH_FACTOR * thickness;
-        if ( arrowWidth < MIN_ARROW_WIDTH )
-            arrowWidth = MIN_ARROW_WIDTH;
-        g.fillPolygon(new int[] { len, len - arrowWidth, len - arrowWidth, len },
-                new int[] { 0, - arrowWidth, arrowWidth, 0 }, 4);
-    }
-
-    /**
      * Draws a line between two sepcified nodes;
      *  used for both directed and undirected edges
      * 
@@ -738,7 +701,42 @@ public class GraphPanel extends JPanel {
      * @param thickness
      *            The thickness of the line used for the edge
      */
-    private void drawLine(Node source, Node target, Graphics2D g2d,
+    private void drawLine(Node source, Node target, Graphics2D g2d) {
+        Graphics2D g = (Graphics2D) g2d.create();
+
+        double dx = target.getX(this.displayState) - source.getX(this.displayState);
+        double dy = target.getY(this.displayState) - source.getY(this.displayState);
+        double angle = Math.atan2(dy, dx);
+
+        int source_radius = this.getNodeRadius(source);
+        int target_radius = this.getNodeRadius(target);
+        int total_radius = source_radius + target_radius;
+        int len = (int) Math.sqrt(dx * dx + dy * dy) - total_radius;
+        // transform the plane so that the origin is at the center of the source
+        // and rotate it by the angle of the line between source and target
+        AffineTransform at = AffineTransform.getTranslateInstance(
+                source.getX(this.displayState),
+                source.getY(this.displayState));
+        at.concatenate(AffineTransform.getRotateInstance(angle));
+        g.transform(at);
+
+        g.drawLine(source_radius, source_radius,
+                   source_radius + len, source_radius + len);
+    }
+
+    /**
+     * Draws a directed arrow on the end of an edge between the specified nodes
+     * 
+     * @param source
+     *            The source node of the relevant edge
+     * @param target
+     *            The target node of the relevant edge
+     * @param g2d
+     *            The graphics object used to draw the elements
+     * @param thickness
+     *            The thickness of the line used for the edge
+     */
+    private void drawDirectedArrow(Node source, Node target, Graphics2D g2d,
             int thickness) {
         Graphics2D g = (Graphics2D) g2d.create();
 

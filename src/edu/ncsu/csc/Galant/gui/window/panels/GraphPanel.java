@@ -507,7 +507,7 @@ public class GraphPanel extends JPanel {
                 // upper left corner of label: treats the bounding box of
                 // as that of the label text only, without any padding;
                 // ditto with weight below
-                int radius = getRadius(node);
+                int radius = this.getNodeRadius(node);
                 Point labelPosition = new Point(nodeCenter.x
                         + radius
                         + NODE_LABEL_DISTANCE + LABEL_PADDING,
@@ -532,7 +532,7 @@ public class GraphPanel extends JPanel {
                     g2d.getFontRenderContext());
             Rectangle2D bounds = layout.getBounds();
             // padding is 'shared' with node label
-            int radius = getRadius(node);
+            int radius = this.getNodeRadius(node);
             Point weightPosition = new Point(nodeCenter.x
                     + radius
                     + NODE_LABEL_DISTANCE
@@ -556,9 +556,9 @@ public class GraphPanel extends JPanel {
          * Circle is filled first so that outline can be drawn on top of
          * the filled circle
          */
-        int radius = getRadius(node);
-        Ellipse2D.Double nodeCircle = new Ellipse2D.Double(nodeCenter.x - this.nodeRadius,
-                nodeCenter.y - this.nodeRadius,
+        int radius = this.getNodeRadius(node);
+        Ellipse2D.Double nodeCircle = new Ellipse2D.Double(nodeCenter.x - radius,
+                nodeCenter.y - radius,
                 2 * radius,
                 2 * radius);
 
@@ -704,10 +704,7 @@ public class GraphPanel extends JPanel {
         double dy = target.getY(this.displayState) - source.getY(this.displayState);
         double angle = Math.atan2(dy, dx);
 
-        int radius = this.nodeRadius;
-        if ( target.hasRadius(this.displayState) ) {
-            radius = target.getRadius(this.displayState);
-        }
+        int radius = this.getNodeRadius(target);
         int len = (int) Math.sqrt(dx * dx + dy * dy) - radius;
 
         AffineTransform at = AffineTransform.getTranslateInstance(
@@ -735,7 +732,7 @@ public class GraphPanel extends JPanel {
      *            The thickness of the line used for the edge
      */
     private void drawSelfLoopArrow(Node node, Graphics2D g2d, int thickness) {
-        int radius = getRadius(node);
+        int radius = this.getNodeRadius(node);
         int x = node.getX(this.displayState) + 1;
         int y = node.getY(this.displayState) + radius;
 
@@ -860,7 +857,7 @@ public class GraphPanel extends JPanel {
      *
      * @todo not clear what this does - it is never called from anywhere
      */
-    private TransformData getEdgeTransform(Point p1, Point p2, Graphics2D g2d) {
+/*     private TransformData getEdgeTransform(Point p1, Point p2, Graphics2D g2d) {
         Graphics2D g = (Graphics2D) g2d.create();
         boolean flip = false;
 
@@ -888,7 +885,7 @@ public class GraphPanel extends JPanel {
         return new TransformData(len, flip, g);
     }
 
-    /**
+ */    /**
      * Draw a text box big enough to contain the specified text.
      * 
      * @param topLeft

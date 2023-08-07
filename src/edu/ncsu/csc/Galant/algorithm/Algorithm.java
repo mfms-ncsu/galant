@@ -849,7 +849,8 @@ public abstract class Algorithm implements Runnable {
   }
   public String color(GraphElement ge) throws GalantException {
     checkGraphElement(ge);
-    return ge.getColor();
+    if ( hasColor(ge) ) return ge.getColor();
+    else return "";
   }
     public boolean hasColor(GraphElement ge) throws GalantException {
         checkGraphElement(ge);

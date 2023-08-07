@@ -154,6 +154,10 @@ public class GraphPanel extends JPanel {
      * width of an arrow must be at least this
      */
     private final int MIN_ARROW_WIDTH = 5;
+    /**
+     * offset so that arrow is visible
+     */
+    private final int ARROW_OFFSET = 2;
 
     /**
      * Node weights and labels are to the right of their nodes. Weights
@@ -668,8 +672,8 @@ public class GraphPanel extends JPanel {
                 drawSelfLoopArrow(target, g2d, thickness);
             }
         } else {
-            // Straight edge
-            g2d.drawLine(p1.x, p1.y, p2.x, p2.y);
+            // draw line representing the edge
+            g2d.drawLine(source, target, g2d, thickness);
 
             if ( g.isDirected() ) {
                 drawDirectedArrow(source, target, g2d, thickness);
@@ -705,7 +709,45 @@ public class GraphPanel extends JPanel {
         double angle = Math.atan2(dy, dx);
 
         int radius = this.getNodeRadius(target);
-        int len = (int) Math.sqrt(dx * dx + dy * dy) - radius;
+        int len = (int) Math.sqrt(dx * dx + dy * dy) - radius - ARROW_OFFSET;
+
+        AffineTransform at = AffineTransform.getTranslateInstance(
+                source.getX(this.displayState),
+                source.getY(this.displayState));
+        at.concatenate(AffineTransform.getRotateInstance(angle));
+        g.transform(at);
+
+        Stroke oldStroke = g.getStroke();
+        int arrowWidth = (int) ARROW_WIDTH_FACTOR * thickness;
+        if ( arrowWidth < MIN_ARROW_WIDTH )
+            arrowWidth = MIN_ARROW_WIDTH;
+        g.fillPolygon(new int[] { len, len - arrowWidth, len - arrowWidth, len },
+                new int[] { 0, - arrowWidth, arrowWidth, 0 }, 4);
+    }
+
+    /**
+     * Draws a line between two sepcified nodes;
+     *  used for both directed and undirected edges
+     * 
+     * @param source
+     *            The source node of the relevant edge
+     * @param target
+     *            The target node of the relevant edge
+     * @param g2d
+     *            The graphics object used to draw the elements
+     * @param thickness
+     *            The thickness of the line used for the edge
+     */
+    private void drawLine(Node source, Node target, Graphics2D g2d,
+            int thickness) {
+        Graphics2D g = (Graphics2D) g2d.create();
+
+        double dx = target.getX(this.displayState) - source.getX(this.displayState);
+        double dy = target.getY(this.displayState) - source.getY(this.displayState);
+        double angle = Math.atan2(dy, dx);
+
+        int radius = this.getNodeRadius(target);
+        int len = (int) Math.sqrt(dx * dx + dy * dy) - radius - ARROW_OFFSET;
 
         AffineTransform at = AffineTransform.getTranslateInstance(
                 source.getX(this.displayState),

@@ -673,7 +673,15 @@ public class GraphPanel extends JPanel {
             }
         } else {
             // draw line representing the edge
-            g2d.drawLine(source, target, g2d);
+            g2d.drawLine(p1.x, p1.y, p2.x, p2.y);
+            /**
+             * The function below does not yet work; the intent is to draw
+             * just the part of the edge between the two node boundaries,
+             * replacing the center to center version that forces edges to be
+             * drawn before nodes
+             * See below for more information
+            drawLine(source, target, g2d);
+             */
 
             if ( g.isDirected() ) {
                 drawDirectedArrow(source, target, g2d, thickness);
@@ -692,20 +700,21 @@ public class GraphPanel extends JPanel {
      * Draws a line between two sepcified nodes;
      *  used for both directed and undirected edges
      * 
-     * @param source
-     *            The source node of the relevant edge
-     * @param target
-     *            The target node of the relevant edge
-     * @param g2d
-     *            The graphics object used to draw the elements
-     * @param thickness
-     *            The thickness of the line used for the edge
+     * @param source The source node of the relevant edge
+     * @param target The target node of the relevant edge
+     * @param g2d    The graphics object used to draw the elements
+     * @todo this does not work as advertised; the intent was to avoid having
+     * the lines for the edges partially obscure the arrows in the directed case
      */
     private void drawLine(Node source, Node target, Graphics2D g2d) {
         Graphics2D g = (Graphics2D) g2d.create();
+        int src_x = source.getX(this.displayState);
+        int src_y = source.getY(this.displayState);
+        int dst_x = target.getX(this.displayState);
+        int dst_y = target.getY(this.displayState);
 
-        double dx = target.getX(this.displayState) - source.getX(this.displayState);
-        double dy = target.getY(this.displayState) - source.getY(this.displayState);
+        double dx = dst_x - src_x;
+        double dy = dst_y - src_y;
         double angle = Math.atan2(dy, dx);
 
         int source_radius = this.getNodeRadius(source);
@@ -714,14 +723,19 @@ public class GraphPanel extends JPanel {
         int len = (int) Math.sqrt(dx * dx + dy * dy) - total_radius;
         // transform the plane so that the origin is at the center of the source
         // and rotate it by the angle of the line between source and target
-        AffineTransform at = AffineTransform.getTranslateInstance(
-                source.getX(this.displayState),
-                source.getY(this.displayState));
+        AffineTransform at
+         = AffineTransform.getTranslateInstance(src_x, src_y);
         at.concatenate(AffineTransform.getRotateInstance(angle));
         g.transform(at);
 
-        g.drawLine(source_radius, source_radius,
-                   source_radius + len, source_radius + len);
+        // Using trig in various forms does not appear to work
+        // g.drawLine(source_radius, 0,
+        //            (int) (Math.cos(angle) * (dst_x - target_radius)), 0);
+
+        // The following gets the directions (angles) of all the edges,
+        // but they are all too long, by varying factors that appear to depend on angle
+        g.drawLine(source_radius, 0,
+                   dst_x, 0);
     }
 
     /**
@@ -744,8 +758,9 @@ public class GraphPanel extends JPanel {
         double dy = target.getY(this.displayState) - source.getY(this.displayState);
         double angle = Math.atan2(dy, dx);
 
-        int radius = this.getNodeRadius(target);
-        int len = (int) Math.sqrt(dx * dx + dy * dy) - radius - ARROW_OFFSET;
+        int target_radius = this.getNodeRadius(target);
+        int len = (int) Math.sqrt(dx * dx + dy * dy)
+                    - target_radius - ARROW_OFFSET;
 
         AffineTransform at = AffineTransform.getTranslateInstance(
                 source.getX(this.displayState),
@@ -758,7 +773,7 @@ public class GraphPanel extends JPanel {
         if ( arrowWidth < MIN_ARROW_WIDTH )
             arrowWidth = MIN_ARROW_WIDTH;
         g.fillPolygon(new int[] { len, len - arrowWidth, len - arrowWidth, len },
-                new int[] { 0, - arrowWidth, arrowWidth, 0 }, 4);
+                new int[] { 0, -arrowWidth, arrowWidth, 0 }, 4);
     }
 
     /**

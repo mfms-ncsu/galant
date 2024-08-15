@@ -4,11 +4,11 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns 
 http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
  <graph  edgedefault="undirected">
-  <node id="0" x="78" y="193"  weight="4.0"  />
-  <node id="1" x="196" y="199"  weight="113.0"  />
-  <node id="2" x="302" y="200"  weight="100.0"  />
-  <node id="3" x="400" y="201"  weight="7.0"  />
-  <node id="4" x="499" y="198"  weight="2.0"  />
-  <node id="5" x="599" y="195"  weight="5.0"  />
-  <node id="6" x="671" y="196"  weight="20.0"  />
+  <node id="0" x="78" y="193"  weight="4.0" />
+  <node id="1" x="196" y="199"  weight="113.0" />
+  <node id="2" x="302" y="200"  weight="100.0" />
+  <node id="3" x="400" y="201"  weight="7.0" />
+  <node id="4" x="499" y="198"  weight="2.0" />
+  <node id="5" x="599" y="195"  weight="5.0" />
+  <node id="6" x="100" y="196"  weight="20.0" />
  </graph></graphml>

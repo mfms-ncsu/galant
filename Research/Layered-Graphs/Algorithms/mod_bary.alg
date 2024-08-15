@@ -127,7 +127,7 @@ algorithm {
   graph.writeMessage( "Crossings = " + layeredGraph.numberOfCrossings() );
   endStep();
 
-  for ( int pass = 0; pass < NUMBER_OF_PASSES; pass++ ) {
+  for ( ; pass < NUMBER_OF_PASSES; pass++ ) {
     /** what follows is a single pass */
     layeredGraph.clearLayerMarks();
     int maxCrossingsLayer = layeredGraph.getMaxCrossingsLayer();
@@ -160,7 +160,6 @@ algorithm {
 
       maxCrossingsLayer = layeredGraph.getMaxCrossingsLayer();
     }
-    pass++;
   } // end, pass
 
   layeredGraph.displaySavedPositions();

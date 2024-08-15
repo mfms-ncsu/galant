@@ -10,6 +10,9 @@ for details.
 If you have questions, comments or bugs to report, please contact me at
 mfms@ncsu.edu
 
+**New:** There is a JavaScript version of Galant under development.
+ It can be accessed as a web app at galant.csc.ncsu.edu and the source code downloaded at github.com/mfms-ncsu/galant-js 
+
 You can run Galant immediately by opening a terminal window, going to the
 galant home directory and executing:
 

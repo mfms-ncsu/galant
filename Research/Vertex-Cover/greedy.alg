@@ -54,7 +54,7 @@ algorithm {
         hide(v);
         cover.add(v);
         cover_size++;
-        display("cover size = " + cover_size);
+        display("cover size = ", cover_size);
         endStep();
     } // while pq not empty
     beginStep();

@@ -38,6 +38,7 @@ algorithm {
    */
   showNodeWeights();
   cover = new NodeSet();
+  int cover_size = 0;
   queueAllNodes();
   while ( ! pq.isEmpty() ) {
     //    print("pq = " + pq);
@@ -54,7 +55,8 @@ algorithm {
       NodeSet closedNeighborsW = new NodeSet(visibleNeighbors(w));
       closedNeighborsW.add(w);
       if ( closedNeighborsV.subset(closedNeighborsW) ) {
-        display(id(w) + " dominates " + id(v));
+        cover_size++;
+        display(id(w), " dominates ", id(v), ", cover size = ", cover_size);
         mark(w);
         cover.add(w);
         // inform neighbors that their degree and position in
@@ -85,9 +87,10 @@ algorithm {
     } // for visible incident edges on v
     unhighlight(v);
     step();
-} // while pq not empty
+  } // while pq not empty
   step();
   showNodes();
+  display("cover size = ", cover_size);
   checkCover();
 }
 

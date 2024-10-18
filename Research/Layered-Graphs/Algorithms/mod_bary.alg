@@ -5,8 +5,6 @@
  * The algorithm finds the layer with the maximum number of crossings, sorts
  * its nodes based on positions of both neighboring layers and completes a
  * pass going in both directions from the max layer.
- * 
- * $Id: mod_bary.alg 104 2015-03-27 16:23:25Z mfms $
  */
 
 import edu.ncsu.csc.Galant.local.LayeredGraph;
@@ -28,19 +26,14 @@ LayeredGraph layeredGraph;
  */
 function displayMessage( LayeredGraph.Scope scope ) {
     int crossings = layeredGraph.numberOfCrossings();
-    String bestCrossingsString = "    ";
-    String bestBottleneckString = "    ";
-    if ( crossings == minCrossings ) bestCrossingsString = " ** ";
-    if ( edgeCrossings == minEdgeCrossings ) bestBottleneckString = " ** ";
     String scopeString = " up ";
     if ( scope == LayeredGraph.Scope.DOWN ) scopeString = "down";
     else if ( scope == LayeredGraph.Scope.BOTH ) scopeString = "both"; 
-    display("pass ", pass,
-            ", iteration ", iteration,
-            " ", scopeString,
-            ", crossings = ", crossings, bestCrossingsString,
-            ", bottleneck = ",  edgeCrossings, bestBottleneckString
-            );
+    display( "pass ", pass,
+             ", iteration ", iteration, ", direction ", scopeString,
+             ", crossings = ", crossings, ", min = ", minCrossings,
+             ", bottleneck = ", edgeCrossings, ", min = ", minEdgeCrossings
+             );
 }
 
 /**
@@ -127,7 +120,7 @@ algorithm {
   graph.writeMessage( "Crossings = " + layeredGraph.numberOfCrossings() );
   endStep();
 
-  for ( int pass = 0; pass < NUMBER_OF_PASSES; pass++ ) {
+  while ( true ) {
     /** what follows is a single pass */
     layeredGraph.clearLayerMarks();
     int maxCrossingsLayer = layeredGraph.getMaxCrossingsLayer();
@@ -160,16 +153,19 @@ algorithm {
 
       maxCrossingsLayer = layeredGraph.getMaxCrossingsLayer();
     }
+    Boolean quit = getBoolean("Ready to quit?");
+    if ( quit ) break;
     pass++;
   } // end, pass
 
+  beginStep(); 
+  reset();
   layeredGraph.displaySavedPositions();
-  graph.writeMessage( "min iteration = " + minIteration
-                      + ", min crossings = " + minCrossings 
+  display( "min iteration = ", minIteration,
+                 ", min crossings = ", minCrossings 
                       );
+  endStep();
 
   System.out.println( "Minimum crossings = " + minCrossings
                       + " at iteration " + minIteration );
 }
-
-//  [Last modified: 2017 11 30 at 12:57:39 GMT]

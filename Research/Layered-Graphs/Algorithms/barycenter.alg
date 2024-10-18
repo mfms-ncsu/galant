@@ -6,13 +6,9 @@
  * y-coordinates of the nodes and that all the edges are between nodes that
  * lie on adjacent layers. Edges are directed from lower numbered layers to
  * higher numbered ones. See LayeredGraph.java for more information
- * 
- * $Id: barycenter.alg 104 2015-03-27 16:23:25Z mfms $
  */
 
 import edu.ncsu.csc.Galant.local.LayeredGraph;
-
-int MAX_ITERATIONS = 200;
 
 int minCrossings = Integer.MAX_VALUE;
 int edgeCrossings = 0;
@@ -28,16 +24,12 @@ LayeredGraph layeredGraph;
  */
 function displayMessage( int layer, String sweepDirection ) {
     int crossings = layeredGraph.numberOfCrossings();
-    String bestCrossingsString = "    ";
-    String bestBottleneckString = "    ";
-    if ( crossings == minCrossings ) bestCrossingsString = " ** ";
-    if ( edgeCrossings == minEdgeCrossings ) bestBottleneckString = " ** ";
     display( "pass ", pass,
              ", iteration ", iteration,
              ", layer ", layer,
              ", direction ", sweepDirection,
-             ", crossings = ", crossings, bestCrossingsString,
-             ", bottleneck = ",  edgeCrossings, bestBottleneckString
+             ", crossings = ", crossings, ", min = ", minCrossings,
+             ", bottleneck = ", edgeCrossings, ", min = ", minEdgeCrossings
              );
 }
 
@@ -151,23 +143,23 @@ algorithm {
     beginStep();
 
     checkCrossings();
-    while ( iteration < MAX_ITERATIONS ) {
+    while ( true ) {
         /** what follows is a single pass */
         pass++;
-        if ( pass % 1000 == 0 )
-            print( "pass = " + pass );
         upSweep( numLayers );
         downSweep( numLayers );
+        Boolean quit = getBoolean("Ready to quit?");
+        if ( quit ) break;
     }
 
     layeredGraph.displaySavedPositions();
-    display( "min pass = " + minPass
-                        + ", min iteration = " + minIteration
-                        + ", min crossings = " + minCrossings 
-                        );
-    print( "min pass = " + minPass
-           + ", min iteration = " + minIteration
-           + ", min crossings = " + minCrossings 
+    display( "min pass = ", minPass,
+           ", min iteration = ", minIteration,
+           ", min crossings = ", minCrossings 
+           );
+    print( "min pass = ", minPass,
+           ", min iteration = ", minIteration,
+           ", min crossings = ", minCrossings 
            );
 }
 

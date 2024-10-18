@@ -8,13 +8,10 @@
  * y-coordinates of the nodes and that all the edges are between nodes that
  * lie on adjacent layers. Edges are directed from lower numbered layers to
  * higher numbered ones. See LayeredGraph.java for more information
- * 
- * $Id: mce.alg 104 2015-03-27 16:23:25Z mfms $
  */
 
 import edu.ncsu.csc.Galant.local.LayeredGraph;
 
-int MAX_ITERATIONS = 200;
 int crossings = 0;
 int minCrossings = Integer.MAX_VALUE;
 int edgeCrossings = 0;
@@ -44,8 +41,6 @@ function checkCrossings() {
 function displayCrossings() {
     layeredGraph.displayPositions();
     layeredGraph.displayMarks();
-    String bestCrossingsString = "    ";
-    String bestBottleneckString = "    ";
     display( "pass ", pass,
              ", iteration ", iteration,
              ", crossings = ", crossings, ", min = ", minCrossings,
@@ -99,12 +94,12 @@ algorithm {
     layeredGraph = new LayeredGraph( getGraph() );
     setDirected( true );
 
-    while ( iteration < MAX_ITERATIONS ) {
+    while ( true ) {
         pass++;
         if ( pass % 100 == 0 ) print( "pass = " + pass );
         layeredGraph.clearMarks();
         maxCrossingsEdge = layeredGraph.getMaxCrossingsEdge( true );
-        while ( maxCrossingsEdge != null && iteration < MAX_ITERATIONS ) {
+        while ( maxCrossingsEdge != null ) {
             checkCrossings();
             displayCrossings();
             endStep(); beginStep();
@@ -141,19 +136,20 @@ algorithm {
             maxCrossingsEdge.unHighlight();
             maxCrossingsEdge = layeredGraph.getMaxCrossingsEdge();
         }
+        Boolean quit = getBoolean("Ready to quit?");
+        if ( quit ) break;
     }
     displayCrossings();
     endStep();
 
     layeredGraph.displaySavedPositions();
-    display( "min pass = " + minPass
-             + ", min iteration = " + minIteration
-             + ", min crossings = " + minCrossings 
-             );
+    display( "min pass = ", minPass,
+           ", min iteration = ", minIteration,
+           ", min crossings = ", minCrossings 
+           );
 
     print( "Minimum crossings = " + minCrossings
                         + " at iteration " + minIteration );
 
     print( "Minimum edge crossings = " + minEdgeCrossings );
 }
-//  [Last modified: 2021 02 08 at 21:21:00 GMT]

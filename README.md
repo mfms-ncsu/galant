@@ -90,3 +90,4 @@ Aside from being an acronym for **g**raph **al**gorithm **an**imation **t**ool, 
 - Matthias Stallmann, designer and lead developer
 - Senior Design Team, Fall 2013: Jason Cockrell, Ty Devries, Alex McCabe, Michael Owoc
 - Independent study students, Summer 2016: Weijia Li, Yuang Ni and Kai Pressler-Marshall
+- Senior Design Team, Spring 2021: Tianxin Jia, Ji Li,

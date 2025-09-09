@@ -85,3 +85,8 @@ graph. The algorithms are in the `Algorithms` folder and the graphs in `Example-
 
 **Note about the name.**
 Aside from being an acronym for **g**raph **al**gorithm **an**imation **t**ool, Galant (pronounced gahlahnt -accent on second syllable) is a term for a musical style that featured a return to classical simplicity after the complexity of the late Baroque era. We hope to achieve the same in our approach to algorithm animation.
+
+***Major Contributors***
+- Matthias Stallmann, designer and lead developer
+- Senior Design Team, Fall 2013: Jason Cockrell, Ty Devries, Alex McCabe, Michael Owoc
+- Independent study students, Summer 2016: Weijia Li, Yuang Ni and Kai Pressler-Marshall
